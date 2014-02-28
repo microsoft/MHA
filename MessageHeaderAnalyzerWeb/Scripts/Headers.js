@@ -5,9 +5,44 @@
 // View model for our headers tables
 var viewModel = null;
 
+function initViewModels() {
+    viewModel = new HeaderModel();
+    rebuildSections();
+}
+
 var HeaderModel = function () {
+    // Initialize defaults
+    var that = this;
     this.summary = new Summary();
     this.antiSpamReport = new AntiSpamReport();
+
+    this._status = "";
+    this.originalHeaders = "";
+
+    this.receivedHeaders = [];
+    this.otherHeaders = [];
+
+    makeResizableTable("receivedHeaders", ImportedStrings.mha_receivedHeaders, function () { return that.receivedHeaders.length; });
+    makeResizableTable("otherHeaders", ImportedStrings.mha_otherHeaders, function () { return that.otherHeaders.length; });
+    makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return that.originalHeaders.length; });
+
+    makeSortableColumn("receivedHeaders", "hop");
+    makeSortableColumn("receivedHeaders", "from");
+    makeSortableColumn("receivedHeaders", "by");
+    makeSortableColumn("receivedHeaders", "_with");
+    makeSortableColumn("receivedHeaders", "id");
+    makeSortableColumn("receivedHeaders", "_for");
+    makeSortableColumn("receivedHeaders", "via");
+    makeSortableColumn("receivedHeaders", "date");
+    makeSortableColumn("receivedHeaders", "delay");
+    $("#receivedHeaders .collapsibleArrow").bind("click", function (event) {
+        toggleExtraColumns(event.currentTarget);
+        event.stopPropagation();
+    });
+
+    makeSortableColumn("otherHeaders", "number");
+    makeSortableColumn("otherHeaders", "header");
+    makeSortableColumn("otherHeaders", "value");
 };
 
 HeaderModel.prototype.summary = {};
@@ -56,7 +91,15 @@ HeaderModel.prototype.doSort = function (table, col) {
     rebuildSections();
 };
 
-function parseHeadersToHeaderList(headers) {
+function parseHeadersToTables(headers) {
+    var Header = function (_header, _value) {
+        this.header = _header;
+        this.value = _value;
+    };
+
+    Header.prototype.header = "";
+    Header.prototype.value = "";
+
     var lines = headers.match(/^.*([\n\r]+|$)/gm);
 
     var headerList = [];
@@ -78,7 +121,7 @@ function parseHeadersToHeaderList(headers) {
         // never seen one in practice, so we check for and exclude 'headers' that
         // consist only of 1 or 2 digits.
         if (match && match[1] && !match[1].match(/^\d{1,2}$/)) {
-            headerList[iNextHeader] = { header: match[1], value: match[2] };
+            headerList[iNextHeader] = new Header(match[1], match[2]);
             iNextHeader++;
         } else {
             if (iNextHeader > 0) {
@@ -87,14 +130,116 @@ function parseHeadersToHeaderList(headers) {
             } else {
                 // If we didn't have a previous line, go ahead and use this line
                 if (lines[iLine].match(/\S/g)) {
-                    headerList[iNextHeader] = { header: "", value: lines[iLine] };
+                    headerList[iNextHeader] = new Header("", lines[iLine]);
                     iNextHeader++;
                 }
             }
         }
     }
 
-    return headerList;
+    updateStatus(ImportedStrings.mha_parsingHeaders);
+
+    if (headerList.length > 0) {
+        viewModel.hasData = true;
+    }
+
+    var received = [];
+    var iOther = 1;
+    for (var i = 0; i < headerList.length; i++) {
+        updateStatus(ImportedStrings.mha_processingHeader + space + i);
+        headerList[i].value = clean2047Encoding(headerList[i].value);
+
+        // Grab values for our summary pane
+        viewModel.summary.init(headerList[i]);
+
+        // Properties with special parsing
+        switch (headerList[i].header) {
+            case "X-Forefront-Antispam-Report":
+                viewModel.antiSpamReport.init(headerList[i].value);
+                break;
+        }
+
+        if (headerList[i].header === "Received") {
+            received.push(headerList[i].value);
+        } else if (headerList[i].header || headerList[i].value) {
+            viewModel.otherHeaders.push(
+            {
+                number: iOther++,
+                header: headerList[i].header,
+                url: mapHeaderToURL(headerList[i].header),
+                value: headerList[i].value
+            });
+        }
+    }
+
+    // Process received headers in reverse order
+    received.reverse();
+
+    // Preparse headers and compute values needed for the "Delay" column
+    var iStartTime = 0;
+    var iEndTime = 0;
+    var iLastTime = NaN;
+    var iDelta = 0; // This will be the sum of our positive deltas
+    var headerValsArray = [];
+    for (i = 0 ; i < received.length ; i++) {
+        updateStatus(ImportedStrings.mha_processingReceivedHeader + space + i);
+        headerValsArray[i] = parseReceivedHeader(received[i]);
+        headerValsArray[i].dateNum = Date.parse(headerValsArray[i].date);
+        if (!isNaN(headerValsArray[i].dateNum)) {
+            if (!isNaN(iLastTime) && iLastTime < headerValsArray[i].dateNum) {
+                iDelta += headerValsArray[i].dateNum - iLastTime;
+            }
+
+            iStartTime = iStartTime || headerValsArray[i].dateNum;
+            iEndTime = headerValsArray[i].dateNum;
+            iLastTime = headerValsArray[i].dateNum;
+        }
+    }
+
+    iLastTime = NaN;
+    // Total time is still last minus first, even if negative.
+    if (iEndTime !== iStartTime) {
+        viewModel.summary.totalTime = computeTime(iEndTime, iStartTime);
+    }
+
+    for (i = 0 ; i < received.length ; i++) {
+        var row = {};
+        var headerVals = headerValsArray[i];
+
+        row.hop = i + 1;
+        row.from = headerVals.from;
+        row.by = headerVals.by;
+        row._with = headerVals["with"];
+        row.id = headerVals.id;
+        row._for = headerVals["for"];
+        row.via = headerVals.via;
+        row.date = new Date(headerVals.date).toLocaleString();
+        row.dateSort = headerVals.dateNum;
+        row.delay = computeTime(headerVals.dateNum, iLastTime);
+        row.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
+        row.percent = 0;
+
+        if (!isNaN(headerVals.dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
+            row.delaySort = headerVals.dateNum - iLastTime;
+
+            // Only positive delays will get percentage bars. Negative delays will be color coded at render time.
+            if (row.delaySort > 0) {
+                row.percent = 100 * row.delaySort / iDelta;
+            }
+        }
+
+        if (!isNaN(headerVals.dateNum)) {
+            iLastTime = headerVals.dateNum;
+        }
+
+        viewModel.receivedHeaders.push(row);
+    }
+
+    hideStatus();
+    viewModel.resetSort();
+    rebuildSections();
+    hideExtraColumns();
+    recalcLayout(true);
 }
 
 var space = " ";
@@ -205,138 +350,6 @@ function computeTime(current, last) {
         }
     }
     return time.join("");
-}
-
-function initViewModels() {
-    viewModel = new HeaderModel();
-    makeResizableTable("receivedHeaders", ImportedStrings.mha_receivedHeaders, function () { return viewModel.receivedHeaders.length; });
-    makeResizableTable("otherHeaders", ImportedStrings.mha_otherHeaders, function () { return viewModel.otherHeaders.length; });
-    makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
-
-    makeSortableColumn("receivedHeaders", "hop");
-    makeSortableColumn("receivedHeaders", "from");
-    makeSortableColumn("receivedHeaders", "by");
-    makeSortableColumn("receivedHeaders", "_with");
-    makeSortableColumn("receivedHeaders", "id");
-    makeSortableColumn("receivedHeaders", "_for");
-    makeSortableColumn("receivedHeaders", "via");
-    makeSortableColumn("receivedHeaders", "date");
-    makeSortableColumn("receivedHeaders", "delay");
-    $("#receivedHeaders .collapsibleArrow").bind("click", function (event) {
-        toggleExtraColumns(event.currentTarget);
-        event.stopPropagation();
-    });
-
-    makeSortableColumn("otherHeaders", "number");
-    makeSortableColumn("otherHeaders", "header");
-    makeSortableColumn("otherHeaders", "value");
-    rebuildSections();
-}
-
-function parseHeadersToTables(headerList) {
-    updateStatus(ImportedStrings.mha_parsingHeaders);
-
-    if (headerList.length > 0) {
-        viewModel.hasData = true;
-    }
-
-    var received = [];
-    var iOther = 1;
-    for (var i = 0; i < headerList.length; i++) {
-        updateStatus(ImportedStrings.mha_processingHeader + space + i);
-        headerList[i].value = clean2047Encoding(headerList[i].value);
-
-        // Grab values for our summary pane
-        viewModel.summary.init(headerList[i]);
-
-        // Properties with special parsing
-        switch (headerList[i].header) {
-            case "X-Forefront-Antispam-Report":
-                viewModel.antiSpamReport.init(headerList[i].value);
-                break;
-        }
-
-        if (headerList[i].header === "Received") {
-            received.push(headerList[i].value);
-        } else if (headerList[i].header || headerList[i].value) {
-            viewModel.otherHeaders.push(
-            {
-                number: iOther++,
-                header: headerList[i].header,
-                url: mapHeaderToURL(headerList[i].header),
-                value: headerList[i].value
-            });
-        }
-    }
-
-    // Process received headers in reverse order
-    received.reverse();
-
-    // Preparse headers and compute values needed for the "Delay" column
-    var iStartTime = 0;
-    var iEndTime = 0;
-    var iLastTime = NaN;
-    var iDelta = 0; // This will be the sum of our positive deltas
-    var headerValsArray = [];
-    for (i = 0 ; i < received.length ; i++) {
-        updateStatus(ImportedStrings.mha_processingReceivedHeader + space + i);
-        headerValsArray[i] = parseReceivedHeader(received[i]);
-        headerValsArray[i].dateNum = Date.parse(headerValsArray[i].date);
-        if (!isNaN(headerValsArray[i].dateNum)) {
-            if (!isNaN(iLastTime) && iLastTime < headerValsArray[i].dateNum) {
-                iDelta += headerValsArray[i].dateNum - iLastTime;
-            }
-
-            iStartTime = iStartTime || headerValsArray[i].dateNum;
-            iEndTime = headerValsArray[i].dateNum;
-            iLastTime = headerValsArray[i].dateNum;
-        }
-    }
-
-    iLastTime = NaN;
-    // Total time is still last minus first, even if negative.
-    if (iEndTime !== iStartTime) {
-        viewModel.summary.totalTime = computeTime(iEndTime, iStartTime);
-    }
-
-    for (i = 0 ; i < received.length ; i++) {
-        var row = {};
-        var headerVals = headerValsArray[i];
-
-        row.hop = i + 1;
-        row.from = headerVals.from;
-        row.by = headerVals.by;
-        row._with = headerVals["with"];
-        row.id = headerVals.id;
-        row._for = headerVals["for"];
-        row.via = headerVals.via;
-        row.date = new Date(headerVals.date).toLocaleString();
-        row.dateSort = headerVals.dateNum;
-        row.delay = computeTime(headerVals.dateNum, iLastTime);
-        row.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
-        row.percent = 0;
-
-        if (!isNaN(headerVals.dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
-            row.delaySort = headerVals.dateNum - iLastTime;
-
-            // Only positive delays will get percentage bars. Negative delays will be color coded at render time.
-            if (row.delaySort > 0) {
-                row.percent = 100 * row.delaySort / iDelta;
-            }
-        }
-
-        if (!isNaN(headerVals.dateNum)) {
-            iLastTime = headerVals.dateNum;
-        }
-
-        viewModel.receivedHeaders.push(row);
-    }
-
-    hideStatus();
-    viewModel.resetSort();
-    rebuildSections();
-    hideExtraColumns();
-    recalcLayout(true);
 }
 
 function mapHeaderToURL(header, text) {

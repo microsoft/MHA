@@ -14,8 +14,7 @@ function analyzeHeaders() {
 
     updateStatus(ImportedStrings.mha_loading);
 
-    var headerList = parseHeadersToHeaderList($("#inputHeaders").val());
-    parseHeadersToTables(headerList);
+    parseHeadersToTables($("#inputHeaders").val());
 }
 
 function clearHeaders() {
