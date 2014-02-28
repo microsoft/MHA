@@ -104,8 +104,7 @@ function callback(asyncResult) {
                 viewModel.originalHeaders = prop.textContent;
                 $("#originalHeaders").text(viewModel.originalHeaders);
 
-                var allHeaders = parseHeadersToHeaderList(viewModel.originalHeaders);
-                parseHeadersToTables(allHeaders);
+                parseHeadersToTables(viewModel.originalHeaders);
             } else {
                 updateStatus(ImportedStrings.mha_failedToFind);
                 $("#originalHeaders").text(viewModel.originalHeaders);
