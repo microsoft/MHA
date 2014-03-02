@@ -14,92 +14,42 @@ var HeaderModel = function () {
     // Initialize defaults
     var that = this;
     this.summary = new Summary();
+    this.receivedHeaders = new Received();
     this.antiSpamReport = new AntiSpamReport();
+    this.otherHeaders = new Other();
 
-    this._status = "";
+    this.status = "";
     this.originalHeaders = "";
-
-    this.receivedHeaders = [];
-    this.otherHeaders = [];
-
-    makeResizableTable("receivedHeaders", ImportedStrings.mha_receivedHeaders, function () { return that.receivedHeaders.length; });
-    makeResizableTable("otherHeaders", ImportedStrings.mha_otherHeaders, function () { return that.otherHeaders.length; });
     makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return that.originalHeaders.length; });
-
-    makeSortableColumn("receivedHeaders", "hop");
-    makeSortableColumn("receivedHeaders", "from");
-    makeSortableColumn("receivedHeaders", "by");
-    makeSortableColumn("receivedHeaders", "_with");
-    makeSortableColumn("receivedHeaders", "id");
-    makeSortableColumn("receivedHeaders", "_for");
-    makeSortableColumn("receivedHeaders", "via");
-    makeSortableColumn("receivedHeaders", "date");
-    makeSortableColumn("receivedHeaders", "delay");
-    $("#receivedHeaders .collapsibleArrow").bind("click", function (event) {
-        toggleExtraColumns(event.currentTarget);
-        event.stopPropagation();
-    });
-
-    makeSortableColumn("otherHeaders", "number");
-    makeSortableColumn("otherHeaders", "header");
-    makeSortableColumn("otherHeaders", "value");
 };
 
 HeaderModel.prototype.summary = {};
+HeaderModel.prototype.receivedHeaders = {};
 HeaderModel.prototype.antiSpamReport = {};
-HeaderModel.prototype.receivedHeaders = [];
-HeaderModel.prototype.otherHeaders = [];
-HeaderModel.prototype._status = "";
+HeaderModel.prototype.otherHeaders = {};
+HeaderModel.prototype.status = "";
 HeaderModel.prototype.originalHeaders = "";
 
 HeaderModel.prototype.resetView = function () {
-    this._status = "";
-    this.originalHeaders = "";
-
-    this.receivedHeaders = [];
-    this.otherHeaders = [];
+    this.status = "";
 
     this.summary.reset();
+    this.receivedHeaders.reset();
     this.antiSpamReport.reset();
+    this.otherHeaders.reset();
+
+    this.originalHeaders = "";
 };
 
-HeaderModel.prototype.resetSort = function () {
-    setArrows("receivedHeaders", "hop", 1);
-    setArrows("otherHeaders", "number", 1);
+var Header = function (_header, _value) {
+    this.header = _header;
+    this.value = _value;
 };
 
-HeaderModel.prototype.doSort = function (table, col) {
-    var colName = $("#" + table).attr("data-colName");
-    var sortOrder = $("#" + table).attr("data-sortOrder");
-    if (colName === col) {
-        sortOrder *= -1;
-    } else {
-        colName = col;
-        sortOrder = 1;
-    }
-
-    setArrows(table, colName, sortOrder);
-
-    if (viewModel[table].length && col + "Sort" in viewModel[table][0]) {
-        col = col + "Sort";
-    }
-
-    viewModel[table].sort(function (a, b) {
-        return sortOrder * (a[col] < b[col] ? -1 : 1);
-    });
-
-    rebuildSections();
-};
+Header.prototype.header = "";
+Header.prototype.value = "";
 
 function parseHeadersToTables(headers) {
-    var Header = function (_header, _value) {
-        this.header = _header;
-        this.value = _value;
-    };
-
-    Header.prototype.header = "";
-    Header.prototype.value = "";
-
     var lines = headers.match(/^.*([\n\r]+|$)/gm);
 
     var headerList = [];
@@ -143,10 +93,9 @@ function parseHeadersToTables(headers) {
         viewModel.hasData = true;
     }
 
-    var received = [];
     var iOther = 1;
     for (var i = 0; i < headerList.length; i++) {
-        updateStatus(ImportedStrings.mha_processingHeader + space + i);
+        updateStatus(ImportedStrings.mha_processingHeader + " " + i.toString());
         headerList[i].value = clean2047Encoding(headerList[i].value);
 
         // Grab values for our summary pane
@@ -160,202 +109,24 @@ function parseHeadersToTables(headers) {
         }
 
         if (headerList[i].header === "Received") {
-            received.push(headerList[i].value);
+            viewModel.receivedHeaders.init(headerList[i].value);
         } else if (headerList[i].header || headerList[i].value) {
-            viewModel.otherHeaders.push(
-            {
-                number: iOther++,
-                header: headerList[i].header,
-                url: mapHeaderToURL(headerList[i].header),
-                value: headerList[i].value
-            });
+            viewModel.otherHeaders.init(headerList[i]);
         }
     }
 
-    // Process received headers in reverse order
-    received.reverse();
-
-    // Preparse headers and compute values needed for the "Delay" column
-    var iStartTime = 0;
-    var iEndTime = 0;
-    var iLastTime = NaN;
-    var iDelta = 0; // This will be the sum of our positive deltas
-    var headerValsArray = [];
-    for (i = 0 ; i < received.length ; i++) {
-        updateStatus(ImportedStrings.mha_processingReceivedHeader + space + i);
-        headerValsArray[i] = parseReceivedHeader(received[i]);
-        headerValsArray[i].dateNum = Date.parse(headerValsArray[i].date);
-        if (!isNaN(headerValsArray[i].dateNum)) {
-            if (!isNaN(iLastTime) && iLastTime < headerValsArray[i].dateNum) {
-                iDelta += headerValsArray[i].dateNum - iLastTime;
-            }
-
-            iStartTime = iStartTime || headerValsArray[i].dateNum;
-            iEndTime = headerValsArray[i].dateNum;
-            iLastTime = headerValsArray[i].dateNum;
-        }
-    }
-
-    iLastTime = NaN;
-    // Total time is still last minus first, even if negative.
-    if (iEndTime !== iStartTime) {
-        viewModel.summary.totalTime = computeTime(iEndTime, iStartTime);
-    }
-
-    for (i = 0 ; i < received.length ; i++) {
-        var row = {};
-        var headerVals = headerValsArray[i];
-
-        row.hop = i + 1;
-        row.from = headerVals.from;
-        row.by = headerVals.by;
-        row._with = headerVals["with"];
-        row.id = headerVals.id;
-        row._for = headerVals["for"];
-        row.via = headerVals.via;
-        row.date = new Date(headerVals.date).toLocaleString();
-        row.dateSort = headerVals.dateNum;
-        row.delay = computeTime(headerVals.dateNum, iLastTime);
-        row.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
-        row.percent = 0;
-
-        if (!isNaN(headerVals.dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
-            row.delaySort = headerVals.dateNum - iLastTime;
-
-            // Only positive delays will get percentage bars. Negative delays will be color coded at render time.
-            if (row.delaySort > 0) {
-                row.percent = 100 * row.delaySort / iDelta;
-            }
-        }
-
-        if (!isNaN(headerVals.dateNum)) {
-            iLastTime = headerVals.dateNum;
-        }
-
-        viewModel.receivedHeaders.push(row);
-    }
+    viewModel.receivedHeaders.computeDeltas();
 
     hideStatus();
-    viewModel.resetSort();
     rebuildSections();
     hideExtraColumns();
-    recalcLayout(true);
+    recalculateLayout(true);
 }
 
-var space = " ";
-
-var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
-// Returns array of values for each header in receivedHeaderNames.
-// This algorithm should work regardless of the order of the headers, given:
-//  - The date, if present, is always at the end, separated by a ";".
-// Values not attached to a header will not be reflected in output.
-function parseReceivedHeader(receivedHeader) {
-    // Build array of header locations
-    var headerMatches = [];
-    var parsedHeader = {};
-
-    // Read out the date first, then clear it from the string
-    var iDate = receivedHeader.lastIndexOf(";");
-    if (iDate !== -1) {
-        parsedHeader.date = receivedHeader.substring(iDate + 1);
-        receivedHeader = receivedHeader.substring(0, iDate);
-    }
-
-    // Split up the string now so we can look for our headers
-    var tokens = receivedHeader.split(/\s+/);
-
-    var iMatch = 0;
-    var iHeader;
-    var iToken;
-
-    for (iHeader = 0 ; iHeader < receivedHeaderNames.length; iHeader++) {
-        parsedHeader[receivedHeaderNames[iHeader]] = "";
-        for (iToken = 0 ; iToken < tokens.length; iToken++) {
-            if (receivedHeaderNames[iHeader] === tokens[iToken]) {
-                headerMatches[iMatch++] = [iHeader, iToken];
-            }
-        }
-    }
-
-    // Next bit assumes headerMatches[x,y] is increasing on y.
-    // Sort it so it is.
-    headerMatches.sort(function (a, b) {
-        return a[1] - b[1];
-    });
-
-    for (iMatch = 0 ; iMatch < headerMatches.length; iMatch++) {
-        iHeader = headerMatches[iMatch][0];
-        var iTokenHeader = headerMatches[iMatch][1];
-        var iFirstVal = iTokenHeader + 1;
-
-        var iNextTokenHeader;
-        var iLastVal;
-        if (iMatch + 1 < headerMatches.length) {
-            iNextTokenHeader = headerMatches[iMatch + 1][1];
-        } else {
-            iNextTokenHeader = tokens.length;
-        }
-        iLastVal = iNextTokenHeader - 1;
-
-        var headerName = receivedHeaderNames[iHeader];
-        if (parsedHeader[headerName] !== "") { parsedHeader[headerName] += "; "; }
-        for (iToken = iFirstVal ; iToken <= iLastVal ; iToken++) {
-            parsedHeader[headerName] += tokens[iToken];
-            if (iToken < iLastVal) { parsedHeader[headerName] += " "; }
-        }
-    }
-
-    return parsedHeader;
-}
-
-// Computes min/sec from the diff of current and last.
-// Returns nothing if last or current is NaN.
-function computeTime(current, last) {
-    var time = [];
-
-    if (isNaN(current) || isNaN(last)) { return time; }
-    var diff = current - last;
-    var iDelay;
-    var printedMinutes = false;
-
-    if (diff < 0) {
-        time.push(ImportedStrings.mha_negative);
-        diff = -diff;
-    }
-
-    if (diff >= 1000 * 60) {
-        iDelay = Math.floor(diff / 1000 / 60);
-        time.push(iDelay, space);
-        if (iDelay === 1) {
-            time.push(ImportedStrings.mha_minute);
-        } else {
-            time.push(ImportedStrings.mha_minutes);
-        }
-
-        diff -= iDelay * 1000 * 60;
-        printedMinutes = true;
-    }
-
-    if (printedMinutes && diff) {
-        time.push(space);
-    }
-
-    if (!printedMinutes || diff) {
-        iDelay = Math.floor(diff / 1000);
-        time.push(iDelay, space);
-        if (iDelay === 1) {
-            time.push(ImportedStrings.mha_second);
-        } else {
-            time.push(ImportedStrings.mha_seconds);
-        }
-    }
-    return time.join("");
-}
-
-function mapHeaderToURL(header, text) {
+function mapHeaderToURL(headerName, text) {
     for (var i = 0 ; i < HeaderToURLMap.length ; i++) {
-        if (header.toLowerCase() === HeaderToURLMap[i][0].toLowerCase()) {
-            return ["<a href = '", HeaderToURLMap[i][1], "' target = '_blank'>", text || header, "</a>"].join("");
+        if (headerName.toLowerCase() === HeaderToURLMap[i][0].toLowerCase()) {
+            return ["<a href = '", HeaderToURLMap[i][1], "' target = '_blank'>", text || headerName, "</a>"].join("");
         }
     }
 

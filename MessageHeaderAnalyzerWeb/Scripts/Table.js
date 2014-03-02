@@ -8,23 +8,14 @@ if (window.jQuery) {
         var doResize = (newHeight !== oldHeight) || (newWidth !== oldWidth);
         oldHeight = newHeight;
         oldWidth = newWidth;
-        recalcLayout(doResize);
+        recalculateLayout(doResize);
     });
 }
 
-// Adjusts locations and dimensions of our divs without rebuilding content
-function recalcLayout(doResize) {
+// Adjusts locations and dimensions of our response and progress without rebuilding content
+function recalculateLayout(doResize) {
     positionResponse();
-    fixProgressHeight();
-}
 
-// Adjusts response under our linebreak
-function positionResponse() {
-    var top = $("#lineBreak")[0].offsetTop + $("#lineBreak").height();
-    $("#response").css("top", top + 15);
-}
-
-function fixProgressHeight() {
     // Remove the old height
     $(".hotBarContainer").removeAttr("style");
     // Tag the new one
@@ -33,26 +24,32 @@ function fixProgressHeight() {
     });
 }
 
-// Rebuilds content and recalculates what sections and divs should be displayed
-function rebuildSections() {
-    populateTables();
-    recalcVisibility();
+// Adjusts response under our lineBreak
+function positionResponse() {
+    var responseTop = $("#lineBreak")[0].offsetTop + $("#lineBreak").height();
+    $("#response").css("top", responseTop + 15);
 }
 
-function recalcVisibility() {
+// Rebuilds content and recalculates what sections should be displayed
+function rebuildSections() {
+    populateTables();
+    recalculateVisibility();
+}
+
+function recalculateVisibility() {
     for (var i = 0 ; i < visibilityBindings.length ; i++) {
         makeVisible(visibilityBindings[i][0], visibilityBindings[i][1]());
     }
 }
 
-function updateStatus(status) {
-    $("#status").text(status);
+function updateStatus(statusText) {
+    $("#status").text(statusText);
     if (viewModel !== null) {
-        viewModel._status = status;
+        viewModel.status = statusText;
     }
 
     positionResponse();
-    recalcVisibility();
+    recalculateVisibility();
 }
 
 function hideStatus() {
@@ -70,8 +67,9 @@ function hideEmptyColumns(id) {
     $("#" + id + " th").each(function (i) {
         var keep = 0;
 
-        var tds = $(this).parents("table").find("tr td:nth-child(" + (i + 1) + ")");
-        tds.each(function (j) {
+        // Find a child cell which has data
+        var children = $(this).parents("table").find("tr td:nth-child(" + (i + 1).toString() + ")");
+        children.each(function (j) {
             if (this.innerHTML !== "") {
                 keep++;
             }
@@ -79,7 +77,7 @@ function hideEmptyColumns(id) {
 
         if (keep === 0) {
             $(this).addClass("emptyColumn");
-            tds.addClass("emptyColumn");
+            children.addClass("emptyColumn");
         }
     });
 }
@@ -102,16 +100,16 @@ function toggleExtraColumns() {
     } else {
         hideExtraColumns();
     }
-    recalcVisibility();
-    recalcLayout(true);
+    recalculateVisibility();
+    recalculateLayout(true);
 }
 
-function toggleCollapse(obj) {
-    $(".collapsibleElement", $(obj).parents(".collapsibleWrapper")).toggle();
-    recalcLayout(true);
+function toggleCollapse(object) {
+    $(".collapsibleElement", $(object).parents(".collapsibleWrapper")).toggle();
+    recalculateLayout(true);
 }
 
-// Wraps a div(textarea, etc) into a collapsible pane with a title
+// Wraps an element into a collapsible pane with a title
 function makeResizablePane(id, title, visibility) {
     var pane = $("#" + id);
     if (pane.hasClass("collapsibleElement")) {
@@ -198,7 +196,7 @@ function makeResizableTable(id, title, visibility) {
 function makeSortableColumn(table, id) {
     var header = $("#" + id);
 
-    header.bind("click", function () { viewModel.doSort(table, id); });
+    header.bind("click", function () { viewModel[table].doSort(id); });
     var downSpan = $(document.createElement("span"));
     downSpan.addClass("downArrow");
     downSpan.addClass("hiddenElement");
@@ -213,17 +211,17 @@ function makeSortableColumn(table, id) {
     header.append(upSpan);
 }
 
-function makeSummaryTable(name, rows) {
-    var antiSpamDiv = $(name);
-    if (antiSpamDiv) {
-        antiSpamDiv.addClass("summaryList");
+function makeSummaryTable(summaryName, rows) {
+    var summaryList = $(summaryName);
+    if (summaryList) {
+        summaryList.addClass("summaryList");
 
         for (var i = 0 ; i < rows.length ; i++) {
             var id = rows[i].header;
             var row = document.createElement("tr");
             if (row !== null && id !== null) {
                 row.id = id;
-                antiSpamDiv.append(row); // Must happen before we append cells to appease IE7
+                summaryList.append(row); // Must happen before we append cells to appease IE7
                 var headerCell = $(row.insertCell(-1));
                 if (headerCell) {
                     headerCell.text(rows[i].label);
@@ -257,9 +255,6 @@ function appendCell(row, text, html, _class) {
 }
 
 function setArrows(table, colName, sortOrder) {
-    $("#" + table).attr("data-colName", colName);
-    $("#" + table).attr("data-sortOrder", sortOrder);
-
     $("#" + table + " .tableHeader .downArrow").addClass("hiddenElement");
     $("#" + table + " .tableHeader .upArrow").addClass("hiddenElement");
 
@@ -280,52 +275,17 @@ function populateTables() {
     // Original headers
     $("#originalHeaders").text(viewModel.originalHeaders);
 
-    var i;
-    var row;
-    restoreTable("otherHeaders");
-    for (i = 0 ; i < viewModel.otherHeaders.length ; i++) {
-        row = document.createElement("tr");
-        $("#otherHeaders").append(row); // Must happen before we append cells to appease IE7
-        appendCell(row, viewModel.otherHeaders[i].number, null, null);
-        appendCell(row, viewModel.otherHeaders[i].header, viewModel.otherHeaders[i].url, null);
-        appendCell(row, viewModel.otherHeaders[i].value, null, "allowBreak");
-    }
+    // Received
+    viewModel.receivedHeaders.populateTable();
 
-    $("#otherHeaders tbody tr:odd").addClass("oddRow");
-
-    restoreTable("receivedHeaders");
-    for (i = 0 ; i < viewModel.receivedHeaders.length ; i++) {
-        row = document.createElement("tr");
-        $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
-        appendCell(row, viewModel.receivedHeaders[i].hop, null, null);
-        appendCell(row, viewModel.receivedHeaders[i].from, null, null);
-        appendCell(row, viewModel.receivedHeaders[i].by, null, null);
-        appendCell(row, viewModel.receivedHeaders[i].date, null, null);
-        var labelClass = "hotBarLabel";
-        if (viewModel.receivedHeaders[i].delaySort < 0) {
-            labelClass += " negativeCell";
-        }
-
-        var hotBar =
-        "<div class='hotBarContainer'>" +
-        "   <div class='" + labelClass + "'>" + viewModel.receivedHeaders[i].delay + "</div>" +
-        "   <div class='hotBarBar' style='width:" + viewModel.receivedHeaders[i].percent + "%'></div>" +
-        "</div>";
-        appendCell(row, null, hotBar, "hotBarCell");
-        appendCell(row, viewModel.receivedHeaders[i]._with, null, null);
-        appendCell(row, viewModel.receivedHeaders[i].id, null, "extraCol");
-        appendCell(row, viewModel.receivedHeaders[i]._for, null, "extraCol");
-        appendCell(row, viewModel.receivedHeaders[i].via, null, "extraCol");
-    }
-
-    $("#receivedHeaders tbody tr:odd").addClass("oddRow");
-    hideEmptyColumns("receivedHeaders");
+    // Other
+    viewModel.otherHeaders.populateTable();
 }
 
 var visibilityBindings = [
-["#lineBreak", function () { return viewModel._status || viewModel.summary.exists() || viewModel.receivedHeaders.length || viewModel.otherHeaders.length; }],
-["#response", function () { return viewModel._status || viewModel.summary.exists() || viewModel.receivedHeaders.length || viewModel.otherHeaders.length; }],
-["#status", function () { return viewModel._status; }],
+["#lineBreak", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.length; }],
+["#response", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.length; }],
+["#status", function () { return viewModel.status; }],
 [".extraCol", function () { return viewModel.showExtra; }],
 ["#clearButton", function () { return viewModel.hasData; }],
 ];
