@@ -1,5 +1,6 @@
 if (window.jQuery) {
     $(document).ready(function () {
+        $(window).resize(onResize);
         initViewModels();
         makeResizablePane("inputHeaders", ImportedStrings.mha_prompt, null, null);
     });
@@ -22,6 +23,5 @@ function clearHeaders() {
 
     viewModel.resetView();
     rebuildSections();
-    hideExtraColumns();
     recalculateLayout(true);
 }

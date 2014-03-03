@@ -21,14 +21,16 @@ var HeaderModel = function () {
     this.status = "";
     this.originalHeaders = "";
     makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return that.originalHeaders.length; });
+    $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
 };
 
+HeaderModel.prototype.status = "";
 HeaderModel.prototype.summary = {};
 HeaderModel.prototype.receivedHeaders = {};
-HeaderModel.prototype.antiSpamReport = {};
 HeaderModel.prototype.otherHeaders = {};
-HeaderModel.prototype.status = "";
+HeaderModel.prototype.antiSpamReport = {};
 HeaderModel.prototype.originalHeaders = "";
+HeaderModel.prototype.hasData = false;
 
 HeaderModel.prototype.resetView = function () {
     this.status = "";
@@ -39,6 +41,8 @@ HeaderModel.prototype.resetView = function () {
     this.otherHeaders.reset();
 
     this.originalHeaders = "";
+
+    this.hasData = false;
 };
 
 var Header = function (_header, _value) {

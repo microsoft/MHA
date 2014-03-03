@@ -5,6 +5,7 @@
 // It ensures the DOM is ready before updating the span elements with values from the current message.
 Office.initialize = function () {
     $(document).ready(function () {
+        $(window).resize(onResize);
         initViewModels();
         updateStatus(ImportedStrings.mha_loading);
         sendHeadersRequest();
