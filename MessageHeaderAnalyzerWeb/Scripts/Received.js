@@ -23,16 +23,38 @@ var Received = function () {
     var that = this;
     makeResizableTable(this.tableName, ImportedStrings.mha_receivedHeaders, function () { return that.exists(); });
 
-    makeSortableColumn(this.tableName, "hop");
-    makeSortableColumn(this.tableName, "from");
-    makeSortableColumn(this.tableName, "by");
-    makeSortableColumn(this.tableName, "_with");
-    makeSortableColumn(this.tableName, "id");
-    makeSortableColumn(this.tableName, "_for");
-    makeSortableColumn(this.tableName, "via");
-    makeSortableColumn(this.tableName, "date");
-    makeSortableColumn(this.tableName, "delay");
-    $(this.tableName + " .collapsibleArrow").bind("click", function (eventObject) {
+    var columns = [
+        new Column("hop", ImportedStrings.mha_hop, null),
+        new Column("from", ImportedStrings.mha_submittingHost, null),
+        new Column("by", ImportedStrings.mha_receivingHost, null),
+        new Column("date", ImportedStrings.mha_time, null),
+        new Column("delay", ImportedStrings.mha_delay, null),
+        new Column("with", ImportedStrings.mha_type, null),
+        new Column("id", ImportedStrings.mha_id, "extraCol"),
+        new Column("for", ImportedStrings.mha_for, "extraCol"),
+        new Column("via", ImportedStrings.mha_via, "extraCol")
+    ];
+
+    addColumns(this.tableName, columns);
+
+    var _with = $("#" + this.tableName + " #with");
+    if (_with !== null) {
+        var leftSpan = $(document.createElement("span"));
+        leftSpan.attr("id", "leftArrow");
+        leftSpan.addClass("collapsibleArrow");
+        leftSpan.addClass("hiddenElement");
+        leftSpan.html("&lArr;");
+
+        var rightSpan = $(document.createElement("span"));
+        rightSpan.attr("id", "rightArrow");
+        rightSpan.addClass("collapsibleArrow");
+        rightSpan.html("&rArr;");
+
+        _with.append(leftSpan);
+        _with.append(rightSpan);
+    }
+
+    $("#" + this.tableName + " .collapsibleArrow").bind("click", function (eventObject) {
         toggleExtraColumns();
         eventObject.stopPropagation();
     });

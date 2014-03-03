@@ -33,6 +33,22 @@ var ImportedStrings = {
     mha_to: "To",
     mha_cc: "Cc",
 
+    // Received
+    mha_hop: "Hop",
+    mha_submittingHost: "Submitting host",
+    mha_receivingHost: "Receiving host",
+    mha_time: "Time",
+    mha_delay: "Delay",
+    mha_type: "Type",
+    mha_id: "ID",
+    mha_for: "For",
+    mha_via: "Via",
+
+    // Other
+    mha_number: "#",
+    mha_header: "Header",
+    mha_value: "Value",
+
     // AntiSpamReport
     mha_countryRegion: "Country/Region",
     mha_lang: "Language",

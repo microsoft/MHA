@@ -1,16 +1,14 @@
 var oldHeight = 0;
 var oldWidth = 0;
 
-if (window.jQuery) {
-    $(window).resize(function () {
-        var newHeight = $(window).height();
-        var newWidth = $(window).width();
-        var doResize = (newHeight !== oldHeight) || (newWidth !== oldWidth);
-        oldHeight = newHeight;
-        oldWidth = newWidth;
-        recalculateLayout(doResize);
-    });
-}
+function onResize() {
+    var newHeight = $(window).height();
+    var newWidth = $(window).width();
+    var doResize = (newHeight !== oldHeight) || (newWidth !== oldWidth);
+    oldHeight = newHeight;
+    oldWidth = newWidth;
+    recalculateLayout(doResize);
+};
 
 // Adjusts locations and dimensions of our response and progress without rebuilding content
 function recalculateLayout(doResize) {
@@ -100,6 +98,7 @@ function toggleExtraColumns() {
     } else {
         hideExtraColumns();
     }
+
     recalculateVisibility();
     recalculateLayout(true);
 }
@@ -193,14 +192,54 @@ function makeResizableTable(id, title, visibility) {
     header.hide();
 }
 
+var Column = function (id, label, _class) {
+    this.id = id;
+    this.label = label;
+    this.class = _class;
+};
+
+Column.prototype.id = "";
+Column.prototype.label = "";
+Column.prototype.class = null;
+
+function addColumns(tableName, columns) {
+    var tableHeader = $(document.createElement("thead"));
+    if (tableHeader !== null) {
+        $("#" + tableName).append(tableHeader);
+
+        var headerRow = $(document.createElement("tr"));
+        if (headerRow !== null) {
+            headerRow.addClass("tableHeader");
+            tableHeader.append(headerRow); // Must happen before we append cells to appease IE7
+
+            for (var i = 0 ; i < columns.length ; i++) {
+                var headerCell = $(document.createElement("th"));
+                if (headerCell !== null) {
+                    headerCell.attr("id", columns[i].id);
+                    headerCell.text(columns[i].label);
+                    if (columns[i].class !== null) {
+                        headerCell.addClass(columns[i].class);
+                    }
+
+                    headerRow.append(headerCell);
+                }
+
+                makeSortableColumn(tableName, columns[i].id);
+            }
+        }
+    }
+}
+
 function makeSortableColumn(table, id) {
     var header = $("#" + id);
 
     header.bind("click", function () { viewModel[table].doSort(id); });
+
     var downSpan = $(document.createElement("span"));
     downSpan.addClass("downArrow");
     downSpan.addClass("hiddenElement");
     downSpan.html("&darr;");
+
     var upSpan = $(document.createElement("span"));
     upSpan.addClass("upArrow");
     upSpan.addClass("hiddenElement");
@@ -269,22 +308,22 @@ function populateTables() {
     // Summary
     viewModel.summary.populateTable();
 
-    // AntiSpam Report
-    viewModel.antiSpamReport.populateTable();
-
-    // Original headers
-    $("#originalHeaders").text(viewModel.originalHeaders);
-
     // Received
     viewModel.receivedHeaders.populateTable();
 
+    // AntiSpam Report
+    viewModel.antiSpamReport.populateTable();
+
     // Other
     viewModel.otherHeaders.populateTable();
+
+    // Original headers
+    $("#originalHeaders").text(viewModel.originalHeaders);
 }
 
 var visibilityBindings = [
-["#lineBreak", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.length; }],
-["#response", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.length; }],
+["#lineBreak", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
+["#response", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
 ["#status", function () { return viewModel.status; }],
 [".extraCol", function () { return viewModel.showExtra; }],
 ["#clearButton", function () { return viewModel.hasData; }],
