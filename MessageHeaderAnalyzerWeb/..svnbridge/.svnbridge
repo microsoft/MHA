@@ -9,4 +9,16 @@ web.release.config
 </Value></Property><Property><Name>svn:global-ignores</Name><Value>bin
 obj
 Properties
+</Value></Property><Property><Name>svn:ignore</Name><Value>compare.cmd
+MessageHeaderAnalyzerWeb.userosscache
+MessageHeaderAnalyzerWeb.csproj
+MessageHeaderAnalyzerWeb.csproj.user
+packages.config
+web.config
+web.debug.config
+web.release.config
+StyleCop.Cache
+</Value></Property><Property><Name>svn:global-ignores</Name><Value>bin
+obj
+Properties
 </Value></Property></Properties></ItemProperties>
