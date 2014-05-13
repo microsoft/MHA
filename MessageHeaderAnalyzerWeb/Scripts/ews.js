@@ -60,13 +60,17 @@ function disableSpinner() {
 function sendHeadersRequest() {
     enableSpinner();
 
-    // Create a local variable that contains the mailbox.
     var mailbox = Office.context.mailbox;
     var request = getHeadersRequest(mailbox.item.itemId);
     var envelope = getSoapEnvelope(request);
 
-    mailbox.makeEwsRequestAsync(envelope, callback);
-    updateStatus(ImportedStrings.mha_ewsRequestSent);
+    try {
+        mailbox.makeEwsRequestAsync(envelope, callback);
+        updateStatus(ImportedStrings.mha_ewsRequestSent);
+    } catch (e) {
+        updateStatus(ImportedStrings.mha_ewsFailed);
+        disableSpinner();
+    }
 }
 
 // This function plug in filters nodes for the one that matches the given name.
