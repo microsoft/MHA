@@ -26,7 +26,11 @@ var AntiSpamReport = function () {
         new AntiSpamRow("CTRY", ImportedStrings.mha_countryRegion, "X-Forefront-Antispam-Report"),
         new AntiSpamRow("LANG", ImportedStrings.mha_lang, "X-Forefront-Antispam-Report"),
         new AntiSpamRow("SCL", ImportedStrings.mha_scl, "X-MS-Exchange-Organization-SCL"),
-        new AntiSpamRow("SFV", ImportedStrings.mha_sfv, "X-Forefront-Antispam-Report")
+        new AntiSpamRow("PCL", ImportedStrings.mha_pcl, "X-Forefront-Antispam-Report"),
+        new AntiSpamRow("SFV", ImportedStrings.mha_sfv, "X-Forefront-Antispam-Report"),
+        new AntiSpamRow("IPV", ImportedStrings.mha_ipv, "X-Forefront-Antispam-Report"),
+        new AntiSpamRow("H", ImportedStrings.mha_h, "X-Forefront-Antispam-Report"),
+        new AntiSpamRow("PTR", ImportedStrings.mha_ptr, "X-Forefront-Antispam-Report")
     ];
 
     makeResizablePane("antiSpamReport", ImportedStrings.mha_antiSpamReport, function () { return that.exists(); });
