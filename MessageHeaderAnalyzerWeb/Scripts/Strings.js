@@ -54,5 +54,9 @@ var ImportedStrings = {
     mha_countryRegion: "Country/Region",
     mha_lang: "Language",
     mha_scl: "Spam Confidence Level",
-    mha_sfv: "Spam Filtering Verdict"
+    mha_sfv: "Spam Filtering Verdict",
+    mha_pcl: "Phishing Confidence Level",
+    mha_ipv: "IP Verification",
+    mha_h: "HELO/EHLO String",
+    mha_ptr: "PTR Record"
 };
