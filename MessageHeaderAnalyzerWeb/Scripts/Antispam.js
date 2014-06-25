@@ -26,7 +26,7 @@ var AntiSpamReport = function () {
         new AntiSpamRow("CTRY", ImportedStrings.mha_countryRegion, "X-Forefront-Antispam-Report"),
         new AntiSpamRow("LANG", ImportedStrings.mha_lang, "X-Forefront-Antispam-Report"),
         new AntiSpamRow("SCL", ImportedStrings.mha_scl, "X-MS-Exchange-Organization-SCL"),
-        new AntiSpamRow("PCL", ImportedStrings.mha_pcl, "X-Forefront-Antispam-Report"),
+        new AntiSpamRow("PCL", ImportedStrings.mha_pcl, "X-MS-Exchange-Organization-SCL"),
         new AntiSpamRow("SFV", ImportedStrings.mha_sfv, "X-Forefront-Antispam-Report"),
         new AntiSpamRow("IPV", ImportedStrings.mha_ipv, "X-Forefront-Antispam-Report"),
         new AntiSpamRow("H", ImportedStrings.mha_h, "X-Forefront-Antispam-Report"),
@@ -73,8 +73,13 @@ AntiSpamReport.prototype.init = function (report) {
     // Sometimes we see extraneous (null) in the report. They look like this: UIP:(null);(null);(null)SFV:SKI
     // First pass: Remove the (null).
     report = report.replace(/\(null\)/g, "");
+
+    // Occasionally, we find the final ; is missing. 
+    // Third pass: Add one. If it is extraneous, the next pass will remove it.
+    report = report + ";";
+
     // Removing the (null) can leave consecutive ; which confound later parsing.
-    // Second pass: Collapse them.
+    // Third pass: Collapse them.
     report = report.replace(/;+/g, ";");
 
     var lines = report.match(/(.*?):(.*?);/g);
