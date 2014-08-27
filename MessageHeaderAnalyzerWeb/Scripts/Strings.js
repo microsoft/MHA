@@ -18,7 +18,8 @@ var ImportedStrings = {
     mha_summary: "Summary",
     mha_prompt: "Insert the message header you would like to analyze",
     mha_receivedHeaders: "Received headers",
-    mha_antiSpamReport: "Antispam report",
+    mha_forefrontAntiSpamReport: "Forefront Antispam Report Header",
+    mha_antiSpamReport: "Microsoft Antispam Header",
     mha_otherHeaders: "Other headers",
     mha_originalHeaders: "Original headers",
     mha_deliveredStart: "(Delivered after",
@@ -50,7 +51,7 @@ var ImportedStrings = {
     mha_header: "Header",
     mha_value: "Value",
 
-    // AntiSpamReport
+    // ForefrontAntiSpamReport
     mha_countryRegion: "Country/Region",
     mha_lang: "Language",
     mha_scl: "Spam Confidence Level",
@@ -58,5 +59,10 @@ var ImportedStrings = {
     mha_pcl: "Phishing Confidence Level",
     mha_ipv: "IP Filter Verdict",
     mha_h: "HELO/EHLO String",
-    mha_ptr: "PTR Record"
+    mha_ptr: "PTR Record",
+    mha_cip: "Connecting IP Address",
+    mha_customSpam: "Advanced Spam Filtering",
+
+    // AntiSpamReport
+    mha_bcl: "Bulk Complaint Level"
 };

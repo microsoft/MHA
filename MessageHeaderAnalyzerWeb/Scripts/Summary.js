@@ -43,7 +43,7 @@ var Summary = function () {
     ];
 
     makeResizablePane("summary", ImportedStrings.mha_summary, function () { return that.exists(); });
-    makeSummaryTable("#summary", this.summaryRows);
+    makeSummaryTable("#summary", this.summaryRows, "SUM");
 };
 
 Summary.prototype.summaryRows = [];
@@ -69,7 +69,7 @@ Summary.prototype.exists = function () {
 
 Summary.prototype.populateTable = function () {
     for (var i = 0 ; i < this.summaryRows.length ; i++) {
-        var headerVal = $("#" + this.summaryRows[i].header + "Val");
+        var headerVal = $("#" + this.summaryRows[i].header + "SUMVal");
         if (headerVal) {
             headerVal.text(this.summaryRows[i].get());
         }
