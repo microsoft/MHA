@@ -250,13 +250,13 @@ function makeSortableColumn(table, id) {
     header.append(upSpan);
 }
 
-function makeSummaryTable(summaryName, rows) {
+function makeSummaryTable(summaryName, rows, tag) {
     var summaryList = $(summaryName);
     if (summaryList) {
         summaryList.addClass("summaryList");
 
         for (var i = 0 ; i < rows.length ; i++) {
-            var id = rows[i].header;
+            var id = rows[i].header + tag;
             var row = document.createElement("tr");
             if (row !== null && id !== null) {
                 row.id = id;
@@ -310,6 +310,9 @@ function populateTables() {
 
     // Received
     viewModel.receivedHeaders.populateTable();
+
+    // Forefront AntiSpam Report
+    viewModel.forefrontAntiSpamReport.populateTable();
 
     // AntiSpam Report
     viewModel.antiSpamReport.populateTable();

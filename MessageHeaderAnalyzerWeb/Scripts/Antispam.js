@@ -23,18 +23,12 @@ var AntiSpamReport = function () {
     var that = this;
 
     this.antiSpamRows = [
-        new AntiSpamRow("CTRY", ImportedStrings.mha_countryRegion, "X-Forefront-Antispam-Report"),
-        new AntiSpamRow("LANG", ImportedStrings.mha_lang, "X-Forefront-Antispam-Report"),
-        new AntiSpamRow("SCL", ImportedStrings.mha_scl, "X-MS-Exchange-Organization-SCL"),
-        new AntiSpamRow("PCL", ImportedStrings.mha_pcl, "X-MS-Exchange-Organization-SCL"),
-        new AntiSpamRow("SFV", ImportedStrings.mha_sfv, "X-Forefront-Antispam-Report"),
-        new AntiSpamRow("IPV", ImportedStrings.mha_ipv, "X-Forefront-Antispam-Report"),
-        new AntiSpamRow("H", ImportedStrings.mha_h, "X-Forefront-Antispam-Report"),
-        new AntiSpamRow("PTR", ImportedStrings.mha_ptr, "X-Forefront-Antispam-Report")
+        new AntiSpamRow("BCL", ImportedStrings.mha_bcl, "X-Microsoft-Antispam"),
+        new AntiSpamRow("PCL", ImportedStrings.mha_pcl, "X-Microsoft-Antispam")
     ];
 
     makeResizablePane("antiSpamReport", ImportedStrings.mha_antiSpamReport, function () { return that.exists(); });
-    makeSummaryTable("#antiSpamReport", this.antiSpamRows);
+    makeSummaryTable("#antiSpamReport", this.antiSpamRows, "AS");
 };
 
 AntiSpamReport.prototype.antiSpamRows = [];
@@ -57,43 +51,13 @@ AntiSpamReport.prototype.exists = function () {
 
 AntiSpamReport.prototype.populateTable = function () {
     for (var i = 0 ; i < this.antiSpamRows.length ; i++) {
-        var headerVal = $("#" + this.antiSpamRows[i].header + "Val");
+        var headerVal = $("#" + this.antiSpamRows[i].header + "ASVal");
         if (headerVal) {
             headerVal.html(mapHeaderToURL(this.antiSpamRows[i].url, this.antiSpamRows[i].get()));
         }
     }
 };
 
-//// http://technet.microsoft.com/en-us/library/dn205071(v=exchg.150).aspx
 AntiSpamReport.prototype.init = function (report) {
-    if (!report) {
-        return;
-    }
-
-    // Sometimes we see extraneous (null) in the report. They look like this: UIP:(null);(null);(null)SFV:SKI
-    // First pass: Remove the (null).
-    report = report.replace(/\(null\)/g, "");
-
-    // Occasionally, we find the final ; is missing. 
-    // Third pass: Add one. If it is extraneous, the next pass will remove it.
-    report = report + ";";
-
-    // Removing the (null) can leave consecutive ; which confound later parsing.
-    // Third pass: Collapse them.
-    report = report.replace(/;+/g, ";");
-
-    var lines = report.match(/(.*?):(.*?);/g);
-    if (lines) {
-        for (var iLine = 0 ; iLine < lines.length ; iLine++) {
-            var line = lines[iLine].match(/(.*?):(.*?);/m);
-            if (line && line[1] && line[2]) {
-                for (var i = 0 ; i < this.antiSpamRows.length ; i++) {
-                    if (this.antiSpamRows[i].header === line[1].toUpperCase()) {
-                        this.antiSpamRows[i].set(line[2]);
-                        break;
-                    }
-                }
-            }
-        }
-    }
+    ParseAntiSpamReport(report, this.antiSpamRows);
 };
