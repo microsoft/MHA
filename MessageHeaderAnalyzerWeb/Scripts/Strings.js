@@ -7,7 +7,7 @@ var ImportedStrings = {
     mha_lookingForHeaders: "Looking for headers in response",
     mha_foundHeaders: "Found headers",
     mha_processingHeader: "Processing header",
-    mha_failedToFind: "Message was missing headers. Expand the Orginal headers block for more details.",
+    mha_failedToFind: "Message was missing headers or result could not be parsed. Expand the Orginal headers block for more details.",
 
     // Headers
     mha_negative: "-",
