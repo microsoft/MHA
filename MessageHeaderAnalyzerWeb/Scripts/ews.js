@@ -1,6 +1,5 @@
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
-
 // This function is run when the app is ready to start interacting with the host application.
 // It ensures the DOM is ready before updating the span elements with values from the current message.
 Office.initialize = function () {
@@ -91,29 +90,33 @@ function callback(asyncResult) {
     // Process the returned response here.
     if (asyncResult.value) {
         viewModel.originalHeaders = asyncResult.value;
-        var response = $.parseXML(asyncResult.value);
-        var responseDOM = $(response);
+        var prop = null;
+        try {
+            var response = $.parseXML(asyncResult.value);
+            var responseDOM = $(response);
 
-        if (responseDOM) {
-            var i;
-            updateStatus(ImportedStrings.mha_lookingForHeaders);
+            if (responseDOM) {
+                updateStatus(ImportedStrings.mha_lookingForHeaders);
 
-            //// See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
-            //// See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
-            // We can do this because we know there's only the one property.
-            var prop = responseDOM.filterNode("t:ExtendedProperty")[0];
-            if (prop) {
-                updateStatus(ImportedStrings.mha_foundHeaders);
-
-                // Initialize originalHeaders in case we have parsing problems
-                viewModel.originalHeaders = prop.textContent;
-                $("#originalHeaders").text(viewModel.originalHeaders);
-
-                parseHeadersToTables(viewModel.originalHeaders);
-            } else {
-                updateStatus(ImportedStrings.mha_failedToFind);
-                $("#originalHeaders").text(viewModel.originalHeaders);
+                //// See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
+                //// See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
+                // We can do this because we know there's only the one property.
+                prop = responseDOM.filterNode("t:ExtendedProperty")[0];
             }
+        } catch (e) {
+        }
+
+        if (prop) {
+            updateStatus(ImportedStrings.mha_foundHeaders);
+
+            // Initialize originalHeaders in case we have parsing problems
+            viewModel.originalHeaders = prop.textContent;
+            $("#originalHeaders").text(viewModel.originalHeaders);
+
+            parseHeadersToTables(viewModel.originalHeaders);
+        } else {
+            updateStatus(ImportedStrings.mha_failedToFind);
+            $("#originalHeaders").text(viewModel.originalHeaders);
         }
     } else if (asyncResult.error) {
         updateStatus(asyncResult.error.message);

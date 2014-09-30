@@ -18,6 +18,7 @@ ReceivedRow.prototype.dateSort = 0;
 ReceivedRow.prototype.delay = 0;
 ReceivedRow.prototype.delaySort = 0;
 ReceivedRow.prototype.percent = 0;
+ReceivedRow.prototype.sourceHeader = 0;
 
 var Received = function () {
     var that = this;
@@ -128,6 +129,15 @@ Received.prototype.populateTable = function () {
     hideEmptyColumns(this.tableName);
 };
 
+function RemoveEntry(stringArray, entry) {
+    var i = stringArray.indexOf(entry);
+    if (i >= 0) {
+        stringArray.splice(i, 1);
+    }
+
+    return stringArray;
+}
+
 // Builds array of values for each header in receivedHeaderNames.
 // This algorithm should work regardless of the order of the headers, given:
 //  - The date, if present, is always at the end, separated by a ";".
@@ -140,11 +150,32 @@ Received.prototype.init = function (receivedHeader) {
     // Build array of header locations
     var headerMatches = [];
 
+    row.sourceHeader = receivedHeader;
+
     // Read out the date first, then clear it from the string
     var iDate = receivedHeader.lastIndexOf(";");
     if (iDate !== -1) {
         row.date = receivedHeader.substring(iDate + 1);
         receivedHeader = receivedHeader.substring(0, iDate);
+    }
+
+    // Scan for malformed postFix headers
+    // Received: by example.com (Postfix, from userid 1001)
+    //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
+    var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/);
+    if (postFix) {
+        row["by"] = postFix[2];
+        receivedHeader = postFix[1] + postFix[3];
+        receivedHeaderNames = RemoveEntry(receivedHeaderNames, "by");
+    }
+
+    // Scan for malformed qmail headers
+    // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
+    var postFix = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/);
+    if (postFix) {
+        row["by"] = postFix[2];
+        receivedHeader = postFix[1] + postFix[3];
+        receivedHeaderNames = RemoveEntry(receivedHeaderNames, "by");
     }
 
     // Split up the string now so we can look for our headers
