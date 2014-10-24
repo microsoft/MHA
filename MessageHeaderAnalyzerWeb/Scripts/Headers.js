@@ -63,6 +63,8 @@ function parseHeadersToTables(headers) {
     var iNextHeader = 0;
     for (var iLine = 0 ; iLine < lines.length ; iLine++) {
         updateStatus(lines[iLine]);
+        lines[iLine] = clean2047Encoding(lines[iLine]);
+
         // Recognizing a header:
         // - First colon comes before first white space.
         // - We're not strictly honoring white space folding because initial white space.
@@ -100,10 +102,8 @@ function parseHeadersToTables(headers) {
         viewModel.hasData = true;
     }
 
-    var iOther = 1;
     for (var i = 0; i < headerList.length; i++) {
         updateStatus(ImportedStrings.mha_processingHeader + " " + i.toString());
-        headerList[i].value = clean2047Encoding(headerList[i].value);
 
         // Grab values for our summary pane
         viewModel.summary.init(headerList[i]);
