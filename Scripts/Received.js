@@ -171,7 +171,7 @@ Received.prototype.init = function (receivedHeader) {
 
     // Scan for malformed qmail headers
     // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
-    var postFix = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/);
+    postFix = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/);
     if (postFix) {
         row["by"] = postFix[2];
         receivedHeader = postFix[1] + postFix[3];
@@ -240,7 +240,8 @@ Received.prototype.computeDeltas = function () {
     var iEndTime = 0;
     var iLastTime = NaN;
     var iDelta = 0; // This will be the sum of our positive deltas
-    for (var i = 0 ; i < this.receivedRows.length ; i++) {
+    var i;
+    for (i = 0 ; i < this.receivedRows.length ; i++) {
         updateStatus(ImportedStrings.mha_processingReceivedHeader + " " + i.toString());
         if (!isNaN(this.receivedRows[i].dateNum)) {
             if (!isNaN(iLastTime) && iLastTime < this.receivedRows[i].dateNum) {

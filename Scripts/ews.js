@@ -1,5 +1,7 @@
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
+/// <reference path="~/Scripts/Headers.js" />
+/// <reference path="~/Scripts/siteTypesOffice.js" />
 // This function is run when the app is ready to start interacting with the host application.
 // It ensures the DOM is ready before updating the span elements with values from the current message.
 Office.initialize = function () {
@@ -93,15 +95,15 @@ function callback(asyncResult) {
         var prop = null;
         try {
             var response = $.parseXML(asyncResult.value);
-            var responseDOM = $(response);
+            var responseDom = $(response);
 
-            if (responseDOM) {
+            if (responseDom) {
                 updateStatus(ImportedStrings.mha_lookingForHeaders);
 
                 //// See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
                 //// See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
                 // We can do this because we know there's only the one property.
-                prop = responseDOM.filterNode("t:ExtendedProperty")[0];
+                prop = responseDom.filterNode("t:ExtendedProperty")[0];
             }
         } catch (e) {
         }

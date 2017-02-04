@@ -11,13 +11,13 @@ function onResize() {
 };
 
 // Adjusts locations and dimensions of our response and progress without rebuilding content
-function recalculateLayout(doResize) {
+function recalculateLayout() {
     positionResponse();
 
     // Remove the old height
     $(".hotBarContainer").removeAttr("style");
     // Tag the new one
-    $(".hotBarCell").each(function (i) {
+    $(".hotBarCell").each(function () {
         $(this).find(".hotBarContainer").height($(this).height());
     });
 }
@@ -67,7 +67,7 @@ function hideEmptyColumns(id) {
 
         // Find a child cell which has data
         var children = $(this).parents("table").find("tr td:nth-child(" + (i + 1).toString() + ")");
-        children.each(function (j) {
+        children.each(function () {
             if (this.innerHTML !== "") {
                 keep++;
             }
@@ -258,7 +258,7 @@ function makeSummaryTable(summaryName, rows, tag) {
         for (var i = 0 ; i < rows.length ; i++) {
             var id = rows[i].header + tag;
             var row = document.createElement("tr");
-            if (row !== null && id !== null) {
+            if (row !== null) {
                 row.id = id;
                 summaryList.append(row); // Must happen before we append cells to appease IE7
                 var headerCell = $(row.insertCell(-1));
@@ -329,5 +329,5 @@ var visibilityBindings = [
 ["#response", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
 ["#status", function () { return viewModel.status; }],
 [".extraCol", function () { return viewModel.showExtra; }],
-["#clearButton", function () { return viewModel.hasData; }],
+["#clearButton", function () { return viewModel.hasData; }]
 ];

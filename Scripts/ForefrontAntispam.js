@@ -1,6 +1,6 @@
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
-
+/// <reference path="~/Scripts/Headers.js" />
 var ForefrontAntiSpamRow = function (header, label, url, set, get) {
     this.header = header;
     this.label = label;
