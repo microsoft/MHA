@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title>MessageHeaderAnalyzer</title>
+
+    <link rel="stylesheet" type="text/css" href="../Content/Office.css" />
+    <link rel="stylesheet" type="text/css" href="../Content/App.css" />
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.0.min.js"></script>
+    <script>
+        // Fallback to load jQuery from a local path if the CDN is unavailable.
+        (window.jQuery || document.write('<script src="../Scripts/jquery-2.1.0.min.js"><\/script>'));
+    </script>
+
+    <script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+
+    <script src="../Scripts/ews.js"></script>
+    <script src="../Scripts/Headers.js"></script>
+    <script src="../Scripts/Table.js"></script>
+    <script src="../Scripts/Strings.js"></script>
+    <script src="../Scripts/Received.js"></script>
+    <script src="../Scripts/Other.js"></script>
+    <script src="../Scripts/ForefrontAntispam.js"></script>
+    <script src="../Scripts/Antispam.js"></script>
+    <script src="../Scripts/Summary.js"></script>
+    <script src="../Scripts/2047.js"></script>
+</head>
+<body>
+    <div id="SectionHeader">
+        <div id="floater"></div>
+        <h1 id="title">Message Header Analyzer Tablet Edition</h1>
+    </div>
+    <div id="SectionContent">
+        <hr id="lineBreak" />
+        <div id="response" class="hiddenElement">
+            <div class="responsePane">
+                <div id="status"></div>
+                <table id="summary"></table>
+                <table id="receivedHeaders"></table>
+                <table id="forefrontAntiSpamReport"></table>
+                <table id="antiSpamReport"></table>
+                <table id="otherHeaders"></table>
+                <!-- This will crash IE11. As a workaround, we use inline style. -->
+                <!--<textarea class="hiddenElement" id="originalHeaders" readonly rows="10"></textarea>-->
+                <textarea id="originalHeaders" readonly rows="10"></textarea>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
