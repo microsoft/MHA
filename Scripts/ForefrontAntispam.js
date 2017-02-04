@@ -8,7 +8,7 @@ var ForefrontAntiSpamRow = function (header, label, url, set, get) {
 
     var that = this;
 
-    this.set = set || function (_value) { that.value = _value; };
+    this.set = set || function (value) { that.value = value; };
     this.get = get || function () { return that.value; };
 };
 
@@ -16,7 +16,7 @@ ForefrontAntiSpamRow.prototype.header = "";
 ForefrontAntiSpamRow.prototype.label = "";
 ForefrontAntiSpamRow.prototype.url = "";
 ForefrontAntiSpamRow.prototype.value = "";
-ForefrontAntiSpamRow.prototype.set = function (_value) { };
+ForefrontAntiSpamRow.prototype.set = function () { };
 ForefrontAntiSpamRow.prototype.get = function () { };
 
 var ForefrontAntiSpamReport = function () {
@@ -33,7 +33,7 @@ var ForefrontAntiSpamReport = function () {
         new ForefrontAntiSpamRow("PTR", ImportedStrings.mha_ptr, "X-Forefront-Antispam-Report"),
         new ForefrontAntiSpamRow("CIP", ImportedStrings.mha_cip, "X-Forefront-Antispam-Report"),
         new ForefrontAntiSpamRow("X-CustomSpam", ImportedStrings.mha_customSpam, "X-Forefront-Antispam-Report")
-];
+    ];
 
     makeResizablePane("forefrontAntiSpamReport", ImportedStrings.mha_forefrontAntiSpamReport, function () { return that.exists(); });
     makeSummaryTable("#forefrontAntiSpamReport", this.forefrontAntiSpamRows, "FFAS");
@@ -67,8 +67,7 @@ ForefrontAntiSpamReport.prototype.populateTable = function () {
 };
 
 //// http://technet.microsoft.com/en-us/library/dn205071(v=exchg.150).aspx
-function ParseAntiSpamReport(report, antispamRows)
-{
+function ParseAntiSpamReport(report, antispamRows) {
     if (!report) {
         return;
     }

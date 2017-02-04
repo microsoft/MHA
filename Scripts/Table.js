@@ -192,10 +192,10 @@ function makeResizableTable(id, title, visibility) {
     header.hide();
 }
 
-var Column = function (id, label, _class) {
+var Column = function (id, label, columnClass) {
     this.id = id;
     this.label = label;
-    this.class = _class;
+    this.class = columnClass;
 };
 
 Column.prototype.id = "";
@@ -286,11 +286,11 @@ function makeVisible(id, visible) {
     }
 }
 
-function appendCell(row, text, html, _class) {
+function appendCell(row, text, html, cellClass) {
     var cell = $(row.insertCell(-1));
     if (text) { cell.text(text); }
     if (html) { cell.html(html); }
-    if (_class) { cell.addClass(_class); }
+    if (cellClass) { cell.addClass(cellClass); }
 }
 
 function setArrows(table, colName, sortOrder) {

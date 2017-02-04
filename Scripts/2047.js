@@ -84,13 +84,9 @@ function decodeQuoted(charSet, buffer) {
     return decoded;
 }
 
-function decodeBase64(charSet, value) {
-    return base64decode(charSet, value);
-}
-
 // Javascript auto converted from C# implementation + improvements.
 var $F = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-var base64decode = function Microsoft_Exchange_Tools_ExRca_Website_CustomControls_Base64$decode(charSet, input) {
+function decodeBase64(charSet, input) {
     if (!input) {
         return input;
     }

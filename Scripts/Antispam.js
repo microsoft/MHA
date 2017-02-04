@@ -9,7 +9,7 @@ var AntiSpamRow = function (header, label, url, set, get) {
 
     var that = this;
 
-    this.set = set || function (_value) { that.value = _value; };
+    this.set = set || function (value) { that.value = value; };
     this.get = get || function () { return that.value; };
 };
 
@@ -17,7 +17,7 @@ AntiSpamRow.prototype.header = "";
 AntiSpamRow.prototype.label = "";
 AntiSpamRow.prototype.url = "";
 AntiSpamRow.prototype.value = "";
-AntiSpamRow.prototype.set = function (_value) { };
+AntiSpamRow.prototype.set = function () { };
 AntiSpamRow.prototype.get = function () { };
 
 var AntiSpamReport = function () {

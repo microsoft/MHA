@@ -7,14 +7,14 @@ var SummaryRow = function (header, label, set, get) {
 
     var that = this;
 
-    this.set = set || function (_value) { that.value = _value; };
+    this.set = set || function (value) { that.value = value; };
     this.get = get || function () { return that.value; };
 };
 
 SummaryRow.prototype.header = "";
 SummaryRow.prototype.label = "";
 SummaryRow.prototype.value = "";
-SummaryRow.prototype.set = function (_value) { };
+SummaryRow.prototype.set = function () { };
 SummaryRow.prototype.get = function () { };
 
 var Summary = function () {
@@ -22,9 +22,9 @@ var Summary = function () {
     var dateRow = new SummaryRow(
         "Date",
         ImportedStrings.mha_creationTime,
-        function (_value) {
-            if (_value) {
-                this.value = new Date(_value).toLocaleString();
+        function (value) {
+            if (value) {
+                this.value = new Date(value).toLocaleString();
             } else {
                 this.value = "";
             }
@@ -76,14 +76,14 @@ Summary.prototype.populateTable = function () {
     }
 };
 
-Summary.prototype.init = function (_header) {
-    if (!_header) {
+Summary.prototype.init = function (header) {
+    if (!header) {
         return;
     }
 
     for (var i = 0 ; i < this.summaryRows.length ; i++) {
-        if (this.summaryRows[i].header === _header.header) {
-            this.summaryRows[i].set(_header.value);
+        if (this.summaryRows[i].header === header.header) {
+            this.summaryRows[i].set(header.value);
             return;
         }
     }

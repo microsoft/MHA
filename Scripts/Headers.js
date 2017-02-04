@@ -53,9 +53,9 @@ HeaderModel.prototype.resetView = function () {
     this.hasData = false;
 };
 
-var Header = function (_header, _value) {
-    this.header = _header;
-    this.value = _value;
+var Header = function (header, value) {
+    this.header = header;
+    this.value = value;
 };
 
 Header.prototype.header = "";

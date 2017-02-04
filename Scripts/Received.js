@@ -1,7 +1,7 @@
 ﻿/// <reference path="Table.js" />
 /// <reference path="Strings.js" />
 /// <reference path="Headers.js" />
-
+/// <reference path="~/Scripts/jquery-2.1.0.min.js" />
 var ReceivedRow = function () {
 };
 
@@ -38,8 +38,8 @@ var Received = function () {
 
     addColumns(this.tableName, columns);
 
-    var _with = $("#" + this.tableName + " #with");
-    if (_with !== null) {
+    var withColumn = $("#" + this.tableName + " #with");
+    if (withColumn !== null) {
         var leftSpan = $(document.createElement("span"));
         leftSpan.attr("id", "leftArrow");
         leftSpan.addClass("collapsibleArrow");
@@ -51,8 +51,8 @@ var Received = function () {
         rightSpan.addClass("collapsibleArrow");
         rightSpan.html("&rArr;");
 
-        _with.append(leftSpan);
-        _with.append(rightSpan);
+        withColumn.append(leftSpan);
+        withColumn.append(rightSpan);
     }
 
     $("#" + this.tableName + " .collapsibleArrow").bind("click", function (eventObject) {
