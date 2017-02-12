@@ -135,7 +135,7 @@ function parseHeadersToTables(headers) {
     hideStatus();
     rebuildSections();
     hideExtraColumns();
-    recalculateLayout(true);
+    recalculateLayout();
 }
 
 function mapHeaderToURL(headerName, text) {
