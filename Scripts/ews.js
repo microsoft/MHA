@@ -75,7 +75,7 @@ function sendHeadersRequest() {
 }
 
 // This function plug in filters nodes for the one that matches the given name.
-// This sidesteps the issues in jquery"s selector logic.
+// This sidesteps the issues in jquery's selector logic.
 (function ($) {
     $.fn.filterNode = function (node) {
         return this.find("*").filter(function () {
