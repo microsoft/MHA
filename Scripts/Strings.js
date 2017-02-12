@@ -1,7 +1,7 @@
 var ImportedStrings = {
     // EWS
     mha_loading: "Loading...",
-    mha_ewsRequestSent: "Retrieving headers from server",
+    mha_RequestSent: "Retrieving headers from server using REST",
     mha_ewsResponseReceived: "Response received",
     mha_ewsFailed: "EWS call failed. Elevated permission is required.",
     mha_lookingForHeaders: "Looking for headers in response",

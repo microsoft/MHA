@@ -62,7 +62,11 @@ Header.prototype.header = "";
 Header.prototype.value = "";
 
 function parseHeadersToTables(headers) {
-    var lines = headers.match(/^.*([\n\r]+|$)/gm);
+    // Initialize originalHeaders in case we have parsing problems
+    viewModel.originalHeaders = headers;
+    $("#originalHeaders").text(headers);
+
+    var lines = headers.match(/^.*([\n\r]+|$)/gm) ;
 
     var headerList = [];
     var iNextHeader = 0;
