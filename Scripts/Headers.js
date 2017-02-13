@@ -48,17 +48,10 @@ var Header = function (header, value) {
 Header.prototype.header = "";
 Header.prototype.value = "";
 
-<<<<<<< HEAD
-function parseHeadersToTables(headers) {
-    // Initialize originalHeaders in case we have parsing problems
-    viewModel.originalHeaders = headers;
-    $("#originalHeaders").text(headers);
-
-    var lines = headers.match(/^.*([\n\r]+|$)/gm) ;
-=======
 HeaderModel.prototype.parseHeaders = function (headers) {
+    // Initialize originalHeaders in case we have parsing problems
+    this.originalHeaders = headers;
     var lines = headers.match(/^.*([\n\r]+|$)/gm);
->>>>>>> refs/heads/ui-separation
 
     var headerList = [];
     var iNextHeader = 0;
