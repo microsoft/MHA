@@ -1,0 +1,36 @@
+.content-main {
+  background: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto; /* Enable scrollbars within main content section */
+  overflow-x: hidden;
+  padding: 10px;
+}
+
+.summary-table {
+  width: 100%;
+}
+
+.summary-table td {
+  vertical-align: top;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.field-name {
+  width: 15ch;
+  min-width: 15ch;
+  text-align: right;
+}
+
+.code-box > pre {
+  background-color: #eaeaea;
+  border: 1px solid #ccc;
+  padding: 5px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  font-size: .8em;
+}
