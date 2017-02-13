@@ -8,6 +8,7 @@ Office.initialize = function () {
     $(document).ready(function () {
         $(window).resize(onResize);
         initViewModels();
+        updateStatus(ImportedStrings.mha_loading);
         sendHeadersRequest();
     });
 };

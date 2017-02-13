@@ -22,9 +22,9 @@ Other.prototype.reset = function () {
     this.otherRows = [];
 };
 
-//Other.prototype.exists = function () {
-    //return (this.otherRows.length > 0);
-//};
+Other.prototype.exists = function () {
+    return (this.otherRows.length > 0);
+};
 
 Other.prototype.doSort = function (col) {
     var that = this;

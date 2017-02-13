@@ -7,19 +7,17 @@ var viewModel = null;
 function initViewModels() {
     viewModel = new HeaderModel();
 
-    updateStatus(ImportedStrings.mha_loading);
-
     // Headers
     makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
     $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
-    
+
     // Summary
     makeResizablePane("summary", ImportedStrings.mha_summary, function () { return viewModel.summary.exists(); });
     makeSummaryTable("#summary", viewModel.summary.summaryRows, "SUM");
-    
+
     // Received
     makeResizableTable("receivedHeaders", ImportedStrings.mha_receivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
-    
+
     var receivedColumns = [
         new Column("hop", ImportedStrings.mha_hop, null),
         new Column("from", ImportedStrings.mha_submittingHost, null),
@@ -33,7 +31,7 @@ function initViewModels() {
     ];
 
     addColumns("receivedHeaders", receivedColumns);
-    
+
     var withColumn = $("#" + "receivedHeaders" + " #with");
     if (withColumn !== null) {
         var leftSpan = $(document.createElement("span"));
@@ -83,7 +81,7 @@ function initViewModels() {
 }
 
 function parseHeadersToTables(headers) {
-    viewModel.parseHeaders(viewModel.originalHeaders);
+    viewModel.parseHeaders(headers);
     hideStatus();
     rebuildSections();
     hideExtraColumns();
