@@ -34,9 +34,6 @@ var ForefrontAntiSpamReport = function () {
         new ForefrontAntiSpamRow("CIP", ImportedStrings.mha_cip, "X-Forefront-Antispam-Report"),
         new ForefrontAntiSpamRow("X-CustomSpam", ImportedStrings.mha_customSpam, "X-Forefront-Antispam-Report")
     ];
-
-    makeResizablePane("forefrontAntiSpamReport", ImportedStrings.mha_forefrontAntiSpamReport, function () { return that.exists(); });
-    makeSummaryTable("#forefrontAntiSpamReport", this.forefrontAntiSpamRows, "FFAS");
 };
 
 ForefrontAntiSpamReport.prototype.forefrontAntiSpamRows = [];
@@ -55,15 +52,6 @@ ForefrontAntiSpamReport.prototype.exists = function () {
     }
 
     return false;
-};
-
-ForefrontAntiSpamReport.prototype.populateTable = function () {
-    for (var i = 0 ; i < this.forefrontAntiSpamRows.length ; i++) {
-        var headerVal = $("#" + this.forefrontAntiSpamRows[i].header + "FFASVal");
-        if (headerVal) {
-            headerVal.html(mapHeaderToURL(this.forefrontAntiSpamRows[i].url, this.forefrontAntiSpamRows[i].get()));
-        }
-    }
 };
 
 //// http://technet.microsoft.com/en-us/library/dn205071(v=exchg.150).aspx

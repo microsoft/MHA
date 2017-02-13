@@ -41,9 +41,6 @@ var Summary = function () {
         new SummaryRow("To", ImportedStrings.mha_to),
         new SummaryRow("CC", ImportedStrings.mha_cc)
     ];
-
-    makeResizablePane("summary", ImportedStrings.mha_summary, function () { return that.exists(); });
-    makeSummaryTable("#summary", this.summaryRows, "SUM");
 };
 
 Summary.prototype.summaryRows = [];
@@ -65,15 +62,6 @@ Summary.prototype.exists = function () {
     }
 
     return false;
-};
-
-Summary.prototype.populateTable = function () {
-    for (var i = 0 ; i < this.summaryRows.length ; i++) {
-        var headerVal = $("#" + this.summaryRows[i].header + "SUMVal");
-        if (headerVal) {
-            headerVal.text(this.summaryRows[i].get());
-        }
-    }
 };
 
 Summary.prototype.init = function (header) {

@@ -21,46 +21,6 @@ ReceivedRow.prototype.percent = 0;
 ReceivedRow.prototype.sourceHeader = 0;
 
 var Received = function () {
-    var that = this;
-    makeResizableTable(this.tableName, ImportedStrings.mha_receivedHeaders, function () { return that.exists(); });
-
-    var columns = [
-        new Column("hop", ImportedStrings.mha_hop, null),
-        new Column("from", ImportedStrings.mha_submittingHost, null),
-        new Column("by", ImportedStrings.mha_receivingHost, null),
-        new Column("date", ImportedStrings.mha_time, null),
-        new Column("delay", ImportedStrings.mha_delay, null),
-        new Column("with", ImportedStrings.mha_type, null),
-        new Column("id", ImportedStrings.mha_id, "extraCol"),
-        new Column("for", ImportedStrings.mha_for, "extraCol"),
-        new Column("via", ImportedStrings.mha_via, "extraCol")
-    ];
-
-    addColumns(this.tableName, columns);
-
-    var withColumn = $("#" + this.tableName + " #with");
-    if (withColumn !== null) {
-        var leftSpan = $(document.createElement("span"));
-        leftSpan.attr("id", "leftArrow");
-        leftSpan.addClass("collapsibleArrow");
-        leftSpan.addClass("hiddenElement");
-        leftSpan.html("&lArr;");
-
-        var rightSpan = $(document.createElement("span"));
-        rightSpan.attr("id", "rightArrow");
-        rightSpan.addClass("collapsibleArrow");
-        rightSpan.html("&rArr;");
-
-        withColumn.append(leftSpan);
-        withColumn.append(rightSpan);
-    }
-
-    $("#" + this.tableName + " .collapsibleArrow").bind("click", function (eventObject) {
-        toggleExtraColumns();
-        eventObject.stopPropagation();
-    });
-
-    setArrows(this.tableName, "hop", 1);
 };
 
 Received.prototype.tableName = "receivedHeaders";
@@ -70,7 +30,6 @@ Received.prototype.sortOrder = 1;
 
 Received.prototype.reset = function () {
     this.receivedRows = [];
-    setArrows(this.tableName, "hop", 1);
 };
 
 Received.prototype.exists = function () {
@@ -86,8 +45,6 @@ Received.prototype.doSort = function (col) {
         this.sortOrder = 1;
     }
 
-    setArrows(this.tableName, this.sortColumn, this.sortOrder);
-
     if ((this.sortColumn + "Sort") in this.receivedRows[0]) {
         col = col + "Sort";
     }
@@ -95,38 +52,6 @@ Received.prototype.doSort = function (col) {
     this.receivedRows.sort(function (a, b) {
         return that.sortOrder * (a[col] < b[col] ? -1 : 1);
     });
-
-    rebuildSections();
-};
-
-Received.prototype.populateTable = function () {
-    restoreTable(this.tableName);
-    for (var i = 0 ; i < this.receivedRows.length ; i++) {
-        var row = document.createElement("tr");
-        $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
-        appendCell(row, this.receivedRows[i].hop, null, null);
-        appendCell(row, this.receivedRows[i].from, null, null);
-        appendCell(row, this.receivedRows[i].by, null, null);
-        appendCell(row, this.receivedRows[i].date, null, null);
-        var labelClass = "hotBarLabel";
-        if (this.receivedRows[i].delaySort < 0) {
-            labelClass += " negativeCell";
-        }
-
-        var hotBar =
-        "<div class='hotBarContainer'>" +
-        "   <div class='" + labelClass + "'>" + this.receivedRows[i].delay + "</div>" +
-        "   <div class='hotBarBar' style='width:" + this.receivedRows[i].percent + "%'></div>" +
-        "</div>";
-        appendCell(row, null, hotBar, "hotBarCell");
-        appendCell(row, this.receivedRows[i].with, null, null);
-        appendCell(row, this.receivedRows[i].id, null, "extraCol");
-        appendCell(row, this.receivedRows[i].for, null, "extraCol");
-        appendCell(row, this.receivedRows[i].via, null, "extraCol");
-    }
-
-    $("#receivedHeaders tbody tr:odd").addClass("oddRow");
-    hideEmptyColumns(this.tableName);
 };
 
 function RemoveEntry(stringArray, entry) {
@@ -242,7 +167,6 @@ Received.prototype.computeDeltas = function () {
     var iDelta = 0; // This will be the sum of our positive deltas
     var i;
     for (i = 0 ; i < this.receivedRows.length ; i++) {
-        updateStatus(ImportedStrings.mha_processingReceivedHeader + " " + i.toString());
         if (!isNaN(this.receivedRows[i].dateNum)) {
             if (!isNaN(iLastTime) && iLastTime < this.receivedRows[i].dateNum) {
                 iDelta += this.receivedRows[i].dateNum - iLastTime;
