@@ -1,10 +1,7 @@
 var ImportedStrings = {
-    // EWS
+    // REST
     mha_loading: "Loading...",
-    mha_ewsRequestSent: "Retrieving headers from server",
-    mha_ewsResponseReceived: "Response received",
-    mha_ewsFailed: "EWS call failed. Elevated permission is required.",
-    mha_lookingForHeaders: "Looking for headers in response",
+    mha_RequestSent: "Retrieving headers from server",
     mha_foundHeaders: "Found headers",
     mha_processingHeader: "Processing header",
     mha_failedToFind: "Message was missing headers or result could not be parsed. Expand the Orginal headers block for more details.",

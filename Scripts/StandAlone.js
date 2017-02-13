@@ -23,5 +23,5 @@ function clearHeaders() {
 
     viewModel.resetView();
     rebuildSections();
-    recalculateLayout(true);
+    recalculateLayout();
 }

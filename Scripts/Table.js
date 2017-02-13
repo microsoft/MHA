@@ -1,13 +1,5 @@
-var oldHeight = 0;
-var oldWidth = 0;
-
 function onResize() {
-    var newHeight = $(window).height();
-    var newWidth = $(window).width();
-    var doResize = (newHeight !== oldHeight) || (newWidth !== oldWidth);
-    oldHeight = newHeight;
-    oldWidth = newWidth;
-    recalculateLayout(doResize);
+    recalculateLayout();
 };
 
 // Adjusts locations and dimensions of our response and progress without rebuilding content
@@ -100,12 +92,12 @@ function toggleExtraColumns() {
     }
 
     recalculateVisibility();
-    recalculateLayout(true);
+    recalculateLayout();
 }
 
 function toggleCollapse(object) {
     $(".collapsibleElement", $(object).parents(".collapsibleWrapper")).toggle();
-    recalculateLayout(true);
+    recalculateLayout();
 }
 
 // Wraps an element into a collapsible pane with a title
