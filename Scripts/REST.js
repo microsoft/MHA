@@ -66,23 +66,22 @@ function displayError(error) {
 }
 
 function getRestUrl(accessToken) {
-  // Shim function to workaround
-  // mailbox.restUrl == null case
-  if (Office.context.mailbox.restUrl) {
-    return Office.context.mailbox.restUrl;
-  } else {
-    // parse the token
-    var jwt = jwt_decode(accessToken);
-    // get the aud parameter
-    return jwt.aud;
-  }
+    // Shim function to workaround
+    // mailbox.restUrl == null case
+    if (Office.context.mailbox.restUrl) {
+        return Office.context.mailbox.restUrl;
+    } else {
+        // parse the token
+        var jwt = jwt_decode(accessToken);
+        // get the aud parameter
+        return jwt.aud;
+    }
 }
 
 function getHeaders(accessToken) {
     // Get the item's REST ID
     var itemId = getItemRestId();
 
-    // Office.context.mailbox.restUrl appears to always be null, so we hard code our url
     var getMessageUrl = getRestUrl(accessToken) +
         "/api/v2.0/me/messages/" +
         itemId +
@@ -92,15 +91,15 @@ function getHeaders(accessToken) {
     $.ajax({
         url: getMessageUrl,
         dataType: "json",
-        headers: { 
-          "Authorization": "Bearer " + accessToken,
-          "Accept": "application/json; odata.metadata=none"
+        headers: {
+            "Authorization": "Bearer " + accessToken,
+            "Accept": "application/json; odata.metadata=none"
         }
-    }).done(function(item) {
+    }).done(function (item) {
         processHeaders(item.SingleValueExtendedProperties[0].Value);
-    }).fail(function(error) {
+    }).fail(function (error) {
         displayError(JSON.stringify(error, null, 2));
-    }).always(function() {
+    }).always(function () {
         disableSpinner();
     });
 }
