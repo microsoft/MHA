@@ -13,7 +13,7 @@ function initViewModels() {
     makeSummaryTable("#summary", viewModel.summary.summaryRows, "SUM");
 
     // Received
-    makeResizableTable("receivedHeaders", ImportedStrings.mha_receivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
+    makeResizableTable(viewModel.receivedHeaders.tableName, ImportedStrings.mha_receivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
 
     var receivedColumns = [
         new Column("hop", ImportedStrings.mha_hop, null),
@@ -27,7 +27,7 @@ function initViewModels() {
         new Column("via", ImportedStrings.mha_via, "extraCol")
     ];
 
-    addColumns("receivedHeaders", receivedColumns);
+    addColumns(viewModel.receivedHeaders.tableName, receivedColumns);
 
     var withColumn = $("#" + "receivedHeaders" + " #with");
     if (withColumn !== null) {
@@ -51,7 +51,7 @@ function initViewModels() {
         eventObject.stopPropagation();
     });
 
-    setArrows("receivedHeaders", "hop", 1);
+    setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
 
     // FFAS
     makeResizablePane("forefrontAntiSpamReport", ImportedStrings.mha_forefrontAntiSpamReport, function () { return viewModel.forefrontAntiSpamReport.exists(); });
@@ -62,7 +62,7 @@ function initViewModels() {
     makeSummaryTable("#antiSpamReport", viewModel.antiSpamReport.antiSpamRows, "AS");
 
     // Other
-    makeResizableTable("otherHeaders", ImportedStrings.mha_otherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
+    makeResizableTable(viewModel.otherHeaders.tableName, ImportedStrings.mha_otherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
 
     var otherColumns = [
         new Column("number", ImportedStrings.mha_number, null),
@@ -70,9 +70,9 @@ function initViewModels() {
         new Column("value", ImportedStrings.mha_value, null)
     ];
 
-    addColumns("otherHeaders", otherColumns);
+    addColumns(viewModel.otherHeaders.tableName, otherColumns);
 
-    setArrows("otherHeaders", "number", 1);
+    setArrows(viewModel.otherHeaders.tableName, "number", 1);
 
     rebuildSections();
 }
@@ -403,7 +403,7 @@ function populateTables() {
     restoreTable(viewModel.receivedHeaders.tableName);
     for (var i = 0 ; i < viewModel.receivedHeaders.receivedRows.length ; i++) {
         var row = document.createElement("tr");
-        $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
+        $(viewModel.receivedHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].hop, null, null);
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].from, null, null);
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].by, null, null);
@@ -425,7 +425,7 @@ function populateTables() {
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].via, null, "extraCol");
     }
 
-    $("#receivedHeaders tbody tr:odd").addClass("oddRow");
+    $("#" + viewModel.receivedHeaders.tableName + " tbody tr:odd").addClass("oddRow");
     hideEmptyColumns(viewModel.receivedHeaders.tableName);
 
     // Forefront AntiSpam Report
