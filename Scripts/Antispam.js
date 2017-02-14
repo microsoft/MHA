@@ -27,9 +27,6 @@ var AntiSpamReport = function () {
         new AntiSpamRow("BCL", ImportedStrings.mha_bcl, "X-Microsoft-Antispam"),
         new AntiSpamRow("PCL", ImportedStrings.mha_pcl, "X-Microsoft-Antispam")
     ];
-
-    makeResizablePane("antiSpamReport", ImportedStrings.mha_antiSpamReport, function () { return that.exists(); });
-    makeSummaryTable("#antiSpamReport", this.antiSpamRows, "AS");
 };
 
 AntiSpamReport.prototype.antiSpamRows = [];
@@ -48,15 +45,6 @@ AntiSpamReport.prototype.exists = function () {
     }
 
     return false;
-};
-
-AntiSpamReport.prototype.populateTable = function () {
-    for (var i = 0 ; i < this.antiSpamRows.length ; i++) {
-        var headerVal = $("#" + this.antiSpamRows[i].header + "ASVal");
-        if (headerVal) {
-            headerVal.html(mapHeaderToURL(this.antiSpamRows[i].url, this.antiSpamRows[i].get()));
-        }
-    }
 };
 
 AntiSpamReport.prototype.init = function (report) {

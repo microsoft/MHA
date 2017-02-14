@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title>MHA Desktop Pane</title>
+
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.min.css">
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.components.min.css">
+
+    <link rel="stylesheet" href="../Content/DesktopPane.css">
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.0.min.js"></script>
+    <script>
+        // Fallback to load jQuery from a local path if the CDN is unavailable.
+        (window.jQuery || document.write('<script src="../Scripts/jquery-2.1.0.min.js"><\/script>'));
+    </script>
+
+    <script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+
+    <script src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/js/fabric.min.js"></script>
+
+    <script src="../Scripts/v2/Headers.js"></script>
+    <script src="../Scripts/v2/Table.js"></script>
+    <script src="../Scripts/Strings.js"></script>
+    <script src="../Scripts/v2/Received.js"></script>
+    <script src="../Scripts/v2/Other.js"></script>
+    <script src="../Scripts/v2/ForefrontAntispam.js"></script>
+    <script src="../Scripts/v2/Antispam.js"></script>
+    <script src="../Scripts/v2/Summary.js"></script>
+    <script src="../Scripts/2047.js"></script>
+    <script src="../Scripts/DesktopPane.js"></script>
+</head>
+<body>
+  <div class="content-main">
+    <div class="ms-Pivot main-pivot">
+      <ul class="ms-Pivot-links">
+        <li class="ms-Pivot-link is-selected" data-content="summary-view-table" title="Summary" tabindex="1">Summary</li>
+        <li class="ms-Pivot-link" data-content="header-view" title="Headers" tabindex="1">Headers</li>
+      </ul>
+      <div class="ms-Pivot-content" data-content="summary-view">
+        <!--<div class="ms-font-xl">Summary</div>
+        <hr/>-->
+        <div class="ms-font-s ms-fontWeight-semibold">Subject</div>
+        <div class="code-box">
+          <pre><code>RE: ACTION REQUIRED: Tech Summit Washington D.C. Speaker Registration</code></pre>
+        </div>
+        <div class="ms-font-s ms-fontWeight-semibold">Message Id</div>
+        <div class="code-box">
+          <pre><code>&lt;BY2PR0401MB0901164D3A67E840205F74A7AC440@BY2PR0401MB0901.namprd04.prod.outlook.com&gt;</code></pre>
+        </div>
+        <div class="ms-font-s ms-fontWeight-semibold">Creation time</div>
+        <div class="code-box">
+          <pre><code>2‎/‎10‎/‎2017‎ ‎12‎:‎59‎:‎09‎ ‎PM (Delivered after 15 seconds)</code></pre>
+        </div>
+        <div class="ms-font-s ms-fontWeight-semibold">From</div>
+        <div class="code-box">
+          <pre><code>Tech Summit &lt;techsummit@dynamicevents.com&gt;</code></pre>
+        </div>
+        <div class="ms-font-s ms-fontWeight-semibold">To</div>
+        <div class="code-box">
+          <pre><code>Jason Johnston &lt;jasonjoh@exchange.microsoft.com&gt;</code></pre>
+        </div>
+        <div class="ms-font-s ms-fontWeight-semibold">Cc</div>
+        <div class="code-box">
+          <pre><code>"support@eventcore.com" &lt;support@eventcore.com&gt;, Tech Summit &lt;techsummit@dynamicevents&gt;</code></pre>
+        </div>
+      </div>
+      <div class="ms-Pivot-content" data-content="summary-view-table">
+        <table class="ms-Table mt-Table--fixed summary-table">
+          <tbody>
+            <tr>
+              <td class="field-name ms-font-mi ms-fontWeight-semibold">Subject</td>
+              <td class="ms-font-mi">RE: ACTION REQUIRED: Tech Summit Washington D.C. Speaker Registration</td>
+            </tr>
+            <tr>
+              <td class="field-name ms-font-mi ms-fontWeight-semibold">Message Id</td>
+              <td class="ms-font-mi">&lt;BY2PR0401MB0901164D3A67E840205F74A7AC440@BY2PR0401MB0901.namprd04.prod.outlook.com&gt;</td>
+            </tr>
+            <tr>
+              <td class="field-name ms-font-mi ms-fontWeight-semibold">Creation time</td>
+              <td class="ms-font-mi">‎2‎/‎10‎/‎2017‎ ‎12‎:‎59‎:‎09‎ ‎PM (Delivered after 15 seconds)</td>
+            </tr>
+            <tr>
+              <td class="field-name ms-font-mi ms-fontWeight-semibold">From</td>
+              <td class="ms-font-mi">Tech Summit &lt;techsummit@dynamicevents.com&gt;</td>
+            </tr>
+            <tr>
+              <td class="field-name ms-font-mi ms-fontWeight-semibold">To</td>
+              <td class="ms-font-mi">Jason Johnston &lt;jasonjoh@exchange.microsoft.com&gt;</td>
+            </tr>
+            <tr>
+              <td class="field-name ms-font-mi ms-fontWeight-semibold">Cc</td>
+              <td class="ms-font-mi">"support@eventcore.com" &lt;support@eventcore.com&gt;<br/>Tech Summit &lt;techsummit@dynamicevents&gt;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ms-Pivot-content" data-content="header-view">
+        <div class="ms-font-xl">Header Category</div>
+        <hr/>
+        <div class="ms-Pivot header-pivot">
+          <ul class="ms-Pivot-links">
+            <li class="ms-Pivot-link" data-content="received-headers" title="Received" tabindex="1">Received</li>
+            <li class="ms-Pivot-link " data-content="antispam-headers" title="Antispam" tabindex="1">Antispam</li>
+            <li class="ms-Pivot-link " data-content="other-headers" title="Other" tabindex="1">Other</li>
+          </ul>
+          <div class="ms-Pivot-content" data-content="received-headers">
+            RECEIVED
+          </div>
+          <div class="ms-Pivot-content" data-content="antispam-headers">
+            ANTISPAM
+          </div>
+          <div class="ms-Pivot-content" data-content="other-headers">
+            OTHER
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="debug-out code-box">
+      <pre><code class="debug-print"></code>
+    </div>
+  </div>
+</body>
+</html>

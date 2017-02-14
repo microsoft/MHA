@@ -25,6 +25,7 @@ function disableSpinner() {
 
 function processHeaders(headers) {
     updateStatus(ImportedStrings.mha_foundHeaders);
+    $("#originalHeaders").text(headers);
     parseHeadersToTables(headers);
 }
 

@@ -1,3 +1,90 @@
+// View model for our headers tables
+var viewModel = null;
+
+function initViewModels() {
+    viewModel = new HeaderModel();
+
+    // Headers
+    makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
+    $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
+
+    // Summary
+    makeResizablePane("summary", ImportedStrings.mha_summary, function () { return viewModel.summary.exists(); });
+    makeSummaryTable("#summary", viewModel.summary.summaryRows, "SUM");
+
+    // Received
+    makeResizableTable("receivedHeaders", ImportedStrings.mha_receivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
+
+    var receivedColumns = [
+        new Column("hop", ImportedStrings.mha_hop, null),
+        new Column("from", ImportedStrings.mha_submittingHost, null),
+        new Column("by", ImportedStrings.mha_receivingHost, null),
+        new Column("date", ImportedStrings.mha_time, null),
+        new Column("delay", ImportedStrings.mha_delay, null),
+        new Column("with", ImportedStrings.mha_type, null),
+        new Column("id", ImportedStrings.mha_id, "extraCol"),
+        new Column("for", ImportedStrings.mha_for, "extraCol"),
+        new Column("via", ImportedStrings.mha_via, "extraCol")
+    ];
+
+    addColumns("receivedHeaders", receivedColumns);
+
+    var withColumn = $("#" + "receivedHeaders" + " #with");
+    if (withColumn !== null) {
+        var leftSpan = $(document.createElement("span"));
+        leftSpan.attr("id", "leftArrow");
+        leftSpan.addClass("collapsibleArrow");
+        leftSpan.addClass("hiddenElement");
+        leftSpan.html("&lArr;");
+
+        var rightSpan = $(document.createElement("span"));
+        rightSpan.attr("id", "rightArrow");
+        rightSpan.addClass("collapsibleArrow");
+        rightSpan.html("&rArr;");
+
+        withColumn.append(leftSpan);
+        withColumn.append(rightSpan);
+    }
+
+    $("#receivedHeaders .collapsibleArrow").bind("click", function (eventObject) {
+        toggleExtraColumns();
+        eventObject.stopPropagation();
+    });
+
+    setArrows("receivedHeaders", "hop", 1);
+
+    // FFAS
+    makeResizablePane("forefrontAntiSpamReport", ImportedStrings.mha_forefrontAntiSpamReport, function () { return viewModel.forefrontAntiSpamReport.exists(); });
+    makeSummaryTable("#forefrontAntiSpamReport", viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows, "FFAS");
+
+    // AntiSpam
+    makeResizablePane("antiSpamReport", ImportedStrings.mha_antiSpamReport, function () { return viewModel.antiSpamReport.exists(); });
+    makeSummaryTable("#antiSpamReport", viewModel.antiSpamReport.antiSpamRows, "AS");
+
+    // Other
+    makeResizableTable("otherHeaders", ImportedStrings.mha_otherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
+
+    var otherColumns = [
+        new Column("number", ImportedStrings.mha_number, null),
+        new Column("header", ImportedStrings.mha_header, null),
+        new Column("value", ImportedStrings.mha_value, null)
+    ];
+
+    addColumns("otherHeaders", otherColumns);
+
+    setArrows("otherHeaders", "number", 1);
+
+    rebuildSections();
+}
+
+function parseHeadersToTables(headers) {
+    viewModel.parseHeaders(headers);
+    hideStatus();
+    rebuildSections();
+    hideExtraColumns();
+    recalculateLayout(true);
+};
+
 function onResize() {
     recalculateLayout();
 };
@@ -225,7 +312,12 @@ function addColumns(tableName, columns) {
 function makeSortableColumn(table, id) {
     var header = $("#" + id);
 
-    header.bind("click", function () { viewModel[table].doSort(id); });
+    header.bind("click", function () { 
+      viewModel[table].doSort(id); 
+      setArrows(viewModel[table].tableName, viewModel[table].sortColumn, 
+        viewModel[table].sortOrder);
+      rebuildSections();
+    });
 
     var downSpan = $(document.createElement("span"));
     downSpan.addClass("downArrow");
@@ -298,19 +390,74 @@ function setArrows(table, colName, sortOrder) {
 
 function populateTables() {
     // Summary
-    viewModel.summary.populateTable();
+    //viewModel.summary.populateTable();
+    for (var i = 0 ; i < viewModel.summary.summaryRows.length ; i++) {
+        var headerVal = $("#" + viewModel.summary.summaryRows[i].header + "SUMVal");
+        if (headerVal) {
+            headerVal.text(viewModel.summary.summaryRows[i].get());
+        }
+    }
 
     // Received
-    viewModel.receivedHeaders.populateTable();
+    //viewModel.receivedHeaders.populateTable();
+    restoreTable(viewModel.receivedHeaders.tableName);
+    for (var i = 0 ; i < viewModel.receivedHeaders.receivedRows.length ; i++) {
+        var row = document.createElement("tr");
+        $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
+        appendCell(row, viewModel.receivedHeaders.receivedRows[i].hop, null, null);
+        appendCell(row, viewModel.receivedHeaders.receivedRows[i].from, null, null);
+        appendCell(row, viewModel.receivedHeaders.receivedRows[i].by, null, null);
+        appendCell(row, viewModel.receivedHeaders.receivedRows[i].date, null, null);
+        var labelClass = "hotBarLabel";
+        if (viewModel.receivedHeaders.receivedRows[i].delaySort < 0) {
+            labelClass += " negativeCell";
+        }
+
+        var hotBar =
+        "<div class='hotBarContainer'>" +
+        "   <div class='" + labelClass + "'>" + viewModel.receivedHeaders.receivedRows[i].delay + "</div>" +
+        "   <div class='hotBarBar' style='width:" + viewModel.receivedHeaders.receivedRows[i].percent + "%'></div>" +
+        "</div>";
+        appendCell(row, null, hotBar, "hotBarCell");
+        appendCell(row, viewModel.receivedHeaders.receivedRows[i].with, null, null);
+        appendCell(row, viewModel.receivedHeaders.receivedRows[i].id, null, "extraCol");
+        appendCell(row, viewModel.receivedHeaders.receivedRows[i].for, null, "extraCol");
+        appendCell(row, viewModel.receivedHeaders.receivedRows[i].via, null, "extraCol");
+    }
+
+    $("#receivedHeaders tbody tr:odd").addClass("oddRow");
+    hideEmptyColumns(viewModel.receivedHeaders.tableName);
 
     // Forefront AntiSpam Report
-    viewModel.forefrontAntiSpamReport.populateTable();
+    //viewModel.forefrontAntiSpamReport.populateTable();
+    for (var i = 0 ; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length ; i++) {
+        var headerVal = $("#" + viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].header + "FFASVal");
+        if (headerVal) {
+            headerVal.html(mapHeaderToURL(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url, viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get()));
+        }
+    }
 
     // AntiSpam Report
-    viewModel.antiSpamReport.populateTable();
+    //viewModel.antiSpamReport.populateTable();
+    for (var i = 0 ; i < viewModel.antiSpamReport.antiSpamRows.length ; i++) {
+        var headerVal = $("#" + viewModel.antiSpamReport.antiSpamRows[i].header + "ASVal");
+        if (headerVal) {
+            headerVal.html(mapHeaderToURL(viewModel.antiSpamReport.antiSpamRows[i].url, viewModel.antiSpamReport.antiSpamRows[i].get()));
+        }
+    }
 
     // Other
-    viewModel.otherHeaders.populateTable();
+    //viewModel.otherHeaders.populateTable();
+    restoreTable(viewModel.otherHeaders.tableName);
+    for (var i = 0 ; i < viewModel.otherHeaders.otherRows.length ; i++) {
+        var row = document.createElement("tr");
+        $("#" + viewModel.otherHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
+        appendCell(row, viewModel.otherHeaders.otherRows[i].number, null, null);
+        appendCell(row, viewModel.otherHeaders.otherRows[i].header, viewModel.otherHeaders.otherRows[i].url, null);
+        appendCell(row, viewModel.otherHeaders.otherRows[i].value, null, "allowBreak");
+    }
+
+    $("#" + viewModel.otherHeaders.tableName + " tbody tr:odd").addClass("oddRow");
 
     // Original headers
     $("#originalHeaders").text(viewModel.originalHeaders);

@@ -7,14 +7,6 @@
 /// <reference path="~/Scripts/Antispam.js" />
 /// <reference path="~/Scripts/Other.js" />
 
-// View model for our headers tables
-var viewModel = null;
-
-function initViewModels() {
-    viewModel = new HeaderModel();
-    rebuildSections();
-}
-
 var HeaderModel = function () {
     // Initialize defaults
     var that = this;
@@ -23,11 +15,6 @@ var HeaderModel = function () {
     this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
     this.antiSpamReport = new AntiSpamReport();
     this.otherHeaders = new Other();
-
-    this.status = "";
-    this.originalHeaders = "";
-    makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return that.originalHeaders.length; });
-    $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
 };
 
 HeaderModel.prototype.status = "";
@@ -61,17 +48,14 @@ var Header = function (header, value) {
 Header.prototype.header = "";
 Header.prototype.value = "";
 
-function parseHeadersToTables(headers) {
+HeaderModel.prototype.parseHeaders = function (headers) {
     // Initialize originalHeaders in case we have parsing problems
-    viewModel.originalHeaders = headers;
-    $("#originalHeaders").text(headers);
-
-    var lines = headers.match(/^.*([\n\r]+|$)/gm) ;
+    this.originalHeaders = headers;
+    var lines = headers.match(/^.*([\n\r]+|$)/gm);
 
     var headerList = [];
     var iNextHeader = 0;
     for (var iLine = 0 ; iLine < lines.length ; iLine++) {
-        updateStatus(lines[iLine]);
         lines[iLine] = clean2047Encoding(lines[iLine]);
 
         // Recognizing a header:
@@ -105,41 +89,32 @@ function parseHeadersToTables(headers) {
         }
     }
 
-    updateStatus(ImportedStrings.mha_parsingHeaders);
-
     if (headerList.length > 0) {
-        viewModel.hasData = true;
+        this.hasData = true;
     }
 
     for (var i = 0; i < headerList.length; i++) {
-        updateStatus(ImportedStrings.mha_processingHeader + " " + i.toString());
-
         // Grab values for our summary pane
-        viewModel.summary.init(headerList[i]);
+        this.summary.init(headerList[i]);
 
         // Properties with special parsing
         switch (headerList[i].header) {
             case "X-Forefront-Antispam-Report":
-                viewModel.forefrontAntiSpamReport.init(headerList[i].value);
+                this.forefrontAntiSpamReport.init(headerList[i].value);
                 break;
             case "X-Microsoft-Antispam":
-                viewModel.antiSpamReport.init(headerList[i].value);
+                this.antiSpamReport.init(headerList[i].value);
                 break;
         }
 
         if (headerList[i].header === "Received") {
-            viewModel.receivedHeaders.init(headerList[i].value);
+            this.receivedHeaders.init(headerList[i].value);
         } else if (headerList[i].header || headerList[i].value) {
-            viewModel.otherHeaders.init(headerList[i]);
+            this.otherHeaders.init(headerList[i]);
         }
     }
 
-    viewModel.receivedHeaders.computeDeltas();
-
-    hideStatus();
-    rebuildSections();
-    hideExtraColumns();
-    recalculateLayout();
+    this.receivedHeaders.computeDeltas();
 }
 
 function mapHeaderToURL(headerName, text) {
