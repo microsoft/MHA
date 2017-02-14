@@ -96,7 +96,7 @@
         <bt:Image id="mha-icon-80" DefaultValue="https://mha.azurewebsites.net/resources/mhaLogo.jpg"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="functionFile" DefaultValue="https://localhost:8443/pages/functions.html"/>
+        <bt:Url id="functionFile" DefaultValue="https://mha.azurewebsites.net/pages/functions.html"/>
         <bt:Url id="mhaTaskPaneUrl" DefaultValue="https://mha.azurewebsites.net/pages/default.html"/>
       </bt:Urls>
       <bt:ShortStrings>
