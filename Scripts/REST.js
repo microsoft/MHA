@@ -65,21 +65,37 @@ function displayError(error) {
     rebuildSections();
 }
 
+function getRestUrl(accessToken) {
+  // Shim function to workaround
+  // mailbox.restUrl == null case
+  if (Office.context.mailbox.restUrl) {
+    return Office.context.mailbox.restUrl;
+  } else {
+    // parse the token
+    var jwt = jwt_decode(accessToken);
+    // get the aud parameter
+    return jwt.aud;
+  }
+}
+
 function getHeaders(accessToken) {
     // Get the item's REST ID
     var itemId = getItemRestId();
 
     // Office.context.mailbox.restUrl appears to always be null, so we hard code our url
-    var getMessageUrl = 'https://outlook.office.com' +
+    var getMessageUrl = getRestUrl(accessToken) +
         "/api/v2.0/me/messages/" +
         itemId +
         // PR_TRANSPORT_MESSAGE_HEADERS
-        "?select=SingleValueExtendedProperties&$expand=SingleValueExtendedProperties($filter=PropertyId eq 'String 0x007D')";
+        "?$select=SingleValueExtendedProperties&$expand=SingleValueExtendedProperties($filter=PropertyId eq 'String 0x007D')";
 
     $.ajax({
         url: getMessageUrl,
         dataType: "json",
-        headers: { "Authorization": "Bearer " + accessToken }
+        headers: { 
+          "Authorization": "Bearer " + accessToken,
+          "Accept": "application/json; odata.metadata=none"
+        }
     }).done(function(item) {
         processHeaders(item.SingleValueExtendedProperties[0].Value);
     }).fail(function(error) {
