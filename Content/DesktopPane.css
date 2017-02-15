@@ -89,3 +89,14 @@
   line-height: 1em;
   padding: 10px;
 }
+
+.down-icon {
+  float: left;
+  width: 36px;
+  height: 36px;
+  text-align: center;
+}
+
+.progress-icon .ms-ProgressIndicator {
+  padding-left: 40px;
+}

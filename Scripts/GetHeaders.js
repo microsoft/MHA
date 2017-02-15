@@ -46,12 +46,28 @@ function getRestUrl(accessToken) {
   // mailbox.restUrl == null case
   if (Office.context.mailbox.restUrl) {
     return Office.context.mailbox.restUrl;
-  } else {
-    // parse the token
-    var jwt = jwt_decode(accessToken);
-    // get the aud parameter
+  }
+  
+  // parse the token
+  var jwt = jwt_decode(accessToken);
+
+  // 'aud' parameter from token can be in a couple of 
+  // different formats.
+
+  // Format 1: It's just the URL
+  if (jwt.aud.match(/https:\/\/([^@]*)/)) {
     return jwt.aud;
   }
+
+  // Format 2: GUID/hostname@GUID
+  var match = jwt.aud.match(/\/([^@]*)@/);
+  if (match && match[1]) {
+    return 'https://' + match[1];
+  }
+
+  // Couldn't find what we expected, default to
+  // outlook.office.com
+  return 'https://outlook.office.com';
 }
 
 function getHeaders(accessToken) {
@@ -63,6 +79,9 @@ function getHeaders(accessToken) {
     itemId +
     // PR_TRANSPORT_MESSAGE_HEADERS
     '?$select=SingleValueExtendedProperties&$expand=SingleValueExtendedProperties($filter=PropertyId eq \'String 0x007D\')';
+  debugOut('REST URL: ' + getMessageUrl);
+  debugOut('Access Token: ' + accessToken);
+
   $.ajax({
     url: getMessageUrl,
     dataType: 'json',

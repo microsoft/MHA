@@ -6,7 +6,7 @@ var viewModel = null;
 $(document).ready(function () {
   debugOut('Initalizing...');
   initializeFabric();
-  updateStatus(ImportedStrings.mha_loading);
+  //updateStatus(ImportedStrings.mha_loading);
 });
 */
 Office.initialize = function () {
@@ -89,6 +89,91 @@ function buildViews() {
   }
 
   // Build received view
+  var receivedList = $('.received-list');
+
+  if (viewModel.receivedHeaders.receivedRows.length > 0) {
+    var list = $('<ul/>')
+      .addClass('ms-List')
+      .appendTo(receivedList);
+
+    for (var i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
+
+      var listItem = $('<li/>')
+        .addClass('ms-ListItem')
+        .addClass('ms-ListItem--document')
+        .appendTo(list);
+
+      if (viewModel.receivedHeaders.receivedRows[i].delaySort < 0) {
+        var title = $('<span/>')
+          .addClass('ms-ListItem-primaryText')
+          .text('From: ' + viewModel.receivedHeaders.receivedRows[i].from)
+          .appendTo(listItem);
+
+        $('<span/>')
+          .addClass('ms-ListItem-secondaryText')
+          .text('To: ' + viewModel.receivedHeaders.receivedRows[i].by)
+          .appendTo(listItem);
+      } else {
+        var wrap = $('<div/>')
+          .addClass('progress-icon')
+          .appendTo(listItem);
+
+        var iconbox = $('<div/>')
+          .addClass('ms-font-xxl')
+          .addClass('down-icon')
+          .appendTo(wrap);
+
+        $('<i/>')
+          .addClass('ms-Icon')
+          .addClass('ms-Icon--Down')
+          .appendTo(iconbox);
+
+        var delay = $('<div/>')
+          .addClass('ms-ProgressIndicator')
+          .appendTo(wrap);
+
+        var bar = $('<div/>')
+          .addClass('ms-ProgressIndicator-itemProgress')
+          .appendTo(delay);
+
+        $('<div/>')
+          .addClass('ms-ProgressIndicator-progressTrack')
+          .appendTo(bar);
+
+        var width = 1.8 * viewModel.receivedHeaders.receivedRows[i].percent;
+
+        $('<div/>')
+          .addClass('ms-ProgressIndicator-progressBar')
+          .css('width', width)
+          .appendTo(bar);
+
+        var delayText = viewModel.receivedHeaders.receivedRows[i].delay ?
+          viewModel.receivedHeaders.receivedRows[i].delay : '';
+
+        $('<div/>')
+          .addClass('ms-ProgressIndicator-itemDescription')
+          .text(viewModel.receivedHeaders.receivedRows[i].delay)
+          .appendTo(delay);
+
+        $('<span/>')
+          .addClass('ms-ListItem-secondaryText')
+          .text('To: ' + viewModel.receivedHeaders.receivedRows[i].by)
+          .appendTo(listItem);
+      }
+
+      // <div class="ms-ListItem-itemIcon ms-ListItem-itemIcon--ppt"></div>
+      //$('<div/>')
+      //  .addClass('ms-ListItem-itemIcon')
+      //  .addClass('ms-ListItem-itemIcon--Down')
+      //  .appendTo(listItem);
+
+      $('<div/>')
+        .addClass('ms-ListItem-selectionTarget')
+        .appendTo(listItem);
+    }
+  }
+
+  debugOut(receivedList.html());
 
   // Build antispam view
   var antispamList = $('.antispam-list');
