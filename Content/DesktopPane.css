@@ -1,13 +1,18 @@
-.content-main {
+.content-wrap {
   background: #fff;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  overflow-y: auto; /* Enable scrollbars within main content section */
-  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.content-main {
   padding: 10px;
+  overflow-y: auto; /* Enable scrollbars within main content section */
+  height: calc(100% - 60px); /* 40px for nav bar, 20px for padding */
 }
 
 .summary-table {
@@ -33,4 +38,54 @@
   word-wrap: break-word;
   white-space: pre-wrap;
   font-size: .8em;
+}
+
+#nav-bar .ms-CommandButton-label {
+  display: none;
+}
+
+#nav-bar .ms-CommandButton:hover .ms-CommandButton-label {
+  display: inline-block;
+}
+
+#nav-bar .is-active .ms-CommandButton-label {
+  display: inline-block;
+}
+
+.status-display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 250px;
+  height: 70px;
+  margin-left: -125px;
+  margin-top: -35px;
+  text-align: center;
+}
+
+.status-spinner {
+  width: 28px;
+  margin-top: 10px;
+  margin-left: 111px;
+}
+
+#error-display {
+  display: none;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.header-view {
+  display: none;
+}
+
+.spam-report {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.spam-report td {
+  vertical-align: top;
+  line-height: 1em;
+  padding: 10px;
 }

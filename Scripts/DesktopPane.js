@@ -1,139 +1,220 @@
-/// <reference path="Table.js" />
-/// <reference path="Strings.js" />
-/// <reference path="~/Scripts/Headers.js" />
-/// <reference path="~/Scripts/siteTypesOffice.js" />
-// This function is run when the app is ready to start interacting with the host application.
-// It ensures the DOM is ready before updating the span elements with values from the current message.
+var overlay = null;
+var spinner = null;
+var viewModel = null;
+
+/*
+$(document).ready(function () {
+  debugOut('Initalizing...');
+  initializeFabric();
+  updateStatus(ImportedStrings.mha_loading);
+});
+*/
 Office.initialize = function () {
-    $(document).ready(function () {
-        debugOut('Initalizing...');
-        initializeFabric();
-        //$(window).resize(onResize);
-        initViewModels();
-        //updateStatus(ImportedStrings.mha_loading);
-        sendHeadersRequest();
-    });
+  $(document).ready(function () {
+    debugOut('Initalizing...');
+    viewModel = new HeaderModel();
+    initializeFabric();
+    updateStatus(ImportedStrings.mha_loading);
+    sendHeadersRequest();
+  });
 };
 
 function initializeFabric() {
-  var pivotElements = document.querySelectorAll(".ms-Pivot");
-  for (var i = 0; i < pivotElements.length; i++) {
-    new fabric['Pivot'](pivotElements[i]);
+  var OverlayComponent = document.querySelector('.ms-Overlay');
+  // Override click so user can't dismiss overlay
+  OverlayComponent.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  });
+  overlay = new fabric['Overlay'](OverlayComponent);
+
+  var SpinnerElement = document.querySelector('.ms-Spinner');
+  spinner = new fabric['Spinner'](SpinnerElement);
+  spinner.stop();
+
+  var CommandBarElements = document.querySelectorAll('.ms-CommandBar');
+  for (var i = 0; i < CommandBarElements.length; i++) {
+    new fabric['CommandBar'](CommandBarElements[i]);
+  }
+
+  var CommandButtonElements = document.querySelectorAll('.ms-CommandButton');
+  for (var i = 0; i < CommandButtonElements.length; i++) {
+    new fabric['CommandButton'](CommandButtonElements[i]);
+  }
+
+  // Show summary by default
+  $('.header-view[data-content=\'summary-view\']').show();
+
+  // Wire up click events for nav buttons
+  $('#nav-bar .ms-CommandButton').click(function(){
+    // Remove active from current active
+    $('#nav-bar .is-active').removeClass('is-active');
+    // Add active class to clicked button
+    $(this).addClass('is-active');
+
+    // Get content marker
+    var content = $(this).attr('data-content');
+    // Hide sub-views
+    $('.header-view').hide();
+    $('.header-view[data-content=\'' + content + '\']').show();
+  });
+}
+
+function getHeadersComplete(headers) {
+  viewModel.parseHeaders(headers);
+  buildViews();
+}
+
+function buildViews() {
+  // Build summary view
+  var summaryList = $('.summary-list');
+
+  for (var i = 0 ; i < viewModel.summary.summaryRows.length ; i++) {
+    if (viewModel.summary.summaryRows[i].get()) {
+      var headerName = $('<div/>')
+        .addClass('ms-font-s')
+        .addClass('ms-fontWeight-semibold')
+        .text(viewModel.summary.summaryRows[i].label)
+        .appendTo(summaryList);
+
+      var headerVal = $('<div/>')
+        .addClass('code-box')
+        .appendTo(summaryList);
+
+      var pre = $('<pre/>').appendTo(headerVal);
+      var code = $('<code/>')
+        .text(viewModel.summary.summaryRows[i].get())
+        .appendTo(pre);
+    }
+  }
+
+  // Build received view
+
+  // Build antispam view
+  var antispamList = $('.antispam-list');
+
+  // Forefront
+  if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length > 0) {
+    $('<div/>')
+      .addClass('ms-font-m')
+      .text('Forefront Antispam Report')
+      .appendTo(antispamList);
+
+    $('<hr/>').appendTo(antispamList);
+
+    var table = $('<table/>')
+      .addClass('ms-Table')
+      .addClass('ms-Table--fixed')
+      .addClass('spam-report')
+      .appendTo(antispamList);
+
+    var tbody = $('<tbody/>')
+      .appendTo(table);
+
+    for (var i = 0 ; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length ; i++) {
+      if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get()) {
+        var row = $('<tr/>').appendTo(tbody);
+
+        $('<td/>')
+          .text(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].label)
+          .appendTo(row);
+
+        var linkVal = mapHeaderToURL(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url,
+          viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get());
+        $('<td/>')
+          .html(linkVal)
+          .appendTo(row);
+      }
+    }
+  }
+
+  // Microsoft
+  if (viewModel.antiSpamReport.antiSpamRows.length > 0) {
+    $('<div/>')
+      .addClass('ms-font-m')
+      .text('Microsoft Antispam Report')
+      .appendTo(antispamList);
+
+    $('<hr/>').appendTo(antispamList);
+
+    var table = $('<table/>')
+      .addClass('ms-Table')
+      .addClass('ms-Table--fixed')
+      .addClass('spam-report')
+      .appendTo(antispamList);
+
+    var tbody = $('<tbody/>')
+      .appendTo(table);
+
+    for (var i = 0 ; i < viewModel.antiSpamReport.antiSpamRows.length ; i++) {
+      if (viewModel.antiSpamReport.antiSpamRows[i].get()) {
+        var row = $('<tr/>').appendTo(tbody);
+
+        $('<td/>')
+          .text(viewModel.antiSpamReport.antiSpamRows[i].label)
+          .appendTo(row);
+
+        var linkVal = mapHeaderToURL(viewModel.antiSpamReport.antiSpamRows[i].url,
+          viewModel.antiSpamReport.antiSpamRows[i].get());
+        $('<td/>')
+          .html(linkVal)
+          .appendTo(row);
+      }
+    }
+  }
+
+  // Build other view
+  var otherList = $('.other-list');
+
+  for (var i = 0 ; i < viewModel.otherHeaders.otherRows.length ; i++) {
+    if (viewModel.otherHeaders.otherRows[i].value) {
+      var headerName = $('<div/>')
+        .addClass('ms-font-s')
+        .addClass('ms-fontWeight-semibold')
+        .text(viewModel.otherHeaders.otherRows[i].header)
+        .appendTo(otherList);
+
+      if (viewModel.otherHeaders.otherRows[i].url) {
+        headerName.html(viewModel.otherHeaders.otherRows[i].url);
+      }
+
+      var headerVal = $('<div/>')
+        .addClass('code-box')
+        .appendTo(otherList);
+
+      var pre = $('<pre/>').appendTo(headerVal);
+      var code = $('<code/>')
+        .text(viewModel.otherHeaders.otherRows[i].value)
+        .appendTo(pre);
+    }
+  }
+
+  // Initialize any fabric lists added
+  var ListElements = document.querySelectorAll(".ms-List");
+  for (var i = 0; i < ListElements.length; i++) {
+    new fabric['List'](ListElements[i]);
+  }
+
+  var ListItemElements = document.querySelectorAll(".ms-ListItem");
+  for (var i = 0; i < ListItemElements.length; i++) {
+    new fabric['ListItem'](ListItemElements[i]);
   }
 }
 
-function getSoapEnvelope(request) {
-    // Wrap an Exchange Web Services request in a SOAP envelope.
-    var result =
-    "<?xml version='1.0' encoding='utf-8'?>" +
-    "<soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'" +
-    "               xmlns:t='http://schemas.microsoft.com/exchange/services/2006/types'>" +
-    "  <soap:Header>" +
-    "     <t:RequestServerVersion Version='Exchange2013'/>" +
-    "  </soap:Header>" +
-    "  <soap:Body>" +
-    request +
-    "  </soap:Body>" +
-    "</soap:Envelope>";
-
-    return result;
+function updateStatus(message) {
+  $('.status-message').text(message);
+  spinner.start();
+  overlay.show();
 }
 
-function getHeadersRequest(id) {
-    // Return a GetItem EWS operation request for the headers of the specified item.
-    var result =
-    "    <GetItem xmlns='http://schemas.microsoft.com/exchange/services/2006/messages'>" +
-    "      <ItemShape>" +
-    "        <t:BaseShape>IdOnly</t:BaseShape>" +
-    "        <t:BodyType>Text</t:BodyType>" +
-    "        <t:AdditionalProperties>" +
-    // PR_TRANSPORT_MESSAGE_HEADERS
-    "            <t:ExtendedFieldURI PropertyTag='0x007D' PropertyType='String' />" +
-    "        </t:AdditionalProperties>" +
-    "      </ItemShape>" +
-    "      <ItemIds><t:ItemId Id='" + id + "'/></ItemIds>" +
-    "    </GetItem>";
-
-    return result;
+function hideStatus() {
+  spinner.stop();
+  overlay.hide();
 }
 
-function enableSpinner() {
-    $("#response").css("background-image", "url(../Resources/loader.gif)");
-    $("#response").css("background-repeat", "no-repeat");
-    $("#response").css("background-position", "center");
-}
-
-function disableSpinner() {
-    $("#response").css("background", "none");
-}
-
-function sendHeadersRequest() {
-    //enableSpinner();
-
-    debugOut('Sending header request...');
-    var mailbox = Office.context.mailbox;
-    var request = getHeadersRequest(mailbox.item.itemId);
-    var envelope = getSoapEnvelope(request);
-
-    try {
-        mailbox.makeEwsRequestAsync(envelope, callback);
-        //updateStatus(ImportedStrings.mha_ewsRequestSent);
-    } catch (e) {
-        //updateStatus(ImportedStrings.mha_ewsFailed);
-        //disableSpinner();
-    }
-}
-
-// This function plug in filters nodes for the one that matches the given name.
-// This sidesteps the issues in jquery"s selector logic.
-(function ($) {
-    $.fn.filterNode = function (node) {
-        return this.find("*").filter(function () {
-            return this.nodeName === node;
-        });
-    };
-})(jQuery);
-
-// Function called when the EWS request is complete.
-function callback(asyncResult) {
-    //updateStatus(ImportedStrings.mha_ewsResponseReceived);
-    //disableSpinner();
-
-    debugOut('In callback...');
-    // Process the returned response here.
-    if (asyncResult.value) {
-        viewModel.originalHeaders = asyncResult.value;
-        var prop = null;
-        try {
-            var response = $.parseXML(asyncResult.value);
-            var responseDom = $(response);
-
-            if (responseDom) {
-                //updateStatus(ImportedStrings.mha_lookingForHeaders);
-
-                //// See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
-                //// See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
-                // We can do this because we know there's only the one property.
-                prop = responseDom.filterNode("t:ExtendedProperty")[0];
-            }
-        } catch (e) {
-        }
-
-        if (prop) {
-            //updateStatus(ImportedStrings.mha_foundHeaders);
-
-            // Initialize originalHeaders in case we have parsing problems
-            viewModel.originalHeaders = prop.textContent;
-            //$("#originalHeaders").text(viewModel.originalHeaders);
-
-            parseHeadersToTables(viewModel.originalHeaders);
-        } else {
-            //updateStatus(ImportedStrings.mha_failedToFind);
-            //$("#originalHeaders").text(viewModel.originalHeaders);
-        }
-    } else if (asyncResult.error) {
-        //updateStatus(asyncResult.error.message);
-    }
+function showError(message) {
+  $('#error-display .ms-MessageBar-text').text(message);
+  $('#error-display').show();
 }
 
 function debugOut(message) {
