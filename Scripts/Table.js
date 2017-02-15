@@ -403,7 +403,7 @@ function populateTables() {
     restoreTable(viewModel.receivedHeaders.tableName);
     for (var i = 0 ; i < viewModel.receivedHeaders.receivedRows.length ; i++) {
         var row = document.createElement("tr");
-        $(viewModel.receivedHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
+        $("#" + viewModel.receivedHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].hop, null, null);
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].from, null, null);
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].by, null, null);

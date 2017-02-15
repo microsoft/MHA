@@ -73,7 +73,7 @@ function getRestUrl(accessToken) {
     }
 
     // parse the token
-    var jwt = jwt_decode(accessToken);
+    var jwt = window.jwt_decode(accessToken);
 
     // 'aud' parameter from token can be in a couple
     // of different formats.
@@ -86,7 +86,7 @@ function getRestUrl(accessToken) {
     // Format 2: GUID/hostname@GUID
     var match = jwt.aud.match(/\/([^@]*)@/);
     if (match && match[1]) {
-        return 'https://' + match[1];
+        return "https://" + match[1];
     }
 
     // Couldn't find what we expected, default to
@@ -105,17 +105,17 @@ function getHeaders(accessToken) {
         "?$select=SingleValueExtendedProperties&$expand=SingleValueExtendedProperties($filter=PropertyId eq 'String 0x007D')";
 
     $.ajax({
-            url: getMessageUrl,
-            dataType: "json",
-            headers: {
-                "Authorization": "Bearer " + accessToken,
-                "Accept": "application/json; odata.metadata=none"
-                }
-                }).done(function(item) {
+        url: getMessageUrl,
+        dataType: "json",
+        headers: {
+            "Authorization": "Bearer " + accessToken,
+            "Accept": "application/json; odata.metadata=none"
+        }
+    }).done(function (item) {
         processHeaders(item.SingleValueExtendedProperties[0].Value);
-                }).fail(function(error) {
+    }).fail(function (error) {
         displayError(JSON.stringify(error, null, 2));
-                }).always(function() {
+    }).always(function () {
         disableSpinner();
-                });
-                }
+    });
+}
