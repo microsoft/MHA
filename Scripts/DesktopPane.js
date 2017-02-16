@@ -2,16 +2,8 @@ var overlay = null;
 var spinner = null;
 var viewModel = null;
 
-/*
-$(document).ready(function () {
-  debugOut('Initalizing...');
-  initializeFabric();
-  //updateStatus(ImportedStrings.mha_loading);
-});
-*/
 Office.initialize = function () {
   $(document).ready(function () {
-    debugOut('Initalizing...');
     viewModel = new HeaderModel();
     initializeFabric();
     updateStatus(ImportedStrings.mha_loading);
@@ -119,15 +111,15 @@ function buildViews() {
         .addClass('ms-ListItem--document')
         .appendTo(list);
 
-      if (viewModel.receivedHeaders.receivedRows[i].delaySort < 0) {
+      if (i == 0) {
         var title = $('<span/>')
           .addClass('ms-ListItem-primaryText')
-          .text('From: ' + viewModel.receivedHeaders.receivedRows[i].from)
+          .html(makeBold('From: ') + viewModel.receivedHeaders.receivedRows[i].from)
           .appendTo(listItem);
 
         $('<span/>')
           .addClass('ms-ListItem-secondaryText')
-          .text('To: ' + viewModel.receivedHeaders.receivedRows[i].by)
+          .html(makeBold('To: ') + viewModel.receivedHeaders.receivedRows[i].by)
           .appendTo(listItem);
       } else {
         var wrap = $('<div/>')
@@ -173,7 +165,7 @@ function buildViews() {
 
         $('<span/>')
           .addClass('ms-ListItem-secondaryText')
-          .text('To: ' + viewModel.receivedHeaders.receivedRows[i].by)
+          .html(makeBold('To: ') + viewModel.receivedHeaders.receivedRows[i].by)
           .appendTo(listItem);
       }
 
@@ -207,48 +199,13 @@ function buildViews() {
         .addClass('ms-Callout-content')
         .appendTo(calloutInner);
 
-      $('<p/>')
-        .addClass('ms-Callout-subText')
-        .text('From: ' + viewModel.receivedHeaders.receivedRows[i].from)
-        .appendTo(calloutContent);
-
-      $('<p/>')
-        .addClass('ms-Callout-subText')
-        .text('To: ' + viewModel.receivedHeaders.receivedRows[i].by)
-        .appendTo(calloutContent);
-
-      $('<p/>')
-        .addClass('ms-Callout-subText')
-        .text('Time: ' + viewModel.receivedHeaders.receivedRows[i].date)
-        .appendTo(calloutContent);
-
-      if (viewModel.receivedHeaders.receivedRows[i].with) {
-        $('<p/>')
-          .addClass('ms-Callout-subText')
-          .text('Type: ' + viewModel.receivedHeaders.receivedRows[i].with)
-          .appendTo(calloutContent);
-      }
-
-      if (viewModel.receivedHeaders.receivedRows[i].id) {
-        $('<p/>')
-          .addClass('ms-Callout-subText')
-          .text('ID: ' + viewModel.receivedHeaders.receivedRows[i].id)
-          .appendTo(calloutContent);
-      }
-
-      if (viewModel.receivedHeaders.receivedRows[i].for) {
-        $('<p/>')
-          .addClass('ms-Callout-subText')
-          .text('For: ' + viewModel.receivedHeaders.receivedRows[i].for)
-          .appendTo(calloutContent);
-      }
-
-      if (viewModel.receivedHeaders.receivedRows[i].via) {
-        $('<p/>')
-          .addClass('ms-Callout-subText')
-          .text('Via: ' + viewModel.receivedHeaders.receivedRows[i].via)
-          .appendTo(calloutContent);
-      }
+      addCalloutEntry('From', viewModel.receivedHeaders.receivedRows[i].from, calloutContent);
+      addCalloutEntry('To', viewModel.receivedHeaders.receivedRows[i].by, calloutContent);
+      addCalloutEntry('Time', viewModel.receivedHeaders.receivedRows[i].date, calloutContent);
+      addCalloutEntry('Type', viewModel.receivedHeaders.receivedRows[i].with, calloutContent);
+      addCalloutEntry('ID', viewModel.receivedHeaders.receivedRows[i].id, calloutContent);
+      addCalloutEntry('For', viewModel.receivedHeaders.receivedRows[i].for, calloutContent);
+      addCalloutEntry('Via', viewModel.receivedHeaders.receivedRows[i].via, calloutContent);
     }
   }
 
@@ -364,6 +321,19 @@ function buildViews() {
     // Init corresponding callout
     var calloutElement = ListItemElements[i].querySelector('.ms-Callout');
     new fabric['Callout'](calloutElement, ListItemElements[i], 'right');
+  }
+}
+
+function makeBold(text) {
+  return '<span class="ms-fontWeight-semibold">' + text + '</span>';
+}
+
+function addCalloutEntry(name, value, parent) {
+  if (value) {
+    $('<p/>')
+      .addClass('ms-Callout-subText')
+      .html(makeBold(name + ': ') + value)
+      .appendTo(parent);
   }
 }
 
