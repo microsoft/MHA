@@ -9,7 +9,6 @@
 
 var HeaderModel = function () {
     // Initialize defaults
-    var that = this;
     this.summary = new Summary();
     this.receivedHeaders = new Received();
     this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
