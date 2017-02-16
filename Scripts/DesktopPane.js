@@ -42,6 +42,18 @@ function initializeFabric() {
     new fabric['CommandButton'](CommandButtonElements[i]);
   }
 
+  var ButtonElement = document.querySelector("#orig-header-btn");
+  new fabric['Button'](ButtonElement, function() {
+    var btnIcon = $(this).find('.ms-Icon');
+    if (btnIcon.hasClass('ms-Icon--Add')) {
+      $('#original-headers').show();
+      btnIcon.removeClass('ms-Icon--Add').addClass('ms-Icon--Remove');
+    } else {
+      $('#original-headers').hide();
+      btnIcon.removeClass('ms-Icon--Remove').addClass('ms-Icon--Add');
+    }
+  });
+
   // Show summary by default
   $('.header-view[data-content=\'summary-view\']').show();
 
@@ -87,6 +99,10 @@ function buildViews() {
         .appendTo(pre);
     }
   }
+
+  // Save original headers and enable button
+  $('#orig-header-btn').removeAttr('disabled');
+  $('#original-headers code').text(viewModel.originalHeaders);
 
   // Build received view
   var receivedList = $('.received-list');
@@ -161,19 +177,11 @@ function buildViews() {
           .appendTo(listItem);
       }
 
-      // <div class="ms-ListItem-itemIcon ms-ListItem-itemIcon--ppt"></div>
-      //$('<div/>')
-      //  .addClass('ms-ListItem-itemIcon')
-      //  .addClass('ms-ListItem-itemIcon--Down')
-      //  .appendTo(listItem);
-
       $('<div/>')
         .addClass('ms-ListItem-selectionTarget')
         .appendTo(listItem);
     }
   }
-
-  debugOut(receivedList.html());
 
   // Build antispam view
   var antispamList = $('.antispam-list');

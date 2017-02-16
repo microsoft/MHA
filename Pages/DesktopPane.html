@@ -21,7 +21,6 @@
     <script src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/js/fabric.min.js"></script>
 
     <script src="../Scripts/Headers.js"></script>
-    <!--<script src="../Scripts/Table.js"></script>-->
     <script src="../Scripts/Strings.js"></script>
     <script src="../Scripts/Received.js"></script>
     <script src="../Scripts/Other.js"></script>
@@ -68,7 +67,7 @@
   <div class="content-main">
     <div class="ms-Overlay">
       <div class="status-display">
-        <div class="status-message ms-font-xl">Hidey ho, neighborino!</div>
+        <div class="status-message ms-font-xl"></div>
         <div class="status-spinner ms-Spinner ms-Spinner--large"></div>
       </div>
     </div>
@@ -84,6 +83,13 @@
       <div class="ms-font-l">Summary</div>
       <hr/>
       <div class="summary-list"></div>
+      <button id="orig-header-btn" class="ms-Button ms-Button--hero" disabled>
+        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--Add"></i></span> 
+        <span class="ms-Button-label">Original Headers</span> 
+      </button>
+      <div id="original-headers" class="code-box">
+          <pre><code></code></pre>
+      </div>
     </div>
     <div class="header-view" data-content="received-view">
       <div class="ms-font-l">Received</div>
@@ -103,36 +109,6 @@
     <div class="debug-out code-box">
       <pre><code class="debug-print"></code>
     </div>
-<!--
-    <div class="ms-Pivot main-pivot">
-      <ul class="ms-Pivot-links">
-        <li class="ms-Pivot-link is-selected" data-content="summary-view" title="Summary" tabindex="1">Summary</li>
-        <li class="ms-Pivot-link" data-content="header-view" title="Headers" tabindex="1">Headers</li>
-      </ul>
-      
-      <div class="ms-Pivot-content" data-content="header-view">
-        <hr/>
-        <div>
-        <div class="ms-Pivot header-pivot">
-          <ul class="ms-Pivot-links">
-            <li class="ms-Pivot-link is-selected" data-content="received-headers" title="Received" tabindex="1">Received</li>
-            <li class="ms-Pivot-link " data-content="antispam-headers" title="Antispam" tabindex="1">Antispam</li>
-            <li class="ms-Pivot-link " data-content="other-headers" title="Other" tabindex="1">Other</li>
-          </ul>
-          <div class="ms-Pivot-content" data-content="received-headers">
-            RECEIVED
-          </div>
-          <div class="ms-Pivot-content" data-content="antispam-headers">
-            ANTISPAM
-          </div>
-          <div class="ms-Pivot-content" data-content="other-headers">
-            OTHER
-          </div>
-        </div>
-        </div>
-      </div>
-    </div>
--->
   </div>
   </div>
 </body>

@@ -100,3 +100,7 @@
 .progress-icon .ms-ProgressIndicator {
   padding-left: 40px;
 }
+
+#original-headers {
+  display: none;
+}
