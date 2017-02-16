@@ -58,10 +58,10 @@ function getItemRestId() {
     }
 }
 
-function displayError(error) {
+function displayError(error, details) {
     disableSpinner();
-    updateStatus(ImportedStrings.mha_failedToFind);
-    viewModel.originalHeaders = error;
+    updateStatus(error);
+    viewModel.originalHeaders = details;
     rebuildSections();
 }
 
@@ -112,9 +112,13 @@ function getHeaders(accessToken) {
             "Accept": "application/json; odata.metadata=none"
         }
     }).done(function (item) {
-        processHeaders(item.SingleValueExtendedProperties[0].Value);
+        if (item.SingleValueExtendedProperties != undefined) {
+            processHeaders(item.SingleValueExtendedProperties[0].Value);
+        } else {
+            displayError(ImportedStrings.mha_headersMissing);
+        }
     }).fail(function (error) {
-        displayError(JSON.stringify(error, null, 2));
+        displayError(ImportedStrings.mha_requestFailed, JSON.stringify(error, null, 2));
     }).always(function () {
         disableSpinner();
     });
