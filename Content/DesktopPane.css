@@ -101,6 +101,17 @@
   padding-left: 40px;
 }
 
+.ms-ListItem:hover {
+  background-color: #eaeaea;
+  cursor: pointer;
+  outline: 1px solid transparent;
+}
+
 #original-headers {
   display: none;
+}
+
+.ms-Callout {
+  word-wrap: break-word;
+  word-break: break-all;
 }

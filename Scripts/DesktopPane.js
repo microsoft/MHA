@@ -180,6 +180,75 @@ function buildViews() {
       $('<div/>')
         .addClass('ms-ListItem-selectionTarget')
         .appendTo(listItem);
+
+      // Callout
+      var callout = $('<div/>')
+        .addClass('ms-Callout is-hidden')
+        .appendTo(listItem);
+
+      var calloutMain = $('<div/>')
+        .addClass('ms-Callout-main')
+        .appendTo(callout);
+
+      var calloutHeader = $('<div/>')
+        .addClass('ms-Callout-header')
+        .appendTo(calloutMain);
+
+      $('<p/>')
+        .addClass('ms-Callout-title')
+        .text('Hop Details')
+        .appendTo(calloutHeader);
+
+      var calloutInner = $('<div/>')
+        .addClass('ms-Callout-inner')
+        .appendTo(calloutMain);
+
+      var calloutContent = $('<div/>')
+        .addClass('ms-Callout-content')
+        .appendTo(calloutInner);
+
+      $('<p/>')
+        .addClass('ms-Callout-subText')
+        .text('From: ' + viewModel.receivedHeaders.receivedRows[i].from)
+        .appendTo(calloutContent);
+
+      $('<p/>')
+        .addClass('ms-Callout-subText')
+        .text('To: ' + viewModel.receivedHeaders.receivedRows[i].by)
+        .appendTo(calloutContent);
+
+      $('<p/>')
+        .addClass('ms-Callout-subText')
+        .text('Time: ' + viewModel.receivedHeaders.receivedRows[i].date)
+        .appendTo(calloutContent);
+
+      if (viewModel.receivedHeaders.receivedRows[i].with) {
+        $('<p/>')
+          .addClass('ms-Callout-subText')
+          .text('Type: ' + viewModel.receivedHeaders.receivedRows[i].with)
+          .appendTo(calloutContent);
+      }
+
+      if (viewModel.receivedHeaders.receivedRows[i].id) {
+        $('<p/>')
+          .addClass('ms-Callout-subText')
+          .text('ID: ' + viewModel.receivedHeaders.receivedRows[i].id)
+          .appendTo(calloutContent);
+      }
+
+      if (viewModel.receivedHeaders.receivedRows[i].for) {
+        $('<p/>')
+          .addClass('ms-Callout-subText')
+          .text('For: ' + viewModel.receivedHeaders.receivedRows[i].for)
+          .appendTo(calloutContent);
+      }
+
+      if (viewModel.receivedHeaders.receivedRows[i].via) {
+        $('<p/>')
+          .addClass('ms-Callout-subText')
+          .text('Via: ' + viewModel.receivedHeaders.receivedRows[i].via)
+          .appendTo(calloutContent);
+      }
     }
   }
 
@@ -291,6 +360,10 @@ function buildViews() {
   var ListItemElements = document.querySelectorAll(".ms-ListItem");
   for (var i = 0; i < ListItemElements.length; i++) {
     new fabric['ListItem'](ListItemElements[i]);
+
+    // Init corresponding callout
+    var calloutElement = ListItemElements[i].querySelector('.ms-Callout');
+    new fabric['Callout'](calloutElement, ListItemElements[i], 'right');
   }
 }
 
