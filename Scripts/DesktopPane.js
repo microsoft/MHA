@@ -5,11 +5,36 @@ var viewModel = null;
 Office.initialize = function () {
   $(document).ready(function () {
     viewModel = new HeaderModel();
+    registerItemChangeEvent();
     initializeFabric();
     updateStatus(ImportedStrings.mha_loading);
     sendHeadersRequest();
   });
 };
+
+function registerItemChangeEvent() {
+  if (Office.context.mailbox.addHandlerAsync !== undefined) {
+    Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, loadNewItem);
+  }
+}
+
+function loadNewItem() {
+  // Empty data
+  $('.summary-list').empty();
+  $('#original-headers code').empty();
+  $('.orig-header-ui').hide();
+  $('.received-list').empty();
+  $('.antispam-list').empty();
+  $('.other-list').empty();
+  $('#error-display .ms-MessageBar-text').empty();
+  $('#error-display').hide();
+
+  viewModel = new HeaderModel();
+
+  // Load new itemDescription
+  updateStatus(ImportedStrings.mha_loading);
+  sendHeadersRequest();
+}
 
 function initializeFabric() {
   var OverlayComponent = document.querySelector('.ms-Overlay');
@@ -92,9 +117,11 @@ function buildViews() {
     }
   }
 
-  // Save original headers and enable button
-  $('#orig-header-btn').removeAttr('disabled');
+  // Save original headers and show ui
   $('#original-headers code').text(viewModel.originalHeaders);
+  if (viewModel.originalHeaders) {
+    $('.orig-header-ui').show();
+  }
 
   // Build received view
   var receivedList = $('.received-list');

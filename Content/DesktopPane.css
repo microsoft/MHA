@@ -107,6 +107,10 @@
   outline: 1px solid transparent;
 }
 
+.orig-header-ui {
+  display: none;
+}
+
 #original-headers {
   display: none;
 }
