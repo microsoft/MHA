@@ -90,7 +90,11 @@ function getHeaders(accessToken) {
       'Accept': 'application/json; odata.metadata=none'
     }
   }).done(function(item) {
-    getHeadersComplete(item.SingleValueExtendedProperties[0].Value);
+    if (item.SingleValueExtendedProperties !== undefined) {
+      getHeadersComplete(item.SingleValueExtendedProperties[0].Value);
+    } else {
+      showError(ImportedStrings.mha_headersMissing);
+    }
   }).fail(function(error) {
     showError(JSON.stringify(error, null, 2));
   }).always(function() {
