@@ -79,8 +79,6 @@ function getHeaders(accessToken) {
     itemId +
     // PR_TRANSPORT_MESSAGE_HEADERS
     '?$select=SingleValueExtendedProperties&$expand=SingleValueExtendedProperties($filter=PropertyId eq \'String 0x007D\')';
-  debugOut('REST URL: ' + getMessageUrl);
-  debugOut('Access Token: ' + accessToken);
 
   $.ajax({
     url: getMessageUrl,

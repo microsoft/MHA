@@ -379,8 +379,3 @@ function showError(message) {
   $('#error-display .ms-MessageBar-text').text(message);
   $('#error-display').show();
 }
-
-function debugOut(message) {
-  var oldText = $('.debug-print').text();
-  $('.debug-print').text(oldText + '\r\n' + message);
-}
