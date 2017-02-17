@@ -21,8 +21,6 @@ AntiSpamRow.prototype.set = function () { };
 AntiSpamRow.prototype.get = function () { };
 
 var AntiSpamReport = function () {
-    var that = this;
-
     this.antiSpamRows = [
         new AntiSpamRow("BCL", ImportedStrings.mha_bcl, "X-Microsoft-Antispam"),
         new AntiSpamRow("PCL", ImportedStrings.mha_pcl, "X-Microsoft-Antispam")

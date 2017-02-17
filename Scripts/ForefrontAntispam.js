@@ -20,8 +20,6 @@ ForefrontAntiSpamRow.prototype.set = function () { };
 ForefrontAntiSpamRow.prototype.get = function () { };
 
 var ForefrontAntiSpamReport = function () {
-    var that = this;
-
     this.forefrontAntiSpamRows = [
         new ForefrontAntiSpamRow("CTRY", ImportedStrings.mha_countryRegion, "X-Forefront-Antispam-Report"),
         new ForefrontAntiSpamRow("LANG", ImportedStrings.mha_lang, "X-Forefront-Antispam-Report"),
