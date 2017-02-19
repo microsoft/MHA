@@ -1,28 +1,3 @@
-/// <reference path="Table.js" />
-/// <reference path="Strings.js" />
-/// <reference path="~/Scripts/Headers.js" />
-/// <reference path="~/Scripts/siteTypesOffice.js" />
-// This function is run when the app is ready to start interacting with the host application.
-// It ensures the DOM is ready before updating the span elements with values from the current message.
-Office.initialize = function () {
-    $(document).ready(function () {
-        $(window).resize(onResize);
-        initViewModels();
-        updateStatus(ImportedStrings.mha_loading);
-        sendHeadersRequest();
-    });
-};
-
-function enableSpinner() {
-    $("#response").css("background-image", "url(../Resources/loader.gif)");
-    $("#response").css("background-repeat", "no-repeat");
-    $("#response").css("background-position", "center");
-}
-
-function disableSpinner() {
-    $("#response").css("background", "none");
-}
-
 function processHeaders(headers) {
     updateStatus(ImportedStrings.mha_foundHeaders);
     $("#originalHeaders").text(headers);
@@ -58,13 +33,6 @@ function getItemRestId() {
     }
 }
 
-function displayError(error, details) {
-    disableSpinner();
-    updateStatus(error);
-    viewModel.originalHeaders = details;
-    rebuildSections();
-}
-
 function getRestUrl(accessToken) {
     // Shim function to workaround
     // mailbox.restUrl == null case
@@ -75,8 +43,8 @@ function getRestUrl(accessToken) {
     // parse the token
     var jwt = window.jwt_decode(accessToken);
 
-    // 'aud' parameter from token can be in a couple
-    // of different formats.
+    // 'aud' parameter from token can be in a couple of
+    // different formats.
 
     // Format 1: It's just the URL
     if (jwt.aud.match(/https:\/\/([^@]*)/)) {
@@ -91,7 +59,7 @@ function getRestUrl(accessToken) {
 
     // Couldn't find what we expected, default to
     // outlook.office.com
-    return 'https://outlook.office.com';
+    return "https://outlook.office.com";
 }
 
 function getHeaders(accessToken) {
