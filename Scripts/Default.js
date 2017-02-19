@@ -19,13 +19,13 @@ function disableSpinner() {
     $("#response").css("background", "none");
 }
 
-function processHeaders(headers) {
+function getHeadersComplete(headers) {
     updateStatus(ImportedStrings.mha_foundHeaders);
     $("#originalHeaders").text(headers);
     parseHeadersToTables(headers);
 }
 
-function displayError(error, details) {
+function showError(error, details) {
     disableSpinner();
     updateStatus(error);
     viewModel.originalHeaders = details;

@@ -1,9 +1,3 @@
-function processHeaders(headers) {
-    updateStatus(ImportedStrings.mha_foundHeaders);
-    $("#originalHeaders").text(headers);
-    parseHeadersToTables(headers);
-}
-
 function sendHeadersRequest() {
     updateStatus(ImportedStrings.mha_RequestSent);
     enableSpinner();
@@ -80,13 +74,13 @@ function getHeaders(accessToken) {
             "Accept": "application/json; odata.metadata=none"
         }
     }).done(function (item) {
-        if (item.SingleValueExtendedProperties != undefined) {
-            processHeaders(item.SingleValueExtendedProperties[0].Value);
+        if (item.SingleValueExtendedProperties !== undefined) {
+            getHeadersComplete(item.SingleValueExtendedProperties[0].Value);
         } else {
-            displayError(ImportedStrings.mha_headersMissing);
+            showError(ImportedStrings.mha_headersMissing);
         }
     }).fail(function (error) {
-        displayError(ImportedStrings.mha_requestFailed, JSON.stringify(error, null, 2));
+        showError(ImportedStrings.mha_requestFailed, JSON.stringify(error, null, 2));
     }).always(function () {
         disableSpinner();
     });

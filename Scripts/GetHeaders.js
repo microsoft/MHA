@@ -67,7 +67,7 @@ function getRestUrl(accessToken) {
 
     // Couldn't find what we expected, default to
     // outlook.office.com
-    return 'https://outlook.office.com';
+    return "https://outlook.office.com";
 }
 
 function getHeaders(accessToken) {
@@ -75,10 +75,10 @@ function getHeaders(accessToken) {
     var itemId = getItemRestId();
 
     var getMessageUrl = getRestUrl(accessToken) +
-      "/api/v2.0/me/messages/" +
-      itemId +
-      // PR_TRANSPORT_MESSAGE_HEADERS
-      "?$select=SingleValueExtendedProperties&$expand=SingleValueExtendedProperties($filter=PropertyId eq 'String 0x007D')";
+        "/api/v2.0/me/messages/" +
+        itemId +
+        // PR_TRANSPORT_MESSAGE_HEADERS
+        "?$select=SingleValueExtendedProperties&$expand=SingleValueExtendedProperties($filter=PropertyId eq 'String 0x007D')";
 
     $.ajax({
         url: getMessageUrl,
