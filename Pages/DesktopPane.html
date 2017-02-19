@@ -20,106 +20,94 @@
 
     <script src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/js/fabric.min.js"></script>
 
-    <script src="../Scripts/v2/Headers.js"></script>
-    <script src="../Scripts/v2/Table.js"></script>
+    <script src="../Scripts/Headers.js"></script>
     <script src="../Scripts/Strings.js"></script>
-    <script src="../Scripts/v2/Received.js"></script>
-    <script src="../Scripts/v2/Other.js"></script>
-    <script src="../Scripts/v2/ForefrontAntispam.js"></script>
-    <script src="../Scripts/v2/Antispam.js"></script>
-    <script src="../Scripts/v2/Summary.js"></script>
+    <script src="../Scripts/Received.js"></script>
+    <script src="../Scripts/Other.js"></script>
+    <script src="../Scripts/ForefrontAntispam.js"></script>
+    <script src="../Scripts/Antispam.js"></script>
+    <script src="../Scripts/Summary.js"></script>
     <script src="../Scripts/2047.js"></script>
+    <script src="../Scripts/jwt-decode.min.js"></script>
+    <script src="../Scripts/GetHeaders.js"></script>
     <script src="../Scripts/DesktopPane.js"></script>
 </head>
 <body>
-  <div class="content-main">
-    <div class="ms-Pivot main-pivot">
-      <ul class="ms-Pivot-links">
-        <li class="ms-Pivot-link is-selected" data-content="summary-view-table" title="Summary" tabindex="1">Summary</li>
-        <li class="ms-Pivot-link" data-content="header-view" title="Headers" tabindex="1">Headers</li>
-      </ul>
-      <div class="ms-Pivot-content" data-content="summary-view">
-        <!--<div class="ms-font-xl">Summary</div>
-        <hr/>-->
-        <div class="ms-font-s ms-fontWeight-semibold">Subject</div>
-        <div class="code-box">
-          <pre><code>RE: ACTION REQUIRED: Tech Summit Washington D.C. Speaker Registration</code></pre>
-        </div>
-        <div class="ms-font-s ms-fontWeight-semibold">Message Id</div>
-        <div class="code-box">
-          <pre><code>&lt;BY2PR0401MB0901164D3A67E840205F74A7AC440@BY2PR0401MB0901.namprd04.prod.outlook.com&gt;</code></pre>
-        </div>
-        <div class="ms-font-s ms-fontWeight-semibold">Creation time</div>
-        <div class="code-box">
-          <pre><code>2‎/‎10‎/‎2017‎ ‎12‎:‎59‎:‎09‎ ‎PM (Delivered after 15 seconds)</code></pre>
-        </div>
-        <div class="ms-font-s ms-fontWeight-semibold">From</div>
-        <div class="code-box">
-          <pre><code>Tech Summit &lt;techsummit@dynamicevents.com&gt;</code></pre>
-        </div>
-        <div class="ms-font-s ms-fontWeight-semibold">To</div>
-        <div class="code-box">
-          <pre><code>Jason Johnston &lt;jasonjoh@exchange.microsoft.com&gt;</code></pre>
-        </div>
-        <div class="ms-font-s ms-fontWeight-semibold">Cc</div>
-        <div class="code-box">
-          <pre><code>"support@eventcore.com" &lt;support@eventcore.com&gt;, Tech Summit &lt;techsummit@dynamicevents&gt;</code></pre>
-        </div>
-      </div>
-      <div class="ms-Pivot-content" data-content="summary-view-table">
-        <table class="ms-Table mt-Table--fixed summary-table">
-          <tbody>
-            <tr>
-              <td class="field-name ms-font-mi ms-fontWeight-semibold">Subject</td>
-              <td class="ms-font-mi">RE: ACTION REQUIRED: Tech Summit Washington D.C. Speaker Registration</td>
-            </tr>
-            <tr>
-              <td class="field-name ms-font-mi ms-fontWeight-semibold">Message Id</td>
-              <td class="ms-font-mi">&lt;BY2PR0401MB0901164D3A67E840205F74A7AC440@BY2PR0401MB0901.namprd04.prod.outlook.com&gt;</td>
-            </tr>
-            <tr>
-              <td class="field-name ms-font-mi ms-fontWeight-semibold">Creation time</td>
-              <td class="ms-font-mi">‎2‎/‎10‎/‎2017‎ ‎12‎:‎59‎:‎09‎ ‎PM (Delivered after 15 seconds)</td>
-            </tr>
-            <tr>
-              <td class="field-name ms-font-mi ms-fontWeight-semibold">From</td>
-              <td class="ms-font-mi">Tech Summit &lt;techsummit@dynamicevents.com&gt;</td>
-            </tr>
-            <tr>
-              <td class="field-name ms-font-mi ms-fontWeight-semibold">To</td>
-              <td class="ms-font-mi">Jason Johnston &lt;jasonjoh@exchange.microsoft.com&gt;</td>
-            </tr>
-            <tr>
-              <td class="field-name ms-font-mi ms-fontWeight-semibold">Cc</td>
-              <td class="ms-font-mi">"support@eventcore.com" &lt;support@eventcore.com&gt;<br/>Tech Summit &lt;techsummit@dynamicevents&gt;</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="ms-Pivot-content" data-content="header-view">
-        <div class="ms-font-xl">Header Category</div>
-        <hr/>
-        <div class="ms-Pivot header-pivot">
-          <ul class="ms-Pivot-links">
-            <li class="ms-Pivot-link" data-content="received-headers" title="Received" tabindex="1">Received</li>
-            <li class="ms-Pivot-link " data-content="antispam-headers" title="Antispam" tabindex="1">Antispam</li>
-            <li class="ms-Pivot-link " data-content="other-headers" title="Other" tabindex="1">Other</li>
-          </ul>
-          <div class="ms-Pivot-content" data-content="received-headers">
-            RECEIVED
+  <div class="content-wrap">
+    <div class="content-header">
+      <div class="ms-CommandBar" id="nav-bar">
+        <div class="ms-CommandBar-mainArea">
+          <div class="ms-CommandButton ms-CommandButton--pivot is-active" data-content="summary-view">
+            <button class="ms-CommandButton-button">
+              <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Info"></i></span>
+              <span class="ms-CommandButton-label">Summary</span>
+            </button>
           </div>
-          <div class="ms-Pivot-content" data-content="antispam-headers">
-            ANTISPAM
+          <div class="ms-CommandButton ms-CommandButton--pivot" data-content="received-view">
+            <button class="ms-CommandButton-button">
+              <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Timer"></i></span>
+              <span class="ms-CommandButton-label">Received</span>
+            </button>
           </div>
-          <div class="ms-Pivot-content" data-content="other-headers">
-            OTHER
+          <div class="ms-CommandButton ms-CommandButton--pivot" data-content="antispam-view">
+            <button class="ms-CommandButton-button">
+              <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--MailAlert"></i></span>
+              <span class="ms-CommandButton-label">Antispam</span>
+            </button>
+          </div>
+          <div class="ms-CommandButton ms-CommandButton--pivot" data-content="other-view">
+            <button class="ms-CommandButton-button">
+              <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Cake"></i></span>
+              <span class="ms-CommandButton-label">Other</span>
+            </button>
           </div>
         </div>
       </div>
     </div>
-    
-    <div class="debug-out code-box">
-      <pre><code class="debug-print"></code>
+    <div class="content-main">
+      <div class="ms-Overlay">
+        <div class="status-display">
+          <div class="status-message ms-font-xl"></div>
+          <div class="status-spinner ms-Spinner ms-Spinner--large"></div>
+        </div>
+      </div>
+      <div id="error-display" class="ms-MessageBar ms-MessageBar--error">
+        <div class="ms-MessageBar-content">
+          <div class="ms-MessageBar-icon">
+            <i class="ms-Icon ms-Icon--ErrorBadge"></i>
+          </div>
+          <div class="ms-MessageBar-text"></div>
+        </div>
+      </div>
+      <div class="header-view" data-content="summary-view">
+        <div class="ms-font-l">Summary</div>
+        <hr/>
+        <div class="summary-list"></div>
+        <div class="orig-header-ui">
+          <button id="orig-header-btn" class="ms-Button ms-Button--hero">
+            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--Add"></i></span> 
+            <span class="ms-Button-label">Original Headers</span> 
+          </button>
+          <div id="original-headers" class="code-box">
+              <pre><code></code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="header-view" data-content="received-view">
+        <div class="ms-font-l">Received</div>
+        <hr/>
+        <div class="received-list"></div>
+      </div>
+      <div class="header-view" data-content="antispam-view">
+        <div class="ms-font-l">Antispam</div>
+        <hr/>
+        <div class="antispam-list"></div>
+      </div>
+      <div class="header-view" data-content="other-view">
+        <div class="ms-font-l">Other</div>
+        <hr/>
+        <div class="other-list"></div>
+      </div>
     </div>
   </div>
 </body>
