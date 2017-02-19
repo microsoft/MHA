@@ -6,8 +6,7 @@ function sendHeadersRequest() {
             var accessToken = result.value;
             getHeaders(accessToken);
         } else {
-            disableSpinner();
-            updateStatus("Unable to obtain callback token.");
+            showError("Unable to obtain callback token.");
         }
     });
 }
