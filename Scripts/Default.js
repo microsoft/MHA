@@ -19,6 +19,10 @@ function disableSpinner() {
     $("#response").css("background", "none");
 }
 
+function hideStatus() {
+    disableSpinner();
+}
+
 function getHeadersComplete(headers) {
     updateStatus(ImportedStrings.mha_foundHeaders);
     $("#originalHeaders").text(headers);

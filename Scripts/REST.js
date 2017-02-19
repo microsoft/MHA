@@ -1,6 +1,6 @@
 function sendHeadersRequest() {
     updateStatus(ImportedStrings.mha_RequestSent);
-    enableSpinner();
+
     Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
         if (result.status === "succeeded") {
             var accessToken = result.value;
@@ -81,6 +81,6 @@ function getHeaders(accessToken) {
     }).fail(function (error) {
         showError(ImportedStrings.mha_requestFailed, JSON.stringify(error, null, 2));
     }).always(function () {
-        disableSpinner();
+        hideStatus();
     });
 }

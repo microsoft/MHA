@@ -120,6 +120,7 @@ function recalculateVisibility() {
 }
 
 function updateStatus(statusText) {
+    enableSpinner();
     $("#status").text(statusText);
     if (viewModel !== null) {
         viewModel.status = statusText;
