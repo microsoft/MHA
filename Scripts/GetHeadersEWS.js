@@ -55,6 +55,8 @@ function callback(asyncResult) {
     } else if (asyncResult.error) {
         showError(asyncResult.error.message);
     }
+
+    hideStatus();
 }
 
 function getSoapEnvelope(request) {
