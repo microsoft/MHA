@@ -79,7 +79,7 @@ function initViewModels() {
 
 function parseHeadersToTables(headers) {
     viewModel.parseHeaders(headers);
-    hideStatus();
+    updateStatus("");
     rebuildSections();
     hideExtraColumns();
     recalculateLayout(true);

@@ -20,7 +20,6 @@ function disableSpinner() {
 }
 
 function hideStatus() {
-    updateStatus("");
     disableSpinner();
 }
 
