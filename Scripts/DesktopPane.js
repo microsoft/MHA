@@ -329,16 +329,16 @@ function buildViews() {
     // Initialize any fabric lists added
     var listElements = document.querySelectorAll(".ms-List");
     for (i = 0; i < listElements.length; i++) {
-        new fabric["List"](listElements[i]);
+        new window.fabric["List"](listElements[i]);
     }
 
     var listItemElements = document.querySelectorAll(".ms-ListItem");
     for (i = 0; i < listItemElements.length; i++) {
-        new fabric["ListItem"](listItemElements[i]);
+        new window.fabric["ListItem"](listItemElements[i]);
 
         // Init corresponding callout
         var calloutElement = listItemElements[i].querySelector(".ms-Callout");
-        new fabric["Callout"](calloutElement, listItemElements[i], "right");
+        new window.fabric["Callout"](calloutElement, listItemElements[i], "right");
     }
 }
 
