@@ -41,9 +41,8 @@ function getHeadersComplete(headers) {
     parseHeadersToTables(headers);
 }
 
-function showError(message, details) {
+function showError(message) {
     updateStatus(message);
     disableSpinner();
-    viewModel.originalHeaders = details;
     rebuildSections();
 }

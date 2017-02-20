@@ -5,7 +5,7 @@ var ImportedStrings = {
     mha_foundHeaders: "Found headers",
     mha_processingHeader: "Processing header",
     mha_headersMissing: "Message was missing transport headers. If this is a sent item this may be expected.",
-    mha_requestFailed: "Failed to retrieve headers. Expand the Orginal headers block for more details.",
+    mha_requestFailed: "Failed to retrieve headers.",
 
     // Headers
     mha_negative: "-",

@@ -1,5 +1,5 @@
 /**
- * GetHeader.js
+ * GetHeaderRest.js
  * 
  * This file has all the methods to get PR_TRANSPORT_MESSAGE_HEADERS
  * from the current message via REST.
