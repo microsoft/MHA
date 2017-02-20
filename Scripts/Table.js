@@ -119,21 +119,6 @@ function recalculateVisibility() {
     }
 }
 
-function updateStatus(statusText) {
-    enableSpinner();
-    $("#status").text(statusText);
-    if (viewModel !== null) {
-        viewModel.status = statusText;
-    }
-
-    positionResponse();
-    recalculateVisibility();
-}
-
-function hideStatus() {
-    updateStatus("");
-}
-
 // Restores table to empty state so we can repopulate it
 function restoreTable(id) {
     $("#" + id + " tbody tr").remove(); // Remove the rows

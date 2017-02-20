@@ -79,7 +79,7 @@ function getHeaders(accessToken) {
             showError(ImportedStrings.mha_headersMissing);
         }
     }).fail(function (error) {
-        showError(ImportedStrings.mha_requestFailed, JSON.stringify(error, null, 2));
+        showError(JSON.stringify(error, null, 2));
     }).always(function () {
         hideStatus();
     });

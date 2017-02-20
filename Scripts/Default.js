@@ -20,7 +20,19 @@ function disableSpinner() {
 }
 
 function hideStatus() {
+    updateStatus("");
     disableSpinner();
+}
+
+function updateStatus(statusText) {
+    enableSpinner();
+    $("#status").text(statusText);
+    if (viewModel !== null) {
+        viewModel.status = statusText;
+    }
+
+    positionResponse();
+    recalculateVisibility();
 }
 
 function getHeadersComplete(headers) {
@@ -29,9 +41,9 @@ function getHeadersComplete(headers) {
     parseHeadersToTables(headers);
 }
 
-function showError(error, details) {
+function showError(message, details) {
+    updateStatus(message);
     disableSpinner();
-    updateStatus(error);
     viewModel.originalHeaders = details;
     rebuildSections();
 }
