@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--Created:cbbc9d22-5cf7-4e4c-8ee9-42a772aae58a-->
 <OfficeApp
   xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
@@ -41,6 +42,7 @@
     </Form>
   </FormSettings>
 
+  <!-- TODO: Dial this down to ReadItem when the token bug is fixed -->
   <Permissions>ReadWriteMailbox</Permissions>
 
   <Rule xsi:type="RuleCollection" Mode="And">
@@ -61,29 +63,29 @@
           <FunctionFile resid="functionFile" />
 
           <!-- Message read form -->
-            <ExtensionPoint xsi:type="MessageReadCommandSurface">
-              <OfficeTab id="TabDefault">
-                <Group id="mhaCmdGroup">
-                  <Label resid="groupLabel" />
-                  <!-- Task pane button -->
-                  <Control xsi:type="Button" id="mhaOpenPaneButton">
-                    <Label resid="mhaOpenPaneBtnLabel" />
-                    <Supertip>
-                      <Title resid="mhaOpenPaneBtnTipTitle" />
-                      <Description resid="mhaOpenPaneBtnTipDescription" />
-                    </Supertip>
-                    <Icon>
-                      <bt:Image size="16" resid="mha-icon-16" />
-                      <bt:Image size="32" resid="mha-icon-32" />
-                      <bt:Image size="80" resid="mha-icon-80" />
-                    </Icon>
-                    <Action xsi:type="ShowTaskpane">
-                      <SourceLocation resid="mhaTaskPaneUrl" />
-                    </Action>
-                  </Control>
-                </Group>
-              </OfficeTab>
-            </ExtensionPoint>
+          <ExtensionPoint xsi:type="MessageReadCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="mhaCmdGroup">
+                <Label resid="groupLabel" />
+                <!-- Task pane button -->
+                <Control xsi:type="Button" id="mhaOpenPaneButton">
+                  <Label resid="mhaOpenPaneBtnLabel" />
+                  <Supertip>
+                    <Title resid="mhaOpenPaneBtnTipTitle" />
+                    <Description resid="mhaOpenPaneBtnTipDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="mha-icon-16" />
+                    <bt:Image size="32" resid="mha-icon-32" />
+                    <bt:Image size="80" resid="mha-icon-80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="mhaTaskPaneUrl" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
     </Hosts>
@@ -125,30 +127,30 @@
             <FunctionFile resid="functionFile" />
 
             <!-- Message read form -->
-              <ExtensionPoint xsi:type="MessageReadCommandSurface">
-                <OfficeTab id="TabDefault">
-                  <Group id="mhaCmdGroup">
-                    <Label resid="groupLabel" />
-                    <!-- Task pane button -->
-                    <Control xsi:type="Button" id="mhaOpenPaneButton">
-                      <Label resid="mhaOpenPaneBtnLabel" />
-                      <Supertip>
-                        <Title resid="mhaOpenPaneBtnTipTitle" />
-                        <Description resid="mhaOpenPaneBtnTipDescription" />
-                      </Supertip>
-                      <Icon>
-                        <bt:Image size="16" resid="mha-icon-16" />
-                        <bt:Image size="32" resid="mha-icon-32" />
-                        <bt:Image size="80" resid="mha-icon-80" />
-                      </Icon>
-                      <Action xsi:type="ShowTaskpane">
-                        <SourceLocation resid="mhaDesktopPaneUrl" />
-                        <SupportsPinning>true</SupportsPinning> 
-                      </Action>
-                    </Control>
-                  </Group>
-                </OfficeTab>
-              </ExtensionPoint>
+            <ExtensionPoint xsi:type="MessageReadCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="mhaCmdGroup">
+                  <Label resid="groupLabel" />
+                  <!-- Task pane button -->
+                  <Control xsi:type="Button" id="mhaOpenPaneButton">
+                    <Label resid="mhaOpenPaneBtnLabel" />
+                    <Supertip>
+                      <Title resid="mhaOpenPaneBtnTipTitle" />
+                      <Description resid="mhaOpenPaneBtnTipDescription" />
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="mha-icon-16" />
+                      <bt:Image size="32" resid="mha-icon-32" />
+                      <bt:Image size="80" resid="mha-icon-80" />
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <SourceLocation resid="mhaDesktopPaneUrl" />
+                      <SupportsPinning>true</SupportsPinning>
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
           </DesktopFormFactor>
         </Host>
       </Hosts>
@@ -165,7 +167,7 @@
           <bt:Url id="mhaDesktopPaneUrl" DefaultValue="https://mha.azurewebsites.net/pages/desktoppane.html"/>
         </bt:Urls>
         <bt:ShortStrings>
-          <bt:String id="groupLabel" DefaultValue="MHA BETA"/>
+          <bt:String id="groupLabel" DefaultValue=" "/>
           <bt:String id="mhaOpenPaneBtnLabel" DefaultValue="View Headers"/>
           <bt:String id="mhaOpenPaneBtnTipTitle" DefaultValue="Open a pane to view the available headers on the current message"/>
         </bt:ShortStrings>

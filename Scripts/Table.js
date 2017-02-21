@@ -79,7 +79,7 @@ function initViewModels() {
 
 function parseHeadersToTables(headers) {
     viewModel.parseHeaders(headers);
-    hideStatus();
+    updateStatus("");
     rebuildSections();
     hideExtraColumns();
     recalculateLayout(true);
@@ -117,20 +117,6 @@ function recalculateVisibility() {
     for (var i = 0 ; i < visibilityBindings.length ; i++) {
         makeVisible(visibilityBindings[i][0], visibilityBindings[i][1]());
     }
-}
-
-function updateStatus(statusText) {
-    $("#status").text(statusText);
-    if (viewModel !== null) {
-        viewModel.status = statusText;
-    }
-
-    positionResponse();
-    recalculateVisibility();
-}
-
-function hideStatus() {
-    updateStatus("");
 }
 
 // Restores table to empty state so we can repopulate it

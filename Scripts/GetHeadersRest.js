@@ -1,44 +1,27 @@
-/// <reference path="Table.js" />
-/// <reference path="Strings.js" />
-/// <reference path="~/Scripts/Headers.js" />
-/// <reference path="~/Scripts/siteTypesOffice.js" />
-// This function is run when the app is ready to start interacting with the host application.
-// It ensures the DOM is ready before updating the span elements with values from the current message.
-Office.initialize = function () {
-    $(document).ready(function () {
-        $(window).resize(onResize);
-        initViewModels();
-        updateStatus(ImportedStrings.mha_loading);
-        sendHeadersRequest();
-    });
-};
-
-function enableSpinner() {
-    $("#response").css("background-image", "url(../Resources/loader.gif)");
-    $("#response").css("background-repeat", "no-repeat");
-    $("#response").css("background-position", "center");
-}
-
-function disableSpinner() {
-    $("#response").css("background", "none");
-}
-
-function processHeaders(headers) {
-    updateStatus(ImportedStrings.mha_foundHeaders);
-    $("#originalHeaders").text(headers);
-    parseHeadersToTables(headers);
-}
+/**
+ * GetHeaderRest.js
+ * 
+ * This file has all the methods to get PR_TRANSPORT_MESSAGE_HEADERS
+ * from the current message via REST.
+ * 
+ * To use this file, your page JS needs to implement the following methods:
+ * 
+ * - updateStatus(message): Should be a method that displays a status to the user,
+ *   preferably with some sort of activity indicator (spinner)
+ * - hideStatus: Method to hide the status displays
+ * - showError(message): Method to communicate an error to the user.
+ * - getHeadersComplete(headers): Callback to receive headers.
+ */
 
 function sendHeadersRequest() {
     updateStatus(ImportedStrings.mha_RequestSent);
-    enableSpinner();
+
     Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
         if (result.status === "succeeded") {
             var accessToken = result.value;
             getHeaders(accessToken);
         } else {
-            disableSpinner();
-            updateStatus("Unable to obtain callback token.");
+            showError("Unable to obtain callback token.");
         }
     });
 }
@@ -58,13 +41,6 @@ function getItemRestId() {
     }
 }
 
-function displayError(error, details) {
-    disableSpinner();
-    updateStatus(error);
-    viewModel.originalHeaders = details;
-    rebuildSections();
-}
-
 function getRestUrl(accessToken) {
     // Shim function to workaround
     // mailbox.restUrl == null case
@@ -75,8 +51,8 @@ function getRestUrl(accessToken) {
     // parse the token
     var jwt = window.jwt_decode(accessToken);
 
-    // 'aud' parameter from token can be in a couple
-    // of different formats.
+    // 'aud' parameter from token can be in a couple of
+    // different formats.
 
     // Format 1: It's just the URL
     if (jwt.aud.match(/https:\/\/([^@]*)/)) {
@@ -91,7 +67,7 @@ function getRestUrl(accessToken) {
 
     // Couldn't find what we expected, default to
     // outlook.office.com
-    return 'https://outlook.office.com';
+    return "https://outlook.office.com";
 }
 
 function getHeaders(accessToken) {
@@ -112,14 +88,14 @@ function getHeaders(accessToken) {
             "Accept": "application/json; odata.metadata=none"
         }
     }).done(function (item) {
-        if (item.SingleValueExtendedProperties != undefined) {
-            processHeaders(item.SingleValueExtendedProperties[0].Value);
+        if (item.SingleValueExtendedProperties !== undefined) {
+            getHeadersComplete(item.SingleValueExtendedProperties[0].Value);
         } else {
-            displayError(ImportedStrings.mha_headersMissing);
+            showError(ImportedStrings.mha_headersMissing);
         }
     }).fail(function (error) {
-        displayError(ImportedStrings.mha_requestFailed, JSON.stringify(error, null, 2));
+        showError(JSON.stringify(error, null, 2));
     }).always(function () {
-        disableSpinner();
+        hideStatus();
     });
 }
