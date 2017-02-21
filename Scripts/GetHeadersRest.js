@@ -42,9 +42,9 @@ function getItemRestId() {
 }
 
 function getBaseUrl(url) {
-  var parts = url.split('/');
+    var parts = url.split("/");
 
-  return parts[0] + '//' + parts[2];
+    return parts[0] + "//" + parts[2];
 }
 
 function getRestUrl(accessToken) {
