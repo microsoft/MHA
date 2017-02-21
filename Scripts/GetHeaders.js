@@ -41,11 +41,17 @@ function getItemRestId() {
   }
 }
 
+function getBaseUrl(url) {
+  var parts = url.split('/');
+
+  return parts[0] + '//' + parts[2];
+}
+
 function getRestUrl(accessToken) {
   // Shim function to workaround
   // mailbox.restUrl == null case
   if (Office.context.mailbox.restUrl) {
-    return Office.context.mailbox.restUrl;
+    return getBaseUrl(Office.context.mailbox.restUrl);
   }
   
   // parse the token
