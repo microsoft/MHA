@@ -152,6 +152,35 @@
               </OfficeTab>
             </ExtensionPoint>
           </DesktopFormFactor>
+
+          <MobileFormFactor>
+            <FunctionFile resid="functionFile" />
+
+            <ExtensionPoint xsi:type="MobileMessageReadCommandSurface">
+              <Group id="mobileMsgRead">
+                <Label resid="groupLabel" />
+                <Control xsi:type="MobileButton" id="mblOpenPaneButton">
+                  <Label resid="mhaOpenPaneBtnLabel" />
+                  <Icon xsi:type="bt:MobileIconList">
+                    <bt:Image size="25" scale="1" resid="mha-icon-32" />
+                    <bt:Image size="25" scale="2" resid="mha-icon-32" />
+                    <bt:Image size="25" scale="3" resid="mha-icon-32" />
+
+                    <bt:Image size="32" scale="1" resid="mha-icon-32" />
+                    <bt:Image size="32" scale="2" resid="mha-icon-32" />
+                    <bt:Image size="32" scale="3" resid="mha-icon-32" />
+
+                    <bt:Image size="48" scale="1" resid="mha-icon-32" />
+                    <bt:Image size="48" scale="2" resid="mha-icon-32" />
+                    <bt:Image size="48" scale="3" resid="mha-icon-32" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="mhaMobilePaneUrl" />
+                  </Action>
+                </Control>
+              </Group>
+            </ExtensionPoint>
+          </MobileFormFactor>
         </Host>
       </Hosts>
 
@@ -165,6 +194,7 @@
         <bt:Urls>
           <bt:Url id="functionFile" DefaultValue="https://mha.azurewebsites.net/pages/functions.html"/>
           <bt:Url id="mhaDesktopPaneUrl" DefaultValue="https://mha.azurewebsites.net/pages/desktoppane.html"/>
+          <bt:Url id="mhaMobilePaneUrl" DefaultValue="https://mha.azurewebsites.net/pages/mobilepane.html"/>
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="groupLabel" DefaultValue=" "/>
