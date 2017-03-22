@@ -8,6 +8,18 @@
     <link href="../Content/Office.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    Message Header Analyzer does not collect or transmit any user information. Please refer any questions to the MHA <a href="https://github.com/stephenegriffin/MHA/issues/" target="_blank">project</a> on GitHub.
+    <h1>Message Header Analyzer</h1>
+    <h2>Privacy Policy</h2>
+    This add-in does not collect or transmit any user information.
+    Please refer any questions to the MHA <a href="https://github.com/stephenegriffin/MHA/issues/" target="_blank">project</a> on GitHub.<br />
+    <br />
+    <h2>A Note from the Developer on Permissions</h2>
+    In order to get the transport message headers I have to use the EWS makeEwsRequestAsync method, which requires the ReadWriteMailbox permission level. See the article
+    <a href="https://dev.office.com/docs/add-ins/outlook/understanding-outlook-add-in-permissions" target="_blank">Understanding Outlook add-in permissions</a>
+    for more on this. If I could request fewer permissions I would, since I only ever read the one property, but I have no choice in the matter.<br />
+    <br />
+    When REST is more widely available (and a few REST specific bugs are fixed) I'll be able to switch to REST and request a lower permission level.<br />
+    <br />
+    Steve
 </body>
 </html>
