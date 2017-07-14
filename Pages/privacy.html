@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8" />
@@ -10,24 +10,8 @@
 <body>
     <h1>Message Header Analyzer</h1>
     <h2>Privacy Policy</h2>
-    This <a href="https://store.office.com/en-001/app.aspx?assetid=WA104005406" target="_blank">add-in</a> does not collect or transmit any user information.
+    This add-in does not collect or transmit any user information.
     Please refer any questions to the MHA <a href="https://github.com/stephenegriffin/MHA/issues/" target="_blank">project</a> on GitHub.<br />
-    <br />
-    <h2>Installation Procedure</h2>
-    Because MHA requires the ReadWriteMailbox permission (see below) it can only be installed by the Administrator through the Exchange admin center. Here are some steps I put together:
-    <ul>
-        <li>In Office365, go to the Exchange Admin Center.</li>
-        <li>Click on the Organization tab</li>
-        <li>From there, select the add-ins tab</li>
-        <li>Click the Plus icon/Add from the Office Store</li>
-        <li>A new page will load for the store</li>
-        <li>Search for "Message Header Analyzer"</li>
-        <li>Choose MHA in the results</li>
-        <li>Click Add</li>
-        <li>Confirm by clicking Yes</li>
-        <li>Back in the Exchange Admin Center, refresh the list of add-ins</li>
-        <li>You can now edit who the add-in is available for</li>
-    </ul>
     <br />
     <h2>A Note from the Developer on Permissions</h2>
     In order to get the transport message headers I have to use the EWS makeEwsRequestAsync method, which requires the ReadWriteMailbox permission level. See the article
