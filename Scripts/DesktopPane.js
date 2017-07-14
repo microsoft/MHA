@@ -74,8 +74,8 @@ function initializeFabric() {
         }
     });
 
-    buttonElement = document.querySelector("#diagnostics-btn");
-    new window.fabric["Button"](buttonElement, function () {
+    var diagbuttonElement = document.querySelector("#diagnostics-btn");
+    new window.fabric["Button"](diagbuttonElement, function () {
         var btnIcon = $(this).find(".ms-Icon");
         if (btnIcon.hasClass("ms-Icon--Add")) {
             $("#diagnostics").show();
