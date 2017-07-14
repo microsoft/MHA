@@ -21,6 +21,19 @@ function sendHeadersRequest() {
     var envelope = getSoapEnvelope(request);
 
     try {
+        viewModel.diagnostics += "Requirement set = " + getRequirementSet() + "\n";
+        viewModel.diagnostics += "hostname = " + Office.context.mailbox.diagnostics.hostName + "\n";
+        viewModel.diagnostics += "hostVersion = " + Office.context.mailbox.diagnostics.hostVersion + "\n";
+        if (Office.context.mailbox.diagnostics.OWAView) {
+            viewModel.diagnostics += "OWAView = " + Office.context.mailbox.diagnostics.OWAView + "\n";
+        }
+
+        viewModel.diagnostics += "itemType = " + Office.context.mailbox.item.itemType + "\n";
+
+        viewModel.diagnostics += "contentLanguage = " + Office.context.contentLanguage + "\n";
+        viewModel.diagnostics += "displayLanguage = " + Office.context.displayLanguage + "\n";
+        viewModel.diagnostics += "touchEnabled = " + Office.context.touchEnabled + "\n";
+
         mailbox.makeEwsRequestAsync(envelope, callback);
     } catch (e) {
         showError(ImportedStrings.mha_requestFailed);
@@ -62,16 +75,16 @@ function callback(asyncResult) {
 function getSoapEnvelope(request) {
     // Wrap an Exchange Web Services request in a SOAP envelope.
     var result =
-    "<?xml version='1.0' encoding='utf-8'?>" +
-    "<soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'" +
-    "               xmlns:t='http://schemas.microsoft.com/exchange/services/2006/types'>" +
-    "  <soap:Header>" +
-    "     <t:RequestServerVersion Version='Exchange2013'/>" +
-    "  </soap:Header>" +
-    "  <soap:Body>" +
-    request +
-    "  </soap:Body>" +
-    "</soap:Envelope>";
+        "<?xml version='1.0' encoding='utf-8'?>" +
+        "<soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'" +
+        "               xmlns:t='http://schemas.microsoft.com/exchange/services/2006/types'>" +
+        "  <soap:Header>" +
+        "     <t:RequestServerVersion Version='Exchange2013'/>" +
+        "  </soap:Header>" +
+        "  <soap:Body>" +
+        request +
+        "  </soap:Body>" +
+        "</soap:Envelope>";
 
     return result;
 }
@@ -79,17 +92,17 @@ function getSoapEnvelope(request) {
 function getHeadersRequest(id) {
     // Return a GetItem EWS operation request for the headers of the specified item.
     var result =
-    "    <GetItem xmlns='http://schemas.microsoft.com/exchange/services/2006/messages'>" +
-    "      <ItemShape>" +
-    "        <t:BaseShape>IdOnly</t:BaseShape>" +
-    "        <t:BodyType>Text</t:BodyType>" +
-    "        <t:AdditionalProperties>" +
-    // PR_TRANSPORT_MESSAGE_HEADERS
-    "            <t:ExtendedFieldURI PropertyTag='0x007D' PropertyType='String' />" +
-    "        </t:AdditionalProperties>" +
-    "      </ItemShape>" +
-    "      <ItemIds><t:ItemId Id='" + id + "'/></ItemIds>" +
-    "    </GetItem>";
+        "    <GetItem xmlns='http://schemas.microsoft.com/exchange/services/2006/messages'>" +
+        "      <ItemShape>" +
+        "        <t:BaseShape>IdOnly</t:BaseShape>" +
+        "        <t:BodyType>Text</t:BodyType>" +
+        "        <t:AdditionalProperties>" +
+        // PR_TRANSPORT_MESSAGE_HEADERS
+        "            <t:ExtendedFieldURI PropertyTag='0x007D' PropertyType='String' />" +
+        "        </t:AdditionalProperties>" +
+        "      </ItemShape>" +
+        "      <ItemIds><t:ItemId Id='" + id + "'/></ItemIds>" +
+        "    </GetItem>";
 
     return result;
 }
@@ -103,3 +116,22 @@ function getHeadersRequest(id) {
         });
     };
 })(jQuery);
+
+function getRequirementSet() {
+    if (Office.context.requirements && Office.context.requirements.isSetSupported) {
+        if (Office.context.requirements.isSetSupported("Mailbox", 1.6)) return "1.6";
+        if (Office.context.requirements.isSetSupported("Mailbox", 1.5)) return "1.5";
+        if (Office.context.requirements.isSetSupported("Mailbox", 1.4)) return "1.4";
+        if (Office.context.requirements.isSetSupported("Mailbox", 1.3)) return "1.3";
+        if (Office.context.requirements.isSetSupported("Mailbox", 1.2)) return "1.2";
+        if (Office.context.requirements.isSetSupported("Mailbox", 1.1)) return "1.1";
+        if (Office.context.requirements.isSetSupported("Mailbox", 1.0)) return "1.0";
+    }
+
+    if (Office.context.mailbox.addHandlerAsync) return "1.5?";
+    if (Office.context.ui.displayDialogAsync) return "1.4?";
+    if (Office.context.mailbox.item.saveAsync) return "1.3?";
+    if (Office.context.mailbox.item.setSelectedDataAsync) return "1.2?";
+    if (Office.context.mailbox.item.removeAttachmentAsync) return "1.1?";
+    return "1.0?";
+}

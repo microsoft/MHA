@@ -58,6 +58,11 @@ function buildViews() {
         $("#orig-headers-ui").show();
     }
 
+    if (viewModel.diagnostics) {
+        $("#diagnostics").text(viewModel.diagnostics);
+        $("#diagnostics-ui").show();
+    }
+
     // Build received view
     var receivedContent = $("#received-content");
 

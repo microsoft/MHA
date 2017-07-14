@@ -22,7 +22,9 @@ function loadNewItem() {
     // Empty data
     $(".summary-list").empty();
     $("#original-headers code").empty();
+    $("#diagnostics code").empty();
     $(".orig-header-ui").hide();
+    $(".diagnostics-ui").hide();
     $(".received-list").empty();
     $(".antispam-list").empty();
     $(".other-list").empty();
@@ -72,6 +74,18 @@ function initializeFabric() {
         }
     });
 
+    buttonElement = document.querySelector("#diagnostics-btn");
+    new window.fabric["Button"](buttonElement, function () {
+        var btnIcon = $(this).find(".ms-Icon");
+        if (btnIcon.hasClass("ms-Icon--Add")) {
+            $("#diagnostics").show();
+            btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
+        } else {
+            $("#diagnostics").hide();
+            btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
+        }
+    });
+
     // Show summary by default
     $(".header-view[data-content='summary-view']").show();
 
@@ -103,7 +117,7 @@ function buildViews() {
     var pre;
     var code;
     var i;
-    for (i = 0 ; i < viewModel.summary.summaryRows.length ; i++) {
+    for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
         if (viewModel.summary.summaryRows[i].get()) {
             headerName = $("<div/>")
                 .addClass("ms-font-s")
@@ -126,105 +140,116 @@ function buildViews() {
         $(".orig-header-ui").show();
     }
 
+    // Save diagnostics and show ui
+    $("#diagnostics code").text(viewModel.diagnostics);
+    if (viewModel.diagnostics) {
+        $(".diagnostics-ui").show();
+
+        var buttonElement = document.querySelector("#diagnostics-btn");
+        var btnIcon = $(buttonElement).find(".ms-Icon");
+        $("#diagnostics").hide();
+        btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
+    }
+
     // Build received view
     var receivedList = $(".received-list");
 
     if (viewModel.receivedHeaders.receivedRows.length > 0) {
         var list = $("<ul/>")
-          .addClass("ms-List")
-          .appendTo(receivedList);
+            .addClass("ms-List")
+            .appendTo(receivedList);
 
         for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
 
             var listItem = $("<li/>")
-              .addClass("ms-ListItem")
-              .addClass("ms-ListItem--document")
-              .appendTo(list);
+                .addClass("ms-ListItem")
+                .addClass("ms-ListItem--document")
+                .appendTo(list);
 
             if (i === 0) {
                 $("<span/>")
-                  .addClass("ms-ListItem-primaryText")
-                  .html(makeBold("From: ") + viewModel.receivedHeaders.receivedRows[i].from)
-                  .appendTo(listItem);
+                    .addClass("ms-ListItem-primaryText")
+                    .html(makeBold("From: ") + viewModel.receivedHeaders.receivedRows[i].from)
+                    .appendTo(listItem);
 
                 $("<span/>")
-                  .addClass("ms-ListItem-secondaryText")
-                  .html(makeBold("To: ") + viewModel.receivedHeaders.receivedRows[i].by)
-                  .appendTo(listItem);
+                    .addClass("ms-ListItem-secondaryText")
+                    .html(makeBold("To: ") + viewModel.receivedHeaders.receivedRows[i].by)
+                    .appendTo(listItem);
             } else {
                 var wrap = $("<div/>")
-                  .addClass("progress-icon")
-                  .appendTo(listItem);
+                    .addClass("progress-icon")
+                    .appendTo(listItem);
 
                 var iconbox = $("<div/>")
-                  .addClass("ms-font-xxl")
-                  .addClass("down-icon")
-                  .appendTo(wrap);
+                    .addClass("ms-font-xxl")
+                    .addClass("down-icon")
+                    .appendTo(wrap);
 
                 $("<i/>")
-                  .addClass("ms-Icon")
-                  .addClass("ms-Icon--Down")
-                  .appendTo(iconbox);
+                    .addClass("ms-Icon")
+                    .addClass("ms-Icon--Down")
+                    .appendTo(iconbox);
 
                 var delay = $("<div/>")
-                  .addClass("ms-ProgressIndicator")
-                  .appendTo(wrap);
+                    .addClass("ms-ProgressIndicator")
+                    .appendTo(wrap);
 
                 var bar = $("<div/>")
-                  .addClass("ms-ProgressIndicator-itemProgress")
-                  .appendTo(delay);
+                    .addClass("ms-ProgressIndicator-itemProgress")
+                    .appendTo(delay);
 
                 $("<div/>")
-                  .addClass("ms-ProgressIndicator-progressTrack")
-                  .appendTo(bar);
+                    .addClass("ms-ProgressIndicator-progressTrack")
+                    .appendTo(bar);
 
                 var width = 1.8 * viewModel.receivedHeaders.receivedRows[i].percent;
 
                 $("<div/>")
-                  .addClass("ms-ProgressIndicator-progressBar")
-                  .css("width", width)
-                  .appendTo(bar);
+                    .addClass("ms-ProgressIndicator-progressBar")
+                    .css("width", width)
+                    .appendTo(bar);
 
                 $("<div/>")
-                  .addClass("ms-ProgressIndicator-itemDescription")
-                  .text(viewModel.receivedHeaders.receivedRows[i].delay)
-                  .appendTo(delay);
+                    .addClass("ms-ProgressIndicator-itemDescription")
+                    .text(viewModel.receivedHeaders.receivedRows[i].delay)
+                    .appendTo(delay);
 
                 $("<span/>")
-                  .addClass("ms-ListItem-secondaryText")
-                  .html(makeBold("To: ") + viewModel.receivedHeaders.receivedRows[i].by)
-                  .appendTo(listItem);
+                    .addClass("ms-ListItem-secondaryText")
+                    .html(makeBold("To: ") + viewModel.receivedHeaders.receivedRows[i].by)
+                    .appendTo(listItem);
             }
 
             $("<div/>")
-              .addClass("ms-ListItem-selectionTarget")
-              .appendTo(listItem);
+                .addClass("ms-ListItem-selectionTarget")
+                .appendTo(listItem);
 
             // Callout
             var callout = $("<div/>")
-              .addClass("ms-Callout is-hidden")
-              .appendTo(listItem);
+                .addClass("ms-Callout is-hidden")
+                .appendTo(listItem);
 
             var calloutMain = $("<div/>")
-              .addClass("ms-Callout-main")
-              .appendTo(callout);
+                .addClass("ms-Callout-main")
+                .appendTo(callout);
 
             var calloutHeader = $("<div/>")
-              .addClass("ms-Callout-header")
-              .appendTo(calloutMain);
+                .addClass("ms-Callout-header")
+                .appendTo(calloutMain);
 
             $("<p/>")
-              .addClass("ms-Callout-title")
-              .text("Hop Details")
-              .appendTo(calloutHeader);
+                .addClass("ms-Callout-title")
+                .text("Hop Details")
+                .appendTo(calloutHeader);
 
             var calloutInner = $("<div/>")
-              .addClass("ms-Callout-inner")
-              .appendTo(calloutMain);
+                .addClass("ms-Callout-inner")
+                .appendTo(calloutMain);
 
             var calloutContent = $("<div/>")
-              .addClass("ms-Callout-content")
-              .appendTo(calloutInner);
+                .addClass("ms-Callout-content")
+                .appendTo(calloutInner);
 
             addCalloutEntry("From", viewModel.receivedHeaders.receivedRows[i].from, calloutContent);
             addCalloutEntry("To", viewModel.receivedHeaders.receivedRows[i].by, calloutContent);
@@ -246,9 +271,9 @@ function buildViews() {
     var linkVal;
     if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length > 0) {
         $("<div/>")
-          .addClass("ms-font-m")
-          .text("Forefront Antispam Report")
-          .appendTo(antispamList);
+            .addClass("ms-font-m")
+            .text("Forefront Antispam Report")
+            .appendTo(antispamList);
 
         $("<hr/>").appendTo(antispamList);
         table = $("<table/>")
@@ -258,17 +283,17 @@ function buildViews() {
             .appendTo(antispamList);
         tbody = $("<tbody/>")
             .appendTo(table);
-        for (i = 0 ; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length ; i++) {
+        for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
             if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get()) {
                 row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
-                  .text(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].label)
-                  .appendTo(row);
+                    .text(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].label)
+                    .appendTo(row);
                 linkVal = mapHeaderToURL(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url,
                     viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get());
                 $("<td/>")
-                  .html(linkVal)
-                  .appendTo(row);
+                    .html(linkVal)
+                    .appendTo(row);
             }
         }
     }
@@ -276,9 +301,9 @@ function buildViews() {
     // Microsoft
     if (viewModel.antiSpamReport.antiSpamRows.length > 0) {
         $("<div/>")
-          .addClass("ms-font-m")
-          .text("Microsoft Antispam Report")
-          .appendTo(antispamList);
+            .addClass("ms-font-m")
+            .text("Microsoft Antispam Report")
+            .appendTo(antispamList);
 
         $("<hr/>").appendTo(antispamList);
         table = $("<table/>")
@@ -288,17 +313,17 @@ function buildViews() {
             .appendTo(antispamList);
         tbody = $("<tbody/>")
             .appendTo(table);
-        for (i = 0 ; i < viewModel.antiSpamReport.antiSpamRows.length ; i++) {
+        for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
             if (viewModel.antiSpamReport.antiSpamRows[i].get()) {
                 row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
-                  .text(viewModel.antiSpamReport.antiSpamRows[i].label)
-                  .appendTo(row);
+                    .text(viewModel.antiSpamReport.antiSpamRows[i].label)
+                    .appendTo(row);
                 linkVal = mapHeaderToURL(viewModel.antiSpamReport.antiSpamRows[i].url,
                     viewModel.antiSpamReport.antiSpamRows[i].get());
                 $("<td/>")
-                  .html(linkVal)
-                  .appendTo(row);
+                    .html(linkVal)
+                    .appendTo(row);
             }
         }
     }
@@ -306,7 +331,7 @@ function buildViews() {
     // Build other view
     var otherList = $(".other-list");
 
-    for (i = 0 ; i < viewModel.otherHeaders.otherRows.length ; i++) {
+    for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
         if (viewModel.otherHeaders.otherRows[i].value) {
             headerName = $("<div/>")
                 .addClass("ms-font-s")
@@ -349,9 +374,9 @@ function makeBold(text) {
 function addCalloutEntry(name, value, parent) {
     if (value) {
         $("<p/>")
-          .addClass("ms-Callout-subText")
-          .html(makeBold(name + ": ") + value)
-          .appendTo(parent);
+            .addClass("ms-Callout-subText")
+            .html(makeBold(name + ": ") + value)
+            .appendTo(parent);
     }
 }
 

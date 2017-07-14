@@ -20,6 +20,7 @@ var ImportedStrings = {
     mha_antiSpamReport: "Microsoft Antispam Header",
     mha_otherHeaders: "Other headers",
     mha_originalHeaders: "Original headers",
+    mha_diagnostics: "Diagnostics",
     mha_deliveredStart: "(Delivered after",
     mha_deliveredEnd: ")",
     mha_parsingHeaders: "Parsing headers to tables",

@@ -23,6 +23,7 @@ HeaderModel.prototype.otherHeaders = {};
 HeaderModel.prototype.forefrontAntiSpamReport = {};
 HeaderModel.prototype.antiSpamReport = {};
 HeaderModel.prototype.originalHeaders = "";
+HeaderModel.prototype.diagnostics = "";
 HeaderModel.prototype.hasData = false;
 
 HeaderModel.prototype.resetView = function () {
@@ -35,6 +36,7 @@ HeaderModel.prototype.resetView = function () {
     this.otherHeaders.reset();
 
     this.originalHeaders = "";
+    this.diagnostics = "";
 
     this.hasData = false;
 };
@@ -54,7 +56,7 @@ HeaderModel.prototype.parseHeaders = function (headers) {
 
     var headerList = [];
     var iNextHeader = 0;
-    for (var iLine = 0 ; iLine < lines.length ; iLine++) {
+    for (var iLine = 0; iLine < lines.length; iLine++) {
         lines[iLine] = clean2047Encoding(lines[iLine]);
 
         // Recognizing a header:
@@ -117,7 +119,7 @@ HeaderModel.prototype.parseHeaders = function (headers) {
 }
 
 function mapHeaderToURL(headerName, text) {
-    for (var i = 0 ; i < HeaderToURLMap.length ; i++) {
+    for (var i = 0; i < HeaderToURLMap.length; i++) {
         if (headerName.toLowerCase() === HeaderToURLMap[i][0].toLowerCase()) {
             return ["<a href = '", HeaderToURLMap[i][1], "' target = '_blank'>", text || headerName, "</a>"].join("");
         }
@@ -128,51 +130,51 @@ function mapHeaderToURL(headerName, text) {
 
 /// <disable>JS2073.CommentIsMisspelled</disable>
 var HeaderToURLMap = [
-["Accept-Language", "http://go.microsoft.com/?linkid=9837880"], // "http://tools.ietf.org/html/rfc3282"
-["BCC", "http://go.microsoft.com/?linkid=9837885"], // "http://tools.ietf.org/html/rfc5322#section-3.6.3"
-["CC", "http://go.microsoft.com/?linkid=9837885"], // "http://tools.ietf.org/html/rfc5322#section-3.6.3"
-["Content-Description", "http://go.microsoft.com/?linkid=9837876"], // "http://tools.ietf.org/html/rfc2045#section-8"
-["Content-Disposition", "http://go.microsoft.com/?linkid=9837878"], // "http://tools.ietf.org/html/rfc2183"
-["Content-Id", "http://go.microsoft.com/?linkid=9837875"], // "http://tools.ietf.org/html/rfc2045#section-7"
-["Content-Language", "http://go.microsoft.com/?linkid=9837880"], // "http://tools.ietf.org/html/rfc3282"
-["Content-Transfer-Encoding", "http://go.microsoft.com/?linkid=9837874"], // "http://tools.ietf.org/html/rfc2045#section-6"
-["Content-Type", "http://go.microsoft.com/?linkid=9837873"], // "http://tools.ietf.org/html/rfc2045#section-5"
-["Date", "http://go.microsoft.com/?linkid=9837883"], // "http://tools.ietf.org/html/rfc5322#section-3.6.1"
-["From", "http://go.microsoft.com/?linkid=9837884"], // "http://tools.ietf.org/html/rfc5322#section-3.6.2"
-["In-Reply-To", "http://go.microsoft.com/?linkid=9837886"], // "http://tools.ietf.org/html/rfc5322#section-3.6.4"
-["Importance", "http://go.microsoft.com/?linkid=9837877"], // "http://tools.ietf.org/html/rfc2156#section-5.3"
-["List-Help", "http://go.microsoft.com/?linkid=9837879"], // "http://tools.ietf.org/html/rfc2369"
-["List-Subscribe", "http://go.microsoft.com/?linkid=9837879"], // "http://tools.ietf.org/html/rfc2369"
-["List-Unsubscribe", "http://go.microsoft.com/?linkid=9837879"], // "http://tools.ietf.org/html/rfc2369"
-["Message-ID", "http://go.microsoft.com/?linkid=9837886"], // "http://tools.ietf.org/html/rfc5322#section-3.6.4"
-["MIME-Version", "http://go.microsoft.com/?linkid=9837872"], // "http://tools.ietf.org/html/rfc2045#section-4"
-["Received", "http://go.microsoft.com/?linkid=9837882"], // "http://tools.ietf.org/html/rfc5321#section-4.4"
-["Received-SPF", "http://go.microsoft.com/?linkid=9837881"], // "http://tools.ietf.org/html/rfc4408#section-7"
-["References", "http://go.microsoft.com/?linkid=9837886"], // "http://tools.ietf.org/html/rfc5322#section-3.6.4"
-["Reply-To", "http://go.microsoft.com/?linkid=9837884"], // "http://tools.ietf.org/html/rfc5322#section-3.6.2"
-["Return-Path", "http://go.microsoft.com/?linkid=9837888"], // "http://tools.ietf.org/html/rfc5322#section-3.6.7"
-["Sender", "http://go.microsoft.com/?linkid=9837884"], // "http://tools.ietf.org/html/rfc5322#section-3.6.2"
-["Subject", "http://go.microsoft.com/?linkid=9837887"],  // "http://tools.ietf.org/html/rfc5322#section-3.6.5"
-["Thread-Index", "http://go.microsoft.com/?linkid=9837865"], // "http://msdn.microsoft.com/en-us/library/ms526219.aspx"
-["Thread-Topic", "http://go.microsoft.com/?linkid=9837866"], // "http://msdn.microsoft.com/en-us/library/ms526986.aspx"
-["To", "http://go.microsoft.com/?linkid=9837885"], // "http://tools.ietf.org/html/rfc5322#section-3.6.3"
-["X-Auto-Response-Suppress", "http://go.microsoft.com/?linkid=9837863"], // "http://msdn.microsoft.com/en-us/library/ee219609.aspx
-["X-Forefront-Antispam-Report", "http://go.microsoft.com/?linkid=9837870"], // "http://technet.microsoft.com/en-us/library/dn205071.aspx"
-["X-Forefront-Antispam-Report-Untrusted", "http://technet.microsoft.com/en-us/library/bb232136.aspx"],
-["X-Forefront-Prvs", "http://go.microsoft.com/?linkid=9837869"], // "http://technet.microsoft.com/en-us/library/dd639361.aspx"
-["X-Message-Flag", "http://go.microsoft.com/?linkid=9837864"], // "http://msdn.microsoft.com/en-us/library/exchange/ms875195.aspx"
-["X-Microsoft-Antispam", "http://go.microsoft.com/?linkid=9837870"], // "http://technet.microsoft.com/en-us/library/dn205071.aspx"
-["X-MS-Exchange-Organization-AuthAs", "http://go.microsoft.com/?linkid=9837867"], // "http://technet.microsoft.com/en-us/library/bb232136.aspx"
-["X-MS-Exchange-Organization-AuthMechanism", "http://go.microsoft.com/?linkid=9837867"], // "http://technet.microsoft.com/en-us/library/bb232136.aspx"
-["X-MS-Exchange-Organization-AuthSource", "http://go.microsoft.com/?linkid=9837867"], // "http://technet.microsoft.com/en-us/library/bb232136.aspx"
-["X-MS-Exchange-Organization-AutoForwarded", "http://msdn.microsoft.com/en-us/library/ee178180.aspx"],
-["X-MS-Exchange-Organization-AVStamp-Enterprise", "http://go.microsoft.com/?linkid=9837867"], // "http://technet.microsoft.com/en-us/library/bb232136.aspx"
-["X-MS-Exchange-Organization-AVStamp-Mailbox", "http://go.microsoft.com/?linkid=9837867"], // "http://technet.microsoft.com/en-us/library/bb232136.aspx"
-["X-MS-Exchange-Organization-Network-Message-Id", "http://technet.microsoft.com/en-us/library/bb232136.aspx"],
-["X-MS-Exchange-Organization-SCL", "http://go.microsoft.com/?linkid=9837871"], // "http://technet.microsoft.com/en-us/library/jj200686.aspx"
-["X-MS-Has-Attach", "http://go.microsoft.com/?linkid=9837861"], // "http://msdn.microsoft.com/en-us/library/ee178420.aspx"
-["X-MS-TNEF-Correlator", "http://go.microsoft.com/?linkid=9837862"], // "http://msdn.microsoft.com/en-us/library/ee219198.aspx"
-["X-Originating-IP", "http://go.microsoft.com/?linkid=9837859"], // "http://en.wikipedia.org/wiki/X-Originating-IP"
-["X-Priority", "http://go.microsoft.com/?linkid=9837868"] // "http://technet.microsoft.com/en-us/library/bb691107(v=exchg.150)"
+    ["Accept-Language", "http://go.microsoft.com/?linkid=9837880"], // "http://tools.ietf.org/html/rfc3282"
+    ["BCC", "http://go.microsoft.com/?linkid=9837885"], // "http://tools.ietf.org/html/rfc5322#section-3.6.3"
+    ["CC", "http://go.microsoft.com/?linkid=9837885"], // "http://tools.ietf.org/html/rfc5322#section-3.6.3"
+    ["Content-Description", "http://go.microsoft.com/?linkid=9837876"], // "http://tools.ietf.org/html/rfc2045#section-8"
+    ["Content-Disposition", "http://go.microsoft.com/?linkid=9837878"], // "http://tools.ietf.org/html/rfc2183"
+    ["Content-Id", "http://go.microsoft.com/?linkid=9837875"], // "http://tools.ietf.org/html/rfc2045#section-7"
+    ["Content-Language", "http://go.microsoft.com/?linkid=9837880"], // "http://tools.ietf.org/html/rfc3282"
+    ["Content-Transfer-Encoding", "http://go.microsoft.com/?linkid=9837874"], // "http://tools.ietf.org/html/rfc2045#section-6"
+    ["Content-Type", "http://go.microsoft.com/?linkid=9837873"], // "http://tools.ietf.org/html/rfc2045#section-5"
+    ["Date", "http://go.microsoft.com/?linkid=9837883"], // "http://tools.ietf.org/html/rfc5322#section-3.6.1"
+    ["From", "http://go.microsoft.com/?linkid=9837884"], // "http://tools.ietf.org/html/rfc5322#section-3.6.2"
+    ["In-Reply-To", "http://go.microsoft.com/?linkid=9837886"], // "http://tools.ietf.org/html/rfc5322#section-3.6.4"
+    ["Importance", "http://go.microsoft.com/?linkid=9837877"], // "http://tools.ietf.org/html/rfc2156#section-5.3"
+    ["List-Help", "http://go.microsoft.com/?linkid=9837879"], // "http://tools.ietf.org/html/rfc2369"
+    ["List-Subscribe", "http://go.microsoft.com/?linkid=9837879"], // "http://tools.ietf.org/html/rfc2369"
+    ["List-Unsubscribe", "http://go.microsoft.com/?linkid=9837879"], // "http://tools.ietf.org/html/rfc2369"
+    ["Message-ID", "http://go.microsoft.com/?linkid=9837886"], // "http://tools.ietf.org/html/rfc5322#section-3.6.4"
+    ["MIME-Version", "http://go.microsoft.com/?linkid=9837872"], // "http://tools.ietf.org/html/rfc2045#section-4"
+    ["Received", "http://go.microsoft.com/?linkid=9837882"], // "http://tools.ietf.org/html/rfc5321#section-4.4"
+    ["Received-SPF", "http://go.microsoft.com/?linkid=9837881"], // "http://tools.ietf.org/html/rfc4408#section-7"
+    ["References", "http://go.microsoft.com/?linkid=9837886"], // "http://tools.ietf.org/html/rfc5322#section-3.6.4"
+    ["Reply-To", "http://go.microsoft.com/?linkid=9837884"], // "http://tools.ietf.org/html/rfc5322#section-3.6.2"
+    ["Return-Path", "http://go.microsoft.com/?linkid=9837888"], // "http://tools.ietf.org/html/rfc5322#section-3.6.7"
+    ["Sender", "http://go.microsoft.com/?linkid=9837884"], // "http://tools.ietf.org/html/rfc5322#section-3.6.2"
+    ["Subject", "http://go.microsoft.com/?linkid=9837887"],  // "http://tools.ietf.org/html/rfc5322#section-3.6.5"
+    ["Thread-Index", "http://go.microsoft.com/?linkid=9837865"], // "http://msdn.microsoft.com/en-us/library/ms526219.aspx"
+    ["Thread-Topic", "http://go.microsoft.com/?linkid=9837866"], // "http://msdn.microsoft.com/en-us/library/ms526986.aspx"
+    ["To", "http://go.microsoft.com/?linkid=9837885"], // "http://tools.ietf.org/html/rfc5322#section-3.6.3"
+    ["X-Auto-Response-Suppress", "http://go.microsoft.com/?linkid=9837863"], // "http://msdn.microsoft.com/en-us/library/ee219609.aspx
+    ["X-Forefront-Antispam-Report", "http://go.microsoft.com/?linkid=9837870"], // "http://technet.microsoft.com/en-us/library/dn205071.aspx"
+    ["X-Forefront-Antispam-Report-Untrusted", "http://technet.microsoft.com/en-us/library/bb232136.aspx"],
+    ["X-Forefront-Prvs", "http://go.microsoft.com/?linkid=9837869"], // "http://technet.microsoft.com/en-us/library/dd639361.aspx"
+    ["X-Message-Flag", "http://go.microsoft.com/?linkid=9837864"], // "http://msdn.microsoft.com/en-us/library/exchange/ms875195.aspx"
+    ["X-Microsoft-Antispam", "http://go.microsoft.com/?linkid=9837870"], // "http://technet.microsoft.com/en-us/library/dn205071.aspx"
+    ["X-MS-Exchange-Organization-AuthAs", "http://go.microsoft.com/?linkid=9837867"], // "http://technet.microsoft.com/en-us/library/bb232136.aspx"
+    ["X-MS-Exchange-Organization-AuthMechanism", "http://go.microsoft.com/?linkid=9837867"], // "http://technet.microsoft.com/en-us/library/bb232136.aspx"
+    ["X-MS-Exchange-Organization-AuthSource", "http://go.microsoft.com/?linkid=9837867"], // "http://technet.microsoft.com/en-us/library/bb232136.aspx"
+    ["X-MS-Exchange-Organization-AutoForwarded", "http://msdn.microsoft.com/en-us/library/ee178180.aspx"],
+    ["X-MS-Exchange-Organization-AVStamp-Enterprise", "http://go.microsoft.com/?linkid=9837867"], // "http://technet.microsoft.com/en-us/library/bb232136.aspx"
+    ["X-MS-Exchange-Organization-AVStamp-Mailbox", "http://go.microsoft.com/?linkid=9837867"], // "http://technet.microsoft.com/en-us/library/bb232136.aspx"
+    ["X-MS-Exchange-Organization-Network-Message-Id", "http://technet.microsoft.com/en-us/library/bb232136.aspx"],
+    ["X-MS-Exchange-Organization-SCL", "http://go.microsoft.com/?linkid=9837871"], // "http://technet.microsoft.com/en-us/library/jj200686.aspx"
+    ["X-MS-Has-Attach", "http://go.microsoft.com/?linkid=9837861"], // "http://msdn.microsoft.com/en-us/library/ee178420.aspx"
+    ["X-MS-TNEF-Correlator", "http://go.microsoft.com/?linkid=9837862"], // "http://msdn.microsoft.com/en-us/library/ee219198.aspx"
+    ["X-Originating-IP", "http://go.microsoft.com/?linkid=9837859"], // "http://en.wikipedia.org/wiki/X-Originating-IP"
+    ["X-Priority", "http://go.microsoft.com/?linkid=9837868"] // "http://technet.microsoft.com/en-us/library/bb691107(v=exchg.150)"
 ];
 /// <enable>JS2073.CommentIsMisspelled</enable>
