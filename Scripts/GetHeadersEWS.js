@@ -33,7 +33,11 @@ function sendHeadersRequest() {
         viewModel.diagnostics += "contentLanguage = " + Office.context.contentLanguage + "\n";
         viewModel.diagnostics += "displayLanguage = " + Office.context.displayLanguage + "\n";
         viewModel.diagnostics += "touchEnabled = " + Office.context.touchEnabled + "\n";
+    } catch (e) {
+        viewModel.diagnostics = "Failed to get diagnostics";
+    }
 
+    try {
         mailbox.makeEwsRequestAsync(envelope, callback);
     } catch (e) {
         showError(ImportedStrings.mha_requestFailed);
