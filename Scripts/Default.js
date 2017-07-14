@@ -6,6 +6,7 @@ Office.initialize = function () {
         initViewModels();
         updateStatus(ImportedStrings.mha_loading);
         sendHeadersRequest();
+        $("#diagnostics").text(viewModel.diagnostics);
     });
 };
 
