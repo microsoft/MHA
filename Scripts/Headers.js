@@ -1,11 +1,11 @@
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
 /// <reference path="2047.js" />
-/// <reference path="~/Scripts/Summary.js" />
-/// <reference path="~/Scripts/Received.js" />
-/// <reference path="~/Scripts/ForefrontAntispam.js" />
-/// <reference path="~/Scripts/Antispam.js" />
-/// <reference path="~/Scripts/Other.js" />
+/// <reference path="Summary.js" />
+/// <reference path="Received.js" />
+/// <reference path="ForefrontAntispam.js" />
+/// <reference path="Antispam.js" />
+/// <reference path="Other.js" />
 
 var HeaderModel = function () {
     // Initialize defaults

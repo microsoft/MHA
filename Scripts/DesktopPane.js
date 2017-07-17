@@ -7,6 +7,7 @@ Office.initialize = function () {
         viewModel = new HeaderModel();
         registerItemChangeEvent();
         initializeFabric();
+        showDiagnostics();
         updateStatus(ImportedStrings.mha_loading);
         sendHeadersRequest();
     });
@@ -140,16 +141,7 @@ function buildViews() {
         $(".orig-header-ui").show();
     }
 
-    // Save diagnostics and show ui
-    $("#diagnostics code").text(viewModel.diagnostics);
-    if (viewModel.diagnostics) {
-        $(".diagnostics-ui").show();
-
-        var buttonElement = document.querySelector("#diagnostics-btn");
-        var btnIcon = $(buttonElement).find(".ms-Icon");
-        $("#diagnostics").hide();
-        btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
-    }
+        showDiagnostics();
 
     // Build received view
     var receivedList = $(".received-list");
@@ -394,4 +386,19 @@ function hideStatus() {
 function showError(message) {
     $("#error-display .ms-MessageBar-text").text(message);
     $("#error-display").show();
+}
+
+function showDiagnostics() {
+    viewModel.diagnostics = getDiagnostics();
+
+    // Save diagnostics and show ui
+    $("#diagnostics code").text(viewModel.diagnostics);
+    if (viewModel.diagnostics) {
+        $(".diagnostics-ui").show();
+
+        var buttonElement = document.querySelector("#diagnostics-btn");
+        var btnIcon = $(buttonElement).find(".ms-Icon");
+        $("#diagnostics").hide();
+        btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
+    }
 }

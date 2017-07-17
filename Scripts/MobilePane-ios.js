@@ -7,6 +7,7 @@ Office.initialize = function (reason) {
     $(document).ready(function () {
         viewModel = new HeaderModel();
         initializeFramework7();
+        showDiagnostics();
         updateStatus(ImportedStrings.mha_loading);
         sendHeadersRequest();
     });
@@ -58,10 +59,7 @@ function buildViews() {
         $("#orig-headers-ui").show();
     }
 
-    if (viewModel.diagnostics) {
-        $("#diagnostics").text(viewModel.diagnostics);
-        $("#diagnostics-ui").show();
-    }
+    showDiagnostics();
 
     // Build received view
     var receivedContent = $("#received-content");
@@ -369,4 +367,14 @@ function hideStatus() {
 
 function showError(message) {
     myApp.alert(message, "An Error Occurred");
+}
+
+function showDiagnostics() {
+    viewModel.diagnostics = getDiagnostics();
+
+    // Save diagnostics and show ui
+    if (viewModel.diagnostics) {
+        $("#diagnostics").text(viewModel.diagnostics);
+        $("#diagnostics-ui").show();
+    }
 }

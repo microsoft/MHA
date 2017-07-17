@@ -21,23 +21,6 @@ function sendHeadersRequest() {
     var envelope = getSoapEnvelope(request);
 
     try {
-        viewModel.diagnostics += "Requirement set = " + getRequirementSet() + "\n";
-        viewModel.diagnostics += "hostname = " + Office.context.mailbox.diagnostics.hostName + "\n";
-        viewModel.diagnostics += "hostVersion = " + Office.context.mailbox.diagnostics.hostVersion + "\n";
-        if (Office.context.mailbox.diagnostics.OWAView) {
-            viewModel.diagnostics += "OWAView = " + Office.context.mailbox.diagnostics.OWAView + "\n";
-        }
-
-        viewModel.diagnostics += "itemType = " + Office.context.mailbox.item.itemType + "\n";
-
-        viewModel.diagnostics += "contentLanguage = " + Office.context.contentLanguage + "\n";
-        viewModel.diagnostics += "displayLanguage = " + Office.context.displayLanguage + "\n";
-        viewModel.diagnostics += "touchEnabled = " + Office.context.touchEnabled + "\n";
-    } catch (e) {
-        viewModel.diagnostics = "Failed to get diagnostics";
-    }
-
-    try {
         mailbox.makeEwsRequestAsync(envelope, callback);
     } catch (e) {
         showError(ImportedStrings.mha_requestFailed);
@@ -120,6 +103,28 @@ function getHeadersRequest(id) {
         });
     };
 })(jQuery);
+
+function getDiagnostics() {
+    var diagnostics = "";
+    try {
+        diagnostics += "Requirement set = " + getRequirementSet() + "\n";
+        diagnostics += "hostname = " + Office.context.mailbox.diagnostics.hostName + "\n";
+        diagnostics += "hostVersion = " + Office.context.mailbox.diagnostics.hostVersion + "\n";
+        if (Office.context.mailbox.diagnostics.OWAView) {
+            diagnostics += "OWAView = " + Office.context.mailbox.diagnostics.OWAView + "\n";
+        }
+
+        diagnostics += "itemType = " + Office.context.mailbox.item.itemType + "\n";
+
+        diagnostics += "contentLanguage = " + Office.context.contentLanguage + "\n";
+        diagnostics += "displayLanguage = " + Office.context.displayLanguage + "\n";
+        diagnostics += "touchEnabled = " + Office.context.touchEnabled + "\n";
+    } catch (e) {
+        diagnostics = "Failed to get diagnostics";
+    }
+
+    return diagnostics;
+}
 
 function getRequirementSet() {
     if (Office.context.requirements && Office.context.requirements.isSetSupported) {

@@ -4,9 +4,9 @@ Office.initialize = function () {
     $(document).ready(function () {
         $(window).resize(onResize);
         initViewModels();
+        showDiagnostics();
         updateStatus(ImportedStrings.mha_loading);
         sendHeadersRequest();
-        $("#diagnostics").text(viewModel.diagnostics);
     });
 };
 
@@ -45,4 +45,9 @@ function showError(message) {
     updateStatus(message);
     disableSpinner();
     rebuildSections();
+}
+
+function showDiagnostics() {
+    viewModel.diagnostics = getDiagnostics();
+    $("#diagnostics").text(viewModel.diagnostics);
 }
