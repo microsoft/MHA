@@ -1,7 +1,7 @@
 var ImportedStrings = {
     // REST
     mha_loading: "Loading...",
-    mha_RequestSent: "Retrieving headers from server",
+    mha_RequestSent: "Retrieving headers from server.",
     mha_foundHeaders: "Found headers",
     mha_processingHeader: "Processing header",
     mha_headersMissing: "Message was missing transport headers. If this is a sent item this may be expected.",
