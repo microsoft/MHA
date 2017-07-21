@@ -116,7 +116,7 @@ HeaderModel.prototype.parseHeaders = function (headers) {
     }
 
     this.receivedHeaders.computeDeltas();
-}
+};
 
 function mapHeaderToURL(headerName, text) {
     for (var i = 0; i < HeaderToURLMap.length; i++) {

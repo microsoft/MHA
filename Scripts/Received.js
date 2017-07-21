@@ -1,7 +1,7 @@
 ﻿/// <reference path="Table.js" />
 /// <reference path="Strings.js" />
 /// <reference path="Headers.js" />
-/// <reference path="~/Scripts/jquery-2.1.0.min.js" />
+/// <reference path="jquery-2.1.0.min.js" />
 var ReceivedRow = function () {
 };
 
@@ -110,9 +110,9 @@ Received.prototype.init = function (receivedHeader) {
     var iHeader;
     var iToken;
 
-    for (iHeader = 0 ; iHeader < receivedHeaderNames.length; iHeader++) {
+    for (iHeader = 0; iHeader < receivedHeaderNames.length; iHeader++) {
         row[receivedHeaderNames[iHeader]] = "";
-        for (iToken = 0 ; iToken < tokens.length; iToken++) {
+        for (iToken = 0; iToken < tokens.length; iToken++) {
             if (receivedHeaderNames[iHeader] === tokens[iToken]) {
                 headerMatches[iMatch++] = [iHeader, iToken];
             }
@@ -125,7 +125,7 @@ Received.prototype.init = function (receivedHeader) {
         return a[1] - b[1];
     });
 
-    for (iMatch = 0 ; iMatch < headerMatches.length; iMatch++) {
+    for (iMatch = 0; iMatch < headerMatches.length; iMatch++) {
         iHeader = headerMatches[iMatch][0];
         var iTokenHeader = headerMatches[iMatch][1];
         var iFirstVal = iTokenHeader + 1;
@@ -141,7 +141,7 @@ Received.prototype.init = function (receivedHeader) {
 
         var headerName = receivedHeaderNames[iHeader];
         if (row[headerName] !== "") { row[headerName] += "; "; }
-        for (iToken = iFirstVal ; iToken <= iLastVal ; iToken++) {
+        for (iToken = iFirstVal; iToken <= iLastVal; iToken++) {
             row[headerName] += tokens[iToken];
             if (iToken < iLastVal) { row[headerName] += " "; }
         }
@@ -166,7 +166,7 @@ Received.prototype.computeDeltas = function () {
     var iLastTime = NaN;
     var iDelta = 0; // This will be the sum of our positive deltas
     var i;
-    for (i = 0 ; i < this.receivedRows.length ; i++) {
+    for (i = 0; i < this.receivedRows.length; i++) {
         if (!isNaN(this.receivedRows[i].dateNum)) {
             if (!isNaN(iLastTime) && iLastTime < this.receivedRows[i].dateNum) {
                 iDelta += this.receivedRows[i].dateNum - iLastTime;
@@ -184,7 +184,7 @@ Received.prototype.computeDeltas = function () {
         viewModel.summary.totalTime = this.computeTime(iEndTime, iStartTime);
     }
 
-    for (i = 0 ; i < this.receivedRows.length ; i++) {
+    for (i = 0; i < this.receivedRows.length; i++) {
         this.receivedRows[i].hop = i + 1;
         this.receivedRows[i].delay = this.computeTime(this.receivedRows[i].dateNum, iLastTime);
 

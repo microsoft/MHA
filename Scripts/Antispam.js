@@ -1,7 +1,7 @@
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
-/// <reference path="~/Scripts/Headers.js" />
-/// <reference path="~/Scripts/ForefrontAntispam.js" />
+/// <reference path="Headers.js" />
+/// <reference path="ForefrontAntispam.js" />
 var AntiSpamRow = function (header, label, url, set, get) {
     this.header = header;
     this.label = label;
@@ -30,13 +30,13 @@ var AntiSpamReport = function () {
 AntiSpamReport.prototype.antiSpamRows = [];
 
 AntiSpamReport.prototype.reset = function () {
-    for (var i = 0 ; i < this.antiSpamRows.length ; i++) {
+    for (var i = 0; i < this.antiSpamRows.length; i++) {
         this.antiSpamRows[i].set("");
     }
 };
 
 AntiSpamReport.prototype.exists = function () {
-    for (var i = 0 ; i < this.antiSpamRows.length ; i++) {
+    for (var i = 0; i < this.antiSpamRows.length; i++) {
         if (this.antiSpamRows[i].get()) {
             return true;
         }

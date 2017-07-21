@@ -1,6 +1,6 @@
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
-/// <reference path="~/Scripts/Headers.js" />
+/// <reference path="Headers.js" />
 var ForefrontAntiSpamRow = function (header, label, url, set, get) {
     this.header = header;
     this.label = label;
@@ -37,13 +37,13 @@ var ForefrontAntiSpamReport = function () {
 ForefrontAntiSpamReport.prototype.forefrontAntiSpamRows = [];
 
 ForefrontAntiSpamReport.prototype.reset = function () {
-    for (var i = 0 ; i < this.forefrontAntiSpamRows.length ; i++) {
+    for (var i = 0; i < this.forefrontAntiSpamRows.length; i++) {
         this.forefrontAntiSpamRows[i].set("");
     }
 };
 
 ForefrontAntiSpamReport.prototype.exists = function () {
-    for (var i = 0 ; i < this.forefrontAntiSpamRows.length ; i++) {
+    for (var i = 0; i < this.forefrontAntiSpamRows.length; i++) {
         if (this.forefrontAntiSpamRows[i].get()) {
             return true;
         }
@@ -72,10 +72,10 @@ function ParseAntiSpamReport(report, antispamRows) {
 
     var lines = report.match(/(.*?):(.*?);/g);
     if (lines) {
-        for (var iLine = 0 ; iLine < lines.length ; iLine++) {
+        for (var iLine = 0; iLine < lines.length; iLine++) {
             var line = lines[iLine].match(/(.*?):(.*?);/m);
             if (line && line[1] && line[2]) {
-                for (var i = 0 ; i < antispamRows.length ; i++) {
+                for (var i = 0; i < antispamRows.length; i++) {
                     if (antispamRows[i].header.toUpperCase() === line[1].toUpperCase()) {
                         antispamRows[i].set(line[2]);
                         break;
