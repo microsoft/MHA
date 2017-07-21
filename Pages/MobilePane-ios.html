@@ -15,7 +15,7 @@
         // Fallback to load jQuery from a local path if the CDN is unavailable.
         (window.jQuery || document.write('<script src="../Scripts/jquery-2.1.0.min.js"><\/script>'));
     </script>
-    
+
     <script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js" type="text/javascript"></script>
 
     <script src="../Scripts/fw7/framework7.min.js" type="text/javascript"></script>
@@ -56,22 +56,6 @@
                                 </li>
                             </ul>
                         </div>
-                        <div id="diagnostics-ui" class="list-block">
-                            <ul>
-                                <li class="accordion-item">
-                                    <a href="#" class="item-content item-link">
-                                        <div class="item-inner">
-                                            <div class="item-title">Diagnostics</div>
-                                        </div>
-                                    </a>
-                                    <div class="accordion-item-content">
-                                        <div class="code-box">
-                                            <pre><code id="diagnostics"></code></pre>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -101,25 +85,43 @@
                 </div>
             </div>
         </div>
-        <div class="toolbar tabbar tabbar-labels">
-        <div class="toolbar-inner">
-            <a href="#summary-view" class="tab-link active">
-                <i class="f7-icons">info</i>
-                <span class="tabbar-label">Summary</span>
-            </a>
-            <a href="#received-view" class="tab-link">
-                <i class="f7-icons">graph_square</i>
-                <span class="tabbar-label">Received</span>
-            </a>
-            <a href="#antispam-view" class="tab-link">
-                <i class="f7-icons">trash</i>
-                <span class="tabbar-label">Antispam</span>
-            </a>
-            <a href="#other-view" class="tab-link">
-                <i class="f7-icons">data</i>
-                <span class="tabbar-label">Other</span>
-            </a>
+        <div id="diagnostics-view" class="view tab" data-page="other">
+            <div class="pages">
+                <div data-page="diagnostics" class="page">
+                    <div class="page-content">
+                        <div id="diagnostics-ui" class="list-block">
+                            <div class="item-title">Diagnostics</div>
+                            <div class="code-box">
+                                <pre><code id="diagnostics"></code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="toolbar tabbar tabbar-labels">
+            <div class="toolbar-inner">
+                <a href="#summary-view" class="tab-link active">
+                    <i class="f7-icons">info</i>
+                    <span class="tabbar-label">Summary</span>
+                </a>
+                <a href="#received-view" class="tab-link">
+                    <i class="f7-icons">graph_square</i>
+                    <span class="tabbar-label">Received</span>
+                </a>
+                <a href="#antispam-view" class="tab-link">
+                    <i class="f7-icons">trash</i>
+                    <span class="tabbar-label">Antispam</span>
+                </a>
+                <a href="#other-view" class="tab-link">
+                    <i class="f7-icons">data</i>
+                    <span class="tabbar-label">Other</span>
+                </a>
+                <a href="#diagnostics-view" class="tab-link">
+                    <i class="f7-icons">bolt</i>
+                    <span class="tabbar-label">Diagnostics</span>
+                </a>
+            </div>
         </div>
     </div>
 </body>
