@@ -1,0 +1,20 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MHA Unit Tests</title>
+
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.4.0.css">
+    <script src="https://code.jquery.com/qunit/qunit-2.4.0.js"></script>
+    <script src="../Scripts/2047.js"></script>
+
+    <script>
+        QUnit.test("2047 Tests", function (assert) {
+            assert.equal(clean2047Encoding("1234"), "1234");
+        });
+    </script>
+</head>
+<body>
+    <div id="qunit"></div>
+</body>
+</html>
