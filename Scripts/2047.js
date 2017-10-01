@@ -25,7 +25,7 @@ function clean2047Encoding(buffer) {
     buffer = buffer.replace(/\?=\s*=\?/g, "?==?");
 
     while (buffer.length) {
-        var matches = buffer.match(/(.*?)(=\?.*?\?.\?.*?\?=)(.*)/m);
+        var matches = buffer.match(/([\S\s]*?)(=\?.*?\?.\?.*?\?=)(.*)/m);
         if (matches) {
             ////var left = matches[1];
             ////var token = matches[2];
@@ -73,7 +73,9 @@ function decodeQuoted(charSet, buffer) {
     var decoded;
 
     try {
-        decoded = decodeURIComponent(buffer.replace(/=/g, '%'));
+        // 2047 quoted allows _ as a replacement for space. Fix that first.
+        var uriBuffer = buffer.replace(/_/g, " ");
+        decoded = hexDecode(uriBuffer);
     }
     catch (e) {
         // TODO: Figure out how to decode any character set properly
@@ -114,3 +116,26 @@ function decodeBase64(charSet, input) {
 
     return $v$0.join("");
 };
+
+function hexDecode(input) {
+    var result = [];
+
+    while (input.length) {
+        var matches = input.match(/(.*?)=(..)(.*)/m);
+        if (matches) {
+            ////var left = matches[1];
+            ////var token = matches[2];
+            ////var right = matches[3];
+
+            result.push(matches[1], String.fromCharCode("0x" + matches[2]));
+            input = matches[3];
+        } else {
+            // Once we're out of matches, we've decoded the whole string.
+            // Append the rest of the buffer to the result.
+            result.push(input);
+            break;
+        }
+    }
+
+    return result.join("");
+}
