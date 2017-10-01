@@ -1,4 +1,4 @@
-/// <reference path="Table.js" />
+﻿/// <reference path="Table.js" />
 /// <reference path="Strings.js" />
 
 /// <disable>JS2026.CapitalizeComments,JS2027.PunctuateCommentsCorrectly,JS2073.CommentIsMisspelled</disable>
@@ -75,10 +75,9 @@ function decodeQuoted(charSet, buffer) {
     try {
         // 2047 quoted allows _ as a replacement for space. Fix that first.
         var uriBuffer = buffer.replace(/_/g, " ");
-        decoded = hexDecode(uriBuffer);
+        decoded = decodeHex(charSet, uriBuffer);
     }
     catch (e) {
-        // TODO: Figure out how to decode any character set properly
         // Since we failed to decode, put it all back
         decoded = "=?" + charSet + "?Q?" + buffer + "?=";
     }
@@ -106,36 +105,61 @@ function decodeBase64(charSet, input) {
         $v$3 = (($v$6 & 3) << 6) | $v$7;
 
         if ($v$7 !== 64) {
-            $v$0.push(String.fromCharCode($v$1, $v$2, $v$3));
+            $v$0.push($v$1, $v$2, $v$3);
         } else if ($v$6 !== 64) {
-            $v$0.push(String.fromCharCode($v$1, $v$2));
+            $v$0.push($v$1, $v$2);
         } else {
-            $v$0.push(String.fromCharCode($v$1));
+            $v$0.push($v$1);
         }
     }
 
-    return $v$0.join("");
+    return decodeHexCodepage(charSet, $v$0);
 };
 
-function hexDecode(input) {
+function decodeHex(charSet, buffer) {
     var result = [];
 
-    while (input.length) {
-        var matches = input.match(/(.*?)=(..)(.*)/m);
+    while (buffer.length) {
+        var matches = buffer.match(/(.*?)((?:=[0-9a-fA-F]{2,2})+)(.*)/m);
         if (matches) {
             ////var left = matches[1];
-            ////var token = matches[2];
+            ////var hex = matches[2];
             ////var right = matches[3];
+            var hexes = matches[2].split("=").filter(function (i) { return i });
+            var hexArray = [];
+            for (var iHex = 0; iHex < hexes.length; iHex++) {
+                hexArray.push(parseInt("0x" + hexes[iHex], 16));
+            }
 
-            result.push(matches[1], String.fromCharCode("0x" + matches[2]));
-            input = matches[3];
+            result.push(matches[1], decodeHexCodepage(charSet, hexArray));
+            buffer = matches[3];
         } else {
             // Once we're out of matches, we've decoded the whole string.
             // Append the rest of the buffer to the result.
-            result.push(input);
+            result.push(buffer);
             break;
         }
     }
 
     return result.join("");
+}
+
+function decodeHexCodepage(charSet, hexArray) {
+    var codepage = 65001;
+    switch (charSet.toUpperCase()) {
+        case "UTF-8":
+            codepage = 65001;
+            break;
+        case "ISO-8859-8":
+            codepage = 28598;
+            break;
+        case "ISO-8859-1":
+            codepage = 28591;
+            break;
+        case "US-ASCII":
+            codepage = 20127;
+            break;
+    }
+
+    return cptable.utils.decode(codepage, hexArray);
 }
