@@ -35,6 +35,15 @@
             assert.equal(clean2047Encoding("Test of new header generator"), "Test of new header generator");
         });
 
+        QUnit.test("Mailsploit Tests", function (assert) {
+            assert.equal(clean2047Encoding("=?utf-8?Q?=42=45=47=49=4E=20=2F=20=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20=45=4E=44?="),
+                "BEGIN /  / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END");
+            assert.equal(clean2047Encoding("<=?utf-8?Q?=42=45=47=49=4E=20=2F=20=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20=45=4E=44?=@example.com>"),
+                "<BEGIN /  / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END@example.com>");
+            assert.equal(clean2047Encoding("=?utf-8?b?c2VydmljZUBwYXlwYWwuY29tPGlmcmFtZSBvbmxvYWQ9YWxlcnQoZG9jdW1lbnQuY29va2llKSBzcmM9aHR0cHM6Ly93d3cuaHVzaG1haWwuY29tIHN0eWxlPSJkaXNwbGF5Om5vbmUi?==?utf-8?Q?=0A=00?=@mailsploit.com"),
+                "service@paypal.com<iframe onload=alert(document.cookie) src=https://www.hushmail.com style=\"display:none\"\n\0@mailsploit.com");
+        });
+
         // Should I add test cases from http://greenbytes.de/tech/tc2231/ ?
 
         QUnit.test("2047 Hex Tests", function (assert) {
