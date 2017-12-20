@@ -52,13 +52,11 @@ Header.prototype.value = "";
 HeaderModel.prototype.parseHeaders = function (headers) {
     // Initialize originalHeaders in case we have parsing problems
     this.originalHeaders = headers;
-    var lines = headers.match(/^.*([\n\r]+|$)/gm);
+    var lines = GetClean2047Lines(headers);
 
     var headerList = [];
     var iNextHeader = 0;
     for (var iLine = 0; iLine < lines.length; iLine++) {
-        lines[iLine] = clean2047Encoding(lines[iLine]);
-
         // Recognizing a header:
         // - First colon comes before first white space.
         // - We're not strictly honoring white space folding because initial white space.
@@ -117,6 +115,20 @@ HeaderModel.prototype.parseHeaders = function (headers) {
 
     this.receivedHeaders.computeDeltas();
 };
+
+function GetClean2047Lines(headers) {
+    // First, break up out input by lines.
+    var lines = headers.match(/^.*([\n\r]+|$)/gm);
+    var linesOut = [];
+
+    // Next, for each line, clean out the 2047 encoding.
+    // This may produce multiple lines as carriage returns may be embedded. Break those up as well before adding to the final list.
+    for (var iLine = 0; iLine < lines.length; iLine++) {
+        linesOut = linesOut.concat(clean2047Encoding(lines[iLine]).match(/^.*([\n\r]+|$)/gm));
+    }
+
+    return linesOut;
+}
 
 function mapHeaderToURL(headerName, text) {
     for (var i = 0; i < HeaderToURLMap.length; i++) {

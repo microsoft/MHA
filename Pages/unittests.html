@@ -33,15 +33,79 @@
                 "    < ned@innosoft.com>, Keith Moore < moore@cs.utk.edu>"), "Greg Vaudreuil <gvaudre@NRI.Reston.VA.US>, Ned Freed\n" +
                 "    < ned@innosoft.com>, Keith Moore < moore@cs.utk.edu>");
             assert.equal(clean2047Encoding("Test of new header generator"), "Test of new header generator");
+            assert.equal(clean2047Encoding("=?utf-8?Q?=00=41?=test1"), "\0Atest1");
+            assert.equal(clean2047Encoding("=?utf-8?Q?=0A=41?=test2"), "\nAtest2");
+            assert.equal(clean2047Encoding("=?utf-8?Q?=00=0A=41?=test3"), "\0\nAtest3");
+            assert.equal(clean2047Encoding("From: =?utf-8?Q?=00=0A=41?=test4"), "From: \0\nAtest4");
+            assert.equal(clean2047Encoding("From: =?utf-8?Q?=41?=\r\ntest5"), "From: A\r\ntest5");
         });
 
         QUnit.test("Mailsploit Tests", function (assert) {
+            // Tests drawn from posts/discussions of Mailsploit
             assert.equal(clean2047Encoding("=?utf-8?Q?=42=45=47=49=4E=20=2F=20=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20=45=4E=44?="),
                 "BEGIN /  / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END");
             assert.equal(clean2047Encoding("<=?utf-8?Q?=42=45=47=49=4E=20=2F=20=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20=45=4E=44?=@example.com>"),
                 "<BEGIN /  / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END@example.com>");
             assert.equal(clean2047Encoding("=?utf-8?b?c2VydmljZUBwYXlwYWwuY29tPGlmcmFtZSBvbmxvYWQ9YWxlcnQoZG9jdW1lbnQuY29va2llKSBzcmM9aHR0cHM6Ly93d3cuaHVzaG1haWwuY29tIHN0eWxlPSJkaXNwbGF5Om5vbmUi?==?utf-8?Q?=0A=00?=@mailsploit.com"),
                 "service@paypal.com<iframe onload=alert(document.cookie) src=https://www.hushmail.com style=\"display:none\"\n\0@mailsploit.com");
+
+            // Tests from actual Mailsploit mails
+            // macOS  ≤ 10.13.1 / iOS ≤ 11  .2 Mail.app / Open-Xchange < 7.1  0.0 / CloudMagic Newton ≤ 9.8.79-like
+            assert.equal(clean2047Encoding(
+                "=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=00?==?utf-8?b?KHBvdHVzQHdoaXRlaG91c2UuZ292KQ==?=@mailsploit.com"),
+                "potus@whitehouse.gov\0(potus@whitehouse.gov)@mailsploit.com");
+            // Mozilla-Thunderbird ≤ 52.5.0-like
+            assert.equal(clean2047Encoding(
+                "\"=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=0A=00?=\"\r\n <=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=0A=00?=@mailsploit.com>"),
+                "\"potus@whitehouse.gov\n\0\"\r\n <potus@whitehouse.gov\n\0@mailsploit.com>");
+            // Variation #1
+            assert.equal(clean2047Encoding(
+                "=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=00=0A?=@mailsploit.com"),
+                "potus@whitehouse.gov\0\n@mailsploit.com");
+            // Variation #2
+            assert.equal(clean2047Encoding(
+                "\"=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3YiIDxwb3R1c0B3aGl0ZWhvdXNlLmdvdj4=?==?utf-8?Q?=00=0A?=\"\r\n <demo@mailsploit.com>"),
+                "\"potus@whitehouse.gov\" <potus@whitehouse.gov>\0\n\"\r\n <demo@mailsploit.com>");
+            // Variation #2.1
+            assert.equal(clean2047Encoding(
+                "\"=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3YiIDx0ZXN0Pg==?==?utf-8?Q?=00=0A?=\"\r\n <demo@mailsploit.com>"),
+                "\"potus@whitehouse.gov\" <test>\0\n\"\r\n <demo@mailsploit.com>");
+            // Variation #2.2
+            assert.equal(clean2047Encoding(
+                "\"=?utf-8?b?dGVzdCIgPHBvdHVzQHdoaXRlaG91c2UuZ292Pg==?==?utf-8?Q?=00=0A?=\"\r\n <demo@mailsploit.com>"),
+                "\"test\" <potus@whitehouse.gov>\0\n\"\r\n <demo@mailsploit.com>");
+            // Variation #3
+            assert.equal(clean2047Encoding(
+                "\"=?utf-8?b?InBvdHVzQHdoaXRlaG91c2UuZ292IiA8cG90dXNAd2hpdGVob3VzZS5nb3Y+?==?utf-8?Q?=0A=00=00=00?=\"\r\n <demo@mailsploit.com>"),
+                "\"\"potus@whitehouse.gov\" <potus@whitehouse.gov>\n\0\0\0\"\r\n <demo@mailsploit.com>");
+            // Variation #3.1
+            assert.equal(clean2047Encoding(
+                "\"=?utf-8?b?InRlc3QiIDxwb3R1c0B3aGl0ZWhvdXNlLmdvdj4=?==?utf-8?Q?=0A=00=00=00?=\"\r\n <demo@mailsploit.com>"),
+                "\"\"test\" <potus@whitehouse.gov>\n\0\0\0\"\r\n <demo@mailsploit.com>");
+            // Variation #3.2
+            assert.equal(clean2047Encoding(
+                "\"=?utf-8?b?InBvdHVzQHdoaXRlaG91c2UuZ292IiA8dGVzdD4=?==?utf-8?Q?=0A=00=00=00?=\"\r\n<demo@mailsploit.com>"),
+                "\"\"potus@whitehouse.gov\" <test>\n\0\0\0\"\r\n<demo@mailsploit.com>");
+            // Variation #4
+            assert.equal(clean2047Encoding(
+                "=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=0A=00?=@mailsploit.com"),
+                "potus@whitehouse.gov\n\0@mailsploit.com");
+            // Variation #5
+            assert.equal(clean2047Encoding(
+                "\" =?utf - 8 ? b ? cG90dXNAd2hpdGVob3VzZS5nb3Y =?=\" <demo@mailsploit.com>"),
+                "\" =?utf - 8 ? b ? cG90dXNAd2hpdGVob3VzZS5nb3Y =?=\" <demo@mailsploit.com>");
+            // Variation #6
+            assert.equal(clean2047Encoding(
+                "=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3YocG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=00?=@mailsploit.com"),
+                "potus@whitehouse.gov(potus@whitehouse.gov\0@mailsploit.com");
+            // Generic test #1
+            assert.equal(clean2047Encoding(
+                "\"=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E=?=\"\r\n <demo@mailsploit.com>"),
+                "\"BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END\0\"\r\n <demo@mailsploit.com>");
+            // Generic test #2
+            assert.equal(clean2047Encoding(
+                "e=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E=?=@mailsploit.com"),
+                "eBEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END\0@mailsploit.com");
         });
 
         // Should I add test cases from http://greenbytes.de/tech/tc2231/ ?
@@ -55,6 +119,8 @@
             assert.equal(decodeQuoted("US-ASCII", "Keith_Moore"), "Keith Moore");
             assert.equal(decodeQuoted("ISO-8859-1", "Keld_J=F8rn_Simonsen"), "Keld Jørn Simonsen");
             assert.equal(decodeQuoted("iso-8859-8", "=ED=E5=EC=F9=20=EF=E1=20=E9=EC=E8=F4=F0"), "םולש ןב ילטפנ");
+            assert.equal(decodeQuoted("utf-8", "=41=0A=42"), "A\nB");
+            assert.equal(decodeQuoted("utf-8", "=41=00=0A=42"), "A\0\nB");
         });
 
         QUnit.test("2047 Base64 Tests", function (assert) {

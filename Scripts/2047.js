@@ -25,7 +25,7 @@ function clean2047Encoding(buffer) {
     buffer = buffer.replace(/\?=\s*=\?/g, "?==?");
 
     while (buffer.length) {
-        var matches = buffer.match(/([\S\s]*?)(=\?.*?\?.\?.*?\?=)(.*)/m);
+        var matches = buffer.match(/([\S\s]*?)(=\?.*?\?.\?.*?\?=)([\S\s]*)/m);
         if (matches) {
             ////var left = matches[1];
             ////var token = matches[2];
