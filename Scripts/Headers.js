@@ -57,6 +57,9 @@ HeaderModel.prototype.parseHeaders = function (headers) {
     var headerList = [];
     var iNextHeader = 0;
     for (var iLine = 0; iLine < lines.length; iLine++) {
+        // Before processing a line, remove any nulls so we don't have display problems.
+        var line = lines[iLine].replace("\0", "");
+
         // Recognizing a header:
         // - First colon comes before first white space.
         // - We're not strictly honoring white space folding because initial white space.
@@ -64,7 +67,7 @@ HeaderModel.prototype.parseHeaders = function (headers) {
         // This expression will give us:
         // match[1] - everything before the first colon, assuming no spaces (header).
         // match[2] - everything after the first colon (value).
-        var match = lines[iLine].match(/(^[\w-\.]*?): ?(.*)/);
+        var match = line.match(/(^[\w-\.]*?): ?(.*)/);
 
         // There's one false positive we might get: if the time in a Received header has been
         // folded to the next line, the line might start with something like "16:20:05 -0400".
@@ -77,11 +80,11 @@ HeaderModel.prototype.parseHeaders = function (headers) {
         } else {
             if (iNextHeader > 0) {
                 // Tack this line to the previous line
-                headerList[iNextHeader - 1].value += " " + lines[iLine];
+                headerList[iNextHeader - 1].value += " " + line;
             } else {
                 // If we didn't have a previous line, go ahead and use this line
-                if (lines[iLine].match(/\S/g)) {
-                    headerList[iNextHeader] = new Header("", lines[iLine]);
+                if (line.match(/\S/g)) {
+                    headerList[iNextHeader] = new Header("", line);
                     iNextHeader++;
                 }
             }
