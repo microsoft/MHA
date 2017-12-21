@@ -58,7 +58,7 @@ HeaderModel.prototype.parseHeaders = function (headers) {
     var iNextHeader = 0;
     for (var iLine = 0; iLine < lines.length; iLine++) {
         // Before processing a line, remove any nulls so we don't have display problems.
-        var line = lines[iLine].replace("\0", "");
+        var line = lines[iLine].replace(/\0/g, "");
 
         // Recognizing a header:
         // - First colon comes before first white space.
