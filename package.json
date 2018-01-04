@@ -1,0 +1,22 @@
+{
+  "name": "mha",
+  "version": "1.0.0",
+  "description": "Message Header Analyzer",
+  "main": "Pages/mha.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stephenegriffin/mha.git"
+  },
+  "author": "Stephen Griffin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stephenegriffin/mha/issues"
+  },
+  "homepage": "https://github.com/stephenegriffin/mha#readme",
+  "dependencies": {
+    "codepage": "^1.11.0"
+  }
+}

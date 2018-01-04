@@ -1,0 +1,22 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MHA Node Test</title>
+
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.4.0.css">
+    <script src="https://code.jquery.com/qunit/qunit-2.4.0.js"></script>
+    <script src="../Scripts/2047.js"></script>
+    <script src="../node_modules/codepage/cptable.js"></script>
+    <script src="../node_modules/codepage/cputils.js"></script>
+
+    <script>
+        QUnit.test("Test Node", function (assert) {
+            assert.equal(clean2047Encoding("=?US-ASCII?Q?Keith_Moore?= <moore@cs.utk.edu>"), "Keith Moore <moore@cs.utk.edu>");
+        });
+    </script>
+</head>
+<body>
+    <div id="qunit"></div>
+</body>
+</html>

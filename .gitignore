@@ -17,3 +17,4 @@ debug.log
 .vscode
 /.vs
 mha.sln
+/node_modules
