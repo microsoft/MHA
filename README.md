@@ -19,7 +19,7 @@ Because MHA requires the ReadWriteMailbox permission it can only be installed by
 11. You can now edit who the add-in is available for
 
 ## A Note on Permissions
-In order to get the transport message headers I have to use the EWS makeEwsRequestAsync method, which requires the ReadWriteMailbox permission level. See the article [Understanding Outlook add-in permissions](https://dev.office.com/docs/add-ins/outlook/understanding-outlook-add-in-permissions) for more on this. If I could request fewer permissions I would, since I only ever read the one property, but I have no choice in the matter.
+In order to get the transport message headers I have to use the EWS [makeEwsRequestAsync](https://dev.office.com/reference/add-ins/outlook/1.5/Office.context.mailbox?product=outlook&version=v1.5#makeewsrequestasyncdata-callback-usercontext) method, which requires the ReadWriteMailbox permission level. See the article [Understanding Outlook add-in permissions](https://dev.office.com/docs/add-ins/outlook/understanding-outlook-add-in-permissions) for more on this. If I could request fewer permissions I would, since I only ever read the one property, but I have no choice in the matter.
 
 When REST is more widely available, and a few REST specific bugs are fixed, I'll be able to switch to REST and request a lower permission level.
 
