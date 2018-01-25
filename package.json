@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/stephenegriffin/mha#readme",
   "dependencies": {
-    "codepage": "^1.11.1"
+    "codepage": "^1.11.1",
+    "jwt-decode": "^2.2.0"
   }
 }
