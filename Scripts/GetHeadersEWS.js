@@ -14,13 +14,11 @@
  */
 
 function sendHeadersRequest() {
-    updateStatus(ImportedStrings.mha_RequestSent);
-
-    var mailbox = Office.context.mailbox;
-    var request = getHeadersRequest(mailbox.item.itemId);
-    var envelope = getSoapEnvelope(request);
-
     try {
+        updateStatus(ImportedStrings.mha_RequestSent);
+        var mailbox = Office.context.mailbox;
+        var request = getHeadersRequest(mailbox.item.itemId);
+        var envelope = getSoapEnvelope(request);
         mailbox.makeEwsRequestAsync(envelope, callback);
     } catch (e) {
         showError(ImportedStrings.mha_requestFailed);
@@ -41,7 +39,15 @@ function callback(asyncResult) {
                 //// See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
                 //// See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
                 // We can do this because we know there's only the one property.
-                prop = responseDom.filterNode("t:ExtendedProperty")[0];
+                var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
+                if (extendedProperty.length > 0) {
+                    prop = extendedProperty[0];
+                } else {
+                    var messageText = responseDom.filterNode("m:MessageText");
+                    if (messageText.length > 0) {
+                        showError(messageText[0].textContent);
+                    }
+                }
             }
         } catch (e) {
         }
@@ -115,6 +121,7 @@ function getDiagnostics() {
         }
 
         diagnostics += "itemType = " + Office.context.mailbox.item.itemType + "\n";
+        diagnostics += "itemClass = " + Office.context.mailbox.item.itemClass + "\n";
 
         diagnostics += "contentLanguage = " + Office.context.contentLanguage + "\n";
         diagnostics += "displayLanguage = " + Office.context.displayLanguage + "\n";
