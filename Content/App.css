@@ -181,10 +181,7 @@ td {
 }
 
 .hotBarLabel {
-    padding-top: 0.4em;
-    padding-right: 1.2em;
-    padding-bottom: 2px;
-    padding-left: 0;
+    padding: 0.4em 1.2em 2px 0;
     white-space: nowrap;
 }
 

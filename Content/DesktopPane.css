@@ -1,114 +1,114 @@
 .content-wrap {
-  background: #fff;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-  padding: 0;
+    background: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .content-main {
-  padding: 10px;
-  overflow-y: auto; /* Enable scrollbars within main content section */
-  height: calc(100% - 60px); /* 40px for nav bar, 20px for padding */
+    padding: 10px;
+    overflow-y: auto; /* Enable scrollbars within main content section */
+    height: calc(100% - 60px); /* 40px for nav bar, 20px for padding */
 }
 
 .summary-table {
-  width: 100%;
+    width: 100%;
 }
 
-.summary-table td {
-  vertical-align: top;
-  word-wrap: break-word;
-  word-break: break-all;
-}
+    .summary-table td {
+        vertical-align: top;
+        word-wrap: break-word;
+        word-break: break-all;
+    }
 
 .field-name {
-  width: 15ch;
-  min-width: 15ch;
-  text-align: right;
+    width: 15ch;
+    min-width: 15ch;
+    text-align: right;
 }
 
 .code-box > pre {
-  background-color: #eaeaea;
-  border: 1px solid #ccc;
-  padding: 5px;
-  word-wrap: break-word;
-  white-space: pre-wrap;
-  font-size: .8em;
+    background-color: #eaeaea;
+    border: 1px solid #ccc;
+    padding: 5px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    font-size: .8em;
 }
 
 #nav-bar .ms-CommandButton-label {
-  display: none;
+    display: none;
 }
 
 #nav-bar .ms-CommandButton:hover .ms-CommandButton-label {
-  display: inline-block;
+    display: inline-block;
 }
 
 #nav-bar .is-active .ms-CommandButton-label {
-  display: inline-block;
+    display: inline-block;
 }
 
 .status-display {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 250px;
-  height: 70px;
-  margin-left: -125px;
-  margin-top: -35px;
-  text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250px;
+    height: 70px;
+    margin-left: -125px;
+    margin-top: -35px;
+    text-align: center;
 }
 
 .status-spinner {
-  width: 28px;
-  margin-top: 10px;
-  margin-left: 111px;
+    width: 28px;
+    margin-top: 10px;
+    margin-left: 111px;
 }
 
 #error-display {
-  display: none;
-  word-wrap: break-word;
-  word-break: break-all;
+    display: none;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 .header-view {
-  display: none;
+    display: none;
 }
 
 .spam-report {
-  word-wrap: break-word;
-  word-break: break-all;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
-.spam-report td {
-  vertical-align: top;
-  line-height: 1em;
-  padding: 10px;
-}
+    .spam-report td {
+        vertical-align: top;
+        line-height: 1em;
+        padding: 10px;
+    }
 
 .down-icon {
-  float: left;
-  width: 36px;
-  height: 36px;
-  text-align: center;
+    float: left;
+    width: 36px;
+    height: 36px;
+    text-align: center;
 }
 
 .progress-icon .ms-ProgressIndicator {
-  padding-left: 40px;
+    padding-left: 40px;
 }
 
 .ms-ListItem:hover {
-  background-color: #eaeaea;
-  cursor: pointer;
-  outline: 1px solid transparent;
+    background-color: #eaeaea;
+    cursor: pointer;
+    outline: 1px solid transparent;
 }
 
 .orig-header-ui {
-  display: none;
+    display: none;
 }
 
 .diagnostics-ui {
@@ -116,10 +116,10 @@
 }
 
 #original-headers {
-  display: none;
+    display: none;
 }
 
 .ms-Callout {
-  word-wrap: break-word;
-  word-break: break-all;
+    word-wrap: break-word;
+    word-break: break-all;
 }

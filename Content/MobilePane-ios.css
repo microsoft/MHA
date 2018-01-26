@@ -1,9 +1,9 @@
 .code-box > pre {
-  background-color: #eaeaea;
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  word-wrap: break-word;
-  white-space: pre-wrap;
+    background-color: #eaeaea;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 #orig-headers-ui {
