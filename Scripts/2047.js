@@ -100,9 +100,9 @@ function decodeBase64(charSet, input) {
         $v$5 = $F.indexOf(input.charAt($v$8++));
         $v$6 = $F.indexOf(input.charAt($v$8++));
         $v$7 = $F.indexOf(input.charAt($v$8++));
-        $v$1 = ($v$4 << 2) | ($v$5 >> 4);
-        $v$2 = (($v$5 & 15) << 4) | ($v$6 >> 2);
-        $v$3 = (($v$6 & 3) << 6) | $v$7;
+        $v$1 = $v$4 << 2 | $v$5 >> 4;
+        $v$2 = ($v$5 & 15) << 4 | $v$6 >> 2;
+        $v$3 = ($v$6 & 3) << 6 | $v$7;
 
         if ($v$7 !== 64) {
             $v$0.push($v$1, $v$2, $v$3);
