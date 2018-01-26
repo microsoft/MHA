@@ -23,7 +23,7 @@ Other.prototype.reset = function () {
 };
 
 Other.prototype.exists = function () {
-    return (this.otherRows.length > 0);
+    return this.otherRows.length > 0;
 };
 
 Other.prototype.doSort = function (col) {
@@ -35,7 +35,7 @@ Other.prototype.doSort = function (col) {
         this.sortOrder = 1;
     }
 
-    if ((this.sortColumn + "Sort") in this.otherRows[0]) {
+    if (this.sortColumn + "Sort" in this.otherRows[0]) {
         col = col + "Sort";
     }
 

@@ -118,7 +118,7 @@ function rebuildSections() {
 }
 
 function recalculateVisibility() {
-    for (var i = 0 ; i < visibilityBindings.length ; i++) {
+    for (var i = 0; i < visibilityBindings.length; i++) {
         makeVisible(visibilityBindings[i][0], visibilityBindings[i][1]());
     }
 }
@@ -281,7 +281,7 @@ function addColumns(tableName, columns) {
             headerRow.addClass("tableHeader");
             tableHeader.append(headerRow); // Must happen before we append cells to appease IE7
 
-            for (var i = 0 ; i < columns.length ; i++) {
+            for (var i = 0; i < columns.length; i++) {
                 var headerCell = $(document.createElement("th"));
                 if (headerCell !== null) {
                     headerCell.attr("id", columns[i].id);
@@ -302,11 +302,11 @@ function addColumns(tableName, columns) {
 function makeSortableColumn(table, id) {
     var header = $("#" + id);
 
-    header.bind("click", function () { 
-      viewModel[table].doSort(id); 
-      setArrows(viewModel[table].tableName, viewModel[table].sortColumn, 
-        viewModel[table].sortOrder);
-      rebuildSections();
+    header.bind("click", function () {
+        viewModel[table].doSort(id);
+        setArrows(viewModel[table].tableName, viewModel[table].sortColumn,
+            viewModel[table].sortOrder);
+        rebuildSections();
     });
 
     var downSpan = $(document.createElement("span"));
@@ -329,7 +329,7 @@ function makeSummaryTable(summaryName, rows, tag) {
     if (summaryList) {
         summaryList.addClass("summaryList");
 
-        for (var i = 0 ; i < rows.length ; i++) {
+        for (var i = 0; i < rows.length; i++) {
             var id = rows[i].header + tag;
             var row = document.createElement("tr");
             if (row !== null) {
@@ -380,19 +380,20 @@ function setArrows(table, colName, sortOrder) {
 
 function populateTables() {
     // Summary
-    //viewModel.summary.populateTable();
-    for (var i = 0 ; i < viewModel.summary.summaryRows.length ; i++) {
-        var headerVal = $("#" + viewModel.summary.summaryRows[i].header + "SUMVal");
+    var i;
+    var headerVal;
+    var row;
+
+    for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
+        headerVal = $("#" + viewModel.summary.summaryRows[i].header + "SUMVal");
         if (headerVal) {
             headerVal.text(viewModel.summary.summaryRows[i].get());
         }
     }
 
     // Received
-    //viewModel.receivedHeaders.populateTable();
-    restoreTable(viewModel.receivedHeaders.tableName);
-    for (var i = 0 ; i < viewModel.receivedHeaders.receivedRows.length ; i++) {
-        var row = document.createElement("tr");
+    for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
+        row = document.createElement("tr");
         $("#" + viewModel.receivedHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].hop, null, null);
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].from, null, null);
@@ -404,10 +405,10 @@ function populateTables() {
         }
 
         var hotBar =
-        "<div class='hotBarContainer'>" +
-        "   <div class='" + labelClass + "'>" + viewModel.receivedHeaders.receivedRows[i].delay + "</div>" +
-        "   <div class='hotBarBar' style='width:" + viewModel.receivedHeaders.receivedRows[i].percent + "%'></div>" +
-        "</div>";
+            "<div class='hotBarContainer'>" +
+            "   <div class='" + labelClass + "'>" + viewModel.receivedHeaders.receivedRows[i].delay + "</div>" +
+            "   <div class='hotBarBar' style='width:" + viewModel.receivedHeaders.receivedRows[i].percent + "%'></div>" +
+            "</div>";
         appendCell(row, null, hotBar, "hotBarCell");
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].with, null, null);
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].id, null, "extraCol");
@@ -419,28 +420,25 @@ function populateTables() {
     hideEmptyColumns(viewModel.receivedHeaders.tableName);
 
     // Forefront AntiSpam Report
-    //viewModel.forefrontAntiSpamReport.populateTable();
-    for (var i = 0 ; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length ; i++) {
-        var headerVal = $("#" + viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].header + "FFASVal");
+    for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
+        headerVal = $("#" + viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].header + "FFASVal");
         if (headerVal) {
             headerVal.html(mapHeaderToURL(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url, viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get()));
         }
     }
 
     // AntiSpam Report
-    //viewModel.antiSpamReport.populateTable();
-    for (var i = 0 ; i < viewModel.antiSpamReport.antiSpamRows.length ; i++) {
-        var headerVal = $("#" + viewModel.antiSpamReport.antiSpamRows[i].header + "ASVal");
+    for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
+        headerVal = $("#" + viewModel.antiSpamReport.antiSpamRows[i].header + "ASVal");
         if (headerVal) {
             headerVal.html(mapHeaderToURL(viewModel.antiSpamReport.antiSpamRows[i].url, viewModel.antiSpamReport.antiSpamRows[i].get()));
         }
     }
 
     // Other
-    //viewModel.otherHeaders.populateTable();
     restoreTable(viewModel.otherHeaders.tableName);
-    for (var i = 0 ; i < viewModel.otherHeaders.otherRows.length ; i++) {
-        var row = document.createElement("tr");
+    for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
+        row = document.createElement("tr");
         $("#" + viewModel.otherHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
         appendCell(row, viewModel.otherHeaders.otherRows[i].number, null, null);
         appendCell(row, viewModel.otherHeaders.otherRows[i].header, viewModel.otherHeaders.otherRows[i].url, null);
@@ -454,9 +452,9 @@ function populateTables() {
 }
 
 var visibilityBindings = [
-["#lineBreak", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
-["#response", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
-["#status", function () { return viewModel.status; }],
-[".extraCol", function () { return viewModel.showExtra; }],
-["#clearButton", function () { return viewModel.hasData; }]
+    ["#lineBreak", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
+    ["#response", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
+    ["#status", function () { return viewModel.status; }],
+    [".extraCol", function () { return viewModel.showExtra; }],
+    ["#clearButton", function () { return viewModel.hasData; }]
 ];

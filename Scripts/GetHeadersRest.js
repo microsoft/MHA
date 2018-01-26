@@ -35,8 +35,8 @@ function getItemRestId() {
     } else {
         // Convert to an item ID for API v2.0
         return Office.context.mailbox.convertToRestId(
-          Office.context.mailbox.item.itemId,
-          Office.MailboxEnums.RestVersion.v2_0
+            Office.context.mailbox.item.itemId,
+            Office.MailboxEnums.RestVersion.v2_0
         );
     }
 }

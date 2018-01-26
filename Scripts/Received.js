@@ -45,7 +45,7 @@ Received.prototype.doSort = function (col) {
         this.sortOrder = 1;
     }
 
-    if ((this.sortColumn + "Sort") in this.receivedRows[0]) {
+    if (this.sortColumn + "Sort" in this.receivedRows[0]) {
         col = col + "Sort";
     }
 

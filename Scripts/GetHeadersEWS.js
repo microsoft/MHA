@@ -50,6 +50,7 @@ function callback(asyncResult) {
                 }
             }
         } catch (e) {
+            showError(e.message);
         }
 
         if (prop) {

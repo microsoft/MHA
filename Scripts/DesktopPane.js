@@ -141,7 +141,7 @@ function buildViews() {
         $(".orig-header-ui").show();
     }
 
-        showDiagnostics();
+    showDiagnostics();
 
     // Build received view
     var receivedList = $(".received-list");

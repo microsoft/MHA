@@ -30,24 +30,27 @@ function getHeadersComplete(headers) {
 function buildViews() {
     // Build summary view
     var summaryContent = $("#summary-content");
+    var contentBlock;
+    var headerVal;
+    var pre;
 
-    for (var i = 0 ; i < viewModel.summary.summaryRows.length ; i++) {
+    for (var i = 0; i < viewModel.summary.summaryRows.length; i++) {
         if (viewModel.summary.summaryRows[i].get()) {
             $("<div/>")
                 .addClass("content-block-title")
                 .text(viewModel.summary.summaryRows[i].label)
                 .appendTo(summaryContent);
 
-            var contentBlock = $("<div/>")
+            contentBlock = $("<div/>")
                 .addClass("content-block")
                 .appendTo(summaryContent);
-            
-            var headerVal = $("<div/>")
+
+            headerVal = $("<div/>")
                 .addClass("code-box")
                 .appendTo(contentBlock);
 
-            var pre = $("<pre/>").appendTo(headerVal);
-            
+            pre = $("<pre/>").appendTo(headerVal);
+
             $("<code/>")
                 .text(viewModel.summary.summaryRows[i].get())
                 .appendTo(pre);
@@ -71,17 +74,20 @@ function buildViews() {
 
         var currentTime = null;
         var currentTimeEntry = null;
+        var timelineItem;
+        var timelineDate;
+        var timelineInner;
 
         for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
 
             if (i === 0) {
                 currentTime = moment(viewModel.receivedHeaders.receivedRows[i].dateNum).local();
 
-                var timelineItem = $("<div/>")
+                timelineItem = $("<div/>")
                     .addClass("timeline-item")
                     .appendTo(timeline);
-                
-                var timelineDate = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
+
+                timelineDate = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
 
                 $("<div/>")
                     .addClass("timeline-item-date")
@@ -97,7 +103,7 @@ function buildViews() {
                     .appendTo(timelineItem);
 
                 // Add initial otherRows
-                var timelineInner = $("<div/>")
+                timelineInner = $("<div/>")
                     .addClass("timeline-item-inner")
                     .addClass("link")
                     .addClass("open-popover")
@@ -126,11 +132,11 @@ function buildViews() {
                     // Into a new minute, create a new timeline item
                     currentTime = entryTime;
 
-                    var timelineItem = $("<div/>")
+                    timelineItem = $("<div/>")
                         .addClass("timeline-item")
                         .appendTo(timeline);
-                    
-                    var timelineDate = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
+
+                    timelineDate = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
                     $("<div/>")
                         .addClass("timeline-item-date")
                         .html(timelineDate)
@@ -147,7 +153,7 @@ function buildViews() {
                 }
 
                 // Add additional rows
-                var timelineInner = $("<div/>")
+                timelineInner = $("<div/>")
                     .addClass("timeline-item-inner")
                     .addClass("link")
                     .addClass("open-popover")
@@ -177,7 +183,7 @@ function buildViews() {
                     .appendTo(progress);
 
                 try {
-                myApp.showProgressbar(".progress-wrap-" + i, viewModel.receivedHeaders.receivedRows[i].percent);
+                    myApp.showProgressbar(".progress-wrap-" + i, viewModel.receivedHeaders.receivedRows[i].percent);
                 } catch (e) {
                     $("#original-headers").text(JSON.stringify(e));
                     return;
@@ -189,7 +195,7 @@ function buildViews() {
                 .addClass("popover")
                 .addClass("popover-" + i)
                 .appendTo(receivedContent);
-            
+
             $("<div/>")
                 .addClass("popover-angle")
                 .appendTo(popover);
@@ -231,6 +237,8 @@ function buildViews() {
 
     // Build antispam view
     var antispamContent = $("#antispam-content");
+    var list;
+    var ul;
 
     // Forefront
     if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length > 0) {
@@ -239,15 +247,15 @@ function buildViews() {
             .text("Forefront Antispam Report")
             .appendTo(antispamContent);
 
-        var list = $("<div/>")
+        list = $("<div/>")
             .addClass("list-block")
             .addClass("accordion-list")
             .appendTo(antispamContent);
-        
-        var ul = $("<ul/>")
+
+        ul = $("<ul/>")
             .appendTo(list);
 
-        for (i = 0 ; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length ; i++) {
+        for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
             addSpamReportRow(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i], ul);
         }
     }
@@ -259,15 +267,15 @@ function buildViews() {
             .text("Microsoft Antispam Report")
             .appendTo(antispamContent);
 
-        var list = $("<div/>")
+        list = $("<div/>")
             .addClass("list-block")
             .addClass("accordion-list")
             .appendTo(antispamContent);
-        
-        var ul = $("<ul/>")
+
+        ul = $("<ul/>")
             .appendTo(list);
 
-        for (i = 0 ; i < viewModel.antiSpamReport.antiSpamRows.length ; i++) {
+        for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
             addSpamReportRow(viewModel.antiSpamReport.antiSpamRows[i], ul);
         }
     }
@@ -275,7 +283,7 @@ function buildViews() {
     // Build other view
     var otherContent = $("#other-content");
 
-    for (i = 0 ; i < viewModel.otherHeaders.otherRows.length ; i++) {
+    for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
         if (viewModel.otherHeaders.otherRows[i].value) {
             var headerName = $("<div/>")
                 .addClass("content-block-title")
@@ -290,16 +298,16 @@ function buildViews() {
                     .appendTo(headerName);
             }
 
-            var contentBlock = $("<div/>")
+            contentBlock = $("<div/>")
                 .addClass("content-block")
                 .appendTo(otherContent);
-            
-            var headerVal = $("<div/>")
+
+            headerVal = $("<div/>")
                 .addClass("code-box")
                 .appendTo(contentBlock);
 
-            var pre = $("<pre/>").appendTo(headerVal);
-            
+            pre = $("<pre/>").appendTo(headerVal);
+
             $("<code/>")
                 .text(viewModel.otherHeaders.otherRows[i].value)
                 .appendTo(pre);
@@ -332,7 +340,7 @@ function addSpamReportRow(spamRow, parent) {
             .addClass("accordion-item-content")
             .appendTo(item);
 
-        var contentBlock = $("<div/>")
+        contentBlock = $("<div/>")
             .addClass("content-block")
             .appendTo(itemContent);
 

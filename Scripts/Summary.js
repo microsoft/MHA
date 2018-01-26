@@ -47,7 +47,7 @@ Summary.prototype.summaryRows = [];
 Summary.prototype.totalTime = 0;
 
 Summary.prototype.reset = function () {
-    for (var i = 0 ; i < this.summaryRows.length ; i++) {
+    for (var i = 0; i < this.summaryRows.length; i++) {
         this.summaryRows[i].set("");
     }
 
@@ -55,7 +55,7 @@ Summary.prototype.reset = function () {
 };
 
 Summary.prototype.exists = function () {
-    for (var i = 0 ; i < this.summaryRows.length ; i++) {
+    for (var i = 0; i < this.summaryRows.length; i++) {
         if (this.summaryRows[i].get()) {
             return true;
         }
@@ -69,7 +69,7 @@ Summary.prototype.init = function (header) {
         return;
     }
 
-    for (var i = 0 ; i < this.summaryRows.length ; i++) {
+    for (var i = 0; i < this.summaryRows.length; i++) {
         if (this.summaryRows[i].header === header.header) {
             this.summaryRows[i].set(header.value);
             return;
