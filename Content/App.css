@@ -144,9 +144,12 @@ td {
     font-size: xx-large;
     line-height: 8px;
     display: block;
-    width: 30px;
+    width: 38px;
     text-align: center;
     padding-left: 8px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .collapsibleWrapper {
