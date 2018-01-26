@@ -87,11 +87,11 @@ function parseHeadersToTables(headers) {
     rebuildSections();
     hideExtraColumns();
     recalculateLayout(true);
-};
+}
 
 function onResize() {
     recalculateLayout();
-};
+}
 
 // Adjusts locations and dimensions of our response and progress without rebuilding content
 function recalculateLayout() {
@@ -376,7 +376,7 @@ function setArrows(table, colName, sortOrder) {
     } else {
         $("#" + table + " .tableHeader #" + colName + " .upArrow").removeClass("hiddenElement");
     }
-};
+}
 
 function populateTables() {
     // Summary
