@@ -11,6 +11,7 @@
         (window.cptable || document.write('<script src="../node_modules/codepage/dist/sbcs.full.js"><\/script>'));
     </script>
     <script src="../Scripts/2047.js"></script>
+    <script src="../Scripts/Headers.js"></script>
 
     <script>
         QUnit.test("RFC 2047 Tests", function (assert) {
@@ -41,6 +42,11 @@
             assert.equal(clean2047Encoding("=?utf-8?Q?=00=0A=41?=test3"), "\0\nAtest3");
             assert.equal(clean2047Encoding("From: =?utf-8?Q?=00=0A=41?=test4"), "From: \0\nAtest4");
             assert.equal(clean2047Encoding("From: =?utf-8?Q?=41?=\r\ntest5"), "From: A\r\ntest5");
+            assert.equal(clean2047Encoding(
+                "=?UTF-8?B?8J+PiCAgMjAxOSdzIE5vLjEgUmVjcnVpdCwgVGhlIFdvcmxkJ3Mg?=\n" +
+                " =?UTF-8?B?VGFsbGVzdCBUZWVuYWdlciwgVG9wIFBsYXlzIG9mIHRoZSBXZWVrICYgbW9y?=\n" +
+                " =?UTF-8?B?ZQ==?="),
+                "🏈  2019's No.1 Recruit, The World's Tallest Teenager, Top Plays of the Week & more");
         });
 
         QUnit.test("Mailsploit Tests", function (assert) {
@@ -147,6 +153,19 @@
         QUnit.test("2047 Codepage Tests", function (assert) {
             assert.equal(decodeHexCodepage("ISO-8859-8", [0xED, 0xE5, 0xEC, 0xF9, 0x20, 0xEF, 0xE1, 0x20, 0xE9, 0xEC, 0xE8, 0xF4, 0xF0]), "םולש ןב ילטפנ");
             assert.equal(decodeHexCodepage("UTF-8", [0xF0, 0x9D, 0x93, 0xA2, 0xF0, 0x9D, 0x93, 0xBB, 0xF0, 0x9D, 0x93, 0xB2, 0x20]), "𝓢𝓻𝓲 ");
+        });
+
+        QUnit.test("GetHeaderList Test", function (assert) {
+            var headerList = GetHeaderList(
+                "Subject: =?UTF-8?B?8J+PiCAgMjAxOSdzIE5vLjEgUmVjcnVpdCwgVGhlIFdvcmxkJ3Mg?=\n" +
+                " =?UTF 8?B?VGFsbGVzdCBUZWVuYWdlciwgVG9wIFBsYXlzIG9mIHRoZSBXZWVrICYgbW9y?=\n" +
+                " =?UTF-8?B?ZQ==?=\n" +
+                "Date: Fri, 26 Jan 2018 15:54:11 - 0600\n");
+            assert.equal(headerList[0].header, "Subject");
+            assert.equal(headerList[0].value,
+                "🏈  2019's No.1 Recruit, The World's Tallest Teenager, Top Plays of the Week & more");
+            assert.equal(headerList[1].header, "Date");
+            assert.equal(headerList[1].value, "Fri, 26 Jan 2018 15:54:11 - 0600");
         });
     </script>
 </head>
