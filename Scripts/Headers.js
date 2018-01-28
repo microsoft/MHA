@@ -116,7 +116,9 @@ function GetHeaderList(headers) {
                 // Tack this line to the previous line
                 // All folding whitespace should collapse to a single space
                 line = line.replace(/^[\s]+/, "");
-                headerList[iNextHeader - 1].value += " " + line;
+                if (!line) continue;
+                var separator = headerList[iNextHeader - 1].value ? " " : "";
+                headerList[iNextHeader - 1].value += separator + line;
             } else {
                 // If we didn't have a previous line, go ahead and use this line
                 if (line.match(/\S/g)) {
