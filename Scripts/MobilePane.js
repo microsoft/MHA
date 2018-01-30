@@ -1,6 +1,9 @@
 // Check mobile platform
 
 $(document).ready(function () {
+    // Temporary hack for oddball Outlook for iOS user agent
+    var ios = window.navigator.userAgent.match(/(Outlook-iOS)/);
+    if (ios) Framework7.prototype.device.ios = true;
     if (Framework7.prototype.device.ios) {
         // Redirect to iOS page
         var iosPaneUrl = new URI('MobilePane-ios.html').absoluteTo(window.location).toString();
