@@ -52,7 +52,7 @@ ForefrontAntiSpamReport.prototype.exists = function () {
     return false;
 };
 
-//// http://technet.microsoft.com/en-us/library/dn205071(v=exchg.150).aspx
+//// https://technet.microsoft.com/en-us/library/dn205071
 function ParseAntiSpamReport(report, antispamRows) {
     if (!report) {
         return;

@@ -112,6 +112,7 @@ function getDiagnostics() {
         diagnostics += "Requirement set = " + getRequirementSet() + "\n";
         diagnostics += "hostname = " + Office.context.mailbox.diagnostics.hostName + "\n";
         diagnostics += "hostVersion = " + Office.context.mailbox.diagnostics.hostVersion + "\n";
+        diagnostics += "User Agent = " + window.navigator.userAgent + "\n";
         if (Office.context.mailbox.diagnostics.OWAView) {
             diagnostics += "OWAView = " + Office.context.mailbox.diagnostics.OWAView + "\n";
         }
