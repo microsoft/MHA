@@ -11,11 +11,12 @@ $(document).ready(function () {
     } else if (Framework7.prototype.device.android) {
         $('#message').text('Android is not yet supported.');
     } else {
-        $('#message').text('YOU SHOULD NOT BE HERE');
+        $('#message').html("If you see this page something has gone wrong. Please open an issue at <a hRef = 'https://github.com/stephenegriffin/mha'>https://github.com/stephenegriffin/mha</a> and include the diagnostics below.");
     }
 
     insertData('diag', 'User agent', window.navigator.userAgent);
-    insertData('diag', 'iOS', Framework7.prototype.device.ios);
+    insertData('diag', 'iOS (Framework7 check)', Framework7.prototype.device.ios);
+    insertData('diag', 'iOS (userAgent check)', ios);
     insertData('diag', 'iPad', Framework7.prototype.device.ipad);
     insertData('diag', 'iPhone', Framework7.prototype.device.iphone);
     insertData('diag', 'Android', Framework7.prototype.device.android);
