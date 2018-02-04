@@ -1,14 +1,15 @@
-﻿// This function is run when the app is ready to start interacting with the host application.
+﻿var Office = null;
+
+// This function is run when the app is ready to start interacting with the host application.
 // It ensures the DOM is ready before updating the span elements with values from the current message.
-Office.initialize = function () {
-    $(document).ready(function () {
-        $(window).resize(onResize);
-        initViewModels();
-        showDiagnostics();
-        updateStatus(ImportedStrings.mha_loading);
-        sendHeadersRequest();
-    });
-};
+$(document).ready(function () {
+    Office = window.parent.getOffice();
+    $(window).resize(onResize);
+    initViewModels();
+    showDiagnostics();
+    updateStatus(ImportedStrings.mha_loading);
+    sendHeadersRequest();
+});
 
 function enableSpinner() {
     $("#response").css("background-image", "url(../Resources/loader.gif)");
