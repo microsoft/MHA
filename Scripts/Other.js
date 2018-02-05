@@ -11,6 +11,7 @@ OtherRow.prototype.url = "";
 OtherRow.prototype.value = "";
 
 var Other = function () {
+    this.otherRows = [];
 };
 
 Other.prototype.tableName = "otherHeaders";

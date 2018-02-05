@@ -21,6 +21,7 @@ ReceivedRow.prototype.percent = 0;
 ReceivedRow.prototype.sourceHeader = 0;
 
 var Received = function () {
+    this.receivedRows = [];
 };
 
 Received.prototype.tableName = "receivedHeaders";
