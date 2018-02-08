@@ -14,6 +14,7 @@ var HeaderModel = function () {
     this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
     this.antiSpamReport = new AntiSpamReport();
     this.otherHeaders = new Other();
+    this.errors = [];
 };
 
 HeaderModel.prototype.status = "";
@@ -24,6 +25,7 @@ HeaderModel.prototype.forefrontAntiSpamReport = {};
 HeaderModel.prototype.antiSpamReport = {};
 HeaderModel.prototype.originalHeaders = "";
 HeaderModel.prototype.diagnostics = "";
+HeaderModel.prototype.errors = [];
 HeaderModel.prototype.hasData = false;
 
 HeaderModel.prototype.resetView = function () {
@@ -37,6 +39,7 @@ HeaderModel.prototype.resetView = function () {
 
     this.originalHeaders = "";
     this.diagnostics = "";
+    this.errors = [];
 
     this.hasData = false;
 };

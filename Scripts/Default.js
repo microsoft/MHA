@@ -42,6 +42,7 @@ function getHeadersComplete(headers) {
 }
 
 function showError(message) {
+    viewModel.errors.push(message);
     updateStatus(message);
     disableSpinner();
     rebuildSections();

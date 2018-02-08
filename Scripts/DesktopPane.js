@@ -14,8 +14,12 @@ Office.initialize = function () {
 };
 
 function registerItemChangeEvent() {
-    if (Office.context.mailbox.addHandlerAsync !== undefined) {
-        Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, loadNewItem);
+    try {
+        if (Office.context.mailbox.addHandlerAsync !== undefined) {
+            Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, loadNewItem);
+        }
+    } catch (e) {
+        showError("Could not register item change event");
     }
 }
 
@@ -384,6 +388,7 @@ function hideStatus() {
 }
 
 function showError(message) {
+    viewModel.errors.push(message);
     $("#error-display .ms-MessageBar-text").text(message);
     $("#error-display").show();
 }
