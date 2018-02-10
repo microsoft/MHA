@@ -30,7 +30,6 @@ function clearHeaders() {
     setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
     setArrows(viewModel.otherHeaders.tableName, "number", 1);
     rebuildSections();
-    positionResponse();
 }
 
 function enableSpinner() {
@@ -49,6 +48,5 @@ function updateStatus(statusText) {
         viewModel.status = statusText;
     }
 
-    positionResponse();
     recalculateVisibility();
 }

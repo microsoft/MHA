@@ -86,7 +86,6 @@ function parseHeadersToTables(headers) {
     updateStatus("");
     rebuildSections();
     hideExtraColumns();
-    positionResponse();
 }
 
 function onResize() {
@@ -109,6 +108,8 @@ function recalculateVisibility() {
     for (var i = 0; i < visibilityBindings.length; i++) {
         makeVisible(visibilityBindings[i][0], visibilityBindings[i][1]());
     }
+
+    positionResponse();
 }
 
 // Restores table to empty state so we can repopulate it
@@ -160,7 +161,6 @@ function toggleExtraColumns() {
     }
 
     recalculateVisibility();
-    positionResponse();
 }
 
 function toggleCollapse(object) {

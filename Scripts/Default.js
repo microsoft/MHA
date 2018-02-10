@@ -32,7 +32,6 @@ function updateStatus(statusText) {
         viewModel.status = statusText;
     }
 
-    positionResponse();
     recalculateVisibility();
 }
 
