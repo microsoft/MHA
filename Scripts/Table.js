@@ -86,15 +86,10 @@ function parseHeadersToTables(headers) {
     updateStatus("");
     rebuildSections();
     hideExtraColumns();
-    recalculateLayout(true);
+    positionResponse();
 }
 
 function onResize() {
-    recalculateLayout();
-}
-
-// Adjusts locations and dimensions of our response and progress without rebuilding content
-function recalculateLayout() {
     positionResponse();
 }
 
@@ -165,12 +160,12 @@ function toggleExtraColumns() {
     }
 
     recalculateVisibility();
-    recalculateLayout();
+    positionResponse();
 }
 
 function toggleCollapse(object) {
     $(".collapsibleElement", $(object).parents(".collapsibleWrapper")).toggle();
-    recalculateLayout();
+    positionResponse();
 }
 
 // Wraps an element into a collapsible pane with a title
