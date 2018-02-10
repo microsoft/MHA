@@ -96,14 +96,6 @@ function onResize() {
 // Adjusts locations and dimensions of our response and progress without rebuilding content
 function recalculateLayout() {
     positionResponse();
-
-    // Calculate heights for our hotbar cells (progress bars in Delay column)
-    // Remove the old height
-    $(".hotBarContainer").removeAttr("style");
-    // Tag the new one
-    $(".hotBarCell").each(function () {
-        $(this).find(".hotBarContainer").height($(this).height());
-    });
 }
 
 // Adjusts response under our lineBreak
@@ -420,6 +412,12 @@ function populateTables() {
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].for, null, "extraCol");
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].via, null, "extraCol");
     }
+
+    // Calculate heights for the hotbar cells (progress bars in Delay column)
+    // Not clear why we need to do this
+    $(".hotBarCell").each(function () {
+        $(this).find(".hotBarContainer").height($(this).height());
+    });
 
     $("#" + viewModel.receivedHeaders.tableName + " tbody tr:odd").addClass("oddRow");
     hideEmptyColumns(viewModel.receivedHeaders.tableName);
