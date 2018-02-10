@@ -145,6 +145,9 @@ function hideEmptyColumns(id) {
         if (keep === 0) {
             $(this).addClass("emptyColumn");
             children.addClass("emptyColumn");
+        } else {
+            $(this).removeClass("emptyColumn");
+            children.removeClass("emptyColumn");
         }
     });
 }
