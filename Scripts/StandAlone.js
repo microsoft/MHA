@@ -1,7 +1,10 @@
+var viewModel = null;
+
 if (window.jQuery) {
     $(document).ready(function () {
         $(window).resize(onResize);
-        initViewModels();
+        viewModel = new HeaderModel();
+        initializeTableUI();
         makeResizablePane("inputHeaders", ImportedStrings.mha_prompt, null, null);
     });
 }

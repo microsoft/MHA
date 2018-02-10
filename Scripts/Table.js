@@ -1,9 +1,5 @@
-// View model for our headers tables
-var viewModel = null;
 
-function initViewModels() {
-    viewModel = new HeaderModel();
-
+function initializeTableUI() {
     // Headers
     makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
     $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
