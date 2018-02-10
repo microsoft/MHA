@@ -30,7 +30,7 @@ function clearHeaders() {
     setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
     setArrows(viewModel.otherHeaders.tableName, "number", 1);
     rebuildSections();
-    recalculateLayout();
+    positionResponse();
 }
 
 function enableSpinner() {
