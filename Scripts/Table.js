@@ -124,7 +124,7 @@ function recalculateVisibility() {
 }
 
 // Restores table to empty state so we can repopulate it
-function restoreTable(id) {
+function emptyTableUI(id) {
     $("#" + id + " tbody tr").remove(); // Remove the rows
     $("#" + id + " th").removeClass("emptyColumn"); // Restore header visibility
     $("#" + id + " th").removeClass("hiddenElement"); // Restore header visibility
@@ -382,11 +382,11 @@ function setArrows(table, colName, sortOrder) {
 }
 
 function populateTables() {
-    // Summary
     var i;
     var headerVal;
     var row;
 
+    // Summary
     for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
         headerVal = $("#" + viewModel.summary.summaryRows[i].header + "SUMVal");
         if (headerVal) {
@@ -395,6 +395,7 @@ function populateTables() {
     }
 
     // Received
+    emptyTableUI(viewModel.receivedHeaders.tableName);
     for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
         row = document.createElement("tr");
         $("#" + viewModel.receivedHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
@@ -439,7 +440,7 @@ function populateTables() {
     }
 
     // Other
-    restoreTable(viewModel.otherHeaders.tableName);
+    emptyTableUI(viewModel.otherHeaders.tableName);
     for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
         row = document.createElement("tr");
         $("#" + viewModel.otherHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
