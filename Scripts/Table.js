@@ -98,12 +98,6 @@ function positionResponse() {
     $("#response").css("top", responseTop + 15);
 }
 
-// Rebuilds content and recalculates what sections should be displayed
-function rebuildSections() {
-    populateTables();
-    recalculateVisibility();
-}
-
 function recalculateVisibility() {
     for (var i = 0; i < visibilityBindings.length; i++) {
         makeVisible(visibilityBindings[i][0], visibilityBindings[i][1]());
@@ -369,7 +363,8 @@ function setArrows(table, colName, sortOrder) {
     }
 }
 
-function populateTables() {
+// Rebuilds content and recalculates what sections should be displayed
+function rebuildSections() {
     var i;
     var headerVal;
     var row;
@@ -447,6 +442,8 @@ function populateTables() {
 
     // Original headers
     $("#originalHeaders").text(viewModel.originalHeaders);
+
+    recalculateVisibility();
 }
 
 var visibilityBindings = [
