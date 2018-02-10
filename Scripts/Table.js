@@ -97,6 +97,7 @@ function onResize() {
 function recalculateLayout() {
     positionResponse();
 
+    // Calculate heights for our hotbar cells (progress bars in Delay column)
     // Remove the old height
     $(".hotBarContainer").removeAttr("style");
     // Tag the new one
