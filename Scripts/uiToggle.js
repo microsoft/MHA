@@ -65,9 +65,20 @@ function buildUiToggleMenu(id, uiChoices) {
     var headerRow = $(document.createElement("div"));
     headerRow.addClass("header-row");
 
-    var headerLabel = $(document.createElement("label"));
-    headerLabel.text('style:');
-    headerRow.append(headerLabel);
+    var dropDown = $(document.createElement("div"));
+    dropDown.addClass("dropdown");
+    headerRow.append(dropDown);
+
+    var gear = $(document.createElement("span"));
+    gear.attr("onclick", "toggleMenu()");
+    gear.addClass("gearbox");
+    gear.text("\u2699"); // gear icon
+    dropDown.append(gear);
+
+    var dropdownContent = $(document.createElement("div"));
+    dropdownContent.addClass("dropdown-content");
+    dropdownContent.attr("id", "dropdownMenu");
+    dropDown.append(dropdownContent);
 
     for (var iChoice = 0; iChoice < uiChoices.length; iChoice++) {
         var choice = uiChoices[iChoice];
@@ -76,13 +87,15 @@ function buildUiToggleMenu(id, uiChoices) {
         input.attr("name", 'uiChoice');
         input.attr("type", 'radio');
         input.attr("id", id);
-        input.attr("onclick", "go(uiChoices[" + iChoice + "])");
+        input.attr("onclick", "go(uiChoices[" + iChoice + "]);hideMenu()");
         input.prop("checked", choice.checked);
-        headerRow.append(input);
+        dropdownContent.append(input);
         var label = $(document.createElement("label"));
         label.attr("for", id);
         label.text(choice.label);
-        headerRow.append(label);
+        dropdownContent.append(label);
+        var br = $(document.createElement("br"));
+        dropdownContent.append(br);
     }
 
     var frameRow = $(document.createElement("div"));
@@ -94,4 +107,12 @@ function buildUiToggleMenu(id, uiChoices) {
 
     pane.append(headerRow);
     pane.append(frameRow);
+}
+
+function toggleMenu() {
+    $("#dropdownMenu").toggleClass("show");
+}
+
+function hideMenu() {
+    $("#dropdownMenu").removeClass("show");
 }

@@ -11,12 +11,12 @@ body, html {
     top: 0;
     left: 0;
     right: 0;
-    height: 20px;
+    height: 0;
 }
 
 .frame-row {
     position: absolute;
-    top: 20px;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
@@ -28,3 +28,43 @@ body, html {
         height: 100%;
         border: none;
     }
+
+.dropdown {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}
+
+.gearbox {
+    background-color: transparent;
+    color: #0078d7;
+    font-size: xx-large;
+    cursor: pointer;
+    width: 45px;
+    height: 45px;
+    display: table-cell;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    vertical-align: middle;
+    text-align: center;
+}
+
+    .gearbox:hover, .gearbox:focus {
+        background-color: #0078d7;
+        color: white;
+    }
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    z-index: 1;
+    right: 0;
+}
+
+.show {
+    display: block;
+}
