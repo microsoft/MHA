@@ -68,3 +68,37 @@ body, html {
 .show {
     display: block;
 }
+
+.menu-title {
+    font-weight: bold;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+    input[type="radio"] + label {
+        color: #0078d7;
+        cursor: pointer;
+    }
+
+input[type=radio ]:not(old) + label > span {
+    display: inline-block;
+    width: 0.875em;
+    height: 0.875em;
+    margin: 0.25em 0.5em 0.25em 0.25em;
+    border: 0.0625em solid black;
+    border-radius: 0.25em;
+    background: white;
+    vertical-align: bottom;
+}
+
+input[type=radio]:not(old):checked + label > span > span {
+    display: block;
+    width: 0.5em;
+    height: 0.5em;
+    margin: 0.125em;
+    border: 0.0625em solid;
+    border-radius: 0.125em;
+    background: #0078d7;
+}

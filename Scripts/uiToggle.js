@@ -80,6 +80,11 @@ function buildUiToggleMenu(id, uiChoices) {
     dropdownContent.attr("id", "dropdownMenu");
     dropDown.append(dropdownContent);
 
+    var menutitle = $(document.createElement("div"));
+    menutitle.text('Style');
+    menutitle.addClass("menu-title");
+    dropdownContent.append(menutitle);
+
     for (var iChoice = 0; iChoice < uiChoices.length; iChoice++) {
         var choice = uiChoices[iChoice];
         var id = "uiToggle" + choice.label;
@@ -94,6 +99,12 @@ function buildUiToggleMenu(id, uiChoices) {
         label.attr("for", id);
         label.text(choice.label);
         dropdownContent.append(label);
+        // Our radio button
+        var span = $(document.createElement("span"));
+        var span2 = $(document.createElement("span"));
+        span.append(span2);
+        label.prepend(span);
+
         var br = $(document.createElement("br"));
         dropdownContent.append(br);
     }
