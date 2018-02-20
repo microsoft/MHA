@@ -11,12 +11,12 @@ body, html {
     top: 0;
     left: 0;
     right: 0;
-    height: 0;
+    height: 25px;
 }
 
 .frame-row {
     position: absolute;
-    top: 0;
+    top: 25px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -29,79 +29,6 @@ body, html {
         border: none;
     }
 
-.dropdown {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 1;
-}
-
-.gearbox {
-    background-color: transparent;
-    color: #0078d7;
-    font-size: xx-large;
-    cursor: pointer;
-    width: 45px;
-    height: 45px;
-    display: table-cell;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    vertical-align: middle;
-    text-align: center;
-}
-
-    .gearbox:hover, .gearbox:focus {
-        background-color: #0078d7;
-        color: white;
-    }
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    z-index: 1;
-    right: 0;
-    border-color: lightgray;
-    border-style: solid;
-    border-width: 1px;
-}
-
-.show {
-    display: block;
-}
-
-.menu-title {
-    font-weight: bold;
-}
-
-input[type="radio"] {
-    display: none;
-}
-
-    input[type="radio"] + label {
-        color: #0078d7;
-        cursor: pointer;
-    }
-
-input[type=radio ]:not(old) + label > span {
-    display: inline-block;
-    width: 0.875em;
-    height: 0.875em;
-    margin: 0.25em 0.5em 0.25em 0.25em;
-    border: 0.0625em solid black;
-    border-radius: 0.25em;
-    background: white;
-    vertical-align: bottom;
-}
-
-input[type=radio]:not(old):checked + label > span > span {
-    display: block;
-    width: 0.5em;
-    height: 0.5em;
-    margin: 0.125em;
-    border: 0.0625em solid;
-    border-radius: 0.125em;
-    background: #0078d7;
+.floatie {
+    float: right;
 }

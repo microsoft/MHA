@@ -1,3 +1,4 @@
+var currentChoice;
 var uiChoice = function (label, url, checked) {
     this.label = label;
     this.url = url;
@@ -42,6 +43,7 @@ function getSettingsKey() {
 }
 
 function go(choice) {
+    currentChoice = choice;
     document.getElementById('uiFrame').src = choice.url;
     if (Office.context) {
         Office.context.roamingSettings.set(getSettingsKey(), choice);
@@ -59,71 +61,147 @@ function goDefaultChoice(uiChoices) {
     }
 }
 
+function Create(parentElement, newType, newClass) {
+    var newElement = $(document.createElement(newType));
+    if (newClass) {
+        newElement.addClass(newClass);
+    }
+
+    if (parentElement) {
+        parentElement.append(newElement);
+    }
+
+    return newElement;
+}
+
 function buildUiToggleMenu(id, uiChoices) {
     var pane = $("#" + id);
 
-    var headerRow = $(document.createElement("div"));
-    headerRow.addClass("header-row");
-
-    var dropDown = $(document.createElement("div"));
-    dropDown.addClass("dropdown");
-    headerRow.append(dropDown);
-
-    var gear = $(document.createElement("span"));
-    gear.attr("onclick", "toggleMenu()");
-    gear.addClass("gearbox");
-    gear.text("\u2699"); // gear icon
-    dropDown.append(gear);
-
-    var dropdownContent = $(document.createElement("div"));
-    dropdownContent.addClass("dropdown-content");
-    dropdownContent.attr("id", "dropdownMenu");
-    dropDown.append(dropdownContent);
-
-    var menutitle = $(document.createElement("div"));
-    menutitle.text('Style');
-    menutitle.addClass("menu-title");
-    dropdownContent.append(menutitle);
-
+    //<div class="header-row">
+    var headerRow = Create(pane, "div", "header-row");
+    //  <div class="docs-DialogExample-default">
+    var dialogExample = Create(headerRow, "div", "docs-DialogExample-default");
+    //    <div class="ms-Style-button floatie">
+    var buttonDiv = Create(dialogExample, "div", "ms-Style-button floatie");
+    //      <button class="ms-Button ms-Button--hero docs-DialogExample-button">
+    //var button = Create(buttonDiv, "button", "ms-Button");
+    var button = Create(buttonDiv, "button", "ms-Button ms-Button--hero docs-DialogExample-button");
+    //        <span class="ms-Button-label">
+    var buttonSpan = Create(button, "span", "ms-Button-label");
+    //          <i class="ms-Icon ms-Icon--Settings" aria-hidden="true"></i>
+    var buttonIcon = Create(buttonSpan, "i", "ms-Icon ms-Icon--Settings");
+    buttonIcon.attr("aria-hidden", "true");
+    //        </span>
+    //      </button>
+    //    </div>
+    //    <div class="ms-Dialog">
+    var dialog = Create(dialogExample, "div", "ms-Dialog");
+    //      <div class="ms-Dialog-title">Styles</div>
+    var dialogTitle = Create(dialog, "div", "ms-Dialog-title");
+    dialogTitle.text("Styles");
+    //      <div class="ms-Dialog-content">
+    var dialogContent = Create(dialog, "div", "ms-Dialog-content");
+    //        <p class="ms-Dialog-subText">Select UI style</p>
+    var dialogSubText = Create(dialogContent, "p", "ms-Dialog-subText");
+    dialogSubText.text("Select UI style");
+    //        <div class="ms-ChoiceFieldGroup" id="uiChoice" role="radiogroup">
+    ////                    <div class="ms-ChoiceFieldGroup" id="uiChoice" role="radiogroup">
+    var choiceGroup = Create(dialogContent, "div", "ms-ChoiceFieldGroup");
+    choiceGroup.attr("id", "uiChoice");
+    choiceGroup.attr("role", "radiogroup");
+    //          <ul class="ms-ChoiceFieldGroup-list">
+    var list = Create(choiceGroup, "ul", "ms-ChoiceFieldGroup-list");
     for (var iChoice = 0; iChoice < uiChoices.length; iChoice++) {
         var choice = uiChoices[iChoice];
-        var id = "uiToggle" + choice.label;
-        var input = $(document.createElement("input"));
-        input.attr("name", 'uiChoice');
+        //            <li class="ms-RadioButton">
+        var listItem = Create(list, "li", "ms-RadioButton");
+        //              <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
+        var input = Create(listItem, "input", "ms-RadioButton-input");
+        input.attr("tabindex", '-1');
         input.attr("type", 'radio');
-        input.attr("id", id);
-        input.attr("onclick", "go(uiChoices[" + iChoice + "]);hideMenu()");
-        input.prop("checked", choice.checked);
-        dropdownContent.append(input);
-        var label = $(document.createElement("label"));
-        label.attr("for", id);
-        label.text(choice.label);
-        dropdownContent.append(label);
-        // Our radio button
-        var span = $(document.createElement("span"));
-        var span2 = $(document.createElement("span"));
-        span.append(span2);
-        label.prepend(span);
+        input.attr("value", iChoice);
+        //               <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
+        var label = Create(listItem, "label", "ms-RadioButton-field");
+        label.attr("role", 'radio');
+        label.attr("tabindex", '0');
+        label.attr("aria-checked", "false");
+        label.attr("name", 'uiChoice');
+        label.attr("value", choice.label);
+        //                <span class="ms-Label">classic</span>
+        var inputSpan = Create(label, "span", "ms-Label");
+        inputSpan.text(choice.label);
+        //              </label>
+        //            </li>
+    }
+    //          </ul>
+    //        </div>
+    //      </div>
+    //      <div class="ms-Dialog-actions">
+    var actions = Create(dialog, "div", "ms-Dialog-actions");
+    //        <button class="ms-Button ms-Dialog-action ms-Button--primary">
+    var actionsButtonSave = Create(actions, "button", "ms-Button ms-Button--primary ms-Dialog-action");
+    //          <span class="ms-Button-label">Save</span>
+    var actionsButtonSaveLabel = Create(actionsButtonSave, "span", "ms-Button-label");
+    actionsButtonSaveLabel.text("Save");
+    //        </button>
+    //        <button class="ms-Button ms-Dialog-action">
+    var actionsButtonCancel = Create(actions, "button", "ms-Button ms-Dialog-action");
+    //          <span class="ms-Button-label">Cancel</span>
+    var actionsButtonCancelLabel = Create(actionsButtonCancel, "span", "ms-Button-label");
+    actionsButtonCancelLabel.text("Cancel");
+    //        </button>
+    //      </div>
+    //    </div>
+    //  <div>
+    //</div>
+    //<div class="frame-row">
+    var frameRow = Create(pane, "div", "frame-row");
+    //  <iframe id="uiFrame" src="newDesktopFrame.html"></iframe>
+    var frame = Create(frameRow, "iFrame");
+    frame.attr("id", 'uiFrame');
+    //</div>
 
-        var br = $(document.createElement("br"));
-        dropdownContent.append(br);
+    initFabric();
+}
+
+function initFabric() {
+    var choiceGroup = document.querySelectorAll(".ms-ChoiceFieldGroup");
+    new fabric['ChoiceFieldGroup'](choiceGroup[0]);
+
+    var ChoiceFieldGroupElements = document.querySelectorAll(".ms-ChoiceFieldGroup");
+    for (var i = 0; i < ChoiceFieldGroupElements.length; i++) {
+        new fabric['ChoiceFieldGroup'](ChoiceFieldGroupElements[i]);
     }
 
-    var frameRow = $(document.createElement("div"));
-    frameRow.addClass("frame-row");
+    var example = document.querySelector(".docs-DialogExample-default");
+    var button = example.querySelector(".docs-DialogExample-button");
+    var dialog = example.querySelector(".ms-Dialog");
+    var actionButtonElements = example.querySelectorAll(".ms-Dialog-action");
+    var actionButtonComponents = [];
+    // Wire up the dialog
+    var dialogComponent = new fabric['Dialog'](dialog);
 
-    var frame = $(document.createElement("iFrame"));
-    frame.attr("id", 'uiFrame');
-    frameRow.append(frame);
+    // Wire up the buttons
+    for (var i = 0; i < actionButtonElements.length; i++) {
+        actionButtonComponents[i] = new fabric['Button'](actionButtonElements[i], actionHandler);
+    }
 
-    pane.append(headerRow);
-    pane.append(frameRow);
-}
+    // When clicking the button, open the dialog
+    button.onclick = function () {
+        // Set the current choice in the UI.
+        $("#uiChoice label").removeClass("is-checked");
+        $("#uiChoice label[value=" + currentChoice.label + "]").addClass("is-checked");
+        dialogComponent.open();
+    };
 
-function toggleMenu() {
-    $("#dropdownMenu").toggleClass("show");
-}
-
-function hideMenu() {
-    $("#dropdownMenu").removeClass("show");
+    function actionHandler(event) {
+        var choice = uiChoices[iChoice];
+        if (choice.label !== currentChoice.label) {
+            switch (this.innerText.trim()) {
+                case "Save":
+                    go(choice);
+                    break;
+            }
+        }
+    }
 }
