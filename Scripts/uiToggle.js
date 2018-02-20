@@ -80,77 +80,73 @@ function buildUiToggleMenu(id, uiChoices) {
     //<div class="header-row">
     var headerRow = Create(pane, "div", "header-row");
     //  <div class="docs-DialogExample-default">
-    var dialogExample = Create(headerRow, "div", "docs-DialogExample-default");
-    //    <div class="ms-Style-button floatie">
-    var buttonDiv = Create(dialogExample, "div", "ms-Style-button floatie");
-    //      <button class="ms-Button ms-Button--hero docs-DialogExample-button">
+    var buttonDiv = Create(headerRow, "div", "ms-Style-button floatie");
+    //    <button class="ms-Button ms-Button--hero docs-DialogExample-button">
     //var button = Create(buttonDiv, "button", "ms-Button");
     var button = Create(buttonDiv, "button", "ms-Button ms-Button--hero docs-DialogExample-button");
-    //        <span class="ms-Button-label">
+    //      <span class="ms-Button-label">
     var buttonSpan = Create(button, "span", "ms-Button-label");
-    //          <i class="ms-Icon ms-Icon--Settings" aria-hidden="true"></i>
+    //        <i class="ms-Icon ms-Icon--Settings" aria-hidden="true"></i>
     var buttonIcon = Create(buttonSpan, "i", "ms-Icon ms-Icon--Settings");
     buttonIcon.attr("aria-hidden", "true");
-    //        </span>
-    //      </button>
-    //    </div>
-    //    <div class="ms-Dialog">
-    var dialog = Create(dialogExample, "div", "ms-Dialog");
-    //      <div class="ms-Dialog-title">Styles</div>
+    //      </span>
+    //    </button>
+    //  </div>
+    //  <div class="ms-Dialog">
+    var dialog = Create(headerRow, "div", "ms-Dialog");
+    //    <div class="ms-Dialog-title">Styles</div>
     var dialogTitle = Create(dialog, "div", "ms-Dialog-title");
     dialogTitle.text("Styles");
-    //      <div class="ms-Dialog-content">
+    //    <div class="ms-Dialog-content">
     var dialogContent = Create(dialog, "div", "ms-Dialog-content");
-    //        <p class="ms-Dialog-subText">Select UI style</p>
+    //      <p class="ms-Dialog-subText">Select UI style</p>
     var dialogSubText = Create(dialogContent, "p", "ms-Dialog-subText");
     dialogSubText.text("Select UI style");
-    //        <div class="ms-ChoiceFieldGroup" id="uiChoice" role="radiogroup">
-    ////                    <div class="ms-ChoiceFieldGroup" id="uiChoice" role="radiogroup">
+    //      <div class="ms-ChoiceFieldGroup" id="uiChoice" role="radiogroup">
     var choiceGroup = Create(dialogContent, "div", "ms-ChoiceFieldGroup");
     choiceGroup.attr("id", "uiChoice");
     choiceGroup.attr("role", "radiogroup");
-    //          <ul class="ms-ChoiceFieldGroup-list">
+    //        <ul class="ms-ChoiceFieldGroup-list">
     var list = Create(choiceGroup, "ul", "ms-ChoiceFieldGroup-list");
     for (var iChoice = 0; iChoice < uiChoices.length; iChoice++) {
         var choice = uiChoices[iChoice];
-        //            <li class="ms-RadioButton">
+        // <li class="ms-RadioButton">
         var listItem = Create(list, "li", "ms-RadioButton");
-        //              <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
+        //   <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
         var input = Create(listItem, "input", "ms-RadioButton-input");
         input.attr("tabindex", '-1');
         input.attr("type", 'radio');
         input.attr("value", iChoice);
-        //               <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
+        //   <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
         var label = Create(listItem, "label", "ms-RadioButton-field");
         label.attr("role", 'radio');
         label.attr("tabindex", '0');
         label.attr("aria-checked", "false");
         label.attr("name", 'uiChoice');
         label.attr("value", choice.label);
-        //                <span class="ms-Label">classic</span>
+        //     <span class="ms-Label">classic</span>
         var inputSpan = Create(label, "span", "ms-Label");
         inputSpan.text(choice.label);
-        //              </label>
-        //            </li>
+        //   </label>
+        // </li>
     }
-    //          </ul>
-    //        </div>
+    //        </ul>
     //      </div>
-    //      <div class="ms-Dialog-actions">
+    //    </div>
+    //    <div class="ms-Dialog-actions">
     var actions = Create(dialog, "div", "ms-Dialog-actions");
-    //        <button class="ms-Button ms-Dialog-action ms-Button--primary">
+    //      <button class="ms-Button ms-Dialog-action ms-Button--primary">
     var actionsButtonSave = Create(actions, "button", "ms-Button ms-Button--primary ms-Dialog-action");
-    //          <span class="ms-Button-label">Save</span>
+    //        <span class="ms-Button-label">Save</span>
     var actionsButtonSaveLabel = Create(actionsButtonSave, "span", "ms-Button-label");
     actionsButtonSaveLabel.text("Save");
-    //        </button>
-    //        <button class="ms-Button ms-Dialog-action">
+    //      </button>
+    //      <button class="ms-Button ms-Dialog-action">
     var actionsButtonCancel = Create(actions, "button", "ms-Button ms-Dialog-action");
-    //          <span class="ms-Button-label">Cancel</span>
+    //        <span class="ms-Button-label">Cancel</span>
     var actionsButtonCancelLabel = Create(actionsButtonCancel, "span", "ms-Button-label");
     actionsButtonCancelLabel.text("Cancel");
-    //        </button>
-    //      </div>
+    //      </button>
     //    </div>
     //  <div>
     //</div>
@@ -173,10 +169,10 @@ function initFabric() {
         new fabric['ChoiceFieldGroup'](ChoiceFieldGroupElements[i]);
     }
 
-    var example = document.querySelector(".docs-DialogExample-default");
-    var button = example.querySelector(".docs-DialogExample-button");
-    var dialog = example.querySelector(".ms-Dialog");
-    var actionButtonElements = example.querySelectorAll(".ms-Dialog-action");
+    var header = document.querySelector(".header-row");
+    var button = header.querySelector(".docs-DialogExample-button");
+    var dialog = header.querySelector(".ms-Dialog");
+    var actionButtonElements = header.querySelectorAll(".ms-Dialog-action");
     var actionButtonComponents = [];
     // Wire up the dialog
     var dialogComponent = new fabric['Dialog'](dialog);
@@ -195,6 +191,7 @@ function initFabric() {
     };
 
     function actionHandler(event) {
+        var iChoice = $("#uiChoice input:checked")[0].value;
         var choice = uiChoices[iChoice];
         if (choice.label !== currentChoice.label) {
             switch (this.innerText.trim()) {
