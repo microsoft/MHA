@@ -185,8 +185,15 @@ function initFabric() {
     // When clicking the button, open the dialog
     button.onclick = function () {
         // Set the current choice in the UI.
-        $("#uiChoice label").removeClass("is-checked");
-        $("#uiChoice label[value=" + currentChoice.label + "]").addClass("is-checked");
+        $("#uiChoice input").attr("checked", false);
+        var labels = $("#uiChoice label");
+        labels.removeClass("is-checked");
+        labels.attr("aria-checked", "false");
+        var current = $("#uiChoice label[value=" + currentChoice.label + "]");
+        current.addClass("is-checked");
+        current.attr("aria-checked", "true");
+        var input = current.prevAll("input:first")
+        input.prop("checked", "true");
         dialogComponent.open();
     };
 
