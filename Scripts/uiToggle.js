@@ -155,15 +155,16 @@ function buildUiToggleMenu(id, uiChoices) {
 function initFabric() {
     var i;
     var header = document.querySelector(".header-row");
-    var actionButtonElements = header.querySelectorAll(".ms-Dialog-action");
-    // Wire up the buttons
-    for (i = 0; i < actionButtonElements.length; i++) {
-        new fabric['Button'](actionButtonElements[i], actionHandler);
-    }
 
     var dialog = header.querySelector(".ms-Dialog");
     // Wire up the dialog
     var dialogComponent = new fabric['Dialog'](dialog);
+
+    var actionButtonElements = dialog.querySelectorAll(".ms-Dialog-action");
+    // Wire up the buttons
+    for (i = 0; i < actionButtonElements.length; i++) {
+        new fabric['Button'](actionButtonElements[i], actionHandler);
+    }
 
     var choiceGroup = dialog.querySelectorAll(".ms-ChoiceFieldGroup");
     new fabric['ChoiceFieldGroup'](choiceGroup[0]);
