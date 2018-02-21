@@ -9,9 +9,7 @@ body, html {
 .header-row {
     position: absolute;
     top: 0;
-    left: 0;
     right: 0;
-    height: 0px;
     z-index: 10;
 }
 
@@ -30,6 +28,9 @@ body, html {
         border: none;
     }
 
-.floatie {
-    float: right;
+.gear-button {
+    min-width: 0px;
+    width: 35px;
+    height: 44px;
+    margin-top: 1px;
 }

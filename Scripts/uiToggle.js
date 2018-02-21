@@ -79,10 +79,10 @@ function buildUiToggleMenu(id, uiChoices) {
 
     //<div class="header-row">
     var headerRow = Create(pane, "div", "header-row");
-    //  <div class="ms-Style-button floatie">
-    var buttonDiv = Create(headerRow, "div", "ms-Style-button floatie");
-    //    <button class="ms-Button ms-Button--hero dialog-button">
-    var button = Create(buttonDiv, "button", "ms-Button ms-Button--hero dialog-button");
+    //  <div class="ms-Style-button">
+    var buttonDiv = Create(headerRow, "div", "ms-Style-button");
+    //    <button class="ms-Button ms-Button--hero dialog-button gear-button">
+    var button = Create(buttonDiv, "button", "ms-Button ms-Button--hero dialog-button gear-button");
     //      <span class="ms-Button-label">
     var buttonSpan = Create(button, "span", "ms-Button-label");
     //        <i class="ms-Icon ms-Icon--Settings" aria-hidden="true"></i>
