@@ -219,3 +219,13 @@ td {
 #mhaFooter {
     float: right;
 }
+
+.commandBar {
+    height: 44px;
+    background-color: #f4f4f4;
+    padding: 0px;
+}
+
+body {
+    padding: 0px;
+}
