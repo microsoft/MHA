@@ -79,11 +79,10 @@ function buildUiToggleMenu(id, uiChoices) {
 
     //<div class="header-row">
     var headerRow = Create(pane, "div", "header-row");
-    //  <div class="docs-DialogExample-default">
+    //  <div class="ms-Style-button floatie">
     var buttonDiv = Create(headerRow, "div", "ms-Style-button floatie");
-    //    <button class="ms-Button ms-Button--hero docs-DialogExample-button">
-    //var button = Create(buttonDiv, "button", "ms-Button");
-    var button = Create(buttonDiv, "button", "ms-Button ms-Button--hero docs-DialogExample-button");
+    //    <button class="ms-Button ms-Button--hero dialog-button">
+    var button = Create(buttonDiv, "button", "ms-Button ms-Button--hero dialog-button");
     //      <span class="ms-Button-label">
     var buttonSpan = Create(button, "span", "ms-Button-label");
     //        <i class="ms-Icon ms-Icon--Settings" aria-hidden="true"></i>
@@ -121,7 +120,6 @@ function buildUiToggleMenu(id, uiChoices) {
         var label = Create(listItem, "label", "ms-RadioButton-field");
         label.attr("role", 'radio');
         label.attr("tabindex", '0');
-        label.attr("aria-checked", "false");
         label.attr("name", 'uiChoice');
         label.attr("value", choice.label);
         //     <span class="ms-Label">classic</span>
@@ -155,27 +153,26 @@ function buildUiToggleMenu(id, uiChoices) {
 }
 
 function initFabric() {
-    var choiceGroup = document.querySelectorAll(".ms-ChoiceFieldGroup");
+    var header = document.querySelector(".header-row");
+    var actionButtonElements = header.querySelectorAll(".ms-Dialog-action");
+    // Wire up the buttons
+    for (var i = 0; i < actionButtonElements.length; i++) {
+        new fabric['Button'](actionButtonElements[i], actionHandler);
+    }
+
+    var dialog = header.querySelector(".ms-Dialog");
+    // Wire up the dialog
+    var dialogComponent = new fabric['Dialog'](dialog);
+
+    var choiceGroup = dialog.querySelectorAll(".ms-ChoiceFieldGroup");
     new fabric['ChoiceFieldGroup'](choiceGroup[0]);
 
-    var ChoiceFieldGroupElements = document.querySelectorAll(".ms-ChoiceFieldGroup");
+    var ChoiceFieldGroupElements = dialog.querySelectorAll(".ms-ChoiceFieldGroup");
     for (var i = 0; i < ChoiceFieldGroupElements.length; i++) {
         new fabric['ChoiceFieldGroup'](ChoiceFieldGroupElements[i]);
     }
 
-    var header = document.querySelector(".header-row");
-    var button = header.querySelector(".docs-DialogExample-button");
-    var dialog = header.querySelector(".ms-Dialog");
-    var actionButtonElements = header.querySelectorAll(".ms-Dialog-action");
-    var actionButtonComponents = [];
-    // Wire up the dialog
-    var dialogComponent = new fabric['Dialog'](dialog);
-
-    // Wire up the buttons
-    for (var i = 0; i < actionButtonElements.length; i++) {
-        actionButtonComponents[i] = new fabric['Button'](actionButtonElements[i], actionHandler);
-    }
-
+    var button = header.querySelector(".dialog-button");
     // When clicking the button, open the dialog
     button.onclick = function () {
         // Set the current choice in the UI.
