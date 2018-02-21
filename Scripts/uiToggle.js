@@ -136,16 +136,10 @@ function buildUiToggleMenu(id, uiChoices) {
     //    <div class="ms-Dialog-actions">
     var actions = Create(dialog, "div", "ms-Dialog-actions");
     //      <button class="ms-Button ms-Dialog-action ms-Button--primary">
-    var actionsButtonSave = Create(actions, "button", "ms-Button ms-Button--primary ms-Dialog-action");
-    //        <span class="ms-Button-label">Save</span>
-    var actionsButtonSaveLabel = Create(actionsButtonSave, "span", "ms-Button-label");
-    actionsButtonSaveLabel.text("Save");
-    //      </button>
-    //      <button class="ms-Button ms-Dialog-action">
-    var actionsButtonCancel = Create(actions, "button", "ms-Button ms-Dialog-action");
-    //        <span class="ms-Button-label">Cancel</span>
-    var actionsButtonCancelLabel = Create(actionsButtonCancel, "span", "ms-Button-label");
-    actionsButtonCancelLabel.text("Cancel");
+    var actionsButtonOK = Create(actions, "button", "ms-Button ms-Button--primary ms-Dialog-action");
+    //        <span class="ms-Button-label">OK</span>
+    var actionsButtonOKLabel = Create(actionsButtonOK, "span", "ms-Button-label");
+    actionsButtonOKLabel.text("OK");
     //      </button>
     //    </div>
     //  <div>
@@ -201,11 +195,7 @@ function initFabric() {
         var iChoice = $("#uiChoice input:checked")[0].value;
         var choice = uiChoices[iChoice];
         if (choice.label !== currentChoice.label) {
-            switch (this.innerText.trim()) {
-                case "Save":
-                    go(choice);
-                    break;
-            }
+            go(choice);
         }
     }
 }
