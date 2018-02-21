@@ -153,10 +153,11 @@ function buildUiToggleMenu(id, uiChoices) {
 }
 
 function initFabric() {
+    var i;
     var header = document.querySelector(".header-row");
     var actionButtonElements = header.querySelectorAll(".ms-Dialog-action");
     // Wire up the buttons
-    for (var i = 0; i < actionButtonElements.length; i++) {
+    for (i = 0; i < actionButtonElements.length; i++) {
         new fabric['Button'](actionButtonElements[i], actionHandler);
     }
 
@@ -168,7 +169,7 @@ function initFabric() {
     new fabric['ChoiceFieldGroup'](choiceGroup[0]);
 
     var ChoiceFieldGroupElements = dialog.querySelectorAll(".ms-ChoiceFieldGroup");
-    for (var i = 0; i < ChoiceFieldGroupElements.length; i++) {
+    for (i = 0; i < ChoiceFieldGroupElements.length; i++) {
         new fabric['ChoiceFieldGroup'](ChoiceFieldGroupElements[i]);
     }
 
