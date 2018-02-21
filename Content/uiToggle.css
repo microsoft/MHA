@@ -11,12 +11,13 @@ body, html {
     top: 0;
     left: 0;
     right: 0;
-    height: 25px;
+    height: 0px;
+    z-index: 10;
 }
 
 .frame-row {
     position: absolute;
-    top: 25px;
+    top: 0px;
     left: 0;
     right: 0;
     bottom: 0;
