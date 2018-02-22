@@ -1,17 +1,17 @@
 var overlay = null;
 var spinner = null;
 var viewModel = null;
+var Office = null;
 
-Office.initialize = function () {
-    $(document).ready(function () {
-        viewModel = new HeaderModel();
-        registerItemChangeEvent();
-        initializeFabric();
-        showDiagnostics();
-        updateStatus(ImportedStrings.mha_loading);
-        sendHeadersRequest();
-    });
-};
+$(document).ready(function () {
+    Office = window.parent.getOffice();
+    viewModel = new HeaderModel();
+    registerItemChangeEvent();
+    initializeFabric();
+    showDiagnostics();
+    updateStatus(ImportedStrings.mha_loading);
+    sendHeadersRequest();
+});
 
 function registerItemChangeEvent() {
     try {

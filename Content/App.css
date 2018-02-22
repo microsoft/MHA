@@ -1,6 +1,6 @@
-/*body {
-    padding: 0;
-}*/
+body {
+    padding: 0px;
+}
 
 .aspNetHidden {
     padding: 0;
@@ -222,4 +222,10 @@ td {
 
 #mhaFooter {
     float: right;
+}
+
+.commandBar {
+    height: 44px;
+    background-color: #f4f4f4;
+    padding: 0px;
 }

@@ -1,14 +1,35 @@
-﻿// This function is run when the app is ready to start interacting with the host application.
+﻿var viewModel = null;
+var Office = null;
+
+// This function is run when the app is ready to start interacting with the host application.
 // It ensures the DOM is ready before updating the span elements with values from the current message.
-Office.initialize = function () {
-    $(document).ready(function () {
-        $(window).resize(onResize);
-        initViewModels();
-        showDiagnostics();
-        updateStatus(ImportedStrings.mha_loading);
-        sendHeadersRequest();
-    });
-};
+$(document).ready(function () {
+    Office = window.parent.getOffice();
+    $(window).resize(onResize);
+    viewModel = new HeaderModel();
+    registerItemChangeEvent();
+    initializeTableUI();
+    showDiagnostics();
+    updateStatus(ImportedStrings.mha_loading);
+    sendHeadersRequest();
+});
+
+function registerItemChangeEvent() {
+    try {
+        if (Office.context.mailbox.addHandlerAsync !== undefined) {
+            Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, loadNewItem);
+        }
+    } catch (e) {
+        showError("Could not register item change event");
+    }
+}
+
+function loadNewItem() {
+    viewModel = new HeaderModel();
+
+    updateStatus(ImportedStrings.mha_loading);
+    sendHeadersRequest();
+}
 
 function enableSpinner() {
     $("#response").css("background-image", "url(../Resources/loader.gif)");
@@ -31,7 +52,6 @@ function updateStatus(statusText) {
         viewModel.status = statusText;
     }
 
-    positionResponse();
     recalculateVisibility();
 }
 
