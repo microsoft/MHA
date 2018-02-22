@@ -5,12 +5,17 @@ var Office = null;
 
 // The Office initialize function must be run each time a new page is loaded
 $(document).ready(function () {
-    Office = window.parent.getOffice();
-    viewModel = new HeaderModel();
-    initializeFramework7();
-    showDiagnostics();
-    updateStatus(ImportedStrings.mha_loading);
-    sendHeadersRequest();
+    try {
+        Office = window.parent.getOffice();
+        viewModel = new HeaderModel();
+        initializeFramework7();
+        showDiagnostics();
+        updateStatus(ImportedStrings.mha_loading);
+        sendHeadersRequest();
+    }
+    catch (e) {
+        updateStatus(e);
+    }
 });
 
 function initializeFramework7() {
@@ -365,6 +370,7 @@ function addCalloutEntry(name, value, parent) {
 }
 
 function updateStatus(message) {
+    $(".status-message").text(message);
     myApp.hidePreloader();
     myApp.showPreloader(message);
 }
