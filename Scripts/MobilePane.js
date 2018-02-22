@@ -3,6 +3,7 @@
 $(document).ready(function () {
     // Temporary hack for oddball Outlook for iOS user agent
     var ios = window.navigator.userAgent.match(/(Outlook-iOS)/);
+    ios = true; // TODO: Remove
     if (ios) Framework7.prototype.device.ios = true;
     if (Framework7.prototype.device.ios) {
         // Redirect to iOS page
