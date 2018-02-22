@@ -1,9 +1,5 @@
-// View model for our headers tables
-var viewModel = null;
 
-function initViewModels() {
-    viewModel = new HeaderModel();
-
+function initializeTableUI() {
     // Headers
     makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
     $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
@@ -86,23 +82,10 @@ function parseHeadersToTables(headers) {
     updateStatus("");
     rebuildSections();
     hideExtraColumns();
-    recalculateLayout(true);
 }
 
 function onResize() {
-    recalculateLayout();
-}
-
-// Adjusts locations and dimensions of our response and progress without rebuilding content
-function recalculateLayout() {
     positionResponse();
-
-    // Remove the old height
-    $(".hotBarContainer").removeAttr("style");
-    // Tag the new one
-    $(".hotBarCell").each(function () {
-        $(this).find(".hotBarContainer").height($(this).height());
-    });
 }
 
 // Adjusts response under our lineBreak
@@ -111,20 +94,16 @@ function positionResponse() {
     $("#response").css("top", responseTop + 15);
 }
 
-// Rebuilds content and recalculates what sections should be displayed
-function rebuildSections() {
-    populateTables();
-    recalculateVisibility();
-}
-
 function recalculateVisibility() {
     for (var i = 0; i < visibilityBindings.length; i++) {
         makeVisible(visibilityBindings[i][0], visibilityBindings[i][1]());
     }
+
+    positionResponse();
 }
 
 // Restores table to empty state so we can repopulate it
-function restoreTable(id) {
+function emptyTableUI(id) {
     $("#" + id + " tbody tr").remove(); // Remove the rows
     $("#" + id + " th").removeClass("emptyColumn"); // Restore header visibility
     $("#" + id + " th").removeClass("hiddenElement"); // Restore header visibility
@@ -145,6 +124,9 @@ function hideEmptyColumns(id) {
         if (keep === 0) {
             $(this).addClass("emptyColumn");
             children.addClass("emptyColumn");
+        } else {
+            $(this).removeClass("emptyColumn");
+            children.removeClass("emptyColumn");
         }
     });
 }
@@ -169,12 +151,11 @@ function toggleExtraColumns() {
     }
 
     recalculateVisibility();
-    recalculateLayout();
 }
 
 function toggleCollapse(object) {
     $(".collapsibleElement", $(object).parents(".collapsibleWrapper")).toggle();
-    recalculateLayout();
+    positionResponse();
 }
 
 // Wraps an element into a collapsible pane with a title
@@ -378,12 +359,13 @@ function setArrows(table, colName, sortOrder) {
     }
 }
 
-function populateTables() {
-    // Summary
+// Rebuilds content and recalculates what sections should be displayed
+function rebuildSections() {
     var i;
     var headerVal;
     var row;
 
+    // Summary
     for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
         headerVal = $("#" + viewModel.summary.summaryRows[i].header + "SUMVal");
         if (headerVal) {
@@ -392,6 +374,7 @@ function populateTables() {
     }
 
     // Received
+    emptyTableUI(viewModel.receivedHeaders.tableName);
     for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
         row = document.createElement("tr");
         $("#" + viewModel.receivedHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
@@ -416,6 +399,12 @@ function populateTables() {
         appendCell(row, viewModel.receivedHeaders.receivedRows[i].via, null, "extraCol");
     }
 
+    // Calculate heights for the hotbar cells (progress bars in Delay column)
+    // Not clear why we need to do this
+    $(".hotBarCell").each(function () {
+        $(this).find(".hotBarContainer").height($(this).height());
+    });
+
     $("#" + viewModel.receivedHeaders.tableName + " tbody tr:odd").addClass("oddRow");
     hideEmptyColumns(viewModel.receivedHeaders.tableName);
 
@@ -436,7 +425,7 @@ function populateTables() {
     }
 
     // Other
-    restoreTable(viewModel.otherHeaders.tableName);
+    emptyTableUI(viewModel.otherHeaders.tableName);
     for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
         row = document.createElement("tr");
         $("#" + viewModel.otherHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
@@ -449,6 +438,8 @@ function populateTables() {
 
     // Original headers
     $("#originalHeaders").text(viewModel.originalHeaders);
+
+    recalculateVisibility();
 }
 
 var visibilityBindings = [

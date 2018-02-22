@@ -3,130 +3,28 @@
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <title></title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.6.5/css/framework7.ios.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.6.5/css/framework7.ios.colors.min.css" />
-    <link rel="stylesheet" href="https://cdn.framework7.io/css/framework7-icons.css" />
+    <title>MessageHeaderAnalyzer</title>
 
-    <link rel="stylesheet" href="../Content/MobilePane-ios.css" />
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.min.css">
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.components.min.css">
+    <link rel="stylesheet" type="text/css" href="../Content/uiToggle.css" />
 
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.0.min.js"></script>
     <script>
         // Fallback to load jQuery from a local path if the CDN is unavailable.
         (window.jQuery || document.write('<script src="../Scripts/jquery-2.1.0.min.js"><\/script>'));
     </script>
-    <script src="https://unpkg.com/codepage@1.11.1/dist/sbcs.full.js"></script>
+    <script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+    <script src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/js/fabric.min.js"></script>
+    <script src="../Scripts/uiToggle.js"></script>
     <script>
-        (window.cptable || document.write('<script src="../node_modules/codepage/dist/sbcs.full.js"><\/script>'));
+        var uiChoices = [
+            new uiChoice('classic', 'classicDesktopFrame.html', false),
+            new uiChoice('new', 'newMobilePaneIosFrame.html', true)
+        ];
     </script>
-    <script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.6.5/js/framework7.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
-    <script src="../node_modules/jwt-decode/build/jwt-decode.min.js"></script>
-
-    <script src="../Scripts/Headers.js"></script>
-    <script src="../Scripts/Strings.js"></script>
-    <script src="../Scripts/Received.js"></script>
-    <script src="../Scripts/Other.js"></script>
-    <script src="../Scripts/ForefrontAntispam.js"></script>
-    <script src="../Scripts/Antispam.js"></script>
-    <script src="../Scripts/Summary.js"></script>
-    <script src="../Scripts/2047.js"></script>
-    <script src="../Scripts/GetHeaders.js"></script>
-    <script src="../Scripts/GetHeadersEWS.js"></script>
-    <script src="../Scripts/GetHeadersRest.js"></script>
-    <script src="../Scripts/MobilePane-ios.js?version=1.0"></script>
 </head>
-<body class="framework7-root">
-    <div class="views tabs toolbar-through">
-        <div id="summary-view" class="view view-main tab active" data-page="summary">
-            <div class="pages">
-                <div data-page="summary" class="page">
-                    <div class="page-content">
-                        <div id="summary-content"></div>
-                        <div id="orig-headers-ui" class="list-block">
-                            <ul>
-                                <li class="accordion-item">
-                                    <a href="#" class="item-content item-link">
-                                        <div class="item-inner">
-                                            <div class="item-title">Original Headers</div>
-                                        </div>
-                                    </a>
-                                    <div class="accordion-item-content">
-                                        <div class="code-box">
-                                            <pre><code id="original-headers"></code></pre>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="received-view" class="view tab" data-page="received">
-            <div class="pages">
-                <div data-page="received" class="page">
-                    <div id="received-content" class="page-content"></div>
-                </div>
-            </div>
-        </div>
-        <div id="antispam-view" class="view tab" data-page="antispam">
-            <div class="pages">
-                <div data-page="antispam" class="page">
-                    <div class="page-content">
-                        <div id="antispam-content"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="other-view" class="view tab" data-page="other">
-            <div class="pages">
-                <div data-page="other" class="page">
-                    <div class="page-content">
-                        <div id="other-content"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="diagnostics-view" class="view tab" data-page="other">
-            <div class="pages">
-                <div data-page="diagnostics" class="page">
-                    <div class="page-content">
-                        <div id="diagnostics-ui" class="list-block">
-                            <div class="item-title">Diagnostics</div>
-                            <div class="code-box">
-                                <pre><code id="diagnostics"></code></pre>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="toolbar tabbar tabbar-labels">
-            <div class="toolbar-inner">
-                <a href="#summary-view" class="tab-link active">
-                    <i class="f7-icons">info</i>
-                    <span class="tabbar-label">Summary</span>
-                </a>
-                <a href="#received-view" class="tab-link">
-                    <i class="f7-icons">graph_square</i>
-                    <span class="tabbar-label">Received</span>
-                </a>
-                <a href="#antispam-view" class="tab-link">
-                    <i class="f7-icons">trash</i>
-                    <span class="tabbar-label">Antispam</span>
-                </a>
-                <a href="#other-view" class="tab-link">
-                    <i class="f7-icons">data</i>
-                    <span class="tabbar-label">Other</span>
-                </a>
-                <a href="#diagnostics-view" class="tab-link">
-                    <i class="f7-icons">bolt</i>
-                    <span class="tabbar-label">Diagnostics</span>
-                </a>
-            </div>
-        </div>
-    </div>
+<body class="ms-Fabric">
+    <div id="uiToggleFrame"> </div>
 </body>
 </html>

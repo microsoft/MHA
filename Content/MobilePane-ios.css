@@ -17,3 +17,8 @@
 .wrap-line {
     word-wrap: break-word;
 }
+
+.tabs .tab {
+    padding-top: 25px;
+    background: #efeff4;
+}

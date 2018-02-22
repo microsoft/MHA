@@ -1,7 +1,10 @@
+var viewModel = null;
+
 if (window.jQuery) {
     $(document).ready(function () {
         $(window).resize(onResize);
-        initViewModels();
+        viewModel = new HeaderModel();
+        initializeTableUI();
         makeResizablePane("inputHeaders", ImportedStrings.mha_prompt, null, null);
     });
 }
@@ -30,7 +33,6 @@ function clearHeaders() {
     setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
     setArrows(viewModel.otherHeaders.tableName, "number", 1);
     rebuildSections();
-    recalculateLayout();
 }
 
 function enableSpinner() {
@@ -49,6 +51,5 @@ function updateStatus(statusText) {
         viewModel.status = statusText;
     }
 
-    positionResponse();
     recalculateVisibility();
 }

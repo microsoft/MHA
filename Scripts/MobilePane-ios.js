@@ -1,17 +1,17 @@
 // Framework7 app object
 var myApp = null;
 var viewModel = null;
+var Office = null;
 
 // The Office initialize function must be run each time a new page is loaded
-Office.initialize = function (reason) {
-    $(document).ready(function () {
-        viewModel = new HeaderModel();
-        initializeFramework7();
-        showDiagnostics();
-        updateStatus(ImportedStrings.mha_loading);
-        sendHeadersRequest();
-    });
-};
+$(document).ready(function () {
+    Office = window.parent.getOffice();
+    viewModel = new HeaderModel();
+    initializeFramework7();
+    showDiagnostics();
+    updateStatus(ImportedStrings.mha_loading);
+    sendHeadersRequest();
+});
 
 function initializeFramework7() {
     myApp = new Framework7();
