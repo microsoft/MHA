@@ -145,6 +145,7 @@ function decodeHex(charSet, buffer) {
 }
 
 function decodeHexCodepage(charSet, hexArray) {
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/dd317756(v=vs.85).aspx
     var codepage = 65001;
     switch (charSet.toUpperCase()) {
         case "UTF-8":
@@ -158,6 +159,9 @@ function decodeHexCodepage(charSet, hexArray) {
             break;
         case "US-ASCII":
             codepage = 20127;
+            break;
+        case "WINDOWS-1252":
+            codepage = 1252;
             break;
     }
 

@@ -47,6 +47,10 @@
                 " =?UTF-8?B?VGFsbGVzdCBUZWVuYWdlciwgVG9wIFBsYXlzIG9mIHRoZSBXZWVrICYgbW9y?=\n" +
                 " =?UTF-8?B?ZQ==?="),
                 "🏈  2019's No.1 Recruit, The World's Tallest Teenager, Top Plays of the Week & more");
+            assert.equal(clean2047Encoding(
+                "Subject: =?Windows-1252?Q?Fwd:_Scam_Alert_from_a_neighbor_on_NextDoor_-_Don=92t_re?=\n" + 
+                " =?Windows-1252?Q?ad_out_your_2_factored_authentication_code_to_anyone_on_?=\n" +
+                "=?Windows-1252?Q?the_phone?="), "Subject: Fwd: Scam Alert from a neighbor on NextDoor - Don’t read out your 2 factored authentication code to anyone on the phone");
         });
 
         QUnit.test("Mailsploit Tests", function (assert) {
