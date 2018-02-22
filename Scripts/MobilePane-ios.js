@@ -6,6 +6,7 @@ var Office = null;
 // The Office initialize function must be run each time a new page is loaded
 $(document).ready(function () {
     try {
+        $(".status-message").text("loading");
         Office = window.parent.getOffice();
         viewModel = new HeaderModel();
         initializeFramework7();
