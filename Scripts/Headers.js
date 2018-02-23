@@ -167,6 +167,7 @@ var HeaderToURLMap = [
     ["Content-Transfer-Encoding", "https://tools.ietf.org/html/rfc2045#section-6"],
     ["Content-Type", "https://tools.ietf.org/html/rfc2045#section-5"],
     ["Date", "https://tools.ietf.org/html/rfc5322#section-3.6.1"],
+    ["Deferred-Delivery", "https://tools.ietf.org/html/rfc4021#section-2.1.65"],
     ["DKIM-Signature", "https://tools.ietf.org/html/rfc6376"],
     ["From", "https://tools.ietf.org/html/rfc5322#section-3.6.2"],
     ["In-Reply-To", "https://tools.ietf.org/html/rfc5322#section-3.6.4"],
