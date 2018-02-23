@@ -1,3 +1,4 @@
+var loadItemEvent;
 var currentChoice;
 var uiChoice = function (label, url, checked) {
     this.label = label;
@@ -27,6 +28,29 @@ function InitUI() {
     catch (e) {
         goDefaultChoice(uiChoices);
     }
+
+    registerItemChangeEvent();
+}
+
+function registerItemChangeEvent() {
+    try {
+        if (Office.context.mailbox.addHandlerAsync !== undefined) {
+            Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, loadNewItem);
+        }
+    } catch (e) {
+        // TODO: Find a place to log this
+        //showError("Could not register item change event");
+    }
+}
+
+function loadNewItem() {
+    if (loadItemEvent) {
+        loadItemEvent();
+    }
+}
+
+function SetLoadItemEvent(newLoadItemEvent) {
+    loadItemEvent = newLoadItemEvent;
 }
 
 function getOffice() {

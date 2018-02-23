@@ -5,23 +5,13 @@ var Office = null;
 
 $(document).ready(function () {
     Office = window.parent.getOffice();
+    window.parent.SetLoadItemEvent(loadNewItem);
     viewModel = new HeaderModel();
-    registerItemChangeEvent();
     initializeFabric();
     showDiagnostics();
     updateStatus(ImportedStrings.mha_loading);
     sendHeadersRequest();
 });
-
-function registerItemChangeEvent() {
-    try {
-        if (Office.context.mailbox.addHandlerAsync !== undefined) {
-            Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, loadNewItem);
-        }
-    } catch (e) {
-        showError("Could not register item change event");
-    }
-}
 
 function loadNewItem() {
     // Empty data
