@@ -1,15 +1,16 @@
 ﻿var viewModel = null;
 var Office = null;
+var LogError = null;
 
 // This function is run when the app is ready to start interacting with the host application.
 // It ensures the DOM is ready before updating the span elements with values from the current message.
 $(document).ready(function () {
-    Office = window.parent.getOffice();
+    Office = window.parent.Office;
+    LogError = window.parent.LogError;
     window.parent.SetLoadItemEvent(loadNewItem);
     $(window).resize(onResize);
     viewModel = new HeaderModel();
     initializeTableUI();
-    showDiagnostics();
     updateStatus(ImportedStrings.mha_loading);
     sendHeadersRequest();
 });
@@ -52,13 +53,8 @@ function getHeadersComplete(headers) {
 }
 
 function showError(message) {
-    viewModel.errors.push(message);
+    LogError(message);
     updateStatus(message);
     disableSpinner();
     rebuildSections();
-}
-
-function showDiagnostics() {
-    viewModel.diagnostics = getDiagnostics();
-    $("#diagnostics").text(viewModel.diagnostics);
 }

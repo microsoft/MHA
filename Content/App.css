@@ -1,5 +1,5 @@
 body {
-    padding: 0px;
+    padding: 0;
 }
 
 .aspNetHidden {
@@ -212,14 +212,6 @@ td {
     box-sizing: border-box;
 }
 
-#diagnostics {
-    white-space: pre-wrap;
-    width: 100%;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
 #mhaFooter {
     float: right;
 }
@@ -227,5 +219,5 @@ td {
 .commandBar {
     height: 44px;
     background-color: #f4f4f4;
-    padding: 0px;
+    padding: 0;
 }

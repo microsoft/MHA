@@ -4,10 +4,6 @@ function initializeTableUI() {
     makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
     $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
 
-    // Diagnostics
-    makeResizablePane("diagnostics", ImportedStrings.mha_diagnostics, function () { return viewModel.diagnostics.length; });
-    $(".collapsibleElement", $("#diagnostics").parents(".collapsibleWrapper")).toggle();
-
     // Summary
     makeResizablePane("summary", ImportedStrings.mha_summary, function () { return viewModel.summary.exists(); });
     makeSummaryTable("#summary", viewModel.summary.summaryRows, "SUM");

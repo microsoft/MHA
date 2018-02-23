@@ -15,7 +15,7 @@ body, html {
 
 .frame-row {
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
@@ -29,8 +29,23 @@ body, html {
     }
 
 .gear-button {
-    min-width: 0px;
+    min-width: 0;
     width: 35px;
     height: 44px;
     margin-top: 1px;
+}
+
+.code-box > pre {
+    background-color: #eaeaea;
+    border: 1px solid #ccc;
+    padding: 5px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    font-size: .8em;
+}
+
+#dialog-Diagnostics {
+    width: calc(100% - 24px);
+    box-sizing: border-box;
+    max-width: none;
 }

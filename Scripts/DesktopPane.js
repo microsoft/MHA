@@ -2,13 +2,14 @@ var overlay = null;
 var spinner = null;
 var viewModel = null;
 var Office = null;
+var LogError = null;
 
 $(document).ready(function () {
-    Office = window.parent.getOffice();
+    Office = window.parent.Office;
+    LogError = window.parent.LogError;
     window.parent.SetLoadItemEvent(loadNewItem);
     viewModel = new HeaderModel();
     initializeFabric();
-    showDiagnostics();
     updateStatus(ImportedStrings.mha_loading);
     sendHeadersRequest();
 });
@@ -17,9 +18,7 @@ function loadNewItem() {
     // Empty data
     $(".summary-list").empty();
     $("#original-headers code").empty();
-    $("#diagnostics code").empty();
     $(".orig-header-ui").hide();
-    $(".diagnostics-ui").hide();
     $(".received-list").empty();
     $(".antispam-list").empty();
     $(".other-list").empty();
@@ -65,18 +64,6 @@ function initializeFabric() {
             btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
         } else {
             $("#original-headers").hide();
-            btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
-        }
-    });
-
-    var diagbuttonElement = document.querySelector("#diagnostics-btn");
-    new window.fabric["Button"](diagbuttonElement, function () {
-        var btnIcon = $(this).find(".ms-Icon");
-        if (btnIcon.hasClass("ms-Icon--Add")) {
-            $("#diagnostics").show();
-            btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
-        } else {
-            $("#diagnostics").hide();
             btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
         }
     });
@@ -134,8 +121,6 @@ function buildViews() {
     if (viewModel.originalHeaders) {
         $(".orig-header-ui").show();
     }
-
-    showDiagnostics();
 
     // Build received view
     var receivedList = $(".received-list");
@@ -378,22 +363,7 @@ function hideStatus() {
 }
 
 function showError(message) {
-    viewModel.errors.push(message);
+    LogError(message);
     $("#error-display .ms-MessageBar-text").text(message);
     $("#error-display").show();
-}
-
-function showDiagnostics() {
-    viewModel.diagnostics = getDiagnostics();
-
-    // Save diagnostics and show ui
-    $("#diagnostics code").text(viewModel.diagnostics);
-    if (viewModel.diagnostics) {
-        $(".diagnostics-ui").show();
-
-        var buttonElement = document.querySelector("#diagnostics-btn");
-        var btnIcon = $(buttonElement).find(".ms-Icon");
-        $("#diagnostics").hide();
-        btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
-    }
 }

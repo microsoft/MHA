@@ -2,14 +2,15 @@
 var myApp = null;
 var viewModel = null;
 var Office = null;
+var LogError = null;
 
 // The Office initialize function must be run each time a new page is loaded
 $(document).ready(function () {
     try {
-        Office = window.parent.getOffice();
+        Office = window.parent.Office;
+        LogError = window.parent.LogError;
         viewModel = new HeaderModel();
         initializeFramework7();
-        showDiagnostics();
         updateStatus(ImportedStrings.mha_loading);
         sendHeadersRequest();
     }
@@ -66,8 +67,6 @@ function buildViews() {
         $("#original-headers").text(viewModel.originalHeaders);
         $("#orig-headers-ui").show();
     }
-
-    showDiagnostics();
 
     // Build received view
     var receivedContent = $("#received-content");
@@ -379,15 +378,6 @@ function hideStatus() {
 }
 
 function showError(message) {
+    LogError(message);
     myApp.alert(message, "An Error Occurred");
-}
-
-function showDiagnostics() {
-    viewModel.diagnostics = getDiagnostics();
-
-    // Save diagnostics and show ui
-    if (viewModel.diagnostics) {
-        $("#diagnostics").text(viewModel.diagnostics);
-        $("#diagnostics-ui").show();
-    }
 }
