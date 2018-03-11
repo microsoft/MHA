@@ -377,7 +377,7 @@ function hideStatus() {
     myApp.hidePreloader();
 }
 
-function showError(message) {
-    LogError(message);
+function showError(error, message) {
+    LogError(error, message);
     myApp.alert(message, "An Error Occurred");
 }

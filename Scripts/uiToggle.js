@@ -46,12 +46,11 @@ function registerItemChangeEvent() {
             Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, loadNewItem);
         }
     } catch (e) {
-        LogError("Could not register item change event");
+        LogError(e, "Could not register item change event");
     }
 }
 
 function loadNewItem() {
-    viewModel.errors = [];
     if (loadItemEvent) {
         loadItemEvent();
     }
@@ -61,8 +60,36 @@ function SetLoadItemEvent(newLoadItemEvent) {
     loadItemEvent = newLoadItemEvent;
 }
 
-function LogError(message) {
-    viewModel.errors.push(message);
+function LogError(error, message) {
+    var errorMessage = error ? error.message : '';
+    var callback = function (stackframes) {
+        LogArray([message, errorMessage].concat(FilterStack(stackframes).toString()));
+    };
+
+    var errback = function (err) {
+        LogArray([message, errorMessage, err.message]);
+    };
+
+    if (error) {
+        StackTrace.fromError(error).then(callback).catch(errback);
+    } else {
+        StackTrace.get().then(callback).catch(errback);
+    }
+}
+
+// Log an array of strings as an error, removing null/empty values before joining
+function LogArray(array) {
+    viewModel.errors.push((array.filter(function (item) { return item; })).join('\n'));
+}
+
+function FilterStack(stack) {
+    return stack.filter(function (item) {
+        if (!item.fileName) return true;
+        if (item.fileName.indexOf("stacktrace") !== -1) return false;
+        if (item.functionName === "LogError") return false;
+        if (item.functionName === "GetStack") return false;
+        return true;
+    });
 }
 
 function getSettingsKey() {
@@ -76,7 +103,6 @@ function getSettingsKey() {
 
 function go(choice) {
     viewModel.currentChoice = choice;
-    viewModel.errors = [];
     loadItemEvent = null;
     document.getElementById('uiFrame').src = choice.url;
     if (Office.context) {

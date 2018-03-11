@@ -9,7 +9,7 @@
  * - updateStatus(message): Should be a method that displays a status to the user,
  *   preferably with some sort of activity indicator (spinner)
  * - hideStatus: Method to hide the status displays
- * - showError(message): Method to communicate an error to the user.
+ * - showError(error, message): Method to communicate an error to the user.
  * - getHeadersComplete(headers): Callback to receive headers.
  *
  * Requirement Sets and Permissions
@@ -24,7 +24,7 @@ function sendHeadersRequestEWS() {
         var envelope = getSoapEnvelope(request);
         mailbox.makeEwsRequestAsync(envelope, callback);
     } catch (e) {
-        showError(ImportedStrings.mha_requestFailed);
+        showError(e, ImportedStrings.mha_requestFailed);
     }
 }
 
@@ -48,12 +48,12 @@ function callback(asyncResult) {
                 } else {
                     var messageText = responseDom.filterNode("m:MessageText");
                     if (messageText.length > 0) {
-                        showError(messageText[0].textContent);
+                        showError(null, messageText[0].textContent);
                     }
                 }
             }
         } catch (e) {
-            showError(e.message);
+            showError(e, "EWS callback failed");
         }
 
         if (prop) {

@@ -9,7 +9,7 @@
  * - updateStatus(message): Should be a method that displays a status to the user,
  *   preferably with some sort of activity indicator (spinner)
  * - hideStatus: Method to hide the status displays
- * - showError(message): Method to communicate an error to the user.
+ * - showError(error, message): Method to communicate an error to the user.
  * - getHeadersComplete(headers): Callback to receive headers.
  *
  * Requirement Sets and Permissions
@@ -26,7 +26,7 @@ function sendHeadersRequestRest() {
             var accessToken = result.value;
             getHeaders(accessToken);
         } else {
-            showError("Unable to obtain callback token.");
+            showError(null, 'Unable to obtain callback token.\n' + result.error);
         }
     });
 }
@@ -102,10 +102,10 @@ function getHeaders(accessToken) {
         if (item.SingleValueExtendedProperties !== undefined) {
             getHeadersComplete(item.SingleValueExtendedProperties[0].Value);
         } else {
-            showError(ImportedStrings.mha_headersMissing);
+            showError(null, ImportedStrings.mha_headersMissing);
         }
     }).fail(function (error) {
-        showError(JSON.stringify(error, null, 2));
+        showError(null, JSON.stringify(error, null, 2));
     }).always(function () {
         hideStatus();
     });
