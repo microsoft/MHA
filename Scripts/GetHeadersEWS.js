@@ -53,7 +53,7 @@ function callback(asyncResult) {
                 }
             }
         } catch (e) {
-            showError(e, e.message);
+            showError(e, "EWS callback failed");
         }
 
         if (prop) {

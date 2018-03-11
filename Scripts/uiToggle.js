@@ -61,15 +61,13 @@ function SetLoadItemEvent(newLoadItemEvent) {
 }
 
 function LogError(error, message) {
+    var errorMessage = error ? error.message : '';
     var callback = function (stackframes) {
-        var stack = FilterStack(stackframes).map(function (sf) {
-            return sf.toString();
-        }).join('\n');
-        viewModel.errors.push(message + '\n' + stack);
+        LogArray([message, errorMessage].concat(FilterStack(stackframes).toString()));
     };
 
     var errback = function (err) {
-        viewModel.errors.push(message + '\n' + err.message);
+        LogArray([message, errorMessage, err.message]);
     };
 
     if (error) {
@@ -77,6 +75,11 @@ function LogError(error, message) {
     } else {
         StackTrace.get().then(callback).catch(errback);
     }
+}
+
+// Log an array of strings as an error, removing null/empty values before joining
+function LogArray(array) {
+    viewModel.errors.push((array.filter(function (item) { return item; })).join('\n'));
 }
 
 function FilterStack(stack) {
