@@ -13,6 +13,6 @@ function sendHeadersRequest() {
             sendHeadersRequestEWS();
         }
     } catch (e) {
-        showError("Could not send header request");
+        showError(e, "Could not send header request");
     }
 }

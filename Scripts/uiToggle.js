@@ -46,12 +46,11 @@ function registerItemChangeEvent() {
             Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, loadNewItem);
         }
     } catch (e) {
-        LogError("Could not register item change event");
+        LogError(e, "Could not register item change event");
     }
 }
 
 function loadNewItem() {
-    viewModel.errors = [];
     if (loadItemEvent) {
         loadItemEvent();
     }
@@ -61,8 +60,33 @@ function SetLoadItemEvent(newLoadItemEvent) {
     loadItemEvent = newLoadItemEvent;
 }
 
-function LogError(message) {
-    viewModel.errors.push(message);
+function LogError(error, message) {
+    var callback = function (stackframes) {
+        var stack = FilterStack(stackframes).map(function (sf) {
+            return sf.toString();
+        }).join('\n');
+        viewModel.errors.push(message + '\n' + stack);
+    };
+
+    var errback = function (err) {
+        viewModel.errors.push(message + '\n' + err.message);
+    };
+
+    if (error) {
+        StackTrace.fromError(error).then(callback).catch(errback);
+    } else {
+        StackTrace.get().then(callback).catch(errback);
+    }
+}
+
+function FilterStack(stack) {
+    return stack.filter(function (item) {
+        if (!item.fileName) return true;
+        if (item.fileName.indexOf("stacktrace") !== -1) return false;
+        if (item.functionName === "LogError") return false;
+        if (item.functionName === "GetStack") return false;
+        return true;
+    });
 }
 
 function getSettingsKey() {
@@ -76,7 +100,6 @@ function getSettingsKey() {
 
 function go(choice) {
     viewModel.currentChoice = choice;
-    viewModel.errors = [];
     loadItemEvent = null;
     document.getElementById('uiFrame').src = choice.url;
     if (Office.context) {

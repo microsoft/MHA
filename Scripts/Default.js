@@ -52,8 +52,8 @@ function getHeadersComplete(headers) {
     parseHeadersToTables(headers);
 }
 
-function showError(message) {
-    LogError(message);
+function showError(error, message) {
+    LogError(error, message);
     updateStatus(message);
     disableSpinner();
     rebuildSections();

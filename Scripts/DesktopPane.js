@@ -362,8 +362,8 @@ function hideStatus() {
     overlay.hide();
 }
 
-function showError(message) {
-    LogError(message);
+function showError(error, message) {
+    LogError(error, message);
     $("#error-display .ms-MessageBar-text").text(message);
     $("#error-display").show();
 }
