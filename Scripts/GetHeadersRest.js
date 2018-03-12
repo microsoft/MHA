@@ -82,6 +82,10 @@ function getRestUrl(accessToken) {
 }
 
 function getHeaders(accessToken) {
+    if (!accessToken) {
+        LogError(null, "No access token?");
+    }
+
     // Get the item's REST ID
     var itemId = getItemRestId();
 
