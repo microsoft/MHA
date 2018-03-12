@@ -63,7 +63,10 @@ function SetLoadItemEvent(newLoadItemEvent) {
 function LogError(error, message) {
     var errorMessage = error ? error.message : '';
     var callback = function (stackframes) {
-        LogArray([message, errorMessage].concat(FilterStack(stackframes).toString()));
+        LogArray([message, errorMessage].concat(
+            FilterStack(stackframes).map(function (sf) {
+                return sf.toString();
+            })));
     };
 
     var errback = function (err) {
@@ -86,6 +89,7 @@ function FilterStack(stack) {
     return stack.filter(function (item) {
         if (!item.fileName) return true;
         if (item.fileName.indexOf("stacktrace") !== -1) return false;
+        if (item.functionName === "showError") return false;
         if (item.functionName === "LogError") return false;
         if (item.functionName === "GetStack") return false;
         return true;
