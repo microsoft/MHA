@@ -22,14 +22,14 @@ function sendHeadersRequestEWS() {
         var mailbox = Office.context.mailbox;
         var request = getHeadersRequest(mailbox.item.itemId);
         var envelope = getSoapEnvelope(request);
-        mailbox.makeEwsRequestAsync(envelope, callback);
+        mailbox.makeEwsRequestAsync(envelope, callbackEWS);
     } catch (e) {
         showError(e, ImportedStrings.mha_requestFailed);
     }
 }
 
 // Function called when the EWS request is complete.
-function callback(asyncResult) {
+function callbackEWS(asyncResult) {
     // Process the returned response here.
     if (asyncResult.value) {
         viewModel.originalHeaders = asyncResult.value;
