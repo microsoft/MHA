@@ -108,8 +108,8 @@ function getHeaders(accessToken) {
         } else {
             showError(null, ImportedStrings.mha_headersMissing);
         }
-    }).fail(function (error) {
-        showError(null, JSON.stringify(error, null, 2));
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        showError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
     }).always(function () {
         hideStatus();
     });
