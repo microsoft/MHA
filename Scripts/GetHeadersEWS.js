@@ -22,7 +22,9 @@ function sendHeadersRequestEWS() {
         var mailbox = Office.context.mailbox;
         var request = getHeadersRequest(mailbox.item.itemId);
         var envelope = getSoapEnvelope(request);
-        mailbox.makeEwsRequestAsync(envelope, callbackEWS);
+        mailbox.makeEwsRequestAsync(envelope, function (asyncResult) {
+            callbackEWS(asyncResult);
+        });
     } catch (e) {
         showError(e, ImportedStrings.mha_requestFailed);
     }
