@@ -4,15 +4,16 @@
  * Selector for switching between EWS and Rest logic
  */
 
-function sendHeadersRequest() {
+function sendHeadersRequest(headersLoadedCallback) {
     try {
         if (Office.context.requirements.isSetSupported("Mailbox", 1.5)) {
-            sendHeadersRequestRest();
+            sendHeadersRequestRest(headersLoadedCallback);
         }
         else {
-            sendHeadersRequestEWS();
+            sendHeadersRequestEWS(headersLoadedCallback);
         }
     } catch (e) {
-        showError(e, "Could not send header request");
+        // TODO: showError from outer frame to inner
+        LogError(e, "Could not send header request");
     }
 }

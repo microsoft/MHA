@@ -1,23 +1,26 @@
 // Framework7 app object
 var myApp = null;
 var viewModel = null;
-var Office = null;
 var LogError = null;
 
 // The Office initialize function must be run each time a new page is loaded
 $(document).ready(function () {
     try {
-        Office = window.parent.Office;
         LogError = window.parent.LogError;
         viewModel = new HeaderModel();
         initializeFramework7();
         updateStatus(ImportedStrings.mha_loading);
-        sendHeadersRequest();
+        window.parent.SetRenderItemEvent(renderItemEvent);
     }
     catch (e) {
         updateStatus(e);
     }
 });
+
+// TODO: This does not properly clear out on pinned reload
+function renderItemEvent(headers) {
+    getHeadersComplete(headers)
+}
 
 function initializeFramework7() {
     myApp = new Framework7();
@@ -31,6 +34,7 @@ function initializeFramework7() {
 function getHeadersComplete(headers) {
     viewModel.parseHeaders(headers);
     buildViews();
+    hideStatus();
 }
 
 function buildViews() {

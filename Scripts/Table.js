@@ -323,7 +323,11 @@ function makeSummaryTable(summaryName, rows, tag) {
                     valCell.attr("id", id + "Val");
                 }
 
-                visibilityBindings.push(["#" + id, rows[i].get]);
+                // TODO: This is the visibility binding which does not work
+                var getter = rows[i].get;
+                visibilityBindings.push(["#" + id, function () {
+                    return getter();
+                }]);
             }
         }
     }

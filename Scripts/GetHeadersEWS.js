@@ -16,14 +16,15 @@
  * makeEwsRequestAsync requires 1.0 and ReadWriteMailbox
  */
 
-function sendHeadersRequestEWS() {
+function sendHeadersRequestEWS(headersLoadedCallback) {
     try {
-        updateStatus(ImportedStrings.mha_RequestSent);
+        // TODO: Can/should we do a status update from here
+        //updateStatus(ImportedStrings.mha_RequestSent);
         var mailbox = Office.context.mailbox;
         var request = getHeadersRequest(mailbox.item.itemId);
         var envelope = getSoapEnvelope(request);
         mailbox.makeEwsRequestAsync(envelope, function (asyncResult) {
-            callbackEWS(asyncResult);
+            callbackEWS(asyncResult, headersLoadedCallback);
         });
     } catch (e) {
         showError(e, ImportedStrings.mha_requestFailed);
@@ -31,7 +32,7 @@ function sendHeadersRequestEWS() {
 }
 
 // Function called when the EWS request is complete.
-function callbackEWS(asyncResult) {
+function callbackEWS(asyncResult, headersLoadedCallback) {
     // Process the returned response here.
     if (asyncResult.value) {
         viewModel.originalHeaders = asyncResult.value;
@@ -59,16 +60,15 @@ function callbackEWS(asyncResult) {
         }
 
         if (prop) {
-            getHeadersComplete(prop.textContent);
+            headersLoadedCallback(prop.textContent);
         } else {
-            updateStatus(ImportedStrings.mha_requestFailed);
+            // TODO: Can/should we do a status update from here?
+            //updateStatus(ImportedStrings.mha_requestFailed);
             $("#originalHeaders").text(viewModel.originalHeaders);
         }
     } else if (asyncResult.error) {
         showError(asyncResult.error.message);
     }
-
-    hideStatus();
 }
 
 function getSoapEnvelope(request) {

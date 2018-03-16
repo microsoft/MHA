@@ -1,21 +1,20 @@
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
 
+// TODO: These get/set get used for visibility bindings and do NOT work right...
 var SummaryRow = function (header, label, set, get) {
     this.header = header;
     this.label = label;
-
-    var that = this;
-
-    this.set = set || function (value) { that.value = value; };
-    this.get = get || function () { return that.value; };
+    this.value = "";
+    this.set = set || this.set;
+    this.get = get || this.get;
 };
 
 SummaryRow.prototype.header = "";
 SummaryRow.prototype.label = "";
 SummaryRow.prototype.value = "";
-SummaryRow.prototype.set = function () { };
-SummaryRow.prototype.get = function () { };
+SummaryRow.prototype.set = function (_value) { this.value = _value; };
+SummaryRow.prototype.get = function () { return this.value; };
 
 var Summary = function () {
     var that = this;
