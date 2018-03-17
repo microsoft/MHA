@@ -12,14 +12,6 @@ $(document).ready(function () {
     window.parent.SetRenderItemEvent(renderItemEvent);
 });
 
-function renderItemEvent(headers) {
-    viewModel = new HeaderModel();
-
-    updateStatus(ImportedStrings.mha_loading);
-
-    getHeadersComplete(headers)
-}
-
 function enableSpinner() {
     $("#response").css("background-image", "url(../Resources/loader.gif)");
     $("#response").css("background-repeat", "no-repeat");
@@ -42,6 +34,10 @@ function updateStatus(statusText) {
     }
 
     recalculateVisibility();
+}
+
+function renderItemEvent(headers) {
+    getHeadersComplete(headers)
 }
 
 // TODO: Somehow summary rows are not visible after this.

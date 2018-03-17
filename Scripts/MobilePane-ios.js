@@ -17,11 +17,6 @@ $(document).ready(function () {
     }
 });
 
-// TODO: This does not properly clear out on pinned reload
-function renderItemEvent(headers) {
-    getHeadersComplete(headers)
-}
-
 function initializeFramework7() {
     myApp = new Framework7();
 
@@ -31,7 +26,20 @@ function initializeFramework7() {
     myApp.addView("#other-view");
 }
 
+function renderItemEvent(headers) {
+    getHeadersComplete(headers)
+}
+
 function getHeadersComplete(headers) {
+    // Empty data
+    $("#summary-content").empty();
+    $("#received-content").empty();
+    $("#antispam-content").empty();
+    $("#other-content").empty();
+
+    viewModel = new HeaderModel();
+    updateStatus(ImportedStrings.mha_loading);
+
     viewModel.parseHeaders(headers);
     buildViews();
     hideStatus();

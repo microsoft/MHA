@@ -11,24 +11,6 @@ $(document).ready(function () {
     window.parent.SetRenderItemEvent(renderItemEvent);
 });
 
-function renderItemEvent(headers) {
-    // Empty data
-    $(".summary-list").empty();
-    $("#original-headers code").empty();
-    $(".orig-header-ui").hide();
-    $(".received-list").empty();
-    $(".antispam-list").empty();
-    $(".other-list").empty();
-    $("#error-display .ms-MessageBar-text").empty();
-    $("#error-display").hide();
-
-    viewModel = new HeaderModel();
-
-    // Load new itemDescription
-    updateStatus(ImportedStrings.mha_loading);
-    getHeadersComplete(headers)
-}
-
 function initializeFabric() {
     var overlayComponent = document.querySelector(".ms-Overlay");
     // Override click so user can't dismiss overlay
@@ -83,7 +65,25 @@ function initializeFabric() {
     });
 }
 
+function renderItemEvent(headers) {
+    getHeadersComplete(headers)
+}
+
 function getHeadersComplete(headers) {
+    // Empty data
+    $(".summary-list").empty();
+    $("#original-headers code").empty();
+    $(".orig-header-ui").hide();
+    $(".received-list").empty();
+    $(".antispam-list").empty();
+    $(".other-list").empty();
+    $("#error-display .ms-MessageBar-text").empty();
+    $("#error-display").hide();
+
+    viewModel = new HeaderModel();
+
+    // Load new itemDescription
+    updateStatus(ImportedStrings.mha_loading);
     viewModel.parseHeaders(headers);
     buildViews();
     hideStatus();
