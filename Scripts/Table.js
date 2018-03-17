@@ -1,4 +1,3 @@
-
 function initializeTableUI() {
     // Headers
     makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
@@ -323,11 +322,7 @@ function makeSummaryTable(summaryName, rows, tag) {
                     valCell.attr("id", id + "Val");
                 }
 
-                // TODO: This is the visibility binding which does not work
-                var getter = rows[i].get;
-                visibilityBindings.push(["#" + id, function () {
-                    return getter();
-                }]);
+                makeVisible("#" + id, false);
             }
         }
     }
@@ -370,6 +365,7 @@ function rebuildSections() {
         headerVal = $("#" + viewModel.summary.summaryRows[i].header + "SUMVal");
         if (headerVal) {
             headerVal.text(viewModel.summary.summaryRows[i].get());
+            makeVisible("#" + viewModel.summary.summaryRows[i].header + "SUM", true);
         }
     }
 
@@ -413,6 +409,7 @@ function rebuildSections() {
         headerVal = $("#" + viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].header + "FFASVal");
         if (headerVal) {
             headerVal.html(mapHeaderToURL(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url, viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get()));
+            makeVisible("#" + viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].header + "FFAS", true);
         }
     }
 
@@ -421,6 +418,7 @@ function rebuildSections() {
         headerVal = $("#" + viewModel.antiSpamReport.antiSpamRows[i].header + "ASVal");
         if (headerVal) {
             headerVal.html(mapHeaderToURL(viewModel.antiSpamReport.antiSpamRows[i].url, viewModel.antiSpamReport.antiSpamRows[i].get()));
+            makeVisible("#" + viewModel.antiSpamReport.antiSpamRows[i].header + "AS", true);
         }
     }
 
