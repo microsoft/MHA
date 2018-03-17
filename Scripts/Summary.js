@@ -1,7 +1,6 @@
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
 
-// TODO: These get/set get used for visibility bindings and do NOT work right...
 var SummaryRow = function (header, label, set, get) {
     this.header = header;
     this.label = label;
