@@ -66,10 +66,6 @@ function initializeFabric() {
 }
 
 function renderItemEvent(headers) {
-    getHeadersComplete(headers)
-}
-
-function getHeadersComplete(headers) {
     // Empty data
     $(".summary-list").empty();
     $("#original-headers code").empty();

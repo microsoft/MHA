@@ -27,10 +27,6 @@ function initializeFramework7() {
 }
 
 function renderItemEvent(headers) {
-    getHeadersComplete(headers)
-}
-
-function getHeadersComplete(headers) {
     // Empty data
     $("#summary-content").empty();
     $("#received-content").empty();

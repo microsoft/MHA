@@ -10,7 +10,6 @@
  *   preferably with some sort of activity indicator (spinner)
  * - hideStatus: Method to hide the status displays
  * - showError(error, message): Method to communicate an error to the user.
- * - getHeadersComplete(headers): Callback to receive headers.
  *
  * Requirement Sets and Permissions
  * getCallbackTokenAsync requires 1.5 and ReadItem
