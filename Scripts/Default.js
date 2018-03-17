@@ -36,8 +36,6 @@ function updateStatus(statusText) {
     recalculateVisibility();
 }
 
-// TODO: Somehow summary rows are not visible after this.
-// Our visibility bindings need work
 function renderItemEvent(headers) {
     updateStatus(ImportedStrings.mha_foundHeaders);
     $("#originalHeaders").text(headers);
