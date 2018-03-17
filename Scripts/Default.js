@@ -37,6 +37,7 @@ function updateStatus(statusText) {
 }
 
 function renderItemEvent(headers) {
+    viewModel = new HeaderModel();
     updateStatus(ImportedStrings.mha_foundHeaders);
     $("#originalHeaders").text(headers);
     parseHeadersToTables(headers);
