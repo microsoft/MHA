@@ -46,14 +46,6 @@ var Summary = function () {
 Summary.prototype.summaryRows = [];
 Summary.prototype.totalTime = "";
 
-Summary.prototype.reset = function () {
-    for (var i = 0; i < this.summaryRows.length; i++) {
-        this.summaryRows[i].set("");
-    }
-
-    this.totalTime = "";
-};
-
 Summary.prototype.exists = function () {
     for (var i = 0; i < this.summaryRows.length; i++) {
         if (this.summaryRows[i].get()) {

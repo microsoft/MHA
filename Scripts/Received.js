@@ -29,10 +29,6 @@ Received.prototype.receivedRows = [];
 Received.prototype.sortColumn = "hop";
 Received.prototype.sortOrder = 1;
 
-Received.prototype.reset = function () {
-    this.receivedRows = [];
-};
-
 Received.prototype.exists = function () {
     return this.receivedRows.length > 0;
 };

@@ -19,10 +19,6 @@ Other.prototype.otherRows = [];
 Other.prototype.sortColumn = "number";
 Other.prototype.sortOrder = 1;
 
-Other.prototype.reset = function () {
-    this.otherRows = [];
-};
-
 Other.prototype.exists = function () {
     return this.otherRows.length > 0;
 };

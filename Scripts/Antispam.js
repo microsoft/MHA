@@ -27,12 +27,6 @@ var AntiSpamReport = function () {
 
 AntiSpamReport.prototype.antiSpamRows = [];
 
-AntiSpamReport.prototype.reset = function () {
-    for (var i = 0; i < this.antiSpamRows.length; i++) {
-        this.antiSpamRows[i].set("");
-    }
-};
-
 AntiSpamReport.prototype.exists = function () {
     for (var i = 0; i < this.antiSpamRows.length; i++) {
         if (this.antiSpamRows[i].get()) {

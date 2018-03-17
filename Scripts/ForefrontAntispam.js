@@ -34,12 +34,6 @@ var ForefrontAntiSpamReport = function () {
 
 ForefrontAntiSpamReport.prototype.forefrontAntiSpamRows = [];
 
-ForefrontAntiSpamReport.prototype.reset = function () {
-    for (var i = 0; i < this.forefrontAntiSpamRows.length; i++) {
-        this.forefrontAntiSpamRows[i].set("");
-    }
-};
-
 ForefrontAntiSpamReport.prototype.exists = function () {
     for (var i = 0; i < this.forefrontAntiSpamRows.length; i++) {
         if (this.forefrontAntiSpamRows[i].get()) {
