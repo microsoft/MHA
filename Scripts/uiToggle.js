@@ -104,7 +104,7 @@ function LogError(error, message) {
     };
 
     var errback = function (err) {
-        LogArray([message, errorMessage, err.message]);
+        LogArray([message, errorMessage, err.message, err.stack]);
     };
 
     if (error) {
