@@ -30,7 +30,7 @@ function analyzeHeaders() {
 function clearHeaders() {
     $("#inputHeaders").val("");
 
-    viewModel.resetView();
+    viewModel = new HeaderModel();
     setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
     setArrows(viewModel.otherHeaders.tableName, "number", 1);
     rebuildSections();

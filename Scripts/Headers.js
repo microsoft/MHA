@@ -25,20 +25,6 @@ HeaderModel.prototype.antiSpamReport = {};
 HeaderModel.prototype.originalHeaders = "";
 HeaderModel.prototype.hasData = false;
 
-HeaderModel.prototype.resetView = function () {
-    this.status = "";
-
-    this.summary.reset();
-    this.receivedHeaders.reset();
-    this.forefrontAntiSpamReport.reset();
-    this.antiSpamReport.reset();
-    this.otherHeaders.reset();
-
-    this.originalHeaders = "";
-
-    this.hasData = false;
-};
-
 var Header = function (header, value) {
     this.header = header;
     this.value = value;
