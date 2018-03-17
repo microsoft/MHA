@@ -354,6 +354,23 @@ function setArrows(table, colName, sortOrder) {
     }
 }
 
+function setRowValue(row, type) {
+    headerVal = $("#" + row.header + type + "Val");
+    if (headerVal) {
+        var val = row.get();
+        if (val) {
+            if (row.url) {
+                headerVal.html(mapHeaderToURL(row.url, row.get()));
+            }
+            else {
+                headerVal.text(row.get());
+            }
+
+            makeVisible("#" + row.header + type, true);
+        }
+    }
+}
+
 // Rebuilds content and recalculates what sections should be displayed
 function rebuildSections() {
     var i;
@@ -362,11 +379,7 @@ function rebuildSections() {
 
     // Summary
     for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
-        headerVal = $("#" + viewModel.summary.summaryRows[i].header + "SUMVal");
-        if (headerVal) {
-            headerVal.text(viewModel.summary.summaryRows[i].get());
-            makeVisible("#" + viewModel.summary.summaryRows[i].header + "SUM", true);
-        }
+        setRowValue(viewModel.summary.summaryRows[i], "SUM");
     }
 
     // Received
@@ -406,20 +419,12 @@ function rebuildSections() {
 
     // Forefront AntiSpam Report
     for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
-        headerVal = $("#" + viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].header + "FFASVal");
-        if (headerVal) {
-            headerVal.html(mapHeaderToURL(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url, viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get()));
-            makeVisible("#" + viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].header + "FFAS", true);
-        }
+        setRowValue(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i], "FFAS");
     }
 
     // AntiSpam Report
     for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
-        headerVal = $("#" + viewModel.antiSpamReport.antiSpamRows[i].header + "ASVal");
-        if (headerVal) {
-            headerVal.html(mapHeaderToURL(viewModel.antiSpamReport.antiSpamRows[i].url, viewModel.antiSpamReport.antiSpamRows[i].get()));
-            makeVisible("#" + viewModel.antiSpamReport.antiSpamRows[i].header + "AS", true);
-        }
+        setRowValue(viewModel.antiSpamReport.antiSpamRows[i], "AS");
     }
 
     // Other
