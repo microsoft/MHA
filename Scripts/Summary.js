@@ -39,17 +39,19 @@ var Summary = function () {
         new SummaryRow("To", ImportedStrings.mha_to),
         new SummaryRow("CC", ImportedStrings.mha_cc)
     ];
+
+    this.totalTime = "";
 };
 
 Summary.prototype.summaryRows = [];
-Summary.prototype.totalTime = 0;
+Summary.prototype.totalTime = "";
 
 Summary.prototype.reset = function () {
     for (var i = 0; i < this.summaryRows.length; i++) {
         this.summaryRows[i].set("");
     }
 
-    this.totalTime = 0;
+    this.totalTime = "";
 };
 
 Summary.prototype.exists = function () {
@@ -76,13 +78,13 @@ Summary.prototype.init = function (header) {
 };
 
 Summary.prototype.creationTime = function (date) {
-    if (!date && this.totalTime === 0) {
+    if (!date && !this.totalTime) {
         return null;
     }
 
     var time = [date || ""];
 
-    if (this.totalTime !== 0) {
+    if (this.totalTime) {
         time.push(" ", ImportedStrings.mha_deliveredStart, " ", this.totalTime, ImportedStrings.mha_deliveredEnd);
     }
 

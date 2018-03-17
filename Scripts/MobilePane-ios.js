@@ -33,10 +33,9 @@ function renderItemEvent(headers) {
     $("#antispam-content").empty();
     $("#other-content").empty();
 
-    viewModel = new HeaderModel();
     updateStatus(ImportedStrings.mha_loading);
 
-    viewModel.parseHeaders(headers);
+    viewModel = new HeaderModel(headers);
     buildViews();
     hideStatus();
 }

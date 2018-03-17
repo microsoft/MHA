@@ -14,8 +14,7 @@ if (window.jQuery) {
 function analyzeHeaders() {
     // Can't do anything without jquery
     if (!window.jQuery) { return; }
-    viewModel = new HeaderModel();
-    viewModel.parseHeaders($("#inputHeaders").val());
+    viewModel = new HeaderModel($("#inputHeaders").val());
     setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
     setArrows(viewModel.otherHeaders.tableName, "number", 1);
 

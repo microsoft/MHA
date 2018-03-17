@@ -76,11 +76,9 @@ function renderItemEvent(headers) {
     $("#error-display .ms-MessageBar-text").empty();
     $("#error-display").hide();
 
-    viewModel = new HeaderModel();
-
     // Load new itemDescription
     updateStatus(ImportedStrings.mha_loading);
-    viewModel.parseHeaders(headers);
+    viewModel = new HeaderModel(headers);
     buildViews();
     hideStatus();
 }

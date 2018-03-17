@@ -7,13 +7,17 @@
 /// <reference path="Antispam.js" />
 /// <reference path="Other.js" />
 
-var HeaderModel = function () {
+var HeaderModel = function (headers) {
     // Initialize defaults
     this.summary = new Summary();
     this.receivedHeaders = new Received();
     this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
     this.antiSpamReport = new AntiSpamReport();
     this.otherHeaders = new Other();
+
+    if (headers) {
+        this.parseHeaders(headers);
+    }
 };
 
 HeaderModel.prototype.status = "";
@@ -63,7 +67,7 @@ HeaderModel.prototype.parseHeaders = function (headers) {
         }
     }
 
-    this.receivedHeaders.computeDeltas();
+    this.summary.totalTime = this.receivedHeaders.computeDeltas();
 };
 
 function GetHeaderList(headers) {

@@ -359,10 +359,10 @@ function setRowValue(row, type) {
         var val = row.get();
         if (val) {
             if (row.url) {
-                headerVal.html(mapHeaderToURL(row.url, row.get()));
+                headerVal.html(mapHeaderToURL(row.url, val));
             }
             else {
-                headerVal.text(row.get());
+                headerVal.text(val);
             }
 
             makeVisible("#" + row.header + type, true);
