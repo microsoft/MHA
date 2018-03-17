@@ -72,8 +72,7 @@ function initializeTableUI() {
     rebuildSections();
 }
 
-function parseHeadersToTables(headers) {
-    viewModel.parseHeaders(headers);
+function rebuildTables() {
     updateStatus("");
     rebuildSections();
     hideExtraColumns();
