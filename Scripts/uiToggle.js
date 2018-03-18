@@ -26,14 +26,17 @@
 var uiModel = function () {
     this.currentChoice = {};
     this.errors = [];
+    this.deferredErrors = [];
     this.headers = "";
 };
 
 uiModel.prototype.currentChoice = {};
 uiModel.prototype.errors = [];
+uiModel.prototype.deferredErrors = [];
 uiModel.prototype.headers = "";
 
 var renderItemEvent = null;
+var showErrorEvent = null;
 var uiChoice = function (label, url, checked) {
     this.label = label;
     this.url = url;
@@ -91,6 +94,30 @@ function SetRenderItemEvent(newRenderItemEvent) {
     renderItemEvent = newRenderItemEvent;
     if (uiModel.headers && renderItemEvent) {
         renderItemEvent(uiModel.headers)
+    }
+}
+
+function SetShowErrorEvent(newShowErrorEvent) {
+    showErrorEvent = newShowErrorEvent;
+    if (!showErrorEvent) return;
+
+    // If we have any deferred errors, signal them
+    for (var iError = 0; iError < viewModel.deferredErrors.length; iError++) {
+        showErrorEvent(viewModel.deferredErrors[iError][0], viewModel.deferredErrors[iError][1]);
+    }
+
+    // Clear out the now displayed errors
+    viewModel.deferredErrors = [];
+}
+
+// Tells the UI to show an error. The UI will call back to log the error
+function ShowError(error, message) {
+    if (showErrorEvent) {
+        showErrorEvent(error, message);
+    }
+    else {
+        // We don't have a showErrorEvent, so defer the message
+        viewModel.deferredErrors.push([error, message]);
     }
 }
 

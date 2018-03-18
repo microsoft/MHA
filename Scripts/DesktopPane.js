@@ -8,6 +8,7 @@ $(document).ready(function () {
     viewModel = new HeaderModel();
     initializeFabric();
     updateStatus(ImportedStrings.mha_loading);
+    window.parent.SetShowErrorEvent(showError);
     window.parent.SetRenderItemEvent(renderItemEvent);
 });
 

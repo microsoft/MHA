@@ -9,6 +9,7 @@ $(document).ready(function () {
     viewModel = new HeaderModel();
     initializeTableUI();
     updateStatus(ImportedStrings.mha_loading);
+    window.parent.SetShowErrorEvent(showError);
     window.parent.SetRenderItemEvent(renderItemEvent);
 });
 

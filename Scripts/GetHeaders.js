@@ -13,7 +13,6 @@ function sendHeadersRequest(headersLoadedCallback) {
             sendHeadersRequestEWS(headersLoadedCallback);
         }
     } catch (e) {
-        // TODO: showError from outer frame to inner
-        LogError(e, "Could not send header request");
+        ShowError(e, "Could not send header request");
     }
 }

@@ -6,10 +6,11 @@ var LogError = null;
 // The Office initialize function must be run each time a new page is loaded
 $(document).ready(function () {
     try {
-        LogError = window.parent.LogError;
         viewModel = new HeaderModel();
         initializeFramework7();
         updateStatus(ImportedStrings.mha_loading);
+        LogError = window.parent.LogError;
+        window.parent.SetShowErrorEvent(showError);
         window.parent.SetRenderItemEvent(renderItemEvent);
     }
     catch (e) {
@@ -386,5 +387,6 @@ function hideStatus() {
 
 function showError(error, message) {
     LogError(error, message);
+    myApp.hidePreloader();
     myApp.alert(message, "An Error Occurred");
 }
