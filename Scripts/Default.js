@@ -44,7 +44,6 @@ function renderItemEvent(headers) {
     viewModel = new HeaderModel(headers);
     rebuildTables();
     hideStatus();
-    recalculateVisibility();
 }
 
 function showError(error, message) {
