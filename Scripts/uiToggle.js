@@ -1,28 +1,3 @@
-// TODO: When work completed, either delete this block or clean it up to match reality
-// Plan of action:
-// uiModel contains current headers
-// this.headers - string
-// When we load, go fetch headers
-// When headers are loaded, cache headers, call the render function in frame
-//
-// When we pick a new UI, call render function with cached header
-// function loadNewItem()
-//
-// When we get a new message, go fetch headers
-// When headers are loaded, call the render function in frame
-
-// What I need:
-// Way to tell frames about new headers
-// When frame loads, it can give us a callback: RenderHeaders
-// We can call this on header load as well as on loadNewItem
-// Can release loadItemEvent - call it renderItemEvent
-
-// thoughts:
-// frame loads async
-// headers fetch async
-// if we load frame and then headers come in, we're fine - header load can call frame callback.
-// if we load headers and have no callback, then when we load frame, we should call callback immediately
-
 var uiModel = function () {
     this.currentChoice = {};
     this.errors = [];
