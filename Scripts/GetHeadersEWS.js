@@ -1,13 +1,8 @@
 /**
  * GetHeaderEWS.js
- * 
+ *
  * This file has all the methods to get PR_TRANSPORT_MESSAGE_HEADERS
  * from the current message via EWS.
- * 
- * To use this file, your page JS needs to implement the following methods:
- * 
- *   preferably with some sort of activity indicator (spinner)
- * - hideStatus: Method to hide the status displays
  *
  * Requirement Sets and Permissions
  * makeEwsRequestAsync requires 1.0 and ReadWriteMailbox

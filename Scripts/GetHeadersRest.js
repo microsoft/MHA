@@ -1,13 +1,8 @@
 /**
  * GetHeaderRest.js
- * 
+ *
  * This file has all the methods to get PR_TRANSPORT_MESSAGE_HEADERS
  * from the current message via REST.
- * 
- * To use this file, your page JS needs to implement the following methods:
- * 
- * - preferably with some sort of activity indicator (spinner)
- * - hideStatus: Method to hide the status displays
  *
  * Requirement Sets and Permissions
  * getCallbackTokenAsync requires 1.5 and ReadItem
