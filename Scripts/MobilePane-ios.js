@@ -3,7 +3,6 @@ var myApp = null;
 var viewModel = null;
 var LogError = null;
 
-// The Office initialize function must be run each time a new page is loaded
 $(document).ready(function () {
     try {
         viewModel = new HeaderModel();
