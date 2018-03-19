@@ -11,6 +11,7 @@ $(document).ready(function () {
         updateStatus(ImportedStrings.mha_loading);
         LogError = window.parent.LogError;
         window.parent.SetShowErrorEvent(showError);
+        window.parent.SetUpdateStatusEvent(updateStatus);
         window.parent.SetRenderItemEvent(renderItemEvent);
     }
     catch (e) {

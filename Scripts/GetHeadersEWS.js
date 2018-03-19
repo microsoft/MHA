@@ -6,10 +6,8 @@
  * 
  * To use this file, your page JS needs to implement the following methods:
  * 
- * - updateStatus(message): Should be a method that displays a status to the user,
  *   preferably with some sort of activity indicator (spinner)
  * - hideStatus: Method to hide the status displays
- * - showError(error, message): Method to communicate an error to the user.
  *
  * Requirement Sets and Permissions
  * makeEwsRequestAsync requires 1.0 and ReadWriteMailbox
@@ -17,8 +15,7 @@
 
 function sendHeadersRequestEWS(headersLoadedCallback) {
     try {
-        // TODO: Can/should we do a status update from here
-        //updateStatus(ImportedStrings.mha_RequestSent);
+        UpdateStatus(ImportedStrings.mha_RequestSent);
         var mailbox = Office.context.mailbox;
         var request = getHeadersRequest(mailbox.item.itemId);
         var envelope = getSoapEnvelope(request);
@@ -26,7 +23,7 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
             callbackEWS(asyncResult, headersLoadedCallback);
         });
     } catch (e) {
-        showError(e, ImportedStrings.mha_requestFailed);
+        ShowError(e, ImportedStrings.mha_requestFailed);
     }
 }
 
@@ -50,23 +47,22 @@ function callbackEWS(asyncResult, headersLoadedCallback) {
                 } else {
                     var messageText = responseDom.filterNode("m:MessageText");
                     if (messageText.length > 0) {
-                        showError(null, messageText[0].textContent);
+                        ShowError(null, messageText[0].textContent);
                     }
                 }
             }
         } catch (e) {
-            showError(e, "EWS callback failed");
+            ShowError(e, "EWS callback failed");
         }
 
         if (prop) {
             headersLoadedCallback(prop.textContent);
         } else {
-            // TODO: Can/should we do a status update from here?
-            //updateStatus(ImportedStrings.mha_requestFailed);
+            UpdateStatus(ImportedStrings.mha_requestFailed);
             $("#originalHeaders").text(viewModel.originalHeaders);
         }
     } else if (asyncResult.error) {
-        showError(asyncResult.error.message);
+        ShowError(asyncResult.error.message);
     }
 }
 

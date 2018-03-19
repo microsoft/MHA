@@ -6,10 +6,8 @@
  * 
  * To use this file, your page JS needs to implement the following methods:
  * 
- * - updateStatus(message): Should be a method that displays a status to the user,
- *   preferably with some sort of activity indicator (spinner)
+ * - preferably with some sort of activity indicator (spinner)
  * - hideStatus: Method to hide the status displays
- * - showError(error, message): Method to communicate an error to the user.
  *
  * Requirement Sets and Permissions
  * getCallbackTokenAsync requires 1.5 and ReadItem
@@ -18,15 +16,14 @@
  */
 
 function sendHeadersRequestRest(headersLoadedCallback) {
-    // TODO: Can/should we do a status update from here?
-    //updateStatus(ImportedStrings.mha_RequestSent);
+    UpdateStatus(ImportedStrings.mha_RequestSent);
 
     Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
         if (result.status === "succeeded") {
             var accessToken = result.value;
             getHeaders(accessToken, headersLoadedCallback);
         } else {
-            showError(null, 'Unable to obtain callback token.\n' + result.error);
+            ShowError(null, 'Unable to obtain callback token.\n' + result.error);
         }
     });
 }
@@ -106,13 +103,13 @@ function getHeaders(accessToken, headersLoadedCallback) {
         if (item.SingleValueExtendedProperties !== undefined) {
             headersLoadedCallback(item.SingleValueExtendedProperties[0].Value);
         } else {
-            showError(null, ImportedStrings.mha_headersMissing);
+            ShowError(null, ImportedStrings.mha_headersMissing);
         }
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            if (textStatus === "error" && jqXHR.status === 0) {
-                sendHeadersRequestEWS(headersLoadedCallback);
-            } else {
-                showError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
-            }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (textStatus === "error" && jqXHR.status === 0) {
+            sendHeadersRequestEWS(headersLoadedCallback);
+        } else {
+            ShowError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
+        }
     });
 }

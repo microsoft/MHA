@@ -9,6 +9,7 @@ $(document).ready(function () {
     initializeFabric();
     updateStatus(ImportedStrings.mha_loading);
     window.parent.SetShowErrorEvent(showError);
+    window.parent.SetUpdateStatusEvent(updateStatus);
     window.parent.SetRenderItemEvent(renderItemEvent);
 });
 

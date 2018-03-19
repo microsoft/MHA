@@ -27,16 +27,19 @@ var uiModel = function () {
     this.currentChoice = {};
     this.errors = [];
     this.deferredErrors = [];
+    this.deferredStatus = [];
     this.headers = "";
 };
 
 uiModel.prototype.currentChoice = {};
 uiModel.prototype.errors = [];
 uiModel.prototype.deferredErrors = [];
+uiModel.prototype.deferredStatus = [];
 uiModel.prototype.headers = "";
 
 var renderItemEvent = null;
 var showErrorEvent = null;
+var updateStatusEvent = null;
 var uiChoice = function (label, url, checked) {
     this.label = label;
     this.url = url;
@@ -110,8 +113,9 @@ function SetShowErrorEvent(newShowErrorEvent) {
     viewModel.deferredErrors = [];
 }
 
-// Tells the UI to show an error. The UI will call back to log the error
+// Tells the UI to show an error.
 function ShowError(error, message) {
+    LogError(error, message);
     if (showErrorEvent) {
         showErrorEvent(error, message);
     }
@@ -155,6 +159,30 @@ function FilterStack(stack) {
         if (item.functionName === "GetStack") return false;
         return true;
     });
+}
+
+function SetUpdateStatusEvent(newUpdateStatusEvent) {
+    updateStatusEvent = newUpdateStatusEvent;
+    if (!updateStatusEvent) return;
+
+    // If we have any deferred status, signal them
+    for (var iStatus = 0; iStatus < viewModel.deferredStatus.length; iStatus++) {
+        updateStatusEvent(viewModel.deferredStatus[iStatus]);
+    }
+
+    // Clear out the now displayed status
+    viewModel.deferredStatus= [];
+}
+
+// Tells the UI to show an error.
+function UpdateStatus(statusText) {
+    if (updateStatusEvent) {
+        updateStatusEvent(statusText);
+    }
+    else {
+        // We don't have a updateStatusEvent, so defer the status
+        viewModel.deferredStatus.push(statusText);
+    }
 }
 
 function getSettingsKey() {

@@ -10,6 +10,7 @@ $(document).ready(function () {
     initializeTableUI();
     updateStatus(ImportedStrings.mha_loading);
     window.parent.SetShowErrorEvent(showError);
+    window.parent.SetUpdateStatusEvent(updateStatus);
     window.parent.SetRenderItemEvent(renderItemEvent);
 });
 
@@ -47,7 +48,6 @@ function renderItemEvent(headers) {
 }
 
 function showError(error, message) {
-    LogError(error, message);
     updateStatus(message);
     disableSpinner();
     rebuildSections();
