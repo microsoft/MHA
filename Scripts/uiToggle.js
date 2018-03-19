@@ -1,12 +1,20 @@
 var uiModel = function () {
     this.currentChoice = {};
     this.errors = [];
+    this.deferredErrors = [];
+    this.deferredStatus = [];
+    this.headers = "";
 };
 
 uiModel.prototype.currentChoice = {};
 uiModel.prototype.errors = [];
+uiModel.prototype.deferredErrors = [];
+uiModel.prototype.deferredStatus = [];
+uiModel.prototype.headers = "";
 
-var loadItemEvent = null;
+var renderItemEvent = null;
+var showErrorEvent = null;
+var updateStatusEvent = null;
 var uiChoice = function (label, url, checked) {
     this.label = label;
     this.url = url;
@@ -21,6 +29,7 @@ Office.initialize = function () {
     $(document).ready(function () {
         viewModel = new uiModel();
         InitUI();
+        loadNewItem();
     });
 };
 
@@ -51,13 +60,44 @@ function registerItemChangeEvent() {
 }
 
 function loadNewItem() {
-    if (loadItemEvent) {
-        loadItemEvent();
+    sendHeadersRequest(function (headers) {
+        uiModel.headers = headers;
+        if (renderItemEvent) {
+            renderItemEvent(uiModel.headers);
+        }
+    });
+}
+
+function SetRenderItemEvent(newRenderItemEvent) {
+    renderItemEvent = newRenderItemEvent;
+    if (uiModel.headers && renderItemEvent) {
+        renderItemEvent(uiModel.headers)
     }
 }
 
-function SetLoadItemEvent(newLoadItemEvent) {
-    loadItemEvent = newLoadItemEvent;
+function SetShowErrorEvent(newShowErrorEvent) {
+    showErrorEvent = newShowErrorEvent;
+    if (!showErrorEvent) return;
+
+    // If we have any deferred errors, signal them
+    for (var iError = 0; iError < viewModel.deferredErrors.length; iError++) {
+        showErrorEvent(viewModel.deferredErrors[iError][0], viewModel.deferredErrors[iError][1]);
+    }
+
+    // Clear out the now displayed errors
+    viewModel.deferredErrors = [];
+}
+
+// Tells the UI to show an error.
+function ShowError(error, message) {
+    LogError(error, message);
+    if (showErrorEvent) {
+        showErrorEvent(error, message);
+    }
+    else {
+        // We don't have a showErrorEvent, so defer the message
+        viewModel.deferredErrors.push([error, message]);
+    }
 }
 
 function LogError(error, message) {
@@ -70,7 +110,7 @@ function LogError(error, message) {
     };
 
     var errback = function (err) {
-        LogArray([message, errorMessage, err.message]);
+        LogArray([message, errorMessage, err.message, err.stack]);
     };
 
     if (error) {
@@ -94,6 +134,30 @@ function FilterStack(stack) {
         if (item.functionName === "GetStack") return false;
         return true;
     });
+}
+
+function SetUpdateStatusEvent(newUpdateStatusEvent) {
+    updateStatusEvent = newUpdateStatusEvent;
+    if (!updateStatusEvent) return;
+
+    // If we have any deferred status, signal them
+    for (var iStatus = 0; iStatus < viewModel.deferredStatus.length; iStatus++) {
+        updateStatusEvent(viewModel.deferredStatus[iStatus]);
+    }
+
+    // Clear out the now displayed status
+    viewModel.deferredStatus= [];
+}
+
+// Tells the UI to show an error.
+function UpdateStatus(statusText) {
+    if (updateStatusEvent) {
+        updateStatusEvent(statusText);
+    }
+    else {
+        // We don't have a updateStatusEvent, so defer the status
+        viewModel.deferredStatus.push(statusText);
+    }
 }
 
 function getSettingsKey() {

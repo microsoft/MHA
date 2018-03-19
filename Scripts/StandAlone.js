@@ -14,14 +14,14 @@ if (window.jQuery) {
 function analyzeHeaders() {
     // Can't do anything without jquery
     if (!window.jQuery) { return; }
-    viewModel.resetView();
+    viewModel = new HeaderModel($("#inputHeaders").val());
     setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
     setArrows(viewModel.otherHeaders.tableName, "number", 1);
 
     enableSpinner();
     updateStatus(ImportedStrings.mha_loading);
 
-    parseHeadersToTables($("#inputHeaders").val());
+    rebuildTables();
 
     disableSpinner();
 }
@@ -29,7 +29,7 @@ function analyzeHeaders() {
 function clearHeaders() {
     $("#inputHeaders").val("");
 
-    viewModel.resetView();
+    viewModel = new HeaderModel();
     setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
     setArrows(viewModel.otherHeaders.tableName, "number", 1);
     rebuildSections();

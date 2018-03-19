@@ -29,10 +29,6 @@ Received.prototype.receivedRows = [];
 Received.prototype.sortColumn = "hop";
 Received.prototype.sortOrder = 1;
 
-Received.prototype.reset = function () {
-    this.receivedRows = [];
-};
-
 Received.prototype.exists = function () {
     return this.receivedRows.length > 0;
 };
@@ -180,9 +176,10 @@ Received.prototype.computeDeltas = function () {
     }
 
     iLastTime = NaN;
+    var totalTime = "";
     // Total time is still last minus first, even if negative.
     if (iEndTime !== iStartTime) {
-        viewModel.summary.totalTime = this.computeTime(iEndTime, iStartTime);
+        totalTime = this.computeTime(iEndTime, iStartTime);
     }
 
     for (i = 0; i < this.receivedRows.length; i++) {
@@ -202,6 +199,8 @@ Received.prototype.computeDeltas = function () {
             iLastTime = this.receivedRows[i].dateNum;
         }
     }
+
+    return totalTime;
 };
 
 // Computes min/sec from the diff of current and last.

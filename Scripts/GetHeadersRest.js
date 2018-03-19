@@ -1,16 +1,8 @@
 /**
  * GetHeaderRest.js
- * 
+ *
  * This file has all the methods to get PR_TRANSPORT_MESSAGE_HEADERS
  * from the current message via REST.
- * 
- * To use this file, your page JS needs to implement the following methods:
- * 
- * - updateStatus(message): Should be a method that displays a status to the user,
- *   preferably with some sort of activity indicator (spinner)
- * - hideStatus: Method to hide the status displays
- * - showError(error, message): Method to communicate an error to the user.
- * - getHeadersComplete(headers): Callback to receive headers.
  *
  * Requirement Sets and Permissions
  * getCallbackTokenAsync requires 1.5 and ReadItem
@@ -18,15 +10,15 @@
  * restUrl requires 1.5 and ReadItem
  */
 
-function sendHeadersRequestRest() {
-    updateStatus(ImportedStrings.mha_RequestSent);
+function sendHeadersRequestRest(headersLoadedCallback) {
+    UpdateStatus(ImportedStrings.mha_RequestSent);
 
     Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
         if (result.status === "succeeded") {
             var accessToken = result.value;
-            getHeaders(accessToken);
+            getHeaders(accessToken, headersLoadedCallback);
         } else {
-            showError(null, 'Unable to obtain callback token.\n' + result.error);
+            ShowError(null, 'Unable to obtain callback token.\n' + result.error);
         }
     });
 }
@@ -81,7 +73,7 @@ function getRestUrl(accessToken) {
     return "https://outlook.office.com";
 }
 
-function getHeaders(accessToken) {
+function getHeaders(accessToken, headersLoadedCallback) {
     if (!accessToken) {
         LogError(null, "No access token?");
     }
@@ -104,17 +96,15 @@ function getHeaders(accessToken) {
         }
     }).done(function (item) {
         if (item.SingleValueExtendedProperties !== undefined) {
-            getHeadersComplete(item.SingleValueExtendedProperties[0].Value);
+            headersLoadedCallback(item.SingleValueExtendedProperties[0].Value);
         } else {
-            showError(null, ImportedStrings.mha_headersMissing);
+            ShowError(null, ImportedStrings.mha_headersMissing);
         }
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            if (textStatus === "error" && jqXHR.status === 0) {
-                sendHeadersRequestEWS();
-            } else {
-                showError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
-            }
-    }).always(function () {
-        hideStatus();
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (textStatus === "error" && jqXHR.status === 0) {
+            sendHeadersRequestEWS(headersLoadedCallback);
+        } else {
+            ShowError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
+        }
     });
 }

@@ -4,18 +4,16 @@
 var SummaryRow = function (header, label, set, get) {
     this.header = header;
     this.label = label;
-
-    var that = this;
-
-    this.set = set || function (value) { that.value = value; };
-    this.get = get || function () { return that.value; };
+    this.value = "";
+    this.set = set || this.set;
+    this.get = get || this.get;
 };
 
 SummaryRow.prototype.header = "";
 SummaryRow.prototype.label = "";
 SummaryRow.prototype.value = "";
-SummaryRow.prototype.set = function () { };
-SummaryRow.prototype.get = function () { };
+SummaryRow.prototype.set = function (_value) { this.value = _value; };
+SummaryRow.prototype.get = function () { return this.value; };
 
 var Summary = function () {
     var that = this;
@@ -41,18 +39,12 @@ var Summary = function () {
         new SummaryRow("To", ImportedStrings.mha_to),
         new SummaryRow("CC", ImportedStrings.mha_cc)
     ];
+
+    this.totalTime = "";
 };
 
 Summary.prototype.summaryRows = [];
-Summary.prototype.totalTime = 0;
-
-Summary.prototype.reset = function () {
-    for (var i = 0; i < this.summaryRows.length; i++) {
-        this.summaryRows[i].set("");
-    }
-
-    this.totalTime = 0;
-};
+Summary.prototype.totalTime = "";
 
 Summary.prototype.exists = function () {
     for (var i = 0; i < this.summaryRows.length; i++) {
@@ -78,13 +70,13 @@ Summary.prototype.init = function (header) {
 };
 
 Summary.prototype.creationTime = function (date) {
-    if (!date && this.totalTime === 0) {
+    if (!date && !this.totalTime) {
         return null;
     }
 
     var time = [date || ""];
 
-    if (this.totalTime !== 0) {
+    if (this.totalTime) {
         time.push(" ", ImportedStrings.mha_deliveredStart, " ", this.totalTime, ImportedStrings.mha_deliveredEnd);
     }
 

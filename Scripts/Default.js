@@ -1,26 +1,18 @@
 ﻿var viewModel = null;
-var Office = null;
 var LogError = null;
 
 // This function is run when the app is ready to start interacting with the host application.
 // It ensures the DOM is ready before updating the span elements with values from the current message.
 $(document).ready(function () {
-    Office = window.parent.Office;
     LogError = window.parent.LogError;
-    window.parent.SetLoadItemEvent(loadNewItem);
     $(window).resize(onResize);
     viewModel = new HeaderModel();
     initializeTableUI();
     updateStatus(ImportedStrings.mha_loading);
-    sendHeadersRequest();
+    window.parent.SetShowErrorEvent(showError);
+    window.parent.SetUpdateStatusEvent(updateStatus);
+    window.parent.SetRenderItemEvent(renderItemEvent);
 });
-
-function loadNewItem() {
-    viewModel = new HeaderModel();
-
-    updateStatus(ImportedStrings.mha_loading);
-    sendHeadersRequest();
-}
 
 function enableSpinner() {
     $("#response").css("background-image", "url(../Resources/loader.gif)");
@@ -46,14 +38,15 @@ function updateStatus(statusText) {
     recalculateVisibility();
 }
 
-function getHeadersComplete(headers) {
+function renderItemEvent(headers) {
     updateStatus(ImportedStrings.mha_foundHeaders);
     $("#originalHeaders").text(headers);
-    parseHeadersToTables(headers);
+    viewModel = new HeaderModel(headers);
+    rebuildTables();
+    hideStatus();
 }
 
 function showError(error, message) {
-    LogError(error, message);
     updateStatus(message);
     disableSpinner();
     rebuildSections();

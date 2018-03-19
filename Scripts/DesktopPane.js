@@ -1,36 +1,17 @@
 var overlay = null;
 var spinner = null;
 var viewModel = null;
-var Office = null;
 var LogError = null;
 
 $(document).ready(function () {
-    Office = window.parent.Office;
     LogError = window.parent.LogError;
-    window.parent.SetLoadItemEvent(loadNewItem);
     viewModel = new HeaderModel();
     initializeFabric();
     updateStatus(ImportedStrings.mha_loading);
-    sendHeadersRequest();
+    window.parent.SetShowErrorEvent(showError);
+    window.parent.SetUpdateStatusEvent(updateStatus);
+    window.parent.SetRenderItemEvent(renderItemEvent);
 });
-
-function loadNewItem() {
-    // Empty data
-    $(".summary-list").empty();
-    $("#original-headers code").empty();
-    $(".orig-header-ui").hide();
-    $(".received-list").empty();
-    $(".antispam-list").empty();
-    $(".other-list").empty();
-    $("#error-display .ms-MessageBar-text").empty();
-    $("#error-display").hide();
-
-    viewModel = new HeaderModel();
-
-    // Load new itemDescription
-    updateStatus(ImportedStrings.mha_loading);
-    sendHeadersRequest();
-}
 
 function initializeFabric() {
     var overlayComponent = document.querySelector(".ms-Overlay");
@@ -86,9 +67,22 @@ function initializeFabric() {
     });
 }
 
-function getHeadersComplete(headers) {
-    viewModel.parseHeaders(headers);
+function renderItemEvent(headers) {
+    // Empty data
+    $(".summary-list").empty();
+    $("#original-headers code").empty();
+    $(".orig-header-ui").hide();
+    $(".received-list").empty();
+    $(".antispam-list").empty();
+    $(".other-list").empty();
+    $("#error-display .ms-MessageBar-text").empty();
+    $("#error-display").hide();
+
+    // Load new itemDescription
+    updateStatus(ImportedStrings.mha_loading);
+    viewModel = new HeaderModel(headers);
     buildViews();
+    hideStatus();
 }
 
 function buildViews() {

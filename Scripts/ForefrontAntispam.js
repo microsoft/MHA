@@ -6,18 +6,16 @@ var ForefrontAntiSpamRow = function (header, label, url, set, get) {
     this.label = label;
     this.url = url;
 
-    var that = this;
-
-    this.set = set || function (value) { that.value = value; };
-    this.get = get || function () { return that.value; };
+    this.set = set || this.set;
+    this.get = get || this.get;
 };
 
 ForefrontAntiSpamRow.prototype.header = "";
 ForefrontAntiSpamRow.prototype.label = "";
 ForefrontAntiSpamRow.prototype.url = "";
 ForefrontAntiSpamRow.prototype.value = "";
-ForefrontAntiSpamRow.prototype.set = function () { };
-ForefrontAntiSpamRow.prototype.get = function () { };
+ForefrontAntiSpamRow.prototype.set = function (_value) { this.value = _value; };
+ForefrontAntiSpamRow.prototype.get = function () { return this.value; };
 
 var ForefrontAntiSpamReport = function () {
     this.forefrontAntiSpamRows = [
@@ -35,12 +33,6 @@ var ForefrontAntiSpamReport = function () {
 };
 
 ForefrontAntiSpamReport.prototype.forefrontAntiSpamRows = [];
-
-ForefrontAntiSpamReport.prototype.reset = function () {
-    for (var i = 0; i < this.forefrontAntiSpamRows.length; i++) {
-        this.forefrontAntiSpamRows[i].set("");
-    }
-};
 
 ForefrontAntiSpamReport.prototype.exists = function () {
     for (var i = 0; i < this.forefrontAntiSpamRows.length; i++) {

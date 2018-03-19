@@ -1,4 +1,3 @@
-
 function initializeTableUI() {
     // Headers
     makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
@@ -73,8 +72,7 @@ function initializeTableUI() {
     rebuildSections();
 }
 
-function parseHeadersToTables(headers) {
-    viewModel.parseHeaders(headers);
+function rebuildTables() {
     updateStatus("");
     rebuildSections();
     hideExtraColumns();
@@ -323,7 +321,7 @@ function makeSummaryTable(summaryName, rows, tag) {
                     valCell.attr("id", id + "Val");
                 }
 
-                visibilityBindings.push(["#" + id, rows[i].get]);
+                makeVisible("#" + id, false);
             }
         }
     }
@@ -355,6 +353,23 @@ function setArrows(table, colName, sortOrder) {
     }
 }
 
+function setRowValue(row, type) {
+    headerVal = $("#" + row.header + type + "Val");
+    if (headerVal) {
+        var val = row.get();
+        if (val) {
+            if (row.url) {
+                headerVal.html(mapHeaderToURL(row.url, val));
+            }
+            else {
+                headerVal.text(val);
+            }
+
+            makeVisible("#" + row.header + type, true);
+        }
+    }
+}
+
 // Rebuilds content and recalculates what sections should be displayed
 function rebuildSections() {
     var i;
@@ -363,10 +378,7 @@ function rebuildSections() {
 
     // Summary
     for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
-        headerVal = $("#" + viewModel.summary.summaryRows[i].header + "SUMVal");
-        if (headerVal) {
-            headerVal.text(viewModel.summary.summaryRows[i].get());
-        }
+        setRowValue(viewModel.summary.summaryRows[i], "SUM");
     }
 
     // Received
@@ -406,18 +418,12 @@ function rebuildSections() {
 
     // Forefront AntiSpam Report
     for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
-        headerVal = $("#" + viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].header + "FFASVal");
-        if (headerVal) {
-            headerVal.html(mapHeaderToURL(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url, viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get()));
-        }
+        setRowValue(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i], "FFAS");
     }
 
     // AntiSpam Report
     for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
-        headerVal = $("#" + viewModel.antiSpamReport.antiSpamRows[i].header + "ASVal");
-        if (headerVal) {
-            headerVal.html(mapHeaderToURL(viewModel.antiSpamReport.antiSpamRows[i].url, viewModel.antiSpamReport.antiSpamRows[i].get()));
-        }
+        setRowValue(viewModel.antiSpamReport.antiSpamRows[i], "AS");
     }
 
     // Other

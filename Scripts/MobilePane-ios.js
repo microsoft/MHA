@@ -1,18 +1,17 @@
 // Framework7 app object
 var myApp = null;
 var viewModel = null;
-var Office = null;
 var LogError = null;
 
-// The Office initialize function must be run each time a new page is loaded
 $(document).ready(function () {
     try {
-        Office = window.parent.Office;
-        LogError = window.parent.LogError;
         viewModel = new HeaderModel();
         initializeFramework7();
         updateStatus(ImportedStrings.mha_loading);
-        sendHeadersRequest();
+        LogError = window.parent.LogError;
+        window.parent.SetShowErrorEvent(showError);
+        window.parent.SetUpdateStatusEvent(updateStatus);
+        window.parent.SetRenderItemEvent(renderItemEvent);
     }
     catch (e) {
         updateStatus(e);
@@ -28,9 +27,18 @@ function initializeFramework7() {
     myApp.addView("#other-view");
 }
 
-function getHeadersComplete(headers) {
-    viewModel.parseHeaders(headers);
+function renderItemEvent(headers) {
+    // Empty data
+    $("#summary-content").empty();
+    $("#received-content").empty();
+    $("#antispam-content").empty();
+    $("#other-content").empty();
+
+    updateStatus(ImportedStrings.mha_loading);
+
+    viewModel = new HeaderModel(headers);
     buildViews();
+    hideStatus();
 }
 
 function buildViews() {
@@ -379,5 +387,6 @@ function hideStatus() {
 
 function showError(error, message) {
     LogError(error, message);
+    myApp.hidePreloader();
     myApp.alert(message, "An Error Occurred");
 }

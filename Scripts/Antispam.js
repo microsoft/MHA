@@ -7,18 +7,16 @@ var AntiSpamRow = function (header, label, url, set, get) {
     this.label = label;
     this.url = url;
 
-    var that = this;
-
-    this.set = set || function (value) { that.value = value; };
-    this.get = get || function () { return that.value; };
+    this.set = set || this.set;
+    this.get = get || this.get;
 };
 
 AntiSpamRow.prototype.header = "";
 AntiSpamRow.prototype.label = "";
 AntiSpamRow.prototype.url = "";
 AntiSpamRow.prototype.value = "";
-AntiSpamRow.prototype.set = function () { };
-AntiSpamRow.prototype.get = function () { };
+AntiSpamRow.prototype.set = function (_value) { this.value = _value; };
+AntiSpamRow.prototype.get = function () { return this.value; };
 
 var AntiSpamReport = function () {
     this.antiSpamRows = [
@@ -28,12 +26,6 @@ var AntiSpamReport = function () {
 };
 
 AntiSpamReport.prototype.antiSpamRows = [];
-
-AntiSpamReport.prototype.reset = function () {
-    for (var i = 0; i < this.antiSpamRows.length; i++) {
-        this.antiSpamRows[i].set("");
-    }
-};
 
 AntiSpamReport.prototype.exists = function () {
     for (var i = 0; i < this.antiSpamRows.length; i++) {
