@@ -113,10 +113,11 @@ function LogError(error, message) {
         LogArray([message, errorMessage, error.stack, "Parsing error:", err.message, err.stack]);
     };
 
-    if (error) {
-        StackTrace.fromError(error).then(callback).catch(errback);
-    } else {
+    if (!error || Object.prototype.toString.call(error) === "[object String]") {
+        viewModel.errors.push(error);
         StackTrace.get().then(callback).catch(errback);
+    } else {
+        StackTrace.fromError(error).then(callback).catch(errback);
     }
 }
 
@@ -404,7 +405,9 @@ function getDiagnostics() {
     }
 
     for (var iError = 0; iError < viewModel.errors.length; iError++) {
-        diagnostics += "ERROR: " + viewModel.errors[iError] + "\n";
+        if (viewModel.errors[iError]) {
+            diagnostics += "ERROR: " + viewModel.errors[iError] + "\n";
+        }
     }
 
     return diagnostics;
