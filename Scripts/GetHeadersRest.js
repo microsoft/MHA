@@ -18,7 +18,8 @@ function sendHeadersRequestRest(headersLoadedCallback) {
             var accessToken = result.value;
             getHeaders(accessToken, headersLoadedCallback);
         } else {
-            ShowError(null, 'Unable to obtain callback token.\n' + result.error);
+            ShowError(null, 'Unable to obtain callback token.\n' + JSON.stringify(result, null, 2));
+            sendHeadersRequestEWS(headersLoadedCallback);
         }
     });
 }
