@@ -57,7 +57,7 @@ function callbackEWS(asyncResult, headersLoadedCallback) {
             $("#originalHeaders").text(viewModel.originalHeaders);
         }
     } else if (asyncResult.error) {
-        ShowError(asyncResult.error, "EWS callback failed" + JSON.stringify(asyncResult, null, 2));
+        ShowError(asyncResult.error, "EWS callback failed\n" + JSON.stringify(asyncResult, null, 2));
     }
 }
 
