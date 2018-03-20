@@ -130,6 +130,7 @@ function FilterStack(stack) {
     return stack.filter(function (item) {
         if (!item.fileName) return true;
         if (item.fileName.indexOf("stacktrace") !== -1) return false;
+        if (item.functionName === "ShowError") return false;
         if (item.functionName === "showError") return false;
         if (item.functionName === "LogError") return false;
         if (item.functionName === "GetStack") return false;

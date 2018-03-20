@@ -18,8 +18,13 @@ function sendHeadersRequestRest(headersLoadedCallback) {
             var accessToken = result.value;
             getHeaders(accessToken, headersLoadedCallback);
         } else {
-            ShowError(null, 'Unable to obtain callback token.\n' + JSON.stringify(result, null, 2));
-            sendHeadersRequestEWS(headersLoadedCallback);
+            if (result.error.name === "AccessRestricted") {
+                // TODO: Log this, but don't error for the user
+                sendHeadersRequestEWS(headersLoadedCallback);
+            }
+            else {
+                ShowError(null, 'Unable to obtain callback token.\n' + JSON.stringify(result, null, 2));
+            }
         }
     });
 }
@@ -103,6 +108,7 @@ function getHeaders(accessToken, headersLoadedCallback) {
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         if (textStatus === "error" && jqXHR.status === 0) {
+            // TODO: Log this, but don't error for the user
             sendHeadersRequestEWS(headersLoadedCallback);
         } else {
             ShowError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
