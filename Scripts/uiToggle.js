@@ -110,7 +110,7 @@ function LogError(error, message) {
     };
 
     var errback = function (err) {
-        LogArray([message, errorMessage, err.message, err.stack]);
+        LogArray([message, errorMessage, error.stack, "Parsing error:", err.message, err.stack]);
     };
 
     if (error) {
@@ -146,7 +146,7 @@ function SetUpdateStatusEvent(newUpdateStatusEvent) {
     }
 
     // Clear out the now displayed status
-    viewModel.deferredStatus= [];
+    viewModel.deferredStatus = [];
 }
 
 // Tells the UI to show an error.
