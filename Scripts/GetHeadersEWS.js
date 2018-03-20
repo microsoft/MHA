@@ -47,7 +47,7 @@ function callbackEWS(asyncResult, headersLoadedCallback) {
                 }
             }
         } catch (e) {
-            ShowError(e, "EWS callback failed");
+            ShowError(e, "EWS callback failed parsing result");
         }
 
         if (prop) {
@@ -57,7 +57,7 @@ function callbackEWS(asyncResult, headersLoadedCallback) {
             $("#originalHeaders").text(viewModel.originalHeaders);
         }
     } else if (asyncResult.error) {
-        ShowError(asyncResult.error.message);
+        ShowError(asyncResult.error, "EWS callback failed" + JSON.stringify(asyncResult, null, 2));
     }
 }
 
