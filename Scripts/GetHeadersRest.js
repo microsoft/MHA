@@ -14,17 +14,22 @@ function sendHeadersRequestRest(headersLoadedCallback) {
     UpdateStatus(ImportedStrings.mha_RequestSent);
 
     Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
-        if (result.status === "succeeded") {
-            var accessToken = result.value;
-            getHeaders(accessToken, headersLoadedCallback);
-        } else {
-            if (result.error.name === "AccessRestricted") {
-                // TODO: Log this, but don't error for the user
-                sendHeadersRequestEWS(headersLoadedCallback);
+        try {
+            if (result.status === "succeeded") {
+                var accessToken = result.value;
+                getHeaders(accessToken, headersLoadedCallback);
+            } else {
+                if (result.error.name === "AccessRestricted") {
+                    // TODO: Log this, but don't error for the user
+                    sendHeadersRequestEWS(headersLoadedCallback);
+                }
+                else {
+                    ShowError(null, 'Unable to obtain callback token.\n' + JSON.stringify(result, null, 2));
+                }
             }
-            else {
-                ShowError(null, 'Unable to obtain callback token.\n' + JSON.stringify(result, null, 2));
-            }
+        }
+        catch (e) {
+            ShowError(e, "Failed in getCallbackTokenAsync");
         }
     });
 }
@@ -101,17 +106,27 @@ function getHeaders(accessToken, headersLoadedCallback) {
             "Accept": "application/json; odata.metadata=none"
         }
     }).done(function (item) {
-        if (item.SingleValueExtendedProperties !== undefined) {
-            headersLoadedCallback(item.SingleValueExtendedProperties[0].Value);
-        } else {
-            ShowError(null, ImportedStrings.mha_headersMissing);
+        try {
+            if (item.SingleValueExtendedProperties !== undefined) {
+                headersLoadedCallback(item.SingleValueExtendedProperties[0].Value);
+            } else {
+                ShowError(null, ImportedStrings.mha_headersMissing);
+            }
+        }
+        catch (e) {
+            ShowError(e, "Failed parsing headers");
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        if (textStatus === "error" && jqXHR.status === 0) {
-            // TODO: Log this, but don't error for the user
-            sendHeadersRequestEWS(headersLoadedCallback);
-        } else {
-            ShowError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
+        try {
+            if (textStatus === "error" && jqXHR.status === 0) {
+                // TODO: Log this, but don't error for the user
+                sendHeadersRequestEWS(headersLoadedCallback);
+            } else {
+                ShowError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
+            }
+        }
+        catch (e) {
+            ShowError(e, "Failed handling REST failure case");
         }
     });
 }
