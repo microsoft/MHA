@@ -70,7 +70,7 @@ function loadNewItem() {
 
 function SetRenderItemEvent(newRenderItemEvent) {
     renderItemEvent = newRenderItemEvent;
-    if (uiModel.headers && renderItemEvent) {
+    if (renderItemEvent) {
         renderItemEvent(uiModel.headers)
     }
 }

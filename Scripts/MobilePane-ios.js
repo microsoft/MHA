@@ -33,6 +33,7 @@ function renderItemEvent(headers) {
     $("#received-content").empty();
     $("#antispam-content").empty();
     $("#other-content").empty();
+    $("#original-headers").empty();
 
     updateStatus(ImportedStrings.mha_loading);
 
