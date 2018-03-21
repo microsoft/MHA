@@ -52,7 +52,10 @@ function InitUI() {
 function registerItemChangeEvent() {
     try {
         if (Office.context.mailbox.addHandlerAsync !== undefined) {
-            Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, loadNewItem);
+            Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, function () {
+                viewModel.errors = [];
+                loadNewItem();
+            });
         }
     } catch (e) {
         LogError(e, "Could not register item change event");
