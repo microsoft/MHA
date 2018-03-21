@@ -389,5 +389,7 @@ function hideStatus() {
 function showError(error, message) {
     LogError(error, message);
     myApp.hidePreloader();
+    $("#original-headers").text(message);
+    $("#orig-headers-ui").show();
     myApp.alert(message, "An Error Occurred");
 }
