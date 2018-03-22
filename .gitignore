@@ -3,7 +3,7 @@
 ################################################################################
 
 /website.publishproj
-#/Web.config
+/Web.config
 /MessageHeaderAnalyzerWeb/.vs/MHA/v14/.suo
 /MessageHeaderAnalyzerWeb/.vs/MHA/v14
 /MessageHeaderAnalyzerWeb/.vs/config/applicationhost.config
