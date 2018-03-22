@@ -5,16 +5,16 @@ var LogError = null;
 
 $(document).ready(function () {
     try {
-        viewModel = new HeaderModel();
-        initializeFramework7();
-        updateStatus(ImportedStrings.mha_loading);
         LogError = window.parent.LogError;
+        initializeFramework7();
+        viewModel = new HeaderModel();
+        updateStatus(ImportedStrings.mha_loading);
         window.parent.SetShowErrorEvent(showError);
         window.parent.SetUpdateStatusEvent(updateStatus);
         window.parent.SetRenderItemEvent(renderItemEvent);
     }
     catch (e) {
-        updateStatus(e);
+        showError(e, "Failed loading iOS page");
     }
 });
 
@@ -377,8 +377,10 @@ function addCalloutEntry(name, value, parent) {
 }
 
 function updateStatus(message) {
-    myApp.hidePreloader();
-    myApp.showPreloader(message);
+    if (myApp) {
+        myApp.hidePreloader();
+        myApp.showPreloader(message);
+    }
 }
 
 function hideStatus() {
@@ -386,7 +388,12 @@ function hideStatus() {
 }
 
 function showError(error, message) {
-    LogError(error, message);
-    myApp.hidePreloader();
-    myApp.alert(message, "An Error Occurred");
+    if (LogError) {
+        LogError(error, message);
+    }
+
+    if (myApp) {
+        myApp.hidePreloader();
+        myApp.alert(message, "An Error Occurred");
+    }
 }
