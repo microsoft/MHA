@@ -14,6 +14,10 @@ $(document).ready(function () {
         window.parent.SetRenderItemEvent(renderItemEvent);
     }
     catch (e) {
+        if (LogError) {
+            LogError(error, message);
+        }
+
         showError(e, "Failed loading iOS page");
     }
 });
@@ -387,11 +391,9 @@ function hideStatus() {
     myApp.hidePreloader();
 }
 
+// Handles rendering of an error.
+// Does not log the error - caller is responsible for calling LogError
 function showError(error, message) {
-    if (LogError) {
-        LogError(error, message);
-    }
-
     if (myApp) {
         myApp.hidePreloader();
         myApp.alert(message, "An Error Occurred");
