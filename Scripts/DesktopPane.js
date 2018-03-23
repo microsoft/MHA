@@ -356,8 +356,9 @@ function hideStatus() {
     overlay.hide();
 }
 
+// Handles rendering of an error.
+// Does not log the error - caller is responsible for calling LogError
 function showError(error, message) {
-    LogError(error, message);
     $("#error-display .ms-MessageBar-text").text(message);
     $("#error-display").show();
 }
