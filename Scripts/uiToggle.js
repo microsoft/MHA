@@ -122,6 +122,10 @@ function LogError(error, message) {
     } else {
         StackTrace.fromError(error).then(callback).catch(errback);
     }
+
+    if (error) {
+        appInsights.trackException(error);
+    }
 }
 
 // Log an array of strings as an error, removing null/empty values before joining
