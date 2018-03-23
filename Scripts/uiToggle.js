@@ -52,7 +52,10 @@ function InitUI() {
 function registerItemChangeEvent() {
     try {
         if (Office.context.mailbox.addHandlerAsync !== undefined) {
-            Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, loadNewItem);
+            Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, function () {
+                viewModel.errors = [];
+                loadNewItem();
+            });
         }
     } catch (e) {
         LogError(e, "Could not register item change event");
@@ -70,7 +73,7 @@ function loadNewItem() {
 
 function SetRenderItemEvent(newRenderItemEvent) {
     renderItemEvent = newRenderItemEvent;
-    if (uiModel.headers && renderItemEvent) {
+    if (renderItemEvent) {
         renderItemEvent(uiModel.headers)
     }
 }
@@ -130,6 +133,7 @@ function FilterStack(stack) {
     return stack.filter(function (item) {
         if (!item.fileName) return true;
         if (item.fileName.indexOf("stacktrace") !== -1) return false;
+        if (item.functionName === "ShowError") return false;
         if (item.functionName === "showError") return false;
         if (item.functionName === "LogError") return false;
         if (item.functionName === "GetStack") return false;

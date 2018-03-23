@@ -24,40 +24,44 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
 
 // Function called when the EWS request is complete.
 function callbackEWS(asyncResult, headersLoadedCallback) {
-    // Process the returned response here.
-    if (asyncResult.value) {
-        viewModel.originalHeaders = asyncResult.value;
-        var prop = null;
-        try {
-            var response = $.parseXML(asyncResult.value);
-            var responseDom = $(response);
+    try {
+        // Process the returned response here.
+        if (asyncResult.value) {
+            viewModel.originalHeaders = asyncResult.value;
+            var prop = null;
+            try {
+                var response = $.parseXML(asyncResult.value);
+                var responseDom = $(response);
 
-            if (responseDom) {
-                //// See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
-                //// See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
-                // We can do this because we know there's only the one property.
-                var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
-                if (extendedProperty.length > 0) {
-                    prop = extendedProperty[0];
-                } else {
-                    var messageText = responseDom.filterNode("m:MessageText");
-                    if (messageText.length > 0) {
-                        ShowError(null, messageText[0].textContent);
+                if (responseDom) {
+                    //// See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
+                    //// See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
+                    // We can do this because we know there's only the one property.
+                    var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
+                    if (extendedProperty.length > 0) {
+                        prop = extendedProperty[0];
+                    } else {
+                        var messageText = responseDom.filterNode("m:MessageText");
+                        if (messageText.length > 0) {
+                            ShowError(null, messageText[0].textContent);
+                        }
                     }
                 }
+            } catch (e) {
+                ShowError(e, "EWS callback failed parsing result");
             }
-        } catch (e) {
-            ShowError(e, "EWS callback failed");
-        }
 
-        if (prop) {
-            headersLoadedCallback(prop.textContent);
-        } else {
-            UpdateStatus(ImportedStrings.mha_requestFailed);
-            $("#originalHeaders").text(viewModel.originalHeaders);
+            if (prop) {
+                headersLoadedCallback(prop.textContent);
+            } else {
+                ShowError(null, ImportedStrings.mha_requestFailed);
+            }
+        } else if (asyncResult.error) {
+            ShowError(null, "EWS callback failed\n" + JSON.stringify(asyncResult, null, 2));
         }
-    } else if (asyncResult.error) {
-        ShowError(asyncResult.error.message);
+    }
+    catch (e) {
+        ShowError(e, "Failed handling EWS callback");
     }
 }
 
