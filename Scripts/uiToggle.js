@@ -404,6 +404,7 @@ function getDiagnostics() {
         diagnostics += "contentLanguage = " + Office.context.contentLanguage + "\n";
         diagnostics += "displayLanguage = " + Office.context.displayLanguage + "\n";
         diagnostics += "touchEnabled = " + Office.context.touchEnabled + "\n";
+        diagnostics += "permissions = " + Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
     } catch (e) {
         diagnostics += "ERROR: Failed to get diagnostics\n";
     }
