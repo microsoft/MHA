@@ -15,7 +15,7 @@ $(document).ready(function () {
 });
 
 function enableSpinner() {
-    $("#response").css("background-image", "url(../Resources/loader.gif)");
+    $("#response").css("background-image", "url(/Resources/loader.gif)");
     $("#response").css("background-repeat", "no-repeat");
     $("#response").css("background-position", "center");
 }
@@ -46,6 +46,8 @@ function renderItemEvent(headers) {
     hideStatus();
 }
 
+// Handles rendering of an error.
+// Does not log the error - caller is responsible for calling LogError
 function showError(error, message) {
     updateStatus(message);
     disableSpinner();
