@@ -32,20 +32,26 @@ Office.initialize = function () {
     });
 };
 
+function site() { return window.location.protocol + "//" + window.location.host; }
+
 function sendMessage(eventName, data) {
     if (iFrame) {
-        iFrame.postMessage({ eventName: eventName, data: data }, "*");
+        iFrame.postMessage({ eventName: eventName, data: data }, site());
     }
 }
 
 function eventListener(event) {
-    switch (event.data.eventName) {
-        case "frameActive":
-            SetFrame(event.source);
-            break;
-        case "LogError":
-            LogError(JSON.parse(event.data.data.error), event.data.data.message);
-            break;
+    if (event.origin !== site()) return;
+
+    if (event && event.data) {
+        switch (event.data.eventName) {
+            case "frameActive":
+                SetFrame(event.source);
+                break;
+            case "LogError":
+                LogError(JSON.parse(event.data.data.error), event.data.data.message);
+                break;
+        }
     }
 }
 

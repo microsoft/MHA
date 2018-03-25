@@ -16,21 +16,27 @@ $(document).ready(function () {
     }
 });
 
+function site() { return window.location.protocol + "//" + window.location.host; }
+
 function sendMessage(eventName, data) {
-    window.parent.postMessage({ eventName: eventName, data: data }, "*");
+    window.parent.postMessage({ eventName: eventName, data: data }, site());
 }
 
 function eventListener(event) {
-    switch (event.data.eventName) {
-        case "showError":
-            showError(event.data.data.error, event.data.data.message);
-            break;
-        case "updateStatus":
-            updateStatus(event.data.data);
-            break;
-        case "renderItem":
-            renderItem(event.data.data);
-            break;
+    if (event.origin !== site()) return;
+
+    if (event && event.data) {
+        switch (event.data.eventName) {
+            case "showError":
+                showError(event.data.data.error, event.data.data.message);
+                break;
+            case "updateStatus":
+                updateStatus(event.data.data);
+                break;
+            case "renderItem":
+                renderItem(event.data.data);
+                break;
+        }
     }
 }
 
