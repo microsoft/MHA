@@ -107,7 +107,7 @@ function SetFrame(frame) {
 
         // If we have any deferred errors, signal them
         for (var iError = 0; iError < viewModel.deferredErrors.length; iError++) {
-            sendMessage("showError", { error: viewModel.deferredErrors[iError][0], message: viewModel.deferredErrors[iError][1] });
+            sendMessage("showError", { error: JSON.stringify(viewModel.deferredErrors[iError][0]), message: viewModel.deferredErrors[iError][1] });
         }
 
         // Clear out the now displayed errors
@@ -121,7 +121,7 @@ function SetFrame(frame) {
 function ShowError(error, message) {
     LogError(error, message);
     if (iFrame) {
-        sendMessage("showError", { error: error, message: message });
+        sendMessage("showError", { error: JSON.stringify(error), message: message });
     }
     else {
         // We don't have an iFrame, so defer the message

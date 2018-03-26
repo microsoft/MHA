@@ -28,7 +28,7 @@ function eventListener(event) {
     if (event && event.data) {
         switch (event.data.eventName) {
             case "showError":
-                showError(event.data.data.error, event.data.data.message);
+                showError(JSON.parse(event.data.data.error), event.data.data.message);
                 break;
             case "updateStatus":
                 updateStatus(event.data.data);
