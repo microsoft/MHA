@@ -41,9 +41,9 @@ function postMessageToFrame(eventName, data) {
 }
 
 function eventListener(event) {
-    if (event.origin !== site()) return;
+    if (!event || event.origin !== site()) return;
 
-    if (event && event.data) {
+    if (event.data) {
         switch (event.data.eventName) {
             case "frameActive":
                 SetFrame(event.source);

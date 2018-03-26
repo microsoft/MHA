@@ -23,9 +23,9 @@ function postMessageToParent(eventName, data) {
 }
 
 function eventListener(event) {
-    if (event.origin !== site()) return;
+    if (!event || event.origin !== site()) return;
 
-    if (event && event.data) {
+    if (event.data) {
         switch (event.data.eventName) {
             case "showError":
                 showError(JSON.parse(event.data.data.error), event.data.data.message);
