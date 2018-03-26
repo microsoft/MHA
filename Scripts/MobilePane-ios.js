@@ -40,6 +40,10 @@ function eventListener(event) {
     }
 }
 
+function LogError(error, message) {
+    postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+}
+
 function initializeFramework7() {
     myApp = new Framework7();
 

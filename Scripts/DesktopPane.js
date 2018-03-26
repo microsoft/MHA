@@ -40,6 +40,10 @@ function eventListener(event) {
     }
 }
 
+function LogError(error, message) {
+    postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+}
+
 function initializeFabric() {
     var overlayComponent = document.querySelector(".ms-Overlay");
     // Override click so user can't dismiss overlay
