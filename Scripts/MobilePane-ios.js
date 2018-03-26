@@ -1,26 +1,44 @@
 // Framework7 app object
 var myApp = null;
 var viewModel = null;
-var LogError = null;
 
 $(document).ready(function () {
     try {
-        LogError = window.parent.LogError;
         initializeFramework7();
         viewModel = new HeaderModel();
         updateStatus(ImportedStrings.mha_loading);
-        window.parent.SetShowErrorEvent(showError);
-        window.parent.SetUpdateStatusEvent(updateStatus);
-        window.parent.SetRenderItemEvent(renderItemEvent);
+        window.addEventListener("message", eventListener, false);
+        postMessageToParent("frameActive");
     }
     catch (e) {
-        if (LogError) {
-            LogError(error, message);
-        }
-
-        showError(e, "Failed loading iOS page");
+        LogError(e, "Failed initializing frame");
+        showError(e, "Failed initializing frame");
     }
 });
+
+function site() { return window.location.protocol + "//" + window.location.host; }
+
+function postMessageToParent(eventName, data) {
+    window.parent.postMessage({ eventName: eventName, data: data }, site());
+}
+
+function eventListener(event) {
+    if (!event || event.origin !== site()) return;
+
+    if (event.data) {
+        switch (event.data.eventName) {
+            case "showError":
+                showError(JSON.parse(event.data.data.error), event.data.data.message);
+                break;
+            case "updateStatus":
+                updateStatus(event.data.data);
+                break;
+            case "renderItem":
+                renderItem(event.data.data);
+                break;
+        }
+    }
+}
 
 function initializeFramework7() {
     myApp = new Framework7();
@@ -31,7 +49,7 @@ function initializeFramework7() {
     myApp.addView("#other-view");
 }
 
-function renderItemEvent(headers) {
+function renderItem(headers) {
     // Empty data
     $("#summary-content").empty();
     $("#received-content").empty();

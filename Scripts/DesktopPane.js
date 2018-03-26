@@ -1,17 +1,44 @@
 var overlay = null;
 var spinner = null;
 var viewModel = null;
-var LogError = null;
 
 $(document).ready(function () {
-    LogError = window.parent.LogError;
-    viewModel = new HeaderModel();
-    initializeFabric();
-    updateStatus(ImportedStrings.mha_loading);
-    window.parent.SetShowErrorEvent(showError);
-    window.parent.SetUpdateStatusEvent(updateStatus);
-    window.parent.SetRenderItemEvent(renderItemEvent);
+    try {
+        viewModel = new HeaderModel();
+        initializeFabric();
+        updateStatus(ImportedStrings.mha_loading);
+        window.addEventListener("message", eventListener, false);
+        postMessageToParent("frameActive");
+    }
+    catch (e) {
+        LogError(e, "Failed initializing frame");
+        showError(e, "Failed initializing frame");
+    }
 });
+
+function site() { return window.location.protocol + "//" + window.location.host; }
+
+function postMessageToParent(eventName, data) {
+    window.parent.postMessage({ eventName: eventName, data: data }, site());
+}
+
+function eventListener(event) {
+    if (!event || event.origin !== site()) return;
+
+    if (event.data) {
+        switch (event.data.eventName) {
+            case "showError":
+                showError(JSON.parse(event.data.data.error), event.data.data.message);
+                break;
+            case "updateStatus":
+                updateStatus(event.data.data);
+                break;
+            case "renderItem":
+                renderItem(event.data.data);
+                break;
+        }
+    }
+}
 
 function initializeFabric() {
     var overlayComponent = document.querySelector(".ms-Overlay");
@@ -67,7 +94,7 @@ function initializeFabric() {
     });
 }
 
-function renderItemEvent(headers) {
+function renderItem(headers) {
     // Empty data
     $(".summary-list").empty();
     $("#original-headers code").empty();

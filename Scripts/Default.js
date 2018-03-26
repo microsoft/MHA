@@ -1,18 +1,49 @@
 ﻿var viewModel = null;
-var LogError = null;
 
 // This function is run when the app is ready to start interacting with the host application.
 // It ensures the DOM is ready before updating the span elements with values from the current message.
 $(document).ready(function () {
-    LogError = window.parent.LogError;
-    $(window).resize(onResize);
-    viewModel = new HeaderModel();
-    initializeTableUI();
-    updateStatus(ImportedStrings.mha_loading);
-    window.parent.SetShowErrorEvent(showError);
-    window.parent.SetUpdateStatusEvent(updateStatus);
-    window.parent.SetRenderItemEvent(renderItemEvent);
+    try {
+        $(window).resize(onResize);
+        viewModel = new HeaderModel();
+        initializeTableUI();
+        updateStatus(ImportedStrings.mha_loading);
+        window.addEventListener("message", eventListener, false);
+        postMessageToParent("frameActive");
+    }
+    catch (e) {
+        LogError(e, "Failed initializing frame");
+        showError(e, "Failed initializing frame");
+    }
 });
+
+function site() { return window.location.protocol + "//" + window.location.host; }
+
+function postMessageToParent(eventName, data) {
+    window.parent.postMessage({ eventName: eventName, data: data }, site());
+}
+
+function eventListener(event) {
+    if (!event || event.origin !== site()) return;
+
+    if (event.data) {
+        switch (event.data.eventName) {
+            case "showError":
+                showError(JSON.parse(event.data.data.error), event.data.data.message);
+                break;
+            case "updateStatus":
+                updateStatus(event.data.data);
+                break;
+            case "renderItem":
+                renderItem(event.data.data);
+                break;
+        }
+    }
+}
+
+function LogError(error, message) {
+    postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+}
 
 function enableSpinner() {
     $("#response").css("background-image", "url(/Resources/loader.gif)");
@@ -38,7 +69,7 @@ function updateStatus(statusText) {
     recalculateVisibility();
 }
 
-function renderItemEvent(headers) {
+function renderItem(headers) {
     updateStatus(ImportedStrings.mha_foundHeaders);
     $("#originalHeaders").text(headers);
     viewModel = new HeaderModel(headers);

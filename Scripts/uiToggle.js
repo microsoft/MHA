@@ -12,9 +12,7 @@ uiModel.prototype.deferredErrors = [];
 uiModel.prototype.deferredStatus = [];
 uiModel.prototype.headers = "";
 
-var renderItemEvent = null;
-var showErrorEvent = null;
-var updateStatusEvent = null;
+var iFrame = null;
 var uiChoice = function (label, url, checked) {
     this.label = label;
     this.url = url;
@@ -29,9 +27,33 @@ Office.initialize = function () {
     $(document).ready(function () {
         viewModel = new uiModel();
         InitUI();
+        window.addEventListener("message", eventListener, false);
         loadNewItem();
     });
 };
+
+function site() { return window.location.protocol + "//" + window.location.host; }
+
+function postMessageToFrame(eventName, data) {
+    if (iFrame) {
+        iFrame.postMessage({ eventName: eventName, data: data }, site());
+    }
+}
+
+function eventListener(event) {
+    if (!event || event.origin !== site()) return;
+
+    if (event.data) {
+        switch (event.data.eventName) {
+            case "frameActive":
+                SetFrame(event.source);
+                break;
+            case "LogError":
+                LogError(JSON.parse(event.data.data.error), event.data.data.message);
+                break;
+        }
+    }
+}
 
 function InitUI() {
     buildGearDialog('uiToggleFrame', uiChoices);
@@ -64,47 +86,51 @@ function registerItemChangeEvent() {
 
 function loadNewItem() {
     sendHeadersRequest(function (headers) {
-        uiModel.headers = headers;
-        if (renderItemEvent) {
-            renderItemEvent(uiModel.headers);
+        viewModel.headers = headers;
+        if (iFrame) {
+            postMessageToFrame("renderItem", viewModel.headers);
         }
     });
 }
 
-function SetRenderItemEvent(newRenderItemEvent) {
-    renderItemEvent = newRenderItemEvent;
-    if (renderItemEvent) {
-        renderItemEvent(uiModel.headers)
+function SetFrame(frame) {
+    iFrame = frame;
+
+    if (iFrame) {
+        // If we have any deferred status, signal them
+        for (var iStatus = 0; iStatus < viewModel.deferredStatus.length; iStatus++) {
+            postMessageToFrame("updateStatus", viewModel.deferredStatus[iStatus]);
+        }
+
+        // Clear out the now displayed status
+        viewModel.deferredStatus = [];
+
+        // If we have any deferred errors, signal them
+        for (var iError = 0; iError < viewModel.deferredErrors.length; iError++) {
+            postMessageToFrame("showError", { error: JSON.stringify(viewModel.deferredErrors[iError][0]), message: viewModel.deferredErrors[iError][1] });
+        }
+
+        // Clear out the now displayed errors
+        viewModel.deferredErrors = [];
+
+        postMessageToFrame("renderItem", viewModel.headers);
     }
-}
-
-function SetShowErrorEvent(newShowErrorEvent) {
-    showErrorEvent = newShowErrorEvent;
-    if (!showErrorEvent) return;
-
-    // If we have any deferred errors, signal them
-    for (var iError = 0; iError < viewModel.deferredErrors.length; iError++) {
-        showErrorEvent(viewModel.deferredErrors[iError][0], viewModel.deferredErrors[iError][1]);
-    }
-
-    // Clear out the now displayed errors
-    viewModel.deferredErrors = [];
 }
 
 // Tells the UI to show an error.
 function ShowError(error, message) {
     LogError(error, message);
-    if (showErrorEvent) {
-        showErrorEvent(error, message);
+    if (iFrame) {
+        postMessageToFrame("showError", { error: JSON.stringify(error), message: message });
     }
     else {
-        // We don't have a showErrorEvent, so defer the message
+        // We don't have an iFrame, so defer the message
         viewModel.deferredErrors.push([error, message]);
     }
 }
 
 function LogError(error, message) {
-    var errorMessage = error ? error.message : '';
+    var errorMessage = error ? (error.message ? error.message : error.description) : '';
     var callback = function (stackframes) {
         LogArray([message, errorMessage].concat(
             FilterStack(stackframes).map(function (sf) {
@@ -145,26 +171,13 @@ function FilterStack(stack) {
     });
 }
 
-function SetUpdateStatusEvent(newUpdateStatusEvent) {
-    updateStatusEvent = newUpdateStatusEvent;
-    if (!updateStatusEvent) return;
-
-    // If we have any deferred status, signal them
-    for (var iStatus = 0; iStatus < viewModel.deferredStatus.length; iStatus++) {
-        updateStatusEvent(viewModel.deferredStatus[iStatus]);
-    }
-
-    // Clear out the now displayed status
-    viewModel.deferredStatus = [];
-}
-
 // Tells the UI to show an error.
 function UpdateStatus(statusText) {
-    if (updateStatusEvent) {
-        updateStatusEvent(statusText);
+    if (iFrame) {
+        postMessageToFrame("updateStatus", statusText);
     }
     else {
-        // We don't have a updateStatusEvent, so defer the status
+        // We don't have an iFrame, so defer the status
         viewModel.deferredStatus.push(statusText);
     }
 }
@@ -179,6 +192,7 @@ function getSettingsKey() {
 }
 
 function go(choice) {
+    iFrame = null;
     viewModel.currentChoice = choice;
     loadItemEvent = null;
     document.getElementById('uiFrame').src = choice.url;
@@ -408,7 +422,7 @@ function getDiagnostics() {
         diagnostics += "contentLanguage = " + Office.context.contentLanguage + "\n";
         diagnostics += "displayLanguage = " + Office.context.displayLanguage + "\n";
         diagnostics += "touchEnabled = " + Office.context.touchEnabled + "\n";
-        diagnostics += "permissions = " + Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
+        diagnostics += "permissions = " + Office.context.mailbox._initialData$p$0._permissionLevel$p$0 + "\n";
     } catch (e) {
         diagnostics += "ERROR: Failed to get diagnostics\n";
     }
