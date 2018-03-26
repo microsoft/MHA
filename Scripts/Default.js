@@ -9,7 +9,7 @@ $(document).ready(function () {
         initializeTableUI();
         updateStatus(ImportedStrings.mha_loading);
         window.addEventListener("message", eventListener, false);
-        sendMessage("frameActive");
+        postMessageToParent("frameActive");
     }
     catch (e) {
         LogError(e, "Failed initializing frame");
@@ -19,7 +19,7 @@ $(document).ready(function () {
 
 function site() { return window.location.protocol + "//" + window.location.host; }
 
-function sendMessage(eventName, data) {
+function postMessageToParent(eventName, data) {
     window.parent.postMessage({ eventName: eventName, data: data }, site());
 }
 
@@ -42,7 +42,7 @@ function eventListener(event) {
 }
 
 function LogError(error, message) {
-    sendMessage("LogError", { error: JSON.stringify(error), message: message });
+    postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
 function enableSpinner() {

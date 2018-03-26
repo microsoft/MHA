@@ -34,7 +34,7 @@ Office.initialize = function () {
 
 function site() { return window.location.protocol + "//" + window.location.host; }
 
-function sendMessage(eventName, data) {
+function postMessageToFrame(eventName, data) {
     if (iFrame) {
         iFrame.postMessage({ eventName: eventName, data: data }, site());
     }
@@ -88,7 +88,7 @@ function loadNewItem() {
     sendHeadersRequest(function (headers) {
         viewModel.headers = headers;
         if (iFrame) {
-            sendMessage("renderItem", viewModel.headers);
+            postMessageToFrame("renderItem", viewModel.headers);
         }
     });
 }
@@ -99,7 +99,7 @@ function SetFrame(frame) {
     if (iFrame) {
         // If we have any deferred status, signal them
         for (var iStatus = 0; iStatus < viewModel.deferredStatus.length; iStatus++) {
-            sendMessage("updateStatus", viewModel.deferredStatus[iStatus]);
+            postMessageToFrame("updateStatus", viewModel.deferredStatus[iStatus]);
         }
 
         // Clear out the now displayed status
@@ -107,13 +107,13 @@ function SetFrame(frame) {
 
         // If we have any deferred errors, signal them
         for (var iError = 0; iError < viewModel.deferredErrors.length; iError++) {
-            sendMessage("showError", { error: JSON.stringify(viewModel.deferredErrors[iError][0]), message: viewModel.deferredErrors[iError][1] });
+            postMessageToFrame("showError", { error: JSON.stringify(viewModel.deferredErrors[iError][0]), message: viewModel.deferredErrors[iError][1] });
         }
 
         // Clear out the now displayed errors
         viewModel.deferredErrors = [];
 
-        sendMessage("renderItem", viewModel.headers);
+        postMessageToFrame("renderItem", viewModel.headers);
     }
 }
 
@@ -121,7 +121,7 @@ function SetFrame(frame) {
 function ShowError(error, message) {
     LogError(error, message);
     if (iFrame) {
-        sendMessage("showError", { error: JSON.stringify(error), message: message });
+        postMessageToFrame("showError", { error: JSON.stringify(error), message: message });
     }
     else {
         // We don't have an iFrame, so defer the message
@@ -174,7 +174,7 @@ function FilterStack(stack) {
 // Tells the UI to show an error.
 function UpdateStatus(statusText) {
     if (iFrame) {
-        sendMessage("updateStatus", statusText);
+        postMessageToFrame("updateStatus", statusText);
     }
     else {
         // We don't have an iFrame, so defer the status
