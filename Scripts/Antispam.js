@@ -1,7 +1,11 @@
+/* global ImportedStrings */
+/* global ParseAntiSpamReport */
+
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
 /// <reference path="Headers.js" />
 /// <reference path="ForefrontAntispam.js" />
+
 var AntiSpamRow = function (header, label, url, set, get) {
     this.header = header;
     this.label = label;

@@ -1,3 +1,8 @@
+/* global $ */
+/* global HeaderModel */
+/* global ImportedStrings */
+/* global mapHeaderToURL */
+
 var overlay = null;
 var spinner = null;
 var viewModel = null;
@@ -122,7 +127,6 @@ function buildViews() {
     var headerName;
     var headerVal;
     var pre;
-    var code;
     var i;
     for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
         if (viewModel.summary.summaryRows[i].get()) {
@@ -135,7 +139,7 @@ function buildViews() {
                 .addClass("code-box")
                 .appendTo(summaryList);
             pre = $("<pre/>").appendTo(headerVal);
-            code = $("<code/>")
+            $("<code/>")
                 .text(viewModel.summary.summaryRows[i].get())
                 .appendTo(pre);
         }
@@ -341,7 +345,7 @@ function buildViews() {
                 .addClass("code-box")
                 .appendTo(otherList);
             pre = $("<pre/>").appendTo(headerVal);
-            code = $("<code/>")
+            $("<code/>")
                 .text(viewModel.otherHeaders.otherRows[i].value)
                 .appendTo(pre);
         }
