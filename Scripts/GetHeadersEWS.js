@@ -1,3 +1,12 @@
+/* global $ */
+/* global ImportedStrings */
+/* global jQuery */
+/* global Office */
+/* global ShowError */
+/* global UpdateStatus */
+/* global viewModel */
+/* exported sendHeadersRequestEWS */
+
 /**
  * GetHeaderEWS.js
  *

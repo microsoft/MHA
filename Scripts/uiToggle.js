@@ -1,3 +1,14 @@
+/* global $ */
+/* global appInsights */
+/* global fabric */
+/* global Office */
+/* global sendHeadersRequest */
+/* global StackTrace */
+/* global uiChoices */
+/* global viewModel */
+/* exported ShowError */
+/* exported UpdateStatus */
+
 var uiModel = function () {
     this.currentChoice = {};
     this.errors = [];
@@ -194,7 +205,6 @@ function getSettingsKey() {
 function go(choice) {
     iFrame = null;
     viewModel.currentChoice = choice;
-    loadItemEvent = null;
     document.getElementById('uiFrame').src = choice.url;
     if (Office.context) {
         Office.context.roamingSettings.set(getSettingsKey(), choice);
@@ -291,7 +301,7 @@ function buildGearDialog(id, uiChoices) {
     var actionsSettingsButtonDiag = Create(actionsSettings, "button", "ms-Button ms-Dialog-action");
     actionsSettingsButtonDiag.attr("id", "actionsSettings-diag");
     //        <span class="ms-Button-label">OK</span>
-    var actionsSettingsButtonDiagLabel = Create(actionsSettingsButtonDiag, "span", "ms-Button-label");
+    Create(actionsSettingsButtonDiag, "span", "ms-Button-label");
     actionsSettingsButtonDiag.text("diagnostics");
     //      </button>
     //      <button class="ms-Button ms-Dialog-action ms-Button--primary">

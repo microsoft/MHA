@@ -1,3 +1,12 @@
+/* global $ */
+/* global ImportedStrings */
+/* global LogError */
+/* global Office */
+/* global sendHeadersRequestEWS */
+/* global ShowError */
+/* global UpdateStatus */
+/* exported sendHeadersRequestRest */
+
 /**
  * GetHeaderRest.js
  *

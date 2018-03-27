@@ -1,3 +1,6 @@
+/* global Office */
+/* exported statusUpdate */
+
 /**
  * Currently this file isn't used since we have no UI-less buttons
  * If any UI-less buttons are added, define the functions here

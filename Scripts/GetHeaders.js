@@ -1,3 +1,9 @@
+/* global Office */
+/* global sendHeadersRequestEWS */
+/* global sendHeadersRequestRest */
+/* global ShowError */
+/* exported sendHeadersRequest */
+
 /**
  * GetHeaderRest.js
  *
