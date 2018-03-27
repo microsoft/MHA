@@ -1,3 +1,7 @@
+/* global $ */
+/* global Framework7 */
+/* global URI */
+
 // Check mobile platform
 
 $(document).ready(function () {

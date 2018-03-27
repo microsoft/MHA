@@ -1,3 +1,16 @@
+/* global $ */
+/* global HeaderModel */
+/* global ImportedStrings */
+/* global initializeTableUI */
+/* global makeResizablePane */
+/* global onResize */
+/* global rebuildTables */
+/* global rebuildSections */
+/* global recalculateVisibility */
+/* global setArrows */
+/* exported analyzeHeaders */
+/* exported clearHeaders */
+
 var viewModel = null;
 
 if (window.jQuery) {

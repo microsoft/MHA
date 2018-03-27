@@ -1,3 +1,12 @@
+/* global $ */
+/* global ImportedStrings */
+/* global mapHeaderToURL */
+/* global updateStatus */
+/* global viewModel */
+/* exported initializeTableUI */
+/* exported onResize */
+/* exported rebuildTables */
+
 function initializeTableUI() {
     // Headers
     makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
@@ -354,7 +363,7 @@ function setArrows(table, colName, sortOrder) {
 }
 
 function setRowValue(row, type) {
-    headerVal = $("#" + row.header + type + "Val");
+    var headerVal = $("#" + row.header + type + "Val");
     if (headerVal) {
         var val = row.get();
         if (val) {
@@ -373,7 +382,6 @@ function setRowValue(row, type) {
 // Rebuilds content and recalculates what sections should be displayed
 function rebuildSections() {
     var i;
-    var headerVal;
     var row;
 
     // Summary

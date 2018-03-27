@@ -1,3 +1,10 @@
+/* global $ */
+/* global Framework7 */
+/* global HeaderModel */
+/* global ImportedStrings */
+/* global mapHeaderToURL */
+/* global moment */
+
 // Framework7 app object
 var myApp = null;
 var viewModel = null;
@@ -217,7 +224,7 @@ function buildViews() {
                     .text(viewModel.receivedHeaders.receivedRows[i].delay)
                     .appendTo(progress);
 
-                var progressWrap = $("<p/>")
+                $("<p/>")
                     .addClass("progress-wrap-" + i)
                     .appendTo(progress);
 
@@ -379,7 +386,7 @@ function addSpamReportRow(spamRow, parent) {
             .addClass("accordion-item-content")
             .appendTo(item);
 
-        contentBlock = $("<div/>")
+        var contentBlock = $("<div/>")
             .addClass("content-block")
             .appendTo(itemContent);
 

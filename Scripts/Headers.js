@@ -1,3 +1,11 @@
+/* global AntiSpamReport */
+/* global clean2047Encoding */
+/* global ForefrontAntiSpamReport */
+/* global Other */
+/* global Received */
+/* global Summary */
+/* exported mapHeaderToURL */
+
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
 /// <reference path="2047.js" />

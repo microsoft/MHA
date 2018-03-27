@@ -1,4 +1,6 @@
-﻿/// <reference path="Table.js" />
+﻿/* global mapHeaderToURL */
+
+/// <reference path="Table.js" />
 /// <reference path="Strings.js" />
 /// <reference path="Headers.js" />
 

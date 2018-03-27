@@ -1,3 +1,5 @@
+/* global ImportedStrings */
+
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
 

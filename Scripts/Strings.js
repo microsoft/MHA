@@ -1,3 +1,5 @@
+/* exported ImportedStrings */
+
 var ImportedStrings = {
     // REST
     mha_loading: "Loading...",
