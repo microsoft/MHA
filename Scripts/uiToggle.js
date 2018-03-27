@@ -5,10 +5,10 @@
 /* global sendHeadersRequest */
 /* global StackTrace */
 /* global uiChoices */
-/* global viewModel */
 /* exported ShowError */
 /* exported UpdateStatus */
 
+var viewModel = null;
 var uiModel = function () {
     this.currentChoice = {};
     this.errors = [];
