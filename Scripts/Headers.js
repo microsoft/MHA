@@ -97,7 +97,7 @@ function GetHeaderList(headers) {
         // This expression will give us:
         // match[1] - everything before the first colon, assuming no spaces (header).
         // match[2] - everything after the first colon (value).
-        var match = line.match(/(^[\w-\.]*?): ?(.*)/);
+        var match = line.match(/(^[\w-.]*?): ?(.*)/);
 
         // There's one false positive we might get: if the time in a Received header has been
         // folded to the next line, the line might start with something like "16:20:05 -0400".
