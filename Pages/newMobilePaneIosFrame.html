@@ -19,11 +19,13 @@
 
         window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length && appInsights.trackPageView();
     </script>
-    <script crossorigin="anonymous" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.0.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery.min.js"></script>
     <script>
         // Fallback to load jQuery from a local path if the CDN is unavailable.
-        (window.jQuery || document.write('<script src="/Scripts/jquery-2.1.0.min.js"><\/script>'));
+        (window.jQuery || document.write('<script src="/node_modules/jquery/dist/jquery.min.js"><\/script>'));
     </script>
+
     <script crossorigin="anonymous" src="https://unpkg.com/codepage@1.11.1/dist/sbcs.full.js"></script>
     <script>
         (window.cptable || document.write('<script src="/node_modules/codepage/dist/sbcs.full.js"><\/script>'));

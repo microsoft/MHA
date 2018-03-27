@@ -18,6 +18,7 @@
   "homepage": "https://github.com/stephenegriffin/mha#readme",
   "dependencies": {
     "codepage": "^1.12.2",
+    "jquery": "^3.3.1",
     "jwt-decode": "^2.2.0",
     "stacktrace-js": "^2.0.0"
   }
