@@ -237,9 +237,12 @@ function makeResizableTable(id, title, visibility) {
     lessSpan.html("&ndash;&nbsp;");
     captionDiv.append(lessSpan);
 
+    var tbody = $(document.createElement("tbody"));
+
     // Now that everything is built, put it together
     pane.wrap(wrap);
     pane.before(header);
+    pane.append(tbody);
     var caption = $(pane[0].createCaption());
     caption.prepend(captionDiv);
     header.hide();
