@@ -3,7 +3,6 @@
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
 /// <reference path="Headers.js" />
-/// <reference path="jquery-2.1.0.min.js" />
 
 var ReceivedRow = function () {
 };
