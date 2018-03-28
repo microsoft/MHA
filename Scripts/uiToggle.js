@@ -96,12 +96,14 @@ function registerItemChangeEvent() {
 }
 
 function loadNewItem() {
-    sendHeadersRequest(function (headers) {
-        viewModel.headers = headers;
-        if (iFrame) {
-            postMessageToFrame("renderItem", viewModel.headers);
-        }
-    });
+    if (Office.context.mailbox.item) {
+        sendHeadersRequest(function (headers) {
+            viewModel.headers = headers;
+            if (iFrame) {
+                postMessageToFrame("renderItem", viewModel.headers);
+            }
+        });
+    }
 }
 
 function SetFrame(frame) {
