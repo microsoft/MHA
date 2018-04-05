@@ -465,7 +465,7 @@ function getDiagnosticsMap() {
 function getDiagnostics() {
     var diagnostics = "";
     try {
-        diagnosticsMap = getDiagnosticsMap();
+        var diagnosticsMap = getDiagnosticsMap();
         for (var diag in diagnosticsMap) {
             diagnostics += diag + " = " + diagnosticsMap[diag] + "\n";
         }
