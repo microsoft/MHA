@@ -156,7 +156,7 @@ function LogError(error, message) {
     };
 
     if (!error || Object.prototype.toString.call(error) === "[object String]") {
-        viewModel.errors.push(error);
+        pushError(error);
         StackTrace.get().then(callback).catch(errback);
     } else {
         StackTrace.fromError(error).then(callback).catch(errback);
@@ -169,7 +169,16 @@ function LogError(error, message) {
 
 // Log an array of strings as an error, removing null/empty values before joining
 function LogArray(array) {
-    viewModel.errors.push((array.filter(function (item) { return item; })).join('\n'));
+    pushError((array.filter(function (item) { return item; })).join('\n'));
+}
+
+function pushError(errorString) {
+    if (errorString) {
+        viewModel.errors.push(errorString);
+        var props = getDiagnosticsMap();
+        props["Custom Error"] = errorString;
+        appInsights.trackEvent("Error String", props);
+    }
 }
 
 function FilterStack(stack) {
@@ -417,24 +426,49 @@ function initFabric() {
     }
 }
 
+function getDiagnosticsMap() {
+    var diagnosticsMap = {};
+
+    if (window.navigator) diagnosticsMap["User Agent"] = window.navigator.userAgent;
+    diagnosticsMap["Requirement set"] = getRequirementSet();
+    if (Office) {
+        if (Office.context) {
+            diagnosticsMap["contentLanguage"] = Office.context.contentLanguage;
+            diagnosticsMap["displayLanguage"] = Office.context.displayLanguage;
+            diagnosticsMap["touchEnabled"] = Office.context.touchEnabled;
+
+            if (Office.context.mailbox) {
+                if (Office.context.mailbox.diagnostics) {
+                    diagnosticsMap["hostname"] = Office.context.mailbox.diagnostics.hostName;
+                    diagnosticsMap["hostVersion"] = Office.context.mailbox.diagnostics.hostVersion;
+
+                    if (Office.context.mailbox.diagnostics.OWAView) {
+                        diagnosticsMap["OWAView"] = Office.context.mailbox.diagnostics.OWAView;
+                    }
+                }
+
+                if (Office.context.mailbox.item) {
+                    diagnosticsMap["itemType"] = Office.context.mailbox.item.itemType;
+                    diagnosticsMap["itemClass"] = Office.context.mailbox.item.itemClass;
+                }
+
+                if (Office.context.mailbox._initialData$p$0) {
+                    diagnosticsMap["permissions"] = Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
+                }
+            }
+        }
+    }
+
+    return diagnosticsMap;
+}
+
 function getDiagnostics() {
     var diagnostics = "";
     try {
-        diagnostics += "User Agent = " + window.navigator.userAgent + "\n";
-        diagnostics += "Requirement set = " + getRequirementSet() + "\n";
-        diagnostics += "hostname = " + Office.context.mailbox.diagnostics.hostName + "\n";
-        diagnostics += "hostVersion = " + Office.context.mailbox.diagnostics.hostVersion + "\n";
-        if (Office.context.mailbox.diagnostics.OWAView) {
-            diagnostics += "OWAView = " + Office.context.mailbox.diagnostics.OWAView + "\n";
+        diagnosticsMap = getDiagnosticsMap();
+        for (var diag in diagnosticsMap) {
+            diagnostics += diag + " = " + diagnosticsMap[diag] + "\n";
         }
-
-        diagnostics += "itemType = " + Office.context.mailbox.item.itemType + "\n";
-        diagnostics += "itemClass = " + Office.context.mailbox.item.itemClass + "\n";
-
-        diagnostics += "contentLanguage = " + Office.context.contentLanguage + "\n";
-        diagnostics += "displayLanguage = " + Office.context.displayLanguage + "\n";
-        diagnostics += "touchEnabled = " + Office.context.touchEnabled + "\n";
-        diagnostics += "permissions = " + Office.context.mailbox._initialData$p$0._permissionLevel$p$0 + "\n";
     } catch (e) {
         diagnostics += "ERROR: Failed to get diagnostics\n";
     }
