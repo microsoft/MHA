@@ -18,7 +18,7 @@ if (window.jQuery) {
         $(window).resize(onResize);
         viewModel = new HeaderModel();
         initializeTableUI();
-        makeResizablePane("inputHeaders", ImportedStrings.mha_prompt, null, null);
+        makeResizablePane("inputHeaders", ImportedStrings.mha_prompt, null);
     });
 }
 
