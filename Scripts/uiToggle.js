@@ -4,7 +4,6 @@
 /* global Office */
 /* global sendHeadersRequest */
 /* global StackTrace */
-/* global uiChoices */
 /* exported ShowError */
 /* exported UpdateStatus */
 
@@ -34,8 +33,41 @@ uiChoice.prototype.label = "";
 uiChoice.prototype.url = "";
 uiChoice.prototype.checked = "";
 
+var uiChoices = [
+    new uiChoice('classic', 'classicDesktopFrame.html', false),
+    new uiChoice('new', 'newDesktopFrame.html', true),
+    new uiChoice('new-mobile', 'newMobilePaneIosFrame.html', false)
+];
+
+function setDefault() {
+    var uiDefault = getQueryVariable("default");
+    if (uiDefault === null) {
+        uiDefault = "new";
+    }
+
+    for (var iChoice = 0; iChoice < uiChoices.length; iChoice++) {
+        if (uiDefault === uiChoices[iChoice].label) {
+            uiChoices[iChoice].checked = true;
+        }
+        else {
+            uiChoices[iChoice].checked = false;
+        }
+    }
+}
+
+function getQueryVariable(variable) {
+    var vars = window.location.search.substring(1).split("&");
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] === variable) {
+            return pair[1];
+        }
+    }
+}
+
 Office.initialize = function () {
     $(document).ready(function () {
+        setDefault();
         viewModel = new uiModel();
         InitUI();
         window.addEventListener("message", eventListener, false);
