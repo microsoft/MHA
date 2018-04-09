@@ -332,7 +332,7 @@ function buildViews() {
 
     for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
         if (viewModel.otherHeaders.otherRows[i].value) {
-            headerName = $("<div/>")
+            var headerName = $("<div/>")
                 .addClass("ms-font-s")
                 .addClass("ms-fontWeight-semibold")
                 .text(viewModel.otherHeaders.otherRows[i].header)
