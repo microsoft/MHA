@@ -124,13 +124,12 @@ function renderItem(headers) {
 function buildViews() {
     // Build summary view
     var summaryList = $(".summary-list");
-    var headerName;
     var headerVal;
     var pre;
     var i;
     for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
         if (viewModel.summary.summaryRows[i].get()) {
-            headerName = $("<div/>")
+            $("<div/>")
                 .addClass("ms-font-s")
                 .addClass("ms-fontWeight-semibold")
                 .text(viewModel.summary.summaryRows[i].label)
