@@ -115,7 +115,7 @@ function getHeaders(accessToken, headersLoadedCallback) {
                 headersLoadedCallback(item.SingleValueExtendedProperties[0].Value);
             } else {
                 headersLoadedCallback(null);
-                ShowError(null, ImportedStrings.mha_headersMissing);
+                ShowError(null, ImportedStrings.mha_headersMissing, true);
             }
         }
         catch (e) {

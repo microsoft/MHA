@@ -163,8 +163,9 @@ function SetFrame(frame) {
 }
 
 // Tells the UI to show an error.
-function ShowError(error, message) {
-    LogError(error, message);
+function ShowError(error, message, suppressTracking) {
+    LogError(error, message, suppressTracking);
+
     if (iFrame) {
         postMessageToFrame("showError", { error: JSON.stringify(error), message: message });
     }
@@ -174,42 +175,47 @@ function ShowError(error, message) {
     }
 }
 
-function LogError(error, message) {
+function LogError(error, message, suppressTracking) {
     var errorMessage = error ? (error.message ? error.message : error.description) : '';
     var callback = function (stackframes) {
         LogArray([message, errorMessage].concat(
             FilterStack(stackframes).map(function (sf) {
                 return sf.toString();
-            })));
+            })),
+            suppressTracking);
     };
 
     var errback = function (err) {
-        LogArray([message, errorMessage, error.stack, "Parsing error:", err.message, err.stack]);
+        LogArray([message, errorMessage, error.stack, "Parsing error:", err.message, err.stack], suppressTracking);
     };
 
     if (!error || Object.prototype.toString.call(error) === "[object String]") {
-        pushError(error);
+        pushError(error, suppressTracking);
         StackTrace.get().then(callback).catch(errback);
     } else {
         StackTrace.fromError(error).then(callback).catch(errback);
     }
 
-    if (error) {
+    if (error && !suppressTracking) {
         appInsights.trackException(error);
     }
 }
 
 // Log an array of strings as an error, removing null/empty values before joining
-function LogArray(array) {
-    pushError((array.filter(function (item) { return item; })).join('\n'));
+function LogArray(array, suppressTracking) {
+    var error = (array.filter(function (item) { return item; })).join('\n');
+    pushError(error, suppressTracking);
 }
 
-function pushError(errorString) {
+function pushError(errorString, suppressTracking) {
     if (errorString) {
         viewModel.errors.push(errorString);
         var props = getDiagnosticsMap();
         props["Custom Error"] = errorString;
-        appInsights.trackEvent("Error String", props);
+
+        if (!suppressTracking) {
+            appInsights.trackEvent("Error String", props);
+        }
     }
 }
 
