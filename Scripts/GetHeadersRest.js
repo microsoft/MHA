@@ -28,13 +28,8 @@ function sendHeadersRequestRest(headersLoadedCallback) {
                 var accessToken = result.value;
                 getHeaders(accessToken, headersLoadedCallback);
             } else {
-                if (result.error.name === "AccessRestricted") {
-                    // TODO: Log this, but don't error for the user
-                    sendHeadersRequestEWS(headersLoadedCallback);
-                }
-                else {
-                    ShowError(null, 'Unable to obtain callback token.\n' + JSON.stringify(result, null, 2));
-                }
+                LogError(null, 'Unable to obtain callback token.\nFallback to EWS.\n' + JSON.stringify(result, null, 2));
+                sendHeadersRequestEWS(headersLoadedCallback);
             }
         }
         catch (e) {
