@@ -199,19 +199,20 @@ function LogError(exception, message, suppressTracking) {
     };
 
     if (!exception || Object.prototype.toString.call(exception) === "[object String]") {
-        pushError(exception, null, suppressTracking);
+        pushError(null, JSON.stringify(exception), suppressTracking);
         StackTrace.get().then(callback).catch(errback);
     } else {
         StackTrace.fromError(exception).then(callback).catch(errback);
-    }
 
-    if (exception && !suppressTracking) {
-        appInsights.trackException(exception);
+        if (!suppressTracking) {
+            appInsights.trackException(exception);
+        }
     }
 }
 
 // Join an array with char, dropping empty/missing entries
 function joinArray(array, char) {
+    if (!array) return null;
     return (array.filter(function (item) { return item; })).join(char);
 }
 
