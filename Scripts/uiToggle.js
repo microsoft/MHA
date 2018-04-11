@@ -181,7 +181,7 @@ function ShowError(error, message, suppressTracking) {
 function LogError(exception, message, suppressTracking) {
     var stack;
     var exceptionMessage = exception ? (exception.message ? exception.message : exception.description) : '';
-    var eventName = joinArray([message, exceptionMessage], ':');
+    var eventName = joinArray([message, exceptionMessage], ' : ');
     if (!eventName) {
         eventName = "Unknown exception";
     }
@@ -199,7 +199,7 @@ function LogError(exception, message, suppressTracking) {
     };
 
     if (!exception || Object.prototype.toString.call(exception) === "[object String]") {
-        pushError(exception, suppressTracking);
+        pushError(exception, null, suppressTracking);
         StackTrace.get().then(callback).catch(errback);
     } else {
         StackTrace.fromError(exception).then(callback).catch(errback);
