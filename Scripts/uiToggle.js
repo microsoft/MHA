@@ -199,7 +199,7 @@ function LogError(exception, message, suppressTracking) {
     };
 
     if (!exception || Object.prototype.toString.call(exception) === "[object String]") {
-        pushError(null, JSON.stringify(exception), suppressTracking);
+        pushError(JSON.stringify(exception), null, suppressTracking);
         StackTrace.get().then(callback).catch(errback);
     } else {
         StackTrace.fromError(exception).then(callback).catch(errback);
