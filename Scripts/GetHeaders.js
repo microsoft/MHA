@@ -18,10 +18,8 @@ function sendHeadersRequest(headersLoadedCallback) {
         else {
             sendHeadersRequestEWS(headersLoadedCallback);
         }
-        0++;
     } catch (e) {
-        LogError("not an error", null);
-        //ShowError(e, "Could not send header request");
+        ShowError(e, "Could not send header request");
     }
 }
 
