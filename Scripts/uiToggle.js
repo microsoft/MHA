@@ -175,46 +175,56 @@ function ShowError(error, message, suppressTracking) {
     }
 }
 
-function LogError(error, message, suppressTracking) {
-    var errorMessage = error ? (error.message ? error.message : error.description) : '';
+// error - an exception object
+// message - a string describing the error
+// suppressTracking - boolean indicating if we should suppress tracking
+function LogError(exception, message, suppressTracking) {
+    var stack;
+    var exceptionMessage = exception ? (exception.message ? exception.message : exception.description) : '';
+    var eventName = joinArray([message, exceptionMessage], ' : ');
+    if (!eventName) {
+        eventName = "Unknown exception";
+    }
+
     var callback = function (stackframes) {
-        LogArray([message, errorMessage].concat(
-            FilterStack(stackframes).map(function (sf) {
-                return sf.toString();
-            })),
-            suppressTracking);
+        stack = FilterStack(stackframes).map(function (sf) {
+            return sf.toString();
+        });
+        pushError(eventName, stack, suppressTracking);
     };
 
     var errback = function (err) {
-        LogArray([message, errorMessage, error.stack, "Parsing error:", err.message, err.stack], suppressTracking);
+        stack = [exception.stack, "Parsing error:", err.message, err.stack];
+        pushError(eventName, stack, suppressTracking);
     };
 
-    if (!error || Object.prototype.toString.call(error) === "[object String]") {
-        pushError(error, suppressTracking);
+    if (!exception || Object.prototype.toString.call(exception) === "[object String]") {
+        pushError(JSON.stringify(exception), null, suppressTracking);
         StackTrace.get().then(callback).catch(errback);
     } else {
-        StackTrace.fromError(error).then(callback).catch(errback);
-    }
-
-    if (error && !suppressTracking) {
-        appInsights.trackException(error);
-    }
-}
-
-// Log an array of strings as an error, removing null/empty values before joining
-function LogArray(array, suppressTracking) {
-    var error = (array.filter(function (item) { return item; })).join('\n');
-    pushError(error, suppressTracking);
-}
-
-function pushError(errorString, suppressTracking) {
-    if (errorString) {
-        viewModel.errors.push(errorString);
-        var props = getDiagnosticsMap();
-        props["Custom Error"] = errorString;
+        StackTrace.fromError(exception).then(callback).catch(errback);
 
         if (!suppressTracking) {
-            appInsights.trackEvent("Error String", props);
+            appInsights.trackException(exception);
+        }
+    }
+}
+
+// Join an array with char, dropping empty/missing entries
+function joinArray(array, char) {
+    if (!array) return null;
+    return (array.filter(function (item) { return item; })).join(char);
+}
+
+function pushError(eventName, stack, suppressTracking) {
+    if (eventName || stack) {
+        var stackString = joinArray(stack, '\n');
+        viewModel.errors.push(joinArray([eventName, stackString], '\n'));
+
+        if (!suppressTracking) {
+            var props = getDiagnosticsMap();
+            props["Stack"] = stackString;
+            appInsights.trackEvent(eventName, props);
         }
     }
 }
