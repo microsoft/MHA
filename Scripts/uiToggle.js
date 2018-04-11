@@ -194,7 +194,7 @@ function LogError(exception, message, suppressTracking) {
     };
 
     var errback = function (err) {
-        stack = joinArray([exception.stack, "Parsing error:", err.message, err.stack], '\n');
+        stack = [exception.stack, "Parsing error:", err.message, err.stack];
         pushError(eventName, stack, suppressTracking);
     };
 
