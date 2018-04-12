@@ -28,7 +28,7 @@ function sendHeadersRequestRest(headersLoadedCallback) {
                 var accessToken = result.value;
                 getHeaders(accessToken, headersLoadedCallback);
             } else {
-                LogError(null, 'Unable to obtain callback token.\nFallback to EWS.\n' + JSON.stringify(result, null, 2));
+                LogError(null, 'Unable to obtain callback token.\nFallback to EWS.\n' + JSON.stringify(result, null, 2), true);
                 sendHeadersRequestEWS(headersLoadedCallback);
             }
         }
