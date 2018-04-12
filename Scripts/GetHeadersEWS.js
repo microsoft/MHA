@@ -52,7 +52,7 @@ function callbackEWS(asyncResult, headersLoadedCallback) {
                     } else {
                         var messageText = responseDom.filterNode("m:MessageText");
                         if (messageText.length > 0) {
-                            ShowError(null, messageText[0].textContent);
+                            ShowError(null, "Message header not found via EWS\n" + JSON.stringify(messageText, null, 2));
                         }
                     }
                 }
