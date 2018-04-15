@@ -3,24 +3,18 @@
 /* exported LogError */
 
 function getErrorMessage(error) {
-    if (Object.prototype.toString.call(error) === "[object String]") {
-        return error;
-    }
-    else {
-        return error ? (error.message ? error.message : error.description) : '';
-    }
+    if (!error) return '';
+    if (Object.prototype.toString.call(error) === "[object String]") return error;
+    if (error.message) return error.message;
+    if (error.description) return error.description;
+    return JSON.stringify(error, null, 2);
 }
 
 function getErrorStack(error) {
-    if (!error) {
-        return "";
-    }
-    else if (Object.prototype.toString.call(error) === "[object String]") {
-        return "string thrown as error";
-    }
-    else {
-        return error.stack;
-    }
+    if (!error) return '';
+    if (Object.prototype.toString.call(error) === "[object String]") return "string thrown as error";
+    if (error.stack) return error.stack;
+    return '';
 }
 
 // error - an exception object

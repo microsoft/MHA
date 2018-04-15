@@ -192,8 +192,8 @@
         });
 
         QUnit.test("parseError Tests", function (assert) {
-            assert.expect(10); // Count of assert calls in the tests below
-            var done = assert.async(5); // Count of asynchronous calls below
+            assert.expect(14); // Count of assert calls in the tests below
+            var done = assert.async(7); // Count of asynchronous calls below
 
             // Note that we can't check actual stacks because they change all the time.
             // Instead we confirm that we got one of appropriate depth.
@@ -236,6 +236,19 @@
                 assert.equal(stack.length, 7);
                 done();
             });
+
+            var brokenError = new Error();
+            parseError(brokenError, "message", function (eventName, stack) {
+                assert.equal(eventName, "message : {}");
+                assert.equal(stack.length, 7);
+                done();
+            });
+
+            parseError(42, "message", function (eventName, stack) {
+                assert.equal(eventName, "message : 42");
+                assert.equal(stack.length, 4);
+                done();
+            });
         });
 
         QUnit.test("getError* Tests", function (assert) {
@@ -252,6 +265,9 @@
 
             assert.equal(getErrorMessage("stringError"), "stringError");
             assert.equal(getErrorStack("stringError"), "string thrown as error");
+
+            assert.equal(getErrorMessage(42), "42");
+            assert.equal(getErrorStack(42), "");
         });
 
         QUnit.test("joinArray Tests", function (assert) {
