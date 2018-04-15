@@ -2,15 +2,34 @@
 /* global StackTrace */
 /* exported LogError */
 
-// TODO: split out as much as possible into unit testable functions
-// uiToggle will compose these functions without unit testing
+function getErrorMessage(error) {
+    if (Object.prototype.toString.call(error) === "[object String]") {
+        return error;
+    }
+    else {
+        return error ? (error.message ? error.message : error.description) : '';
+    }
+}
+
+function getErrorStack(error) {
+    if (!error) {
+        return "";
+    }
+    else if (Object.prototype.toString.call(error) === "[object String]") {
+        return "string thrown as error";
+    }
+    else {
+        return error.stack;
+    }
+}
 
 // error - an exception object
 // message - a string describing the error
 // errorHandler - function to call with parsed error
 function parseError(exception, message, errorHandler) {
     var stack;
-    var exceptionMessage = exception ? (exception.message ? exception.message : exception.description) : '';
+    var exceptionMessage = getErrorMessage(exception);
+
     var eventName = joinArray([message, exceptionMessage], ' : ');
     if (!eventName) {
         eventName = "Unknown exception";
@@ -24,12 +43,11 @@ function parseError(exception, message, errorHandler) {
     };
 
     var errback = function (err) {
-        stack = [exception.stack, "Parsing error:", err.message, err.stack];
+        stack = [getErrorStack(exception), "Parsing error:", getErrorMessage(err), getErrorStack(err)];
         errorHandler(eventName, stack);
     };
 
     if (!exception || Object.prototype.toString.call(exception) === "[object String]") {
-        errorHandler(JSON.stringify(exception), null);
         StackTrace.get().then(callback).catch(errback);
     } else {
         StackTrace.fromError(exception).then(callback).catch(errback);
@@ -39,12 +57,12 @@ function parseError(exception, message, errorHandler) {
 // error - an exception object
 // message - a string describing the error
 // suppressTracking - boolean indicating if we should suppress tracking
-function LogError(exception, message, suppressTracking) {
-    if (!suppressTracking && exception && Object.prototype.toString.call(exception) !== "[object String]") {
-        appInsights.trackException(exception);
+function LogError(error, message, suppressTracking) {
+    if (!suppressTracking && error && Object.prototype.toString.call(error) !== "[object String]") {
+        appInsights.trackException(error);
     }
 
-    parseError(exception, message, function (eventName, stack) {
+    parseError(error, message, function (eventName, stack) {
         pushError(eventName, stack, suppressTracking);
     });
 }
@@ -76,6 +94,7 @@ function FilterStack(stack) {
         if (item.functionName === "showError") return false;
         if (item.functionName === "LogError") return false;
         if (item.functionName === "GetStack") return false;
+        if (item.functionName === "parseError") return false;
         return true;
     });
 }

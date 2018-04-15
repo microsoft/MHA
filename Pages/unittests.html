@@ -12,6 +12,11 @@
     </script>
     <script src="/Scripts/2047.js"></script>
     <script src="/Scripts/Headers.js"></script>
+    <script src="/Scripts/Errors.js"></script>
+    <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/stacktrace.js/2.0.0/stacktrace-with-promises-and-json-polyfills.min.js"></script>
+    <script>
+        (window.StackTrace || document.write('<script src="/node_modules/stacktrace-js/dist/stacktrace-with-promises-and-json-polyfills.min.js"><\/script>'));
+    </script>
 
     <script>
         QUnit.test("RFC 2047 Tests", function (assert) {
@@ -48,7 +53,7 @@
                 " =?UTF-8?B?ZQ==?="),
                 "🏈  2019's No.1 Recruit, The World's Tallest Teenager, Top Plays of the Week & more");
             assert.equal(clean2047Encoding(
-                "Subject: =?Windows-1252?Q?Fwd:_Scam_Alert_from_a_neighbor_on_NextDoor_-_Don=92t_re?=\n" + 
+                "Subject: =?Windows-1252?Q?Fwd:_Scam_Alert_from_a_neighbor_on_NextDoor_-_Don=92t_re?=\n" +
                 " =?Windows-1252?Q?ad_out_your_2_factored_authentication_code_to_anyone_on_?=\n" +
                 "=?Windows-1252?Q?the_phone?="), "Subject: Fwd: Scam Alert from a neighbor on NextDoor - Don’t read out your 2 factored authentication code to anyone on the phone");
         });
@@ -159,7 +164,7 @@
             assert.equal(decodeHexCodepage("UTF-8", [0xF0, 0x9D, 0x93, 0xA2, 0xF0, 0x9D, 0x93, 0xBB, 0xF0, 0x9D, 0x93, 0xB2, 0x20]), "𝓢𝓻𝓲 ");
         });
 
-        QUnit.test("GetHeaderList Test", function (assert) {
+        QUnit.test("GetHeaderList Tests", function (assert) {
             var headerList = GetHeaderList(
                 "Subject: =?UTF-8?B?8J+PiCAgMjAxOSdzIE5vLjEgUmVjcnVpdCwgVGhlIFdvcmxkJ3Mg?=\n" +
                 " =?UTF 8?B?VGFsbGVzdCBUZWVuYWdlciwgVG9wIFBsYXlzIG9mIHRoZSBXZWVrICYgbW9y?=\n" +
@@ -184,6 +189,78 @@
             assert.equal(headerList[0].header, "Content-Type");
             assert.equal(headerList[0].value,
                 "multipart/alternative; boundary=\"ErclWH56b6W5=_?:\"");
+        });
+
+        QUnit.test("parseError Tests", function (assert) {
+            assert.expect(10); // Count of assert calls in the tests below
+            var done = assert.async(5); // Count of asynchronous calls below
+
+            // Note that we can't check actual stacks because they change all the time.
+            // Instead we confirm that we got one of appropriate depth.
+            parseError("stringError", "message", function (eventName, stack) {
+                assert.equal(eventName, "message : stringError");
+                assert.equal(stack.length, 7);
+                done();
+            });
+
+            try {
+                0++;
+            }
+            catch (error) {
+                parseError(error, "message", function (eventName, stack) {
+                    assert.equal(eventName, "message : Invalid left-hand side in assignment");
+                    assert.equal(stack.length, 7);
+                    done();
+                });
+            }
+
+            try {
+                0++;
+            }
+            catch (error) {
+                parseError(error, null, function (eventName, stack) {
+                    assert.equal(eventName, "Invalid left-hand side in assignment");
+                    assert.equal(stack.length, 7);
+                    done();
+                });
+            }
+
+            parseError(null, "message", function (eventName, stack) {
+                assert.equal(eventName, "message");
+                assert.equal(stack.length, 7);
+                done();
+            });
+
+            parseError(null, null, function (eventName, stack) {
+                assert.equal(eventName, "Unknown exception");
+                assert.equal(stack.length, 7);
+                done();
+            });
+        });
+
+        QUnit.test("getError* Tests", function (assert) {
+            try {
+                0++;
+            }
+            catch (error) {
+                assert.equal(getErrorMessage(error), "Invalid left-hand side in assignment");
+                assert.ok(getErrorStack(error).length > 0);
+            }
+
+            assert.equal(getErrorMessage(null), "");
+            assert.equal(getErrorStack(null), "");
+
+            assert.equal(getErrorMessage("stringError"), "stringError");
+            assert.equal(getErrorStack("stringError"), "string thrown as error");
+        });
+
+        QUnit.test("joinArray Tests", function (assert) {
+            assert.equal(joinArray(null, " : "), null);
+            assert.equal(joinArray(["1"], " : "), "1");
+            assert.equal(joinArray(["1", "2"], " : "), "1 : 2");
+            assert.equal(joinArray([null, "2"], " : "), "2");
+            assert.equal(joinArray(["1", null], " : "), "1");
+            assert.equal(joinArray(["1", null, "3"], " : "), "1 : 3");
         });
     </script>
 </head>
