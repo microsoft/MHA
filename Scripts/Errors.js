@@ -1,6 +1,7 @@
 /* global appInsights */
 /* global pushError */
 /* global StackTrace */
+/* exported CleanStack */
 /* exported LogError */
 
 function getErrorMessage(error) {
@@ -78,5 +79,15 @@ function FilterStack(stack) {
         if (item.functionName === "GetStack") return false;
         if (item.functionName === "parseError") return false;
         return true;
+    });
+}
+
+// Strip stack of rows with unittests.html.
+// Only used for unit tests.
+function CleanStack(stack) {
+    return stack.map(function (item) {
+        return item.replace(/.*localhost.*/g, "").replace(/.*azurewebsites.*/g, "").replace(/\n+/g, "\n");
+    }).filter(function (item) {
+        return !!item;
     });
 }

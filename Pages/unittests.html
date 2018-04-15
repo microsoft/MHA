@@ -199,7 +199,14 @@
             // Instead we confirm that we got one of appropriate depth.
             parseError("stringError", "message", function (eventName, stack) {
                 assert.equal(eventName, "message : stringError");
-                assert.equal(stack.length, 7);
+                assert.deepEqual(CleanStack(stack), [
+                    "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+                    "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+                    "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+                    "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+                ]);
                 done();
             });
 
@@ -209,7 +216,14 @@
             catch (error) {
                 parseError(error, "message", function (eventName, stack) {
                     assert.equal(eventName, "message : Invalid left-hand side in assignment");
-                    assert.equal(stack.length, 7);
+                    assert.deepEqual(CleanStack(stack), [
+                        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+                        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+                        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+                        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+                    ]);
                     done();
                 });
             }
@@ -220,33 +234,73 @@
             catch (error) {
                 parseError(error, null, function (eventName, stack) {
                     assert.equal(eventName, "Invalid left-hand side in assignment");
-                    assert.equal(stack.length, 7);
+                    assert.deepEqual(CleanStack(stack), [
+                        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+                        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+                        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+                        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+                    ]);
                     done();
                 });
             }
 
             parseError(null, "message", function (eventName, stack) {
                 assert.equal(eventName, "message");
-                assert.equal(stack.length, 7);
+                assert.deepEqual(CleanStack(stack), [
+                    "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+                    "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+                    "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+                    "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+                ]);
                 done();
             });
 
             parseError(null, null, function (eventName, stack) {
                 assert.equal(eventName, "Unknown exception");
-                assert.equal(stack.length, 7);
+                assert.deepEqual(CleanStack(stack), [
+                    "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+                    "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+                    "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+                    "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+                ]);
                 done();
             });
 
             var brokenError = new Error();
             parseError(brokenError, "message", function (eventName, stack) {
                 assert.equal(eventName, "message : {}");
-                assert.equal(stack.length, 7);
+                assert.deepEqual(CleanStack(stack), [
+                    "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+                    "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+                    "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+                    "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+                ]);
                 done();
             });
 
             parseError(42, "message", function (eventName, stack) {
                 assert.equal(eventName, "message : 42");
-                assert.equal(stack.length, 4);
+                assert.deepEqual(CleanStack(stack), [
+                    "Parsing error:",
+                    "Cannot parse given Error object",
+                    "Error: Cannot parse given Error object\n" +
+                    "   at parse (https://cdnjs.cloudflare.com/ajax/libs/stacktrace.js/2.0.0/stacktrace-with-promises-and-json-polyfills.min.js:1:1293)\n" +
+                    "   at Anonymous function (https://cdnjs.cloudflare.com/ajax/libs/stacktrace.js/2.0.0/stacktrace-with-promises-and-json-polyfills.min.js:2:14668)\n" +
+                    "   at Promise (native code)\n" +
+                    "   at fromError (https://cdnjs.cloudflare.com/ajax/libs/stacktrace.js/2.0.0/stacktrace-with-promises-and-json-polyfills.min.js:2:14637)\n" +
+                    "   at runTest (https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6)\n" +
+                    "   at run (https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6)\n" +
+                    "   at Anonymous function (https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7)\n" +
+                    "   at advance (https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6)"
+                ]);
                 done();
             });
         });
