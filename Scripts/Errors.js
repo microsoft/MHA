@@ -1,4 +1,5 @@
 /* global appInsights */
+/* global pushError */
 /* global StackTrace */
 /* exported LogError */
 
@@ -65,20 +66,6 @@ function LogError(error, message, suppressTracking) {
 function joinArray(array, char) {
     if (!array) return null;
     return (array.filter(function (item) { return item; })).join(char);
-}
-
-// TODO: Move viewModel and getDiagnosticsMap back to uiToggle.js
-function pushError(eventName, stack, suppressTracking) {
-    if (eventName || stack) {
-        var stackString = joinArray(stack, '\n');
-        viewModel.errors.push(joinArray([eventName, stackString], '\n'));
-
-        if (!suppressTracking) {
-            var props = getDiagnosticsMap();
-            props["Stack"] = stackString;
-            appInsights.trackEvent(eventName, props);
-        }
-    }
 }
 
 function FilterStack(stack) {

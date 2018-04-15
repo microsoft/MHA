@@ -1,8 +1,11 @@
 /* global $ */
+/* global appInsights */
 /* global fabric */
+/* global joinArray */
 /* global LogError */
 /* global Office */
 /* global sendHeadersRequest */
+/* exported pushError */
 /* exported ShowError */
 /* exported UpdateStatus */
 
@@ -171,6 +174,19 @@ function ShowError(error, message, suppressTracking) {
     else {
         // We don't have an iFrame, so defer the message
         viewModel.deferredErrors.push([error, message]);
+    }
+}
+
+function pushError(eventName, stack, suppressTracking) {
+    if (eventName || stack) {
+        var stackString = joinArray(stack, '\n');
+        viewModel.errors.push(joinArray([eventName, stackString], '\n'));
+
+        if (!suppressTracking) {
+            var props = getDiagnosticsMap();
+            props["Stack"] = stackString;
+            appInsights.trackEvent(eventName, props);
+        }
     }
 }
 
