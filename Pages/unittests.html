@@ -195,8 +195,6 @@
             assert.expect(14); // Count of assert calls in the tests below
             var done = assert.async(7); // Count of asynchronous calls below
 
-            // Note that we can't check actual stacks because they change all the time.
-            // Instead we confirm that we got one of appropriate depth.
             parseError("stringError", "message", function (eventName, stack) {
                 assert.equal(eventName, "message : stringError");
                 assert.deepEqual(CleanStack(stack), [
