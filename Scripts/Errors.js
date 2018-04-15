@@ -1,8 +1,6 @@
-/* global appInsights */
-/* global pushError */
 /* global StackTrace */
 /* exported CleanStack */
-/* exported LogError */
+/* exported parseError */
 
 function getErrorMessage(error) {
     if (!error) return '';
@@ -48,19 +46,6 @@ function parseError(exception, message, errorHandler) {
     } else {
         StackTrace.fromError(exception).then(callback).catch(errback);
     }
-}
-
-// error - an exception object
-// message - a string describing the error
-// suppressTracking - boolean indicating if we should suppress tracking
-function LogError(error, message, suppressTracking) {
-    if (!suppressTracking && error && Object.prototype.toString.call(error) !== "[object String]") {
-        appInsights.trackException(error);
-    }
-
-    parseError(error, message, function (eventName, stack) {
-        pushError(eventName, stack, suppressTracking);
-    });
 }
 
 // Join an array with char, dropping empty/missing entries

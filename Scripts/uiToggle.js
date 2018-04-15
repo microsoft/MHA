@@ -4,6 +4,7 @@
 /* global joinArray */
 /* global LogError */
 /* global Office */
+/* global parseError */
 /* global sendHeadersRequest */
 /* exported pushError */
 /* exported ShowError */
@@ -175,6 +176,19 @@ function ShowError(error, message, suppressTracking) {
         // We don't have an iFrame, so defer the message
         viewModel.deferredErrors.push([error, message]);
     }
+}
+
+// error - an exception object
+// message - a string describing the error
+// suppressTracking - boolean indicating if we should suppress tracking
+function LogError(error, message, suppressTracking) {
+    if (!suppressTracking && error && Object.prototype.toString.call(error) !== "[object String]") {
+        appInsights.trackException(error);
+    }
+
+    parseError(error, message, function (eventName, stack) {
+        pushError(eventName, stack, suppressTracking);
+    });
 }
 
 function pushError(eventName, stack, suppressTracking) {
