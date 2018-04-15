@@ -126,6 +126,8 @@ function getHeaders(accessToken, headersLoadedCallback) {
             if (textStatus === "error" && jqXHR.status === 0) {
                 // TODO: Log this, but don't error for the user
                 sendHeadersRequestEWS(headersLoadedCallback);
+            } else if (textStatus === "error" && jqXHR.status === 404) {
+                ShowError(null, ImportedStrings.mha_messageMissing, true);
             } else {
                 ShowError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
             }
