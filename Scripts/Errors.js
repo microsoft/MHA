@@ -67,6 +67,7 @@ function joinArray(array, char) {
     return (array.filter(function (item) { return item; })).join(char);
 }
 
+// TODO: Move viewModel and getDiagnosticsMap back to uiToggle.js
 function pushError(eventName, stack, suppressTracking) {
     if (eventName || stack) {
         var stackString = joinArray(stack, '\n');
