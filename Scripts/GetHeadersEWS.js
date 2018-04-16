@@ -35,49 +35,38 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
 function callbackEWS(asyncResult, headersLoadedCallback) {
     try {
         // Process the returned response here.
+        var prop = null;
         if (asyncResult.value) {
             viewModel.originalHeaders = asyncResult.value;
-            var prop = null;
-            try {
-                var response = $.parseXML(asyncResult.value);
-                var responseDom = $(response);
+            var response = $.parseXML(asyncResult.value);
+            var responseDom = $(response);
 
-                if (responseDom) {
-                    //// See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
-                    //// See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
-                    // We can do this because we know there's only the one property.
-                    var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
-                    if (extendedProperty.length > 0) {
-                        prop = extendedProperty[0];
-                    } else {
-                        var messageText = responseDom.filterNode("m:MessageText");
-                        if (messageText.length > 0) {
-                            ShowError(null, "Message header not found via EWS\n" + JSON.stringify(messageText, null, 2));
-                        }
-                    }
+            if (responseDom) {
+                // See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
+                // See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
+                // We can do this because we know there's only the one property.
+                var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
+                if (extendedProperty.length > 0) {
+                    prop = extendedProperty[0];
                 }
-            } catch (e) {
-                ShowError(e, "EWS callback failed parsing result");
             }
+        }
 
-            if (prop) {
-                headersLoadedCallback(prop.textContent);
-            } else {
-                ShowError(null, ImportedStrings.mha_requestFailed);
-            }
-        } else if (asyncResult.error) {
-            ShowError(null, "EWS callback failed\n" + JSON.stringify(asyncResult, null, 2));
+        if (prop) {
+            headersLoadedCallback(prop.textContent);
+        }
+        else {
+            throw new Error(ImportedStrings.mha_requestFailed);
         }
     }
     catch (e) {
-        ShowError(e, "Failed handling EWS callback");
+        ShowError(e, "EWS callback failed\n" + JSON.stringify(asyncResult, null, 2));
     }
 }
 
 function getSoapEnvelope(request) {
     // Wrap an Exchange Web Services request in a SOAP envelope.
-    var result =
-        "<?xml version='1.0' encoding='utf-8'?>" +
+    return "<?xml version='1.0' encoding='utf-8'?>" +
         "<soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'" +
         "               xmlns:t='http://schemas.microsoft.com/exchange/services/2006/types'>" +
         "  <soap:Header>" +
@@ -87,26 +76,21 @@ function getSoapEnvelope(request) {
         request +
         "  </soap:Body>" +
         "</soap:Envelope>";
-
-    return result;
 }
 
 function getHeadersRequest(id) {
     // Return a GetItem EWS operation request for the headers of the specified item.
-    var result =
-        "    <GetItem xmlns='http://schemas.microsoft.com/exchange/services/2006/messages'>" +
-        "      <ItemShape>" +
-        "        <t:BaseShape>IdOnly</t:BaseShape>" +
-        "        <t:BodyType>Text</t:BodyType>" +
-        "        <t:AdditionalProperties>" +
+ return "<GetItem xmlns='http://schemas.microsoft.com/exchange/services/2006/messages'>" +
+        "  <ItemShape>" +
+        "    <t:BaseShape>IdOnly</t:BaseShape>" +
+        "    <t:BodyType>Text</t:BodyType>" +
+        "    <t:AdditionalProperties>" +
         // PR_TRANSPORT_MESSAGE_HEADERS
-        "            <t:ExtendedFieldURI PropertyTag='0x007D' PropertyType='String' />" +
-        "        </t:AdditionalProperties>" +
-        "      </ItemShape>" +
-        "      <ItemIds><t:ItemId Id='" + id + "'/></ItemIds>" +
-        "    </GetItem>";
-
-    return result;
+        "      <t:ExtendedFieldURI PropertyTag='0x007D' PropertyType='String' />" +
+        "    </t:AdditionalProperties>" +
+        "  </ItemShape>" +
+        "  <ItemIds><t:ItemId Id='" + id + "'/></ItemIds>" +
+        "</GetItem>";
 }
 
 // This function plug in filters nodes for the one that matches the given name.
