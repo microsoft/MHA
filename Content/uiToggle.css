@@ -42,6 +42,9 @@ body, html {
     word-wrap: break-word;
     white-space: pre-wrap;
     font-size: .8em;
+    max-height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 #dialog-Diagnostics {
