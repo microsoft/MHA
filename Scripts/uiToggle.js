@@ -17,6 +17,7 @@ var uiModel = function () {
     this.deferredErrors = [];
     this.deferredStatus = [];
     this.headers = "";
+    this.apiUsed = "";
 };
 
 uiModel.prototype.currentChoice = {};
@@ -24,6 +25,7 @@ uiModel.prototype.errors = [];
 uiModel.prototype.deferredErrors = [];
 uiModel.prototype.deferredStatus = [];
 uiModel.prototype.headers = "";
+uiModel.prototype.apiUsed = "";
 
 var iFrame = null;
 var uiChoice = function (label, url, checked) {
@@ -132,8 +134,9 @@ function registerItemChangeEvent() {
 
 function loadNewItem() {
     if (Office.context.mailbox.item) {
-        sendHeadersRequest(function (headers) {
+        sendHeadersRequest(function (headers, apiUsed) {
             viewModel.headers = headers;
+            viewModel.apiUsed = apiUsed;
             if (iFrame) {
                 postMessageToFrame("renderItem", viewModel.headers);
             }
@@ -442,6 +445,7 @@ function getDiagnosticsMap() {
 
     if (window.navigator) diagnosticsMap["User Agent"] = window.navigator.userAgent;
     diagnosticsMap["Requirement set"] = getRequirementSet();
+    diagnosticsMap["API used"] = viewModel.apiUsed;
     if (Office) {
         if (Office.context) {
             diagnosticsMap["contentLanguage"] = Office.context.contentLanguage;

@@ -53,7 +53,7 @@ function callbackEWS(asyncResult, headersLoadedCallback) {
         }
 
         if (prop) {
-            headersLoadedCallback(prop.textContent);
+            headersLoadedCallback(prop.textContent, "EWS");
         }
         else {
             throw new Error(ImportedStrings.mha_requestFailed);

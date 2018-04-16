@@ -112,9 +112,9 @@ function getHeaders(accessToken, headersLoadedCallback) {
     }).done(function (item) {
         try {
             if (item.SingleValueExtendedProperties !== undefined) {
-                headersLoadedCallback(item.SingleValueExtendedProperties[0].Value);
+                headersLoadedCallback(item.SingleValueExtendedProperties[0].Value, "REST");
             } else {
-                headersLoadedCallback(null);
+                headersLoadedCallback(null, "REST");
                 ShowError(null, ImportedStrings.mha_headersMissing, true);
             }
         }
