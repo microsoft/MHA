@@ -49,6 +49,15 @@ function callbackEWS(asyncResult, headersLoadedCallback) {
                 if (extendedProperty.length > 0) {
                     prop = extendedProperty[0];
                 }
+
+                // We might not have a prop and also no error. This is OK if the prop is just missing.
+                if (!prop) {
+                    var ResponseCode = responseDom.filterNode("m:ResponseCode");
+                    if (ResponseCode.length > 0 && ResponseCode[0].firstChild && ResponseCode[0].firstChild.data === "NoError") {
+                        ShowError(null, ImportedStrings.mha_headersMissing, true);
+                        return;
+                    }
+                }
             }
         }
 
@@ -80,7 +89,7 @@ function getSoapEnvelope(request) {
 
 function getHeadersRequest(id) {
     // Return a GetItem EWS operation request for the headers of the specified item.
- return "<GetItem xmlns='http://schemas.microsoft.com/exchange/services/2006/messages'>" +
+    return "<GetItem xmlns='http://schemas.microsoft.com/exchange/services/2006/messages'>" +
         "  <ItemShape>" +
         "    <t:BaseShape>IdOnly</t:BaseShape>" +
         "    <t:BodyType>Text</t:BodyType>" +
