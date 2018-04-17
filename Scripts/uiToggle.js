@@ -17,7 +17,7 @@ var uiModel = function () {
     this.deferredErrors = [];
     this.deferredStatus = [];
     this.headers = "";
-    this.apiUsed = "";
+    this.apiUsed = "not set";
 };
 
 uiModel.prototype.currentChoice = {};
@@ -25,7 +25,7 @@ uiModel.prototype.errors = [];
 uiModel.prototype.deferredErrors = [];
 uiModel.prototype.deferredStatus = [];
 uiModel.prototype.headers = "";
-uiModel.prototype.apiUsed = "";
+uiModel.prototype.apiUsed = "not set";
 
 var iFrame = null;
 var uiChoice = function (label, url, checked) {
@@ -420,7 +420,7 @@ function initFabric() {
         dialogSettingsComponent.open();
     };
 
-    function actionHandler(event) {
+    function actionHandler() {
         var action = this.id;
 
         switch (action) {
@@ -450,7 +450,6 @@ function getDiagnosticsMap() {
         if (Office.context) {
             diagnosticsMap["contentLanguage"] = Office.context.contentLanguage;
             diagnosticsMap["displayLanguage"] = Office.context.displayLanguage;
-            diagnosticsMap["touchEnabled"] = Office.context.touchEnabled;
 
             if (Office.context.mailbox) {
                 if (Office.context.mailbox.diagnostics) {
@@ -461,17 +460,35 @@ function getDiagnosticsMap() {
                         diagnosticsMap["OWAView"] = Office.context.mailbox.diagnostics.OWAView;
                     }
                 }
+                else {
+                    diagnosticsMap["Office.context.mailbox.diagnostics"] = "missing";
+                }
 
                 if (Office.context.mailbox.item) {
                     diagnosticsMap["itemType"] = Office.context.mailbox.item.itemType;
                     diagnosticsMap["itemClass"] = Office.context.mailbox.item.itemClass;
                 }
+                else {
+                    diagnosticsMap["Office.context.mailbox.item"] = "missing";
+                }
 
                 if (Office.context.mailbox._initialData$p$0) {
                     diagnosticsMap["permissions"] = Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
                 }
+                else {
+                    diagnosticsMap["Office.context.mailbox._initialData$p$0"] = "missing";
+                }
+            }
+            else {
+                diagnosticsMap["Office.context.mailbox"] = "missing";
             }
         }
+        else {
+            diagnosticsMap["Office.context"] = "missing";
+        }
+    }
+    else {
+        diagnosticsMap["Office"] = "missing";
     }
 
     return diagnosticsMap;
