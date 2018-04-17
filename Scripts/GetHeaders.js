@@ -12,7 +12,7 @@
 
 function sendHeadersRequest(headersLoadedCallback) {
     if (!Office.context.mailbox || !Office.context.mailbox.item) {
-        ShowError(e, "No item selected", true);
+        ShowError(null, "No item selected", true);
         return;
     }
 
