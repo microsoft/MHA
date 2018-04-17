@@ -16,6 +16,11 @@ function sendHeadersRequest(headersLoadedCallback) {
         return;
     }
 
+    if (!sufficientPermission()) {
+        ShowError(null, "Insufficient permissions to request headers", false);
+        return;
+    }
+
     try {
         if (canUseRest()) {
             sendHeadersRequestRest(headersLoadedCallback);
@@ -28,9 +33,16 @@ function sendHeadersRequest(headersLoadedCallback) {
     }
 }
 
+function sufficientPermission() {
+    if (!Office.context.mailbox) return false;
+    if (!Office.context.mailbox._initialData$p$0) return false;
+    if (Office.context.mailbox._initialData$p$0._permissionLevel$p$0 < 1) return false;
+    return true;
+}
+
 function canUseRest() {
     if (!Office.context.requirements.isSetSupported("Mailbox", 1.5)) return false;
-    if (Office.context.mailbox._initialData$p$0._permissionLevel$p$0 < 1) return false;
+    if (!sufficientPermission()) return false;
     if (!Office.context.mailbox.getCallbackTokenAsync) return false;
     return true;
 }
