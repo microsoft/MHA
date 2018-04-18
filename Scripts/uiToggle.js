@@ -185,7 +185,7 @@ function ShowError(error, message, suppressTracking) {
 // message - a string describing the error
 // suppressTracking - boolean indicating if we should suppress tracking
 function LogError(error, message, suppressTracking) {
-    if (!suppressTracking && error && Object.prototype.toString.call(error) !== "[object String]") {
+    if (document.domain !== "localhost" && !suppressTracking && error && Object.prototype.toString.call(error) !== "[object String]") {
         appInsights.trackException(error);
     }
 
@@ -199,7 +199,7 @@ function pushError(eventName, stack, suppressTracking) {
         var stackString = joinArray(stack, '\n');
         viewModel.errors.push(joinArray([eventName, stackString], '\n'));
 
-        if (!suppressTracking) {
+        if (document.domain !== "localhost" && !suppressTracking) {
             var props = getDiagnosticsMap();
             props["Stack"] = stackString;
             appInsights.trackEvent(eventName, props);
