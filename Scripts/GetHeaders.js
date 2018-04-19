@@ -47,5 +47,5 @@ function canUseRest() {
     if (!Office.context.requirements.isSetSupported("Mailbox", 1.5)) return false;
     if (!sufficientPermission(true)) return false;
     if (!Office.context.mailbox.getCallbackTokenAsync) return false;
-    return true;
+    return false;
 }
