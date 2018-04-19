@@ -84,15 +84,11 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
         }
         catch (e) {
             if (asyncResult) {
-                var logValue = {};
-                logValue.status = asyncResult.status;
-                logValue.value = stripHeaderFromXML(asyncResult.value);
-                LogError(null, "Async Response\n" + JSON.stringify(logValue, null, 2));
+                LogError(null, "Async Response\n" + stripHeaderFromXML(JSON.stringify(asyncResult, null, 2)));
             }
 
             if (logResponse) {
-                logResponse.body = stripHeaderFromXML(logResponse.body);
-                LogError(null, "Original Response\n" + JSON.stringify(logResponse, null, 2));
+                LogError(null, "Original Response\n" + stripHeaderFromXML(JSON.stringify(logResponse, null, 2)));
             }
 
             headersLoadedCallback(null, "EWS");
