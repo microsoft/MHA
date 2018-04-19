@@ -48,7 +48,7 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
     function callbackEWS(asyncResult, headersLoadedCallback) {
         try {
             // Process the returned response here.
-            var prop = null;
+        var prop = null;
             if (asyncResult.value) {
                 viewModel.originalHeaders = asyncResult.value;
                 var response = $.parseXML(asyncResult.value);
@@ -67,6 +67,7 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
                     if (!prop) {
                         var ResponseCode = responseDom.filterNode("m:ResponseCode");
                         if (ResponseCode.length > 0 && ResponseCode[0].firstChild && ResponseCode[0].firstChild.data === "NoError") {
+                            headersLoadedCallback(null, "EWS");
                             ShowError(null, ImportedStrings.mha_headersMissing, true);
                             return;
                         }
@@ -94,6 +95,7 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
                 LogError(null, "Async Response\n" + JSON.stringify(logResponse, null, 2));
             }
 
+            headersLoadedCallback(null, "EWS");
             ShowError(e, "EWS callback failed");
         }
     }
