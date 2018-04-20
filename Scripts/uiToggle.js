@@ -185,7 +185,7 @@ function ShowError(error, message, suppressTracking) {
 // message - a string describing the error
 // suppressTracking - boolean indicating if we should suppress tracking
 function LogError(error, message, suppressTracking) {
-    if (document.domain !== "localhost" && !suppressTracking) {
+    if (error && document.domain !== "localhost" && !suppressTracking) {
         if (isError(error)) {
             appInsights.trackException(error);
         }
