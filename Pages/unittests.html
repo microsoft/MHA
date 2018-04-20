@@ -192,8 +192,8 @@
         });
 
         QUnit.test("parseError Tests", function (assert) {
-            assert.expect(18); // Count of assert calls in the tests below
-            var done = assert.async(9); // Count of asynchronous calls below
+            assert.expect(20); // Count of assert calls in the tests below
+            var done = assert.async(10); // Count of asynchronous calls below
 
             parseError("stringError", "message", function (eventName, stack) {
                 assert.equal(eventName, "message : stringError");
@@ -272,6 +272,24 @@
                         "  \"two\": 2,\n" +
                         "  \"three\": \"three\"\n" +
                         "}");
+                    assert.deepEqual(CleanStack(stack), [
+                        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+                        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+                        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+                        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+                    ]);
+                    done();
+                });
+            }
+
+            try {
+                throw null;
+            }
+            catch (error) {
+                parseError(error, null, function (eventName, stack) {
+                    assert.equal(eventName, "Unknown exception");
                     assert.deepEqual(CleanStack(stack), [
                         "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
                         "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",

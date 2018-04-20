@@ -191,6 +191,7 @@ function LogError(error, message, suppressTracking) {
         }
         else {
             var props = getDiagnosticsMap();
+            props["Message"] = message;
             props["Error"] = JSON.stringify(error, null, 2);
             appInsights.trackEvent("Unknown error object", props);
         }
