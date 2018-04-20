@@ -185,8 +185,15 @@ function ShowError(error, message, suppressTracking) {
 // message - a string describing the error
 // suppressTracking - boolean indicating if we should suppress tracking
 function LogError(error, message, suppressTracking) {
-    if (document.domain !== "localhost" && !suppressTracking && error && Object.prototype.toString.call(error) !== "[object String]") {
-        appInsights.trackException(error);
+    if (document.domain !== "localhost" && !suppressTracking) {
+        if (isError(error)) {
+            appInsights.trackException(error);
+        }
+        else {
+            var props = getDiagnosticsMap();
+            props["Error"] = JSON.stringify(error, null, 2);
+            appInsights.trackEvent("Unknown error object", props);
+        }
     }
 
     parseError(error, message, function (eventName, stack) {

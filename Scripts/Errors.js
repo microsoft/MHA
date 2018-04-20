@@ -1,10 +1,12 @@
 /* global StackTrace */
 /* exported CleanStack */
+/* exported isError */
 /* exported parseError */
 
 function getErrorMessage(error) {
     if (!error) return '';
     if (Object.prototype.toString.call(error) === "[object String]") return error;
+    if (!isError(error)) return JSON.stringify(error, null, 2);
     if (error.message) return error.message;
     if (error.description) return error.description;
     return JSON.stringify(error, null, 2);
@@ -13,8 +15,14 @@ function getErrorMessage(error) {
 function getErrorStack(error) {
     if (!error) return '';
     if (Object.prototype.toString.call(error) === "[object String]") return "string thrown as error";
+    if (!isError(error)) return '';
     if (error.stack) return error.stack;
     return '';
+}
+
+function isError(error) {
+    if (Object.prototype.toString.call(error) === "[object Error]") return true;
+    return false;
 }
 
 // error - an exception object
@@ -37,11 +45,11 @@ function parseError(exception, message, errorHandler) {
     };
 
     var errback = function (err) {
-        stack = [getErrorStack(exception), "Parsing error:", getErrorMessage(err), getErrorStack(err)];
+        stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
         errorHandler(eventName, stack);
     };
 
-    if (!exception || Object.prototype.toString.call(exception) === "[object String]") {
+    if (!isError(exception)) {
         StackTrace.get().then(callback).catch(errback);
     } else {
         StackTrace.fromError(exception).then(callback).catch(errback);
@@ -70,6 +78,7 @@ function FilterStack(stack) {
 // Strip stack of rows with unittests.html.
 // Only used for unit tests.
 function CleanStack(stack) {
+    if (!stack) return null;
     return stack.map(function (item) {
         return item.replace(/.*localhost.*/g, "").replace(/.*azurewebsites.*/g, "").replace(/\n+/g, "\n");
     }).filter(function (item) {
