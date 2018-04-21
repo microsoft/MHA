@@ -86,7 +86,7 @@ var ReceivedRow = function (receivedHeader) {
     }
 
     this.dateNum = Date.parse(this.date);
-    this.date = new Date(this.date).toLocaleString().replace(/\u200E/, "");
+    this.date = new Date(this.date).toLocaleString().replace(/\u200E/g, "");
     this.dateSort = this.dateNum;
     this.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
     this.percent = 0;

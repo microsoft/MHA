@@ -224,7 +224,7 @@
             assert.propEqual(received.receivedRows[0],
                 {
                     "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
-                    "date": "4‎/‎20‎/‎2018‎ ‎5‎:‎51‎:‎19‎ ‎PM",
+                    "date": "4/20/2018 5:51:19 PM",
                     "dateNum": 1524261079000,
                     "dateSort": 1524261079000,
                     "delay": "",
@@ -241,7 +241,7 @@
             assert.propEqual(received.receivedRows[1],
                 {
                     "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
-                    "date": "4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM",
+                    "date": "4/20/2018 11:01:32 PM",
                     "dateNum": 1524279692000,
                     "dateSort": 1524279692000,
                     "delay": "310 minutes 13 seconds",
@@ -258,7 +258,7 @@
             assert.propEqual(received.receivedRows[2],
                 {
                     "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
-                    "date": "4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM",
+                    "date": "4/20/2018 11:01:32 PM",
                     "dateNum": 1524279692000,
                     "dateSort": 1524279692000,
                     "delay": "0 seconds",
@@ -275,7 +275,7 @@
             assert.propEqual(received.receivedRows[3],
                 {
                     "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
-                    "date": "4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎33‎ ‎PM",
+                    "date": "4/20/2018 11:01:33 PM",
                     "dateNum": 1524279693000,
                     "dateSort": 1524279693000,
                     "delay": "1 second",
@@ -295,22 +295,22 @@
             };
 
             assert.datesEqual(new ReceivedRow("Received: test; Sat, 21 Apr 2018 03:01:32 +0000"), {
-                "date": "4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+                "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
             });
             assert.datesEqual(new ReceivedRow("Received: test; Saturday, 21 Apr 2018 03:01:32 +0000"), {
-                "date": "4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+                "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
             });
             assert.datesEqual(new ReceivedRow("Received: test; 21 Apr 2018 03:01:32 +0000"), {
-                "date": "4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+                "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
             });
             assert.datesEqual(new ReceivedRow("Received: test; Apr 21 2018 03:01:32 +0000"), {
-                "date": "4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+                "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
             });
-            assert.datesEqual(new ReceivedRow("Received: test; 4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM"), {
-                "date": "4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+            assert.datesEqual(new ReceivedRow("Received: test; 4/20/2018 11:01:32 PM"), {
+                "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
             });
             assert.datesEqual(new ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36 +0000 (UTC)"), {
-                "date": "3‎/‎26‎/‎2018‎ ‎9‎:‎35‎:‎36‎ ‎AM", "dateNum": 1522071336000, "dateSort": 1522071336000
+                "date": "3/26/2018 9:35:36 AM", "dateNum": 1522071336000, "dateSort": 1522071336000
             });
         });
 
