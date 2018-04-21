@@ -209,20 +209,14 @@
                 " Apr 2018 03:01:32 +0000";
             received.init(header2);
             var header3 =
-                "Received-SPF: Pass (protection.outlook.com: domain of response.nfcu.org\n" +
-                " designates 199.204.166.217 as permitted sender)\n" +
-                " receiver=protection.outlook.com; client-ip=199.204.166.217;\n" +
-                " helo=vmta6.response.nfcu.org;";
-            received.init(header3);
-            var header4 =
                 "Received: from vmta6.response.nfcu.org (199.204.166.217) by\n" +
                 " BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112) with Microsoft SMTP\n" +
                 " Server id 15.20.696.11 via Frontend Transport; Sat, 21 Apr 2018 03:01:32\n" +
                 " +0000";
-            received.init(header4);
-            var header5 =
+            received.init(header3);
+            var header4 =
                 "Received: from localhost (10.0.22.21) by vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17) id hrakoo0lrlgv for <sgriffin@outlook.com>; Fri, 20 Apr 2018 17:51:19 -0400 (envelope-from <abuse_281D5450C2D61412E888B78BD84CCB3D2E80DB1641131EAF@response.nfcu.org>)";
-            received.init(header5);
+            received.init(header4);
 
             var totalTime = received.computeDeltas();
             assert.equal(totalTime, "310 minutes 14 seconds");
@@ -240,7 +234,7 @@
                         "hop": 1,
                         "id": "hrakoo0lrlgv",
                         "percent": 0,
-                        "sourceHeader": header5,
+                        "sourceHeader": header4,
                         "via": "",
                         "with": ""
                     },
@@ -256,25 +250,9 @@
                         "hop": 2,
                         "id": "15.20.696.11",
                         "percent": 99.99462769958096,
-                        "sourceHeader": header4,
+                        "sourceHeader": header3,
                         "via": "Frontend Transport",
                         "with": "Microsoft SMTP Server"
-                    },
-                    {
-                        "by": "",
-                        "date": "Invalid Date",
-                        "dateNum": NaN,
-                        "dateSort": NaN,
-                        "delay": [],
-                        "delaySort": -1,
-                        "for": "",
-                        "from": "",
-                        "hop": 3,
-                        "id": "",
-                        "percent": 0,
-                        "sourceHeader": header3,
-                        "via": "",
-                        "with": ""
                     },
                     {
                         "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
@@ -285,7 +263,7 @@
                         "delaySort": 0,
                         "for": "",
                         "from": "BN3NAM04FT003.eop-NAM04.prod.protection.outlook.com (10.152.92.53)",
-                        "hop": 4,
+                        "hop": 3,
                         "id": "15.20.696.11",
                         "percent": 0,
                         "sourceHeader": header2,
@@ -301,7 +279,7 @@
                         "delaySort": 1000,
                         "for": "",
                         "from": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (2a01:111:e400:c418::34)",
-                        "hop": 5,
+                        "hop": 4,
                         "id": "",
                         "percent": 0.0053723004190394325,
                         "sourceHeader": header1,
