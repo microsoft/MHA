@@ -147,7 +147,7 @@ Received.prototype.init = function (receivedHeader) {
     }
 
     row.dateNum = Date.parse(row.date);
-    row.date = new Date(row.date).toLocaleString();
+    row.date = new Date(row.date).toLocaleString().replace(/\u200E/,"");
     row.dateSort = row.dateNum;
     row.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
     row.percent = 0;
