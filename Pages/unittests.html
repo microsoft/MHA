@@ -13,6 +13,8 @@
     <script src="/Scripts/2047.js"></script>
     <script src="/Scripts/Headers.js"></script>
     <script src="/Scripts/Errors.js"></script>
+    <script src="/Scripts/Received.js"></script>
+    <script src="/Scripts/Strings.js"></script>
     <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/stacktrace.js/2.0.0/stacktrace-with-promises-and-json-polyfills.min.js"></script>
     <script>
         (window.StackTrace || document.write('<script src="/node_modules/stacktrace-js/dist/stacktrace-with-promises-and-json-polyfills.min.js"><\/script>'));
@@ -189,6 +191,125 @@
             assert.equal(headerList[0].header, "Content-Type");
             assert.equal(headerList[0].value,
                 "multipart/alternative; boundary=\"ErclWH56b6W5=_?:\"");
+        });
+
+        QUnit.test("Received Tests", function (assert) {
+            var received = new Received();
+            var header1 =
+                "Received: from BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
+                " (2a01:111:e400:c418::34) by SN1PR16MB0494.namprd16.prod.outlook.com with\n" +
+                " HTTPS via SN1PR15CA0024.NAMPRD15.PROD.OUTLOOK.COM; Sat, 21 Apr 2018 03:01:33\n" +
+                " +0000";
+            received.init(header1);
+            var header2 =
+                "Received: from BN3NAM04FT003.eop-NAM04.prod.protection.outlook.com\n" +
+                " (10.152.92.53) by BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
+                " (10.152.93.134) with Microsoft SMTP Server (version=TLS1_2,\n" +
+                " cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.20.696.11; Sat, 21\n" +
+                " Apr 2018 03:01:32 +0000";
+            received.init(header2);
+            var header3 =
+                "Received-SPF: Pass (protection.outlook.com: domain of response.nfcu.org\n" +
+                " designates 199.204.166.217 as permitted sender)\n" +
+                " receiver=protection.outlook.com; client-ip=199.204.166.217;\n" +
+                " helo=vmta6.response.nfcu.org;";
+            received.init(header3);
+            var header4 =
+                "Received: from vmta6.response.nfcu.org (199.204.166.217) by\n" +
+                " BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112) with Microsoft SMTP\n" +
+                " Server id 15.20.696.11 via Frontend Transport; Sat, 21 Apr 2018 03:01:32\n" +
+                " +0000";
+            received.init(header4);
+            var header5 =
+                "Received: from localhost (10.0.22.21) by vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17) id hrakoo0lrlgv for <sgriffin@outlook.com>; Fri, 20 Apr 2018 17:51:19 -0400 (envelope-from <abuse_281D5450C2D61412E888B78BD84CCB3D2E80DB1641131EAF@response.nfcu.org>)";
+            received.init(header5);
+
+            var totalTime = received.computeDeltas();
+            assert.equal(totalTime, "310 minutes 14 seconds");
+            assert.propEqual(received.receivedRows,
+                [
+                    {
+                        "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
+                        "date": "‎4‎/‎20‎/‎2018‎ ‎5‎:‎51‎:‎19‎ ‎PM",
+                        "dateNum": 1524261079000,
+                        "dateSort": 1524261079000,
+                        "delay": [],
+                        "delaySort": -1,
+                        "for": "<sgriffin@outlook.com>",
+                        "from": "localhost (10.0.22.21)",
+                        "hop": 1,
+                        "id": "hrakoo0lrlgv",
+                        "percent": 0,
+                        "sourceHeader": header5,
+                        "via": "",
+                        "with": ""
+                    },
+                    {
+                        "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
+                        "date": "‎4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM",
+                        "dateNum": 1524279692000,
+                        "dateSort": 1524279692000,
+                        "delay": "310 minutes 13 seconds",
+                        "delaySort": 18613000,
+                        "for": "",
+                        "from": "vmta6.response.nfcu.org (199.204.166.217)",
+                        "hop": 2,
+                        "id": "15.20.696.11",
+                        "percent": 99.99462769958096,
+                        "sourceHeader": header4,
+                        "via": "Frontend Transport",
+                        "with": "Microsoft SMTP Server"
+                    },
+                    {
+                        "by": "",
+                        "date": "Invalid Date",
+                        "dateNum": NaN,
+                        "dateSort": NaN,
+                        "delay": [],
+                        "delaySort": -1,
+                        "for": "",
+                        "from": "",
+                        "hop": 3,
+                        "id": "",
+                        "percent": 0,
+                        "sourceHeader": header3,
+                        "via": "",
+                        "with": ""
+                    },
+                    {
+                        "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
+                        "date": "‎4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM",
+                        "dateNum": 1524279692000,
+                        "dateSort": 1524279692000,
+                        "delay": "0 seconds",
+                        "delaySort": 0,
+                        "for": "",
+                        "from": "BN3NAM04FT003.eop-NAM04.prod.protection.outlook.com (10.152.92.53)",
+                        "hop": 4,
+                        "id": "15.20.696.11",
+                        "percent": 0,
+                        "sourceHeader": header2,
+                        "via": "",
+                        "with": "Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384)"
+                    },
+                    {
+                        "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
+                        "date": "‎4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎33‎ ‎PM",
+                        "dateNum": 1524279693000,
+                        "dateSort": 1524279693000,
+                        "delay": "1 second",
+                        "delaySort": 1000,
+                        "for": "",
+                        "from": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (2a01:111:e400:c418::34)",
+                        "hop": 5,
+                        "id": "",
+                        "percent": 0.0053723004190394325,
+                        "sourceHeader": header1,
+                        "via": "SN1PR15CA0024.NAMPRD15.PROD.OUTLOOK.COM",
+                        "with": "HTTPS"
+                    }
+                ]
+            );
         });
 
         QUnit.test("parseError Tests", function (assert) {
