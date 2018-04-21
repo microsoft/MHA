@@ -221,74 +221,80 @@
             var totalTime = received.computeDeltas();
             assert.equal(totalTime, "310 minutes 14 seconds");
             assert.equal(received.exists(), true);
-            assert.propEqual(received.receivedRows,
-                [
-                    {
-                        "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
-                        "date": "‎4‎/‎20‎/‎2018‎ ‎5‎:‎51‎:‎19‎ ‎PM",
-                        "dateNum": 1524261079000,
-                        "dateSort": 1524261079000,
-                        "delay": "",
-                        "delaySort": -1,
-                        "for": "<sgriffin@outlook.com>",
-                        "from": "localhost (10.0.22.21)",
-                        "hop": 1,
-                        "id": "hrakoo0lrlgv",
-                        "percent": 0,
-                        "sourceHeader": header4,
-                        "via": "",
-                        "with": ""
-                    },
-                    {
-                        "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
-                        "date": "‎4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM",
-                        "dateNum": 1524279692000,
-                        "dateSort": 1524279692000,
-                        "delay": "310 minutes 13 seconds",
-                        "delaySort": 18613000,
-                        "for": "",
-                        "from": "vmta6.response.nfcu.org (199.204.166.217)",
-                        "hop": 2,
-                        "id": "15.20.696.11",
-                        "percent": 99.99462769958096,
-                        "sourceHeader": header3,
-                        "via": "Frontend Transport",
-                        "with": "Microsoft SMTP Server"
-                    },
-                    {
-                        "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
-                        "date": "‎4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM",
-                        "dateNum": 1524279692000,
-                        "dateSort": 1524279692000,
-                        "delay": "0 seconds",
-                        "delaySort": 0,
-                        "for": "",
-                        "from": "BN3NAM04FT003.eop-NAM04.prod.protection.outlook.com (10.152.92.53)",
-                        "hop": 3,
-                        "id": "15.20.696.11",
-                        "percent": 0,
-                        "sourceHeader": header2,
-                        "via": "",
-                        "with": "Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384)"
-                    },
-                    {
-                        "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
-                        "date": "‎4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎33‎ ‎PM",
-                        "dateNum": 1524279693000,
-                        "dateSort": 1524279693000,
-                        "delay": "1 second",
-                        "delaySort": 1000,
-                        "for": "",
-                        "from": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (2a01:111:e400:c418::34)",
-                        "hop": 4,
-                        "id": "",
-                        "percent": 0.0053723004190394325,
-                        "sourceHeader": header1,
-                        "via": "SN1PR15CA0024.NAMPRD15.PROD.OUTLOOK.COM",
-                        "with": "HTTPS"
-                    }
-                ]
-            );
+            assert.propEqual(received.receivedRows[0],
+                {
+                    "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
+                    "date": "‎4‎/‎20‎/‎2018‎ ‎5‎:‎51‎:‎19‎ ‎PM",
+                    "dateNum": 1524261079000,
+                    "dateSort": 1524261079000,
+                    "delay": "",
+                    "delaySort": -1,
+                    "for": "<sgriffin@outlook.com>",
+                    "from": "localhost (10.0.22.21)",
+                    "hop": 1,
+                    "id": "hrakoo0lrlgv",
+                    "percent": 0,
+                    "sourceHeader": header4,
+                    "via": "",
+                    "with": ""
+                });
+            assert.propEqual(received.receivedRows[1],
+                {
+                    "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
+                    "date": "‎4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM",
+                    "dateNum": 1524279692000,
+                    "dateSort": 1524279692000,
+                    "delay": "310 minutes 13 seconds",
+                    "delaySort": 18613000,
+                    "for": "",
+                    "from": "vmta6.response.nfcu.org (199.204.166.217)",
+                    "hop": 2,
+                    "id": "15.20.696.11",
+                    "percent": 99.99462769958096,
+                    "sourceHeader": header3,
+                    "via": "Frontend Transport",
+                    "with": "Microsoft SMTP Server"
+                });
+            assert.propEqual(received.receivedRows[2],
+                {
+                    "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
+                    "date": "‎4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM",
+                    "dateNum": 1524279692000,
+                    "dateSort": 1524279692000,
+                    "delay": "0 seconds",
+                    "delaySort": 0,
+                    "for": "",
+                    "from": "BN3NAM04FT003.eop-NAM04.prod.protection.outlook.com (10.152.92.53)",
+                    "hop": 3,
+                    "id": "15.20.696.11",
+                    "percent": 0,
+                    "sourceHeader": header2,
+                    "via": "",
+                    "with": "Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384)"
+                });
+            assert.propEqual(received.receivedRows[3],
+                {
+                    "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
+                    "date": "‎4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎33‎ ‎PM",
+                    "dateNum": 1524279693000,
+                    "dateSort": 1524279693000,
+                    "delay": "1 second",
+                    "delaySort": 1000,
+                    "for": "",
+                    "from": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (2a01:111:e400:c418::34)",
+                    "hop": 4,
+                    "id": "",
+                    "percent": 0.0053723004190394325,
+                    "sourceHeader": header1,
+                    "via": "SN1PR15CA0024.NAMPRD15.PROD.OUTLOOK.COM",
+                    "with": "HTTPS"
+                });
+
+            var date = new Received();
+            date.init("Received: test; Sat, 21 Apr 2018 03:01:32 +0000");
+            assert.equal(date.receivedRows[0].date, "‎4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM");
+            assert.equal(date.receivedRows[0].dateNum, 1524279692000);
+            assert.equal(date.receivedRows[0].dateSort, 1524279692000);
         });
 
         QUnit.test("parseError Tests", function (assert) {
@@ -515,11 +521,12 @@
 
         QUnit.test("isError Tests", function (assert) {
             try { 0++; } catch (error) { assert.ok(isError(error)); }
-            try { throw "string"; } catch (error) { assert.ok(!isError(error)); }
-            try { throw 42; } catch (error) { assert.ok(!isError(error)); }
-            assert.ok(!isError("string"));
-            assert.ok(!isError(42));
-            assert.ok(!isError(null));
+            try { throw null; } catch (error) { assert.notOk(isError(error)); }
+            try { throw "string"; } catch (error) { assert.notOk(isError(error)); }
+            try { throw 42; } catch (error) { assert.notOk(isError(error)); }
+            assert.notOk(isError("string"));
+            assert.notOk(isError(42));
+            assert.notOk(isError(null));
         });
     </script>
 </head>
