@@ -4,29 +4,11 @@
 /// <reference path="Strings.js" />
 /// <reference path="Headers.js" />
 
-var ReceivedRow = function () {
-};
-
-ReceivedRow.prototype.hop = 0;
-ReceivedRow.prototype.from = "";
-ReceivedRow.prototype.by = "";
-ReceivedRow.prototype.with = "";
-ReceivedRow.prototype.id = 0;
-ReceivedRow.prototype.for = "";
-ReceivedRow.prototype.via = "";
-ReceivedRow.prototype.date = "";
-ReceivedRow.prototype.dateNum = 0;
-ReceivedRow.prototype.dateSort = 0;
-ReceivedRow.prototype.delay = 0;
-ReceivedRow.prototype.delaySort = 0;
-ReceivedRow.prototype.percent = 0;
-ReceivedRow.prototype.sourceHeader = 0;
-
 // Builds array of values for each header in receivedHeaderNames.
 // This algorithm should work regardless of the order of the headers, given:
 //  - The date, if present, is always at the end, separated by a ";".
 // Values not attached to a header will not be reflected in output.
-ReceivedRow.prototype.init = function (receivedHeader) {
+var ReceivedRow = function (receivedHeader) {
     var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
 
     // Build array of header locations
@@ -151,9 +133,7 @@ function RemoveEntry(stringArray, entry) {
 }
 
 Received.prototype.init = function (receivedHeader) {
-    row = new ReceivedRow();
-    row.init(receivedHeader);
-    this.receivedRows.push(row);
+    this.receivedRows.push(new ReceivedRow(receivedHeader));
 };
 
 Received.prototype.computeDeltas = function () {
