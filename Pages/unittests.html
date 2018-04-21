@@ -194,6 +194,10 @@
         });
 
         QUnit.test("Received Tests", function (assert) {
+            QUnit.assert.datesEqual = function (value, expected, message) {
+                return assert.propEqual({ date: value.date, dateNum: value.dateNum, dateSort: value.dateSort }, expected, message);
+            };
+
             var received = new Received();
             var header1 =
                 "Received: from BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
@@ -290,10 +294,6 @@
                     "with": "HTTPS"
                 });
 
-            QUnit.assert.datesEqual = function (value, expected, message) {
-                return assert.propEqual({ date: value.date, dateNum: value.dateNum, dateSort: value.dateSort }, expected, message);
-            };
-
             assert.datesEqual(new ReceivedRow("Received: test; Sat, 21 Apr 2018 03:01:32 +0000"), {
                 "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
             });
@@ -306,11 +306,17 @@
             assert.datesEqual(new ReceivedRow("Received: test; Apr 21 2018 03:01:32 +0000"), {
                 "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
             });
+            assert.datesEqual(new ReceivedRow("Received: test; Apr 21 2018 3:01:32 +0000"), {
+                "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+            });
             assert.datesEqual(new ReceivedRow("Received: test; 4/20/2018 11:01:32 PM"), {
                 "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
             });
             assert.datesEqual(new ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36 +0000 (UTC)"), {
                 "date": "3/26/2018 9:35:36 AM", "dateNum": 1522071336000, "dateSort": 1522071336000
+            });
+            assert.datesEqual(new ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)"), {
+                "date": "3/26/2018 9:35:36 AM", "dateNum": 1522071336102, "dateSort": 1522071336102
             });
         });
 

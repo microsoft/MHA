@@ -85,8 +85,14 @@ var ReceivedRow = function (receivedHeader) {
         }
     }
 
-    this.dateNum = Date.parse(this.date);
-    this.date = new Date(this.date).toLocaleString().replace(/\u200E/g, "");
+    var milliseconds = this.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
+    var trimDate = this.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
+    this.dateNum = Date.parse(trimDate);
+    if (milliseconds && milliseconds.length >= 2) {
+        this.dateNum = this.dateNum + parseInt(milliseconds[1]);
+    }
+
+    this.date = new Date(trimDate).toLocaleString().replace(/\u200E/g, "");
     this.dateSort = this.dateNum;
     this.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
     this.percent = 0;
