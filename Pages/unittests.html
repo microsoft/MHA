@@ -290,10 +290,15 @@
                     "with": "HTTPS"
                 });
 
-            var date = new ReceivedRow("Received: test; Sat, 21 Apr 2018 03:01:32 +0000");
-            assert.equal(date.date, "4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM");
-            assert.equal(date.dateNum, 1524279692000);
-            assert.equal(date.dateSort, 1524279692000);
+            QUnit.assert.datesEqual = function (value, expected, message) {
+                return assert.propEqual({ date: value.date, dateNum: value.dateNum, dateSort: value.dateSort }, expected, message);
+            };
+
+            assert.datesEqual(new ReceivedRow("Received: test; Sat, 21 Apr 2018 03:01:32 +0000"), {
+                "date": "4‎/‎20‎/‎2018‎ ‎11‎:‎01‎:‎32‎ ‎PM",
+                "dateNum": 1524279692000,
+                "dateSort": 1524279692000,
+            });
         });
 
         QUnit.test("parseError Tests", function (assert) {
