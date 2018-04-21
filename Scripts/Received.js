@@ -210,7 +210,7 @@ Received.prototype.computeDeltas = function () {
 Received.prototype.computeTime = function (current, last) {
     var time = [];
 
-    if (isNaN(current) || isNaN(last)) { return time; }
+    if (isNaN(current) || isNaN(last)) { return ""; }
     var diff = current - last;
     var iDelay;
     var printedMinutes = false;
