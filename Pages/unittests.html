@@ -220,6 +220,7 @@
 
             var totalTime = received.computeDeltas();
             assert.equal(totalTime, "310 minutes 14 seconds");
+            assert.equal(received.exists(), true);
             assert.propEqual(received.receivedRows,
                 [
                     {
