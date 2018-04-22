@@ -72,7 +72,7 @@ var ReceivedRow = function (receivedHeader) {
         this[receivedHeaderNames[iHeader]] = "";
         for (iToken = 0; iToken < tokens.length; iToken++) {
             if (receivedHeaderNames[iHeader] === tokens[iToken]) {
-                headerMatches[iMatch++] = { iHeader:iHeader, iToken:iToken };
+                headerMatches[iMatch++] = { iHeader: iHeader, iToken: iToken };
             }
         }
     }
@@ -171,17 +171,17 @@ Received.prototype.computeDeltas = function () {
     var iLastTime = NaN;
     var iDelta = 0; // This will be the sum of our positive deltas
     var i;
-    for (i = 0; i < this.receivedRows.length; i++) {
-        if (!isNaN(this.receivedRows[i].dateNum)) {
-            if (!isNaN(iLastTime) && iLastTime < this.receivedRows[i].dateNum) {
-                iDelta += this.receivedRows[i].dateNum - iLastTime;
+    this.receivedRows.forEach(function (row) {
+        if (!isNaN(row.dateNum)) {
+            if (!isNaN(iLastTime) && iLastTime < row.dateNum) {
+                iDelta += row.dateNum - iLastTime;
             }
 
-            iStartTime = iStartTime || this.receivedRows[i].dateNum;
-            iEndTime = this.receivedRows[i].dateNum;
-            iLastTime = this.receivedRows[i].dateNum;
+            iStartTime = iStartTime || row.dateNum;
+            iEndTime = row.dateNum;
+            iLastTime = row.dateNum;
         }
-    }
+    });
 
     iLastTime = NaN;
     var totalTime = "";
@@ -190,23 +190,23 @@ Received.prototype.computeDeltas = function () {
         totalTime = computeTime(iEndTime, iStartTime);
     }
 
-    for (i = 0; i < this.receivedRows.length; i++) {
-        this.receivedRows[i].hop = i + 1;
-        this.receivedRows[i].delay = computeTime(this.receivedRows[i].dateNum, iLastTime);
+    this.receivedRows.forEach(function (row, index) {
+        row.hop = index + 1;
+        row.delay = computeTime(row.dateNum, iLastTime);
 
-        if (!isNaN(this.receivedRows[i].dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
-            this.receivedRows[i].delaySort = this.receivedRows[i].dateNum - iLastTime;
+        if (!isNaN(row.dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
+            row.delaySort = row.dateNum - iLastTime;
 
             // Only positive delays will get percentage bars. Negative delays will be color coded at render time.
-            if (this.receivedRows[i].delaySort > 0) {
-                this.receivedRows[i].percent = 100 * this.receivedRows[i].delaySort / iDelta;
+            if (row.delaySort > 0) {
+                row.percent = 100 * row.delaySort / iDelta;
             }
         }
 
-        if (!isNaN(this.receivedRows[i].dateNum)) {
-            iLastTime = this.receivedRows[i].dateNum;
+        if (!isNaN(row.dateNum)) {
+            iLastTime = row.dateNum;
         }
-    }
+    });
 
     return totalTime;
 };
