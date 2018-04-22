@@ -25,14 +25,15 @@ var ReceivedRow = function (receivedHeader) {
     // No semicolon means no date - or maybe there's one there?
     // Sendgrid is bad about this
     if (iDate === -1) {
-        // First try to find a day of the week at the start of a line
-        receivedHeader = receivedHeader.replace(/\n\s*(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/g, "; $1");
+        // First try to find a day of the week
+        receivedHeader = receivedHeader.replace(/\s*(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/g, "; $1");
         iDate = receivedHeader.lastIndexOf(";")
     }
 
     if (iDate === -1) {
-        // Next we look for year-month-day at the start of a line
-        receivedHeader = receivedHeader.replace(/\n\s*(\d{4}-\d{1,2}-\d{1,2})/g, "; $1");
+        // Next we look for year-month-day
+        // Swap to month-day-year because IE can't parse it otherwise
+        receivedHeader = receivedHeader.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "; $2-$3-$1");
         iDate = receivedHeader.lastIndexOf(";")
     }
 
@@ -101,8 +102,8 @@ var ReceivedRow = function (receivedHeader) {
     }
 
     if (this.date) {
-        var milliseconds = this.date.match(/\d{1,2}:\d{1,2}:\d{2}.(\d+)/);
-        var trimDate = this.date.replace(/(\d{1,2}:\d{1,2}:\d{2}).(\d+)/, "$1");
+        var milliseconds = this.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
+        var trimDate = this.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
         this.dateNum = Date.parse(trimDate);
         if (milliseconds && milliseconds.length >= 2) {
             this.dateNum = this.dateNum + parseInt(milliseconds[1]);
