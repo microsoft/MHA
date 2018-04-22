@@ -184,11 +184,6 @@ Received.prototype.computeDeltas = function () {
     });
 
     iLastTime = NaN;
-    var totalTime = "";
-    // Total time is still last minus first, even if negative.
-    if (iEndTime !== iStartTime) {
-        totalTime = computeTime(iEndTime, iStartTime);
-    }
 
     this.receivedRows.forEach(function (row, index) {
         row.hop = index + 1;
@@ -208,7 +203,8 @@ Received.prototype.computeDeltas = function () {
         }
     });
 
-    return totalTime;
+    // Total time is still last minus first, even if negative.
+    return iEndTime !== iStartTime ? computeTime(iEndTime, iStartTime) : "";
 };
 
 // Computes min/sec from the diff of current and last.
