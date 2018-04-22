@@ -187,12 +187,12 @@ Received.prototype.computeDeltas = function () {
     var totalTime = "";
     // Total time is still last minus first, even if negative.
     if (iEndTime !== iStartTime) {
-        totalTime = this.computeTime(iEndTime, iStartTime);
+        totalTime = computeTime(iEndTime, iStartTime);
     }
 
     for (i = 0; i < this.receivedRows.length; i++) {
         this.receivedRows[i].hop = i + 1;
-        this.receivedRows[i].delay = this.computeTime(this.receivedRows[i].dateNum, iLastTime);
+        this.receivedRows[i].delay = computeTime(this.receivedRows[i].dateNum, iLastTime);
 
         if (!isNaN(this.receivedRows[i].dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
             this.receivedRows[i].delaySort = this.receivedRows[i].dateNum - iLastTime;
@@ -213,13 +213,17 @@ Received.prototype.computeDeltas = function () {
 
 // Computes min/sec from the diff of current and last.
 // Returns nothing if last or current is NaN.
-Received.prototype.computeTime = function (current, last) {
+computeTime = function (current, last) {
     var time = [];
 
     if (isNaN(current) || isNaN(last)) { return ""; }
     var diff = current - last;
     var iDelay;
     var printedMinutes = false;
+
+    if (Math.abs(diff) < 1000) {
+        return "0 " + ImportedStrings.mha_seconds;
+    }
 
     if (diff < 0) {
         time.push(ImportedStrings.mha_negative);
