@@ -68,14 +68,14 @@ var ReceivedRow = function (receivedHeader) {
     var iHeader;
     var iToken;
 
-    for (iHeader = 0; iHeader < receivedHeaderNames.length; iHeader++) {
-        this[receivedHeaderNames[iHeader]] = "";
+    receivedHeaderNames.forEach(function (receivedHeaderName, iHeader) {
+        this[receivedHeaderName] = "";
         for (iToken = 0; iToken < tokens.length; iToken++) {
-            if (receivedHeaderNames[iHeader] === tokens[iToken]) {
+            if (receivedHeaderName === tokens[iToken]) {
                 headerMatches[iMatch++] = { iHeader: iHeader, iToken: iToken };
             }
         }
-    }
+    });
 
     // Next bit assumes headerMatches[x,y] is increasing on y.
     // Sort it so it is.
