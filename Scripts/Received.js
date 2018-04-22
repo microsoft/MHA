@@ -79,22 +79,16 @@ var ReceivedRow = function (receivedHeader) {
     headerMatches.sort(function (a, b) { return a.iToken - b.iToken; });
 
     for (iMatch = 0; iMatch < headerMatches.length; iMatch++) {
-        var iTokenHeader = headerMatches[iMatch].iToken;
-        var iFirstVal = iTokenHeader + 1;
-
         var iNextTokenHeader;
-        var iLastVal;
         if (iMatch + 1 < headerMatches.length) {
             iNextTokenHeader = headerMatches[iMatch + 1].iToken;
         } else {
             iNextTokenHeader = tokens.length;
         }
 
-        iLastVal = iNextTokenHeader - 1;
-
         var headerName = receivedHeaderNames[headerMatches[iMatch].iHeader];
         if (this[headerName] !== "") { this[headerName] += "; "; }
-        this[headerName] = tokens.slice(iFirstVal, iLastVal + 1).join(" ").trim();
+        this[headerName] = tokens.slice(headerMatches[iMatch].iToken + 1, iNextTokenHeader).join(" ").trim();
     }
 
     if (this.date) {
