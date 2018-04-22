@@ -295,7 +295,7 @@
         });
 
         var sendGrid = "Received: by filter0383p1iad2.sendgrid.net with SMTP id filter0383p1iad2-15318-5AB8F728-C\n" +
-        "2018-03-26 13:35:36.270951634 +0000 UTC";
+        " 2018-03-26 13:35:36.270951634 +0000 UTC";
         assert.propEqual(new ReceivedRow(sendGrid), {
         "by": "filter0383p1iad2.sendgrid.net",
         "date": "3/26/2018 9:35:36 AM",
@@ -312,8 +312,8 @@
         });
 
         var sendGrid2 = "Received: from smtp.github.com (out-8.smtp.github.com [192.30.252.199])\n" +
-        "by ismtpd0003p1iad2.sendgrid.net (SG) with ESMTP id gDQRSEGgSqCsi9tFtF1Vtg\n" +
-        "Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)";
+        " by ismtpd0003p1iad2.sendgrid.net (SG) with ESMTP id gDQRSEGgSqCsi9tFtF1Vtg\n" +
+        " Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)";
         assert.propEqual(new ReceivedRow(sendGrid2), {
         "by": "ismtpd0003p1iad2.sendgrid.net (SG)",
         "date": "3/26/2018 9:35:36 AM",

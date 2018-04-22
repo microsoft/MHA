@@ -26,13 +26,13 @@ var ReceivedRow = function (receivedHeader) {
     // Sendgrid is bad about this
     if (iDate === -1) {
         // First try to find a day of the week at the start of a line
-        receivedHeader = receivedHeader.replace(/\n(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/g, "; $1");
+        receivedHeader = receivedHeader.replace(/\n\s*(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/g, "; $1");
         iDate = receivedHeader.lastIndexOf(";")
     }
 
     if (iDate === -1) {
         // Next we look for year-month-day at the start of a line
-        receivedHeader = receivedHeader.replace(/(\d{4}-\d{1,2}-\d{1,2})/g, "; $1");
+        receivedHeader = receivedHeader.replace(/\n\s*(\d{4}-\d{1,2}-\d{1,2})/g, "; $1");
         iDate = receivedHeader.lastIndexOf(";")
     }
 
