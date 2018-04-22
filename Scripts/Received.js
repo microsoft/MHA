@@ -213,7 +213,7 @@ Received.prototype.computeDeltas = function () {
 
 // Computes min/sec from the diff of current and last.
 // Returns nothing if last or current is NaN.
-computeTime = function (current, last) {
+function computeTime(current, last) {
     var time = [];
 
     if (isNaN(current) || isNaN(last)) { return ""; }
@@ -258,4 +258,4 @@ computeTime = function (current, last) {
     }
 
     return time.join("");
-};
+}
