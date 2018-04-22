@@ -72,24 +72,24 @@ var ReceivedRow = function (receivedHeader) {
         this[receivedHeaderNames[iHeader]] = "";
         for (iToken = 0; iToken < tokens.length; iToken++) {
             if (receivedHeaderNames[iHeader] === tokens[iToken]) {
-                headerMatches[iMatch++] = [iHeader, iToken];
+                headerMatches[iMatch++] = { iHeader:iHeader, iToken:iToken };
             }
         }
     }
 
     // Next bit assumes headerMatches[x,y] is increasing on y.
     // Sort it so it is.
-    headerMatches.sort(function (a, b) { return a[1] - b[1]; });
+    headerMatches.sort(function (a, b) { return a.iToken - b.iToken; });
 
     for (iMatch = 0; iMatch < headerMatches.length; iMatch++) {
-        iHeader = headerMatches[iMatch][0];
-        var iTokenHeader = headerMatches[iMatch][1];
+        iHeader = headerMatches[iMatch].iHeader;
+        var iTokenHeader = headerMatches[iMatch].iToken;
         var iFirstVal = iTokenHeader + 1;
 
         var iNextTokenHeader;
         var iLastVal;
         if (iMatch + 1 < headerMatches.length) {
-            iNextTokenHeader = headerMatches[iMatch + 1][1];
+            iNextTokenHeader = headerMatches[iMatch + 1].iToken;
         } else {
             iNextTokenHeader = tokens.length;
         }
