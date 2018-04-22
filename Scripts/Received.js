@@ -106,7 +106,7 @@ var ReceivedRow = function (receivedHeader) {
         var trimDate = this.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
         this.dateNum = Date.parse(trimDate);
         if (milliseconds && milliseconds.length >= 2) {
-            this.dateNum = this.dateNum + parseInt(milliseconds[1]);
+            this.dateNum = this.dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
         }
 
         this.date = new Date(trimDate).toLocaleString().replace(/\u200E/g, "");
