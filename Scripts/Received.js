@@ -16,8 +16,26 @@ var ReceivedRow = function (receivedHeader) {
 
     this.sourceHeader = receivedHeader;
 
+    // Some bad dates don't wrap UTC in paren - fix that first
+    receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/g, "(UTC)");
+
     // Read out the date first, then clear it from the string
     var iDate = receivedHeader.lastIndexOf(";");
+
+    // No semicolon means no date - or maybe there's one there?
+    // Sendgrid is bad about this
+    if (iDate === -1) {
+        // First try to find a day of the week at the start of a line
+        receivedHeader = receivedHeader.replace(/\n(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/g, "; $1");
+        iDate = receivedHeader.lastIndexOf(";")
+    }
+
+    if (iDate === -1) {
+        // Next we look for year-month-day at the start of a line
+        receivedHeader = receivedHeader.replace(/(\d{4}-\d{1,2}-\d{1,2})/g, "; $1");
+        iDate = receivedHeader.lastIndexOf(";")
+    }
+
     if (iDate !== -1) {
         this.date = receivedHeader.substring(iDate + 1);
         receivedHeader = receivedHeader.substring(0, iDate);
@@ -79,21 +97,21 @@ var ReceivedRow = function (receivedHeader) {
 
         var headerName = receivedHeaderNames[iHeader];
         if (this[headerName] !== "") { this[headerName] += "; "; }
-        for (iToken = iFirstVal; iToken <= iLastVal; iToken++) {
-            this[headerName] += tokens[iToken];
-            if (iToken < iLastVal) { this[headerName] += " "; }
+        this[headerName] = tokens.slice(iFirstVal, iLastVal + 1).join(" ").trim();
+    }
+
+    if (this.date) {
+        var milliseconds = this.date.match(/\d{1,2}:\d{1,2}:\d{2}.(\d+)/);
+        var trimDate = this.date.replace(/(\d{1,2}:\d{1,2}:\d{2}).(\d+)/, "$1");
+        this.dateNum = Date.parse(trimDate);
+        if (milliseconds && milliseconds.length >= 2) {
+            this.dateNum = this.dateNum + parseInt(milliseconds[1]);
         }
+
+        this.date = new Date(trimDate).toLocaleString().replace(/\u200E/g, "");
+        this.dateSort = this.dateNum;
     }
 
-    var milliseconds = this.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
-    var trimDate = this.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
-    this.dateNum = Date.parse(trimDate);
-    if (milliseconds && milliseconds.length >= 2) {
-        this.dateNum = this.dateNum + parseInt(milliseconds[1]);
-    }
-
-    this.date = new Date(trimDate).toLocaleString().replace(/\u200E/g, "");
-    this.dateSort = this.dateNum;
     this.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
     this.percent = 0;
 }

@@ -22,534 +22,578 @@
 
     <script>
         QUnit.test("RFC 2047 Tests", function (assert) {
-            // Tests from https://tools.ietf.org/html/rfc2047
-            assert.equal(clean2047Encoding("=?US-ASCII?Q?Keith_Moore?= <moore@cs.utk.edu>"), "Keith Moore <moore@cs.utk.edu>");
-            assert.equal(clean2047Encoding("=?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= <keld@dkuug.dk>"), "Keld Jørn Simonsen <keld@dkuug.dk>");
-            assert.equal(clean2047Encoding("=?ISO-8859-1?Q?Andr=E9?= Pirard <PIRARD@vm1.ulg.ac.be>"), "André Pirard <PIRARD@vm1.ulg.ac.be>");
-            assert.equal(clean2047Encoding("=?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?=\n" +
-                "    =?ISO-8859-2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?="), "If you can read this you understand the example.");
-            assert.equal(clean2047Encoding("=?ISO-8859-1?Q?Olle_J=E4rnefors?= <ojarnef@admin.kth.se>"), "Olle Järnefors <ojarnef@admin.kth.se>");
-            assert.equal(clean2047Encoding("ietf-822@dimacs.rutgers.edu, ojarnef@admin.kth.se"), "ietf-822@dimacs.rutgers.edu, ojarnef@admin.kth.se");
-            assert.equal(clean2047Encoding("Time for ISO 10646?"), "Time for ISO 10646?");
-            assert.equal(clean2047Encoding("Dave Crocker <dcrocker@mordor.stanford.edu>"), "Dave Crocker <dcrocker@mordor.stanford.edu>");
-            assert.equal(clean2047Encoding("ietf-822@dimacs.rutgers.edu, paf@comsol.se"), "ietf-822@dimacs.rutgers.edu, paf@comsol.se");
-            assert.equal(clean2047Encoding("=?ISO-8859-1?Q?Patrik_F=E4ltstr=F6m?= <paf@nada.kth.se>"), "Patrik Fältström <paf@nada.kth.se>");
-            assert.equal(clean2047Encoding("Re: RFC-HDR care and feeding"), "Re: RFC-HDR care and feeding");
+        // Tests from https://tools.ietf.org/html/rfc2047
+        assert.equal(clean2047Encoding("=?US-ASCII?Q?Keith_Moore?= <moore@cs.utk.edu>"), "Keith Moore <moore@cs.utk.edu>");
+        assert.equal(clean2047Encoding("=?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= <keld@dkuug.dk>"), "Keld Jørn Simonsen <keld@dkuug.dk>");
+        assert.equal(clean2047Encoding("=?ISO-8859-1?Q?Andr=E9?= Pirard <PIRARD@vm1.ulg.ac.be>"), "André Pirard <PIRARD@vm1.ulg.ac.be>");
+        assert.equal(clean2047Encoding("=?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?=\n" +
+        "    =?ISO-8859-2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?="), "If you can read this you understand the example.");
+        assert.equal(clean2047Encoding("=?ISO-8859-1?Q?Olle_J=E4rnefors?= <ojarnef@admin.kth.se>"), "Olle Järnefors <ojarnef@admin.kth.se>");
+        assert.equal(clean2047Encoding("ietf-822@dimacs.rutgers.edu, ojarnef@admin.kth.se"), "ietf-822@dimacs.rutgers.edu, ojarnef@admin.kth.se");
+        assert.equal(clean2047Encoding("Time for ISO 10646?"), "Time for ISO 10646?");
+        assert.equal(clean2047Encoding("Dave Crocker <dcrocker@mordor.stanford.edu>"), "Dave Crocker <dcrocker@mordor.stanford.edu>");
+        assert.equal(clean2047Encoding("ietf-822@dimacs.rutgers.edu, paf@comsol.se"), "ietf-822@dimacs.rutgers.edu, paf@comsol.se");
+        assert.equal(clean2047Encoding("=?ISO-8859-1?Q?Patrik_F=E4ltstr=F6m?= <paf@nada.kth.se>"), "Patrik Fältström <paf@nada.kth.se>");
+        assert.equal(clean2047Encoding("Re: RFC-HDR care and feeding"), "Re: RFC-HDR care and feeding");
 
-            assert.equal(clean2047Encoding("Nathaniel Borenstein <nsb@thumper.bellcore.com>\n" +
-                "    (=?iso-8859-8?b?7eXs+SDv4SDp7Oj08A==?=)"), "Nathaniel Borenstein <nsb@thumper.bellcore.com>\n" +
-                "    (םולש ןב ילטפנ)");
+        assert.equal(clean2047Encoding("Nathaniel Borenstein <nsb@thumper.bellcore.com>\n" +
+        "    (=?iso-8859-8?b?7eXs+SDv4SDp7Oj08A==?=)"), "Nathaniel Borenstein <nsb@thumper.bellcore.com>\n" +
+        "    (םולש ןב ילטפנ)");
 
-            assert.equal(clean2047Encoding("Greg Vaudreuil <gvaudre@NRI.Reston.VA.US>, Ned Freed\n" +
-                "    < ned@innosoft.com>, Keith Moore < moore@cs.utk.edu>"), "Greg Vaudreuil <gvaudre@NRI.Reston.VA.US>, Ned Freed\n" +
-                "    < ned@innosoft.com>, Keith Moore < moore@cs.utk.edu>");
-            assert.equal(clean2047Encoding("Test of new header generator"), "Test of new header generator");
-            assert.equal(clean2047Encoding("=?utf-8?Q?=00=41?=test1"), "\0Atest1");
-            assert.equal(clean2047Encoding("=?utf-8?Q?=0A=41?=test2"), "\nAtest2");
-            assert.equal(clean2047Encoding("=?utf-8?Q?=00=0A=41?=test3"), "\0\nAtest3");
-            assert.equal(clean2047Encoding("From: =?utf-8?Q?=00=0A=41?=test4"), "From: \0\nAtest4");
-            assert.equal(clean2047Encoding("From: =?utf-8?Q?=41?=\r\ntest5"), "From: A\r\ntest5");
-            assert.equal(clean2047Encoding(
-                "=?UTF-8?B?8J+PiCAgMjAxOSdzIE5vLjEgUmVjcnVpdCwgVGhlIFdvcmxkJ3Mg?=\n" +
-                " =?UTF-8?B?VGFsbGVzdCBUZWVuYWdlciwgVG9wIFBsYXlzIG9mIHRoZSBXZWVrICYgbW9y?=\n" +
-                " =?UTF-8?B?ZQ==?="),
-                "🏈  2019's No.1 Recruit, The World's Tallest Teenager, Top Plays of the Week & more");
-            assert.equal(clean2047Encoding(
-                "Subject: =?Windows-1252?Q?Fwd:_Scam_Alert_from_a_neighbor_on_NextDoor_-_Don=92t_re?=\n" +
-                " =?Windows-1252?Q?ad_out_your_2_factored_authentication_code_to_anyone_on_?=\n" +
-                "=?Windows-1252?Q?the_phone?="), "Subject: Fwd: Scam Alert from a neighbor on NextDoor - Don’t read out your 2 factored authentication code to anyone on the phone");
+        assert.equal(clean2047Encoding("Greg Vaudreuil <gvaudre@NRI.Reston.VA.US>, Ned Freed\n" +
+        "    < ned@innosoft.com>, Keith Moore < moore@cs.utk.edu>"), "Greg Vaudreuil <gvaudre@NRI.Reston.VA.US>, Ned Freed\n" +
+        "    < ned@innosoft.com>, Keith Moore < moore@cs.utk.edu>");
+        assert.equal(clean2047Encoding("Test of new header generator"), "Test of new header generator");
+        assert.equal(clean2047Encoding("=?utf-8?Q?=00=41?=test1"), "\0Atest1");
+        assert.equal(clean2047Encoding("=?utf-8?Q?=0A=41?=test2"), "\nAtest2");
+        assert.equal(clean2047Encoding("=?utf-8?Q?=00=0A=41?=test3"), "\0\nAtest3");
+        assert.equal(clean2047Encoding("From: =?utf-8?Q?=00=0A=41?=test4"), "From: \0\nAtest4");
+        assert.equal(clean2047Encoding("From: =?utf-8?Q?=41?=\r\ntest5"), "From: A\r\ntest5");
+        assert.equal(clean2047Encoding(
+        "=?UTF-8?B?8J+PiCAgMjAxOSdzIE5vLjEgUmVjcnVpdCwgVGhlIFdvcmxkJ3Mg?=\n" +
+        " =?UTF-8?B?VGFsbGVzdCBUZWVuYWdlciwgVG9wIFBsYXlzIG9mIHRoZSBXZWVrICYgbW9y?=\n" +
+        " =?UTF-8?B?ZQ==?="),
+        "🏈  2019's No.1 Recruit, The World's Tallest Teenager, Top Plays of the Week & more");
+        assert.equal(clean2047Encoding(
+        "Subject: =?Windows-1252?Q?Fwd:_Scam_Alert_from_a_neighbor_on_NextDoor_-_Don=92t_re?=\n" +
+        " =?Windows-1252?Q?ad_out_your_2_factored_authentication_code_to_anyone_on_?=\n" +
+        "=?Windows-1252?Q?the_phone?="), "Subject: Fwd: Scam Alert from a neighbor on NextDoor - Don’t read out your 2 factored authentication code to anyone on the phone");
         });
 
         QUnit.test("Mailsploit Tests", function (assert) {
-            // Tests drawn from posts/discussions of Mailsploit
-            assert.equal(clean2047Encoding("=?utf-8?Q?=42=45=47=49=4E=20=2F=20=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20=45=4E=44?="),
-                "BEGIN /  / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END");
-            assert.equal(clean2047Encoding("<=?utf-8?Q?=42=45=47=49=4E=20=2F=20=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20=45=4E=44?=@example.com>"),
-                "<BEGIN /  / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END@example.com>");
-            assert.equal(clean2047Encoding("=?utf-8?b?c2VydmljZUBwYXlwYWwuY29tPGlmcmFtZSBvbmxvYWQ9YWxlcnQoZG9jdW1lbnQuY29va2llKSBzcmM9aHR0cHM6Ly93d3cuaHVzaG1haWwuY29tIHN0eWxlPSJkaXNwbGF5Om5vbmUi?==?utf-8?Q?=0A=00?=@mailsploit.com"),
-                "service@paypal.com<iframe onload=alert(document.cookie) src=https://www.hushmail.com style=\"display:none\"\n\0@mailsploit.com");
+        // Tests drawn from posts/discussions of Mailsploit
+        assert.equal(clean2047Encoding("=?utf-8?Q?=42=45=47=49=4E=20=2F=20=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20=45=4E=44?="),
+        "BEGIN /  / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END");
+        assert.equal(clean2047Encoding("<=?utf-8?Q?=42=45=47=49=4E=20=2F=20=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20=45=4E=44?=@example.com>"),
+        "<BEGIN /  / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END@example.com>");
+        assert.equal(clean2047Encoding("=?utf-8?b?c2VydmljZUBwYXlwYWwuY29tPGlmcmFtZSBvbmxvYWQ9YWxlcnQoZG9jdW1lbnQuY29va2llKSBzcmM9aHR0cHM6Ly93d3cuaHVzaG1haWwuY29tIHN0eWxlPSJkaXNwbGF5Om5vbmUi?==?utf-8?Q?=0A=00?=@mailsploit.com"),
+        "service@paypal.com<iframe onload=alert(document.cookie) src=https://www.hushmail.com style=\"display:none\"\n\0@mailsploit.com");
 
-            // Tests from actual Mailsploit mails
-            // macOS  ≤ 10.13.1 / iOS ≤ 11  .2 Mail.app / Open-Xchange < 7.1  0.0 / CloudMagic Newton ≤ 9.8.79-like
-            assert.equal(clean2047Encoding(
-                "=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=00?==?utf-8?b?KHBvdHVzQHdoaXRlaG91c2UuZ292KQ==?=@mailsploit.com"),
-                "potus@whitehouse.gov\0(potus@whitehouse.gov)@mailsploit.com");
-            // Mozilla-Thunderbird ≤ 52.5.0-like
-            assert.equal(clean2047Encoding(
-                "\"=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=0A=00?=\"\r\n <=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=0A=00?=@mailsploit.com>"),
-                "\"potus@whitehouse.gov\n\0\"\r\n <potus@whitehouse.gov\n\0@mailsploit.com>");
-            // Variation #1
-            assert.equal(clean2047Encoding(
-                "=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=00=0A?=@mailsploit.com"),
-                "potus@whitehouse.gov\0\n@mailsploit.com");
-            // Variation #2
-            assert.equal(clean2047Encoding(
-                "\"=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3YiIDxwb3R1c0B3aGl0ZWhvdXNlLmdvdj4=?==?utf-8?Q?=00=0A?=\"\r\n <demo@mailsploit.com>"),
-                "\"potus@whitehouse.gov\" <potus@whitehouse.gov>\0\n\"\r\n <demo@mailsploit.com>");
-            // Variation #2.1
-            assert.equal(clean2047Encoding(
-                "\"=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3YiIDx0ZXN0Pg==?==?utf-8?Q?=00=0A?=\"\r\n <demo@mailsploit.com>"),
-                "\"potus@whitehouse.gov\" <test>\0\n\"\r\n <demo@mailsploit.com>");
-            // Variation #2.2
-            assert.equal(clean2047Encoding(
-                "\"=?utf-8?b?dGVzdCIgPHBvdHVzQHdoaXRlaG91c2UuZ292Pg==?==?utf-8?Q?=00=0A?=\"\r\n <demo@mailsploit.com>"),
-                "\"test\" <potus@whitehouse.gov>\0\n\"\r\n <demo@mailsploit.com>");
-            // Variation #3
-            assert.equal(clean2047Encoding(
-                "\"=?utf-8?b?InBvdHVzQHdoaXRlaG91c2UuZ292IiA8cG90dXNAd2hpdGVob3VzZS5nb3Y+?==?utf-8?Q?=0A=00=00=00?=\"\r\n <demo@mailsploit.com>"),
-                "\"\"potus@whitehouse.gov\" <potus@whitehouse.gov>\n\0\0\0\"\r\n <demo@mailsploit.com>");
-            // Variation #3.1
-            assert.equal(clean2047Encoding(
-                "\"=?utf-8?b?InRlc3QiIDxwb3R1c0B3aGl0ZWhvdXNlLmdvdj4=?==?utf-8?Q?=0A=00=00=00?=\"\r\n <demo@mailsploit.com>"),
-                "\"\"test\" <potus@whitehouse.gov>\n\0\0\0\"\r\n <demo@mailsploit.com>");
-            // Variation #3.2
-            assert.equal(clean2047Encoding(
-                "\"=?utf-8?b?InBvdHVzQHdoaXRlaG91c2UuZ292IiA8dGVzdD4=?==?utf-8?Q?=0A=00=00=00?=\"\r\n<demo@mailsploit.com>"),
-                "\"\"potus@whitehouse.gov\" <test>\n\0\0\0\"\r\n<demo@mailsploit.com>");
-            // Variation #4
-            assert.equal(clean2047Encoding(
-                "=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=0A=00?=@mailsploit.com"),
-                "potus@whitehouse.gov\n\0@mailsploit.com");
-            // Variation #5
-            assert.equal(clean2047Encoding(
-                "\" =?utf - 8 ? b ? cG90dXNAd2hpdGVob3VzZS5nb3Y =?=\" <demo@mailsploit.com>"),
-                "\" =?utf - 8 ? b ? cG90dXNAd2hpdGVob3VzZS5nb3Y =?=\" <demo@mailsploit.com>");
-            // Variation #6
-            assert.equal(clean2047Encoding(
-                "=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3YocG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=00?=@mailsploit.com"),
-                "potus@whitehouse.gov(potus@whitehouse.gov\0@mailsploit.com");
-            // Generic test #1
-            assert.equal(clean2047Encoding(
-                "\"=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E=?=\"\r\n <demo@mailsploit.com>"),
-                "\"BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END\0\"\r\n <demo@mailsploit.com>");
-            // Generic test #2
-            assert.equal(clean2047Encoding(
-                "=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E=?=@mailsploit.com"),
-                "BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END\0@mailsploit.com");
+        // Tests from actual Mailsploit mails
+        // macOS  ≤ 10.13.1 / iOS ≤ 11  .2 Mail.app / Open-Xchange < 7.1  0.0 / CloudMagic Newton ≤ 9.8.79-like
+        assert.equal(clean2047Encoding(
+        "=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=00?==?utf-8?b?KHBvdHVzQHdoaXRlaG91c2UuZ292KQ==?=@mailsploit.com"),
+        "potus@whitehouse.gov\0(potus@whitehouse.gov)@mailsploit.com");
+        // Mozilla-Thunderbird ≤ 52.5.0-like
+        assert.equal(clean2047Encoding(
+        "\"=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=0A=00?=\"\r\n <=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=0A=00?=@mailsploit.com>"),
+        "\"potus@whitehouse.gov\n\0\"\r\n <potus@whitehouse.gov\n\0@mailsploit.com>");
+        // Variation #1
+        assert.equal(clean2047Encoding(
+        "=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=00=0A?=@mailsploit.com"),
+        "potus@whitehouse.gov\0\n@mailsploit.com");
+        // Variation #2
+        assert.equal(clean2047Encoding(
+        "\"=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3YiIDxwb3R1c0B3aGl0ZWhvdXNlLmdvdj4=?==?utf-8?Q?=00=0A?=\"\r\n <demo@mailsploit.com>"),
+        "\"potus@whitehouse.gov\" <potus@whitehouse.gov>\0\n\"\r\n <demo@mailsploit.com>");
+        // Variation #2.1
+        assert.equal(clean2047Encoding(
+        "\"=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3YiIDx0ZXN0Pg==?==?utf-8?Q?=00=0A?=\"\r\n <demo@mailsploit.com>"),
+        "\"potus@whitehouse.gov\" <test>\0\n\"\r\n <demo@mailsploit.com>");
+        // Variation #2.2
+        assert.equal(clean2047Encoding(
+        "\"=?utf-8?b?dGVzdCIgPHBvdHVzQHdoaXRlaG91c2UuZ292Pg==?==?utf-8?Q?=00=0A?=\"\r\n <demo@mailsploit.com>"),
+        "\"test\" <potus@whitehouse.gov>\0\n\"\r\n <demo@mailsploit.com>");
+        // Variation #3
+        assert.equal(clean2047Encoding(
+        "\"=?utf-8?b?InBvdHVzQHdoaXRlaG91c2UuZ292IiA8cG90dXNAd2hpdGVob3VzZS5nb3Y+?==?utf-8?Q?=0A=00=00=00?=\"\r\n <demo@mailsploit.com>"),
+        "\"\"potus@whitehouse.gov\" <potus@whitehouse.gov>\n\0\0\0\"\r\n <demo@mailsploit.com>");
+        // Variation #3.1
+        assert.equal(clean2047Encoding(
+        "\"=?utf-8?b?InRlc3QiIDxwb3R1c0B3aGl0ZWhvdXNlLmdvdj4=?==?utf-8?Q?=0A=00=00=00?=\"\r\n <demo@mailsploit.com>"),
+        "\"\"test\" <potus@whitehouse.gov>\n\0\0\0\"\r\n <demo@mailsploit.com>");
+        // Variation #3.2
+        assert.equal(clean2047Encoding(
+        "\"=?utf-8?b?InBvdHVzQHdoaXRlaG91c2UuZ292IiA8dGVzdD4=?==?utf-8?Q?=0A=00=00=00?=\"\r\n<demo@mailsploit.com>"),
+        "\"\"potus@whitehouse.gov\" <test>\n\0\0\0\"\r\n<demo@mailsploit.com>");
+        // Variation #4
+        assert.equal(clean2047Encoding(
+        "=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=0A=00?=@mailsploit.com"),
+        "potus@whitehouse.gov\n\0@mailsploit.com");
+        // Variation #5
+        assert.equal(clean2047Encoding(
+        "\" =?utf - 8 ? b ? cG90dXNAd2hpdGVob3VzZS5nb3Y =?=\" <demo@mailsploit.com>"),
+        "\" =?utf - 8 ? b ? cG90dXNAd2hpdGVob3VzZS5nb3Y =?=\" <demo@mailsploit.com>");
+        // Variation #6
+        assert.equal(clean2047Encoding(
+        "=?utf-8?b?cG90dXNAd2hpdGVob3VzZS5nb3YocG90dXNAd2hpdGVob3VzZS5nb3Y=?==?utf-8?Q?=00?=@mailsploit.com"),
+        "potus@whitehouse.gov(potus@whitehouse.gov\0@mailsploit.com");
+        // Generic test #1
+        assert.equal(clean2047Encoding(
+        "\"=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E=?=\"\r\n <demo@mailsploit.com>"),
+        "\"BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END\0\"\r\n <demo@mailsploit.com>");
+        // Generic test #2
+        assert.equal(clean2047Encoding(
+        "=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E=?=@mailsploit.com"),
+        "BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END\0@mailsploit.com");
         });
 
         // Should I add test cases from http://greenbytes.de/tech/tc2231/ ?
 
         QUnit.test("2047 Hex Tests", function (assert) {
-            assert.equal(decodeHex("US-ASCII", "=61=62"), "ab");
-            assert.equal(decodeHex("ISO-8859-1", "Keld J=F8rn Simonsen"), "Keld Jørn Simonsen");
+        assert.equal(decodeHex("US-ASCII", "=61=62"), "ab");
+        assert.equal(decodeHex("ISO-8859-1", "Keld J=F8rn Simonsen"), "Keld Jørn Simonsen");
         });
 
         QUnit.test("2047 Quoted Tests", function (assert) {
-            assert.equal(decodeQuoted("US-ASCII", "Keith_Moore"), "Keith Moore");
-            assert.equal(decodeQuoted("ISO-8859-1", "Keld_J=F8rn_Simonsen"), "Keld Jørn Simonsen");
-            assert.equal(decodeQuoted("iso-8859-8", "=ED=E5=EC=F9=20=EF=E1=20=E9=EC=E8=F4=F0"), "םולש ןב ילטפנ");
-            assert.equal(decodeQuoted("utf-8", "=41=0A=42"), "A\nB");
-            assert.equal(decodeQuoted("utf-8", "=41=00=0A=42"), "A\0\nB");
+        assert.equal(decodeQuoted("US-ASCII", "Keith_Moore"), "Keith Moore");
+        assert.equal(decodeQuoted("ISO-8859-1", "Keld_J=F8rn_Simonsen"), "Keld Jørn Simonsen");
+        assert.equal(decodeQuoted("iso-8859-8", "=ED=E5=EC=F9=20=EF=E1=20=E9=EC=E8=F4=F0"), "םולש ןב ילטפנ");
+        assert.equal(decodeQuoted("utf-8", "=41=0A=42"), "A\nB");
+        assert.equal(decodeQuoted("utf-8", "=41=00=0A=42"), "A\0\nB");
         });
 
         QUnit.test("2047 Base64 Tests", function (assert) {
-            assert.equal(decodeBase64("US-ASCII", "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4bHl6"), "abcdefghijklmnopqrstuvwxlyz");
-            assert.equal(decodeBase64("US-ASCII", "IUAjJCVeJiooKV8rLT1bXVx7fXw7JzoiLC4vPD4/"), "!@#$%^&*()_+-=[]\\{}|;':\",./<>?");
-            assert.equal(decodeBase64("ISO-8859-1", "SWYgeW91IGNhbiByZWFkIHRoaXMgeW8="), "If you can read this yo");
-            assert.equal(decodeBase64("ISO-8859-2", "dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg=="), "u understand the example.");
+        assert.equal(decodeBase64("US-ASCII", "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4bHl6"), "abcdefghijklmnopqrstuvwxlyz");
+        assert.equal(decodeBase64("US-ASCII", "IUAjJCVeJiooKV8rLT1bXVx7fXw7JzoiLC4vPD4/"), "!@#$%^&*()_+-=[]\\{}|;':\",./<>?");
+        assert.equal(decodeBase64("ISO-8859-1", "SWYgeW91IGNhbiByZWFkIHRoaXMgeW8="), "If you can read this yo");
+        assert.equal(decodeBase64("ISO-8859-2", "dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg=="), "u understand the example.");
 
-            // This passes. Is this right?
-            assert.equal(decodeBase64("iso-8859-8", "7eXs+SDv4SDp7Oj08A=="), "םולש ןב ילטפנ");
+        // This passes. Is this right?
+        assert.equal(decodeBase64("iso-8859-8", "7eXs+SDv4SDp7Oj08A=="), "םולש ןב ילטפנ");
         });
 
         QUnit.test("2047 Junkmail Tests", function (assert) {
-            // Tests taken from junkmail
-            assert.equal(clean2047Encoding("=?UTF-8?Q?=F0=9D=93=A2=F0=9D=93=BB=F0=9D=93=B2=20=E2=84=92=F0=9D=93=AA=F0=9D=93=B7=F0=9D=93=B4=F0=9D=93=AA=F0=9D=93=B7=20?= =?UTF-8?Q?=F0=9D=93=B5=20=F0=9D=93=A3=F0=9D=93=BB=F0=9D=93=B2=F0=9D=93=AC=F0=9D=93=B4=20=E2=84=9B=F0=9D=92=86=F0=9D=93=BF=F0=9D=92=86?= =?UTF-8?Q?=F0=9D=93=B2=F0=9D=93=AA=F0=9D=93=AB=F0=9D=92=86=F0=9D=93=BD=F0=9D=92=86=F0=9D=93=BC=20=F0=9D=93=B2=F0=9D=93=B7=20?= =?UTF-8?Q?=F0=9D=93=BC?= "),
-                "𝓢𝓻𝓲 ℒ𝓪𝓷𝓴𝓪𝓷 𝓵 𝓣𝓻𝓲𝓬𝓴 ℛ𝒆𝓿𝒆𝓲𝓪𝓫𝒆𝓽𝒆𝓼 𝓲𝓷 𝓼 ");
-            assert.equal(decodeHex("UTF-8", "Test string=F0=9D=93=A2=F0=9D=93=BB=F0=9D=93=B2=20Woohoo!"), "Test string𝓢𝓻𝓲 Woohoo!");
-            assert.equal(cptable.utils.decode(28598, [0xED, 0xE5, 0xEC, 0xF9, 0x20, 0xEF, 0xE1, 0x20, 0xE9, 0xEC, 0xE8, 0xF4, 0xF0]), "םולש ןב ילטפנ");
+        // Tests taken from junkmail
+        assert.equal(clean2047Encoding("=?UTF-8?Q?=F0=9D=93=A2=F0=9D=93=BB=F0=9D=93=B2=20=E2=84=92=F0=9D=93=AA=F0=9D=93=B7=F0=9D=93=B4=F0=9D=93=AA=F0=9D=93=B7=20?= =?UTF-8?Q?=F0=9D=93=B5=20=F0=9D=93=A3=F0=9D=93=BB=F0=9D=93=B2=F0=9D=93=AC=F0=9D=93=B4=20=E2=84=9B=F0=9D=92=86=F0=9D=93=BF=F0=9D=92=86?= =?UTF-8?Q?=F0=9D=93=B2=F0=9D=93=AA=F0=9D=93=AB=F0=9D=92=86=F0=9D=93=BD=F0=9D=92=86=F0=9D=93=BC=20=F0=9D=93=B2=F0=9D=93=B7=20?= =?UTF-8?Q?=F0=9D=93=BC?= "),
+        "𝓢𝓻𝓲 ℒ𝓪𝓷𝓴𝓪𝓷 𝓵 𝓣𝓻𝓲𝓬𝓴 ℛ𝒆𝓿𝒆𝓲𝓪𝓫𝒆𝓽𝒆𝓼 𝓲𝓷 𝓼 ");
+        assert.equal(decodeHex("UTF-8", "Test string=F0=9D=93=A2=F0=9D=93=BB=F0=9D=93=B2=20Woohoo!"), "Test string𝓢𝓻𝓲 Woohoo!");
+        assert.equal(cptable.utils.decode(28598, [0xED, 0xE5, 0xEC, 0xF9, 0x20, 0xEF, 0xE1, 0x20, 0xE9, 0xEC, 0xE8, 0xF4, 0xF0]), "םולש ןב ילטפנ");
         });
 
         QUnit.test("2047 Codepage Tests", function (assert) {
-            assert.equal(decodeHexCodepage("ISO-8859-8", [0xED, 0xE5, 0xEC, 0xF9, 0x20, 0xEF, 0xE1, 0x20, 0xE9, 0xEC, 0xE8, 0xF4, 0xF0]), "םולש ןב ילטפנ");
-            assert.equal(decodeHexCodepage("UTF-8", [0xF0, 0x9D, 0x93, 0xA2, 0xF0, 0x9D, 0x93, 0xBB, 0xF0, 0x9D, 0x93, 0xB2, 0x20]), "𝓢𝓻𝓲 ");
+        assert.equal(decodeHexCodepage("ISO-8859-8", [0xED, 0xE5, 0xEC, 0xF9, 0x20, 0xEF, 0xE1, 0x20, 0xE9, 0xEC, 0xE8, 0xF4, 0xF0]), "םולש ןב ילטפנ");
+        assert.equal(decodeHexCodepage("UTF-8", [0xF0, 0x9D, 0x93, 0xA2, 0xF0, 0x9D, 0x93, 0xBB, 0xF0, 0x9D, 0x93, 0xB2, 0x20]), "𝓢𝓻𝓲 ");
         });
 
         QUnit.test("GetHeaderList Tests", function (assert) {
-            var headerList = GetHeaderList(
-                "Subject: =?UTF-8?B?8J+PiCAgMjAxOSdzIE5vLjEgUmVjcnVpdCwgVGhlIFdvcmxkJ3Mg?=\n" +
-                " =?UTF 8?B?VGFsbGVzdCBUZWVuYWdlciwgVG9wIFBsYXlzIG9mIHRoZSBXZWVrICYgbW9y?=\n" +
-                " =?UTF-8?B?ZQ==?=\n" +
-                "Date: Fri, 26 Jan 2018 15:54:11 - 0600\n");
-            assert.equal(headerList[0].header, "Subject");
-            assert.equal(headerList[0].value,
-                "🏈  2019's No.1 Recruit, The World's Tallest Teenager, Top Plays of the Week & more");
-            assert.equal(headerList[1].header, "Date");
-            assert.equal(headerList[1].value, "Fri, 26 Jan 2018 15:54:11 - 0600");
+        var headerList = GetHeaderList(
+        "Subject: =?UTF-8?B?8J+PiCAgMjAxOSdzIE5vLjEgUmVjcnVpdCwgVGhlIFdvcmxkJ3Mg?=\n" +
+        " =?UTF 8?B?VGFsbGVzdCBUZWVuYWdlciwgVG9wIFBsYXlzIG9mIHRoZSBXZWVrICYgbW9y?=\n" +
+        " =?UTF-8?B?ZQ==?=\n" +
+        "Date: Fri, 26 Jan 2018 15:54:11 - 0600\n");
+        assert.equal(headerList[0].header, "Subject");
+        assert.equal(headerList[0].value,
+        "🏈  2019's No.1 Recruit, The World's Tallest Teenager, Top Plays of the Week & more");
+        assert.equal(headerList[1].header, "Date");
+        assert.equal(headerList[1].value, "Fri, 26 Jan 2018 15:54:11 - 0600");
 
-            headerList = GetHeaderList(
-                "X-Microsoft-Antispam-Mailbox-Delivery:\n" +
-                "\tabwl:0;wl:0;pcwl:0;kl:0;iwl:0;ijl:0;dwl:0;dkl:0;rwl:0;ex:0;auth:1;dest:I;ENG:(400001000128)(400125000095)(5062000261)(5061607266)(5061608174)(4900095)(4920089)(6250004)(4950112)(4990090)(400001001318)(400125100095)(61617190)(400001002128)(400125200095);");
-            assert.equal(headerList[0].header, "X-Microsoft-Antispam-Mailbox-Delivery");
-            assert.equal(headerList[0].value,
-                "abwl:0;wl:0;pcwl:0;kl:0;iwl:0;ijl:0;dwl:0;dkl:0;rwl:0;ex:0;auth:1;dest:I;ENG:(400001000128)(400125000095)(5062000261)(5061607266)(5061608174)(4900095)(4920089)(6250004)(4950112)(4990090)(400001001318)(400125100095)(61617190)(400001002128)(400125200095);");
+        headerList = GetHeaderList(
+        "X-Microsoft-Antispam-Mailbox-Delivery:\n" +
+        "\tabwl:0;wl:0;pcwl:0;kl:0;iwl:0;ijl:0;dwl:0;dkl:0;rwl:0;ex:0;auth:1;dest:I;ENG:(400001000128)(400125000095)(5062000261)(5061607266)(5061608174)(4900095)(4920089)(6250004)(4950112)(4990090)(400001001318)(400125100095)(61617190)(400001002128)(400125200095);");
+        assert.equal(headerList[0].header, "X-Microsoft-Antispam-Mailbox-Delivery");
+        assert.equal(headerList[0].value,
+        "abwl:0;wl:0;pcwl:0;kl:0;iwl:0;ijl:0;dwl:0;dkl:0;rwl:0;ex:0;auth:1;dest:I;ENG:(400001000128)(400125000095)(5062000261)(5061607266)(5061608174)(4900095)(4920089)(6250004)(4950112)(4990090)(400001001318)(400125100095)(61617190)(400001002128)(400125200095);");
 
-            headerList = GetHeaderList(
-                "Content-Type: multipart/alternative;\n" +
-                "\tboundary=\"ErclWH56b6W5=_?:\"");
-            assert.equal(headerList[0].header, "Content-Type");
-            assert.equal(headerList[0].value,
-                "multipart/alternative; boundary=\"ErclWH56b6W5=_?:\"");
+        headerList = GetHeaderList(
+        "Content-Type: multipart/alternative;\n" +
+        "\tboundary=\"ErclWH56b6W5=_?:\"");
+        assert.equal(headerList[0].header, "Content-Type");
+        assert.equal(headerList[0].value,
+        "multipart/alternative; boundary=\"ErclWH56b6W5=_?:\"");
         });
 
         QUnit.test("Received Tests", function (assert) {
-            QUnit.assert.datesEqual = function (value, expected, message) {
-                return assert.propEqual({ date: value.date, dateNum: value.dateNum, dateSort: value.dateSort }, expected, message);
-            };
+        QUnit.assert.datesEqual = function (value, expected, message) {
+        return assert.propEqual({ date: value.date, dateNum: value.dateNum, dateSort: value.dateSort }, expected, message);
+        };
 
-            var received = new Received();
-            var header1 =
-                "Received: from BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
-                " (2a01:111:e400:c418::34) by SN1PR16MB0494.namprd16.prod.outlook.com with\n" +
-                " HTTPS via SN1PR15CA0024.NAMPRD15.PROD.OUTLOOK.COM; Sat, 21 Apr 2018 03:01:33\n" +
-                " +0000";
-            received.init(header1);
-            var header2 =
-                "Received: from BN3NAM04FT003.eop-NAM04.prod.protection.outlook.com\n" +
-                " (10.152.92.53) by BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
-                " (10.152.93.134) with Microsoft SMTP Server (version=TLS1_2,\n" +
-                " cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.20.696.11; Sat, 21\n" +
-                " Apr 2018 03:01:32 +0000";
-            received.init(header2);
-            var header3 =
-                "Received: from vmta6.response.nfcu.org (199.204.166.217) by\n" +
-                " BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112) with Microsoft SMTP\n" +
-                " Server id 15.20.696.11 via Frontend Transport; Sat, 21 Apr 2018 03:01:32\n" +
-                " +0000";
-            received.init(header3);
-            var header4 =
-                "Received: from localhost (10.0.22.21) by vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17) id hrakoo0lrlgv for <sgriffin@outlook.com>; Fri, 20 Apr 2018 17:51:19 -0400 (envelope-from <abuse_281D5450C2D61412E888B78BD84CCB3D2E80DB1641131EAF@response.nfcu.org>)";
-            received.init(header4);
+        var received = new Received();
+        var header1 =
+        "Received: from BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
+        " (2a01:111:e400:c418::34) by SN1PR16MB0494.namprd16.prod.outlook.com with\n" +
+        " HTTPS via SN1PR15CA0024.NAMPRD15.PROD.OUTLOOK.COM; Sat, 21 Apr 2018 03:01:33\n" +
+        " +0000";
+        received.init(header1);
+        var header2 =
+        "Received: from BN3NAM04FT003.eop-NAM04.prod.protection.outlook.com\n" +
+        " (10.152.92.53) by BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
+        " (10.152.93.134) with Microsoft SMTP Server (version=TLS1_2,\n" +
+        " cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.20.696.11; Sat, 21\n" +
+        " Apr 2018 03:01:32 +0000";
+        received.init(header2);
+        var header3 =
+        "Received: from vmta6.response.nfcu.org (199.204.166.217) by\n" +
+        " BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112) with Microsoft SMTP\n" +
+        " Server id 15.20.696.11 via Frontend Transport; Sat, 21 Apr 2018 03:01:32\n" +
+        " +0000";
+        received.init(header3);
+        var header4 =
+        "Received: from localhost (10.0.22.21) by vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17) id hrakoo0lrlgv for <sgriffin@outlook.com>; Fri, 20 Apr 2018 17:51:19 -0400 (envelope-from <abuse_281D5450C2D61412E888B78BD84CCB3D2E80DB1641131EAF@response.nfcu.org>)";
+        received.init(header4);
 
-            var totalTime = received.computeDeltas();
-            assert.equal(totalTime, "310 minutes 14 seconds");
-            assert.equal(received.exists(), true);
-            assert.propEqual(received.receivedRows[0],
-                {
-                    "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
-                    "date": "4/20/2018 5:51:19 PM",
-                    "dateNum": 1524261079000,
-                    "dateSort": 1524261079000,
-                    "delay": "",
-                    "delaySort": -1,
-                    "for": "<sgriffin@outlook.com>",
-                    "from": "localhost (10.0.22.21)",
-                    "hop": 1,
-                    "id": "hrakoo0lrlgv",
-                    "percent": 0,
-                    "sourceHeader": header4,
-                    "via": "",
-                    "with": ""
-                });
-            assert.propEqual(received.receivedRows[1],
-                {
-                    "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
-                    "date": "4/20/2018 11:01:32 PM",
-                    "dateNum": 1524279692000,
-                    "dateSort": 1524279692000,
-                    "delay": "310 minutes 13 seconds",
-                    "delaySort": 18613000,
-                    "for": "",
-                    "from": "vmta6.response.nfcu.org (199.204.166.217)",
-                    "hop": 2,
-                    "id": "15.20.696.11",
-                    "percent": 99.99462769958096,
-                    "sourceHeader": header3,
-                    "via": "Frontend Transport",
-                    "with": "Microsoft SMTP Server"
-                });
-            assert.propEqual(received.receivedRows[2],
-                {
-                    "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
-                    "date": "4/20/2018 11:01:32 PM",
-                    "dateNum": 1524279692000,
-                    "dateSort": 1524279692000,
-                    "delay": "0 seconds",
-                    "delaySort": 0,
-                    "for": "",
-                    "from": "BN3NAM04FT003.eop-NAM04.prod.protection.outlook.com (10.152.92.53)",
-                    "hop": 3,
-                    "id": "15.20.696.11",
-                    "percent": 0,
-                    "sourceHeader": header2,
-                    "via": "",
-                    "with": "Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384)"
-                });
-            assert.propEqual(received.receivedRows[3],
-                {
-                    "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
-                    "date": "4/20/2018 11:01:33 PM",
-                    "dateNum": 1524279693000,
-                    "dateSort": 1524279693000,
-                    "delay": "1 second",
-                    "delaySort": 1000,
-                    "for": "",
-                    "from": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (2a01:111:e400:c418::34)",
-                    "hop": 4,
-                    "id": "",
-                    "percent": 0.0053723004190394325,
-                    "sourceHeader": header1,
-                    "via": "SN1PR15CA0024.NAMPRD15.PROD.OUTLOOK.COM",
-                    "with": "HTTPS"
-                });
+        var totalTime = received.computeDeltas();
+        assert.equal(totalTime, "310 minutes 14 seconds");
+        assert.equal(received.exists(), true);
+        assert.propEqual(received.receivedRows[0],
+        {
+        "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
+        "date": "4/20/2018 5:51:19 PM",
+        "dateNum": 1524261079000,
+        "dateSort": 1524261079000,
+        "delay": "",
+        "delaySort": -1,
+        "for": "<sgriffin@outlook.com>",
+        "from": "localhost (10.0.22.21)",
+        "hop": 1,
+        "id": "hrakoo0lrlgv",
+        "percent": 0,
+        "sourceHeader": header4,
+        "via": "",
+        "with": ""
+        });
+        assert.propEqual(received.receivedRows[1],
+        {
+        "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
+        "date": "4/20/2018 11:01:32 PM",
+        "dateNum": 1524279692000,
+        "dateSort": 1524279692000,
+        "delay": "310 minutes 13 seconds",
+        "delaySort": 18613000,
+        "for": "",
+        "from": "vmta6.response.nfcu.org (199.204.166.217)",
+        "hop": 2,
+        "id": "15.20.696.11",
+        "percent": 99.99462769958096,
+        "sourceHeader": header3,
+        "via": "Frontend Transport",
+        "with": "Microsoft SMTP Server"
+        });
+        assert.propEqual(received.receivedRows[2],
+        {
+        "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
+        "date": "4/20/2018 11:01:32 PM",
+        "dateNum": 1524279692000,
+        "dateSort": 1524279692000,
+        "delay": "0 seconds",
+        "delaySort": 0,
+        "for": "",
+        "from": "BN3NAM04FT003.eop-NAM04.prod.protection.outlook.com (10.152.92.53)",
+        "hop": 3,
+        "id": "15.20.696.11",
+        "percent": 0,
+        "sourceHeader": header2,
+        "via": "",
+        "with": "Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384)"
+        });
+        assert.propEqual(received.receivedRows[3],
+        {
+        "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
+        "date": "4/20/2018 11:01:33 PM",
+        "dateNum": 1524279693000,
+        "dateSort": 1524279693000,
+        "delay": "1 second",
+        "delaySort": 1000,
+        "for": "",
+        "from": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (2a01:111:e400:c418::34)",
+        "hop": 4,
+        "id": "",
+        "percent": 0.0053723004190394325,
+        "sourceHeader": header1,
+        "via": "SN1PR15CA0024.NAMPRD15.PROD.OUTLOOK.COM",
+        "with": "HTTPS"
+        });
 
-            assert.datesEqual(new ReceivedRow("Received: test; Sat, 21 Apr 2018 03:01:32 +0000"), {
-                "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-            });
-            assert.datesEqual(new ReceivedRow("Received: test; Saturday, 21 Apr 2018 03:01:32 +0000"), {
-                "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-            });
-            assert.datesEqual(new ReceivedRow("Received: test; 21 Apr 2018 03:01:32 +0000"), {
-                "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-            });
-            assert.datesEqual(new ReceivedRow("Received: test; Apr 21 2018 03:01:32 +0000"), {
-                "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-            });
-            assert.datesEqual(new ReceivedRow("Received: test; Apr 21 2018 3:01:32 +0000"), {
-                "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-            });
-            assert.datesEqual(new ReceivedRow("Received: test; 4/20/2018 11:01:32 PM"), {
-                "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-            });
-            assert.datesEqual(new ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36 +0000 (UTC)"), {
-                "date": "3/26/2018 9:35:36 AM", "dateNum": 1522071336000, "dateSort": 1522071336000
-            });
-            assert.datesEqual(new ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)"), {
-                "date": "3/26/2018 9:35:36 AM", "dateNum": 1522071336102, "dateSort": 1522071336102
-            });
+        var sendGrid = "Received: by filter0383p1iad2.sendgrid.net with SMTP id filter0383p1iad2-15318-5AB8F728-C\n" +
+        "2018-03-26 13:35:36.270951634 +0000 UTC";
+        assert.propEqual(new ReceivedRow(sendGrid), {
+        "by": "filter0383p1iad2.sendgrid.net",
+        "date": "3/26/2018 9:35:36 AM",
+        "dateNum": 1522342287634,
+        "dateSort": 1522342287634,
+        "delaySort": -1,
+        "for": "",
+        "from": "",
+        "id": "filter0383p1iad2-15318-5AB8F728-C",
+        "percent": 0,
+        "sourceHeader": sendGrid,
+        "via": "",
+        "with": "SMTP"
+        });
+
+        var sendGrid2 = "Received: from smtp.github.com (out-8.smtp.github.com [192.30.252.199])\n" +
+        "by ismtpd0003p1iad2.sendgrid.net (SG) with ESMTP id gDQRSEGgSqCsi9tFtF1Vtg\n" +
+        "Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)";
+        assert.propEqual(new ReceivedRow(sendGrid2), {
+        "by": "ismtpd0003p1iad2.sendgrid.net (SG)",
+        "date": "3/26/2018 9:35:36 AM",
+        "dateNum": 1522071336102,
+        "dateSort": 1522071336102,
+        "delaySort": -1,
+        "for": "",
+        "from": "smtp.github.com (out-8.smtp.github.com [192.30.252.199])",
+        "id": "gDQRSEGgSqCsi9tFtF1Vtg",
+        "percent": 0,
+        "sourceHeader": sendGrid2,
+        "via": "",
+        "with": "ESMTP"
+        });
+
+        assert.datesEqual(new ReceivedRow("Received: test; Sat, 21 Apr 2018 03:01:32 +0000"), {
+        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+        });
+        assert.datesEqual(new ReceivedRow("Received: test; Saturday, 21 Apr 2018 03:01:32 +0000"), {
+        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+        });
+        assert.datesEqual(new ReceivedRow("Received: test; 21 Apr 2018 03:01:32 +0000"), {
+        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+        });
+        assert.datesEqual(new ReceivedRow("Received: test; Apr 21 2018 03:01:32 +0000"), {
+        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+        });
+        assert.datesEqual(new ReceivedRow("Received: test; Apr 21 2018 3:01:32 +0000"), {
+        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+        });
+        assert.datesEqual(new ReceivedRow("Received: test; 4/20/2018 11:01:32 PM"), {
+        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+        });
+        assert.datesEqual(new ReceivedRow("Received: test; 4-20-2018 11:01:32 PM"), {
+        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+        });
+        assert.datesEqual(new ReceivedRow("Received: test; 2018-4-20 11:01:32 PM"), {
+        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
+        });
+        assert.datesEqual(new ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36 +0000 (UTC)"), {
+        "date": "3/26/2018 9:35:36 AM", "dateNum": 1522071336000, "dateSort": 1522071336000
+        });
+        assert.datesEqual(new ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)"), {
+        "date": "3/26/2018 9:35:36 AM", "dateNum": 1522071336102, "dateSort": 1522071336102
+        });
+        assert.datesEqual(new ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36.102 +0000 UTC"), {
+        "date": "3/26/2018 9:35:36 AM", "dateNum": 1522071336102, "dateSort": 1522071336102
+        });
         });
 
         QUnit.test("parseError Tests", function (assert) {
-            assert.expect(20); // Count of assert calls in the tests below
-            var done = assert.async(10); // Count of asynchronous calls below
+        assert.expect(20); // Count of assert calls in the tests below
+        var done = assert.async(10); // Count of asynchronous calls below
 
-            parseError("stringError", "message", function (eventName, stack) {
-                assert.equal(eventName, "message : stringError");
-                assert.deepEqual(CleanStack(stack), [
-                    "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
-                    "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
-                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
-                    "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
-                    "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
-                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
-                ]);
-                done();
-            });
+        parseError("stringError", "message", function (eventName, stack) {
+        assert.equal(eventName, "message : stringError");
+        assert.deepEqual(CleanStack(stack), [
+        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+        ]);
+        done();
+        });
 
-            try {
-                0++;
-            }
-            catch (error) {
-                parseError(error, "message", function (eventName, stack) {
-                    assert.equal(eventName, "message : Invalid left-hand side in assignment");
-                    assert.deepEqual(CleanStack(stack), [
-                        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
-                        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
-                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
-                        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
-                        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
-                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
-                    ]);
-                    done();
-                });
-            }
+        try {
+        0++;
+        }
+        catch (error) {
+        parseError(error, "message", function (eventName, stack) {
+        assert.equal(eventName, "message : Invalid left-hand side in assignment");
+        assert.deepEqual(CleanStack(stack), [
+        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+        ]);
+        done();
+        });
+        }
 
-            try {
-                0++;
-            }
-            catch (error) {
-                parseError(error, null, function (eventName, stack) {
-                    assert.equal(eventName, "Invalid left-hand side in assignment");
-                    assert.deepEqual(CleanStack(stack), [
-                        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
-                        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
-                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
-                        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
-                        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
-                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
-                    ]);
-                    done();
-                });
-            }
+        try {
+        0++;
+        }
+        catch (error) {
+        parseError(error, null, function (eventName, stack) {
+        assert.equal(eventName, "Invalid left-hand side in assignment");
+        assert.deepEqual(CleanStack(stack), [
+        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+        ]);
+        done();
+        });
+        }
 
-            try {
-                throw 42;
-            }
-            catch (error) {
-                parseError(error, "message", function (eventName, stack) {
-                    assert.equal(eventName, "message : 42");
-                    assert.deepEqual(CleanStack(stack), [
-                        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
-                        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
-                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
-                        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
-                        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
-                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
-                    ]);
-                    done();
-                });
-            }
+        try {
+        throw 42;
+        }
+        catch (error) {
+        parseError(error, "message", function (eventName, stack) {
+        assert.equal(eventName, "message : 42");
+        assert.deepEqual(CleanStack(stack), [
+        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+        ]);
+        done();
+        });
+        }
 
-            try {
-                throw { one: 1, two: 2, three: "three" };
-            }
-            catch (error) {
-                parseError(error, null, function (eventName, stack) {
-                    assert.equal(eventName, "{\n" +
-                        "  \"one\": 1,\n" +
-                        "  \"two\": 2,\n" +
-                        "  \"three\": \"three\"\n" +
-                        "}");
-                    assert.deepEqual(CleanStack(stack), [
-                        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
-                        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
-                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
-                        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
-                        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
-                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
-                    ]);
-                    done();
-                });
-            }
+        try {
+        throw { one: 1, two: 2, three: "three" };
+        }
+        catch (error) {
+        parseError(error, null, function (eventName, stack) {
+        assert.equal(eventName, "{\n" +
+        "  \"one\": 1,\n" +
+        "  \"two\": 2,\n" +
+        "  \"three\": \"three\"\n" +
+        "}");
+        assert.deepEqual(CleanStack(stack), [
+        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+        ]);
+        done();
+        });
+        }
 
-            try {
-                throw null;
-            }
-            catch (error) {
-                parseError(error, null, function (eventName, stack) {
-                    assert.equal(eventName, "Unknown exception");
-                    assert.deepEqual(CleanStack(stack), [
-                        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
-                        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
-                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
-                        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
-                        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
-                        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
-                    ]);
-                    done();
-                });
-            }
+        try {
+        throw null;
+        }
+        catch (error) {
+        parseError(error, null, function (eventName, stack) {
+        assert.equal(eventName, "Unknown exception");
+        assert.deepEqual(CleanStack(stack), [
+        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+        ]);
+        done();
+        });
+        }
 
-            parseError(null, "message", function (eventName, stack) {
-                assert.equal(eventName, "message");
-                assert.deepEqual(CleanStack(stack), [
-                    "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
-                    "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
-                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
-                    "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
-                    "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
-                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
-                ]);
-                done();
-            });
+        parseError(null, "message", function (eventName, stack) {
+        assert.equal(eventName, "message");
+        assert.deepEqual(CleanStack(stack), [
+        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+        ]);
+        done();
+        });
 
-            parseError(null, null, function (eventName, stack) {
-                assert.equal(eventName, "Unknown exception");
-                assert.deepEqual(CleanStack(stack), [
-                    "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
-                    "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
-                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
-                    "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
-                    "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
-                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
-                ]);
-                done();
-            });
+        parseError(null, null, function (eventName, stack) {
+        assert.equal(eventName, "Unknown exception");
+        assert.deepEqual(CleanStack(stack), [
+        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+        ]);
+        done();
+        });
 
-            var brokenError = new Error();
-            parseError(brokenError, "message", function (eventName, stack) {
-                assert.equal(eventName, "message : {}");
-                assert.deepEqual(CleanStack(stack), [
-                    "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
-                    "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
-                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
-                    "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
-                    "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
-                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
-                ]);
-                done();
-            });
+        var brokenError = new Error();
+        parseError(brokenError, "message", function (eventName, stack) {
+        assert.equal(eventName, "message : {}");
+        assert.deepEqual(CleanStack(stack), [
+        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+        ]);
+        done();
+        });
 
-            parseError(42, "message", function (eventName, stack) {
-                assert.equal(eventName, "message : 42");
-                assert.deepEqual(CleanStack(stack), [
-                    "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
-                    "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
-                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
-                    "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
-                    "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
-                    "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
-                ]);
-                done();
-            });
+        parseError(42, "message", function (eventName, stack) {
+        assert.equal(eventName, "message : 42");
+        assert.deepEqual(CleanStack(stack), [
+        "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
+        "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663:7",
+        "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116:6",
+        "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928:4",
+        "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888:6"
+        ]);
+        done();
+        });
         });
 
         QUnit.test("getError* Tests", function (assert) {
-            try {
-                0++;
-            }
-            catch (error) {
-                assert.equal(getErrorMessage(error), "Invalid left-hand side in assignment");
-                assert.ok(getErrorStack(error).length > 0);
-            }
+        try {
+        0++;
+        }
+        catch (error) {
+        assert.equal(getErrorMessage(error), "Invalid left-hand side in assignment");
+        assert.ok(getErrorStack(error).length > 0);
+        }
 
-            try {
-                throw "string";
-            }
-            catch (error) {
-                assert.equal(getErrorMessage(error), "string");
-                assert.equal(getErrorStack(error), "string thrown as error");
-            }
+        try {
+        throw "string";
+        }
+        catch (error) {
+        assert.equal(getErrorMessage(error), "string");
+        assert.equal(getErrorStack(error), "string thrown as error");
+        }
 
-            try {
-                throw 42;
-            }
-            catch (error) {
-                assert.equal(getErrorMessage(error), "42");
-                assert.ok(getErrorStack(error).length === 0);
-            }
+        try {
+        throw 42;
+        }
+        catch (error) {
+        assert.equal(getErrorMessage(error), "42");
+        assert.ok(getErrorStack(error).length === 0);
+        }
 
-            try {
-                throw { one: 1, two: 2, three: "three" };
-            }
-            catch (error) {
-                assert.equal(getErrorMessage(error), "{\n" +
-                    "  \"one\": 1,\n" +
-                    "  \"two\": 2,\n" +
-                    "  \"three\": \"three\"\n" +
-                    "}");
-                assert.ok(getErrorStack(error).length == 0);
-            }
+        try {
+        throw { one: 1, two: 2, three: "three" };
+        }
+        catch (error) {
+        assert.equal(getErrorMessage(error), "{\n" +
+        "  \"one\": 1,\n" +
+        "  \"two\": 2,\n" +
+        "  \"three\": \"three\"\n" +
+        "}");
+        assert.ok(getErrorStack(error).length == 0);
+        }
 
-            assert.equal(getErrorMessage(null), "");
-            assert.equal(getErrorStack(null), "");
+        assert.equal(getErrorMessage(null), "");
+        assert.equal(getErrorStack(null), "");
 
-            assert.equal(getErrorMessage("stringError"), "stringError");
-            assert.equal(getErrorStack("stringError"), "string thrown as error");
+        assert.equal(getErrorMessage("stringError"), "stringError");
+        assert.equal(getErrorStack("stringError"), "string thrown as error");
 
-            assert.equal(getErrorMessage(42), "42");
-            assert.equal(getErrorStack(42), "");
+        assert.equal(getErrorMessage(42), "42");
+        assert.equal(getErrorStack(42), "");
         });
 
         QUnit.test("joinArray Tests", function (assert) {
-            assert.equal(joinArray(null, " : "), null);
-            assert.equal(joinArray(["1"], " : "), "1");
-            assert.equal(joinArray(["1", "2"], " : "), "1 : 2");
-            assert.equal(joinArray([null, "2"], " : "), "2");
-            assert.equal(joinArray(["1", null], " : "), "1");
-            assert.equal(joinArray(["1", null, "3"], " : "), "1 : 3");
-            assert.equal(joinArray([1, 2], " : "), "1 : 2");
+        assert.equal(joinArray(null, " : "), null);
+        assert.equal(joinArray(["1"], " : "), "1");
+        assert.equal(joinArray(["1", "2"], " : "), "1 : 2");
+        assert.equal(joinArray([null, "2"], " : "), "2");
+        assert.equal(joinArray(["1", null], " : "), "1");
+        assert.equal(joinArray(["1", null, "3"], " : "), "1 : 3");
+        assert.equal(joinArray([1, 2], " : "), "1 : 2");
         });
 
         QUnit.test("isError Tests", function (assert) {
-            try { 0++; } catch (error) { assert.ok(isError(error)); }
-            try { throw null; } catch (error) { assert.notOk(isError(error)); }
-            try { throw "string"; } catch (error) { assert.notOk(isError(error)); }
-            try { throw 42; } catch (error) { assert.notOk(isError(error)); }
-            assert.notOk(isError("string"));
-            assert.notOk(isError(42));
-            assert.notOk(isError(null));
+        try { 0++; } catch (error) { assert.ok(isError(error)); }
+        try { throw null; } catch (error) { assert.notOk(isError(error)); }
+        try { throw "string"; } catch (error) { assert.notOk(isError(error)); }
+        try { throw 42; } catch (error) { assert.notOk(isError(error)); }
+        assert.notOk(isError("string"));
+        assert.notOk(isError(42));
+        assert.notOk(isError(null));
         });
     </script>
 </head>
