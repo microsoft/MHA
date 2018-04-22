@@ -170,7 +170,7 @@ Received.prototype.computeDeltas = function () {
     var iEndTime = 0;
     var iLastTime = NaN;
     var iDelta = 0; // This will be the sum of our positive deltas
-    var i;
+
     this.receivedRows.forEach(function (row) {
         if (!isNaN(row.dateNum)) {
             if (!isNaN(iLastTime) && iLastTime < row.dateNum) {
