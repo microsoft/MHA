@@ -66,14 +66,12 @@ var ReceivedRow = function (receivedHeader) {
 
     var iMatch = 0;
     var iHeader;
-    var iToken;
 
     receivedHeaderNames.forEach(function (receivedHeaderName, iHeader) {
         this[receivedHeaderName] = "";
-        for (iToken = 0; iToken < tokens.length; iToken++) {
-            if (receivedHeaderName === tokens[iToken]) {
-                headerMatches[iMatch++] = { iHeader: iHeader, iToken: iToken };
-            }
+        var iToken = tokens.findIndex(function (token) { return receivedHeaderName === token });
+        if (-1 !== iToken) {
+            headerMatches[iMatch++] = { iHeader: iHeader, iToken: iToken };
         }
     });
 
