@@ -1,5 +1,8 @@
 /* global StackTrace */
 /* exported CleanStack */
+/* exported getErrorMessage */
+/* exported getErrorStack */
+/* exported CleanStack */
 /* exported isError */
 /* exported parseError */
 
