@@ -65,7 +65,6 @@ var ReceivedRow = function (receivedHeader) {
     var tokens = receivedHeader.split(/\s+/);
 
     var iMatch = 0;
-    var iHeader;
 
     receivedHeaderNames.forEach(function (receivedHeaderName, iHeader) {
         this[receivedHeaderName] = "";
@@ -80,7 +79,6 @@ var ReceivedRow = function (receivedHeader) {
     headerMatches.sort(function (a, b) { return a.iToken - b.iToken; });
 
     for (iMatch = 0; iMatch < headerMatches.length; iMatch++) {
-        iHeader = headerMatches[iMatch].iHeader;
         var iTokenHeader = headerMatches[iMatch].iToken;
         var iFirstVal = iTokenHeader + 1;
 
@@ -94,7 +92,7 @@ var ReceivedRow = function (receivedHeader) {
 
         iLastVal = iNextTokenHeader - 1;
 
-        var headerName = receivedHeaderNames[iHeader];
+        var headerName = receivedHeaderNames[headerMatches[iMatch].iHeader];
         if (this[headerName] !== "") { this[headerName] += "; "; }
         this[headerName] = tokens.slice(iFirstVal, iLastVal + 1).join(" ").trim();
     }
