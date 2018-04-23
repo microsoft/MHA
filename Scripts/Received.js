@@ -65,7 +65,6 @@ var ReceivedRow = function (receivedHeader) {
     var tokens = receivedHeader.split(/\s+/);
 
     var iMatch = 0;
-
     receivedHeaderNames.forEach(function (receivedHeaderName, iHeader) {
         var iToken = tokens.findIndex(function (token) { return receivedHeaderName === token });
         if (-1 !== iToken) {
