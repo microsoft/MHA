@@ -67,7 +67,6 @@ var ReceivedRow = function (receivedHeader) {
     var iMatch = 0;
 
     receivedHeaderNames.forEach(function (receivedHeaderName, iHeader) {
-        this[receivedHeaderName] = "";
         var iToken = tokens.findIndex(function (token) { return receivedHeaderName === token });
         if (-1 !== iToken) {
             headerMatches[iMatch++] = { iHeader: iHeader, iToken: iToken };
@@ -78,7 +77,7 @@ var ReceivedRow = function (receivedHeader) {
     // Sort it so it is.
     headerMatches.sort(function (a, b) { return a.iToken - b.iToken; });
 
-    for (iMatch = 0; iMatch < headerMatches.length; iMatch++) {
+    headerMatches.forEach(function (headerMatch, iMatch) {
         var iNextTokenHeader;
         if (iMatch + 1 < headerMatches.length) {
             iNextTokenHeader = headerMatches[iMatch + 1].iToken;
@@ -86,10 +85,10 @@ var ReceivedRow = function (receivedHeader) {
             iNextTokenHeader = tokens.length;
         }
 
-        var headerName = receivedHeaderNames[headerMatches[iMatch].iHeader];
+        var headerName = receivedHeaderNames[headerMatch.iHeader];
         if (this[headerName] !== "") { this[headerName] += "; "; }
-        this[headerName] = tokens.slice(headerMatches[iMatch].iToken + 1, iNextTokenHeader).join(" ").trim();
-    }
+        this[headerName] = tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim();
+    }, this);
 
     if (this.date) {
         var milliseconds = this.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
