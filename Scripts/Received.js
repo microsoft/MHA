@@ -4,23 +4,108 @@
 /// <reference path="Strings.js" />
 /// <reference path="Headers.js" />
 
-var ReceivedRow = function () {
-};
+// Builds array of values for each header in receivedHeaderNames.
+// This algorithm should work regardless of the order of the headers, given:
+//  - The date, if present, is always at the end, separated by a ";".
+// Values not attached to a header will not be reflected in output.
+var ReceivedRow = function (receivedHeader) {
+    var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
 
-ReceivedRow.prototype.hop = 0;
-ReceivedRow.prototype.from = "";
-ReceivedRow.prototype.by = "";
-ReceivedRow.prototype.with = "";
-ReceivedRow.prototype.id = 0;
-ReceivedRow.prototype.for = "";
-ReceivedRow.prototype.via = "";
-ReceivedRow.prototype.date = "";
-ReceivedRow.prototype.dateNum = 0;
-ReceivedRow.prototype.dateSort = 0;
-ReceivedRow.prototype.delay = 0;
-ReceivedRow.prototype.delaySort = 0;
-ReceivedRow.prototype.percent = 0;
-ReceivedRow.prototype.sourceHeader = 0;
+    // Build array of header locations
+    var headerMatches = [];
+
+    this.sourceHeader = receivedHeader;
+
+    // Some bad dates don't wrap UTC in paren - fix that first
+    receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/g, "(UTC)");
+
+    // Read out the date first, then clear it from the string
+    var iDate = receivedHeader.lastIndexOf(";");
+
+    // No semicolon means no date - or maybe there's one there?
+    // Sendgrid is bad about this
+    if (iDate === -1) {
+        // First try to find a day of the week
+        receivedHeader = receivedHeader.replace(/\s*(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/g, "; $1");
+        iDate = receivedHeader.lastIndexOf(";")
+    }
+
+    if (iDate === -1) {
+        // Next we look for year-month-day
+        // Swap to month-day-year because IE can't parse it otherwise
+        receivedHeader = receivedHeader.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "; $2-$3-$1");
+        iDate = receivedHeader.lastIndexOf(";")
+    }
+
+    if (iDate !== -1) {
+        this.date = receivedHeader.substring(iDate + 1);
+        receivedHeader = receivedHeader.substring(0, iDate);
+    }
+
+    // Scan for malformed postFix headers
+    // Received: by example.com (Postfix, from userid 1001)
+    //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
+    var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/);
+    if (postFix) {
+        this["by"] = postFix[2];
+        receivedHeader = postFix[1] + postFix[3];
+        receivedHeaderNames = RemoveEntry(receivedHeaderNames, "by");
+    }
+
+    // Scan for malformed qmail headers
+    // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
+    postFix = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/);
+    if (postFix) {
+        this["by"] = postFix[2];
+        receivedHeader = postFix[1] + postFix[3];
+        receivedHeaderNames = RemoveEntry(receivedHeaderNames, "by");
+    }
+
+    // Split up the string now so we can look for our headers
+    var tokens = receivedHeader.split(/\s+/);
+
+    var iMatch = 0;
+    receivedHeaderNames.forEach(function (receivedHeaderName, iHeader) {
+        tokens.some(function (token, iToken) {
+            if (receivedHeaderName === token) {
+                headerMatches[iMatch++] = { iHeader: iHeader, iToken: iToken };
+                return true;
+            }
+        });
+    });
+
+    // Next bit assumes headerMatches[x,y] is increasing on y.
+    // Sort it so it is.
+    headerMatches.sort(function (a, b) { return a.iToken - b.iToken; });
+
+    headerMatches.forEach(function (headerMatch, iMatch) {
+        var iNextTokenHeader;
+        if (iMatch + 1 < headerMatches.length) {
+            iNextTokenHeader = headerMatches[iMatch + 1].iToken;
+        } else {
+            iNextTokenHeader = tokens.length;
+        }
+
+        var headerName = receivedHeaderNames[headerMatch.iHeader];
+        if (this[headerName] !== "") { this[headerName] += "; "; }
+        this[headerName] = tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim();
+    }, this);
+
+    if (this.date) {
+        var milliseconds = this.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
+        var trimDate = this.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
+        this.dateNum = Date.parse(trimDate);
+        if (milliseconds && milliseconds.length >= 2) {
+            this.dateNum = this.dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
+        }
+
+        this.date = new Date(trimDate).toLocaleString().replace(/\u200E/g, "");
+        this.dateSort = this.dateNum;
+    }
+
+    this.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
+    this.percent = 0;
+}
 
 var Received = function () {
     this.receivedRows = [];
@@ -62,97 +147,8 @@ function RemoveEntry(stringArray, entry) {
     return stringArray;
 }
 
-// Builds array of values for each header in receivedHeaderNames.
-// This algorithm should work regardless of the order of the headers, given:
-//  - The date, if present, is always at the end, separated by a ";".
-// Values not attached to a header will not be reflected in output.
 Received.prototype.init = function (receivedHeader) {
-    var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
-
-    var row = new ReceivedRow();
-
-    // Build array of header locations
-    var headerMatches = [];
-
-    row.sourceHeader = receivedHeader;
-
-    // Read out the date first, then clear it from the string
-    var iDate = receivedHeader.lastIndexOf(";");
-    if (iDate !== -1) {
-        row.date = receivedHeader.substring(iDate + 1);
-        receivedHeader = receivedHeader.substring(0, iDate);
-    }
-
-    // Scan for malformed postFix headers
-    // Received: by example.com (Postfix, from userid 1001)
-    //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
-    var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/);
-    if (postFix) {
-        row["by"] = postFix[2];
-        receivedHeader = postFix[1] + postFix[3];
-        receivedHeaderNames = RemoveEntry(receivedHeaderNames, "by");
-    }
-
-    // Scan for malformed qmail headers
-    // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
-    postFix = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/);
-    if (postFix) {
-        row["by"] = postFix[2];
-        receivedHeader = postFix[1] + postFix[3];
-        receivedHeaderNames = RemoveEntry(receivedHeaderNames, "by");
-    }
-
-    // Split up the string now so we can look for our headers
-    var tokens = receivedHeader.split(/\s+/);
-
-    var iMatch = 0;
-    var iHeader;
-    var iToken;
-
-    for (iHeader = 0; iHeader < receivedHeaderNames.length; iHeader++) {
-        row[receivedHeaderNames[iHeader]] = "";
-        for (iToken = 0; iToken < tokens.length; iToken++) {
-            if (receivedHeaderNames[iHeader] === tokens[iToken]) {
-                headerMatches[iMatch++] = [iHeader, iToken];
-            }
-        }
-    }
-
-    // Next bit assumes headerMatches[x,y] is increasing on y.
-    // Sort it so it is.
-    headerMatches.sort(function (a, b) {
-        return a[1] - b[1];
-    });
-
-    for (iMatch = 0; iMatch < headerMatches.length; iMatch++) {
-        iHeader = headerMatches[iMatch][0];
-        var iTokenHeader = headerMatches[iMatch][1];
-        var iFirstVal = iTokenHeader + 1;
-
-        var iNextTokenHeader;
-        var iLastVal;
-        if (iMatch + 1 < headerMatches.length) {
-            iNextTokenHeader = headerMatches[iMatch + 1][1];
-        } else {
-            iNextTokenHeader = tokens.length;
-        }
-        iLastVal = iNextTokenHeader - 1;
-
-        var headerName = receivedHeaderNames[iHeader];
-        if (row[headerName] !== "") { row[headerName] += "; "; }
-        for (iToken = iFirstVal; iToken <= iLastVal; iToken++) {
-            row[headerName] += tokens[iToken];
-            if (iToken < iLastVal) { row[headerName] += " "; }
-        }
-    }
-
-    row.dateNum = Date.parse(row.date);
-    row.date = new Date(row.date).toLocaleString();
-    row.dateSort = row.dateNum;
-    row.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
-    row.percent = 0;
-
-    this.receivedRows.push(row);
+    this.receivedRows.push(new ReceivedRow(receivedHeader));
 };
 
 Received.prototype.computeDeltas = function () {
@@ -164,56 +160,56 @@ Received.prototype.computeDeltas = function () {
     var iEndTime = 0;
     var iLastTime = NaN;
     var iDelta = 0; // This will be the sum of our positive deltas
-    var i;
-    for (i = 0; i < this.receivedRows.length; i++) {
-        if (!isNaN(this.receivedRows[i].dateNum)) {
-            if (!isNaN(iLastTime) && iLastTime < this.receivedRows[i].dateNum) {
-                iDelta += this.receivedRows[i].dateNum - iLastTime;
+
+    this.receivedRows.forEach(function (row) {
+        if (!isNaN(row.dateNum)) {
+            if (!isNaN(iLastTime) && iLastTime < row.dateNum) {
+                iDelta += row.dateNum - iLastTime;
             }
 
-            iStartTime = iStartTime || this.receivedRows[i].dateNum;
-            iEndTime = this.receivedRows[i].dateNum;
-            iLastTime = this.receivedRows[i].dateNum;
+            iStartTime = iStartTime || row.dateNum;
+            iEndTime = row.dateNum;
+            iLastTime = row.dateNum;
         }
-    }
+    });
 
     iLastTime = NaN;
-    var totalTime = "";
-    // Total time is still last minus first, even if negative.
-    if (iEndTime !== iStartTime) {
-        totalTime = this.computeTime(iEndTime, iStartTime);
-    }
 
-    for (i = 0; i < this.receivedRows.length; i++) {
-        this.receivedRows[i].hop = i + 1;
-        this.receivedRows[i].delay = this.computeTime(this.receivedRows[i].dateNum, iLastTime);
+    this.receivedRows.forEach(function (row, index) {
+        row.hop = index + 1;
+        row.delay = computeTime(row.dateNum, iLastTime);
 
-        if (!isNaN(this.receivedRows[i].dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
-            this.receivedRows[i].delaySort = this.receivedRows[i].dateNum - iLastTime;
+        if (!isNaN(row.dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
+            row.delaySort = row.dateNum - iLastTime;
 
             // Only positive delays will get percentage bars. Negative delays will be color coded at render time.
-            if (this.receivedRows[i].delaySort > 0) {
-                this.receivedRows[i].percent = 100 * this.receivedRows[i].delaySort / iDelta;
+            if (row.delaySort > 0) {
+                row.percent = 100 * row.delaySort / iDelta;
             }
         }
 
-        if (!isNaN(this.receivedRows[i].dateNum)) {
-            iLastTime = this.receivedRows[i].dateNum;
+        if (!isNaN(row.dateNum)) {
+            iLastTime = row.dateNum;
         }
-    }
+    });
 
-    return totalTime;
+    // Total time is still last minus first, even if negative.
+    return iEndTime !== iStartTime ? computeTime(iEndTime, iStartTime) : "";
 };
 
 // Computes min/sec from the diff of current and last.
 // Returns nothing if last or current is NaN.
-Received.prototype.computeTime = function (current, last) {
+function computeTime(current, last) {
     var time = [];
 
-    if (isNaN(current) || isNaN(last)) { return time; }
+    if (isNaN(current) || isNaN(last)) { return ""; }
     var diff = current - last;
     var iDelay;
     var printedMinutes = false;
+
+    if (Math.abs(diff) < 1000) {
+        return "0 " + ImportedStrings.mha_seconds;
+    }
 
     if (diff < 0) {
         time.push(ImportedStrings.mha_negative);
@@ -248,4 +244,4 @@ Received.prototype.computeTime = function (current, last) {
     }
 
     return time.join("");
-};
+}

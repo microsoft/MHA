@@ -1,6 +1,7 @@
 /* global $ */
 /* global appInsights */
 /* global fabric */
+/* global isError */
 /* global joinArray */
 /* global LogError */
 /* global Office */
