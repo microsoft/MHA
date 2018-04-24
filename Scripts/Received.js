@@ -40,6 +40,16 @@ var ReceivedRow = function (receivedHeader) {
     if (iDate !== -1) {
         this.date = receivedHeader.substring(iDate + 1);
         receivedHeader = receivedHeader.substring(0, iDate);
+
+        var milliseconds = this.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
+        var trimDate = this.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
+        this.dateNum = Date.parse(trimDate);
+        if (milliseconds && milliseconds.length >= 2) {
+            this.dateNum = this.dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
+        }
+
+        this.date = new Date(trimDate).toLocaleString().replace(/\u200E|,/g, "");
+        this.dateSort = this.dateNum;
     }
 
     // Scan for malformed postFix headers
@@ -90,18 +100,6 @@ var ReceivedRow = function (receivedHeader) {
         if (this[headerName] !== "") { this[headerName] += "; "; }
         this[headerName] = tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim();
     }, this);
-
-    if (this.date) {
-        var milliseconds = this.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
-        var trimDate = this.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
-        this.dateNum = Date.parse(trimDate);
-        if (milliseconds && milliseconds.length >= 2) {
-            this.dateNum = this.dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
-        }
-
-        this.date = new Date(trimDate).toLocaleString().replace(/\u200E|,/g, "");
-        this.dateSort = this.dateNum;
-    }
 
     this.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
     this.percent = 0;
