@@ -33,13 +33,16 @@ var ReceivedRow = function (receivedHeader) {
     if (iDate === -1) {
         // Next we look for year-month-day
         // Swap to month-day-year because IE can't parse it otherwise
-        receivedHeader = receivedHeader.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "; $2-$3-$1");
+        receivedHeader = receivedHeader.replace(/\s*(\d{4}-\d{1,2}-\d{1,2})/g, "; $1");
         iDate = receivedHeader.lastIndexOf(";")
     }
 
     if (iDate !== -1) {
         this.date = receivedHeader.substring(iDate + 1);
         receivedHeader = receivedHeader.substring(0, iDate);
+
+        // Invert any backwards dates: 2018-01-28 -> 01-28-2018
+        this.date = this.date.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2-$3-$1");
 
         var milliseconds = this.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
         var trimDate = this.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
