@@ -42,7 +42,9 @@ var ReceivedRow = function (receivedHeader) {
         receivedHeader = receivedHeader.substring(0, iDate);
 
         // Invert any backwards dates: 2018-01-28 -> 01-28-2018
-        this.date = this.date.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2-$3-$1");
+        this.date = this.date.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2/$3/$1");
+        // Replace dashes with slashes
+        this.date = this.date.replace(/\s*(\d{1,2})-(\d{1,2})-(\d{4})/g, "$1/$2/$3");
 
         var milliseconds = this.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
         var trimDate = this.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
