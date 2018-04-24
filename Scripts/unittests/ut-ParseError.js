@@ -6,7 +6,32 @@
 /* global parseError */
 /* global QUnit */
 
+QUnit.assert.errorsEqual = function (value, expectedValues, message) {
+    var found = expectedValues.some(function (expected) {
+        if (value === expected) {
+            this.pushResult({
+                result: true,
+                actual: value,
+                expected: expected,
+                message: message
+            });
+
+            return true;
+        }
+    }, this);
+
+    if (!found) {
+        this.pushResult({
+            result: false,
+            actual: value,
+            expected: expectedValues,
+            message: message
+        });
+    }
+};
+
 QUnit.test("parseError Tests", function (assert) {
+
     assert.expect(20); // Count of assert calls in the tests below
     var done = assert.async(10); // Count of asynchronous calls below
 
@@ -28,7 +53,8 @@ QUnit.test("parseError Tests", function (assert) {
     }
     catch (error) {
         parseError(error, "message", function (eventName, stack) {
-            assert.equal(eventName, "message : Object doesn't support property or method 'notAFunction'");
+            assert.errorsEqual(eventName, ["message : Object doesn't support property or method 'notAFunction'",
+                "message : document.notAFunction is not a function"]);
             assert.deepEqual(CleanStack(stack), [
                 "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
                 "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
@@ -46,7 +72,8 @@ QUnit.test("parseError Tests", function (assert) {
     }
     catch (error) {
         parseError(error, null, function (eventName, stack) {
-            assert.equal(eventName, "Object doesn't support property or method 'notAFunction'");
+            assert.errorsEqual(eventName, ["Object doesn't support property or method 'notAFunction'",
+                "document.notAFunction is not a function"]);
             assert.deepEqual(CleanStack(stack), [
                 "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471:6",
                 "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457:6",
@@ -176,7 +203,8 @@ QUnit.test("getError* Tests", function (assert) {
         document.notAFunction();
     }
     catch (error) {
-        assert.equal(getErrorMessage(error), "Object doesn't support property or method 'notAFunction'");
+        assert.errorsEqual(getErrorMessage(error), ["Object doesn't support property or method 'notAFunction'",
+            "document.notAFunction is not a function"]);
         assert.ok(getErrorStack(error).length > 0);
     }
 
