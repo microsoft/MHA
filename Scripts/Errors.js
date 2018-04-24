@@ -83,7 +83,13 @@ function FilterStack(stack) {
 function CleanStack(stack) {
     if (!stack) return null;
     return stack.map(function (item) {
-        return item.replace(/.*localhost.*/g, "").replace(/.*azurewebsites.*/g, "").replace(/\n+/g, "\n");
+        return item.replace(/.*localhost.*/, "")
+            .replace(/.*azurewebsites.*/, "")
+            .replace(/\n+/, "\n")
+            .replace(/^.*?\.(.*)@/, "$1@")
+            .replace(/^.*\/<\(\)@http/, "Anonymous function()@http")
+            .replace(/{anonymous}/, "Anonymous function")
+            .replace(/:\d*$/, "");
     }).filter(function (item) {
         return !!item;
     });
