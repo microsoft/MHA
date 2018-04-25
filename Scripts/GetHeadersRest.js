@@ -93,6 +93,10 @@ function getHeaders(accessToken, headersLoadedCallback) {
         LogError(null, "No access token?");
     }
 
+    if (!Office.context.mailbox.item.itemId) {
+        LogError(null, "No itemId?");
+    }
+
     // Get the item's REST ID
     var itemId = getItemRestId();
 

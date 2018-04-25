@@ -474,6 +474,7 @@ function getDiagnosticsMap() {
                 }
 
                 if (Office.context.mailbox.item) {
+                    diagnosticsMap["itemId"] = !!Office.context.mailbox.item.itemId;
                     diagnosticsMap["itemType"] = Office.context.mailbox.item.itemType;
                     diagnosticsMap["itemClass"] = Office.context.mailbox.item.itemClass;
                 }

@@ -16,6 +16,11 @@ function sendHeadersRequest(headersLoadedCallback) {
         return;
     }
 
+    if (!Office.context.mailbox.item.itemId) {
+        ShowError(null, "Item has no itemId", true);
+        return;
+    }
+
     if (!sufficientPermission(false)) {
         ShowError(null, "Insufficient permissions to request headers", false);
         return;
