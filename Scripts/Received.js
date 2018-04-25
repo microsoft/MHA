@@ -32,7 +32,6 @@ var ReceivedRow = function (receivedHeader) {
 
     if (iDate === -1) {
         // Next we look for year-month-day
-        // Swap to month-day-year because IE can't parse it otherwise
         receivedHeader = receivedHeader.replace(/\s*(\d{4}-\d{1,2}-\d{1,2})/g, "; $1");
         iDate = receivedHeader.lastIndexOf(";")
     }
