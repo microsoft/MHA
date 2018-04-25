@@ -5,6 +5,7 @@
 /* global sendHeadersRequestEWS */
 /* global ShowError */
 /* global UpdateStatus */
+/* global validItem */
 /* exported sendHeadersRequestRest */
 
 /**
@@ -20,6 +21,11 @@
  */
 
 function sendHeadersRequestRest(headersLoadedCallback) {
+    if (!validItem()) {
+        LogError(null, "No item selected (REST)", true);
+        return;
+    }
+
     UpdateStatus(ImportedStrings.mha_RequestSent);
 
     Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {

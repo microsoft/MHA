@@ -3,6 +3,8 @@
 /* global sendHeadersRequestRest */
 /* global ShowError */
 /* exported sendHeadersRequest */
+/* exported validItem */
+
 
 /**
  * GetHeaderRest.js
@@ -11,13 +13,8 @@
  */
 
 function sendHeadersRequest(headersLoadedCallback) {
-    if (!Office.context.mailbox || !Office.context.mailbox.item) {
+    if (!validItem()) {
         ShowError(null, "No item selected", true);
-        return;
-    }
-
-    if (!Office.context.mailbox.item.itemId) {
-        ShowError(null, "Item has no itemId", true);
         return;
     }
 
@@ -52,5 +49,12 @@ function canUseRest() {
     if (!Office.context.requirements.isSetSupported("Mailbox", 1.5)) return false;
     if (!sufficientPermission(true)) return false;
     if (!Office.context.mailbox.getCallbackTokenAsync) return false;
+    return true;
+}
+
+function validItem() {
+    if (!Office.context.mailbox) return false;
+    if (!Office.context.mailbox.item) return false;
+    if (!Office.context.mailbox.item.itemId) return false;
     return true;
 }

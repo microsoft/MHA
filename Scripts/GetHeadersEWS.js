@@ -6,6 +6,7 @@
 /* global Office */
 /* global ShowError */
 /* global UpdateStatus */
+/* global validItem */
 /* global viewModel */
 /* exported sendHeadersRequestEWS */
 
@@ -20,6 +21,11 @@
  */
 
 function sendHeadersRequestEWS(headersLoadedCallback) {
+    if (!validItem()) {
+        LogError(null, "No item selected (EWS)", true);
+        return;
+    }
+
     var logResponse;
 
     try {
