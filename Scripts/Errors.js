@@ -9,9 +9,9 @@
 function getErrorMessage(error) {
     if (!error) return '';
     if (Object.prototype.toString.call(error) === "[object String]") return error;
-    if (!isError(error)) return JSON.stringify(error, null, 2);
-    if (error.message) return error.message;
-    if (error.description) return error.description;
+    if (Object.prototype.toString.call(error) === "[object Number]") return error.toString();
+    if ("message" in error) return error.message;
+    if ("description" in error) return error.description;
     return JSON.stringify(error, null, 2);
 }
 
@@ -19,12 +19,14 @@ function getErrorStack(error) {
     if (!error) return '';
     if (Object.prototype.toString.call(error) === "[object String]") return "string thrown as error";
     if (!isError(error)) return '';
-    if (error.stack) return error.stack;
+    if ("stack" in error) return error.stack;
     return '';
 }
 
 function isError(error) {
-    if (Object.prototype.toString.call(error) === "[object Error]") return true;
+    if (Object.prototype.toString.call(error) === "[object Error]") {
+        if ("stack" in error) return true;
+    }
     return false;
 }
 

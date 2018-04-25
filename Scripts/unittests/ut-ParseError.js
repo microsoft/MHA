@@ -172,7 +172,7 @@ QUnit.test("parseError Tests", function (assert) {
 
     var brokenError = new Error();
     parseError(brokenError, "message", function (eventName, stack) {
-        assert.equal(eventName, "message : {}");
+        assert.equal(eventName, "message", "brokenError event");
         assert.deepEqual(CleanStack(stack), [
             "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
             "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
@@ -180,7 +180,7 @@ QUnit.test("parseError Tests", function (assert) {
             "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116",
             "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928",
             "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
-        ]);
+        ], "brokenError stack");
         done();
     });
 
