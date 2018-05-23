@@ -419,7 +419,9 @@ function getDiagnostics() {
     try {
         var diagnosticsMap = getDiagnosticsMap();
         for (var diag in diagnosticsMap) {
-            diagnostics += diag + " = " + diagnosticsMap[diag] + "\n";
+            if (diagnosticsMap.hasOwnProperty(diag)) {
+                diagnostics += diag + " = " + diagnosticsMap[diag] + "\n";
+            }
         }
     } catch (e) {
         diagnostics += "ERROR: Failed to get diagnostics\n";
