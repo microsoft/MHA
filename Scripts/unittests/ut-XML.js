@@ -60,7 +60,7 @@ QUnit.test("Received Tests", function (assert) {
 
     assert.propEqual(extractHeadersFromXml(xml1),
         {
-            "prop": prop1,
+            "prop": prop1
         });
 
     var xml2 =
@@ -73,7 +73,7 @@ QUnit.test("Received Tests", function (assert) {
         "From: Test User <testuser@gmail.com>\r";
     assert.propEqual(extractHeadersFromXml(xml2),
         {
-            "prop": prop2,
+            "prop": prop2
         });
 
 });
