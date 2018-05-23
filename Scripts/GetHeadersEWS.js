@@ -139,6 +139,8 @@ function extractHeadersFromXml(xml) {
 
     var ret = {};
 
+    // Strip encoded embedded null characters from our XML. parseXML doesn't like them.
+    xml = xml.replace(/&#x0;/g, "");
     var response = $.parseXML(xml);
     var responseDom = $(response);
 
