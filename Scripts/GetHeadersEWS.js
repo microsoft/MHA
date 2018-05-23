@@ -28,6 +28,7 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
 
     var logResponse;
 
+    var e;
     try {
         if ($h && $h.EwsRequest && $h.EwsRequest.prototype && $h.EwsRequest.prototype._parseExtraResponseData$i$1) {
             $h.EwsRequest.prototype._parseExtraResponseData$i$1 = function (response) {
@@ -44,45 +45,32 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
         var request = getHeadersRequest(mailbox.item.itemId);
         var envelope = getSoapEnvelope(request);
         mailbox.makeEwsRequestAsync(envelope, function (asyncResult) {
-            callbackEWS(asyncResult, headersLoadedCallback);
+            callbackEws(asyncResult, headersLoadedCallback);
         });
     } catch (e) {
         ShowError(e, ImportedStrings.mha_requestFailed);
     }
 
     // Function called when the EWS request is complete.
-    function callbackEWS(asyncResult, headersLoadedCallback) {
+    function callbackEws(asyncResult, headersLoadedCallback) {
         try {
             // Process the returned response here.
-        var prop = null;
+        var header = null;
             if (asyncResult.value) {
-                viewModel.originalHeaders = asyncResult.value;
-                var response = $.parseXML(asyncResult.value);
-                var responseDom = $(response);
+                header= extractHeadersFromXml(asyncResult.value);
 
-                if (responseDom) {
-                    // See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
-                    // See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
-                    // We can do this because we know there's only the one property.
-                    var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
-                    if (extendedProperty.length > 0) {
-                        prop = extendedProperty[0];
-                    }
-
-                    // We might not have a prop and also no error. This is OK if the prop is just missing.
-                    if (!prop) {
-                        var ResponseCode = responseDom.filterNode("m:ResponseCode");
-                        if (ResponseCode.length > 0 && ResponseCode[0].firstChild && ResponseCode[0].firstChild.data === "NoError") {
-                            headersLoadedCallback(null, "EWS");
-                            ShowError(null, ImportedStrings.mha_headersMissing, true);
-                            return;
-                        }
+                // We might not have a prop and also no error. This is OK if the prop is just missing.
+                if (header && !header.prop) {
+                    if (header.responseCode.length > 0 && header.responseCode[0].firstChild && header.responseCode[0].firstChild.data === "NoError") {
+                        headersLoadedCallback(null, "EWS");
+                        ShowError(null, ImportedStrings.mha_headersMissing, true);
+                        return;
                     }
                 }
             }
 
-            if (prop) {
-                headersLoadedCallback(prop.textContent, "EWS");
+            if (header && header.prop) {
+                headersLoadedCallback(header.prop, "EWS");
             }
             else {
                 throw new Error(ImportedStrings.mha_requestFailed);
@@ -90,11 +78,11 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
         }
         catch (e) {
             if (asyncResult) {
-                LogError(null, "Async Response\n" + stripHeaderFromXML(JSON.stringify(asyncResult, null, 2)));
+                LogError(null, "Async Response\n" + stripHeaderFromXml(JSON.stringify(asyncResult, null, 2)));
             }
 
             if (logResponse) {
-                LogError(null, "Original Response\n" + stripHeaderFromXML(JSON.stringify(logResponse, null, 2)));
+                LogError(null, "Original Response\n" + stripHeaderFromXml(JSON.stringify(logResponse, null, 2)));
             }
 
             headersLoadedCallback(null, "EWS");
@@ -102,7 +90,30 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
         }
     }
 
-    function stripHeaderFromXML(xml) {
+    function extractHeadersFromXml(xml) {
+        var ret = {};
+
+        var response = $.parseXML(xml);
+        var responseDom = $(response);
+
+        if (responseDom) {
+            // See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
+            // See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
+            // We can do this because we know there's only the one property.
+            var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
+            if (extendedProperty.length > 0) {
+                ret.prop = extendedProperty[0].textContent;
+            }
+        }
+
+        if (!ret.prop) {
+            ret.responseCode = responseDom.filterNode("m:ResponseCode");
+        }
+
+        return ret;
+    }
+
+    function stripHeaderFromXml(xml) {
         if (!xml) return null;
         return xml
             .replace(/<t:Value>[\s\S]*<\/t:Value>/g, "<t:Value>redacted</t:Value>")
