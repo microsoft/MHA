@@ -12,7 +12,7 @@
 /* exported UpdateStatus */
 
 var viewModel = null;
-var uiModel = function () {
+var UiModel = function () {
     this.currentChoice = {};
     this.errors = [];
     this.deferredErrors = [];
@@ -21,28 +21,28 @@ var uiModel = function () {
     this.apiUsed = "not set";
 };
 
-uiModel.prototype.currentChoice = {};
-uiModel.prototype.errors = [];
-uiModel.prototype.deferredErrors = [];
-uiModel.prototype.deferredStatus = [];
-uiModel.prototype.headers = "";
-uiModel.prototype.apiUsed = "not set";
+UiModel.prototype.currentChoice = {};
+UiModel.prototype.errors = [];
+UiModel.prototype.deferredErrors = [];
+UiModel.prototype.deferredStatus = [];
+UiModel.prototype.headers = "";
+UiModel.prototype.apiUsed = "not set";
 
 var iFrame = null;
-var uiChoice = function (label, url, checked) {
+var UiChoice = function (label, url, checked) {
     this.label = label;
     this.url = url;
     this.checked = checked;
 };
 
-uiChoice.prototype.label = "";
-uiChoice.prototype.url = "";
-uiChoice.prototype.checked = "";
+UiChoice.prototype.label = "";
+UiChoice.prototype.url = "";
+UiChoice.prototype.checked = "";
 
 var uiChoices = [
-    new uiChoice('classic', 'classicDesktopFrame.html', false),
-    new uiChoice('new', 'newDesktopFrame.html', true),
-    new uiChoice('new-mobile', 'newMobilePaneIosFrame.html', false)
+    new UiChoice("classic", "classicDesktopFrame.html", false),
+    new UiChoice("new", "newDesktopFrame.html", true),
+    new UiChoice("new-mobile", "newMobilePaneIosFrame.html", false)
 ];
 
 function setDefault() {
@@ -69,12 +69,13 @@ function getQueryVariable(variable) {
             return pair[1];
         }
     }
+    return null;
 }
 
 Office.initialize = function () {
     $(document).ready(function () {
         setDefault();
-        viewModel = new uiModel();
+        viewModel = new UiModel();
         InitUI();
         window.addEventListener("message", eventListener, false);
         loadNewItem();
@@ -105,7 +106,8 @@ function eventListener(event) {
 }
 
 function InitUI() {
-    buildGearDialog('uiToggleFrame', uiChoices);
+    addChoices(uiChoices);
+    initFabric();
 
     try {
         var choice = Office.context.roamingSettings.get(getSettingsKey());
@@ -205,8 +207,8 @@ function LogError(error, message, suppressTracking) {
 
 function pushError(eventName, stack, suppressTracking) {
     if (eventName || stack) {
-        var stackString = joinArray(stack, '\n');
-        viewModel.errors.push(joinArray([eventName, stackString], '\n'));
+        var stackString = joinArray(stack, "\n");
+        viewModel.errors.push(joinArray([eventName, stackString], "\n"));
 
         if (document.domain !== "localhost" && !suppressTracking) {
             var props = getDiagnosticsMap();
@@ -229,17 +231,17 @@ function UpdateStatus(statusText) {
 
 function getSettingsKey() {
     try {
-        return 'frame' + Office.context.mailbox.diagnostics.hostName;
+        return "frame" + Office.context.mailbox.diagnostics.hostName;
     }
     catch (e) {
-        return 'frame';
+        return "frame";
     }
 }
 
 function go(choice) {
     iFrame = null;
     viewModel.currentChoice = choice;
-    document.getElementById('uiFrame').src = choice.url;
+    document.getElementById("uiFrame").src = choice.url;
     if (Office.context) {
         Office.context.roamingSettings.set(getSettingsKey(), choice);
         Office.context.roamingSettings.saveAsync();
@@ -269,56 +271,23 @@ function Create(parentElement, newType, newClass) {
     return newElement;
 }
 
-function buildGearDialog(id, uiChoices) {
-    var pane = $("#" + id);
+function addChoices(uiChoices) {
+    var list = $("#uiChoice-list");
 
-    //<div class="header-row">
-    var headerRow = Create(pane, "div", "header-row");
-    //  <div class="ms-Style-button">
-    var buttonDiv = Create(headerRow, "div", "ms-Style-button");
-    //    <button class="ms-Button ms-Button--hero dialog-button gear-button">
-    var button = Create(buttonDiv, "button", "ms-Button ms-Button--hero dialog-button gear-button");
-    //      <span class="ms-Button-label">
-    var buttonSpan = Create(button, "span", "ms-Button-label");
-    //        <i class="ms-Icon ms-Icon--Settings" aria-hidden="true"></i>
-    var buttonIcon = Create(buttonSpan, "i", "ms-Icon ms-Icon--Settings");
-    buttonIcon.attr("aria-hidden", "true");
-    //      </span>
-    //    </button>
-    //  </div>
-
-    // Settings Dialog
-    //  <div class="ms-Dialog">
-    var dialogSettings = Create(headerRow, "div", "ms-Dialog ms-Dialog--lgHeader");
-    dialogSettings.attr("id", "dialog-Settings");
-    //    <div class="ms-Dialog-title">Styles</div>
-    var dialogSettingsTitle = Create(dialogSettings, "div", "ms-Dialog-title");
-    dialogSettingsTitle.text("Settings");
-    //    <div class="ms-Dialog-content">
-    var dialogSettingsContent = Create(dialogSettings, "div", "ms-Dialog-content");
-    //      <p class="ms-Dialog-subText">Select UI style</p>
-    var dialogSettingsSubText = Create(dialogSettingsContent, "p", "ms-Dialog-subText");
-    dialogSettingsSubText.text("UI style");
-    //      <div class="ms-ChoiceFieldGroup" id="uiChoice" role="radiogroup">
-    var choiceGroup = Create(dialogSettingsContent, "div", "ms-ChoiceFieldGroup");
-    choiceGroup.attr("id", "uiChoice");
-    choiceGroup.attr("role", "radiogroup");
-    //        <ul class="ms-ChoiceFieldGroup-list">
-    var list = Create(choiceGroup, "ul", "ms-ChoiceFieldGroup-list");
     for (var iChoice = 0; iChoice < uiChoices.length; iChoice++) {
         var choice = uiChoices[iChoice];
         // <li class="ms-RadioButton">
         var listItem = Create(list, "li", "ms-RadioButton");
         //   <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
         var input = Create(listItem, "input", "ms-RadioButton-input");
-        input.attr("tabindex", '-1');
-        input.attr("type", 'radio');
+        input.attr("tabindex", "-1");
+        input.attr("type", "radio");
         input.attr("value", iChoice);
         //   <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
         var label = Create(listItem, "label", "ms-RadioButton-field");
-        label.attr("role", 'radio');
-        label.attr("tabindex", '0');
-        label.attr("name", 'uiChoice');
+        label.attr("role", "radio");
+        label.attr("tabindex", "0");
+        label.attr("name", "uiChoice");
         label.attr("value", choice.label);
         //     <span class="ms-Label">classic</span>
         var inputSpan = Create(label, "span", "ms-Label");
@@ -326,65 +295,7 @@ function buildGearDialog(id, uiChoices) {
         //   </label>
         // </li>
     }
-    //        </ul>
-    //      </div>
-    //    </div>
-    //    <div class="ms-Dialog-actions">
-    var actionsSettings = Create(dialogSettings, "div", "ms-Dialog-actions");
-    //      <button class="ms-Button ms-Dialog-action">
-    var actionsSettingsButtonDiag = Create(actionsSettings, "button", "ms-Button ms-Dialog-action");
-    actionsSettingsButtonDiag.attr("id", "actionsSettings-diag");
-    //        <span class="ms-Button-label">OK</span>
-    Create(actionsSettingsButtonDiag, "span", "ms-Button-label");
-    actionsSettingsButtonDiag.text("diagnostics");
-    //      </button>
-    //      <button class="ms-Button ms-Dialog-action ms-Button--primary">
-    var actionsSettingsButtonOK = Create(actionsSettings, "button", "ms-Button ms-Button--primary ms-Dialog-action");
-    actionsSettingsButtonOK.attr("id", "actionsSettings-OK");
-    //        <span class="ms-Button-label">OK</span>
-    var actionsSettingsButtonOKLabel = Create(actionsSettingsButtonOK, "span", "ms-Button-label");
-    actionsSettingsButtonOKLabel.text("OK");
-    //      </button>
-    //    </div>
-    //  <div>
-    //</div>
 
-    // Diagnostics dialog
-    //  <div class="ms-Dialog">
-    var dialogDiag = Create(headerRow, "div", "ms-Dialog ms-Dialog--lgHeader");
-    dialogDiag.attr("id", "dialog-Diagnostics");
-    //    <div class="ms-Dialog-title">Styles</div>
-    var dialogDiagTitle = Create(dialogDiag, "div", "ms-Dialog-title");
-    dialogDiagTitle.text("Diagnostics");
-    //    <div class="ms-Dialog-content">
-    var dialogDiagContent = Create(dialogDiag, "div", "ms-Dialog-content");
-    //      <p class="ms-Dialog-subText">Select UI style</p>
-    var dialogDiagSubText = Create(dialogDiagContent, "div", "code-box");
-    var pre = Create(dialogDiagSubText, "pre", null);
-    var code = Create(pre, "code", null);
-    code.attr("id", "diagnostics");
-    //    </div>
-    //    <div class="ms-Dialog-actions">
-    var actionsDiag = Create(dialogDiag, "div", "ms-Dialog-actions");
-    //      <button class="ms-Button ms-Dialog-action ms-Button--primary">
-    var actionsDiagButtonOK = Create(actionsDiag, "button", "ms-Button ms-Button--primary ms-Dialog-action");
-    actionsDiagButtonOK.attr("id", "actionsDiag-OK");
-    //        <span class="ms-Button-label">OK</span>
-    var actionsDiagButtonOKLabel = Create(actionsDiagButtonOK, "span", "ms-Button-label");
-    actionsDiagButtonOKLabel.text("OK");
-    //      </button>
-    //    </div>
-    //  <div>
-    //</div>
-
-    //<div class="frame-row">
-    var frameRow = Create(pane, "div", "frame-row");
-    //  <iframe id="uiFrame" src="newDesktopFrame.html"></iframe>
-    var frame = Create(frameRow, "iFrame");
-    frame.attr("id", 'uiFrame');
-    //</div>
-
-    initFabric();
 }
 
 function initFabric() {
@@ -393,24 +304,24 @@ function initFabric() {
 
     var dialogSettings = header.querySelector("#dialog-Settings");
     // Wire up the dialog
-    var dialogSettingsComponent = new fabric['Dialog'](dialogSettings);
+    var dialogSettingsComponent = new fabric["Dialog"](dialogSettings);
 
     var dialogDiagnostics = header.querySelector("#dialog-Diagnostics");
     // Wire up the dialog
-    var dialogDiagnosticsComponent = new fabric['Dialog'](dialogDiagnostics);
+    var dialogDiagnosticsComponent = new fabric["Dialog"](dialogDiagnostics);
 
     var actionButtonElements = header.querySelectorAll(".ms-Dialog-action");
     // Wire up the buttons
     for (i = 0; i < actionButtonElements.length; i++) {
-        new fabric['Button'](actionButtonElements[i], actionHandler);
+        new fabric["Button"](actionButtonElements[i], actionHandler);
     }
 
     var choiceGroup = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
-    new fabric['ChoiceFieldGroup'](choiceGroup[0]);
+    new fabric["ChoiceFieldGroup"](choiceGroup[0]);
 
-    var ChoiceFieldGroupElements = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
-    for (i = 0; i < ChoiceFieldGroupElements.length; i++) {
-        new fabric['ChoiceFieldGroup'](ChoiceFieldGroupElements[i]);
+    var choiceFieldGroupElements = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
+    for (i = 0; i < choiceFieldGroupElements.length; i++) {
+        new fabric["ChoiceFieldGroup"](choiceFieldGroupElements[i]);
     }
 
     var button = header.querySelector(".dialog-button");
@@ -509,7 +420,9 @@ function getDiagnostics() {
     try {
         var diagnosticsMap = getDiagnosticsMap();
         for (var diag in diagnosticsMap) {
-            diagnostics += diag + " = " + diagnosticsMap[diag] + "\n";
+            if (diagnosticsMap.hasOwnProperty(diag)) {
+                diagnostics += diag + " = " + diagnosticsMap[diag] + "\n";
+            }
         }
     } catch (e) {
         diagnostics += "ERROR: Failed to get diagnostics\n";
