@@ -7,8 +7,8 @@
 /* global ShowError */
 /* global UpdateStatus */
 /* global validItem */
-/* global viewModel */
 /* exported sendHeadersRequestEWS */
+/* exported extractHeadersFromXml */
 
 /**
  * GetHeaderEWS.js
@@ -28,7 +28,6 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
 
     var logResponse;
 
-    var e;
     try {
         if ($h && $h.EwsRequest && $h.EwsRequest.prototype && $h.EwsRequest.prototype._parseExtraResponseData$i$1) {
             $h.EwsRequest.prototype._parseExtraResponseData$i$1 = function (response) {
@@ -47,17 +46,17 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
         mailbox.makeEwsRequestAsync(envelope, function (asyncResult) {
             callbackEws(asyncResult, headersLoadedCallback);
         });
-    } catch (e) {
-        ShowError(e, ImportedStrings.mha_requestFailed);
+    } catch (e2) {
+        ShowError(e2, ImportedStrings.mha_requestFailed);
     }
 
     // Function called when the EWS request is complete.
     function callbackEws(asyncResult, headersLoadedCallback) {
         try {
             // Process the returned response here.
-        var header = null;
+            var header = null;
             if (asyncResult.value) {
-                header= extractHeadersFromXml(asyncResult.value);
+                header = extractHeadersFromXml(asyncResult.value);
 
                 // We might not have a prop and also no error. This is OK if the prop is just missing.
                 if (header && !header.prop) {
@@ -88,29 +87,6 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
             headersLoadedCallback(null, "EWS");
             ShowError(e, "EWS callback failed");
         }
-    }
-
-    function extractHeadersFromXml(xml) {
-        var ret = {};
-
-        var response = $.parseXML(xml);
-        var responseDom = $(response);
-
-        if (responseDom) {
-            // See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
-            // See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
-            // We can do this because we know there's only the one property.
-            var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
-            if (extendedProperty.length > 0) {
-                ret.prop = extendedProperty[0].textContent;
-            }
-        }
-
-        if (!ret.prop) {
-            ret.responseCode = responseDom.filterNode("m:ResponseCode");
-        }
-
-        return ret;
     }
 
     function stripHeaderFromXml(xml) {
@@ -148,7 +124,9 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
             "  <ItemIds><t:ItemId Id='" + id + "'/></ItemIds>" +
             "</GetItem>";
     }
+}
 
+function extractHeadersFromXml(xml) {
     // This function plug in filters nodes for the one that matches the given name.
     // This sidesteps the issues in jquery's selector logic.
     (function ($) {
@@ -158,4 +136,25 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
             });
         };
     })(jQuery);
+
+    var ret = {};
+
+    var response = $.parseXML(xml);
+    var responseDom = $(response);
+
+    if (responseDom) {
+        // See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
+        // See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
+        // We can do this because we know there's only the one property.
+        var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
+        if (extendedProperty.length > 0) {
+            ret.prop = extendedProperty[0].textContent;
+        }
+    }
+
+    if (!ret.prop) {
+        ret.responseCode = responseDom.filterNode("m:ResponseCode");
+    }
+
+    return ret;
 }
