@@ -12,7 +12,7 @@
 /* exported UpdateStatus */
 
 var viewModel = null;
-var uiModel = function () {
+var UiModel = function () {
     this.currentChoice = {};
     this.errors = [];
     this.deferredErrors = [];
@@ -21,28 +21,28 @@ var uiModel = function () {
     this.apiUsed = "not set";
 };
 
-uiModel.prototype.currentChoice = {};
-uiModel.prototype.errors = [];
-uiModel.prototype.deferredErrors = [];
-uiModel.prototype.deferredStatus = [];
-uiModel.prototype.headers = "";
-uiModel.prototype.apiUsed = "not set";
+UiModel.prototype.currentChoice = {};
+UiModel.prototype.errors = [];
+UiModel.prototype.deferredErrors = [];
+UiModel.prototype.deferredStatus = [];
+UiModel.prototype.headers = "";
+UiModel.prototype.apiUsed = "not set";
 
 var iFrame = null;
-var uiChoice = function (label, url, checked) {
+var UiChoice = function (label, url, checked) {
     this.label = label;
     this.url = url;
     this.checked = checked;
 };
 
-uiChoice.prototype.label = "";
-uiChoice.prototype.url = "";
-uiChoice.prototype.checked = "";
+UiChoice.prototype.label = "";
+UiChoice.prototype.url = "";
+UiChoice.prototype.checked = "";
 
 var uiChoices = [
-    new uiChoice("classic", "classicDesktopFrame.html", false),
-    new uiChoice("new", "newDesktopFrame.html", true),
-    new uiChoice("new-mobile", "newMobilePaneIosFrame.html", false)
+    new UiChoice("classic", "classicDesktopFrame.html", false),
+    new UiChoice("new", "newDesktopFrame.html", true),
+    new UiChoice("new-mobile", "newMobilePaneIosFrame.html", false)
 ];
 
 function setDefault() {
@@ -74,7 +74,7 @@ function getQueryVariable(variable) {
 Office.initialize = function () {
     $(document).ready(function () {
         setDefault();
-        viewModel = new uiModel();
+        viewModel = new UiModel();
         InitUI();
         window.addEventListener("message", eventListener, false);
         loadNewItem();
