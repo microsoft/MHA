@@ -105,7 +105,8 @@ function eventListener(event) {
 }
 
 function InitUI() {
-    buildGearDialog('uiToggleFrame', uiChoices);
+    addChoices(uiChoices);
+    initFabric();
 
     try {
         var choice = Office.context.roamingSettings.get(getSettingsKey());
@@ -269,42 +270,9 @@ function Create(parentElement, newType, newClass) {
     return newElement;
 }
 
-function buildGearDialog(id, uiChoices) {
-    var pane = $("#" + id);
+function addChoices(uiChoices) {
+    var list = $("#uiChoice-list");
 
-    //<div class="header-row">
-    var headerRow = Create(pane, "div", "header-row");
-    //  <div class="ms-Style-button">
-    var buttonDiv = Create(headerRow, "div", "ms-Style-button");
-    //    <button class="ms-Button ms-Button--hero dialog-button gear-button">
-    var button = Create(buttonDiv, "button", "ms-Button ms-Button--hero dialog-button gear-button");
-    //      <span class="ms-Button-label">
-    var buttonSpan = Create(button, "span", "ms-Button-label");
-    //        <i class="ms-Icon ms-Icon--Settings" aria-hidden="true"></i>
-    var buttonIcon = Create(buttonSpan, "i", "ms-Icon ms-Icon--Settings");
-    buttonIcon.attr("aria-hidden", "true");
-    //      </span>
-    //    </button>
-    //  </div>
-
-    // Settings Dialog
-    //  <div class="ms-Dialog">
-    var dialogSettings = Create(headerRow, "div", "ms-Dialog ms-Dialog--lgHeader");
-    dialogSettings.attr("id", "dialog-Settings");
-    //    <div class="ms-Dialog-title">Styles</div>
-    var dialogSettingsTitle = Create(dialogSettings, "div", "ms-Dialog-title");
-    dialogSettingsTitle.text("Settings");
-    //    <div class="ms-Dialog-content">
-    var dialogSettingsContent = Create(dialogSettings, "div", "ms-Dialog-content");
-    //      <p class="ms-Dialog-subText">Select UI style</p>
-    var dialogSettingsSubText = Create(dialogSettingsContent, "p", "ms-Dialog-subText");
-    dialogSettingsSubText.text("UI style");
-    //      <div class="ms-ChoiceFieldGroup" id="uiChoice" role="radiogroup">
-    var choiceGroup = Create(dialogSettingsContent, "div", "ms-ChoiceFieldGroup");
-    choiceGroup.attr("id", "uiChoice");
-    choiceGroup.attr("role", "radiogroup");
-    //        <ul class="ms-ChoiceFieldGroup-list">
-    var list = Create(choiceGroup, "ul", "ms-ChoiceFieldGroup-list");
     for (var iChoice = 0; iChoice < uiChoices.length; iChoice++) {
         var choice = uiChoices[iChoice];
         // <li class="ms-RadioButton">
@@ -326,65 +294,7 @@ function buildGearDialog(id, uiChoices) {
         //   </label>
         // </li>
     }
-    //        </ul>
-    //      </div>
-    //    </div>
-    //    <div class="ms-Dialog-actions">
-    var actionsSettings = Create(dialogSettings, "div", "ms-Dialog-actions");
-    //      <button class="ms-Button ms-Dialog-action">
-    var actionsSettingsButtonDiag = Create(actionsSettings, "button", "ms-Button ms-Dialog-action");
-    actionsSettingsButtonDiag.attr("id", "actionsSettings-diag");
-    //        <span class="ms-Button-label">OK</span>
-    Create(actionsSettingsButtonDiag, "span", "ms-Button-label");
-    actionsSettingsButtonDiag.text("diagnostics");
-    //      </button>
-    //      <button class="ms-Button ms-Dialog-action ms-Button--primary">
-    var actionsSettingsButtonOK = Create(actionsSettings, "button", "ms-Button ms-Button--primary ms-Dialog-action");
-    actionsSettingsButtonOK.attr("id", "actionsSettings-OK");
-    //        <span class="ms-Button-label">OK</span>
-    var actionsSettingsButtonOKLabel = Create(actionsSettingsButtonOK, "span", "ms-Button-label");
-    actionsSettingsButtonOKLabel.text("OK");
-    //      </button>
-    //    </div>
-    //  <div>
-    //</div>
 
-    // Diagnostics dialog
-    //  <div class="ms-Dialog">
-    var dialogDiag = Create(headerRow, "div", "ms-Dialog ms-Dialog--lgHeader");
-    dialogDiag.attr("id", "dialog-Diagnostics");
-    //    <div class="ms-Dialog-title">Styles</div>
-    var dialogDiagTitle = Create(dialogDiag, "div", "ms-Dialog-title");
-    dialogDiagTitle.text("Diagnostics");
-    //    <div class="ms-Dialog-content">
-    var dialogDiagContent = Create(dialogDiag, "div", "ms-Dialog-content");
-    //      <p class="ms-Dialog-subText">Select UI style</p>
-    var dialogDiagSubText = Create(dialogDiagContent, "div", "code-box");
-    var pre = Create(dialogDiagSubText, "pre", null);
-    var code = Create(pre, "code", null);
-    code.attr("id", "diagnostics");
-    //    </div>
-    //    <div class="ms-Dialog-actions">
-    var actionsDiag = Create(dialogDiag, "div", "ms-Dialog-actions");
-    //      <button class="ms-Button ms-Dialog-action ms-Button--primary">
-    var actionsDiagButtonOK = Create(actionsDiag, "button", "ms-Button ms-Button--primary ms-Dialog-action");
-    actionsDiagButtonOK.attr("id", "actionsDiag-OK");
-    //        <span class="ms-Button-label">OK</span>
-    var actionsDiagButtonOKLabel = Create(actionsDiagButtonOK, "span", "ms-Button-label");
-    actionsDiagButtonOKLabel.text("OK");
-    //      </button>
-    //    </div>
-    //  <div>
-    //</div>
-
-    //<div class="frame-row">
-    var frameRow = Create(pane, "div", "frame-row");
-    //  <iframe id="uiFrame" src="newDesktopFrame.html"></iframe>
-    var frame = Create(frameRow, "iFrame");
-    frame.attr("id", 'uiFrame');
-    //</div>
-
-    initFabric();
 }
 
 function initFabric() {
