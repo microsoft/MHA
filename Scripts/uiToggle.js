@@ -40,9 +40,9 @@ uiChoice.prototype.url = "";
 uiChoice.prototype.checked = "";
 
 var uiChoices = [
-    new uiChoice('classic', 'classicDesktopFrame.html', false),
-    new uiChoice('new', 'newDesktopFrame.html', true),
-    new uiChoice('new-mobile', 'newMobilePaneIosFrame.html', false)
+    new uiChoice("classic", "classicDesktopFrame.html", false),
+    new uiChoice("new", "newDesktopFrame.html", true),
+    new uiChoice("new-mobile", "newMobilePaneIosFrame.html", false)
 ];
 
 function setDefault() {
@@ -206,8 +206,8 @@ function LogError(error, message, suppressTracking) {
 
 function pushError(eventName, stack, suppressTracking) {
     if (eventName || stack) {
-        var stackString = joinArray(stack, '\n');
-        viewModel.errors.push(joinArray([eventName, stackString], '\n'));
+        var stackString = joinArray(stack, "\n");
+        viewModel.errors.push(joinArray([eventName, stackString], "\n"));
 
         if (document.domain !== "localhost" && !suppressTracking) {
             var props = getDiagnosticsMap();
@@ -230,17 +230,17 @@ function UpdateStatus(statusText) {
 
 function getSettingsKey() {
     try {
-        return 'frame' + Office.context.mailbox.diagnostics.hostName;
+        return "frame" + Office.context.mailbox.diagnostics.hostName;
     }
     catch (e) {
-        return 'frame';
+        return "frame";
     }
 }
 
 function go(choice) {
     iFrame = null;
     viewModel.currentChoice = choice;
-    document.getElementById('uiFrame').src = choice.url;
+    document.getElementById("uiFrame").src = choice.url;
     if (Office.context) {
         Office.context.roamingSettings.set(getSettingsKey(), choice);
         Office.context.roamingSettings.saveAsync();
@@ -279,14 +279,14 @@ function addChoices(uiChoices) {
         var listItem = Create(list, "li", "ms-RadioButton");
         //   <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
         var input = Create(listItem, "input", "ms-RadioButton-input");
-        input.attr("tabindex", '-1');
-        input.attr("type", 'radio');
+        input.attr("tabindex", "-1");
+        input.attr("type", "radio");
         input.attr("value", iChoice);
         //   <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
         var label = Create(listItem, "label", "ms-RadioButton-field");
-        label.attr("role", 'radio');
-        label.attr("tabindex", '0');
-        label.attr("name", 'uiChoice');
+        label.attr("role", "radio");
+        label.attr("tabindex", "0");
+        label.attr("name", "uiChoice");
         label.attr("value", choice.label);
         //     <span class="ms-Label">classic</span>
         var inputSpan = Create(label, "span", "ms-Label");
@@ -303,24 +303,24 @@ function initFabric() {
 
     var dialogSettings = header.querySelector("#dialog-Settings");
     // Wire up the dialog
-    var dialogSettingsComponent = new fabric['Dialog'](dialogSettings);
+    var dialogSettingsComponent = new fabric["Dialog"](dialogSettings);
 
     var dialogDiagnostics = header.querySelector("#dialog-Diagnostics");
     // Wire up the dialog
-    var dialogDiagnosticsComponent = new fabric['Dialog'](dialogDiagnostics);
+    var dialogDiagnosticsComponent = new fabric["Dialog"](dialogDiagnostics);
 
     var actionButtonElements = header.querySelectorAll(".ms-Dialog-action");
     // Wire up the buttons
     for (i = 0; i < actionButtonElements.length; i++) {
-        new fabric['Button'](actionButtonElements[i], actionHandler);
+        new fabric["Button"](actionButtonElements[i], actionHandler);
     }
 
     var choiceGroup = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
-    new fabric['ChoiceFieldGroup'](choiceGroup[0]);
+    new fabric["ChoiceFieldGroup"](choiceGroup[0]);
 
-    var ChoiceFieldGroupElements = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
-    for (i = 0; i < ChoiceFieldGroupElements.length; i++) {
-        new fabric['ChoiceFieldGroup'](ChoiceFieldGroupElements[i]);
+    var choiceFieldGroupElements = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
+    for (i = 0; i < choiceFieldGroupElements.length; i++) {
+        new fabric["ChoiceFieldGroup"](choiceFieldGroupElements[i]);
     }
 
     var button = header.querySelector(".dialog-button");
