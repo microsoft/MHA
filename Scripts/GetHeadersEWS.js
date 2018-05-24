@@ -60,7 +60,7 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
 
                 // We might not have a prop and also no error. This is OK if the prop is just missing.
                 if (header && !header.prop) {
-                    if (header.responseCode.length > 0 && header.responseCode[0].firstChild && header.responseCode[0].firstChild.data === "NoError") {
+                    if (header.responseCode && header.responseCode.length > 0 && header.responseCode[0].firstChild && header.responseCode[0].firstChild.data === "NoError") {
                         headersLoadedCallback(null, "EWS");
                         ShowError(null, ImportedStrings.mha_headersMissing, true);
                         return;
@@ -138,24 +138,28 @@ function extractHeadersFromXml(xml) {
     })(jQuery);
 
     var ret = {};
+    try {
+        // Strip encoded embedded null characters from our XML. parseXML doesn't like them.
+        xml = xml.replace(/&#x0;/g, "");
+        var response = $.parseXML(xml);
+        var responseDom = $(response);
 
-    // Strip encoded embedded null characters from our XML. parseXML doesn't like them.
-    xml = xml.replace(/&#x0;/g, "");
-    var response = $.parseXML(xml);
-    var responseDom = $(response);
-
-    if (responseDom) {
-        // See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
-        // See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
-        // We can do this because we know there's only the one property.
-        var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
-        if (extendedProperty.length > 0) {
-            ret.prop = extendedProperty[0].textContent;
+        if (responseDom) {
+            // See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
+            // See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
+            // We can do this because we know there's only the one property.
+            var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
+            if (extendedProperty.length > 0) {
+                ret.prop = extendedProperty[0].textContent;
+            }
         }
-    }
 
-    if (!ret.prop) {
-        ret.responseCode = responseDom.filterNode("m:ResponseCode");
+        if (!ret.prop) {
+            ret.responseCode = responseDom.filterNode("m:ResponseCode");
+        }
+    } catch (e) {
+        // Exceptions thrown from parseXML are super chatty and we do not want to log them.
+        // We throw this exception away and just return nothing.
     }
 
     return ret;

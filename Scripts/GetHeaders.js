@@ -5,7 +5,6 @@
 /* exported sendHeadersRequest */
 /* exported validItem */
 
-
 /**
  * GetHeaderRest.js
  *
