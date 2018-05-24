@@ -75,5 +75,5 @@ QUnit.test("Received Tests", function (assert) {
         {
             "prop": prop2
         });
-
+    assert.propEqual(extractHeadersFromXml("Not xml"), {});
 });
