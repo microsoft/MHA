@@ -79,8 +79,7 @@ function decodeQuoted(charSet, buffer) {
         // 2047 quoted allows _ as a replacement for space. Fix that first.
         var uriBuffer = buffer.replace(/_/g, " ");
         decoded = decodeHex(charSet, uriBuffer);
-    }
-    catch (e) {
+    } catch (e) {
         // Since we failed to decode, put it all back
         decoded = "=?" + charSet + "?Q?" + buffer + "?=";
     }
@@ -116,7 +115,17 @@ function decodeBase64(charSet, input) {
         }
     }
 
-    return decodeHexCodepage(charSet, $v$0);
+    var decoded;
+    try {
+        decoded = decodeHexCodepage(charSet, $v$0);
+    }
+    catch (e) {
+        // Since we failed to decode, put it all back
+        decoded = "=?" + charSet + "?B?" + input + "?=";
+    }
+
+    return decoded;
+
 }
 
 function decodeHex(charSet, buffer) {
@@ -130,7 +139,7 @@ function decodeHex(charSet, buffer) {
             ////var right = matches[3];
             var hexes = matches[2].split("=").filter(function (i) { return i; });
             var hexArray = [];
-            for (var iHex = 0; iHex < hexes.length; iHex++) {
+            for (let iHex = 0; iHex < hexes.length; iHex++) {
                 hexArray.push(parseInt("0x" + hexes[iHex], 16));
             }
 
@@ -165,6 +174,9 @@ function decodeHexCodepage(charSet, hexArray) {
             break;
         case "WINDOWS-1252":
             codepage = 1252;
+            break;
+        case "GB2312":
+            codepage = 936;
             break;
     }
 
