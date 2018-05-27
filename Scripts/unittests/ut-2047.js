@@ -43,6 +43,9 @@ QUnit.test("RFC 2047 Tests", function (assert) {
         "Subject: =?Windows-1252?Q?Fwd:_Scam_Alert_from_a_neighbor_on_NextDoor_-_Don=92t_re?=\n" +
         " =?Windows-1252?Q?ad_out_your_2_factored_authentication_code_to_anyone_on_?=\n" +
         "=?Windows-1252?Q?the_phone?="), "Subject: Fwd: Scam Alert from a neighbor on NextDoor - Don’t read out your 2 factored authentication code to anyone on the phone");
+    assert.equal(clean2047Encoding("Subject: =?gb2312?B?RndkOiDT67DCwu3SqdK119y+rcDto6ywosDvsM2wzdfcvOCjrMu5sdi/y9fc?=" +
+        " =?gb2312?B?ssOjrNK7xvDR0L6/yc/K0Lmry762rcrCu+HD2Mrp?="),
+        "Subject: Fwd: 与奥马药业总经理，阿里巴巴总监，斯必克总裁，一起研究上市公司董事会秘书");
 });
 
 QUnit.test("Mailsploit Tests", function (assert) {

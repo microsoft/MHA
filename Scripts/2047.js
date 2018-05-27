@@ -116,7 +116,17 @@ function decodeBase64(charSet, input) {
         }
     }
 
-    return decodeHexCodepage(charSet, $v$0);
+    var decoded;
+    try {
+        decoded = decodeHexCodepage(charSet, $v$0);
+    }
+    catch (e) {
+        // Since we failed to decode, put it all back
+        decoded = "=?" + charSet + "?B?" + input  + "?=";
+    }
+
+    return decoded;
+
 }
 
 function decodeHex(charSet, buffer) {
@@ -165,6 +175,9 @@ function decodeHexCodepage(charSet, hexArray) {
             break;
         case "WINDOWS-1252":
             codepage = 1252;
+            break;
+        case "GB2312":
+            codepage = 936;
             break;
     }
 
