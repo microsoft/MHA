@@ -20,7 +20,7 @@
 /// <enable>JS2026.CapitalizeComments,JS2027.PunctuateCommentsCorrectly,JS2073.CommentIsMisspelled</enable>
 
 function clean2047Encoding(buffer) {
-    const result = [];
+    var result = [];
 
     // We're decoding =?...?= tokens here.
     // Per RFC, white space between tokens is to be ignored.
@@ -28,7 +28,7 @@ function clean2047Encoding(buffer) {
     buffer = buffer.replace(/\?=\s*=\?/g, "?==?");
 
     while (buffer.length) {
-        const matches = buffer.match(/([\S\s]*?)(=\?.*?\?.\?.*?\?=)([\S\s]*)/m);
+        var matches = buffer.match(/([\S\s]*?)(=\?.*?\?.\?.*?\?=)([\S\s]*)/m);
         if (matches) {
             ////var left = matches[1];
             ////var token = matches[2];
@@ -49,7 +49,7 @@ function clean2047Encoding(buffer) {
 
 function decode2047Token(token) {
     var decoding = token;
-    const matches = token.match(/=\?(.*?)(?:\*.*)?\?(.)\?(.*?)\?=/m);
+    var matches = token.match(/=\?(.*?)(?:\*.*)?\?(.)\?(.*?)\?=/m);
     if (matches) {
         ////var charSet = matches[1];
         ////var type = matches[2];
@@ -77,11 +77,11 @@ function decodeQuoted(charSet, buffer) {
 
     try {
         // 2047 quoted allows _ as a replacement for space. Fix that first.
-        const uriBuffer = buffer.replace(/_/g, " ");
+        var uriBuffer = buffer.replace(/_/g, " ");
         decoded = decodeHex(charSet, uriBuffer);
     } catch (e) {
         // Since we failed to decode, put it all back
-        decoded = `=?${charSet}?Q?${buffer}?=`;
+        decoded = "=?" + charSet + "?Q?" + buffer + "?=";
     }
 
     return decoded;
@@ -94,7 +94,7 @@ function decodeBase64(charSet, input) {
         return input;
     }
 
-    const $v$0 = [];
+    var $v$0 = [];
     var $v$1, $v$2, $v$3, $v$4, $v$5, $v$6, $v$7;
     var $v$8 = 0;
     while ($v$8 < input.length) {
@@ -121,7 +121,7 @@ function decodeBase64(charSet, input) {
     }
     catch (e) {
         // Since we failed to decode, put it all back
-        decoded = `=?${charSet}?B?${input}?=`;
+        decoded = "=?" + charSet + "?B?" + input + "?=";
     }
 
     return decoded;
@@ -129,18 +129,18 @@ function decodeBase64(charSet, input) {
 }
 
 function decodeHex(charSet, buffer) {
-    const result = [];
+    var result = [];
 
     while (buffer.length) {
-        const matches = buffer.match(/(.*?)((?:=[0-9a-fA-F]{2,2})+)(.*)/m);
+        var matches = buffer.match(/(.*?)((?:=[0-9a-fA-F]{2,2})+)(.*)/m);
         if (matches) {
             ////var left = matches[1];
             ////var hex = matches[2];
             ////var right = matches[3];
-            const hexes = matches[2].split("=").filter(function (i) { return i; });
-            const hexArray = [];
+            var hexes = matches[2].split("=").filter(function (i) { return i; });
+            var hexArray = [];
             for (let iHex = 0; iHex < hexes.length; iHex++) {
-                hexArray.push(parseInt(`0x${hexes[iHex]}`, 16));
+                hexArray.push(parseInt("0x" + hexes[iHex], 16));
             }
 
             result.push(matches[1], decodeHexCodepage(charSet, hexArray));
