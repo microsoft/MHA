@@ -20,52 +20,67 @@
 /// <enable>JS2026.CapitalizeComments,JS2027.PunctuateCommentsCorrectly,JS2073.CommentIsMisspelled</enable>
 
 function clean2047Encoding(buffer) {
-    var result = [];
-
     // We're decoding =?...?= tokens here.
     // Per RFC, white space between tokens is to be ignored.
     // Remove that white space.
     buffer = buffer.replace(/\?=\s*=\?/g, "?==?");
 
+    var unparsedblocks = [];
+    //split string into blocks
     while (buffer.length) {
         var matches = buffer.match(/([\S\s]*?)(=\?.*?\?.\?.*?\?=)([\S\s]*)/m);
         if (matches) {
-            ////var left = matches[1];
-            ////var token = matches[2];
-            ////var right = matches[3];
+            if (matches[1]) {
+                unparsedblocks.push({ text: matches[1] });
+            }
 
-            result.push(matches[1], decode2047Token(matches[2]));
+            unparsedblocks.push(getBlock(matches[2]));
             buffer = matches[3];
-        } else {
-            // Once we're out of matches, we've decoded the whole string.
+        } else if (buffer) {
+            // Once we're out of matches, we've parsed the whole string.
             // Append the rest of the buffer to the result.
-            result.push(buffer);
+            unparsedblocks.push({ text: buffer });
             break;
         }
     }
 
-    return result.join("");
-}
+    var collapsedBlocks = [];
+    for (let i = 0; i < unparsedblocks.length; i++) {
+        collapsedBlocks.push(unparsedblocks[i]);
 
-function decode2047Token(token) {
-    var decoding = token;
-    var matches = token.match(/=\?(.*?)(?:\*.*)?\?(.)\?(.*?)\?=/m);
-    if (matches) {
-        ////var charSet = matches[1];
-        ////var type = matches[2];
-        ////var encoding = matches[3];
-
-        switch (matches[2].toUpperCase()) {
-            case "B":
-                decoding = decodeBase64(matches[1], matches[3]);
-                break;
-            case "Q":
-                decoding = decodeQuoted(matches[1], matches[3]);
-                break;
+        // Combine a Q block with the previous Q block if the charset matches
+        if (i >= 1 &&
+            collapsedBlocks[i].type === "Q" && collapsedBlocks[i - 1].type === "Q" &&
+            collapsedBlocks[i].charset === collapsedBlocks[i - 1].charset) {
+            collapsedBlocks[i].text = collapsedBlocks[i - 1].text + collapsedBlocks[i].text;
+            // Clear the previous block so we don't process it later
+            collapsedBlocks[i - 1] = {};
         }
     }
 
-    return decoding;
+    var result = [];
+    collapsedBlocks.forEach(function (block) {
+        if (block.type === "B") {
+            result.push(decodeBase64(block.charset, block.text));
+        }
+        else if (block.type === "Q") {
+            result.push(decodeQuoted(block.charset, block.text));
+        }
+        else {
+            result.push(block.text);
+        }
+    });
+
+    return result.join("");
+}
+
+function getBlock(token) {
+    var matches = token.match(/=\?(.*?)(?:\*.*)?\?(.)\?(.*?)\?=/m);
+    if (matches) {
+        return { charset: matches[1], type: matches[2].toUpperCase(), text: matches[3] }
+    }
+
+    return { text: token, };
 }
 
 function decodeQuoted(charSet, buffer) {
