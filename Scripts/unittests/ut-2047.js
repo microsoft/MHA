@@ -46,6 +46,11 @@ QUnit.test("RFC 2047 Tests", function (assert) {
     assert.equal(clean2047Encoding("Subject: =?gb2312?B?RndkOiDT67DCwu3SqdK119y+rcDto6ywosDvsM2wzdfcvOCjrMu5sdi/y9fc?=" +
         " =?gb2312?B?ssOjrNK7xvDR0L6/yc/K0Lmry762rcrCu+HD2Mrp?="),
         "Subject: Fwd: 与奥马药业总经理，阿里巴巴总监，斯必克总裁，一起研究上市公司董事会秘书");
+    assert.equal(clean2047Encoding("Subject: =?gb2312?Q?=D3=EB=B0=C2=C2=ED=D2=A9=D2=B5=D7=DC=BE=AD=C0=ED=A3?=" +
+        "=?gb2312?Q?=AC=B0=A2=C0=EF=B0=CD=B0=CD=D7=DC=BC=E0=A3=AC=CB=B9=B1=D8?=" +
+        "=?gb2312?Q?=BF=CB=D7=DC=B2=C3=A3=AC=D2=BB=C6=F0=D1=D0=BE=BF=C9=CF=CA?=" +
+        "=?gb2312?Q?=D0=B9=AB=CB=BE=B6=AD=CA=C2=BB=E1=C3=D8=CA=E9?="),
+        "Subject: 与奥马药业总经理，阿里巴巴总监，斯必克总裁，一起研究上市公司董事会秘书");
 });
 
 QUnit.test("Mailsploit Tests", function (assert) {
