@@ -1,13 +1,8 @@
-﻿/* global computeTime */
-/* global QUnit */
+﻿/* global QUnit */
 /* global Received */
 /* global ReceivedRow */
 
 QUnit.test("Received Tests", function (assert) {
-    QUnit.assert.datesEqual = function (value, expected, message) {
-        return assert.propEqual({ date: value.date, dateNum: value.dateNum, dateSort: value.dateSort }, expected, message);
-    };
-
     var received = new Received();
     var header1 =
         "Received: from BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
@@ -32,8 +27,8 @@ QUnit.test("Received Tests", function (assert) {
         "Received: from localhost (10.0.22.21) by vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17) id hrakoo0lrlgv for <sgriffin@outlook.com>; Fri, 20 Apr 2018 17:51:19 -0400 (envelope-from <abuse_281D5450C2D61412E888B78BD84CCB3D2E80DB1641131EAF@response.nfcu.org>)";
     received.init(header4);
 
-    assert.equal(received.computeDeltas(), "310 minutes 14 seconds");
-    assert.equal(received.exists(), true);
+    assert.equal(received.computeDeltas(), "310 minutes 14 seconds", "Deltas");
+    assert.equal(received.exists(), true, "Exists");
     assert.propEqual(received.receivedRows[0],
         {
             "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
@@ -48,7 +43,7 @@ QUnit.test("Received Tests", function (assert) {
             "id": "hrakoo0lrlgv",
             "percent": 0,
             "sourceHeader": header4,
-        });
+        }, "header4");
     assert.propEqual(received.receivedRows[1],
         {
             "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
@@ -126,8 +121,8 @@ QUnit.test("Received Tests", function (assert) {
         "	for <sgriffin@outlook.com>; Sun, 22 Apr 2018 02:54:16.987 +0000 (UTC)"
     github.init(githubHeader5);
 
-    assert.equal(github.computeDeltas(), "2 seconds");
-    assert.equal(github.exists(), true);
+    assert.equal(github.computeDeltas(), "2 seconds", "github Deltas");
+    assert.equal(github.exists(), true, "github exists");
     assert.propEqual(github.receivedRows[0],
         {
             "by": "ismtpd0021p1iad2.sendgrid.net (SG)",
@@ -234,49 +229,4 @@ QUnit.test("Received Tests", function (assert) {
         "sourceHeader": sendGrid2,
         "with": "ESMTP"
     }, "sendGrid2");
-
-    assert.datesEqual(new ReceivedRow("Received: test; Sat, 21 Apr 2018 03:01:32 +0000"), {
-        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-    });
-    assert.datesEqual(new ReceivedRow("Received: test; Saturday, 21 Apr 2018 03:01:32 +0000"), {
-        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-    });
-    assert.datesEqual(new ReceivedRow("Received: test; 21 Apr 2018 03:01:32 +0000"), {
-        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-    });
-    assert.datesEqual(new ReceivedRow("Received: test; Apr 21 2018 03:01:32 +0000"), {
-        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-    });
-    assert.datesEqual(new ReceivedRow("Received: test; Apr 21 2018 3:01:32 +0000"), {
-        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-    });
-    assert.datesEqual(new ReceivedRow("Received: test; 4/20/2018 11:01:32 PM"), {
-        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-    });
-    assert.datesEqual(new ReceivedRow("Received: test; 4-20-2018 11:01:32 PM"), {
-        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-    });
-    assert.datesEqual(new ReceivedRow("Received: test; 2018-4-20 11:01:32 PM"), {
-        "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000, "dateSort": 1524279692000,
-    });
-    assert.datesEqual(new ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36 +0000 (UTC)"), {
-        "date": "3/26/2018 9:35:36 AM", "dateNum": 1522071336000, "dateSort": 1522071336000
-    });
-    assert.datesEqual(new ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)"), {
-        "date": "3/26/2018 9:35:36 AM", "dateNum": 1522071336102, "dateSort": 1522071336102
-    });
-    assert.datesEqual(new ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36.102 +0000 UTC"), {
-        "date": "3/26/2018 9:35:36 AM", "dateNum": 1522071336102, "dateSort": 1522071336102
-    });
-
-    assert.equal(computeTime(9000, 8000), "1 second");
-    assert.equal(computeTime(99000, 8000), "1 minute 31 seconds");
-    assert.equal(computeTime(999000, 8000), "16 minutes 31 seconds");
-    assert.equal(computeTime(9999000, 8000), "166 minutes 31 seconds");
-    assert.equal(computeTime(8000, 9000), "-1 second");
-    assert.equal(computeTime(8000, 99000), "-1 minute 31 seconds");
-    assert.equal(computeTime(8000, 999000), "-16 minutes 31 seconds");
-    assert.equal(computeTime(8000, 9999000), "-166 minutes 31 seconds");
-    assert.equal(computeTime(9000, 8500), "0 seconds");
-    assert.equal(computeTime(8500, 9000), "0 seconds");
 });

@@ -45,8 +45,19 @@ var ReceivedRow = function (receivedHeader) {
         // Replace dashes with slashes
         this.date = this.date.replace(/\s*(\d{1,2})-(\d{1,2})-(\d{4})/g, "$1/$2/$3");
 
+        // If we don't have a +xxxx or -xxxx on our date, it will be interpreted in local time
+        // This likely isn't the intended timezone, so we add a +0000 to get UTC
+        var offset = this.date.match(/[+|-]\d{4}/);
+        if (!offset || offset.length != 1) {
+            this.date += " +0000";
+        }
+
+        // Some browsers don't like milliseconds in parse
+        // Trim off milliseconds so we don't pass them into Date.parse
         var milliseconds = this.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
         var trimDate = this.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
+
+        // And now we can parse our date
         this.dateNum = Date.parse(trimDate);
         if (milliseconds && milliseconds.length >= 2) {
             this.dateNum = this.dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
