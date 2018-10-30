@@ -229,4 +229,17 @@ QUnit.test("Received Tests", function (assert) {
         "sourceHeader": sendGrid2,
         "with": "ESMTP"
     }, "sendGrid2");
+
+    var dupe1 = "Received: by me by you with this with that with whatever\n" +
+        " 2018-03-26 13:35:36.270951634 +0000 UTC";
+    assert.propEqual(new ReceivedRow(dupe1), {
+        "by": "me; you",
+        "date": "3/26/2018 9:35:36 AM",
+        "dateNum": 1522071336270,
+        "dateSort": 1522071336270,
+        "delaySort": -1,
+        "percent": 0,
+        "sourceHeader": dupe1,
+        "with": "this; that; whatever"
+    }, "dupe1");
 });
