@@ -42,7 +42,7 @@ QUnit.test("Received Tests", function (assert) {
             "hop": 1,
             "id": "hrakoo0lrlgv",
             "percent": 0,
-            "sourceHeader": header4,
+            "sourceHeader": header4
         }, "header4");
     assert.propEqual(received.receivedRows[1],
         {
@@ -118,7 +118,7 @@ QUnit.test("Received Tests", function (assert) {
     var githubHeader5 =
         "Received: from smtp.github.com (out-3.smtp.github.com [192.30.252.194])\n" +
         "	by ismtpd0021p1iad2.sendgrid.net (SG) with ESMTP id 1dCtTVbKTgGmrXSNolRfbg\n" +
-        "	for <sgriffin@outlook.com>; Sun, 22 Apr 2018 02:54:16.987 +0000 (UTC)"
+        "	for <sgriffin@outlook.com>; Sun, 22 Apr 2018 02:54:16.987 +0000 (UTC)";
     github.init(githubHeader5);
 
     assert.equal(github.computeDeltas(), "2 seconds", "github Deltas");
