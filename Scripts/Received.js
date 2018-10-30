@@ -27,13 +27,13 @@ var ReceivedRow = function (receivedHeader) {
     if (iDate === -1) {
         // First try to find a day of the week
         receivedHeader = receivedHeader.replace(/\s*(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/g, "; $1");
-        iDate = receivedHeader.lastIndexOf(";")
+        iDate = receivedHeader.lastIndexOf(";");
     }
 
     if (iDate === -1) {
         // Next we look for year-month-day
         receivedHeader = receivedHeader.replace(/\s*(\d{4}-\d{1,2}-\d{1,2})/g, "; $1");
-        iDate = receivedHeader.lastIndexOf(";")
+        iDate = receivedHeader.lastIndexOf(";");
     }
 
     if (iDate !== -1) {
@@ -48,7 +48,7 @@ var ReceivedRow = function (receivedHeader) {
         // If we don't have a +xxxx or -xxxx on our date, it will be interpreted in local time
         // This likely isn't the intended timezone, so we add a +0000 to get UTC
         var offset = this.date.match(/[+|-]\d{4}/);
-        if (!offset || offset.length != 1) {
+        if (!offset || offset.length !== 1) {
             this.date += " +0000";
         }
 
@@ -94,7 +94,11 @@ var ReceivedRow = function (receivedHeader) {
         tokens.some(function (token, iToken) {
             if (receivedHeaderName === token) {
                 headerMatches[iMatch++] = { iHeader: iHeader, iToken: iToken };
-                return true;
+                // We don't return true so we can match any duplicate headers
+                // In doing this, we risk failing to parse a string where a header
+                // keyword appears as the value for another header
+                // Both situations are invalid input
+                // We're just picking which one we'd prefer to handle
             }
         });
     });
@@ -112,13 +116,14 @@ var ReceivedRow = function (receivedHeader) {
         }
 
         var headerName = receivedHeaderNames[headerMatch.iHeader];
+        if (this[headerName] === undefined) { this[headerName] = ""; }
         if (this[headerName] !== "") { this[headerName] += "; "; }
-        this[headerName] = tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim();
+        this[headerName] += tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim();
     }, this);
 
     this.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
     this.percent = 0;
-}
+};
 
 var Received = function () {
     this.receivedRows = [];
