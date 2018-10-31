@@ -63,7 +63,7 @@ var ReceivedRow = function (receivedHeader) {
             this.dateNum = this.dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
         }
 
-        this.date = new Date(trimDate).toLocaleString().replace(/\u200E|,/g, "");
+        this.date = dateString(trimDate);
         this.dateSort = this.dateNum;
     }
 
@@ -258,3 +258,5 @@ function computeTime(current, last) {
 
     return time.join("");
 }
+
+function dateString (value) { return new Date(value).toLocaleString().replace(/\u200E|,/g, ""); }
