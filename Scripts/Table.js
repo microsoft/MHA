@@ -372,12 +372,14 @@ function setRowValue(row, type) {
         if (val) {
             if (row.url) {
                 headerVal.html(mapHeaderToURL(row.url, val));
-            }
-            else {
+            } else {
                 headerVal.text(val);
             }
 
             makeVisible("#" + row.header + type, true);
+        } else {
+            headerVal.text(null);
+            makeVisible("#" + row.header + type, false);
         }
     }
 }
