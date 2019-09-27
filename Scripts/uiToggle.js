@@ -11,6 +11,9 @@
 /* exported ShowError */
 /* exported UpdateStatus */
 
+// Controller for Settings screen which controls what is being displayed
+// and which UI to use.
+
 var viewModel = null;
 var UiModel = function () {
     this.currentChoice = {};
@@ -238,6 +241,7 @@ function getSettingsKey() {
     }
 }
 
+// Display primary UI
 function go(choice) {
     iFrame = null;
     viewModel.currentChoice = choice;
@@ -271,33 +275,38 @@ function Create(parentElement, newType, newClass) {
     return newElement;
 }
 
+// Create list of choices to display for the UI types
 function addChoices(uiChoices) {
     var list = $("#uiChoice-list");
+    list.empty();
 
     for (var iChoice = 0; iChoice < uiChoices.length; iChoice++) {
         var choice = uiChoices[iChoice];
-        // <li class="ms-RadioButton">
+
+        // Create html: <li class="ms-RadioButton">
         var listItem = Create(list, "li", "ms-RadioButton");
-        //   <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
+
+        // Create html: <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
         var input = Create(listItem, "input", "ms-RadioButton-input");
+
         input.attr("tabindex", "-1");
         input.attr("type", "radio");
         input.attr("value", iChoice);
-        //   <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
+
+        //  Create html: <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
         var label = Create(listItem, "label", "ms-RadioButton-field");
         label.attr("role", "radio");
         label.attr("tabindex", "0");
         label.attr("name", "uiChoice");
         label.attr("value", choice.label);
-        //     <span class="ms-Label">classic</span>
+
+        // Create html: <span class="ms-Label">classic</span>
         var inputSpan = Create(label, "span", "ms-Label");
         inputSpan.text(choice.label);
-        //   </label>
-        // </li>
     }
-
 }
 
+// Hook the UI together for display
 function initFabric() {
     var i;
     var header = document.querySelector(".header-row");
@@ -332,10 +341,10 @@ function initFabric() {
         var labels = $("#uiChoice label");
         labels.removeClass("is-checked");
         labels.attr("aria-checked", "false");
-        var current = $("#uiChoice label[value=" + viewModel.currentChoice.label + "]");
-        current.addClass("is-checked");
-        current.attr("aria-checked", "true");
-        var input = current.prevAll("input:first");
+        var currentSelected = $("#uiChoice label[value=" + viewModel.currentChoice.label + "]");
+        currentSelected.addClass("is-checked");
+        currentSelected.attr("aria-checked", "true");
+        var input = currentSelected.prevAll("input:first");
         input.prop("checked", "true");
         dialogSettingsComponent.open();
     };
@@ -345,6 +354,8 @@ function initFabric() {
 
         switch (action) {
             case "actionsSettings-OK":
+                // How did the user say to display it (UI to display)
+
                 var iChoice = $("#uiChoice input:checked")[0].value;
                 var choice = uiChoices[iChoice];
                 if (choice.label !== viewModel.currentChoice.label) {

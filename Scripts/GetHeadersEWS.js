@@ -145,8 +145,6 @@ function extractHeadersFromXml(xml) {
         var responseDom = $(response);
 
         if (responseDom) {
-            // See http://stackoverflow.com/questions/853740/jquery-xml-parsing-with-namespaces
-            // See also http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000
             // We can do this because we know there's only the one property.
             var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
             if (extendedProperty.length > 0) {
