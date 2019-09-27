@@ -4,6 +4,8 @@
 /// <reference path="Strings.js" />
 /// <reference path="Headers.js" />
 
+//#region ReceivedRow Class Definition
+
 // Builds array of values for each header in receivedHeaderNames.
 // This algorithm should work regardless of the order of the headers, given:
 //  - The date, if present, is always at the end, separated by a ";".
@@ -215,6 +217,8 @@ Received.prototype.computeDeltas = function () {
     return iEndTime !== iStartTime ? computeTime(iEndTime, iStartTime) : "";
 };
 
+//#endregion Received Class Definition
+
 // Computes min/sec from the diff of current and last.
 // Returns nothing if last or current is NaN.
 function computeTime(current, last) {
@@ -264,4 +268,4 @@ function computeTime(current, last) {
     return time.join("");
 }
 
-function dateString (value) { return new Date(value).toLocaleString().replace(/\u200E|,/g, ""); }
+function dateString(value) { return new Date(value).toLocaleString().replace(/\u200E|,/g, ""); }

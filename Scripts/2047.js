@@ -45,7 +45,7 @@ function clean2047Encoding(buffer) {
     }
 
     var collapsedBlocks = [];
-    for (var i = 0; i < unparsedblocks.length; i++) {
+    for (let i = 0; i < unparsedblocks.length; i++) {
         collapsedBlocks.push(unparsedblocks[i]);
 
         // Combine a Q block with the previous Q block if the charset matches
@@ -154,7 +154,7 @@ function decodeHex(charSet, buffer) {
             ////var right = matches[3];
             var hexes = matches[2].split("=").filter(function (i) { return i; });
             var hexArray = [];
-            for (var iHex = 0; iHex < hexes.length; iHex++) {
+            for (let iHex = 0; iHex < hexes.length; iHex++) {
                 hexArray.push(parseInt("0x" + hexes[iHex], 16));
             }
 
