@@ -7,6 +7,13 @@
 $(document).ready(function () {
     // Temporary hack for oddball Outlook for iOS user agent
     var ios = window.navigator.userAgent.match(/(Outlook-iOS)/);
+
+    // iPad OS no longer includes iOS, so we detect it differently
+    if (window.navigator.userAgent.match(/(Mac OS X)/)) {
+        Framework7.prototype.device.iPad = true;
+        ios = true;
+    }
+
     if (ios) Framework7.prototype.device.ios = true;
     if (Framework7.prototype.device.ios) {
         // Redirect to iOS page
