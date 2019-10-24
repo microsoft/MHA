@@ -31,6 +31,7 @@ $(document).ready(function () {
     insertData('diag', 'iPad', Framework7.prototype.device.ipad);
     insertData('diag', 'iPhone', Framework7.prototype.device.iphone);
     insertData('diag', 'Android', Framework7.prototype.device.android);
+    insertData('diag', 'Last update', '11:51AM October 24th, 2019');
 });
 
 function insertData(id, headerText, valueText) {
