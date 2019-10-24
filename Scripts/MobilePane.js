@@ -30,8 +30,7 @@ $(document).ready(function () {
     insertData('diag', 'iOS (userAgent check)', ios);
     insertData('diag', 'iPad', Framework7.prototype.device.ipad);
     insertData('diag', 'iPhone', Framework7.prototype.device.iphone);
-    insertData('diag', 'Android', Framework7.prototype.device.android);
-    insertData('diag', 'Last update', '11:51AM October 24th, 2019');
+    insertLastModified();
 });
 
 function insertData(id, headerText, valueText) {
@@ -48,4 +47,15 @@ function insertData(id, headerText, valueText) {
     pane.append(header);
     pane.append(value);
     pane.append(lf);
+}
+
+function insertLastModified() {
+    var client = new XMLHttpRequest();
+    client.open("HEAD", "../Scripts/MobilePane.js", true);
+    client.onreadystatechange = function () {
+        if (this.readyState == 2) {
+            insertData('diag', 'Last update', client.getResponseHeader("Last-Modified"));
+        }
+    }
+    client.send();
 }
