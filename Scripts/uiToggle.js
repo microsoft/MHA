@@ -82,6 +82,17 @@ Office.initialize = function () {
         InitUI();
         window.addEventListener("message", eventListener, false);
         loadNewItem();
+
+        window.DiagnosticsMap = getDiagnosticsMap();
+        var client = new XMLHttpRequest();
+        client.open("HEAD", window.location.origin + window.location.pathname, true);
+        client.onreadystatechange = function () {
+            if (this.readyState == 2) {
+                window.DiagnosticsMap["Last Update"] = client.getResponseHeader("Last-Modified");
+            }
+        }
+
+        client.send();
     });
 };
 
@@ -196,7 +207,7 @@ function LogError(error, message, suppressTracking) {
             appInsights.trackException(error);
         }
         else {
-            var props = getDiagnosticsMap();
+            var props = window.DiagnosticsMap;
             props["Message"] = message;
             props["Error"] = JSON.stringify(error, null, 2);
             appInsights.trackEvent("Unknown error object", props);
@@ -214,7 +225,7 @@ function pushError(eventName, stack, suppressTracking) {
         viewModel.errors.push(joinArray([eventName, stackString], "\n"));
 
         if (document.domain !== "localhost" && !suppressTracking) {
-            var props = getDiagnosticsMap();
+            var props = window.DiagnosticsMap;
             props["Stack"] = stackString;
             appInsights.trackEvent(eventName, props);
         }
@@ -423,16 +434,17 @@ function getDiagnosticsMap() {
         diagnosticsMap["Office"] = "missing";
     }
 
+    diagnosticsMap["origin"] = window.location.origin;
+    diagnosticsMap["path"] = window.location.pathname;
     return diagnosticsMap;
 }
 
 function getDiagnostics() {
     var diagnostics = "";
     try {
-        var diagnosticsMap = getDiagnosticsMap();
-        for (var diag in diagnosticsMap) {
-            if (diagnosticsMap.hasOwnProperty(diag)) {
-                diagnostics += diag + " = " + diagnosticsMap[diag] + "\n";
+        for (var diag in window.DiagnosticsMap) {
+            if (window.DiagnosticsMap.hasOwnProperty(diag)) {
+                diagnostics += diag + " = " + window.DiagnosticsMap[diag] + "\n";
             }
         }
     } catch (e) {
