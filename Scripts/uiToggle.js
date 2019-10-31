@@ -203,13 +203,14 @@ function ShowError(error, message, suppressTracking) {
 // suppressTracking - boolean indicating if we should suppress tracking
 function LogError(error, message, suppressTracking) {
     if (error && document.domain !== "localhost" && !suppressTracking) {
-        if (isError(error)) {
-            appInsights.trackException(error);
+        var props = window.DiagnosticsMap;
+        props["Message"] = message;
+        props["Error"] = JSON.stringify(error, null, 2);
+
+        if (isError(error) && error.exception) {
+            appInsights.trackException(error, props);
         }
         else {
-            var props = window.DiagnosticsMap;
-            props["Message"] = message;
-            props["Error"] = JSON.stringify(error, null, 2);
             appInsights.trackEvent("Unknown error object", props);
         }
     }
