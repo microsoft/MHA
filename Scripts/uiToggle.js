@@ -462,8 +462,10 @@ function getDiagnostics() {
 }
 
 function getRequirementSet() {
+    // https://docs.microsoft.com/en-us/office/dev/add-ins/reference/requirement-sets/outlook-api-requirement-sets
     try {
         if (Office.context.requirements && Office.context.requirements.isSetSupported) {
+            if (Office.context.requirements.isSetSupported("Mailbox", 1.7)) return "1.7";
             if (Office.context.requirements.isSetSupported("Mailbox", 1.6)) return "1.6";
             if (Office.context.requirements.isSetSupported("Mailbox", 1.5)) return "1.5";
             if (Office.context.requirements.isSetSupported("Mailbox", 1.4)) return "1.4";
