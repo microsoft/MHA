@@ -16,30 +16,27 @@ var options = {
 };
 
 const targets = {
-    "mha.js": [
-        "StandAlone.js",
-        "Headers.js",
-        "Table.js",
-        "Strings.js",
-        "Received.js",
-        "Other.js",
-        "ForefrontAntispam.js",
-        "Antispam.js",
-        "Summary.js",
-        "2047.js",
-    ],
-    "classicDesktopFrame.js": [
-        "Headers.js",
-        "Received.js",
-        "Other.js",
-        "ForefrontAntispam.js",
-        "Antispam.js",
-        "Summary.js",
-        "Table.js",
-        "Strings.js",
-        "2047.js",
-        "Default.js",
-    ],
+    "2047.min.js": [ "2047.js" ],
+    "Antispam.min.js": [ "Antispam.js" ],
+    "Default.min.js": [ "Default.js" ],
+    "DesktopPane.min.js": [ "DesktopPane.js" ],
+    "Errors.min.js": [ "Errors.js" ],
+    "ForefrontAntispam.min.js": [ "ForefrontAntispam.js" ],
+    "Functions.min.js": [ "Functions.js" ],
+    "GetHeaders.min.js": [ "GetHeaders.js" ],
+    "GetHeadersEWS.min.js": [ "GetHeadersEWS.js" ],
+    "GetHeadersRest.min.js": [ "GetHeadersRest.js" ],
+    "Headers.min.js": [ "Headers.js" ],
+    "MobilePane-ios.min.js": [ "MobilePane-ios.js" ],
+    "MobilePane.min.js": [ "MobilePane.js" ],
+    "Other.min.js": [ "Other.js" ],
+    "Received.min.js": [ "Received.js" ],
+    "siteTypesOffice.min.js": [ "siteTypesOffice.js" ],
+    "StandAlone.min.js": [ "StandAlone.js" ],
+    "Strings.min.js": [ "Strings.js" ],
+    "Summary.min.js": [ "Summary.js" ],
+    "Table.min.js": [ "Table.js" ],
+    "uiToggle.min.js": [ "uiToggle.js" ]
 };
 
 for (const targetName of Object.keys(targets)) {
