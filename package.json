@@ -4,9 +4,7 @@
   "description": "Message Header Analyzer",
   "main": "Pages/mha.html",
   "scripts": {
-    "build": "tsc & node minify.js",
-    "serve": "node ./index.js",
-    "start": "npm run build & npm run serve",
+    "build": "node tasks/minify.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

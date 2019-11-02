@@ -18,3 +18,4 @@ debug.log
 /.vs
 mha.sln
 /node_modules
+/dist

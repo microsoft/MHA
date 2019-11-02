@@ -2,8 +2,8 @@ const UglifyJS = require("uglify-js");
 const fs = require("fs");
 const path = require("path");
 
-const scriptsFolder = path.join(__dirname, "Scripts");
-const distFolder = path.join(__dirname, "dist");
+const scriptsFolder = path.join(__dirname, "..", "Scripts");
+const distFolder = path.join(__dirname, "..", "dist");
 
 // Ensure dist directory exists
 if (!fs.existsSync(distFolder)) {
