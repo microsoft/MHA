@@ -29,10 +29,13 @@
     "jquery": "^3.4.1",
     "jwt-decode": "^2.2.0",
     "office-ui-fabric-js": "^1.5.0",
-    "stacktrace-js": "^2.0.0"
+    "stacktrace-js": "^2.0.0",
+    "uglify-js": "^3.6.7"
   },
-  "devDependencies": {
-    "uglify-js": "^3.6.6"
+  "devDependencies": {},
+  "-vs-binding": {
+    "BeforeBuild": [
+      "build"
+    ]
   }
-, "-vs-binding":{"BeforeBuild":["build"]}
 }
