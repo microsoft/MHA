@@ -32,10 +32,12 @@
     "stacktrace-js": "^2.0.0",
     "uglify-js": "^3.6.7"
   },
-  "devDependencies": {},
   "-vs-binding": {
     "BeforeBuild": [
       "build"
+    ],
+    "Clean": [
+      "clean"
     ]
   }
 }
