@@ -87,6 +87,7 @@ function CleanStack(stack) {
     return stack.map(function (item) {
         return item.replace(/.*localhost.*/, "")
             .replace(/.*azurewebsites.*/, "")
+            .replace(/.*\.\.\/scripts\/.*/, "")
             .replace(/\n+/, "\n")
             .replace(/^.*?\.(.*)@/, "$1@")
             .replace(/^.*\/<\(\)@http/, "Anonymous function()@http")
