@@ -3,18 +3,6 @@ const fs = require("fs");
 const path = require("path");
 
 const scriptsFolder = path.join(__dirname, "..", "Scripts");
-const distFolder = path.join(__dirname, "..", "dist");
-const unittestsFolder = path.join(__dirname, "..", "dist", "unittests");
-
-
-// Ensure directories exist
-if (!fs.existsSync(distFolder)) {
-    fs.mkdirSync(distFolder);
-}
-
-if (!fs.existsSync(unittestsFolder)) {
-    fs.mkdirSync(unittestsFolder);
-}
 
 var options = {
     compress: {},
@@ -61,6 +49,6 @@ for (const targetName of Object.keys(targets)) {
     options.sourceMap.url = mapName;
     options.sourceMap.root = "..//scripts";
     var result = UglifyJS.minify(files, options);
-    fs.writeFileSync(path.join(distFolder, targetName), result.code, "utf8");
-    fs.writeFileSync(path.join(distFolder, mapName), result.map, "utf8");
+    fs.writeFileSync(path.join(scriptsFolder, targetName), result.code, "utf8");
+    fs.writeFileSync(path.join(scriptsFolder, mapName), result.map, "utf8");
 }
