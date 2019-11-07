@@ -85,7 +85,7 @@ Office.initialize = function () {
 
         window.DiagnosticsMap = getDiagnosticsMap();
         var client = new XMLHttpRequest();
-        client.open("HEAD", window.location.origin + window.location.pathname, true);
+        client.open("HEAD", window.location.origin + "/Scripts/uiToggle.min.js", true);
         client.onreadystatechange = function () {
             if (this.readyState == 2) {
                 window.DiagnosticsMap["Last Update"] = client.getResponseHeader("Last-Modified");
