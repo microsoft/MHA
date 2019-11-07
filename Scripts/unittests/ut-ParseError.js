@@ -36,7 +36,7 @@ QUnit.test("parseError Tests", function (assert) {
     var done = assert.async(10); // Count of asynchronous calls below
 
     parseError("stringError", "message", function (eventName, stack) {
-        assert.equal(eventName, "message : stringError");
+        assert.equal(eventName, "message : stringError", "parseError 1 error");
         assert.deepEqual(CleanStack(stack), [
             "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
             "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
@@ -44,7 +44,7 @@ QUnit.test("parseError Tests", function (assert) {
             "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116",
             "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928",
             "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
-        ]);
+        ], "parseError 1 stack");
         done();
     });
 
@@ -54,7 +54,7 @@ QUnit.test("parseError Tests", function (assert) {
     catch (error) {
         parseError(error, "message", function (eventName, stack) {
             assert.errorsEqual(eventName, ["message : Object doesn't support property or method 'notAFunction'",
-                "message : document.notAFunction is not a function"]);
+                "message : document.notAFunction is not a function"], "Try 1 error");
             assert.deepEqual(CleanStack(stack), [
                 "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
                 "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
@@ -62,7 +62,7 @@ QUnit.test("parseError Tests", function (assert) {
                 "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116",
                 "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928",
                 "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
-            ]);
+            ], "Try 1 stack");
             done();
         });
     }
@@ -73,7 +73,7 @@ QUnit.test("parseError Tests", function (assert) {
     catch (error) {
         parseError(error, null, function (eventName, stack) {
             assert.errorsEqual(eventName, ["Object doesn't support property or method 'notAFunction'",
-                "document.notAFunction is not a function"]);
+                "document.notAFunction is not a function"], "Try 2 error");
             assert.deepEqual(CleanStack(stack), [
                 "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
                 "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
@@ -81,7 +81,7 @@ QUnit.test("parseError Tests", function (assert) {
                 "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116",
                 "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928",
                 "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
-            ]);
+            ], "Try 2 stack");
             done();
         });
     }
@@ -91,7 +91,7 @@ QUnit.test("parseError Tests", function (assert) {
     }
     catch (error) {
         parseError(error, "message", function (eventName, stack) {
-            assert.equal(eventName, "message : 42");
+            assert.equal(eventName, "message : 42", "Try 3 error");
             assert.deepEqual(CleanStack(stack), [
                 "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
                 "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
@@ -99,7 +99,7 @@ QUnit.test("parseError Tests", function (assert) {
                 "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116",
                 "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928",
                 "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
-            ]);
+            ], "Try 3 stack");
             done();
         });
     }
@@ -113,7 +113,8 @@ QUnit.test("parseError Tests", function (assert) {
                 "  \"one\": 1,\n" +
                 "  \"two\": 2,\n" +
                 "  \"three\": \"three\"\n" +
-                "}");
+                "}",
+                "Try 4 error");
             assert.deepEqual(CleanStack(stack), [
                 "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
                 "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
@@ -121,7 +122,7 @@ QUnit.test("parseError Tests", function (assert) {
                 "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116",
                 "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928",
                 "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
-            ]);
+            ], "Try 4 stack");
             done();
         });
     }
@@ -131,7 +132,7 @@ QUnit.test("parseError Tests", function (assert) {
     }
     catch (error) {
         parseError(error, null, function (eventName, stack) {
-            assert.equal(eventName, "Unknown exception");
+            assert.equal(eventName, "Unknown exception", "Try 5 error");
             assert.deepEqual(CleanStack(stack), [
                 "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
                 "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
@@ -139,13 +140,13 @@ QUnit.test("parseError Tests", function (assert) {
                 "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116",
                 "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928",
                 "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
-            ]);
+            ], "Try 5 stack");
             done();
         });
     }
 
     parseError(null, "message", function (eventName, stack) {
-        assert.equal(eventName, "message");
+        assert.equal(eventName, "message", "parseError 2 error");
         assert.deepEqual(CleanStack(stack), [
             "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
             "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
@@ -153,12 +154,12 @@ QUnit.test("parseError Tests", function (assert) {
             "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116",
             "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928",
             "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
-        ]);
+        ], "parseError 2 stack");
         done();
     });
 
     parseError(null, null, function (eventName, stack) {
-        assert.equal(eventName, "Unknown exception");
+        assert.equal(eventName, "Unknown exception", "parseError 3 error");
         assert.deepEqual(CleanStack(stack), [
             "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
             "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
@@ -166,7 +167,7 @@ QUnit.test("parseError Tests", function (assert) {
             "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116",
             "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928",
             "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
-        ]);
+        ], "parseError 3 stack");
         done();
     });
 
@@ -185,7 +186,7 @@ QUnit.test("parseError Tests", function (assert) {
     });
 
     parseError(42, "message", function (eventName, stack) {
-        assert.equal(eventName, "message : 42");
+        assert.equal(eventName, "message : 42", "parseError 4 error");
         assert.deepEqual(CleanStack(stack), [
             "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
             "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
@@ -193,7 +194,7 @@ QUnit.test("parseError Tests", function (assert) {
             "advance()@https://code.jquery.com/qunit/qunit-2.4.0.js:1116",
             "begin()@https://code.jquery.com/qunit/qunit-2.4.0.js:2928",
             "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
-        ]);
+        ], "parseError 4 stack");
         done();
     });
 });

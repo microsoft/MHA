@@ -51,7 +51,7 @@ function insertData(id, headerText, valueText) {
 
 function insertLastModified() {
     var client = new XMLHttpRequest();
-    client.open("HEAD", "../Scripts/MobilePane.js", true);
+    client.open("HEAD", "../dist/MobilePane.min.js", true);
     client.onreadystatechange = function () {
         if (this.readyState == 2) {
             insertData('diag', 'Last update', client.getResponseHeader("Last-Modified"));

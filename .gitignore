@@ -18,3 +18,5 @@ debug.log
 /.vs
 mha.sln
 /node_modules
+*.min.js
+*.min.js.map
