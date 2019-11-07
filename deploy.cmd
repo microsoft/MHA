@@ -102,9 +102,11 @@ call :SelectNodeVersion
 :: 3. Install npm packages
 echo 3. Install npm packages
 IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
+  echo Running npm install --production
   pushd "%DEPLOYMENT_TARGET%"
   call :ExecuteCmd !NPM_CMD! install --production
   IF !ERRORLEVEL! NEQ 0 goto error
+  echo Completed npm install --production
   popd
 )
 
