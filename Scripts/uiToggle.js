@@ -374,8 +374,11 @@ function initFabric() {
     }
 }
 
+// Combines window.appDiagnostics and window.itemDiagnostics and returns a single object
 function getDiagnosticsMap() {
-    return Object.assign(window.appDiagnostics, window.itemDiagnostics);
+    // Ideally we'd combine with Object.assign or the spread operator(...) but not all our browsers (IE) support that.
+    // jQuery's extend should work everywhere.
+    return $.extend({}, window.appDiagnostics, window.itemDiagnostics);
 }
 
 function ensureAppDiagnostics() {
