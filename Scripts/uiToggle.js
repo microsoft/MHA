@@ -21,7 +21,6 @@ var UiModel = function () {
     this.deferredErrors = [];
     this.deferredStatus = [];
     this.headers = "";
-    this.apiUsed = "not set";
 };
 
 UiModel.prototype.currentChoice = {};
@@ -29,7 +28,6 @@ UiModel.prototype.errors = [];
 UiModel.prototype.deferredErrors = [];
 UiModel.prototype.deferredStatus = [];
 UiModel.prototype.headers = "";
-UiModel.prototype.apiUsed = "not set";
 
 var iFrame = null;
 var UiChoice = function (label, url, checked) {
@@ -153,7 +151,7 @@ function loadNewItem() {
     if (Office.context.mailbox.item) {
         sendHeadersRequest(function (headers, apiUsed) {
             viewModel.headers = headers;
-            viewModel.apiUsed = apiUsed;
+            window.DiagnosticsMap["API used"] = apiUsed;
             if (iFrame) {
                 postMessageToFrame("renderItem", viewModel.headers);
             }
@@ -388,7 +386,7 @@ function getDiagnosticsMap() {
 
     if (window.navigator) diagnosticsMap["User Agent"] = window.navigator.userAgent;
     diagnosticsMap["Requirement set"] = getRequirementSet();
-    diagnosticsMap["API used"] = viewModel.apiUsed;
+    diagnosticsMap["API used"] = "Not set";
     if (Office) {
         if (Office.context) {
             diagnosticsMap["contentLanguage"] = Office.context.contentLanguage;
