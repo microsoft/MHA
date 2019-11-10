@@ -427,7 +427,7 @@ function ensureAppDiagnostics() {
     client.open("HEAD", window.location.origin + "/Scripts/uiToggle.min.js", true);
     client.onreadystatechange = function () {
         if (this.readyState == 2) {
-            window.DiagnosticsMap["Last Update"] = client.getResponseHeader("Last-Modified");
+            window.appDiagnostics["Last Update"] = client.getResponseHeader("Last-Modified");
         }
     }
 
