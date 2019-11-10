@@ -81,16 +81,8 @@ Office.initialize = function () {
         window.addEventListener("message", eventListener, false);
         loadNewItem();
 
-        window.DiagnosticsMap = getDiagnosticsMap();
-        var client = new XMLHttpRequest();
-        client.open("HEAD", window.location.origin + "/Scripts/uiToggle.min.js", true);
-        client.onreadystatechange = function () {
-            if (this.readyState == 2) {
-                window.DiagnosticsMap["Last Update"] = client.getResponseHeader("Last-Modified");
-            }
-        }
-
-        client.send();
+        ensureAppDiagnostics();
+        ensureItemDiagnostics();
     });
 };
 
@@ -139,6 +131,7 @@ function registerItemChangeEvent() {
         if (Office.context.mailbox.addHandlerAsync !== undefined) {
             Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, function () {
                 viewModel.errors = [];
+                ensureItemDiagnostics();
                 loadNewItem();
             });
         }
@@ -151,7 +144,7 @@ function loadNewItem() {
     if (Office.context.mailbox.item) {
         sendHeadersRequest(function (headers, apiUsed) {
             viewModel.headers = headers;
-            window.DiagnosticsMap["API used"] = apiUsed;
+            window.itemDiagnostics["API used"] = apiUsed;
             if (iFrame) {
                 postMessageToFrame("renderItem", viewModel.headers);
             }
@@ -201,7 +194,7 @@ function ShowError(error, message, suppressTracking) {
 // suppressTracking - boolean indicating if we should suppress tracking
 function LogError(error, message, suppressTracking) {
     if (error && document.domain !== "localhost" && !suppressTracking) {
-        var props = window.DiagnosticsMap;
+        var props = getDiagnosticsMap();
         props["Message"] = message;
         props["Error"] = JSON.stringify(error, null, 2);
 
@@ -224,7 +217,7 @@ function pushError(eventName, stack, suppressTracking) {
         viewModel.errors.push(joinArray([eventName, stackString], "\n"));
 
         if (document.domain !== "localhost" && !suppressTracking) {
-            var props = window.DiagnosticsMap;
+            var props = getDiagnosticsMap();
             props["Stack"] = stackString;
             appInsights.trackEvent(eventName, props);
         }
@@ -382,68 +375,101 @@ function initFabric() {
 }
 
 function getDiagnosticsMap() {
-    var diagnosticsMap = {};
+    return Object.assign(window.appDiagnostics, window.itemDiagnostics);
+}
 
-    if (window.navigator) diagnosticsMap["User Agent"] = window.navigator.userAgent;
-    diagnosticsMap["Requirement set"] = getRequirementSet();
-    diagnosticsMap["API used"] = "Not set";
+function ensureAppDiagnostics() {
+    window.appDiagnostics = {};
+
+    if (window.navigator) window.appDiagnostics["User Agent"] = window.navigator.userAgent;
+    window.appDiagnostics["Requirement set"] = getRequirementSet();
     if (Office) {
         if (Office.context) {
-            diagnosticsMap["contentLanguage"] = Office.context.contentLanguage;
-            diagnosticsMap["displayLanguage"] = Office.context.displayLanguage;
+            window.appDiagnostics["contentLanguage"] = Office.context.contentLanguage;
+            window.appDiagnostics["displayLanguage"] = Office.context.displayLanguage;
 
             if (Office.context.mailbox) {
                 if (Office.context.mailbox.diagnostics) {
-                    diagnosticsMap["hostname"] = Office.context.mailbox.diagnostics.hostName;
-                    diagnosticsMap["hostVersion"] = Office.context.mailbox.diagnostics.hostVersion;
+                    window.appDiagnostics["hostname"] = Office.context.mailbox.diagnostics.hostName;
+                    window.appDiagnostics["hostVersion"] = Office.context.mailbox.diagnostics.hostVersion;
 
                     if (Office.context.mailbox.diagnostics.OWAView) {
-                        diagnosticsMap["OWAView"] = Office.context.mailbox.diagnostics.OWAView;
+                        window.appDiagnostics["OWAView"] = Office.context.mailbox.diagnostics.OWAView;
                     }
                 }
                 else {
-                    diagnosticsMap["Office.context.mailbox.diagnostics"] = "missing";
-                }
-
-                if (Office.context.mailbox.item) {
-                    diagnosticsMap["itemId"] = !!Office.context.mailbox.item.itemId;
-                    diagnosticsMap["itemType"] = Office.context.mailbox.item.itemType;
-                    diagnosticsMap["itemClass"] = Office.context.mailbox.item.itemClass;
-                }
-                else {
-                    diagnosticsMap["Office.context.mailbox.item"] = "missing";
+                    window.appDiagnostics["Office.context.mailbox.diagnostics"] = "missing";
                 }
 
                 if (Office.context.mailbox._initialData$p$0) {
-                    diagnosticsMap["permissions"] = Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
+                    window.appDiagnostics["permissions"] = Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
                 }
                 else {
-                    diagnosticsMap["Office.context.mailbox._initialData$p$0"] = "missing";
+                    window.appDiagnostics["Office.context.mailbox._initialData$p$0"] = "missing";
                 }
             }
             else {
-                diagnosticsMap["Office.context.mailbox"] = "missing";
+                window.appDiagnostics["Office.context.mailbox"] = "missing";
             }
         }
         else {
-            diagnosticsMap["Office.context"] = "missing";
+            window.appDiagnostics["Office.context"] = "missing";
         }
     }
     else {
-        diagnosticsMap["Office"] = "missing";
+        window.appDiagnostics["Office"] = "missing";
     }
 
-    diagnosticsMap["origin"] = window.location.origin;
-    diagnosticsMap["path"] = window.location.pathname;
-    return diagnosticsMap;
+    window.appDiagnostics["origin"] = window.location.origin;
+    window.appDiagnostics["path"] = window.location.pathname;
+
+    var client = new XMLHttpRequest();
+    client.open("HEAD", window.location.origin + "/Scripts/uiToggle.min.js", true);
+    client.onreadystatechange = function () {
+        if (this.readyState == 2) {
+            window.DiagnosticsMap["Last Update"] = client.getResponseHeader("Last-Modified");
+        }
+    }
+
+    client.send();
+}
+
+function ensureItemDiagnostics() {
+    window.itemDiagnostics = {};
+
+    window.itemDiagnostics["API used"] = "Not set";
+    if (Office) {
+        if (Office.context) {
+            if (Office.context.mailbox) {
+                if (Office.context.mailbox.item) {
+                    window.itemDiagnostics["itemId"] = !!Office.context.mailbox.item.itemId;
+                    window.itemDiagnostics["itemType"] = Office.context.mailbox.item.itemType;
+                    window.itemDiagnostics["itemClass"] = Office.context.mailbox.item.itemClass;
+                }
+                else {
+                    window.itemDiagnostics["Office.context.mailbox.item"] = "missing";
+                }
+            }
+            else {
+                window.itemDiagnostics["Office.context.mailbox"] = "missing";
+            }
+        }
+        else {
+            window.itemDiagnostics["Office.context"] = "missing";
+        }
+    }
+    else {
+        window.itemDiagnostics["Office"] = "missing";
+    }
 }
 
 function getDiagnostics() {
     var diagnostics = "";
     try {
-        for (var diag in window.DiagnosticsMap) {
-            if (window.DiagnosticsMap.hasOwnProperty(diag)) {
-                diagnostics += diag + " = " + window.DiagnosticsMap[diag] + "\n";
+        var diagnosticMap = getDiagnosticsMap();
+        for (var diag in diagnosticMap) {
+            if (diagnosticMap.hasOwnProperty(diag)) {
+                diagnostics += diag + " = " + diagnosticMap[diag] + "\n";
             }
         }
     } catch (e) {
