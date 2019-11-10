@@ -24,9 +24,15 @@ function getErrorStack(error) {
 }
 
 function isError(error) {
-    if (Object.prototype.toString.call(error) === "[object Error]") {
-        if ("stack" in error) return true;
+    // We can't afford to throw while checking if we're processing an error
+    // So just swallow any exception and fail.
+    try {
+        if (Object.prototype.toString.call(error) === "[object Error]") {
+            if ("stack" in error) return true;
+        }
     }
+    catch (e) { }
+
     return false;
 }
 

@@ -197,6 +197,7 @@ function LogError(error, message, suppressTracking) {
         var props = getDiagnosticsMap();
         props["Message"] = message;
         props["Error"] = JSON.stringify(error, null, 2);
+        props["Source"] = "LogError";
 
         if (isError(error) && error.exception) {
             appInsights.trackException(error, props);
@@ -219,6 +220,7 @@ function pushError(eventName, stack, suppressTracking) {
         if (document.domain !== "localhost" && !suppressTracking) {
             var props = getDiagnosticsMap();
             props["Stack"] = stackString;
+            props["Source"] = "pushError";
             appInsights.trackEvent(eventName, props);
         }
     }
