@@ -77,6 +77,8 @@ Office.initialize = function () {
     $(document).ready(function () {
         if (appInsights && appInsights.addTelemetryInitializer) {
             appInsights.addTelemetryInitializer(function (envelope) {
+                envelope.data.ti = "ti functioning";
+                envelope.data.baseType = envelope.baseType;
                 // This will get called for any appInsights tracking - we can augment or suppress logging from here
                 // No appInsights logging for localhost/dev
                 if (document.domain == "localhost") return false;
@@ -86,7 +88,6 @@ Office.initialize = function () {
 
                 // If we're not one of the above types, tag in our diagnostics data
                 $.extend(envelope.data, getDiagnosticsMap());
-                envelope.data.baseType = envelope.baseType;
 
                 return true;
             });
@@ -211,7 +212,7 @@ function ShowError(error, message, suppressTracking) {
 // suppressTracking - boolean indicating if we should suppress tracking
 function LogError(error, message, suppressTracking) {
     if (error && !suppressTracking) {
-        var props = {};
+        var props = getDiagnosticsMap();
         props["Message"] = message;
         props["Error"] = JSON.stringify(error, null, 2);
         props["Source"] = "LogError";
@@ -235,7 +236,7 @@ function pushError(eventName, stack, suppressTracking) {
         viewModel.errors.push(joinArray([eventName, stackString], "\n"));
 
         if (!suppressTracking) {
-            var props = {};
+            var props = getDiagnosticsMap();
             props["Stack"] = stackString;
             props["Source"] = "pushError";
             appInsights.trackEvent(eventName, props);
