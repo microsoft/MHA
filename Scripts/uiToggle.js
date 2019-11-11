@@ -75,20 +75,22 @@ function getQueryVariable(variable) {
 
 Office.initialize = function () {
     $(document).ready(function () {
-        appInsights.addTelemetryInitializer(function (envelope) {
-            // This will get called for any appInsights tracking - we can augment or suppress logging from here
-            // No appInsights logging for localhost/dev
-            if (document.domain == "localhost") return false;
-            if (envelope.baseType == "RemoteDependencyData") return true;
-            if (envelope.baseType == "PageviewData") return true;
-            if (envelope.baseType == "PageviewPerformanceData") return true;
+        if (appInsights && appInsights.addTelemetryInitializer) {
+            appInsights.addTelemetryInitializer(function (envelope) {
+                // This will get called for any appInsights tracking - we can augment or suppress logging from here
+                // No appInsights logging for localhost/dev
+                if (document.domain == "localhost") return false;
+                if (envelope.baseType == "RemoteDependencyData") return true;
+                if (envelope.baseType == "PageviewData") return true;
+                if (envelope.baseType == "PageviewPerformanceData") return true;
 
-            // If we're not one of the above types, tag in our diagnostics data
-            $.extend(envelope.data, getDiagnosticsMap());
-            envelope.data.baseType = envelope.baseType;
+                // If we're not one of the above types, tag in our diagnostics data
+                $.extend(envelope.data, getDiagnosticsMap());
+                envelope.data.baseType = envelope.baseType;
 
-            return true;
-        });
+                return true;
+            });
+        }
 
         setDefault();
         viewModel = new UiModel();
