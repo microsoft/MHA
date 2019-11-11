@@ -5,6 +5,7 @@
 /* exported CleanStack */
 /* exported isError */
 /* exported parseError */
+/* global appInsights */
 
 function getErrorMessage(error) {
     if (!error) return '';
@@ -24,6 +25,8 @@ function getErrorStack(error) {
 }
 
 function isError(error) {
+    if (!error) return false;
+
     // We can't afford to throw while checking if we're processing an error
     // So just swallow any exception and fail.
     try {
@@ -31,7 +34,10 @@ function isError(error) {
             if ("stack" in error) return true;
         }
     }
-    catch (e) { }
+    catch (e) {
+        appInsights.trackEvent("isError exception");
+        appInsights.trackEvent("isError exception with error", e);
+    }
 
     return false;
 }
@@ -56,6 +62,7 @@ function parseError(exception, message, errorHandler) {
     };
 
     var errback = function (err) {
+        appInsights.trackEvent("parseError errback");
         stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
         errorHandler(eventName, stack);
     };
@@ -73,15 +80,16 @@ function joinArray(array, char) {
     return (array.filter(function (item) { return item; })).join(char);
 }
 
+// While trying to get our error tracking under control, let's not filter our stacks
 function FilterStack(stack) {
     return stack.filter(function (item) {
         if (!item.fileName) return true;
         if (item.fileName.indexOf("stacktrace") !== -1) return false;
-        if (item.functionName === "ShowError") return false;
-        if (item.functionName === "showError") return false;
-        if (item.functionName === "LogError") return false;
-        if (item.functionName === "GetStack") return false;
-        if (item.functionName === "parseError") return false;
+        //if (item.functionName === "ShowError") return false;
+        //if (item.functionName === "showError") return false;
+        //if (item.functionName === "LogError") return false;
+        //if (item.functionName === "GetStack") return false;
+        //if (item.functionName === "parseError") return false;
         return true;
     });
 }

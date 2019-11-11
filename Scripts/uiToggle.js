@@ -75,6 +75,21 @@ function getQueryVariable(variable) {
 
 Office.initialize = function () {
     $(document).ready(function () {
+        appInsights.addTelemetryInitializer(function (envelope) {
+            // This will get called for any appInsights tracking - we can augment or suppress logging from here
+            // No appInsights logging for localhost/dev
+            if (document.domain == "localhost") return false;
+            if (envelope.baseType == "RemoteDependencyData") return true;
+            if (envelope.baseType == "PageviewData") return true;
+            if (envelope.baseType == "PageviewPerformanceData") return true;
+
+            // If we're not one of the above types, tag in our diagnostics data
+            $.extend(envelope.data, getDiagnosticsMap());
+            envelope.data.baseType = envelope.baseType;
+
+            return true;
+        });
+
         setDefault();
         viewModel = new UiModel();
         InitUI();
@@ -193,8 +208,8 @@ function ShowError(error, message, suppressTracking) {
 // message - a string describing the error
 // suppressTracking - boolean indicating if we should suppress tracking
 function LogError(error, message, suppressTracking) {
-    if (error && document.domain !== "localhost" && !suppressTracking) {
-        var props = getDiagnosticsMap();
+    if (error && !suppressTracking) {
+        var props = {};
         props["Message"] = message;
         props["Error"] = JSON.stringify(error, null, 2);
         props["Source"] = "LogError";
@@ -217,8 +232,8 @@ function pushError(eventName, stack, suppressTracking) {
         var stackString = joinArray(stack, "\n");
         viewModel.errors.push(joinArray([eventName, stackString], "\n"));
 
-        if (document.domain !== "localhost" && !suppressTracking) {
-            var props = getDiagnosticsMap();
+        if (!suppressTracking) {
+            var props = {};
             props["Stack"] = stackString;
             props["Source"] = "pushError";
             appInsights.trackEvent(eventName, props);
