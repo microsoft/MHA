@@ -75,6 +75,11 @@ function getQueryVariable(variable) {
 
 Office.initialize = function () {
     $(document).ready(function () {
+        // Ensure our diagnostic values before we do anything which might signal an event
+        appInsights.trackEvent("startup begin");
+        ensureAppDiagnostics();
+        ensureItemDiagnostics();
+
         if (appInsights && appInsights.addTelemetryInitializer) {
             appInsights.trackEvent("register ti");
             appInsights.addTelemetryInitializer(function (envelope) {
@@ -94,16 +99,13 @@ Office.initialize = function () {
             });
         }
 
-        appInsights.trackEvent("startup");
         setDefault();
         viewModel = new UiModel();
         InitUI();
         window.addEventListener("message", eventListener, false);
         loadNewItem();
 
-        ensureAppDiagnostics();
-        ensureItemDiagnostics();
-        appInsights.trackEvent("startup");
+        appInsights.trackEvent("startup end");
     });
 };
 
