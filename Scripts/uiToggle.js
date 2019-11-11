@@ -85,6 +85,7 @@ Office.initialize = function () {
             appInsights.addTelemetryInitializer(function (envelope) {
                 envelope.data.ti = "ti functioning";
                 envelope.data.baseType = envelope.baseType;
+                envelope.data.baseData = envelope.baseData;
                 // This will get called for any appInsights tracking - we can augment or suppress logging from here
                 // No appInsights logging for localhost/dev
                 if (document.domain == "localhost") return false;
