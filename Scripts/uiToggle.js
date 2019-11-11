@@ -76,6 +76,7 @@ function getQueryVariable(variable) {
 Office.initialize = function () {
     $(document).ready(function () {
         if (appInsights && appInsights.addTelemetryInitializer) {
+            appInsights.trackEvent("register ti");
             appInsights.addTelemetryInitializer(function (envelope) {
                 envelope.data.ti = "ti functioning";
                 envelope.data.baseType = envelope.baseType;
@@ -93,6 +94,7 @@ Office.initialize = function () {
             });
         }
 
+        appInsights.trackEvent("startup");
         setDefault();
         viewModel = new UiModel();
         InitUI();
@@ -101,6 +103,7 @@ Office.initialize = function () {
 
         ensureAppDiagnostics();
         ensureItemDiagnostics();
+        appInsights.trackEvent("startup");
     });
 };
 
