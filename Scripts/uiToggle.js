@@ -73,15 +73,15 @@ function getQueryVariable(variable) {
     return null;
 }
 
+function CanUseTI() { return appInsights && appInsights.addTelemetryInitializer; }
+
 Office.initialize = function () {
     $(document).ready(function () {
         // Ensure our diagnostic values before we do anything which might signal an event
-        appInsights.trackEvent("startup begin");
         ensureAppDiagnostics();
         ensureItemDiagnostics();
 
-        if (appInsights && appInsights.addTelemetryInitializer) {
-            appInsights.trackEvent("register ti");
+        if (CanUseTI()) {
             appInsights.addTelemetryInitializer(function (envelope) {
                 envelope.data.ti = "ti functioning";
                 envelope.data.baseType = envelope.baseType;
@@ -105,8 +105,6 @@ Office.initialize = function () {
         InitUI();
         window.addEventListener("message", eventListener, false);
         loadNewItem();
-
-        appInsights.trackEvent("startup end");
     });
 };
 
@@ -218,7 +216,8 @@ function ShowError(error, message, suppressTracking) {
 // suppressTracking - boolean indicating if we should suppress tracking
 function LogError(error, message, suppressTracking) {
     if (error && !suppressTracking) {
-        var props = getDiagnosticsMap();
+        var props = CanUseTI() ? {} : getDiagnosticsMap();
+        if (!CanUseTI()) props["ti"] = "ti nonfunctioning";
         props["Message"] = message;
         props["Error"] = JSON.stringify(error, null, 2);
         props["Source"] = "LogError";
@@ -242,7 +241,8 @@ function pushError(eventName, stack, suppressTracking) {
         viewModel.errors.push(joinArray([eventName, stackString], "\n"));
 
         if (!suppressTracking) {
-            var props = getDiagnosticsMap();
+            var props = CanUseTI() ? {} : getDiagnosticsMap();
+            if (!CanUseTI()) props["ti"] = "ti nonfunctioning";
             props["Stack"] = stackString;
             props["Source"] = "pushError";
             appInsights.trackEvent(eventName, props);
