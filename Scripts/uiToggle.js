@@ -457,7 +457,6 @@ function ensureAppDiagnostics() {
     client.onreadystatechange = function () {
         if (this.readyState == 2) {
             window.appDiagnostics["Last Update"] = client.getResponseHeader("Last-Modified");
-            appInsights.trackEvent("last update");
         }
     }
 
