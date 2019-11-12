@@ -77,10 +77,6 @@ function CanUseTI() { return appInsights && appInsights.addTelemetryInitializer;
 
 Office.initialize = function () {
     $(document).ready(function () {
-        // Ensure our diagnostic values before we do anything which might signal an event
-        ensureAppDiagnostics();
-        ensureItemDiagnostics();
-
         if (CanUseTI()) {
             appInsights.addTelemetryInitializer(function (envelope) {
                 envelope.data.ti = "ti functioning";
@@ -153,7 +149,7 @@ function registerItemChangeEvent() {
         if (Office.context.mailbox.addHandlerAsync !== undefined) {
             Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, function () {
                 viewModel.errors = [];
-                ensureItemDiagnostics();
+                clearItemDiagnostics();
                 loadNewItem();
             });
         }
@@ -166,7 +162,7 @@ function loadNewItem() {
     if (Office.context.mailbox.item) {
         sendHeadersRequest(function (headers, apiUsed) {
             viewModel.headers = headers;
-            window.itemDiagnostics["API used"] = apiUsed;
+            setItemDiagnostics("API used", apiUsed);
             if (iFrame) {
                 postMessageToFrame("renderItem", viewModel.headers);
             }
@@ -402,23 +398,53 @@ function initFabric() {
 
 // Combines window.appDiagnostics and window.itemDiagnostics and returns a single object
 function getDiagnosticsMap() {
+    ensureAppDiagnostics();
+    ensureItemDiagnostics();
+
     // Ideally we'd combine with Object.assign or the spread operator(...) but not all our browsers (IE) support that.
     // jQuery's extend should work everywhere.
     return $.extend({}, window.appDiagnostics, window.itemDiagnostics);
 }
 
 function ensureAppDiagnostics() {
+    if (window.appDiagnostics) {
+        // We may have initialized earlier before we had an Office object, so repopulate it
+        ensureOfficeDiagnostics();
+        return;
+    }
+
     window.appDiagnostics = {};
 
     if (window.navigator) window.appDiagnostics["User Agent"] = window.navigator.userAgent;
     window.appDiagnostics["Requirement set"] = getRequirementSet();
+    ensureOfficeDiagnostics();
+
+    window.appDiagnostics["origin"] = window.location.origin;
+    window.appDiagnostics["path"] = window.location.pathname;
+
+    var client = new XMLHttpRequest();
+    client.open("HEAD", window.location.origin + "/Scripts/uiToggle.min.js", true);
+    client.onreadystatechange = function () {
+        if (this.readyState == 2) {
+            window.appDiagnostics["Last Update"] = client.getResponseHeader("Last-Modified");
+        }
+    }
+
+    client.send();
+}
+
+function ensureOfficeDiagnostics() {
     if (Office) {
+        delete window.appDiagnostics["Office"];
         if (Office.context) {
+            delete window.appDiagnostics["Office.context"];
             window.appDiagnostics["contentLanguage"] = Office.context.contentLanguage;
             window.appDiagnostics["displayLanguage"] = Office.context.displayLanguage;
 
             if (Office.context.mailbox) {
+                delete window.appDiagnostics["Office.context.mailbox"];
                 if (Office.context.mailbox.diagnostics) {
+                    delete window.appDiagnostics["Office.context.mailbox.diagnostics"];
                     window.appDiagnostics["hostname"] = Office.context.mailbox.diagnostics.hostName;
                     window.appDiagnostics["hostVersion"] = Office.context.mailbox.diagnostics.hostVersion;
 
@@ -431,6 +457,7 @@ function ensureAppDiagnostics() {
                 }
 
                 if (Office.context.mailbox._initialData$p$0) {
+                    delete window.appDiagnostics["Office.context.mailbox._initialData$p$0"];
                     window.appDiagnostics["permissions"] = Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
                 }
                 else {
@@ -448,22 +475,19 @@ function ensureAppDiagnostics() {
     else {
         window.appDiagnostics["Office"] = "missing";
     }
+}
 
-    window.appDiagnostics["origin"] = window.location.origin;
-    window.appDiagnostics["path"] = window.location.pathname;
+function setItemDiagnostics(field, value) {
+    ensureItemDiagnostics();
+    window.itemDiagnostics[field] = value;
+}
 
-    var client = new XMLHttpRequest();
-    client.open("HEAD", window.location.origin + "/Scripts/uiToggle.min.js", true);
-    client.onreadystatechange = function () {
-        if (this.readyState == 2) {
-            window.appDiagnostics["Last Update"] = client.getResponseHeader("Last-Modified");
-        }
-    }
-
-    client.send();
+function clearItemDiagnostics() {
+    if (window.itemDiagnostics) delete window.itemDiagnostics;
 }
 
 function ensureItemDiagnostics() {
+    if (window.itemDiagnostics) return;
     window.itemDiagnostics = {};
 
     window.itemDiagnostics["API used"] = "Not set";
