@@ -55,19 +55,13 @@ function ensureAppDiagnostics() {
 
     window.appDiagnostics["origin"] = window.location.origin;
     window.appDiagnostics["path"] = window.location.pathname;
-
-    var client = new XMLHttpRequest();
-    client.open("HEAD", window.location.origin + "/Scripts/uiToggle.min.js", true);
-    client.onreadystatechange = function () {
-        if (this.readyState == 2) {
-            window.appDiagnostics["Last Update"] = client.getResponseHeader("Last-Modified");
-        }
-    }
-
-    client.send();
 }
 
 function ensureOfficeDiagnostics() {
+    if (window.viewModel) {
+        window.appDiagnostics["Last Update"] = window.viewModel.lastUpdate;
+    }
+
     if (window.Office) {
         delete window.appDiagnostics["Office"];
         if (window.Office.context) {

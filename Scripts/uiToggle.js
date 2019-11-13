@@ -25,6 +25,8 @@ var UiModel = function () {
     this.deferredErrors = [];
     this.deferredStatus = [];
     this.headers = "";
+    this.lastUpdate = "";
+    ensureLastModified();
 };
 
 UiModel.prototype.currentChoice = {};
@@ -32,6 +34,7 @@ UiModel.prototype.errors = [];
 UiModel.prototype.deferredErrors = [];
 UiModel.prototype.deferredStatus = [];
 UiModel.prototype.headers = "";
+UiModel.prototype.lastUpdate = "";
 
 var iFrame = null;
 var UiChoice = function (label, url, checked) {
@@ -75,6 +78,18 @@ function getQueryVariable(variable) {
         }
     }
     return null;
+}
+
+function ensureLastModified() {
+    var client = new XMLHttpRequest();
+    client.open("HEAD", window.location.origin + "/Scripts/diag.min.js", true);
+    client.onreadystatechange = function () {
+        if (this.readyState == 2) {
+            window.viewModel.lastUpdate = client.getResponseHeader("Last-Modified");
+        }
+    }
+
+    client.send();
 }
 
 function CanUseTI() { return appInsights && appInsights.addTelemetryInitializer; }
