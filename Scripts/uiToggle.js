@@ -7,6 +7,10 @@
 /* global Office */
 /* global parseError */
 /* global sendHeadersRequest */
+/* global getDiagnosticsMap */
+/* global setItemDiagnostics */
+/* global clearItemDiagnostics */
+/* global getDiagnostics */
 /* exported pushError */
 /* exported ShowError */
 /* exported UpdateStatus */
@@ -77,29 +81,6 @@ function CanUseTI() { return appInsights && appInsights.addTelemetryInitializer;
 
 Office.initialize = function () {
     $(document).ready(function () {
-        // Ensure our diagnostic values before we do anything which might signal an event
-        ensureAppDiagnostics();
-        ensureItemDiagnostics();
-
-        if (CanUseTI()) {
-            appInsights.addTelemetryInitializer(function (envelope) {
-                envelope.data.ti = "ti functioning";
-                envelope.data.baseType = envelope.baseType;
-                envelope.data.baseData = envelope.baseData;
-                // This will get called for any appInsights tracking - we can augment or suppress logging from here
-                // No appInsights logging for localhost/dev
-                if (document.domain == "localhost") return false;
-                if (envelope.baseType == "RemoteDependencyData") return true;
-                if (envelope.baseType == "PageviewData") return true;
-                if (envelope.baseType == "PageviewPerformanceData") return true;
-
-                // If we're not one of the above types, tag in our diagnostics data
-                $.extend(envelope.data, getDiagnosticsMap());
-
-                return true;
-            });
-        }
-
         setDefault();
         viewModel = new UiModel();
         InitUI();
@@ -153,7 +134,7 @@ function registerItemChangeEvent() {
         if (Office.context.mailbox.addHandlerAsync !== undefined) {
             Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, function () {
                 viewModel.errors = [];
-                ensureItemDiagnostics();
+                clearItemDiagnostics();
                 loadNewItem();
             });
         }
@@ -166,7 +147,7 @@ function loadNewItem() {
     if (Office.context.mailbox.item) {
         sendHeadersRequest(function (headers, apiUsed) {
             viewModel.headers = headers;
-            window.itemDiagnostics["API used"] = apiUsed;
+            setItemDiagnostics("API used", apiUsed);
             if (iFrame) {
                 postMessageToFrame("renderItem", viewModel.headers);
             }
@@ -397,145 +378,5 @@ function initFabric() {
                 dialogDiagnosticsComponent.open();
                 break;
         }
-    }
-}
-
-// Combines window.appDiagnostics and window.itemDiagnostics and returns a single object
-function getDiagnosticsMap() {
-    // Ideally we'd combine with Object.assign or the spread operator(...) but not all our browsers (IE) support that.
-    // jQuery's extend should work everywhere.
-    return $.extend({}, window.appDiagnostics, window.itemDiagnostics);
-}
-
-function ensureAppDiagnostics() {
-    window.appDiagnostics = {};
-
-    if (window.navigator) window.appDiagnostics["User Agent"] = window.navigator.userAgent;
-    window.appDiagnostics["Requirement set"] = getRequirementSet();
-    if (Office) {
-        if (Office.context) {
-            window.appDiagnostics["contentLanguage"] = Office.context.contentLanguage;
-            window.appDiagnostics["displayLanguage"] = Office.context.displayLanguage;
-
-            if (Office.context.mailbox) {
-                if (Office.context.mailbox.diagnostics) {
-                    window.appDiagnostics["hostname"] = Office.context.mailbox.diagnostics.hostName;
-                    window.appDiagnostics["hostVersion"] = Office.context.mailbox.diagnostics.hostVersion;
-
-                    if (Office.context.mailbox.diagnostics.OWAView) {
-                        window.appDiagnostics["OWAView"] = Office.context.mailbox.diagnostics.OWAView;
-                    }
-                }
-                else {
-                    window.appDiagnostics["Office.context.mailbox.diagnostics"] = "missing";
-                }
-
-                if (Office.context.mailbox._initialData$p$0) {
-                    window.appDiagnostics["permissions"] = Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
-                }
-                else {
-                    window.appDiagnostics["Office.context.mailbox._initialData$p$0"] = "missing";
-                }
-            }
-            else {
-                window.appDiagnostics["Office.context.mailbox"] = "missing";
-            }
-        }
-        else {
-            window.appDiagnostics["Office.context"] = "missing";
-        }
-    }
-    else {
-        window.appDiagnostics["Office"] = "missing";
-    }
-
-    window.appDiagnostics["origin"] = window.location.origin;
-    window.appDiagnostics["path"] = window.location.pathname;
-
-    var client = new XMLHttpRequest();
-    client.open("HEAD", window.location.origin + "/Scripts/uiToggle.min.js", true);
-    client.onreadystatechange = function () {
-        if (this.readyState == 2) {
-            window.appDiagnostics["Last Update"] = client.getResponseHeader("Last-Modified");
-        }
-    }
-
-    client.send();
-}
-
-function ensureItemDiagnostics() {
-    window.itemDiagnostics = {};
-
-    window.itemDiagnostics["API used"] = "Not set";
-    if (Office) {
-        if (Office.context) {
-            if (Office.context.mailbox) {
-                if (Office.context.mailbox.item) {
-                    window.itemDiagnostics["itemId"] = !!Office.context.mailbox.item.itemId;
-                    window.itemDiagnostics["itemType"] = Office.context.mailbox.item.itemType;
-                    window.itemDiagnostics["itemClass"] = Office.context.mailbox.item.itemClass;
-                }
-                else {
-                    window.itemDiagnostics["Office.context.mailbox.item"] = "missing";
-                }
-            }
-            else {
-                window.itemDiagnostics["Office.context.mailbox"] = "missing";
-            }
-        }
-        else {
-            window.itemDiagnostics["Office.context"] = "missing";
-        }
-    }
-    else {
-        window.itemDiagnostics["Office"] = "missing";
-    }
-}
-
-function getDiagnostics() {
-    var diagnostics = "";
-    try {
-        var diagnosticMap = getDiagnosticsMap();
-        for (var diag in diagnosticMap) {
-            if (diagnosticMap.hasOwnProperty(diag)) {
-                diagnostics += diag + " = " + diagnosticMap[diag] + "\n";
-            }
-        }
-    } catch (e) {
-        diagnostics += "ERROR: Failed to get diagnostics\n";
-    }
-
-    for (var iError = 0; iError < viewModel.errors.length; iError++) {
-        if (viewModel.errors[iError]) {
-            diagnostics += "ERROR: " + viewModel.errors[iError] + "\n";
-        }
-    }
-
-    return diagnostics;
-}
-
-function getRequirementSet() {
-    // https://docs.microsoft.com/en-us/office/dev/add-ins/reference/requirement-sets/outlook-api-requirement-sets
-    try {
-        if (Office.context.requirements && Office.context.requirements.isSetSupported) {
-            if (Office.context.requirements.isSetSupported("Mailbox", 1.7)) return "1.7";
-            if (Office.context.requirements.isSetSupported("Mailbox", 1.6)) return "1.6";
-            if (Office.context.requirements.isSetSupported("Mailbox", 1.5)) return "1.5";
-            if (Office.context.requirements.isSetSupported("Mailbox", 1.4)) return "1.4";
-            if (Office.context.requirements.isSetSupported("Mailbox", 1.3)) return "1.3";
-            if (Office.context.requirements.isSetSupported("Mailbox", 1.2)) return "1.2";
-            if (Office.context.requirements.isSetSupported("Mailbox", 1.1)) return "1.1";
-            if (Office.context.requirements.isSetSupported("Mailbox", 1.0)) return "1.0";
-        }
-
-        if (Office.context.mailbox.addHandlerAsync) return "1.5?";
-        if (Office.context.ui.displayDialogAsync) return "1.4?";
-        if (Office.context.mailbox.item.saveAsync) return "1.3?";
-        if (Office.context.mailbox.item.setSelectedDataAsync) return "1.2?";
-        if (Office.context.mailbox.item.removeAttachmentAsync) return "1.1?";
-        return "1.0?";
-    }
-    catch (e) {
-        return "Could not detect requirements set";
     }
 }
