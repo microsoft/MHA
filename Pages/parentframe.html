@@ -23,7 +23,7 @@
             }
         ); window[aiName] = aisdk, aisdk.queue && 0 === aisdk.queue.length;
         aisdk.queue.push(function () {
-            appInsights.context.addTelemetryInitializer(function (envelope) {
+            appInsights.addTelemetryInitializer(function (envelope) {
                 //var telemetryItem = envelope.data.baseData;
 
                 //// To set custom properties:
