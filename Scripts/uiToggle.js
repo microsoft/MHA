@@ -216,13 +216,18 @@ function LogError(error, message, suppressTracking) {
         if (!CanUseTI()) props["ti"] = "ti nonfunctioning";
         props["Message"] = message;
         props["Error"] = JSON.stringify(error, null, 2);
-        props["Source"] = "LogError";
 
         if (isError(error) && error.exception) {
+            props["Source"] = "LogErrorException";
             appInsights.trackException(error, props);
         }
         else {
-            appInsights.trackEvent("Unknown error object", props);
+            props["Source"] = "LogErrorEvent";
+            if (error.description) props.description = error.description;
+            if (error.message) props.message = error.message;
+            if (error.stack) props.stack = error.stack;
+
+            appInsights.trackEvent(error.description || error.message || props.Message || "Unknown error object", props);
         }
     }
 
