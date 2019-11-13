@@ -10,7 +10,6 @@
 /* global getDiagnosticsMap */
 /* global setItemDiagnostics */
 /* global clearItemDiagnostics */
-/* global getDiagnostics */
 /* exported pushError */
 /* exported ShowError */
 /* exported UpdateStatus */
@@ -394,5 +393,27 @@ function initFabric() {
                 dialogDiagnosticsComponent.open();
                 break;
         }
+    }
+
+    function getDiagnostics() {
+        var diagnostics = "";
+        try {
+            var diagnosticMap = getDiagnosticsMap();
+            for (var diag in diagnosticMap) {
+                if (diagnosticMap.hasOwnProperty(diag)) {
+                    diagnostics += diag + " = " + diagnosticMap[diag] + "\n";
+                }
+            }
+        } catch (e) {
+            diagnostics += "ERROR: Failed to get diagnostics\n";
+        }
+
+        for (var iError = 0; iError < window.viewModel.errors.length; iError++) {
+            if (window.viewModel.errors[iError]) {
+                diagnostics += "ERROR: " + window.viewModel.errors[iError] + "\n";
+            }
+        }
+
+        return diagnostics;
     }
 }

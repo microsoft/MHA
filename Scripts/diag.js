@@ -3,7 +3,6 @@
 /* exported getDiagnosticsMap */
 /* exported setItemDiagnostics */
 /* exported clearItemDiagnostics */
-/* exported getDiagnostics */
 
 // diagnostic functions
 
@@ -142,28 +141,6 @@ function ensureItemDiagnostics() {
     else {
         window.itemDiagnostics["Office"] = "missing";
     }
-}
-
-function getDiagnostics() {
-    var diagnostics = "";
-    try {
-        var diagnosticMap = getDiagnosticsMap();
-        for (var diag in diagnosticMap) {
-            if (diagnosticMap.hasOwnProperty(diag)) {
-                diagnostics += diag + " = " + diagnosticMap[diag] + "\n";
-            }
-        }
-    } catch (e) {
-        diagnostics += "ERROR: Failed to get diagnostics\n";
-    }
-
-    for (var iError = 0; iError < window.viewModel.errors.length; iError++) {
-        if (window.viewModel.errors[iError]) {
-            diagnostics += "ERROR: " + window.viewModel.errors[iError] + "\n";
-        }
-    }
-
-    return diagnostics;
 }
 
 function getRequirementSet() {
