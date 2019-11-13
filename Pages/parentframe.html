@@ -17,9 +17,7 @@
             {
                 instrumentationKey: "2f12afed-6139-456e-9de3-49003d3a1fb1"
             }
-        ); window[aiName] = aisdk, aisdk.queue && 0 === aisdk.queue.length;
-        aisdk.queue.push(function () { appInsights.addTelemetryInitializer(window.telemetryInitializer); });
-        aisdk.trackPageView({});
+        ); window[aiName] = aisdk, aisdk.queue.push(function () { appInsights.addTelemetryInitializer(window.telemetryInitializer); }), aisdk.queue && 0 === aisdk.queue.length && aisdk.trackPageView({});
     </script>
 
     <script crossorigin="anonymous" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
