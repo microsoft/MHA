@@ -8,18 +8,24 @@
 // diagnostic functions
 
 function telemetryInitializer(envelope) {
-    envelope.data.ti = "ti functioning";
     envelope.data.baseType = envelope.baseType;
     envelope.data.baseData = envelope.baseData;
     // This will get called for any appInsights tracking - we can augment or suppress logging from here
     // No appInsights logging for localhost/dev
-    //if (document.domain == "localhost") return false;
+    if (document.domain == "localhost") return false;
     if (envelope.baseType == "RemoteDependencyData") return true;
     if (envelope.baseType == "PageviewData") return true;
     if (envelope.baseType == "PageviewPerformanceData") return true;
 
     // If we're not one of the above types, tag in our diagnostics data
-    $.extend(envelope.data, getDiagnosticsMap());
+    if (envelope.baseType == "ExceptionData") {
+        // custom data for the ExceptionData type lives in a different place
+        envelope.baseData.properties = envelope.baseData.properties || {};
+        $.extend(envelope.baseData.properties, getDiagnosticsMap());
+    }
+    else {
+        $.extend(envelope.data, getDiagnosticsMap());
+    }
 
     return true;
 }
