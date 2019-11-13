@@ -92,8 +92,6 @@ function ensureLastModified() {
     client.send();
 }
 
-function CanUseTI() { return appInsights && appInsights.addTelemetryInitializer; }
-
 Office.initialize = function () {
     $(document).ready(function () {
         setDefault();
@@ -212,8 +210,7 @@ function ShowError(error, message, suppressTracking) {
 // suppressTracking - boolean indicating if we should suppress tracking
 function LogError(error, message, suppressTracking) {
     if (error && !suppressTracking) {
-        var props = CanUseTI() ? {} : getDiagnosticsMap();
-        if (!CanUseTI()) props["ti"] = "ti nonfunctioning";
+        var props = {};
         props["Message"] = message;
         props["Error"] = JSON.stringify(error, null, 2);
 
@@ -223,9 +220,9 @@ function LogError(error, message, suppressTracking) {
         }
         else {
             props["Source"] = "LogErrorEvent";
-            if (error.description) props.description = error.description;
-            if (error.message) props.message = error.message;
-            if (error.stack) props.stack = error.stack;
+            if (error.description) props["Error description"] = error.description;
+            if (error.message) props["Error message"] = error.message;
+            if (error.stack) props["Stack"] = error.stack;
 
             appInsights.trackEvent(error.description || error.message || props.Message || "Unknown error object", props);
         }
@@ -242,8 +239,7 @@ function pushError(eventName, stack, suppressTracking) {
         viewModel.errors.push(joinArray([eventName, stackString], "\n"));
 
         if (!suppressTracking) {
-            var props = CanUseTI() ? {} : getDiagnosticsMap();
-            if (!CanUseTI()) props["ti"] = "ti nonfunctioning";
+            var props = {};
             props["Stack"] = stackString;
             props["Source"] = "pushError";
             appInsights.trackEvent(eventName, props);
