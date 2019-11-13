@@ -1,10 +1,39 @@
 /* global $ */
+/* exported ensureDiag */
 /* exported telemetryInitializer */
 /* exported getDiagnosticsMap */
 /* exported setItemDiagnostics */
 /* exported clearItemDiagnostics */
 
 // diagnostic functions
+
+var mhadiagnostics = null;
+var DiagModel = function () {
+    this.appDiagnostics = null;
+    this.itemDiagnostics = null;
+    this.lastUpdate = "";
+    ensureLastModified();
+};
+
+DiagModel.prototype.appDiagnostics = {};
+DiagModel.prototype.itemDiagnostics = {};
+DiagModel.prototype.lastUpdate = "";
+
+function ensureLastModified() {
+    var client = new XMLHttpRequest();
+    client.open("HEAD", window.location.origin + "/Scripts/diag.min.js", true);
+    client.onreadystatechange = function () {
+        if (this.readyState == 2) {
+            mhadiagnostics.lastUpdate = client.getResponseHeader("Last-Modified");
+        }
+    }
+
+    client.send();
+}
+
+function ensureDiagnostics() {
+    mhadiagnostics = mhadiagnostics || new DiagModel;
+}
 
 function telemetryInitializer(envelope) {
     envelope.data.baseType = envelope.baseType;
@@ -29,117 +58,117 @@ function telemetryInitializer(envelope) {
     return true;
 }
 
-// Combines window.appDiagnostics and window.itemDiagnostics and returns a single object
+// Combines mhadiagnostics.appDiagnostics and mhadiagnostics.itemDiagnostics and returns a single object
 function getDiagnosticsMap() {
     ensureAppDiagnostics();
     ensureItemDiagnostics();
 
     // Ideally we'd combine with Object.assign or the spread operator(...) but not all our browsers (IE) support that.
     // jQuery's extend should work everywhere.
-    return $.extend({}, window.appDiagnostics, window.itemDiagnostics);
+    return $.extend({}, mhadiagnostics.appDiagnostics, mhadiagnostics.itemDiagnostics);
 }
 
 function ensureAppDiagnostics() {
-    if (window.appDiagnostics) {
+    if (mhadiagnostics.appDiagnostics) {
         // We may have initialized earlier before we had an Office object, so repopulate it
         ensureOfficeDiagnostics();
         return;
     }
 
-    window.appDiagnostics = {};
+    mhadiagnostics.appDiagnostics = {};
 
-    if (window.navigator) window.appDiagnostics["User Agent"] = window.navigator.userAgent;
-    window.appDiagnostics["Requirement set"] = getRequirementSet();
+    if (window.navigator) mhadiagnostics.appDiagnostics["User Agent"] = window.navigator.userAgent;
+    mhadiagnostics.appDiagnostics["Requirement set"] = getRequirementSet();
     ensureOfficeDiagnostics();
 
-    window.appDiagnostics["origin"] = window.location.origin;
-    window.appDiagnostics["path"] = window.location.pathname;
+    mhadiagnostics.appDiagnostics["origin"] = window.location.origin;
+    mhadiagnostics.appDiagnostics["path"] = window.location.pathname;
 }
 
 function ensureOfficeDiagnostics() {
-    if (window.viewModel) {
-        window.appDiagnostics["Last Update"] = window.viewModel.lastUpdate;
+    if (mhadiagnostics.lastUpdate) {
+        mhadiagnostics.appDiagnostics["Last Update"] = mhadiagnostics.lastUpdate;
     }
 
     if (window.Office) {
-        delete window.appDiagnostics["Office"];
+        delete mhadiagnostics.appDiagnostics["Office"];
         if (window.Office.context) {
-            delete window.appDiagnostics["Office.context"];
-            window.appDiagnostics["contentLanguage"] = window.Office.context.contentLanguage;
-            window.appDiagnostics["displayLanguage"] = window.Office.context.displayLanguage;
+            delete mhadiagnostics.appDiagnostics["Office.context"];
+            mhadiagnostics.appDiagnostics["contentLanguage"] = window.Office.context.contentLanguage;
+            mhadiagnostics.appDiagnostics["displayLanguage"] = window.Office.context.displayLanguage;
 
             if (window.Office.context.mailbox) {
-                delete window.appDiagnostics["Office.context.mailbox"];
+                delete mhadiagnostics.appDiagnostics["Office.context.mailbox"];
                 if (window.Office.context.mailbox.diagnostics) {
-                    delete window.appDiagnostics["Office.context.mailbox.diagnostics"];
-                    window.appDiagnostics["hostname"] = window.Office.context.mailbox.diagnostics.hostName;
-                    window.appDiagnostics["hostVersion"] = window.Office.context.mailbox.diagnostics.hostVersion;
+                    delete mhadiagnostics.appDiagnostics["Office.context.mailbox.diagnostics"];
+                    mhadiagnostics.appDiagnostics["hostname"] = window.Office.context.mailbox.diagnostics.hostName;
+                    mhadiagnostics.appDiagnostics["hostVersion"] = window.Office.context.mailbox.diagnostics.hostVersion;
 
                     if (window.Office.context.mailbox.diagnostics.OWAView) {
-                        window.appDiagnostics["OWAView"] = window.Office.context.mailbox.diagnostics.OWAView;
+                        mhadiagnostics.appDiagnostics["OWAView"] = window.Office.context.mailbox.diagnostics.OWAView;
                     }
                 }
                 else {
-                    window.appDiagnostics["Office.context.mailbox.diagnostics"] = "missing";
+                    mhadiagnostics.appDiagnostics["Office.context.mailbox.diagnostics"] = "missing";
                 }
 
                 if (window.Office.context.mailbox._initialData$p$0) {
-                    delete window.appDiagnostics["Office.context.mailbox._initialData$p$0"];
-                    window.appDiagnostics["permissions"] = window.Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
+                    delete mhadiagnostics.appDiagnostics["Office.context.mailbox._initialData$p$0"];
+                    mhadiagnostics.appDiagnostics["permissions"] = window.Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
                 }
                 else {
-                    window.appDiagnostics["Office.context.mailbox._initialData$p$0"] = "missing";
+                    mhadiagnostics.appDiagnostics["Office.context.mailbox._initialData$p$0"] = "missing";
                 }
             }
             else {
-                window.appDiagnostics["Office.context.mailbox"] = "missing";
+                mhadiagnostics.appDiagnostics["Office.context.mailbox"] = "missing";
             }
         }
         else {
-            window.appDiagnostics["Office.context"] = "missing";
+            mhadiagnostics.appDiagnostics["Office.context"] = "missing";
         }
     }
     else {
-        window.appDiagnostics["Office"] = "missing";
+        mhadiagnostics.appDiagnostics["Office"] = "missing";
     }
 }
 
 function setItemDiagnostics(field, value) {
     ensureItemDiagnostics();
-    window.itemDiagnostics[field] = value;
+    mhadiagnostics.itemDiagnostics[field] = value;
 }
 
 function clearItemDiagnostics() {
-    if (window.itemDiagnostics) delete window.itemDiagnostics;
+    if (mhadiagnostics.itemDiagnostics) delete mhadiagnostics.itemDiagnostics;
 }
 
 function ensureItemDiagnostics() {
-    if (window.itemDiagnostics) return;
-    window.itemDiagnostics = {};
+    if (mhadiagnostics.itemDiagnostics) return;
+    mhadiagnostics.itemDiagnostics = {};
 
-    window.itemDiagnostics["API used"] = "Not set";
+    mhadiagnostics.itemDiagnostics["API used"] = "Not set";
     if (window.Office) {
         if (window.Office.context) {
             if (window.Office.context.mailbox) {
                 if (window.Office.context.mailbox.item) {
-                    window.itemDiagnostics["itemId"] = !!window.Office.context.mailbox.item.itemId;
-                    window.itemDiagnostics["itemType"] = window.Office.context.mailbox.item.itemType;
-                    window.itemDiagnostics["itemClass"] = window.Office.context.mailbox.item.itemClass;
+                    mhadiagnostics.itemDiagnostics["itemId"] = !!window.Office.context.mailbox.item.itemId;
+                    mhadiagnostics.itemDiagnostics["itemType"] = window.Office.context.mailbox.item.itemType;
+                    mhadiagnostics.itemDiagnostics["itemClass"] = window.Office.context.mailbox.item.itemClass;
                 }
                 else {
-                    window.itemDiagnostics["Office.context.mailbox.item"] = "missing";
+                    mhadiagnostics.itemDiagnostics["Office.context.mailbox.item"] = "missing";
                 }
             }
             else {
-                window.itemDiagnostics["Office.context.mailbox"] = "missing";
+                mhadiagnostics.itemDiagnostics["Office.context.mailbox"] = "missing";
             }
         }
         else {
-            window.itemDiagnostics["Office.context"] = "missing";
+            mhadiagnostics.itemDiagnostics["Office.context"] = "missing";
         }
     }
     else {
-        window.itemDiagnostics["Office"] = "missing";
+        mhadiagnostics.itemDiagnostics["Office"] = "missing";
     }
 }
 
