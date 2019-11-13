@@ -31,7 +31,8 @@ const targets = {
     "Strings.min.js": ["Strings.js"],
     "Summary.min.js": ["Summary.js"],
     "Table.min.js": ["Table.js"],
-    "uiToggle.min.js": ["uiToggle.js"]
+    "uiToggle.min.js": ["uiToggle.js"],
+    "diag.min.js": ["diag.js"]
 };
 
 for (const targetName of Object.keys(targets)) {
