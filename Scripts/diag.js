@@ -145,8 +145,6 @@ function ensureItemDiagnostics() {
 }
 
 function getDiagnostics() {
-    window.appInsights.trackEvent("Getting diagnostics");
-
     var diagnostics = "";
     try {
         var diagnosticMap = getDiagnosticsMap();
