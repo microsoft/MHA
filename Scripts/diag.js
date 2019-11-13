@@ -8,16 +8,6 @@
 // diagnostic functions
 
 function telemetryInitializer(envelope) {
-    //var telemetryItem = envelope.data.baseData;
-
-    //// To set custom properties:
-    //telemetryItem.properties = telemetryItem.properties || {};
-    //telemetryItem.properties["globalProperty"] = "boo";
-
-    //// To set custom metrics:
-    //telemetryItem.measurements = telemetryItem.measurements || {};
-    //telemetryItem.measurements["globalMetric"] = 100;
-
     envelope.data.ti = "ti functioning";
     envelope.data.baseType = envelope.baseType;
     envelope.data.baseData = envelope.baseData;
