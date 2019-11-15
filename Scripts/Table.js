@@ -4,7 +4,6 @@
 /* global updateStatus */
 /* global viewModel */
 /* exported initializeTableUI */
-/* exported onResize */
 /* exported rebuildTables */
 
 function initializeTableUI() {
@@ -85,10 +84,6 @@ function rebuildTables() {
     updateStatus("");
     rebuildSections();
     hideExtraColumns();
-}
-
-function onResize() {
-    positionResponse();
 }
 
 // Adjusts response under our lineBreak

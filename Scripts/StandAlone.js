@@ -3,7 +3,6 @@
 /* global ImportedStrings */
 /* global initializeTableUI */
 /* global makeResizablePane */
-/* global onResize */
 /* global rebuildTables */
 /* global rebuildSections */
 /* global recalculateVisibility */
@@ -15,7 +14,6 @@ var viewModel = null;
 
 if (window.jQuery) {
     $(document).ready(function () {
-        $(window).resize(onResize);
         viewModel = new HeaderModel();
         initializeTableUI();
         makeResizablePane("inputHeaders", ImportedStrings.mha_prompt, null);

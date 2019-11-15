@@ -1,5 +1,4 @@
 ﻿/* global $ */
-/* global onResize */
 /* global HeaderModel */
 /* global ImportedStrings */
 /* global initializeTableUI */
@@ -13,7 +12,6 @@ var viewModel = null;
 // It ensures the DOM is ready before updating the span elements with values from the current message.
 $(document).ready(function () {
     try {
-        $(window).resize(onResize);
         viewModel = new HeaderModel();
         initializeTableUI();
         updateStatus(ImportedStrings.mha_loading);
