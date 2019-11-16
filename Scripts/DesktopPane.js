@@ -381,8 +381,8 @@ function addCalloutEntry(name, value, parent) {
 
 function updateStatus(message) {
     $(".status-message").text(message);
-    spinner.start();
     overlay.show();
+    spinner.start();
 }
 
 function hideStatus() {
