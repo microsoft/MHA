@@ -87,9 +87,10 @@ function FilterStack(stack) {
         if (item.fileName.indexOf("stacktrace") !== -1) return false;
         //if (item.functionName === "ShowError") return false;
         //if (item.functionName === "showError") return false;
-        //if (item.functionName === "LogError") return false;
+        //if (item.functionName === "LogError") return false; // Logs with LogError in them usually have location where it was called from - keep those
         //if (item.functionName === "GetStack") return false;
-        //if (item.functionName === "parseError") return false;
+        if (item.functionName === "parseError") return false; // Only ever called from LogError
+        if (item.functionName === "isError") return false; // Not called from anywhere interesting
         return true;
     });
 }
