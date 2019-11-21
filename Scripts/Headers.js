@@ -1,3 +1,4 @@
+/* global $ */
 /* global AntiSpamReport */
 /* global clean2047Encoding */
 /* global ForefrontAntiSpamReport */
@@ -137,10 +138,12 @@ function GetHeaderList(headers) {
     return headerList;
 }
 
+function htmlEncode(value) { return value ? $('<div />').text(value).html() : ''; }
+
 function mapHeaderToURL(headerName, text) {
     for (var i = 0; i < HeaderToURLMap.length; i++) {
         if (headerName.toLowerCase() === HeaderToURLMap[i][0].toLowerCase()) {
-            return ["<a href = '", HeaderToURLMap[i][1], "' target = '_blank'>", text || headerName, "</a>"].join("");
+            return ["<a href = '", HeaderToURLMap[i][1], "' target = '_blank'>", htmlEncode(text || headerName), "</a>"].join("");
         }
     }
 
