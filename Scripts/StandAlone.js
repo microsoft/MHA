@@ -9,6 +9,7 @@
 /* global setArrows */
 /* exported analyzeHeaders */
 /* exported clearHeaders */
+/* global appInsights */
 
 var viewModel = null;
 
@@ -25,6 +26,7 @@ if (window.jQuery) {
 function analyzeHeaders() {
     // Can't do anything without jquery
     if (!window.jQuery) { return; }
+    appInsights.trackEvent("analyzeHeaders");
     viewModel = new HeaderModel($("#inputHeaders").val());
     setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
     setArrows(viewModel.otherHeaders.tableName, "number", 1);
