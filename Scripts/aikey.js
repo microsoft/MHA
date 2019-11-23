@@ -1,0 +1,1 @@
+/* exported aikey */ window.aikey = function () { return "2f12afed-6139-456e-9de3-49003d3a1fb1"; };

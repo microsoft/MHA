@@ -35,8 +35,8 @@ function isError(error) {
         }
     }
     catch (e) {
-        appInsights.trackEvent("isError exception");
-        appInsights.trackEvent("isError exception with error", e);
+        if (appInsights) appInsights.trackEvent("isError exception");
+        if (appInsights) appInsights.trackEvent("isError exception with error", e);
     }
 
     return false;
@@ -62,7 +62,7 @@ function parseError(exception, message, errorHandler) {
     };
 
     var errback = function (err) {
-        appInsights.trackEvent("parseError errback");
+        if (appInsights) appInsights.trackEvent("parseError errback");
         stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
         errorHandler(eventName, stack);
     };

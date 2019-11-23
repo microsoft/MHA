@@ -195,7 +195,7 @@ function ShowError(error, message, suppressTracking) {
 // message - a string describing the error
 // suppressTracking - boolean indicating if we should suppress tracking
 function LogError(error, message, suppressTracking) {
-    if (error && !suppressTracking) {
+    if (error && appInsights && !suppressTracking) {
         var props = {};
         props["Message"] = message;
         props["Error"] = JSON.stringify(error, null, 2);

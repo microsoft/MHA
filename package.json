@@ -10,6 +10,7 @@
   "scripts": {
     "build": "node tasks/minify.js",
     "clean": "node tasks/clean.js",
+    "genaikey": "node tasks/genaikey.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -34,7 +35,8 @@
   },
   "-vs-binding": {
     "BeforeBuild": [
-      "build"
+      "build",
+      "genaikey"
     ],
     "Clean": [
       "clean"
