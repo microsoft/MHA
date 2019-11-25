@@ -205,7 +205,7 @@ script.onload = function () {
 
             return true;
         });
-    }), aisdk.queue && 0 === aisdk.queue.length && aisdk.trackPageView({});
+    }), aisdk.queue && 0 === aisdk.queue.length; aisdk.trackPageView({});
 };
 script.src = window.location.origin + '/Scripts/aikey.js';
 document.body.appendChild(script);
