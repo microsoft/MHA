@@ -202,4 +202,4 @@ var sdkInstance = "appInsightsSDK"; window[sdkInstance] = "appInsights"; var aiN
 
         return true;
     });
-}), aisdk.queue && 0 === aisdk.queue.length && aisdk.trackPageView({});
+}), aisdk.queue && 0 === aisdk.queue.length; aisdk.trackPageView({});
