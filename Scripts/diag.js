@@ -209,4 +209,3 @@ script.onload = function () {
 };
 script.src = window.location.origin + '/Scripts/aikey.js';
 document.body.appendChild(script);
-//document.getElementsByTagName('script')[0].parentNode.appendChild(script);
