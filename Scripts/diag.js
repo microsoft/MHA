@@ -208,4 +208,4 @@ script.onload = function () {
     }), aisdk.queue && 0 === aisdk.queue.length; aisdk.trackPageView({});
 };
 script.src = window.location.origin + '/Scripts/aikey.js';
-document.body.appendChild(script);
+document.getElementsByTagName('script')[0].parentNode.appendChild(script);
