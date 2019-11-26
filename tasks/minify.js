@@ -48,7 +48,7 @@ for (const targetName of Object.keys(targets)) {
 
     options.sourceMap.filename = targetName;
     options.sourceMap.url = mapName;
-    options.sourceMap.root = "..//scripts";
+    options.sourceMap.root = "..//Scripts";
     var result = UglifyJS.minify(files, options);
     fs.writeFileSync(path.join(scriptsFolder, targetName), result.code, "utf8");
     fs.writeFileSync(path.join(scriptsFolder, mapName), result.map, "utf8");
