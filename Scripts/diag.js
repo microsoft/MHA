@@ -1,4 +1,5 @@
 /* global $ */
+/* global StackTrace */
 /* exported ensureDiag */
 /* exported getDiagnosticsMap */
 /* exported setItemDiagnostics */
@@ -195,6 +196,8 @@ var sdkInstance = "appInsightsSDK"; window[sdkInstance] = "appInsights"; var aiN
             // custom data for the ExceptionData type lives in a different place
             envelope.baseData.properties = envelope.baseData.properties || {};
             $.extend(envelope.baseData.properties, getDiagnosticsMap());
+            // Log an extra event with stack frame
+            StackTrace.get().then(function (stackframes) { appInsights.trackEvent("Exception Details", { stack: stackframes }); });
         }
         else {
             $.extend(envelope.data, getDiagnosticsMap());
