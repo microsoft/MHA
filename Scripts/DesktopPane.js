@@ -3,6 +3,8 @@
 /* global ImportedStrings */
 /* global mapHeaderToURL */
 
+// This is the "new" UI rendered in newDesktopFrame.html
+
 var overlay = null;
 var spinner = null;
 var viewModel = null;
@@ -16,7 +18,7 @@ $(document).ready(function () {
         postMessageToParent("frameActive");
     }
     catch (e) {
-        LogError(e, "Failed initializing frame");
+        PostError(e, "Failed initializing frame");
         showError(e, "Failed initializing frame");
     }
 });
@@ -45,7 +47,7 @@ function eventListener(event) {
     }
 }
 
-function LogError(error, message) {
+function PostError(error, message) {
     postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
@@ -391,7 +393,7 @@ function hideStatus() {
 }
 
 // Handles rendering of an error.
-// Does not log the error - caller is responsible for calling LogError
+// Does not log the error - caller is responsible for calling PostError
 function showError(error, message) {
     $("#error-display .ms-MessageBar-text").text(message);
     $("#error-display").show();

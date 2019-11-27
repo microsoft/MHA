@@ -6,6 +6,8 @@
 /* global rebuildTables */
 /* global recalculateVisibility */
 
+// This is the "classic" UI rendered in classicDesktopFrame.html
+
 var viewModel = null;
 
 // This function is run when the app is ready to start interacting with the host application.
@@ -19,7 +21,7 @@ $(document).ready(function () {
         postMessageToParent("frameActive");
     }
     catch (e) {
-        LogError(e, "Failed initializing frame");
+        PostError(e, "Failed initializing frame");
         showError(e, "Failed initializing frame");
     }
 });
@@ -48,7 +50,7 @@ function eventListener(event) {
     }
 }
 
-function LogError(error, message) {
+function PostError(error, message) {
     postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
@@ -85,7 +87,7 @@ function renderItem(headers) {
 }
 
 // Handles rendering of an error.
-// Does not log the error - caller is responsible for calling LogError
+// Does not log the error - caller is responsible for calling PostError
 function showError(error, message) {
     updateStatus(message);
     disableSpinner();

@@ -5,6 +5,8 @@
 /* global mapHeaderToURL */
 /* global moment */
 
+// This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
+
 // Framework7 app object
 var myApp = null;
 var viewModel = null;
@@ -18,7 +20,7 @@ $(document).ready(function () {
         postMessageToParent("frameActive");
     }
     catch (e) {
-        LogError(e, "Failed initializing frame");
+        PostError(e, "Failed initializing frame");
         showError(e, "Failed initializing frame");
     }
 });
@@ -47,7 +49,7 @@ function eventListener(event) {
     }
 }
 
-function LogError(error, message) {
+function PostError(error, message) {
     postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
@@ -422,7 +424,7 @@ function hideStatus() {
 }
 
 // Handles rendering of an error.
-// Does not log the error - caller is responsible for calling LogError
+// Does not log the error - caller is responsible for calling PostError
 function showError(error, message) {
     if (myApp) {
         myApp.hidePreloader();
