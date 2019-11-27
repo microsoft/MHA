@@ -152,6 +152,7 @@ function ensureItemDiagnostics() {
 
 function getRequirementSet() {
     // https://docs.microsoft.com/en-us/office/dev/add-ins/reference/requirement-sets/outlook-api-requirement-sets
+    if (!window.Office) return "none";
     try {
         if (window.Office.context.requirements && window.Office.context.requirements.isSetSupported) {
             if (window.Office.context.requirements.isSetSupported("Mailbox", 1.7)) return "1.7";
