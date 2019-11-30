@@ -7,20 +7,28 @@
 /* exported isError */
 /* exported LogError */
 /* exported parseError */
-/* exported clearErrors */
-/* exported getErrors */
+/* exported Errors */
 
-function clearErrors() {
-    window.mhaErrors = [];
-}
+var Errors = (function () {
+    var errorArray = [];
+    var clear = function () {
+        errorArray = [];
+    };
 
-function ensureErrors() {
-    window.mhaErrors = window.mhaErrors || [];
-}
+    var get = function () { return errorArray; };
 
-function getErrors() {
-    return window.mhaErrors;
-}
+    var add = function (error) { errorArray.push(error); };
+    var addArray = function (errors) {
+        errorArray.push(joinArray(errors, "\n"));
+    };
+
+    return {
+        clear: clear,
+        get: get,
+        add: add,
+        addArray: addArray
+    }
+})();
 
 function getErrorMessage(error) {
     if (!error) return '';
@@ -119,9 +127,8 @@ function parseError(exception, message, errorHandler) {
 
 function pushError(eventName, stack, suppressTracking) {
     if (eventName || stack) {
-        ensureErrors();
         var stackString = joinArray(stack, "\n");
-        window.mhaErrors.push(joinArray([eventName, stackString], "\n"));
+        Errors.addArray([eventName, stackString]);
 
         if (!suppressTracking) {
             var props = {};

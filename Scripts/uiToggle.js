@@ -7,8 +7,7 @@
 /* global setItemDiagnostics */
 /* global clearItemDiagnostics */
 /* global ensureDiagnostics */
-/* global clearErrors */
-/* global getErrors */
+/* global Errors */
 /* exported ShowError */
 /* exported UpdateStatus */
 
@@ -127,7 +126,7 @@ function registerItemChangeEvent() {
     try {
         if (Office.context.mailbox.addHandlerAsync !== undefined) {
             Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, function () {
-                clearErrors();
+                Errors.clear();
                 clearItemDiagnostics();
                 loadNewItem();
             });
@@ -348,7 +347,7 @@ function initFabric() {
             diagnostics += "ERROR: Failed to get diagnostics\n";
         }
 
-        var errors = getErrors();
+        var errors = Errors.get();
         for (var iError = 0; iError < errors.length; iError++) {
             if (errors[iError]) {
                 diagnostics += "ERROR: " + errors[iError] + "\n";
