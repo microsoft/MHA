@@ -11,13 +11,25 @@
 
 var Errors = (function () {
     var errorArray = [];
-    var clear = function () {
-        errorArray = [];
-    };
+    var clear = function () { errorArray = []; };
 
     var get = function () { return errorArray; };
 
-    var add = function (error) { errorArray.push(error); };
+    var add = function (eventName, stack, suppressTracking) {
+        if (eventName || stack) {
+            var stackString = joinArray(stack, "\n");
+            Errors.addArray([eventName, stackString]);
+
+            if (!suppressTracking) {
+                appInsights.trackEvent(eventName,
+                    {
+                        Stack: stackString,
+                        Source: "Errors.add"
+                    });
+            }
+        }
+    }
+
     var addArray = function (errors) {
         errorArray.push(joinArray(errors, "\n"));
     };
@@ -89,7 +101,7 @@ function LogError(error, message, suppressTracking) {
     }
 
     parseError(error, message, function (eventName, stack) {
-        pushError(eventName, stack, suppressTracking);
+        Errors.add(eventName, stack, suppressTracking);
     });
 }
 
@@ -122,20 +134,6 @@ function parseError(exception, message, errorHandler) {
         StackTrace.get().then(callback).catch(errback);
     } else {
         StackTrace.fromError(exception).then(callback).catch(errback);
-    }
-}
-
-function pushError(eventName, stack, suppressTracking) {
-    if (eventName || stack) {
-        var stackString = joinArray(stack, "\n");
-        Errors.addArray([eventName, stackString]);
-
-        if (!suppressTracking) {
-            var props = {};
-            props["Stack"] = stackString;
-            props["Source"] = "pushError";
-            appInsights.trackEvent(eventName, props);
-        }
     }
 }
 
