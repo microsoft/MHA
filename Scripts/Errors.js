@@ -1,11 +1,26 @@
+/* global appInsights */
 /* global StackTrace */
 /* exported CleanStack */
 /* exported getErrorMessage */
 /* exported getErrorStack */
 /* exported CleanStack */
 /* exported isError */
+/* exported LogError */
 /* exported parseError */
-/* global appInsights */
+/* exported clearErrors */
+/* exported getErrors */
+
+function clearErrors() {
+    window.mhaErrors = [];
+}
+
+function ensureErrors() {
+    window.mhaErrors = window.mhaErrors || [];
+}
+
+function getErrors() {
+    return window.mhaErrors;
+}
 
 function getErrorMessage(error) {
     if (!error) return '';
@@ -44,6 +59,34 @@ function isError(error) {
 
 // error - an exception object
 // message - a string describing the error
+// suppressTracking - boolean indicating if we should suppress tracking
+function LogError(error, message, suppressTracking) {
+    if (error && !suppressTracking) {
+        var props = {};
+        props["Message"] = message;
+        props["Error"] = JSON.stringify(error, null, 2);
+
+        if (isError(error) && error.exception) {
+            props["Source"] = "LogErrorException";
+            appInsights.trackException(error, props);
+        }
+        else {
+            props["Source"] = "LogErrorEvent";
+            if (error.description) props["Error description"] = error.description;
+            if (error.message) props["Error message"] = error.message;
+            if (error.stack) props["Stack"] = error.stack;
+
+            appInsights.trackEvent(error.description || error.message || props.Message || "Unknown error object", props);
+        }
+    }
+
+    parseError(error, message, function (eventName, stack) {
+        pushError(eventName, stack, suppressTracking);
+    });
+}
+
+// error - an exception object
+// message - a string describing the error
 // errorHandler - function to call with parsed error
 function parseError(exception, message, errorHandler) {
     var stack;
@@ -71,6 +114,21 @@ function parseError(exception, message, errorHandler) {
         StackTrace.get().then(callback).catch(errback);
     } else {
         StackTrace.fromError(exception).then(callback).catch(errback);
+    }
+}
+
+function pushError(eventName, stack, suppressTracking) {
+    if (eventName || stack) {
+        ensureErrors();
+        var stackString = joinArray(stack, "\n");
+        window.mhaErrors.push(joinArray([eventName, stackString], "\n"));
+
+        if (!suppressTracking) {
+            var props = {};
+            props["Stack"] = stackString;
+            props["Source"] = "pushError";
+            appInsights.trackEvent(eventName, props);
+        }
     }
 }
 
