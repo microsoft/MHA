@@ -2,7 +2,6 @@
 /* global getErrorMessage */
 /* global getErrorStack */
 /* global isError */
-/* global joinArray */
 /* global Errors */
 /* global QUnit */
 
@@ -248,13 +247,13 @@ QUnit.test("getError* Tests", function (assert) {
 });
 
 QUnit.test("joinArray Tests", function (assert) {
-    assert.equal(joinArray(null, " : "), null);
-    assert.equal(joinArray(["1"], " : "), "1");
-    assert.equal(joinArray(["1", "2"], " : "), "1 : 2");
-    assert.equal(joinArray([null, "2"], " : "), "2");
-    assert.equal(joinArray(["1", null], " : "), "1");
-    assert.equal(joinArray(["1", null, "3"], " : "), "1 : 3");
-    assert.equal(joinArray([1, 2], " : "), "1 : 2");
+    assert.equal(Errors.joinArray(null, " : "), null);
+    assert.equal(Errors.joinArray(["1"], " : "), "1");
+    assert.equal(Errors.joinArray(["1", "2"], " : "), "1 : 2");
+    assert.equal(Errors.joinArray([null, "2"], " : "), "2");
+    assert.equal(Errors.joinArray(["1", null], " : "), "1");
+    assert.equal(Errors.joinArray(["1", null, "3"], " : "), "1 : 3");
+    assert.equal(Errors.joinArray([1, 2], " : "), "1 : 2");
 });
 
 QUnit.test("isError Tests", function (assert) {

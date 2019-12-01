@@ -13,9 +13,15 @@ var Errors = (function () {
 
     var get = function () { return errorArray; };
 
+    // Join an array with char, dropping empty/missing entries
+    var joinArray = function(array, char) {
+        if (!array) return null;
+        return (array.filter(function(item) { return item; })).join(char);
+    };
+
     var add = function (eventName, stack, suppressTracking) {
         if (eventName || stack) {
-            var stackString = joinArray(stack, "\n");
+            var stackString = this.joinArray(stack, "\n");
             this.addArray([eventName, stackString]);
 
             if (!suppressTracking) {
@@ -29,7 +35,7 @@ var Errors = (function () {
     }
 
     var addArray = function (errors) {
-        errorArray.push(joinArray(errors, "\n"));
+        errorArray.push(this.joinArray(errors, "\n"));
     };
 
     // error - an exception object
@@ -68,7 +74,7 @@ var Errors = (function () {
         var stack;
         var exceptionMessage = getErrorMessage(exception);
 
-        var eventName = joinArray([message, exceptionMessage], ' : ');
+        var eventName = this.joinArray([message, exceptionMessage], ' : ');
         if (!eventName) {
             eventName = "Unknown exception";
         }
@@ -97,6 +103,7 @@ var Errors = (function () {
     return {
         clear: clear,
         get: get,
+        joinArray: joinArray,
         add: add,
         addArray: addArray,
         log: log,
@@ -137,12 +144,6 @@ function isError(error) {
     }
 
     return false;
-}
-
-// Join an array with char, dropping empty/missing entries
-function joinArray(array, char) {
-    if (!array) return null;
-    return (array.filter(function (item) { return item; })).join(char);
 }
 
 // While trying to get our error tracking under control, let's not filter our stacks
