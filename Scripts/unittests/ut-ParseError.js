@@ -1,6 +1,22 @@
-﻿/* global CleanStack */
-/* global Errors */
+﻿/* global Errors */
 /* global QUnit */
+
+// Strip stack of rows with unittests.html.
+function cleanStack(stack) {
+    if (!stack) return null;
+    return stack.map(function (item) {
+        return item.replace(/.*localhost.*/, "")
+            .replace(/.*azurewebsites.*/, "")
+            .replace(/.*\.\.\/Scripts\/.*/, "")
+            .replace(/\n+/, "\n")
+            .replace(/^.*?\.(.*)@/, "$1@")
+            .replace(/^.*\/<\(\)@http/, "Anonymous function()@http")
+            .replace(/{anonymous}/, "Anonymous function")
+            .replace(/:\d*$/, "");
+    }).filter(function (item) {
+        return !!item;
+    });
+}
 
 QUnit.assert.errorsEqual = function (value, expectedValues, message) {
     var found = expectedValues.some(function (expected) {
@@ -33,7 +49,7 @@ QUnit.test("Errors.parse Tests", function (assert) {
 
     Errors.parse("stringError", "message", function (eventName, stack) {
         assert.equal(eventName, "message : stringError", "Errors.parse 1 error");
-        assert.deepEqual(CleanStack(stack), [
+        assert.deepEqual(cleanStack(stack), [
             "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
             "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
             "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
@@ -51,7 +67,7 @@ QUnit.test("Errors.parse Tests", function (assert) {
         Errors.parse(error, "message", function (eventName, stack) {
             assert.errorsEqual(eventName, ["message : Object doesn't support property or method 'notAFunction'",
                 "message : document.notAFunction is not a function"], "Try 1 error");
-            assert.deepEqual(CleanStack(stack), [
+            assert.deepEqual(cleanStack(stack), [
                 "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
                 "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
                 "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
@@ -70,7 +86,7 @@ QUnit.test("Errors.parse Tests", function (assert) {
         Errors.parse(error, null, function (eventName, stack) {
             assert.errorsEqual(eventName, ["Object doesn't support property or method 'notAFunction'",
                 "document.notAFunction is not a function"], "Try 2 error");
-            assert.deepEqual(CleanStack(stack), [
+            assert.deepEqual(cleanStack(stack), [
                 "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
                 "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
                 "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
@@ -88,7 +104,7 @@ QUnit.test("Errors.parse Tests", function (assert) {
     catch (error) {
         Errors.parse(error, "message", function (eventName, stack) {
             assert.equal(eventName, "message : 42", "Try 3 error");
-            assert.deepEqual(CleanStack(stack), [
+            assert.deepEqual(cleanStack(stack), [
                 "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
                 "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
                 "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
@@ -111,7 +127,7 @@ QUnit.test("Errors.parse Tests", function (assert) {
                 "  \"three\": \"three\"\n" +
                 "}",
                 "Try 4 error");
-            assert.deepEqual(CleanStack(stack), [
+            assert.deepEqual(cleanStack(stack), [
                 "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
                 "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
                 "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
@@ -129,7 +145,7 @@ QUnit.test("Errors.parse Tests", function (assert) {
     catch (error) {
         Errors.parse(error, null, function (eventName, stack) {
             assert.equal(eventName, "Unknown exception", "Try 5 error");
-            assert.deepEqual(CleanStack(stack), [
+            assert.deepEqual(cleanStack(stack), [
                 "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
                 "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
                 "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
@@ -143,7 +159,7 @@ QUnit.test("Errors.parse Tests", function (assert) {
 
     Errors.parse(null, "message", function (eventName, stack) {
         assert.equal(eventName, "message", "Errors.parse 2 error");
-        assert.deepEqual(CleanStack(stack), [
+        assert.deepEqual(cleanStack(stack), [
             "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
             "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
             "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
@@ -156,7 +172,7 @@ QUnit.test("Errors.parse Tests", function (assert) {
 
     Errors.parse(null, null, function (eventName, stack) {
         assert.equal(eventName, "Unknown exception", "Errors.parse 3 error");
-        assert.deepEqual(CleanStack(stack), [
+        assert.deepEqual(cleanStack(stack), [
             "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
             "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
             "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
@@ -170,7 +186,7 @@ QUnit.test("Errors.parse Tests", function (assert) {
     var brokenError = new Error();
     Errors.parse(brokenError, "message", function (eventName, stack) {
         assert.equal(eventName, "message", "brokenError event");
-        assert.deepEqual(CleanStack(stack), [
+        assert.deepEqual(cleanStack(stack), [
             "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
             "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
             "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
@@ -183,7 +199,7 @@ QUnit.test("Errors.parse Tests", function (assert) {
 
     Errors.parse(42, "message", function (eventName, stack) {
         assert.equal(eventName, "message : 42", "Errors.parse 4 error");
-        assert.deepEqual(CleanStack(stack), [
+        assert.deepEqual(cleanStack(stack), [
             "runTest()@https://code.jquery.com/qunit/qunit-2.4.0.js:1471",
             "run()@https://code.jquery.com/qunit/qunit-2.4.0.js:1457",
             "Anonymous function()@https://code.jquery.com/qunit/qunit-2.4.0.js:1663",

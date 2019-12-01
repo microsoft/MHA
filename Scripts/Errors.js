@@ -1,6 +1,5 @@
 /* global appInsights */
 /* global StackTrace */
-/* exported CleanStack */
 /* exported Errors */
 
 var Errors = (function () {
@@ -153,21 +152,3 @@ var Errors = (function () {
         getErrorStack: getErrorStack
     }
 })();
-
-// Strip stack of rows with unittests.html.
-// Only used for unit tests.
-function CleanStack(stack) {
-    if (!stack) return null;
-    return stack.map(function (item) {
-        return item.replace(/.*localhost.*/, "")
-            .replace(/.*azurewebsites.*/, "")
-            .replace(/.*\.\.\/Scripts\/.*/, "")
-            .replace(/\n+/, "\n")
-            .replace(/^.*?\.(.*)@/, "$1@")
-            .replace(/^.*\/<\(\)@http/, "Anonymous function()@http")
-            .replace(/{anonymous}/, "Anonymous function")
-            .replace(/:\d*$/, "");
-    }).filter(function (item) {
-        return !!item;
-    });
-}
