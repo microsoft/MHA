@@ -6,7 +6,6 @@
 /* exported CleanStack */
 /* exported isError */
 /* exported LogError */
-/* exported parseError */
 /* exported Errors */
 
 var Errors = (function () {
@@ -18,7 +17,7 @@ var Errors = (function () {
     var add = function (eventName, stack, suppressTracking) {
         if (eventName || stack) {
             var stackString = joinArray(stack, "\n");
-            Errors.addArray([eventName, stackString]);
+            addArray([eventName, stackString]);
 
             if (!suppressTracking) {
                 appInsights.trackEvent(eventName,
@@ -34,11 +33,45 @@ var Errors = (function () {
         errorArray.push(joinArray(errors, "\n"));
     };
 
+    // exception - an exception object
+    // message - a string describing the error
+    // handler - function to call with parsed error
+    var parse = function (exception, message, handler) {
+        var stack;
+        var exceptionMessage = getErrorMessage(exception);
+
+        var eventName = joinArray([message, exceptionMessage], ' : ');
+        if (!eventName) {
+            eventName = "Unknown exception";
+        }
+
+        var callback = function (stackframes) {
+            stack = FilterStack(stackframes).map(function (sf) {
+                return sf.toString();
+            });
+            handler(eventName, stack);
+        };
+
+        var errback = function (err) {
+            appInsights.trackEvent("Errors.parse errback");
+            stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
+            handler(eventName, stack);
+        };
+
+        // TODO: Move filter from callbacks into gets
+        if (!isError(exception)) {
+            StackTrace.get().then(callback).catch(errback);
+        } else {
+            StackTrace.fromError(exception).then(callback).catch(errback);
+        }
+    };
+
     return {
         clear: clear,
         get: get,
         add: add,
-        addArray: addArray
+        addArray: addArray,
+        parse: parse
     }
 })();
 
@@ -100,41 +133,9 @@ function LogError(error, message, suppressTracking) {
         }
     }
 
-    parseError(error, message, function (eventName, stack) {
+    Errors.parse(error, message, function (eventName, stack) {
         Errors.add(eventName, stack, suppressTracking);
     });
-}
-
-// error - an exception object
-// message - a string describing the error
-// errorHandler - function to call with parsed error
-function parseError(exception, message, errorHandler) {
-    var stack;
-    var exceptionMessage = getErrorMessage(exception);
-
-    var eventName = joinArray([message, exceptionMessage], ' : ');
-    if (!eventName) {
-        eventName = "Unknown exception";
-    }
-
-    var callback = function (stackframes) {
-        stack = FilterStack(stackframes).map(function (sf) {
-            return sf.toString();
-        });
-        errorHandler(eventName, stack);
-    };
-
-    var errback = function (err) {
-        appInsights.trackEvent("parseError errback");
-        stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
-        errorHandler(eventName, stack);
-    };
-
-    if (!isError(exception)) {
-        StackTrace.get().then(callback).catch(errback);
-    } else {
-        StackTrace.fromError(exception).then(callback).catch(errback);
-    }
 }
 
 // Join an array with char, dropping empty/missing entries
@@ -152,7 +153,7 @@ function FilterStack(stack) {
         //if (item.functionName === "showError") return false;
         //if (item.functionName === "LogError") return false; // Logs with LogError in them usually have location where it was called from - keep those
         //if (item.functionName === "GetStack") return false;
-        if (item.functionName === "parseError") return false; // Only ever called from LogError
+        if (item.functionName === "Errors.parse") return false; // Only ever called from LogError
         if (item.functionName === "isError") return false; // Not called from anywhere interesting
         return true;
     });
