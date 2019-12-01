@@ -335,10 +335,13 @@ var ParentFrame = (function () {
         }
     };
 
+    var getChoice = function() { return currentChoice; };
+
     return {
         initUI: initUI,
         updateStatus: updateStatus,
-        showError: showError
+        showError: showError,
+        getChoice: getChoice
     }
 })();
 

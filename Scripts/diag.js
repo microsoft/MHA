@@ -1,6 +1,7 @@
 /* global $ */
 /* global StackTrace */
 /* global appInsights */
+/* global ParentFrame */
 /* exported Diagnostics */
 
 // diagnostics  module
@@ -51,9 +52,14 @@ var Diagnostics = (function () {
 
         appDiagnostics["origin"] = window.location.origin;
         appDiagnostics["path"] = window.location.pathname;
-    } 
+    }
 
     function ensureOfficeDiagnostics() {
+        var choice = ParentFrame.getChoice();
+        if (choice) {
+            appDiagnostics.ui = choice.label;
+        }
+
         if (lastUpdate) {
             appDiagnostics["Last Update"] = lastUpdate;
         }
