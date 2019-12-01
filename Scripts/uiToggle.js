@@ -116,10 +116,7 @@ var ParentFrame = (function () {
             sendHeadersRequest(function (_headers, apiUsed) {
                 headers = _headers;
                 Diagnostics.set("API used", apiUsed);
-                if (iFrame) {
-                    if (appInsights) appInsights.trackEvent("analyzeHeaders");
-                    postMessageToFrame("renderItem", headers);
-                }
+                renderItem(headers);
             });
         }
     };
@@ -148,9 +145,15 @@ var ParentFrame = (function () {
             // Clear out the now displayed errors
             deferredErrors = [];
 
-            postMessageToFrame("renderItem", headers);
+            renderItem(headers);
         }
     };
+
+    function renderItem(headers) {
+        if (appInsights && headers) appInsights.trackEvent("analyzeHeaders: " + headers);
+        postMessageToFrame("renderItem", headers);
+
+    }
 
     // Tells the UI to show an error.
     var showError = function (error, message, suppressTracking) {
@@ -335,7 +338,7 @@ var ParentFrame = (function () {
         }
     };
 
-    var getChoice = function() { return currentChoice; };
+    var getChoice = function () { return currentChoice; };
 
     return {
         initUI: initUI,
