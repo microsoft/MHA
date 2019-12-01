@@ -1,17 +1,12 @@
 /* global $ */
-/* global appInsights */
 /* global fabric */
-/* global isError */
-/* global joinArray */
-/* global LogError */
 /* global Office */
-/* global parseError */
 /* global sendHeadersRequest */
 /* global getDiagnosticsMap */
 /* global setItemDiagnostics */
 /* global clearItemDiagnostics */
 /* global ensureDiagnostics */
-/* exported pushError */
+/* global Errors */
 /* exported ShowError */
 /* exported UpdateStatus */
 
@@ -21,14 +16,12 @@
 var viewModel = null;
 var UiModel = function () {
     this.currentChoice = {};
-    this.errors = [];
     this.deferredErrors = [];
     this.deferredStatus = [];
     this.headers = "";
 };
 
 UiModel.prototype.currentChoice = {};
-UiModel.prototype.errors = [];
 UiModel.prototype.deferredErrors = [];
 UiModel.prototype.deferredStatus = [];
 UiModel.prototype.headers = "";
@@ -105,7 +98,7 @@ function eventListener(event) {
                 SetFrame(event.source);
                 break;
             case "LogError":
-                LogError(JSON.parse(event.data.data.error), event.data.data.message);
+                Errors.log(JSON.parse(event.data.data.error), event.data.data.message);
                 break;
         }
     }
@@ -132,13 +125,13 @@ function registerItemChangeEvent() {
     try {
         if (Office.context.mailbox.addHandlerAsync !== undefined) {
             Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, function () {
-                viewModel.errors = [];
+                Errors.clear();
                 clearItemDiagnostics();
                 loadNewItem();
             });
         }
     } catch (e) {
-        LogError(e, "Could not register item change event");
+        Errors.log(e, "Could not register item change event");
     }
 }
 
@@ -180,7 +173,7 @@ function SetFrame(frame) {
 
 // Tells the UI to show an error.
 function ShowError(error, message, suppressTracking) {
-    LogError(error, message, suppressTracking);
+    Errors.log(error, message, suppressTracking);
 
     if (iFrame) {
         postMessageToFrame("showError", { error: JSON.stringify(error), message: message });
@@ -188,48 +181,6 @@ function ShowError(error, message, suppressTracking) {
     else {
         // We don't have an iFrame, so defer the message
         viewModel.deferredErrors.push([error, message]);
-    }
-}
-
-// error - an exception object
-// message - a string describing the error
-// suppressTracking - boolean indicating if we should suppress tracking
-function LogError(error, message, suppressTracking) {
-    if (error && appInsights && !suppressTracking) {
-        var props = {};
-        props["Message"] = message;
-        props["Error"] = JSON.stringify(error, null, 2);
-
-        if (isError(error) && error.exception) {
-            props["Source"] = "LogErrorException";
-            appInsights.trackException(error, props);
-        }
-        else {
-            props["Source"] = "LogErrorEvent";
-            if (error.description) props["Error description"] = error.description;
-            if (error.message) props["Error message"] = error.message;
-            if (error.stack) props["Stack"] = error.stack;
-
-            appInsights.trackEvent(error.description || error.message || props.Message || "Unknown error object", props);
-        }
-    }
-
-    parseError(error, message, function (eventName, stack) {
-        pushError(eventName, stack, suppressTracking);
-    });
-}
-
-function pushError(eventName, stack, suppressTracking) {
-    if (eventName || stack) {
-        var stackString = joinArray(stack, "\n");
-        viewModel.errors.push(joinArray([eventName, stackString], "\n"));
-
-        if (!suppressTracking) {
-            var props = {};
-            props["Stack"] = stackString;
-            props["Source"] = "pushError";
-            appInsights.trackEvent(eventName, props);
-        }
     }
 }
 
@@ -395,9 +346,10 @@ function initFabric() {
             diagnostics += "ERROR: Failed to get diagnostics\n";
         }
 
-        for (var iError = 0; iError < window.viewModel.errors.length; iError++) {
-            if (window.viewModel.errors[iError]) {
-                diagnostics += "ERROR: " + window.viewModel.errors[iError] + "\n";
+        var errors = Errors.get();
+        for (var iError = 0; iError < errors.length; iError++) {
+            if (errors[iError]) {
+                diagnostics += "ERROR: " + errors[iError] + "\n";
             }
         }
 

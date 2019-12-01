@@ -1,6 +1,6 @@
 /* global $ */
 /* global ImportedStrings */
-/* global LogError */
+/* global Errors */
 /* global Office */
 /* global sendHeadersRequestEWS */
 /* global ShowError */
@@ -22,7 +22,7 @@
 
 function sendHeadersRequestRest(headersLoadedCallback) {
     if (!validItem()) {
-        LogError(null, "No item selected (REST)", true);
+        Errors.log(null, "No item selected (REST)", true);
         return;
     }
 
@@ -34,7 +34,7 @@ function sendHeadersRequestRest(headersLoadedCallback) {
                 var accessToken = result.value;
                 getHeaders(accessToken, headersLoadedCallback);
             } else {
-                LogError(null, 'Unable to obtain callback token.\nFallback to EWS.\n' + JSON.stringify(result, null, 2), true);
+                Errors.log(null, 'Unable to obtain callback token.\nFallback to EWS.\n' + JSON.stringify(result, null, 2), true);
                 sendHeadersRequestEWS(headersLoadedCallback);
             }
         }
@@ -96,11 +96,11 @@ function getRestUrl(accessToken) {
 
 function getHeaders(accessToken, headersLoadedCallback) {
     if (!accessToken) {
-        LogError(null, "No access token?");
+        Errors.log(null, "No access token?");
     }
 
     if (!Office.context.mailbox.item.itemId) {
-        LogError(null, "No itemId?");
+        Errors.log(null, "No itemId?");
     }
 
     // Get the item's REST ID
