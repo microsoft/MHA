@@ -20,20 +20,14 @@ var ParentFrame = (function () {
     var deferredStatus = [];
     var headers = "";
 
-    var UiChoice = function (label, url, checked) {
-        this.label = label;
-        this.url = url;
-        this.checked = checked;
+    var choice = function (label, url, checked) {
+        return { label: label, url: url, checked: checked };
     };
 
-    UiChoice.prototype.label = "";
-    UiChoice.prototype.url = "";
-    UiChoice.prototype.checked = "";
-
-    var uiChoices = [
-        new UiChoice("classic", "classicDesktopFrame.html", false),
-        new UiChoice("new", "newDesktopFrame.html", true),
-        new UiChoice("new-mobile", "newMobilePaneIosFrame.html", false)
+    var choices = [
+        choice("classic", "classicDesktopFrame.html", false),
+        choice("new", "newDesktopFrame.html", true),
+        choice("new-mobile", "newMobilePaneIosFrame.html", false)
     ];
 
     var setDefault = function () {
@@ -42,11 +36,11 @@ var ParentFrame = (function () {
             uiDefault = "new";
         }
 
-        for (var iChoice = 0; iChoice < uiChoices.length; iChoice++) {
-            if (uiDefault === uiChoices[iChoice].label) {
-                uiChoices[iChoice].checked = true;
+        for (var iChoice = 0; iChoice < choices.length; iChoice++) {
+            if (uiDefault === choices[iChoice].label) {
+                choices[iChoice].checked = true;
             } else {
-                uiChoices[iChoice].checked = false;
+                choices[iChoice].checked = false;
             }
         }
     };
@@ -203,8 +197,8 @@ var ParentFrame = (function () {
     };
 
     var goDefaultChoice = function () {
-        for (var iChoice = 0; iChoice < uiChoices.length; iChoice++) {
-            var choice = uiChoices[iChoice];
+        for (var iChoice = 0; iChoice < choices.length; iChoice++) {
+            var choice = choices[iChoice];
             if (choice.checked) {
                 go(choice);
                 return;
@@ -230,8 +224,8 @@ var ParentFrame = (function () {
         var list = $("#uiChoice-list");
         list.empty();
 
-        for (var iChoice = 0; iChoice < uiChoices.length; iChoice++) {
-            var choice = uiChoices[iChoice];
+        for (var iChoice = 0; iChoice < choices.length; iChoice++) {
+            var choice = choices[iChoice];
 
             // Create html: <li class="ms-RadioButton">
             var listItem = create(list, "li", "ms-RadioButton");
@@ -307,7 +301,7 @@ var ParentFrame = (function () {
                     // How did the user say to display it (UI to display)
 
                     var iChoice = $("#uiChoice input:checked")[0].value;
-                    var choice = uiChoices[iChoice];
+                    var choice = choices[iChoice];
                     if (choice.label !== currentChoice.label) {
                         go(choice);
                     }
