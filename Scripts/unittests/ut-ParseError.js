@@ -1,6 +1,4 @@
 ﻿/* global CleanStack */
-/* global getErrorMessage */
-/* global getErrorStack */
 /* global Errors */
 /* global QUnit */
 
@@ -202,47 +200,47 @@ QUnit.test("getError* Tests", function (assert) {
         document.notAFunction();
     }
     catch (error) {
-        assert.errorsEqual(getErrorMessage(error), ["Object doesn't support property or method 'notAFunction'",
+        assert.errorsEqual(Errors.getErrorMessage(error), ["Object doesn't support property or method 'notAFunction'",
             "document.notAFunction is not a function"]);
-        assert.ok(getErrorStack(error).length > 0);
+        assert.ok(Errors.getErrorStack(error).length > 0);
     }
 
     try {
         throw "string";
     }
     catch (error) {
-        assert.equal(getErrorMessage(error), "string");
-        assert.equal(getErrorStack(error), "string thrown as error");
+        assert.equal(Errors.getErrorMessage(error), "string");
+        assert.equal(Errors.getErrorStack(error), "string thrown as error");
     }
 
     try {
         throw 42;
     }
     catch (error) {
-        assert.equal(getErrorMessage(error), "42");
-        assert.ok(getErrorStack(error).length === 0);
+        assert.equal(Errors.getErrorMessage(error), "42");
+        assert.ok(Errors.getErrorStack(error).length === 0);
     }
 
     try {
         throw { one: 1, two: 2, three: "three" };
     }
     catch (error) {
-        assert.equal(getErrorMessage(error), "{\n" +
+        assert.equal(Errors.getErrorMessage(error), "{\n" +
             "  \"one\": 1,\n" +
             "  \"two\": 2,\n" +
             "  \"three\": \"three\"\n" +
             "}");
-        assert.ok(getErrorStack(error).length == 0);
+        assert.ok(Errors.getErrorStack(error).length == 0);
     }
 
-    assert.equal(getErrorMessage(null), "");
-    assert.equal(getErrorStack(null), "");
+    assert.equal(Errors.getErrorMessage(null), "");
+    assert.equal(Errors.getErrorStack(null), "");
 
-    assert.equal(getErrorMessage("stringError"), "stringError");
-    assert.equal(getErrorStack("stringError"), "string thrown as error");
+    assert.equal(Errors.getErrorMessage("stringError"), "stringError");
+    assert.equal(Errors.getErrorStack("stringError"), "string thrown as error");
 
-    assert.equal(getErrorMessage(42), "42");
-    assert.equal(getErrorStack(42), "");
+    assert.equal(Errors.getErrorMessage(42), "42");
+    assert.equal(Errors.getErrorStack(42), "");
 });
 
 QUnit.test("joinArray Tests", function (assert) {

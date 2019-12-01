@@ -1,9 +1,6 @@
 /* global appInsights */
 /* global StackTrace */
 /* exported CleanStack */
-/* exported getErrorMessage */
-/* exported getErrorStack */
-/* exported CleanStack */
 /* exported Errors */
 
 var Errors = (function () {
@@ -21,7 +18,7 @@ var Errors = (function () {
     var add = function (eventName, stack, suppressTracking) {
         if (eventName || stack) {
             var stackString = Errors.joinArray(stack, "\n");
-            Errors.addArray([eventName, stackString]);
+            errorArray.push(Errors.joinArray([eventName, stackString], "\n"));
 
             if (!suppressTracking) {
                 appInsights.trackEvent(eventName,
@@ -33,11 +30,7 @@ var Errors = (function () {
         }
     }
 
-    var addArray = function (errors) {
-        errorArray.push(Errors.joinArray(errors, "\n"));
-    };
-
-    var isError = function(error) {
+    var isError = function (error) {
         if (!error) return false;
 
         // We can't afford to throw while checking if we're processing an error
@@ -103,7 +96,7 @@ var Errors = (function () {
     // handler - function to call with parsed error
     var parse = function (exception, message, handler) {
         var stack;
-        var exceptionMessage = getErrorMessage(exception);
+        var exceptionMessage = Errors.getErrorMessage(exception);
 
         var eventName = Errors.joinArray([message, exceptionMessage], ' : ');
         if (!eventName) {
@@ -131,34 +124,35 @@ var Errors = (function () {
         }
     };
 
+    var getErrorMessage = function (error) {
+        if (!error) return '';
+        if (Object.prototype.toString.call(error) === "[object String]") return error;
+        if (Object.prototype.toString.call(error) === "[object Number]") return error.toString();
+        if ("message" in error) return error.message;
+        if ("description" in error) return error.description;
+        return JSON.stringify(error, null, 2);
+    };
+
+    var getErrorStack = function (error) {
+        if (!error) return '';
+        if (Object.prototype.toString.call(error) === "[object String]") return "string thrown as error";
+        if (!Errors.isError(error)) return '';
+        if ("stack" in error) return error.stack;
+        return '';
+    }
+
     return {
         clear: clear,
         get: get,
         joinArray: joinArray,
         add: add,
-        addArray: addArray,
         isError: isError,
         log: log,
-        parse: parse
+        parse: parse,
+        getErrorMessage: getErrorMessage,
+        getErrorStack: getErrorStack
     }
 })();
-
-function getErrorMessage(error) {
-    if (!error) return '';
-    if (Object.prototype.toString.call(error) === "[object String]") return error;
-    if (Object.prototype.toString.call(error) === "[object Number]") return error.toString();
-    if ("message" in error) return error.message;
-    if ("description" in error) return error.description;
-    return JSON.stringify(error, null, 2);
-}
-
-function getErrorStack(error) {
-    if (!error) return '';
-    if (Object.prototype.toString.call(error) === "[object String]") return "string thrown as error";
-    if (!Errors.isError(error)) return '';
-    if ("stack" in error) return error.stack;
-    return '';
-}
 
 // Strip stack of rows with unittests.html.
 // Only used for unit tests.
