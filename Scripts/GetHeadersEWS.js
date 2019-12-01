@@ -2,7 +2,7 @@
 /* global $h */
 /* global ImportedStrings */
 /* global jQuery */
-/* global LogError */
+/* global Errors */
 /* global Office */
 /* global ShowError */
 /* global UpdateStatus */
@@ -22,7 +22,7 @@
 
 function sendHeadersRequestEWS(headersLoadedCallback) {
     if (!validItem()) {
-        LogError(null, "No item selected (EWS)", true);
+        Errors.log(null, "No item selected (EWS)", true);
         return;
     }
 
@@ -35,7 +35,7 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
             };
         }
     } catch (e) {
-        LogError(e, null);
+        Errors.log(e, null);
     }
 
     try {
@@ -77,11 +77,11 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
         }
         catch (e) {
             if (asyncResult) {
-                LogError(null, "Async Response\n" + stripHeaderFromXml(JSON.stringify(asyncResult, null, 2)));
+                Errors.log(null, "Async Response\n" + stripHeaderFromXml(JSON.stringify(asyncResult, null, 2)));
             }
 
             if (logResponse) {
-                LogError(null, "Original Response\n" + stripHeaderFromXml(JSON.stringify(logResponse, null, 2)));
+                Errors.log(null, "Original Response\n" + stripHeaderFromXml(JSON.stringify(logResponse, null, 2)));
             }
 
             headersLoadedCallback(null, "EWS");

@@ -1,6 +1,5 @@
 /* global $ */
 /* global fabric */
-/* global LogError */
 /* global Office */
 /* global sendHeadersRequest */
 /* global getDiagnosticsMap */
@@ -79,7 +78,6 @@ Office.initialize = function () {
         InitUI();
         window.addEventListener("message", eventListener, false);
         loadNewItem();
-        LogError("Whoops");
     });
 };
 
@@ -100,7 +98,7 @@ function eventListener(event) {
                 SetFrame(event.source);
                 break;
             case "LogError":
-                LogError(JSON.parse(event.data.data.error), event.data.data.message);
+                Errors.log(JSON.parse(event.data.data.error), event.data.data.message);
                 break;
         }
     }
@@ -133,7 +131,7 @@ function registerItemChangeEvent() {
             });
         }
     } catch (e) {
-        LogError(e, "Could not register item change event");
+        Errors.log(e, "Could not register item change event");
     }
 }
 
@@ -175,7 +173,7 @@ function SetFrame(frame) {
 
 // Tells the UI to show an error.
 function ShowError(error, message, suppressTracking) {
-    LogError(error, message, suppressTracking);
+    Errors.log(error, message, suppressTracking);
 
     if (iFrame) {
         postMessageToFrame("showError", { error: JSON.stringify(error), message: message });

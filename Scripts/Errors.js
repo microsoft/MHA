@@ -5,7 +5,6 @@
 /* exported getErrorStack */
 /* exported CleanStack */
 /* exported isError */
-/* exported LogError */
 /* exported Errors */
 
 var Errors = (function () {
@@ -17,7 +16,7 @@ var Errors = (function () {
     var add = function (eventName, stack, suppressTracking) {
         if (eventName || stack) {
             var stackString = joinArray(stack, "\n");
-            addArray([eventName, stackString]);
+            this.addArray([eventName, stackString]);
 
             if (!suppressTracking) {
                 appInsights.trackEvent(eventName,
@@ -32,6 +31,35 @@ var Errors = (function () {
     var addArray = function (errors) {
         errorArray.push(joinArray(errors, "\n"));
     };
+
+    // error - an exception object
+    // message - a string describing the error
+    // suppressTracking - boolean indicating if we should suppress tracking
+    var log = function (error, message, suppressTracking) {
+        if (error && !suppressTracking) {
+            var props = {
+                Message: message,
+                Error: JSON.stringify(error, null, 2)
+            };
+
+            if (isError(error) && error.exception) {
+                props.Source = "Error.log Exception";
+                appInsights.trackException(error, props);
+            }
+            else {
+                props.Source = "Error.log Event";
+                if (error.description) props["Error description"] = error.description;
+                if (error.message) props["Error message"] = error.message;
+                if (error.stack) props.Stack = error.stack;
+
+                appInsights.trackEvent(error.description || error.message || props.Message || "Unknown error object", props);
+            }
+        }
+
+        this.parse(error, message, function (eventName, stack) {
+            this.add(eventName, stack, suppressTracking);
+        });
+    }
 
     // exception - an exception object
     // message - a string describing the error
@@ -71,6 +99,7 @@ var Errors = (function () {
         get: get,
         add: add,
         addArray: addArray,
+        log: log,
         parse: parse
     }
 })();
@@ -110,34 +139,6 @@ function isError(error) {
     return false;
 }
 
-// error - an exception object
-// message - a string describing the error
-// suppressTracking - boolean indicating if we should suppress tracking
-function LogError(error, message, suppressTracking) {
-    if (error && !suppressTracking) {
-        var props = {};
-        props["Message"] = message;
-        props["Error"] = JSON.stringify(error, null, 2);
-
-        if (isError(error) && error.exception) {
-            props["Source"] = "LogErrorException";
-            appInsights.trackException(error, props);
-        }
-        else {
-            props["Source"] = "LogErrorEvent";
-            if (error.description) props["Error description"] = error.description;
-            if (error.message) props["Error message"] = error.message;
-            if (error.stack) props["Stack"] = error.stack;
-
-            appInsights.trackEvent(error.description || error.message || props.Message || "Unknown error object", props);
-        }
-    }
-
-    Errors.parse(error, message, function (eventName, stack) {
-        Errors.add(eventName, stack, suppressTracking);
-    });
-}
-
 // Join an array with char, dropping empty/missing entries
 function joinArray(array, char) {
     if (!array) return null;
@@ -151,9 +152,9 @@ function FilterStack(stack) {
         if (item.fileName.indexOf("stacktrace") !== -1) return false;
         //if (item.functionName === "ShowError") return false;
         //if (item.functionName === "showError") return false;
-        //if (item.functionName === "LogError") return false; // Logs with LogError in them usually have location where it was called from - keep those
+        //if (item.functionName === "Errors.log") return false; // Logs with Errors.log in them usually have location where it was called from - keep those
         //if (item.functionName === "GetStack") return false;
-        if (item.functionName === "Errors.parse") return false; // Only ever called from LogError
+        if (item.functionName === "Errors.parse") return false; // Only ever called from Errors.log
         if (item.functionName === "isError") return false; // Not called from anywhere interesting
         return true;
     });
