@@ -2,10 +2,7 @@
 /* global fabric */
 /* global Office */
 /* global sendHeadersRequest */
-/* global getDiagnosticsMap */
-/* global setItemDiagnostics */
-/* global clearItemDiagnostics */
-/* global ensureDiagnostics */
+/* global Diagnostics */
 /* global Errors */
 /* global appInsights */
 /* exported ParentFrame */
@@ -105,7 +102,7 @@ var ParentFrame = (function () {
                 Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged,
                     function () {
                         Errors.clear();
-                        clearItemDiagnostics();
+                        Diagnostics.clear();
                         ParentFrame.loadNewItem();
                     });
             }
@@ -118,7 +115,7 @@ var ParentFrame = (function () {
         if (Office.context.mailbox.item) {
             sendHeadersRequest(function (_headers, apiUsed) {
                 headers = _headers;
-                setItemDiagnostics("API used", apiUsed);
+                Diagnostics.set("API used", apiUsed);
                 if (iFrame) {
                     if (appInsights) appInsights.trackEvent("analyzeHeaders");
                     postMessageToFrame("renderItem", headers);
@@ -317,7 +314,7 @@ var ParentFrame = (function () {
         function getDiagnostics() {
             var diagnostics = "";
             try {
-                var diagnosticMap = getDiagnosticsMap();
+                var diagnosticMap = Diagnostics.get();
                 for (var diag in diagnosticMap) {
                     if (diagnosticMap.hasOwnProperty(diag)) {
                         diagnostics += diag + " = " + diagnosticMap[diag] + "\n";
@@ -341,13 +338,12 @@ var ParentFrame = (function () {
     return {
         initUI: initUI,
         updateStatus: updateStatus,
-        showError: showError,
+        showError: showError
     }
 })();
 
 Office.initialize = function () {
     $(document).ready(function () {
-        ensureDiagnostics();
         ParentFrame.initUI();
     });
 };

@@ -7,16 +7,16 @@
 /* global rebuildSections */
 /* global recalculateVisibility */
 /* global setArrows */
+/* global Diagnostics */
+/* global appInsights */
 /* exported analyzeHeaders */
 /* exported clearHeaders */
-/* global appInsights */
-/* global setItemDiagnostics */
 
 var viewModel = null;
 
 if (window.jQuery) {
     $(document).ready(function () {
-        setItemDiagnostics("API used", "standalone");
+        Diagnostics.set("API used", "standalone");
         viewModel = new HeaderModel();
         initializeTableUI();
         makeResizablePane("inputHeaders", ImportedStrings.mha_prompt, null);
