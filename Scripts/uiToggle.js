@@ -78,6 +78,7 @@ Office.initialize = function () {
         InitUI();
         window.addEventListener("message", eventListener, false);
         loadNewItem();
+        Errors.log("whoops");
     });
 };
 

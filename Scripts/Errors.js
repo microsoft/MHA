@@ -14,15 +14,15 @@ var Errors = (function () {
     var get = function () { return errorArray; };
 
     // Join an array with char, dropping empty/missing entries
-    var joinArray = function(array, char) {
+    var joinArray = function (array, char) {
         if (!array) return null;
-        return (array.filter(function(item) { return item; })).join(char);
+        return (array.filter(function (item) { return item; })).join(char);
     };
 
     var add = function (eventName, stack, suppressTracking) {
         if (eventName || stack) {
-            var stackString = this.joinArray(stack, "\n");
-            this.addArray([eventName, stackString]);
+            var stackString = Errors.joinArray(stack, "\n");
+            Errors.addArray([eventName, stackString]);
 
             if (!suppressTracking) {
                 appInsights.trackEvent(eventName,
@@ -35,7 +35,7 @@ var Errors = (function () {
     }
 
     var addArray = function (errors) {
-        errorArray.push(this.joinArray(errors, "\n"));
+        errorArray.push(Errors.joinArray(errors, "\n"));
     };
 
     // error - an exception object
@@ -62,10 +62,25 @@ var Errors = (function () {
             }
         }
 
-        this.parse(error, message, function (eventName, stack) {
-            this.add(eventName, stack, suppressTracking);
+        Errors.parse(error, message, function (eventName, stack) {
+            Errors.add(eventName, stack, suppressTracking);
         });
     }
+
+    // While trying to get our error tracking under control, let's not filter our stacks
+    var filterStack = function (stack) {
+        return stack.filter(function (item) {
+            if (!item.fileName) return true;
+            if (item.fileName.indexOf("stacktrace") !== -1) return false;
+            //if (item.functionName === "ShowError") return false;
+            //if (item.functionName === "showError") return false;
+            //if (item.functionName === "Errors.log") return false; // Logs with Errors.log in them usually have location where it was called from - keep those
+            //if (item.functionName === "GetStack") return false;
+            if (item.functionName === "Errors.parse") return false; // Only ever called from Errors.log
+            if (item.functionName === "isError") return false; // Not called from anywhere interesting
+            return true;
+        });
+    };
 
     // exception - an exception object
     // message - a string describing the error
@@ -74,13 +89,13 @@ var Errors = (function () {
         var stack;
         var exceptionMessage = getErrorMessage(exception);
 
-        var eventName = this.joinArray([message, exceptionMessage], ' : ');
+        var eventName = Errors.joinArray([message, exceptionMessage], ' : ');
         if (!eventName) {
             eventName = "Unknown exception";
         }
 
         var callback = function (stackframes) {
-            stack = FilterStack(stackframes).map(function (sf) {
+            stack = filterStack(stackframes).map(function (sf) {
                 return sf.toString();
             });
             handler(eventName, stack);
@@ -144,21 +159,6 @@ function isError(error) {
     }
 
     return false;
-}
-
-// While trying to get our error tracking under control, let's not filter our stacks
-function FilterStack(stack) {
-    return stack.filter(function (item) {
-        if (!item.fileName) return true;
-        if (item.fileName.indexOf("stacktrace") !== -1) return false;
-        //if (item.functionName === "ShowError") return false;
-        //if (item.functionName === "showError") return false;
-        //if (item.functionName === "Errors.log") return false; // Logs with Errors.log in them usually have location where it was called from - keep those
-        //if (item.functionName === "GetStack") return false;
-        if (item.functionName === "Errors.parse") return false; // Only ever called from Errors.log
-        if (item.functionName === "isError") return false; // Not called from anywhere interesting
-        return true;
-    });
 }
 
 // Strip stack of rows with unittests.html.
