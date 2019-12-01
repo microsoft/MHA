@@ -4,7 +4,6 @@
 /* exported getErrorMessage */
 /* exported getErrorStack */
 /* exported CleanStack */
-/* exported isError */
 /* exported Errors */
 
 var Errors = (function () {
@@ -38,6 +37,23 @@ var Errors = (function () {
         errorArray.push(Errors.joinArray(errors, "\n"));
     };
 
+    var isError = function(error) {
+        if (!error) return false;
+
+        // We can't afford to throw while checking if we're processing an error
+        // So just swallow any exception and fail.
+        try {
+            if (Object.prototype.toString.call(error) === "[object Error]") {
+                if ("stack" in error) return true;
+            }
+        } catch (e) {
+            appInsights.trackEvent("isError exception");
+            appInsights.trackEvent("isError exception with error", e);
+        }
+
+        return false;
+    };
+
     // error - an exception object
     // message - a string describing the error
     // suppressTracking - boolean indicating if we should suppress tracking
@@ -48,7 +64,7 @@ var Errors = (function () {
                 Error: JSON.stringify(error, null, 2)
             };
 
-            if (isError(error) && error.exception) {
+            if (Errors.isError(error) && error.exception) {
                 props.Source = "Error.log Exception";
                 appInsights.trackException(error, props);
             }
@@ -77,7 +93,7 @@ var Errors = (function () {
             //if (item.functionName === "Errors.log") return false; // Logs with Errors.log in them usually have location where it was called from - keep those
             //if (item.functionName === "GetStack") return false;
             if (item.functionName === "Errors.parse") return false; // Only ever called from Errors.log
-            if (item.functionName === "isError") return false; // Not called from anywhere interesting
+            if (item.functionName === "Errors.isError") return false; // Not called from anywhere interesting
             return true;
         });
     };
@@ -108,7 +124,7 @@ var Errors = (function () {
         };
 
         // TODO: Move filter from callbacks into gets
-        if (!isError(exception)) {
+        if (!Errors.isError(exception)) {
             StackTrace.get().then(callback).catch(errback);
         } else {
             StackTrace.fromError(exception).then(callback).catch(errback);
@@ -121,6 +137,7 @@ var Errors = (function () {
         joinArray: joinArray,
         add: add,
         addArray: addArray,
+        isError: isError,
         log: log,
         parse: parse
     }
@@ -138,27 +155,9 @@ function getErrorMessage(error) {
 function getErrorStack(error) {
     if (!error) return '';
     if (Object.prototype.toString.call(error) === "[object String]") return "string thrown as error";
-    if (!isError(error)) return '';
+    if (!Errors.isError(error)) return '';
     if ("stack" in error) return error.stack;
     return '';
-}
-
-function isError(error) {
-    if (!error) return false;
-
-    // We can't afford to throw while checking if we're processing an error
-    // So just swallow any exception and fail.
-    try {
-        if (Object.prototype.toString.call(error) === "[object Error]") {
-            if ("stack" in error) return true;
-        }
-    }
-    catch (e) {
-        appInsights.trackEvent("isError exception");
-        appInsights.trackEvent("isError exception with error", e);
-    }
-
-    return false;
 }
 
 // Strip stack of rows with unittests.html.

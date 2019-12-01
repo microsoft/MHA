@@ -1,7 +1,6 @@
 ﻿/* global CleanStack */
 /* global getErrorMessage */
 /* global getErrorStack */
-/* global isError */
 /* global Errors */
 /* global QUnit */
 
@@ -257,11 +256,11 @@ QUnit.test("joinArray Tests", function (assert) {
 });
 
 QUnit.test("isError Tests", function (assert) {
-    try { document.notAFunction(); } catch (error) { assert.ok(isError(error)); }
-    try { throw null; } catch (error) { assert.notOk(isError(error)); }
-    try { throw "string"; } catch (error) { assert.notOk(isError(error)); }
-    try { throw 42; } catch (error) { assert.notOk(isError(error)); }
-    assert.notOk(isError("string"));
-    assert.notOk(isError(42));
-    assert.notOk(isError(null));
+    try { document.notAFunction(); } catch (error) { assert.ok(Errors.isError(error)); }
+    try { throw null; } catch (error) { assert.notOk(Errors.isError(error)); }
+    try { throw "string"; } catch (error) { assert.notOk(Errors.isError(error)); }
+    try { throw 42; } catch (error) { assert.notOk(Errors.isError(error)); }
+    assert.notOk(Errors.isError("string"));
+    assert.notOk(Errors.isError(42));
+    assert.notOk(Errors.isError(null));
 });
