@@ -1,7 +1,6 @@
 /* global $ */
 /* global StackTrace */
 /* global appInsights */
-/* global ParentFrame */
 /* exported Diagnostics */
 
 // diagnostics  module
