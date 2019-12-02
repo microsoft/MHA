@@ -12,18 +12,18 @@ var Diagnostics = (function () {
     var lastUpdate = "";
 
     // Combines appDiagnostics and itemDiagnostics and returns a single object
-    var get = function () {
+    function get() {
         ensureAppDiagnostics();
         ensureItemDiagnostics();
 
         // Ideally we'd combine with Object.assign or the spread operator(...) but not all our browsers (IE) support that.
         // jQuery's extend should work everywhere.
         return $.extend({}, appDiagnostics, itemDiagnostics);
-    };
+    }
 
-    var set = function (field, value) { itemDiagnostics[field] = value; };
+    function set(field, value) { itemDiagnostics[field] = value; }
 
-    var clear = function () { if (itemDiagnostics) itemDiagnostics = {}; };
+    function clear() { if (itemDiagnostics) itemDiagnostics = {}; }
 
     function ensureLastModified() {
         var client = new XMLHttpRequest();
