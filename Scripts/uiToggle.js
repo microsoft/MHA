@@ -103,7 +103,7 @@ var ParentFrame = (function () {
                     function () {
                         Errors.clear();
                         Diagnostics.clear();
-                        ParentFrame.loadNewItem();
+                        loadNewItem();
                     });
             }
         } catch (e) {
@@ -152,7 +152,6 @@ var ParentFrame = (function () {
     function renderItem(headers) {
         if (appInsights && headers) appInsights.trackEvent("analyzeHeaders: " + headers);
         postMessageToFrame("renderItem", headers);
-
     }
 
     // Tells the UI to show an error.
