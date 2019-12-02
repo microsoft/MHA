@@ -150,7 +150,7 @@ var ParentFrame = (function () {
     }
 
     function renderItem(headers) {
-        if (appInsights && headers) appInsights.trackEvent("analyzeHeaders: ");
+        if (appInsights && headers) appInsights.trackEvent("analyzeHeaders");
         postMessageToFrame("renderItem", headers);
     }
 
