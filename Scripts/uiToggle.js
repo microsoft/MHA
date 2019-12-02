@@ -17,9 +17,9 @@ var ParentFrame = (function () {
     var deferredStatus = [];
     var headers = "";
 
-    var choice = function (label, url, checked) {
+    function choice(label, url, checked) {
         return { label: label, url: url, checked: checked };
-    };
+    }
 
     var choices = [
         choice("classic", "classicDesktopFrame.html", false),
@@ -27,7 +27,7 @@ var ParentFrame = (function () {
         choice("new-mobile", "newMobilePaneIosFrame.html", false)
     ];
 
-    var setDefault = function () {
+    function setDefault() {
         var uiDefault = getQueryVariable("default");
         if (uiDefault === null) {
             uiDefault = "new";
@@ -40,7 +40,7 @@ var ParentFrame = (function () {
                 choices[iChoice].checked = false;
             }
         }
-    };
+    }
 
     function getQueryVariable(variable) {
         var vars = window.location.search.substring(1).split("&");
@@ -55,13 +55,13 @@ var ParentFrame = (function () {
 
     function site() { return window.location.protocol + "//" + window.location.host; }
 
-    var postMessageToFrame = function (eventName, data) {
+    function postMessageToFrame(eventName, data) {
         if (iFrame) {
             iFrame.postMessage({ eventName: eventName, data: data }, site());
         }
-    };
+    }
 
-    var eventListener = function (event) {
+    function eventListener(event) {
         if (!event || event.origin !== site()) return;
 
         if (event.data) {
@@ -74,9 +74,9 @@ var ParentFrame = (function () {
                     break;
             }
         }
-    };
+    }
 
-    var initUI = function () {
+    function initUI() {
         setDefault();
         addChoices();
         initFabric();
@@ -94,9 +94,9 @@ var ParentFrame = (function () {
 
         window.addEventListener("message", eventListener, false);
         loadNewItem();
-    };
+    }
 
-    var registerItemChangedEvent = function () {
+    function registerItemChangedEvent() {
         try {
             if (Office.context.mailbox.addHandlerAsync !== undefined) {
                 Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged,
@@ -109,9 +109,9 @@ var ParentFrame = (function () {
         } catch (e) {
             Errors.log(e, "Could not register item changed event");
         }
-    };
+    }
 
-    var loadNewItem = function () {
+    function loadNewItem() {
         if (Office.context.mailbox.item) {
             sendHeadersRequest(function (_headers, apiUsed) {
                 headers = _headers;
@@ -119,9 +119,9 @@ var ParentFrame = (function () {
                 renderItem(headers);
             });
         }
-    };
+    }
 
-    var setFrame = function (frame) {
+    function setFrame(frame) {
         iFrame = frame;
 
         if (iFrame) {
@@ -147,7 +147,7 @@ var ParentFrame = (function () {
 
             renderItem(headers);
         }
-    };
+    }
 
     function renderItem(headers) {
         if (appInsights && headers) appInsights.trackEvent("analyzeHeaders: " + headers);
@@ -156,7 +156,7 @@ var ParentFrame = (function () {
     }
 
     // Tells the UI to show an error.
-    var showError = function (error, message, suppressTracking) {
+    function showError(error, message, suppressTracking) {
         Errors.log(error, message, suppressTracking);
 
         if (iFrame) {
@@ -165,28 +165,28 @@ var ParentFrame = (function () {
             // We don't have an iFrame, so defer the message
             deferredErrors.push([error, message]);
         }
-    };
+    }
 
     // Tells the UI to show an error.
-    var updateStatus = function (statusText) {
+    function updateStatus(statusText) {
         if (iFrame) {
             postMessageToFrame("updateStatus", statusText);
         } else {
             // We don't have an iFrame, so defer the status
             deferredStatus.push(statusText);
         }
-    };
+    }
 
-    var getSettingsKey = function () {
+    function getSettingsKey() {
         try {
             return "frame" + Office.context.mailbox.diagnostics.hostName;
         } catch (e) {
             return "frame";
         }
-    };
+    }
 
     // Display primary UI
-    var go = function (choice) {
+    function go(choice) {
         iFrame = null;
         currentChoice = choice;
         document.getElementById("uiFrame").src = choice.url;
@@ -194,9 +194,9 @@ var ParentFrame = (function () {
             Office.context.roamingSettings.set(getSettingsKey(), choice);
             Office.context.roamingSettings.saveAsync();
         }
-    };
+    }
 
-    var goDefaultChoice = function () {
+    function goDefaultChoice() {
         for (var iChoice = 0; iChoice < choices.length; iChoice++) {
             var choice = choices[iChoice];
             if (choice.checked) {
@@ -204,9 +204,9 @@ var ParentFrame = (function () {
                 return;
             }
         }
-    };
+    }
 
-    var create = function (parentElement, newType, newClass) {
+    function create(parentElement, newType, newClass) {
         var newElement = $(document.createElement(newType));
         if (newClass) {
             newElement.addClass(newClass);
@@ -217,10 +217,10 @@ var ParentFrame = (function () {
         }
 
         return newElement;
-    };
+    }
 
     // Create list of choices to display for the UI types
-    var addChoices = function () {
+    function addChoices() {
         var list = $("#uiChoice-list");
         list.empty();
 
@@ -248,10 +248,10 @@ var ParentFrame = (function () {
             var inputSpan = create(label, "span", "ms-Label");
             inputSpan.text(choice.label);
         }
-    };
+    }
 
     // Hook the UI together for display
-    var initFabric = function () {
+    function initFabric() {
         var i;
         var header = document.querySelector(".header-row");
 
@@ -336,9 +336,9 @@ var ParentFrame = (function () {
 
             return diagnostics;
         }
-    };
+    }
 
-    var getChoice = function () { return currentChoice; };
+    function getChoice() { return currentChoice; }
 
     return {
         initUI: initUI,
