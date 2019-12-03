@@ -1,9 +1,10 @@
 /* global $ */
 /* global StackTrace */
+/* global aikey */
 /* global appInsights */
 /* exported Diagnostics */
 
-// diagnostics  module
+// diagnostics module
 
 var Diagnostics = (function () {
     var appDiagnostics = null;
@@ -176,34 +177,39 @@ var Diagnostics = (function () {
     }
 })();
 
-// app Insights initialization
-var sdkInstance = "appInsightsSDK"; window[sdkInstance] = "appInsights"; var aiName = window[sdkInstance], aisdk = window[aiName] || function (e) { function n(e) { t[e] = function () { var n = arguments; t.queue.push(function () { t[e].apply(t, n) }) } } var t = { config: e }; t.initialize = !0; var i = document, a = window; setTimeout(function () { var n = i.createElement("script"); n.src = e.url || "https://az416426.vo.msecnd.net/scripts/b/ai.2.min.js", i.getElementsByTagName("script")[0].parentNode.appendChild(n) }); try { t.cookie = i.cookie } catch (e) { } t.queue = [], t.version = 2; for (var r = ["Event", "PageView", "Exception", "Trace", "DependencyData", "Metric", "PageViewPerformance"]; r.length;)n("track" + r.pop()); n("startTrackPage"), n("stopTrackPage"); var s = "Track" + r[0]; if (n("start" + s), n("stop" + s), n("setAuthenticatedUserContext"), n("clearAuthenticatedUserContext"), n("flush"), !(!0 === e.disableExceptionTracking || e.extensionConfig && e.extensionConfig.ApplicationInsightsAnalytics && !0 === e.extensionConfig.ApplicationInsightsAnalytics.disableExceptionTracking)) { n("_" + (r = "onerror")); var o = a[r]; a[r] = function (e, n, i, a, s) { var c = o && o(e, n, i, a, s); return !0 !== c && t["_" + r]({ message: e, url: n, lineNumber: i, columnNumber: a, error: s }), c }, e.autoExceptionInstrumented = !0 } return t }(
-    {
-        instrumentationKey: "2f12afed-6139-456e-9de3-49003d3a1fb1"
-    }
-); window[aiName] = aisdk, aisdk.queue.push(function () {
-    aisdk.addTelemetryInitializer(function (envelope) {
-        envelope.data.baseType = envelope.baseType;
-        envelope.data.baseData = envelope.baseData;
-        // This will get called for any appInsights tracking - we can augment or suppress logging from here
-        // No appInsights logging for localhost/dev
-        var doLog = (document.domain !== "localhost");
-        if (envelope.baseType === "RemoteDependencyData") return doLog;
-        if (envelope.baseType === "PageviewData") return doLog;
-        if (envelope.baseType === "PageviewPerformanceData") return doLog;
-
-        // If we're not one of the above types, tag in our diagnostics data
-        if (envelope.baseType === "ExceptionData") {
-            // custom data for the ExceptionData type lives in a different place
-            envelope.baseData.properties = envelope.baseData.properties || {};
-            $.extend(envelope.baseData.properties, Diagnostics.get());
-            // Log an extra event with stack frame
-            StackTrace.get().then(function (stackframes) { appInsights.trackEvent("Exception Details", { stack: stackframes }); });
+var script = document.createElement('script');
+script.onload = function () {
+    // app Insights initialization
+    var sdkInstance = "appInsightsSDK"; window[sdkInstance] = "appInsights"; var aiName = window[sdkInstance], aisdk = window[aiName] || function (e) { function n(e) { t[e] = function () { var n = arguments; t.queue.push(function () { t[e].apply(t, n) }) } } var t = { config: e }; t.initialize = !0; var i = document, a = window; setTimeout(function () { var n = i.createElement("script"); n.src = e.url || "https://az416426.vo.msecnd.net/scripts/b/ai.2.min.js", i.getElementsByTagName("script")[0].parentNode.appendChild(n) }); try { t.cookie = i.cookie } catch (e) { } t.queue = [], t.version = 2; for (var r = ["Event", "PageView", "Exception", "Trace", "DependencyData", "Metric", "PageViewPerformance"]; r.length;) n("track" + r.pop()); n("startTrackPage"), n("stopTrackPage"); var s = "Track" + r[0]; if (n("start" + s), n("stop" + s), n("setAuthenticatedUserContext"), n("clearAuthenticatedUserContext"), n("flush"), !(!0 === e.disableExceptionTracking || e.extensionConfig && e.extensionConfig.ApplicationInsightsAnalytics && !0 === e.extensionConfig.ApplicationInsightsAnalytics.disableExceptionTracking)) { n("_" + (r = "onerror")); var o = a[r]; a[r] = function (e, n, i, a, s) { var c = o && o(e, n, i, a, s); return !0 !== c && t["_" + r]({ message: e, url: n, lineNumber: i, columnNumber: a, error: s }), c }, e.autoExceptionInstrumented = !0 } return t }(
+        {
+            instrumentationKey: aikey()
         }
-        else {
-            $.extend(envelope.data, Diagnostics.get());
-        }
+    ); window[aiName] = aisdk, aisdk.queue.push(function () {
+        aisdk.addTelemetryInitializer(function (envelope) {
+            envelope.data.baseType = envelope.baseType;
+            envelope.data.baseData = envelope.baseData;
+            // This will get called for any appInsights tracking - we can augment or suppress logging from here
+            // No appInsights logging for localhost/dev
+            var doLog = (document.domain !== "localhost");
+            if (envelope.baseType === "RemoteDependencyData") return doLog;
+            if (envelope.baseType === "PageviewData") return doLog;
+            if (envelope.baseType === "PageviewPerformanceData") return doLog;
 
-        return doLog;
-    });
-}), aisdk.queue && 0 === aisdk.queue.length; aisdk.trackPageView({});
+            // If we're not one of the above types, tag in our diagnostics data
+            if (envelope.baseType === "ExceptionData") {
+                // custom data for the ExceptionData type lives in a different place
+                envelope.baseData.properties = envelope.baseData.properties || {};
+                $.extend(envelope.baseData.properties, Diagnostics.get());
+                // Log an extra event with stack frame
+                StackTrace.get().then(function (stackframes) { appInsights.trackEvent("Exception Details", { stack: stackframes }); });
+            }
+            else {
+                $.extend(envelope.data, Diagnostics.get());
+            }
+
+            return doLog;
+        });
+    }), aisdk.queue && 0 === aisdk.queue.length; aisdk.trackPageView({});
+};
+script.src = window.location.origin + '/Scripts/aikey.js';
+document.getElementsByTagName('script')[0].parentNode.appendChild(script);

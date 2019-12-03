@@ -19,7 +19,7 @@ var Errors = (function () {
             var stackString = Errors.joinArray(stack, "\n");
             errorArray.push(Errors.joinArray([eventName, stackString], "\n"));
 
-            if (!suppressTracking) {
+            if (!suppressTracking && appInsights) {
                 appInsights.trackEvent(eventName,
                     {
                         Stack: stackString,
@@ -39,8 +39,8 @@ var Errors = (function () {
                 if ("stack" in error) return true;
             }
         } catch (e) {
-            appInsights.trackEvent("isError exception");
-            appInsights.trackEvent("isError exception with error", e);
+            if (appInsights) appInsights.trackEvent("isError exception");
+            if (appInsights) appInsights.trackEvent("isError exception with error", e);
         }
 
         return false;
@@ -50,7 +50,7 @@ var Errors = (function () {
     // message - a string describing the error
     // suppressTracking - boolean indicating if we should suppress tracking
     function log(error, message, suppressTracking) {
-        if (error && !suppressTracking) {
+        if (error && !suppressTracking && appInsights) {
             var props = {
                 Message: message,
                 Error: JSON.stringify(error, null, 2)
@@ -110,7 +110,7 @@ var Errors = (function () {
         }
 
         function errback(err) {
-            appInsights.trackEvent("Errors.parse errback");
+            if (appInsights) appInsights.trackEvent("Errors.parse errback");
             stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
             handler(eventName, stack);
         }
