@@ -8,9 +8,8 @@
   },
   "main": "Pages/mha.html",
   "scripts": {
-    "build": "node tasks/minify.js",
+    "build": "node tasks/build.js",
     "clean": "node tasks/clean.js",
-    "genaikey": "node tasks/genaikey.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -34,7 +33,11 @@
     "uglify-js": "^3.6.8"
   },
   "-vs-binding": {
-    "BeforeBuild": [ "build", "genaikey" ],
-    "Clean": [ "clean" ]
+    "BeforeBuild": [
+      "build"
+    ],
+    "Clean": [
+      "clean"
+    ]
   }
 }
