@@ -1,1 +1,0 @@
-/* exported aikey */ window.aikey = function () { return ""; };
