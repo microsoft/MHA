@@ -34,12 +34,7 @@
     "uglify-js": "^3.6.8"
   },
   "-vs-binding": {
-    "BeforeBuild": [
-      "build",
-      "genaikey"
-    ],
-    "Clean": [
-      "clean"
-    ]
+    "BeforeBuild": [ "build", "genaikey" ],
+    "Clean": [ "clean" ]
   }
 }
