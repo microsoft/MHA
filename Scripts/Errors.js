@@ -4,17 +4,17 @@
 
 var Errors = (function () {
     var errorArray = [];
-    var clear = function () { errorArray = []; };
+    function clear() { errorArray = []; }
 
-    var get = function () { return errorArray; };
+    function get() { return errorArray; }
 
     // Join an array with char, dropping empty/missing entries
-    var joinArray = function (array, char) {
+    function joinArray(array, char) {
         if (!array) return null;
         return (array.filter(function (item) { return item; })).join(char);
-    };
+    }
 
-    var add = function (eventName, stack, suppressTracking) {
+    function add(eventName, stack, suppressTracking) {
         if (eventName || stack) {
             var stackString = Errors.joinArray(stack, "\n");
             errorArray.push(Errors.joinArray([eventName, stackString], "\n"));
@@ -29,7 +29,7 @@ var Errors = (function () {
         }
     }
 
-    var isError = function (error) {
+    function isError(error) {
         if (!error) return false;
 
         // We can't afford to throw while checking if we're processing an error
@@ -45,12 +45,12 @@ var Errors = (function () {
         }
 
         return false;
-    };
+    }
 
     // error - an exception object
     // message - a string describing the error
     // suppressTracking - boolean indicating if we should suppress tracking
-    var log = function (error, message, suppressTracking) {
+    function log(error, message, suppressTracking) {
         if (error && !suppressTracking && appInsights) {
             var props = {
                 Message: message,
@@ -77,7 +77,7 @@ var Errors = (function () {
     }
 
     // While trying to get our error tracking under control, let's not filter our stacks
-    var filterStack = function (stack) {
+    function filterStack(stack) {
         return stack.filter(function (item) {
             if (!item.fileName) return true;
             if (item.fileName.indexOf("stacktrace") !== -1) return false;
@@ -89,12 +89,12 @@ var Errors = (function () {
             if (item.functionName === "Errors.isError") return false; // Not called from anywhere interesting
             return true;
         });
-    };
+    }
 
     // exception - an exception object
     // message - a string describing the error
     // handler - function to call with parsed error
-    var parse = function (exception, message, handler) {
+    function parse(exception, message, handler) {
         var stack;
         var exceptionMessage = Errors.getErrorMessage(exception);
 
@@ -103,18 +103,18 @@ var Errors = (function () {
             eventName = "Unknown exception";
         }
 
-        var callback = function (stackframes) {
+        function callback(stackframes) {
             stack = filterStack(stackframes).map(function (sf) {
                 return sf.toString();
             });
             handler(eventName, stack);
-        };
+        }
 
-        var errback = function (err) {
-            if (appInsights) appInsights.trackEvent("parseError errback");
+        function errback(err) {
+            if (appInsights) appInsights.trackEvent("Errors.parse errback");
             stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
             handler(eventName, stack);
-        };
+        }
 
         // TODO: Move filter from callbacks into gets
         if (!Errors.isError(exception)) {
@@ -122,18 +122,18 @@ var Errors = (function () {
         } else {
             StackTrace.fromError(exception).then(callback).catch(errback);
         }
-    };
+    }
 
-    var getErrorMessage = function (error) {
+    function getErrorMessage(error) {
         if (!error) return '';
         if (Object.prototype.toString.call(error) === "[object String]") return error;
         if (Object.prototype.toString.call(error) === "[object Number]") return error.toString();
         if ("message" in error) return error.message;
         if ("description" in error) return error.description;
         return JSON.stringify(error, null, 2);
-    };
+    }
 
-    var getErrorStack = function (error) {
+    function getErrorStack(error) {
         if (!error) return '';
         if (Object.prototype.toString.call(error) === "[object String]") return "string thrown as error";
         if (!Errors.isError(error)) return '';

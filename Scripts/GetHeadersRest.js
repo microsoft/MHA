@@ -3,9 +3,8 @@
 /* global Errors */
 /* global Office */
 /* global sendHeadersRequestEWS */
-/* global ShowError */
-/* global UpdateStatus */
 /* global validItem */
+/* global ParentFrame */
 /* exported sendHeadersRequestRest */
 
 /**
@@ -26,7 +25,7 @@ function sendHeadersRequestRest(headersLoadedCallback) {
         return;
     }
 
-    UpdateStatus(ImportedStrings.mha_RequestSent);
+    ParentFrame.updateStatus(ImportedStrings.mha_RequestSent);
 
     Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
         try {
@@ -39,7 +38,7 @@ function sendHeadersRequestRest(headersLoadedCallback) {
             }
         }
         catch (e) {
-            ShowError(e, "Failed in getCallbackTokenAsync");
+            ParentFrame.showError(e, "Failed in getCallbackTokenAsync");
         }
     });
 }
@@ -125,11 +124,11 @@ function getHeaders(accessToken, headersLoadedCallback) {
                 headersLoadedCallback(item.SingleValueExtendedProperties[0].Value, "REST");
             } else {
                 headersLoadedCallback(null, "REST");
-                ShowError(null, ImportedStrings.mha_headersMissing, true);
+                ParentFrame.showError(null, ImportedStrings.mha_headersMissing, true);
             }
         }
         catch (e) {
-            ShowError(e, "Failed parsing headers");
+            ParentFrame.showError(e, "Failed parsing headers");
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         try {
@@ -137,13 +136,13 @@ function getHeaders(accessToken, headersLoadedCallback) {
                 // TODO: Log this, but don't error for the user
                 sendHeadersRequestEWS(headersLoadedCallback);
             } else if (textStatus === "error" && jqXHR.status === 404) {
-                ShowError(null, ImportedStrings.mha_messageMissing, true);
+                ParentFrame.showError(null, ImportedStrings.mha_messageMissing, true);
             } else {
-                ShowError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
+                ParentFrame.showError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
             }
         }
         catch (e) {
-            ShowError(e, "Failed handling REST failure case");
+            ParentFrame.showError(e, "Failed handling REST failure case");
         }
     });
 }

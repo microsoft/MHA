@@ -1,7 +1,7 @@
 /* global Office */
 /* global sendHeadersRequestEWS */
 /* global sendHeadersRequestRest */
-/* global ShowError */
+/* global ParentFrame */
 /* exported sendHeadersRequest */
 /* exported validItem */
 
@@ -13,12 +13,12 @@
 
 function sendHeadersRequest(headersLoadedCallback) {
     if (!validItem()) {
-        ShowError(null, "No item selected", true);
+        ParentFrame.showError(null, "No item selected", true);
         return;
     }
 
     if (!sufficientPermission(false)) {
-        ShowError(null, "Insufficient permissions to request headers", false);
+        ParentFrame.showError(null, "Insufficient permissions to request headers", false);
         return;
     }
 
@@ -30,7 +30,7 @@ function sendHeadersRequest(headersLoadedCallback) {
             sendHeadersRequestEWS(headersLoadedCallback);
         }
     } catch (e) {
-        ShowError(e, "Could not send header request");
+        ParentFrame.showError(e, "Could not send header request");
     }
 }
 
