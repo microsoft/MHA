@@ -1,17 +1,4 @@
-################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
-/website.publishproj
 /Web.config
-/MessageHeaderAnalyzerWeb/.vs/MHA/v14/.suo
-/MessageHeaderAnalyzerWeb/.vs/MHA/v14
-/MessageHeaderAnalyzerWeb/.vs/config/applicationhost.config
-/MessageHeaderAnalyzerWeb/.vs/config
-/MessageHeaderAnalyzerWeb/.vs
-/App_Data/PublishProfiles/mha - Web Deploy.pubxml
-/App_Data/PublishProfiles/mha - FTP.pubxml
-debug.log
 /Debug
 /vwd.webinfo
 .vscode
@@ -20,3 +7,4 @@ mha.sln
 /node_modules
 *.min.js
 *.min.js.map
+/Scripts/aikey.js
