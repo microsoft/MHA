@@ -38,8 +38,7 @@ var Errors = (function () {
             if (Object.prototype.toString.call(error) === "[object Error]") {
                 if ("stack" in error) return true;
             }
-        }
-        catch (e) {
+        } catch (e) {
             if (appInsights) appInsights.trackEvent("isError exception");
             if (appInsights) appInsights.trackEvent("isError exception with error", e);
         }
