@@ -116,7 +116,7 @@ var ParentFrame = (function () {
             sendHeadersRequest(function (_headers, apiUsed) {
                 headers = _headers;
                 Diagnostics.set("API used", apiUsed);
-                renderItem(headers);
+                render();
             });
         }
     }
@@ -145,11 +145,11 @@ var ParentFrame = (function () {
             // Clear out the now displayed errors
             deferredErrors = [];
 
-            renderItem(headers);
+            render();
         }
     }
 
-    function renderItem(headers) {
+    function render() {
         if (appInsights && headers) appInsights.trackEvent("analyzeHeaders");
         postMessageToFrame("renderItem", headers);
     }
