@@ -5,8 +5,8 @@ const process = require("process");
 
 const scriptsFolder = path.join(__dirname, "..", "Scripts");
 
-console.log("key found in env: " + process.env.APPINSIGHTS_INSTRUMENTATIONKEY);
-const key = process.env.APPINSIGHTS_INSTRUMENTATIONKEY ? process.env.APPINSIGHTS_INSTRUMENTATIONKEY : "2f12afed-6139-456e-9de3-49003d3a1fb1";
+const key = process.env.APPINSIGHTS_INSTRUMENTATIONKEY || "";
+console.log("key found in env: " + key);
 const aiscript = path.join(scriptsFolder, "aikey.js");
 
 console.log("Merging AppInsights key (" + key + ") into js");
