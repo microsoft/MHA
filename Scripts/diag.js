@@ -200,8 +200,15 @@ script.onload = function () {
                 // custom data for the ExceptionData type lives in a different place
                 envelope.baseData.properties = envelope.baseData.properties || {};
                 $.extend(envelope.baseData.properties, Diagnostics.get());
-                // Log an extra event with stack frame
-                StackTrace.get().then(function (stackframes) { appInsights.trackEvent("Exception Details", { stack: stackframes }); });
+                // Log an extra event with parsed stack frame
+                if (envelope.baseData.exceptions.length) {
+                    StackTrace.fromError(envelope.baseData.exceptions[0]).then(function (stackframes) {
+                        appInsights.trackEvent("Exception Details", {
+                            stack: stackframes,
+                            error: envelope.baseData.exceptions[0]
+                        });
+                    });
+                }
             }
             else {
                 $.extend(envelope.data, Diagnostics.get());
