@@ -1,4 +1,5 @@
 ﻿/* global ImportedStrings */
+/* global appInsights */
 
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
@@ -268,4 +269,13 @@ function computeTime(current, last) {
     return time.join("");
 }
 
-function dateString(value) { return new Date(value).toLocaleString().replace(/\u200E|,/g, ""); }
+function dateString(value) {
+    try {
+
+        var ret = new Date(value).toLocaleString().replace(/\u200E|,/g, "");
+        return ret;
+    } catch (e) {
+        appInsights.trackException(e, { date: value });
+        return value;
+    }
+}

@@ -8,3 +8,4 @@ mha.sln
 *.min.js
 *.min.js.map
 /Scripts/aikey.js
+/website.publishproj
