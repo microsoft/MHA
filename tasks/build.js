@@ -5,18 +5,22 @@ const process = require("process");
 
 const scriptsFolder = path.join(__dirname, "..", "Scripts");
 
-const key = process.env.APPINSIGHTS_INSTRUMENTATIONKEY || "";
-console.log("key found in env: " + key);
-const aiscript = path.join(scriptsFolder, "aikey.js");
+const key = process.env.APPINSIGHTS_INSTRUMENTATIONKEY;
+if (key) {
+    console.log("key found in env: " + key);
+    const aiscript = path.join(scriptsFolder, "aikey.js");
 
-console.log("Merging AppInsights key (" + key + ") into js");
-if (fs.existsSync(aiscript)) {
-    console.log("  Deleting " + aiscript);
-    fs.unlinkSync(aiscript);
-}
+    console.log("Merging AppInsights key (" + key + ") into js");
+    if (fs.existsSync(aiscript)) {
+        console.log("  Deleting " + aiscript);
+        fs.unlinkSync(aiscript);
+    }
 
-console.log("Building " + aiscript);
-fs.writeFileSync(aiscript, "/* exported aikey */ window.aikey = function () { return \"" + key + "\"; };", "utf8");
+    console.log("Building " + aiscript);
+    fs.writeFileSync(aiscript, "/* exported aikey */ window.aikey = function () { return \"" + key + "\"; };", "utf8");
+} else {
+    console.log("No key found - skipping aikey.js generation");
+ }
 
 var options = {
     compress: {},
