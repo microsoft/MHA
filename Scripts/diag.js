@@ -8,7 +8,7 @@
 
 var Diagnostics = (function () {
     var appDiagnostics = null;
-    var itemDiagnostics = {};
+    var itemDiagnostics = null;
     var lastUpdate = "";
 
     // Combines appDiagnostics and itemDiagnostics and returns a single object
@@ -21,9 +21,12 @@ var Diagnostics = (function () {
         return $.extend({}, appDiagnostics, itemDiagnostics);
     }
 
-    function set(field, value) { itemDiagnostics[field] = value; }
+    function set(field, value) {
+        ensureItemDiagnostics();
+        itemDiagnostics[field] = value;
+    }
 
-    function clear() { if (itemDiagnostics) itemDiagnostics = {}; }
+    function clear() { itemDiagnostics = null; }
 
     function ensureLastModified() {
         var client = new XMLHttpRequest();
