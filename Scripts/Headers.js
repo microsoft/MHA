@@ -1,7 +1,7 @@
 /* global $ */
 /* global AntiSpamReport */
 /* global ForefrontAntiSpamReport */
-/* global clean2047Encoding */
+/* global Decoder */
 /* global Other */
 /* global Received */
 /* global Summary */
@@ -122,7 +122,7 @@ function GetHeaderList(headers) {
         // Clean 2047 encoding
         // Strip nulls
         // Strip trailing carriage returns
-        var headerValue = clean2047Encoding(headerList[iHeader].value).replace(/\0/g, "").replace(/[\n\r]+$/, "");
+        var headerValue = Decoder.clean2047Encoding(headerList[iHeader].value).replace(/\0/g, "").replace(/[\n\r]+$/, "");
         headerList[iHeader].value = headerValue;
     }
 
