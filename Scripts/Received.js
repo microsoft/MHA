@@ -82,7 +82,7 @@ var Received = (function () {
         if (postFix) {
             parsedRow.by = postFix[2];
             receivedHeader = postFix[1] + postFix[3];
-            receivedHeaderNames = RemoveEntry(receivedHeaderNames, "by");
+            receivedHeaderNames = removeEntry(receivedHeaderNames, "by");
         }
 
         // Scan for malformed qmail headers
@@ -91,7 +91,7 @@ var Received = (function () {
         if (postFix) {
             parsedRow.by = postFix[2];
             receivedHeader = postFix[1] + postFix[3];
-            receivedHeaderNames = RemoveEntry(receivedHeaderNames, "by");
+            receivedHeaderNames = removeEntry(receivedHeaderNames, "by");
         }
 
         // Split up the string now so we can look for our headers
@@ -152,7 +152,7 @@ var Received = (function () {
         });
     }
 
-    function RemoveEntry(stringArray, entry) {
+    function removeEntry(stringArray, entry) {
         var i = stringArray.indexOf(entry);
         if (i >= 0) {
             stringArray.splice(i, 1);
