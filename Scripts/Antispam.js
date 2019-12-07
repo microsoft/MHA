@@ -2,25 +2,28 @@
 /* exported AntiSpamReport */
 
 var AntiSpamReport = (function () {
-    var AntiSpamRow = function (header, label, url, set, get) {
-        this.header = header;
-        this.label = label;
-        this.url = url;
+    var row = function (_header, _label, _url) {
+        var header = _header;
+        var label = _label;
+        var url = _url;
+        var value = "";
 
-        this.set = set || this.set;
-        this.get = get || this.get;
+        function set(_value) { value = _value; }
+        function get () { return value; }
+
+        return {
+            header: header,
+            label: label,
+            url: url,
+            set: set,
+            get: get
+        }
+
     };
 
-    AntiSpamRow.prototype.header = "";
-    AntiSpamRow.prototype.label = "";
-    AntiSpamRow.prototype.url = "";
-    AntiSpamRow.prototype.value = "";
-    AntiSpamRow.prototype.set = function (_value) { this.value = _value; };
-    AntiSpamRow.prototype.get = function () { return this.value; };
-
     var antispamRows = [
-        new AntiSpamRow("BCL", ImportedStrings.mha_bcl, "X-Microsoft-Antispam"),
-        new AntiSpamRow("PCL", ImportedStrings.mha_pcl, "X-Microsoft-Antispam")
+        row("BCL", ImportedStrings.mha_bcl, "X-Microsoft-Antispam"),
+        row("PCL", ImportedStrings.mha_pcl, "X-Microsoft-Antispam")
     ];
 
     function exists() {
@@ -77,7 +80,8 @@ var AntiSpamReport = (function () {
         init: init,
         exists: exists,
         parse: parse,
-        rows: rows
+        rows: rows,
+        row: row
     }
 });
 
