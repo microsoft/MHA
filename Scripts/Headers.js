@@ -1,7 +1,7 @@
 /* global $ */
 /* global AntiSpamReport */
-/* global clean2047Encoding */
 /* global ForefrontAntiSpamReport */
+/* global clean2047Encoding */
 /* global Other */
 /* global Received */
 /* global Summary */
@@ -11,8 +11,8 @@ var HeaderModel = function (headers) {
     // Initialize defaults
     this.summary = new Summary();
     this.receivedHeaders = new Received();
-    this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
-    this.antiSpamReport = new AntiSpamReport();
+    this.forefrontAntiSpamReport = ForefrontAntiSpamReport();
+    this.antiSpamReport = AntiSpamReport();
     this.otherHeaders = new Other();
 
     if (headers) {
