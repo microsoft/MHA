@@ -1,51 +1,61 @@
 ﻿/* global mapHeaderToURL */
+/* exported Other */
 
-var OtherRow = function () {
-};
+var Other = (function () {
+    var row = function (_number, _header, _url, _value) {
+        var number = _number;
+        var header = _header;
+        var url = _url;
+        var value = _value;
 
-OtherRow.prototype.number = 0;
-OtherRow.prototype.header = "";
-OtherRow.prototype.url = "";
-OtherRow.prototype.value = "";
+        return {
+            number: number,
+            header: header,
+            url: url,
+            value: value
+        }
+    };
 
-var Other = function () {
-    this.otherRows = [];
-};
+    var tableName = "otherHeaders";
+    var otherRows = [];
+    var sortColumn = "number";
+    var sortOrder = 1;
 
-Other.prototype.tableName = "otherHeaders";
-Other.prototype.otherRows = [];
-Other.prototype.sortColumn = "number";
-Other.prototype.sortOrder = 1;
+    function doSort(col) {
+        if (sortColumn === col) {
+            sortOrder *= -1;
+        } else {
+            sortColumn = col;
+            sortOrder = 1;
+        }
 
-Other.prototype.exists = function () {
-    return this.otherRows.length > 0;
-};
+        if (sortColumn + "Sort" in otherRows[0]) {
+            col = col + "Sort";
+        }
 
-Other.prototype.doSort = function (col) {
-    var that = this;
-    if (this.sortColumn === col) {
-        this.sortOrder *= -1;
-    } else {
-        this.sortColumn = col;
-        this.sortOrder = 1;
+        var that = this;
+        otherRows.sort(function (a, b) {
+            return that.sortOrder * (a[col] < b[col] ? -1 : 1);
+        });
     }
 
-    if (this.sortColumn + "Sort" in this.otherRows[0]) {
-        col = col + "Sort";
+    function init(otherHeader) {
+        otherRows.push(new row(
+            otherRows.length + 1,
+            otherHeader.header,
+            mapHeaderToURL(otherHeader.header, null),
+            row.value = otherHeader.value));
     }
 
-    this.otherRows.sort(function (a, b) {
-        return that.sortOrder * (a[col] < b[col] ? -1 : 1);
-    });
-};
+    function exists() { otherRows.length > 0; }
 
-Other.prototype.init = function (otherHeader) {
-    var row = new OtherRow();
-
-    row.number = this.otherRows.length + 1;
-    row.header = otherHeader.header;
-    row.url = mapHeaderToURL(otherHeader.header, null);
-    row.value = otherHeader.value;
-
-    this.otherRows.push(row);
-};
+    return {
+        init: init,
+        exists: exists,
+        get otherRows() { return otherRows; },
+        doSort: doSort,
+        tableName: tableName,
+        get sortColumn() { return sortColumn; },
+        get sortOrder() { return sortOrder; }
+    }
+});

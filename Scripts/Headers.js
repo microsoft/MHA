@@ -13,7 +13,7 @@ var HeaderModel = function (headers) {
     this.receivedHeaders = new Received();
     this.forefrontAntiSpamReport = ForefrontAntiSpamReport();
     this.antiSpamReport = AntiSpamReport();
-    this.otherHeaders = new Other();
+    this.otherHeaders = Other();
 
     if (headers) {
         this.parseHeaders(headers);
