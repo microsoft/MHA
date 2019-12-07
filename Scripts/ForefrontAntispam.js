@@ -37,8 +37,8 @@ var ForefrontAntiSpamReport = (function () {
     }
 
     function exists() {
-        for (var i = 0; i < this.rows().length; i++) {
-            if (this.rows()[i].get()) {
+        for (var i = 0; i < forefrontrows.length; i++) {
+            if (forefrontrows[i].get()) {
                 return true;
             }
         }

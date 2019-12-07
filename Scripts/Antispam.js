@@ -24,8 +24,8 @@ var AntiSpamReport = (function () {
     ];
 
     function exists() {
-        for (var i = 0; i < this.rows().length; i++) {
-            if (this.rows()[i].get()) {
+        for (var i = 0; i < antispamRows.length; i++) {
+            if (antispamRows[i].get()) {
                 return true;
             }
         }
