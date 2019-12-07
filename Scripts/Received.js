@@ -18,7 +18,11 @@ var Received = (function () {
         // Build array of header locations
         var headerMatches = [];
 
-        var parsedRow = { sourceHeader: receivedHeader };
+        var parsedRow = {
+            sourceHeader: receivedHeader,
+            delaySort: -1, // Force the "no previous or current time" rows to sort before the 0 second rows
+            percent: 0
+        }
 
         // Some bad dates don't wrap UTC in paren - fix that first
         receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/g, "(UTC)");
@@ -124,9 +128,6 @@ var Received = (function () {
             if (parsedRow[headerName] !== "") { parsedRow[headerName] += "; "; }
             parsedRow[headerName] += tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim();
         });
-
-        parsedRow.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
-        parsedRow.percent = 0;
 
         return parsedRow;
     };
