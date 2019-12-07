@@ -1,10 +1,8 @@
 ﻿/* global QUnit */
 /* global Received */
-/* global ReceivedRow */
-/* global dateString */
 
 QUnit.test("Received Tests", function (assert) {
-    var received = new Received();
+    var received = Received();
     var header1 =
         "Received: from BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
         " (2a01:111:e400:c418::34) by SN1PR16MB0494.namprd16.prod.outlook.com with\n" +
@@ -33,7 +31,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(received.receivedRows[0],
         {
             "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
-            "date": dateString("20 Apr 2018 21:51:19 +0000"),
+            "date": received.dateString("20 Apr 2018 21:51:19 +0000"),
             "dateNum": 1524261079000,
             "dateSort": 1524261079000,
             "delay": "",
@@ -48,7 +46,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(received.receivedRows[1],
         {
             "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
-            "date": dateString("21 Apr 2018 03:01:32 +0000"),
+            "date": received.dateString("21 Apr 2018 03:01:32 +0000"),
             "dateNum": 1524279692000,
             "dateSort": 1524279692000,
             "delay": "310 minutes 13 seconds",
@@ -64,7 +62,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(received.receivedRows[2],
         {
             "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
-            "date": dateString("21 Apr 2018 03:01:32 +0000"),
+            "date": received.dateString("21 Apr 2018 03:01:32 +0000"),
             "dateNum": 1524279692000,
             "dateSort": 1524279692000,
             "delay": "0 seconds",
@@ -79,7 +77,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(received.receivedRows[3],
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
-            "date": dateString("21 Apr 2018 03:01:33 +0000"),
+            "date": received.dateString("21 Apr 2018 03:01:33 +0000"),
             "dateNum": 1524279693000,
             "dateSort": 1524279693000,
             "delay": "1 second",
@@ -92,7 +90,7 @@ QUnit.test("Received Tests", function (assert) {
             "with": "HTTPS"
         }, "header1");
 
-    var github = new Received();
+    var github = Received();
     var githubHeader1 =
         "Received: from CO1NAM03HT217.eop-NAM03.prod.protection.outlook.com\n" +
         " (2a01:111:e400:c418::43) by SN1PR16MB0494.namprd16.prod.outlook.com with\n" +
@@ -127,7 +125,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(github.receivedRows[0],
         {
             "by": "ismtpd0021p1iad2.sendgrid.net (SG)",
-            "date": dateString("22 Apr 2018 02:54:16 +0000"),
+            "date": received.dateString("22 Apr 2018 02:54:16 +0000"),
             "dateNum": 1524365656987,
             "dateSort": 1524365656987,
             "delay": "",
@@ -143,7 +141,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(github.receivedRows[1],
         {
             "by": "filter0652p1las1.sendgrid.net",
-            "date": dateString("22 Apr 2018 02:54:17 +0000"),
+            "date": received.dateString("22 Apr 2018 02:54:17 +0000"),
             "dateNum": 1524365657028,
             "dateSort": 1524365657028,
             "delay": "0 seconds",
@@ -157,7 +155,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(github.receivedRows[2],
         {
             "by": "CO1NAM03FT028.mail.protection.outlook.com (10.152.80.189)",
-            "date": dateString("22 Apr 2018 02:54:17 +0000"),
+            "date": received.dateString("22 Apr 2018 02:54:17 +0000"),
             "dateNum": 1524365657000,
             "dateSort": 1524365657000,
             "delay": "0 seconds",
@@ -173,7 +171,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(github.receivedRows[3],
         {
             "by": "CO1NAM03HT217.eop-NAM03.prod.protection.outlook.com (10.152.81.113)",
-            "date": dateString("22 Apr 2018 02:54:18 +0000"),
+            "date": received.dateString("22 Apr 2018 02:54:18 +0000"),
             "dateNum": 1524365658000,
             "dateSort": 1524365658000,
             "delay": "1 second",
@@ -188,7 +186,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(github.receivedRows[4],
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
-            "date": dateString("22 Apr 2018 02:54:19 +0000"),
+            "date": received.dateString("22 Apr 2018 02:54:19 +0000"),
             "dateNum": 1524365659000,
             "dateSort": 1524365659000,
             "delay": "1 second",
@@ -203,9 +201,9 @@ QUnit.test("Received Tests", function (assert) {
 
     var sendGrid = "Received: by filter0383p1iad2.sendgrid.net with SMTP id filter0383p1iad2-15318-5AB8F728-C\n" +
         " 2018-03-26 13:35:36.270951634 +0000 UTC";
-    assert.propEqual(new ReceivedRow(sendGrid), {
+    assert.propEqual(new received.ReceivedRow(sendGrid), {
         "by": "filter0383p1iad2.sendgrid.net",
-        "date": dateString("26 Mar 2018 13:35:36 +0000"),
+        "date": received.dateString("26 Mar 2018 13:35:36 +0000"),
         "dateNum": 1522071336270,
         "dateSort": 1522071336270,
         "delaySort": -1,
@@ -218,9 +216,9 @@ QUnit.test("Received Tests", function (assert) {
     var sendGrid2 = "Received: from smtp.github.com (out-8.smtp.github.com [192.30.252.199])\n" +
         " by ismtpd0003p1iad2.sendgrid.net (SG) with ESMTP id gDQRSEGgSqCsi9tFtF1Vtg\n" +
         " Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)";
-    assert.propEqual(new ReceivedRow(sendGrid2), {
+    assert.propEqual(new received.ReceivedRow(sendGrid2), {
         "by": "ismtpd0003p1iad2.sendgrid.net (SG)",
-        "date": dateString("26 Mar 2018 13:35:36 +0000"),
+        "date": received.dateString("26 Mar 2018 13:35:36 +0000"),
         "dateNum": 1522071336102,
         "dateSort": 1522071336102,
         "delaySort": -1,
@@ -233,7 +231,7 @@ QUnit.test("Received Tests", function (assert) {
 
     var dupe1 = "Received: by me by you with this with that with whatever\n" +
         " 2018-03-26 13:35:36.270951634 +0000 UTC";
-    assert.propEqual(new ReceivedRow(dupe1), {
+    assert.propEqual(new received.ReceivedRow(dupe1), {
         "by": "me; you",
         "date": "3/26/2018 9:35:36 AM",
         "dateNum": 1522071336270,
