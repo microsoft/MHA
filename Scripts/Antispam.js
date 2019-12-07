@@ -21,7 +21,7 @@ var AntiSpamReport = (function () {
 
     };
 
-    var antispamRows = [
+    var antiSpamRows = [
         row("BCL", ImportedStrings.mha_bcl, "X-Microsoft-Antispam"),
         row("PCL", ImportedStrings.mha_pcl, "X-Microsoft-Antispam")
     ];
@@ -70,16 +70,15 @@ var AntiSpamReport = (function () {
         }
     }
 
-    function init(report) { parse(report, antispamRows); }
-    function exists() { return existsInternal(antispamRows); }
-    function rows() { return antispamRows; }
+    function init(report) { parse(report, antiSpamRows); }
+    function exists() { return existsInternal(antiSpamRows); }
 
     return {
         init: init,
         exists: exists,
         existsInternal: existsInternal,
         parse: parse,
-        rows: rows,
+        get antiSpamRows() { return antiSpamRows; },
         row: row
     }
 });

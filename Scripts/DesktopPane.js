@@ -270,7 +270,7 @@ function buildViews() {
     var table;
     var row;
     var linkVal;
-    if (viewModel.forefrontAntiSpamReport.rows().length > 0) {
+    if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length > 0) {
         $("<div/>")
             .addClass("ms-font-m")
             .text("Forefront Antispam Report")
@@ -284,14 +284,14 @@ function buildViews() {
             .appendTo(antispamList);
         tbody = $("<tbody/>")
             .appendTo(table);
-        for (i = 0; i < viewModel.forefrontAntiSpamReport.rows().length; i++) {
-            if (viewModel.forefrontAntiSpamReport.rows()[i].get()) {
+        for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
+            if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get()) {
                 row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
-                    .text(viewModel.forefrontAntiSpamReport.rows()[i].label)
+                    .text(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].label)
                     .appendTo(row);
-                linkVal = mapHeaderToURL(viewModel.forefrontAntiSpamReport.rows()[i].url,
-                    viewModel.forefrontAntiSpamReport.rows()[i].get());
+                linkVal = mapHeaderToURL(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url,
+                    viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get());
                 $("<td/>")
                     .html(linkVal)
                     .appendTo(row);
@@ -300,7 +300,7 @@ function buildViews() {
     }
 
     // Microsoft
-    if (viewModel.antiSpamReport.rows().length > 0) {
+    if (viewModel.antiSpamReport.antiSpamRows.length > 0) {
         $("<div/>")
             .addClass("ms-font-m")
             .text("Microsoft Antispam Report")
@@ -314,14 +314,14 @@ function buildViews() {
             .appendTo(antispamList);
         tbody = $("<tbody/>")
             .appendTo(table);
-        for (i = 0; i < viewModel.antiSpamReport.rows().length; i++) {
-            if (viewModel.antiSpamReport.rows()[i].get()) {
+        for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
+            if (viewModel.antiSpamReport.antiSpamRows[i].get()) {
                 row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
-                    .text(viewModel.antiSpamReport.rows()[i].label)
+                    .text(viewModel.antiSpamReport.antiSpamRows[i].label)
                     .appendTo(row);
-                linkVal = mapHeaderToURL(viewModel.antiSpamReport.rows()[i].url,
-                    viewModel.antiSpamReport.rows()[i].get());
+                linkVal = mapHeaderToURL(viewModel.antiSpamReport.antiSpamRows[i].url,
+                    viewModel.antiSpamReport.antiSpamRows[i].get());
                 $("<td/>")
                     .html(linkVal)
                     .appendTo(row);

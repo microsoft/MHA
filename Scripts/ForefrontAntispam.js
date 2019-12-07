@@ -5,7 +5,7 @@
 var ForefrontAntiSpamReport = (function () {
     // cheap inheritance
     var antiSpamReport = AntiSpamReport();
-    var forefrontrows = [
+    var forefrontAntiSpamRows = [
         antiSpamReport.row("CTRY", ImportedStrings.mha_countryRegion, "X-Forefront-Antispam-Report"),
         antiSpamReport.row("LANG", ImportedStrings.mha_lang, "X-Forefront-Antispam-Report"),
         antiSpamReport.row("SCL", ImportedStrings.mha_scl, "X-MS-Exchange-Organization-SCL"),
@@ -18,13 +18,12 @@ var ForefrontAntiSpamReport = (function () {
         antiSpamReport.row("X-CustomSpam", ImportedStrings.mha_customSpam, "X-Forefront-Antispam-Report")
     ];
 
-    function init(report) { antiSpamReport.parse(report, forefrontrows); }
-    function exists() { return antiSpamReport.existsInternal(forefrontrows); }
-    function rows() { return forefrontrows; }
+    function init(report) { antiSpamReport.parse(report, forefrontAntiSpamRows); }
+    function exists() { return antiSpamReport.existsInternal(forefrontAntiSpamRows); }
 
     return {
         init: init,
         exists: exists,
-        rows: rows
+        get forefrontAntiSpamRows() { return forefrontAntiSpamRows; },
     }
 });

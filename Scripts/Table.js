@@ -58,11 +58,11 @@ function initializeTableUI() {
 
     // FFAS
     makeResizablePane("forefrontAntiSpamReport", ImportedStrings.mha_forefrontAntiSpamReport, function () { return viewModel.forefrontAntiSpamReport.exists(); });
-    makeSummaryTable("#forefrontAntiSpamReport", viewModel.forefrontAntiSpamReport.rows(), "FFAS");
+    makeSummaryTable("#forefrontAntiSpamReport", viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows, "FFAS");
 
     // AntiSpam
     makeResizablePane("antiSpamReport", ImportedStrings.mha_antiSpamReport, function () { return viewModel.antiSpamReport.exists(); });
-    makeSummaryTable("#antiSpamReport", viewModel.antiSpamReport.rows(), "AS");
+    makeSummaryTable("#antiSpamReport", viewModel.antiSpamReport.antiSpamRows, "AS");
 
     // Other
     makeResizableTable(viewModel.otherHeaders.tableName, ImportedStrings.mha_otherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
@@ -425,13 +425,13 @@ function rebuildSections() {
     hideEmptyColumns(viewModel.receivedHeaders.tableName);
 
     // Forefront AntiSpam Report
-    for (i = 0; i < viewModel.forefrontAntiSpamReport.rows().length; i++) {
-        setRowValue(viewModel.forefrontAntiSpamReport.rows()[i], "FFAS");
+    for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
+        setRowValue(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i], "FFAS");
     }
 
     // AntiSpam Report
-    for (i = 0; i < viewModel.antiSpamReport.rows().length; i++) {
-        setRowValue(viewModel.antiSpamReport.rows()[i], "AS");
+    for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
+        setRowValue(viewModel.antiSpamReport.antiSpamRows[i], "AS");
     }
 
     // Other
