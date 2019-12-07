@@ -3,6 +3,7 @@
 /* exported ForefrontAntiSpamReport */
 
 var ForefrontAntiSpamReport = (function () {
+    // cheap inheritance
     var antiSpamReport = AntiSpamReport();
     var forefrontrows = [
         antiSpamReport.row("CTRY", ImportedStrings.mha_countryRegion, "X-Forefront-Antispam-Report"),
@@ -17,20 +18,8 @@ var ForefrontAntiSpamReport = (function () {
         antiSpamReport.row("X-CustomSpam", ImportedStrings.mha_customSpam, "X-Forefront-Antispam-Report")
     ];
 
-    function init(report) {
-        antiSpamReport.parse(report, forefrontrows);
-    }
-
-    function exists() {
-        for (var i = 0; i < forefrontrows.length; i++) {
-            if (forefrontrows[i].get()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
+    function init(report) { antiSpamReport.parse(report, forefrontrows); }
+    function exists() { return antiSpamReport.existsInternal(forefrontrows); }
     function rows() { return forefrontrows; }
 
     return {

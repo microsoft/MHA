@@ -9,7 +9,7 @@ var AntiSpamReport = (function () {
         var value = "";
 
         function set(_value) { value = _value; }
-        function get () { return value; }
+        function get() { return value; }
 
         return {
             header: header,
@@ -26,21 +26,15 @@ var AntiSpamReport = (function () {
         row("PCL", ImportedStrings.mha_pcl, "X-Microsoft-Antispam")
     ];
 
-    function exists() {
-        for (var i = 0; i < antispamRows.length; i++) {
-            if (antispamRows[i].get()) {
+    function existsInternal(rows) {
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].get()) {
                 return true;
             }
         }
 
         return false;
     }
-
-    function init(report) {
-        parse(report, antispamRows);
-    }
-
-    function rows() { return antispamRows;}
 
     //// https://technet.microsoft.com/en-us/library/dn205071
     function parse(report, rows) {
@@ -76,13 +70,16 @@ var AntiSpamReport = (function () {
         }
     }
 
+    function init(report) { parse(report, antispamRows); }
+    function exists() { return existsInternal(antispamRows); }
+    function rows() { return antispamRows; }
+
     return {
         init: init,
         exists: exists,
+        existsInternal: existsInternal,
         parse: parse,
         rows: rows,
         row: row
     }
 });
-
-
