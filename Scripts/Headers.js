@@ -141,7 +141,6 @@ function mapHeaderToURL(headerName, text) {
     return null;
 }
 
-/// <disable>JS2073.CommentIsMisspelled</disable>
 var HeaderToURLMap = [
     ["Accept-Language", "https://tools.ietf.org/html/rfc3282"],
     ["Authentication-Results", "https://tools.ietf.org/html/rfc7601"],
@@ -197,4 +196,3 @@ var HeaderToURLMap = [
     ["X-Originating-IP", "https://en.wikipedia.org/wiki/X-Originating-IP"],
     ["X-Priority", "https://technet.microsoft.com/en-us/library/bb691107"]
 ];
-/// <enable>JS2073.CommentIsMisspelled</enable>

@@ -1,7 +1,6 @@
 ﻿/* global cptable */
 /* exported clean2047Encoding */
 
-/// <disable>JS2026.CapitalizeComments,JS2027.PunctuateCommentsCorrectly,JS2073.CommentIsMisspelled</disable>
 // http://tools.ietf.org/html/rfc2047
 // http://tools.ietf.org/html/rfc2231
 
@@ -14,7 +13,6 @@
 ////From: Nathaniel Borenstein <nsb@thumper.bellcore.com>
 ////    (=?iso-8859-8?b?7eXs+SDv4SDp7Oj08A==?=)
 ////From: =?US-ASCII*EN?Q?Keith_Moore?= <moore@cs.utk.edu>
-/// <enable>JS2026.CapitalizeComments,JS2027.PunctuateCommentsCorrectly,JS2073.CommentIsMisspelled</enable>
 
 function clean2047Encoding(buffer) {
     // We're decoding =?...?= tokens here.
