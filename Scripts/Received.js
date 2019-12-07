@@ -45,33 +45,33 @@ var Received = (function () {
         }
 
         if (iDate !== -1) {
-            parsedRow.date = receivedHeader.substring(iDate + 1);
+            var date = receivedHeader.substring(iDate + 1);
             receivedHeader = receivedHeader.substring(0, iDate);
 
             // Invert any backwards dates: 2018-01-28 -> 01-28-2018
-            parsedRow.date = parsedRow.date.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2/$3/$1");
+            date = date.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2/$3/$1");
             // Replace dashes with slashes
-            parsedRow.date = parsedRow.date.replace(/\s*(\d{1,2})-(\d{1,2})-(\d{4})/g, "$1/$2/$3");
+            date = date.replace(/\s*(\d{1,2})-(\d{1,2})-(\d{4})/g, "$1/$2/$3");
 
             // If we don't have a +xxxx or -xxxx on our date, it will be interpreted in local time
             // This likely isn't the intended timezone, so we add a +0000 to get UTC
-            var offset = parsedRow.date.match(/[+|-]\d{4}/);
+            var offset = date.match(/[+|-]\d{4}/);
             if (!offset || offset.length !== 1) {
-                parsedRow.date += " +0000";
+                date += " +0000";
             }
 
             // Some browsers don't like milliseconds in parse
             // Trim off milliseconds so we don't pass them into Date.parse
-            var milliseconds = parsedRow.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
-            var trimDate = parsedRow.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
+            var milliseconds = date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
+            date = date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
 
             // And now we can parse our date
-            parsedRow.dateNum = Date.parse(trimDate);
+            parsedRow.dateNum = Date.parse(date);
             if (milliseconds && milliseconds.length >= 2) {
                 parsedRow.dateNum = parsedRow.dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
             }
 
-            parsedRow.date = dateString(trimDate);
+            parsedRow.date = dateString(date);
             parsedRow.dateSort = parsedRow.dateNum;
         }
 
