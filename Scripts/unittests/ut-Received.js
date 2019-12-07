@@ -201,7 +201,7 @@ QUnit.test("Received Tests", function (assert) {
 
     var sendGrid = "Received: by filter0383p1iad2.sendgrid.net with SMTP id filter0383p1iad2-15318-5AB8F728-C\n" +
         " 2018-03-26 13:35:36.270951634 +0000 UTC";
-    assert.propEqual(received.ReceivedRow(sendGrid), {
+    assert.propEqual(received.row(sendGrid), {
         "by": "filter0383p1iad2.sendgrid.net",
         "date": received.dateString("26 Mar 2018 13:35:36 +0000"),
         "dateNum": 1522071336270,
@@ -216,7 +216,7 @@ QUnit.test("Received Tests", function (assert) {
     var sendGrid2 = "Received: from smtp.github.com (out-8.smtp.github.com [192.30.252.199])\n" +
         " by ismtpd0003p1iad2.sendgrid.net (SG) with ESMTP id gDQRSEGgSqCsi9tFtF1Vtg\n" +
         " Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)";
-    assert.propEqual(received.ReceivedRow(sendGrid2), {
+    assert.propEqual(received.row(sendGrid2), {
         "by": "ismtpd0003p1iad2.sendgrid.net (SG)",
         "date": received.dateString("26 Mar 2018 13:35:36 +0000"),
         "dateNum": 1522071336102,
@@ -231,7 +231,7 @@ QUnit.test("Received Tests", function (assert) {
 
     var dupe1 = "Received: by me by you with this with that with whatever\n" +
         " 2018-03-26 13:35:36.270951634 +0000 UTC";
-    assert.propEqual(received.ReceivedRow(dupe1), {
+    assert.propEqual(received.row(dupe1), {
         "by": "me; you",
         "date": "3/26/2018 9:35:36 AM",
         "dateNum": 1522071336270,

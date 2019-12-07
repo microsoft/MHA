@@ -12,7 +12,7 @@ var Received = (function () {
     // This algorithm should work regardless of the order of the headers, given:
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
-    var ReceivedRow = function (receivedHeader) {
+    var row = function (receivedHeader) {
         var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
 
         // Build array of header locations
@@ -160,7 +160,7 @@ var Received = (function () {
         return stringArray;
     }
 
-    function init(receivedHeader) { receivedRows.push(ReceivedRow(receivedHeader)); }
+    function init(receivedHeader) { receivedRows.push(row(receivedHeader)); }
 
     function computeDeltas() {
         // Process received headers in reverse order
@@ -277,7 +277,7 @@ var Received = (function () {
         get receivedRows() { return receivedRows; },
         get sortColumn() { return sortColumn; },
         get sortOrder() { return sortOrder; },
-        ReceivedRow: ReceivedRow, // For testing only
+        row: row, // For testing only
         dateString: dateString, // For testing only
         computeTime: computeTime // For testing only
     }
