@@ -1,4 +1,5 @@
 /* global ImportedStrings */
+/* exported ParseAntiSpamReport */
 
 /// <reference path="Table.js" />
 /// <reference path="Strings.js" />
