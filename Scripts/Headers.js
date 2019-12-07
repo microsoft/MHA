@@ -7,15 +7,6 @@
 /* global Summary */
 /* exported mapHeaderToURL */
 
-/// <reference path="Table.js" />
-/// <reference path="Strings.js" />
-/// <reference path="2047.js" />
-/// <reference path="Summary.js" />
-/// <reference path="Received.js" />
-/// <reference path="ForefrontAntispam.js" />
-/// <reference path="Antispam.js" />
-/// <reference path="Other.js" />
-
 var HeaderModel = function (headers) {
     // Initialize defaults
     this.summary = new Summary();

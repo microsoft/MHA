@@ -1,8 +1,5 @@
 /* global ImportedStrings */
 
-/// <reference path="Table.js" />
-/// <reference path="Strings.js" />
-
 var SummaryRow = function (header, label, set, get) {
     this.header = header;
     this.label = label;

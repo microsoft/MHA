@@ -1,9 +1,6 @@
 ﻿/* global cptable */
 /* exported clean2047Encoding */
 
-/// <reference path="Table.js" />
-/// <reference path="Strings.js" />
-
 /// <disable>JS2026.CapitalizeComments,JS2027.PunctuateCommentsCorrectly,JS2073.CommentIsMisspelled</disable>
 // http://tools.ietf.org/html/rfc2047
 // http://tools.ietf.org/html/rfc2231

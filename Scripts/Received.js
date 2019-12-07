@@ -1,10 +1,6 @@
 ﻿/* global ImportedStrings */
 /* global appInsights */
 
-/// <reference path="Table.js" />
-/// <reference path="Strings.js" />
-/// <reference path="Headers.js" />
-
 //#region ReceivedRow Class Definition
 
 // Builds array of values for each header in receivedHeaderNames.
