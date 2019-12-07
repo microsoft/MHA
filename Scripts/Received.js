@@ -18,7 +18,7 @@ var Received = (function () {
         // Build array of header locations
         var headerMatches = [];
 
-        this.sourceHeader = receivedHeader;
+        var retVal = { sourceHeader: receivedHeader };
 
         // Some bad dates don't wrap UTC in paren - fix that first
         receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/g, "(UTC)");
@@ -41,34 +41,34 @@ var Received = (function () {
         }
 
         if (iDate !== -1) {
-            this.date = receivedHeader.substring(iDate + 1);
+            retVal.date = receivedHeader.substring(iDate + 1);
             receivedHeader = receivedHeader.substring(0, iDate);
 
             // Invert any backwards dates: 2018-01-28 -> 01-28-2018
-            this.date = this.date.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2/$3/$1");
+            retVal.date = retVal.date.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2/$3/$1");
             // Replace dashes with slashes
-            this.date = this.date.replace(/\s*(\d{1,2})-(\d{1,2})-(\d{4})/g, "$1/$2/$3");
+            retVal.date = retVal.date.replace(/\s*(\d{1,2})-(\d{1,2})-(\d{4})/g, "$1/$2/$3");
 
             // If we don't have a +xxxx or -xxxx on our date, it will be interpreted in local time
             // This likely isn't the intended timezone, so we add a +0000 to get UTC
-            var offset = this.date.match(/[+|-]\d{4}/);
+            var offset = retVal.date.match(/[+|-]\d{4}/);
             if (!offset || offset.length !== 1) {
-                this.date += " +0000";
+                retVal.date += " +0000";
             }
 
             // Some browsers don't like milliseconds in parse
             // Trim off milliseconds so we don't pass them into Date.parse
-            var milliseconds = this.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
-            var trimDate = this.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
+            var milliseconds = retVal.date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
+            var trimDate = retVal.date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
 
             // And now we can parse our date
-            this.dateNum = Date.parse(trimDate);
+            retVal.dateNum = Date.parse(trimDate);
             if (milliseconds && milliseconds.length >= 2) {
-                this.dateNum = this.dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
+                retVal.dateNum = retVal.dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
             }
 
-            this.date = dateString(trimDate);
-            this.dateSort = this.dateNum;
+            retVal.date = dateString(trimDate);
+            retVal.dateSort = retVal.dateNum;
         }
 
         // Scan for malformed postFix headers
@@ -76,7 +76,7 @@ var Received = (function () {
         //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
         var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/);
         if (postFix) {
-            this["by"] = postFix[2];
+            retVal.by = postFix[2];
             receivedHeader = postFix[1] + postFix[3];
             receivedHeaderNames = RemoveEntry(receivedHeaderNames, "by");
         }
@@ -85,7 +85,7 @@ var Received = (function () {
         // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
         postFix = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/);
         if (postFix) {
-            this["by"] = postFix[2];
+            retVal.by = postFix[2];
             receivedHeader = postFix[1] + postFix[3];
             receivedHeaderNames = RemoveEntry(receivedHeaderNames, "by");
         }
@@ -120,13 +120,15 @@ var Received = (function () {
             }
 
             var headerName = receivedHeaderNames[headerMatch.iHeader];
-            if (this[headerName] === undefined) { this[headerName] = ""; }
-            if (this[headerName] !== "") { this[headerName] += "; "; }
-            this[headerName] += tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim();
-        }, this);
+            if (retVal[headerName] === undefined) { retVal[headerName] = ""; }
+            if (retVal[headerName] !== "") { retVal[headerName] += "; "; }
+            retVal[headerName] += tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim();
+        }, retVal);
 
-        this.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
-        this.percent = 0;
+        retVal.delaySort = -1; // Force the "no previous or current time" rows to sort before the 0 second rows
+        retVal.percent = 0;
+
+        return retVal;
     };
 
     function exists() { return receivedRows.length > 0; }
@@ -158,7 +160,7 @@ var Received = (function () {
         return stringArray;
     }
 
-    function init(receivedHeader) { receivedRows.push(new ReceivedRow(receivedHeader)); }
+    function init(receivedHeader) { receivedRows.push(ReceivedRow(receivedHeader)); }
 
     function computeDeltas() {
         // Process received headers in reverse order

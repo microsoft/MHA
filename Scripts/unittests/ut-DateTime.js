@@ -7,46 +7,46 @@ QUnit.test("DateTime Tests", function (assert) {
         return assert.propEqual({ date: value.date, dateNum: value.dateNum, dateSort: value.dateSort }, expected, message);
     };
 
-    assert.datesEqual(new received.ReceivedRow("Received: test; Sat, 21 Apr 2018 03:01:32 +0000"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; Sat, 21 Apr 2018 03:01:32 +0000"), {
         "date": received.dateString("21 Apr 2018 03:01:32 +0000"), "dateNum": 1524279692000, "dateSort": 1524279692000,
     }, 1);
-    assert.datesEqual(new received.ReceivedRow("Received: test; Saturday, 21 Apr 2018 03:01:32 +0000"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; Saturday, 21 Apr 2018 03:01:32 +0000"), {
         "date": received.dateString("21 Apr 2018 03:01:32 +0000"), "dateNum": 1524279692000, "dateSort": 1524279692000,
     }, 2);
-    assert.datesEqual(new received.ReceivedRow("Received: test; 21 Apr 2018 03:01:32 +0000"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; 21 Apr 2018 03:01:32 +0000"), {
         "date": received.dateString("21 Apr 2018 03:01:32 +0000"), "dateNum": 1524279692000, "dateSort": 1524279692000,
     }, 3);
-    assert.datesEqual(new received.ReceivedRow("Received: test; Apr 21 2018 03:01:32 +0000"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; Apr 21 2018 03:01:32 +0000"), {
         "date": received.dateString("21 Apr 2018 03:01:32 +0000"), "dateNum": 1524279692000, "dateSort": 1524279692000,
     }, 4);
-    assert.datesEqual(new received.ReceivedRow("Received: test; Apr 21 2018 3:01:32 +0000"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; Apr 21 2018 3:01:32 +0000"), {
         "date": received.dateString("21 Apr 2018 03:01:32 +0000"), "dateNum": 1524279692000, "dateSort": 1524279692000,
     }, 5);
-    assert.datesEqual(new received.ReceivedRow("Received: test; 4/20/2018 23:01:32 -0400 (EDT)"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; 4/20/2018 23:01:32 -0400 (EDT)"), {
         "date": received.dateString("21 Apr 2018 03:01:32 +0000"), "dateNum": 1524279692000, "dateSort": 1524279692000,
     }, 6);
-    assert.datesEqual(new received.ReceivedRow("Received: test; 4/20/2018 11:01:32 PM -0400 (EDT)"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; 4/20/2018 11:01:32 PM -0400 (EDT)"), {
         "date": received.dateString("21 Apr 2018 03:01:32 +0000"), "dateNum": 1524279692000, "dateSort": 1524279692000,
     }, 6.1);
-    assert.datesEqual(new received.ReceivedRow("Received: test; 4/20/2018 11:01:32 PM +0000"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; 4/20/2018 11:01:32 PM +0000"), {
         "date": received.dateString("20 Apr 2018 23:01:32 +0000"), "dateNum": 1524265292000, "dateSort": 1524265292000,
     }, 6.2);
-    assert.datesEqual(new received.ReceivedRow("Received: test; 4/20/2018 11:01:32 PM"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; 4/20/2018 11:01:32 PM"), {
         "date": received.dateString("20 Apr 2018 23:01:32 +0000"), "dateNum": 1524265292000, "dateSort": 1524265292000,
     }, 6.3);
-    assert.datesEqual(new received.ReceivedRow("Received: test; 4-20-2018 11:01:32 PM"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; 4-20-2018 11:01:32 PM"), {
         "date": received.dateString("20 Apr 2018 23:01:32 +0000"), "dateNum": 1524265292000, "dateSort": 1524265292000,
     }, 7);
-    assert.datesEqual(new received.ReceivedRow("Received: test; 2018-4-20 11:01:32 PM"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; 2018-4-20 11:01:32 PM"), {
         "date": received.dateString("20 Apr 2018 23:01:32 +0000"), "dateNum": 1524265292000, "dateSort": 1524265292000,
     }, 8);
-    assert.datesEqual(new received.ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36 +0000 (UTC)"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36 +0000 (UTC)"), {
         "date": received.dateString("26 Mar 2018 13:35:36 +0000"), "dateNum": 1522071336000, "dateSort": 1522071336000
     }, 9);
-    assert.datesEqual(new received.ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)"), {
         "date": received.dateString("26 Mar 2018 13:35:36 +0000"), "dateNum": 1522071336102, "dateSort": 1522071336102
     }, 10);
-    assert.datesEqual(new received.ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36.102 +0000 UTC"), {
+    assert.datesEqual(received.ReceivedRow("Received: test; Mon, 26 Mar 2018 13:35:36.102 +0000 UTC"), {
         "date": received.dateString("26 Mar 2018 13:35:36 +0000"), "dateNum": 1522071336102, "dateSort": 1522071336102
     }, 11);
 
