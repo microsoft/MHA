@@ -35,8 +35,8 @@ var Summary = (function () {
     ];
 
     function exists() {
-        for (var i = 0; i < this.summaryRows.length; i++) {
-            if (this.summaryRows[i].get()) {
+        for (var i = 0; i < summaryRows.length; i++) {
+            if (summaryRows[i].get()) {
                 return true;
             }
         }
@@ -76,6 +76,6 @@ var Summary = (function () {
         exists: exists,
         get summaryRows() { return summaryRows; },
         get totalTime() { return totalTime; },
-        set totalTime(value) { totalTime = value; },
+        set totalTime(value) { totalTime = value; }
     }
 });
