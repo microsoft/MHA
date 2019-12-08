@@ -14,7 +14,7 @@ var viewModel = null;
 $(document).ready(function () {
     try {
         initializeFramework7();
-        viewModel = new HeaderModel();
+        viewModel = HeaderModel();
         updateStatus(ImportedStrings.mha_loading);
         window.addEventListener("message", eventListener, false);
         postMessageToParent("frameActive");
@@ -72,7 +72,7 @@ function renderItem(headers) {
 
     updateStatus(ImportedStrings.mha_loading);
 
-    viewModel = new HeaderModel(headers);
+    viewModel = HeaderModel(headers);
     buildViews();
     hideStatus();
 }

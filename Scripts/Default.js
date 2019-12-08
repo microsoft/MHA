@@ -14,7 +14,7 @@ var viewModel = null;
 // It ensures the DOM is ready before updating the span elements with values from the current message.
 $(document).ready(function () {
     try {
-        viewModel = new HeaderModel();
+        viewModel = HeaderModel();
         initializeTableUI();
         updateStatus(ImportedStrings.mha_loading);
         window.addEventListener("message", eventListener, false);
@@ -81,7 +81,7 @@ function updateStatus(statusText) {
 function renderItem(headers) {
     updateStatus(ImportedStrings.mha_foundHeaders);
     $("#originalHeaders").text(headers);
-    viewModel = new HeaderModel(headers);
+    viewModel = HeaderModel(headers);
     rebuildTables();
     hideStatus();
 }

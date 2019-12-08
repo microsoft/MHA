@@ -17,7 +17,7 @@ var viewModel = null;
 if (window.jQuery) {
     $(document).ready(function () {
         Diagnostics.set("API used", "standalone");
-        viewModel = new HeaderModel();
+        viewModel = HeaderModel();
         initializeTableUI();
         makeResizablePane("inputHeaders", ImportedStrings.mha_prompt, null);
     });
@@ -29,7 +29,7 @@ function analyzeHeaders() {
     // Can't do anything without jquery
     if (!window.jQuery) { return; }
     if (appInsights) appInsights.trackEvent("analyzeHeaders");
-    viewModel = new HeaderModel($("#inputHeaders").val());
+    viewModel = HeaderModel($("#inputHeaders").val());
     setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
     setArrows(viewModel.otherHeaders.tableName, "number", 1);
 
@@ -44,7 +44,7 @@ function analyzeHeaders() {
 function clearHeaders() {
     $("#inputHeaders").val("");
 
-    viewModel = new HeaderModel();
+    viewModel = HeaderModel();
     setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
     setArrows(viewModel.otherHeaders.tableName, "number", 1);
     rebuildSections();

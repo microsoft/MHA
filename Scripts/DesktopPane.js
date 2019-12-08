@@ -11,7 +11,7 @@ var viewModel = null;
 
 $(document).ready(function () {
     try {
-        viewModel = new HeaderModel();
+        viewModel = HeaderModel();
         initializeFabric();
         updateStatus(ImportedStrings.mha_loading);
         window.addEventListener("message", eventListener, false);
@@ -118,7 +118,7 @@ function renderItem(headers) {
 
     // Load new itemDescription
     updateStatus(ImportedStrings.mha_loading);
-    viewModel = new HeaderModel(headers);
+    viewModel = HeaderModel(headers);
     buildViews();
     hideStatus();
 }
