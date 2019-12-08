@@ -1,14 +1,9 @@
 /* global $ */
+/* global appInsights */
 /* global mhaStrings */
 /* global HeaderModel */
-/* global initializeTableUI */
-/* global makeResizablePane */
-/* global rebuildTables */
-/* global rebuildSections */
-/* global recalculateVisibility */
-/* global setArrows */
 /* global Diagnostics */
-/* global appInsights */
+/* global Table */
 /* exported analyzeHeaders */
 /* exported clearHeaders */
 
@@ -18,8 +13,8 @@ if (window.jQuery) {
     $(document).ready(function () {
         Diagnostics.set("API used", "standalone");
         viewModel = HeaderModel();
-        initializeTableUI();
-        makeResizablePane("inputHeaders", mhaStrings.mha_prompt, null);
+        Table.initializeTableUI();
+        Table.makeResizablePane("inputHeaders", mhaStrings.mha_prompt, null);
     });
 }
 
@@ -30,13 +25,13 @@ function analyzeHeaders() {
     if (!window.jQuery) { return; }
     if (appInsights) appInsights.trackEvent("analyzeHeaders");
     viewModel = HeaderModel($("#inputHeaders").val());
-    setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
-    setArrows(viewModel.otherHeaders.tableName, "number", 1);
+    Table.setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
+    Table.setArrows(viewModel.otherHeaders.tableName, "number", 1);
 
     enableSpinner();
     updateStatus(mhaStrings.mha_loading);
 
-    rebuildTables();
+    Table.rebuildTables();
 
     disableSpinner();
 }
@@ -45,9 +40,9 @@ function clearHeaders() {
     $("#inputHeaders").val("");
 
     viewModel = HeaderModel();
-    setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
-    setArrows(viewModel.otherHeaders.tableName, "number", 1);
-    rebuildSections();
+    Table.setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
+    Table.setArrows(viewModel.otherHeaders.tableName, "number", 1);
+    Table.rebuildSections();
 }
 
 function enableSpinner() {
@@ -66,5 +61,5 @@ function updateStatus(statusText) {
         viewModel.status = statusText;
     }
 
-    recalculateVisibility();
+    Table.recalculateVisibility();
 }

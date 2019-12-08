@@ -1,4 +1,3 @@
-/* global $ */
 /* global AntiSpamReport */
 /* global ForefrontAntiSpamReport */
 /* global Decoder */
@@ -126,6 +125,7 @@ var HeaderModel = (function (headers) {
         antiSpamReport: antiSpamReport,
         otherHeaders: otherHeaders,
         hasData: hasData,
+        GetHeaderList: GetHeaderList,
         get status() { return status; },
         set status(value) { status = value; }
     }

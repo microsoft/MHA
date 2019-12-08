@@ -1,7 +1,7 @@
 /* global $ */
 /* global Framework7 */
 /* global HeaderModel */
-/* global Strings */
+/* global mhaStrings */
 /* global moment */
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
@@ -14,7 +14,7 @@ $(document).ready(function () {
     try {
         initializeFramework7();
         viewModel = HeaderModel();
-        updateStatus(Strings.mha_loading);
+        updateStatus(mhaStrings.mha_loading);
         window.addEventListener("message", eventListener, false);
         postMessageToParent("frameActive");
     }
@@ -69,7 +69,7 @@ function renderItem(headers) {
     $("#other-content").empty();
     $("#original-headers").empty();
 
-    updateStatus(Strings.mha_loading);
+    updateStatus(mhaStrings.mha_loading);
 
     viewModel = HeaderModel(headers);
     buildViews();

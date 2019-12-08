@@ -289,7 +289,7 @@ function buildViews() {
                 $("<td/>")
                     .text(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].label)
                     .appendTo(row);
-                linkVal = mhaStrings(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url,
+                linkVal = mhaStrings.mapHeaderToURL(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url,
                     viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get());
                 $("<td/>")
                     .html(linkVal)
@@ -319,7 +319,7 @@ function buildViews() {
                 $("<td/>")
                     .text(viewModel.antiSpamReport.antiSpamRows[i].label)
                     .appendTo(row);
-                linkVal = mhaStrings(viewModel.antiSpamReport.antiSpamRows[i].url,
+                linkVal = mhaStrings.mapHeaderToURL(viewModel.antiSpamReport.antiSpamRows[i].url,
                     viewModel.antiSpamReport.antiSpamRows[i].get());
                 $("<td/>")
                     .html(linkVal)

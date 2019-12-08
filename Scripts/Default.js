@@ -1,10 +1,7 @@
 ﻿/* global $ */
-/* global HeaderModel */
 /* global mhaStrings  */
-/* global initializeTableUI */
-/* global rebuildSections */
-/* global rebuildTables */
-/* global recalculateVisibility */
+/* global HeaderModel */
+/* global Table */
 
 // This is the "classic" UI rendered in classicDesktopFrame.html
 
@@ -15,7 +12,7 @@ var viewModel = null;
 $(document).ready(function () {
     try {
         viewModel = HeaderModel();
-        initializeTableUI();
+        Table.initializeTableUI();
         updateStatus(mhaStrings.mha_loading);
         window.addEventListener("message", eventListener, false);
         postMessageToParent("frameActive");
@@ -75,14 +72,14 @@ function updateStatus(statusText) {
         viewModel.status = statusText;
     }
 
-    recalculateVisibility();
+    Table.recalculateVisibility();
 }
 
 function renderItem(headers) {
     updateStatus(mhaStrings.mha_foundHeaders);
     $("#originalHeaders").text(headers);
     viewModel = HeaderModel(headers);
-    rebuildTables();
+    Table.rebuildTables();
     hideStatus();
 }
 
@@ -91,5 +88,5 @@ function renderItem(headers) {
 function showError(error, message) {
     updateStatus(message);
     disableSpinner();
-    rebuildSections();
+    Table.rebuildSections();
 }
