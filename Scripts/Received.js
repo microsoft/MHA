@@ -1,5 +1,5 @@
-﻿/* global ImportedStrings */
-/* global appInsights */
+﻿/* global appInsights */
+/* global mhaStrings */
 /* exported Received */
 
 var Received = (function () {
@@ -220,11 +220,11 @@ var Received = (function () {
         var printedMinutes = false;
 
         if (Math.abs(diff) < 1000) {
-            return "0 " + ImportedStrings.mha_seconds;
+            return "0 " + mhaStrings.mha_seconds;
         }
 
         if (diff < 0) {
-            time.push(ImportedStrings.mha_negative);
+            time.push(mhaStrings.mha_negative);
             diff = -diff;
         }
 
@@ -232,9 +232,9 @@ var Received = (function () {
             iDelay = Math.floor(diff / 1000 / 60);
             time.push(iDelay, " ");
             if (iDelay === 1) {
-                time.push(ImportedStrings.mha_minute);
+                time.push(mhaStrings.mha_minute);
             } else {
-                time.push(ImportedStrings.mha_minutes);
+                time.push(mhaStrings.mha_minutes);
             }
 
             diff -= iDelay * 1000 * 60;
@@ -249,9 +249,9 @@ var Received = (function () {
             iDelay = Math.floor(diff / 1000);
             time.push(iDelay, " ");
             if (iDelay === 1) {
-                time.push(ImportedStrings.mha_second);
+                time.push(mhaStrings.mha_second);
             } else {
-                time.push(ImportedStrings.mha_seconds);
+                time.push(mhaStrings.mha_seconds);
             }
         }
 

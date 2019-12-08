@@ -1,6 +1,6 @@
 /* global $ */
+/* global mhaStrings */
 /* global HeaderModel */
-/* global ImportedStrings */
 /* global initializeTableUI */
 /* global makeResizablePane */
 /* global rebuildTables */
@@ -19,7 +19,7 @@ if (window.jQuery) {
         Diagnostics.set("API used", "standalone");
         viewModel = HeaderModel();
         initializeTableUI();
-        makeResizablePane("inputHeaders", ImportedStrings.mha_prompt, null);
+        makeResizablePane("inputHeaders", mhaStrings.mha_prompt, null);
     });
 }
 
@@ -34,7 +34,7 @@ function analyzeHeaders() {
     setArrows(viewModel.otherHeaders.tableName, "number", 1);
 
     enableSpinner();
-    updateStatus(ImportedStrings.mha_loading);
+    updateStatus(mhaStrings.mha_loading);
 
     rebuildTables();
 

@@ -1,6 +1,6 @@
 ﻿/* global $ */
 /* global HeaderModel */
-/* global ImportedStrings */
+/* global mhaStrings  */
 /* global initializeTableUI */
 /* global rebuildSections */
 /* global rebuildTables */
@@ -16,7 +16,7 @@ $(document).ready(function () {
     try {
         viewModel = HeaderModel();
         initializeTableUI();
-        updateStatus(ImportedStrings.mha_loading);
+        updateStatus(mhaStrings.mha_loading);
         window.addEventListener("message", eventListener, false);
         postMessageToParent("frameActive");
     }
@@ -79,7 +79,7 @@ function updateStatus(statusText) {
 }
 
 function renderItem(headers) {
-    updateStatus(ImportedStrings.mha_foundHeaders);
+    updateStatus(mhaStrings.mha_foundHeaders);
     $("#originalHeaders").text(headers);
     viewModel = HeaderModel(headers);
     rebuildTables();

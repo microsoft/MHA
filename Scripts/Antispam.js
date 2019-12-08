@@ -1,4 +1,4 @@
-/* global ImportedStrings */
+/* global mhaStrings  */
 /* exported AntiSpamReport */
 
 var AntiSpamReport = (function () {
@@ -22,8 +22,8 @@ var AntiSpamReport = (function () {
     };
 
     var antiSpamRows = [
-        row("BCL", ImportedStrings.mha_bcl, "X-Microsoft-Antispam"),
-        row("PCL", ImportedStrings.mha_pcl, "X-Microsoft-Antispam")
+        row("BCL", mhaStrings.mha_bcl, "X-Microsoft-Antispam"),
+        row("PCL", mhaStrings.mha_pcl, "X-Microsoft-Antispam")
     ];
 
     function existsInternal(rows) {

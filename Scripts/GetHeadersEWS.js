@@ -1,7 +1,7 @@
 /* global $ */
 /* global $h */
-/* global ImportedStrings */
 /* global jQuery */
+/* global mhaStrings */
 /* global Errors */
 /* global Office */
 /* global ParentFrame */
@@ -38,7 +38,7 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
     }
 
     try {
-        ParentFrame.updateStatus(ImportedStrings.mha_RequestSent);
+        ParentFrame.updateStatus(mhaStrings.mha_RequestSent);
         var mailbox = Office.context.mailbox;
         var request = getHeadersRequest(mailbox.item.itemId);
         var envelope = getSoapEnvelope(request);
@@ -46,7 +46,7 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
             callbackEws(asyncResult, headersLoadedCallback);
         });
     } catch (e2) {
-        ParentFrame.showError(e2, ImportedStrings.mha_requestFailed);
+        ParentFrame.showError(e2, mhaStrings.mha_requestFailed);
     }
 
     // Function called when the EWS request is complete.
@@ -61,7 +61,7 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
                 if (header && !header.prop) {
                     if (header.responseCode && header.responseCode.length > 0 && header.responseCode[0].firstChild && header.responseCode[0].firstChild.data === "NoError") {
                         headersLoadedCallback(null, "EWS");
-                        ParentFrame.showError(null, ImportedStrings.mha_headersMissing, true);
+                        ParentFrame.showError(null, mhaStrings.mha_headersMissing, true);
                         return;
                     }
                 }
@@ -71,7 +71,7 @@ function sendHeadersRequestEWS(headersLoadedCallback) {
                 headersLoadedCallback(header.prop, "EWS");
             }
             else {
-                throw new Error(ImportedStrings.mha_requestFailed);
+                throw new Error(mhaStrings.mha_requestFailed);
             }
         }
         catch (e) {

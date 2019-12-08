@@ -1,6 +1,5 @@
 /* global $ */
-/* global ImportedStrings */
-/* global mapHeaderToURL */
+/* global mhaStrings */
 /* global updateStatus */
 /* global viewModel */
 /* exported initializeTableUI */
@@ -8,26 +7,26 @@
 
 function initializeTableUI() {
     // Headers
-    makeResizablePane("originalHeaders", ImportedStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
+    makeResizablePane("originalHeaders", mhaStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
     $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
 
     // Summary
-    makeResizablePane("summary", ImportedStrings.mha_summary, function () { return viewModel.summary.exists(); });
+    makeResizablePane("summary", mhaStrings.mha_summary, function () { return viewModel.summary.exists(); });
     makeSummaryTable("#summary", viewModel.summary.summaryRows, "SUM");
 
     // Received
-    makeResizableTable(viewModel.receivedHeaders.tableName, ImportedStrings.mha_receivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
+    makeResizableTable(viewModel.receivedHeaders.tableName, mhaStrings.mha_receivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
 
     var receivedColumns = [
-        new Column("hop", ImportedStrings.mha_hop, null),
-        new Column("from", ImportedStrings.mha_submittingHost, null),
-        new Column("by", ImportedStrings.mha_receivingHost, null),
-        new Column("date", ImportedStrings.mha_time, null),
-        new Column("delay", ImportedStrings.mha_delay, null),
-        new Column("with", ImportedStrings.mha_type, null),
-        new Column("id", ImportedStrings.mha_id, "extraCol"),
-        new Column("for", ImportedStrings.mha_for, "extraCol"),
-        new Column("via", ImportedStrings.mha_via, "extraCol")
+        new Column("hop", mhaStrings.mha_hop, null),
+        new Column("from", mhaStrings.mha_submittingHost, null),
+        new Column("by", mhaStrings.mha_receivingHost, null),
+        new Column("date", mhaStrings.mha_time, null),
+        new Column("delay", mhaStrings.mha_delay, null),
+        new Column("with", mhaStrings.mha_type, null),
+        new Column("id", mhaStrings.mha_id, "extraCol"),
+        new Column("for", mhaStrings.mha_for, "extraCol"),
+        new Column("via", mhaStrings.mha_via, "extraCol")
     ];
 
     addColumns(viewModel.receivedHeaders.tableName, receivedColumns);
@@ -57,20 +56,20 @@ function initializeTableUI() {
     setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
 
     // FFAS
-    makeResizablePane("forefrontAntiSpamReport", ImportedStrings.mha_forefrontAntiSpamReport, function () { return viewModel.forefrontAntiSpamReport.exists(); });
+    makeResizablePane("forefrontAntiSpamReport", mhaStrings.mha_forefrontAntiSpamReport, function () { return viewModel.forefrontAntiSpamReport.exists(); });
     makeSummaryTable("#forefrontAntiSpamReport", viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows, "FFAS");
 
     // AntiSpam
-    makeResizablePane("antiSpamReport", ImportedStrings.mha_antiSpamReport, function () { return viewModel.antiSpamReport.exists(); });
+    makeResizablePane("antiSpamReport", mhaStrings.mha_antiSpamReport, function () { return viewModel.antiSpamReport.exists(); });
     makeSummaryTable("#antiSpamReport", viewModel.antiSpamReport.antiSpamRows, "AS");
 
     // Other
-    makeResizableTable(viewModel.otherHeaders.tableName, ImportedStrings.mha_otherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
+    makeResizableTable(viewModel.otherHeaders.tableName, mhaStrings.mha_otherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
 
     var otherColumns = [
-        new Column("number", ImportedStrings.mha_number, null),
-        new Column("header", ImportedStrings.mha_header, null),
-        new Column("value", ImportedStrings.mha_value, null)
+        new Column("number", mhaStrings.mha_number, null),
+        new Column("header", mhaStrings.mha_header, null),
+        new Column("value", mhaStrings.mha_value, null)
     ];
 
     addColumns(viewModel.otherHeaders.tableName, otherColumns);
@@ -366,7 +365,7 @@ function setRowValue(row, type) {
         var val = row.get();
         if (val) {
             if (row.url) {
-                headerVal.html(mapHeaderToURL(row.url, val));
+                headerVal.html(mhaStrings.mapHeaderToURL(row.url, val));
             } else {
                 headerVal.text(val);
             }

@@ -1,7 +1,6 @@
 /* global $ */
+/* global mhaStrings */
 /* global HeaderModel */
-/* global ImportedStrings */
-/* global mapHeaderToURL */
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -13,7 +12,7 @@ $(document).ready(function () {
     try {
         viewModel = HeaderModel();
         initializeFabric();
-        updateStatus(ImportedStrings.mha_loading);
+        updateStatus(mhaStrings.mha_loading);
         window.addEventListener("message", eventListener, false);
         postMessageToParent("frameActive");
     }
@@ -117,7 +116,7 @@ function renderItem(headers) {
     $("#error-display").hide();
 
     // Load new itemDescription
-    updateStatus(ImportedStrings.mha_loading);
+    updateStatus(mhaStrings.mha_loading);
     viewModel = HeaderModel(headers);
     buildViews();
     hideStatus();
@@ -290,7 +289,7 @@ function buildViews() {
                 $("<td/>")
                     .text(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].label)
                     .appendTo(row);
-                linkVal = mapHeaderToURL(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url,
+                linkVal = mhaStrings(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url,
                     viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get());
                 $("<td/>")
                     .html(linkVal)
@@ -320,7 +319,7 @@ function buildViews() {
                 $("<td/>")
                     .text(viewModel.antiSpamReport.antiSpamRows[i].label)
                     .appendTo(row);
-                linkVal = mapHeaderToURL(viewModel.antiSpamReport.antiSpamRows[i].url,
+                linkVal = mhaStrings(viewModel.antiSpamReport.antiSpamRows[i].url,
                     viewModel.antiSpamReport.antiSpamRows[i].get());
                 $("<td/>")
                     .html(linkVal)

@@ -1,4 +1,4 @@
-/* global ImportedStrings */
+/* global mhaStrings */
 /* exported Summary */
 
 var Summary = (function () {
@@ -15,7 +15,7 @@ var Summary = (function () {
     var totalTime = "";
     var dateRow = SummaryRow(
         "Date",
-        ImportedStrings.mha_creationTime,
+        mhaStrings.mha_creationTime,
         function (value) {
             if (value) {
                 this.value = new Date(value).toLocaleString();
@@ -26,12 +26,12 @@ var Summary = (function () {
         function () { return creationTime(dateRow.value); });
 
     var summaryRows = [
-        SummaryRow("Subject", ImportedStrings.mha_subject),
-        SummaryRow("Message-ID", ImportedStrings.mha_messageId),
+        SummaryRow("Subject", mhaStrings.mha_subject),
+        SummaryRow("Message-ID", mhaStrings.mha_messageId),
         dateRow,
-        SummaryRow("From", ImportedStrings.mha_from),
-        SummaryRow("To", ImportedStrings.mha_to),
-        SummaryRow("CC", ImportedStrings.mha_cc)
+        SummaryRow("From", mhaStrings.mha_from),
+        SummaryRow("To", mhaStrings.mha_to),
+        SummaryRow("CC", mhaStrings.mha_cc)
     ];
 
     function exists() {
@@ -65,7 +65,7 @@ var Summary = (function () {
         var time = [date || ""];
 
         if (totalTime) {
-            time.push(" ", ImportedStrings.mha_deliveredStart, " ", totalTime, ImportedStrings.mha_deliveredEnd);
+            time.push(" ", mhaStrings.mha_deliveredStart, " ", totalTime, mhaStrings.mha_deliveredEnd);
         }
 
         return time.join("");

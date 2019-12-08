@@ -1,5 +1,5 @@
 /* global $ */
-/* global ImportedStrings */
+/* global mhaStrings */
 /* global Errors */
 /* global Office */
 /* global sendHeadersRequestEWS */
@@ -7,7 +7,7 @@
 /* global ParentFrame */
 /* exported sendHeadersRequestRest */
 
-/**
+/*
  * GetHeaderRest.js
  *
  * This file has all the methods to get PR_TRANSPORT_MESSAGE_HEADERS
@@ -25,7 +25,7 @@ function sendHeadersRequestRest(headersLoadedCallback) {
         return;
     }
 
-    ParentFrame.updateStatus(ImportedStrings.mha_RequestSent);
+    ParentFrame.updateStatus(mhaStrings.mha_RequestSent);
 
     Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
         try {
@@ -124,7 +124,7 @@ function getHeaders(accessToken, headersLoadedCallback) {
                 headersLoadedCallback(item.SingleValueExtendedProperties[0].Value, "REST");
             } else {
                 headersLoadedCallback(null, "REST");
-                ParentFrame.showError(null, ImportedStrings.mha_headersMissing, true);
+                ParentFrame.showError(null, mhaStrings.mha_headersMissing, true);
             }
         }
         catch (e) {
@@ -136,7 +136,7 @@ function getHeaders(accessToken, headersLoadedCallback) {
                 // TODO: Log this, but don't error for the user
                 sendHeadersRequestEWS(headersLoadedCallback);
             } else if (textStatus === "error" && jqXHR.status === 404) {
-                ParentFrame.showError(null, ImportedStrings.mha_messageMissing, true);
+                ParentFrame.showError(null, mhaStrings.mha_messageMissing, true);
             } else {
                 ParentFrame.showError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
             }

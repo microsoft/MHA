@@ -1,4 +1,4 @@
-﻿/* global mapHeaderToURL */
+﻿/* global mhaStrings */
 /* exported Other */
 
 var Other = (function () {
@@ -43,7 +43,7 @@ var Other = (function () {
         otherRows.push(new row(
             otherRows.length + 1,
             otherHeader.header,
-            mapHeaderToURL(otherHeader.header, null),
+            mhaStrings.mapHeaderToURL(otherHeader.header, null),
             row.value = otherHeader.value));
     }
 
