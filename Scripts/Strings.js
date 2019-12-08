@@ -137,4 +137,4 @@ var mhaStrings = (function () {
         // AntiSpamReport
         mha_bcl: "Bulk Complaint Level"
     }
-});
+})();
