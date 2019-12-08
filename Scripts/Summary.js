@@ -1,22 +1,19 @@
 /* global ImportedStrings */
+/* exported Summary */
 
-var SummaryRow = function (header, label, set, get) {
-    this.header = header;
-    this.label = label;
-    this.value = "";
-    this.set = set || this.set;
-    this.get = get || this.get;
-};
+var Summary = (function () {
+    var SummaryRow = function (_header, _label, _set, _get) {
+        return {
+            header: _header,
+            label: _label,
+            value: "",
+            set: _set || function (_value) { this.value = _value; },
+            get: _get || function () { return this.value; }
+        };
+    };
 
-SummaryRow.prototype.header = "";
-SummaryRow.prototype.label = "";
-SummaryRow.prototype.value = "";
-SummaryRow.prototype.set = function (_value) { this.value = _value; };
-SummaryRow.prototype.get = function () { return this.value; };
-
-var Summary = function () {
-    var that = this;
-    var dateRow = new SummaryRow(
+    var totalTime = "";
+    var dateRow = SummaryRow(
         "Date",
         ImportedStrings.mha_creationTime,
         function (value) {
@@ -26,58 +23,59 @@ var Summary = function () {
                 this.value = "";
             }
         },
-        function () {
-            return that.creationTime(dateRow.value);
-        });
+        function () { return creationTime(dateRow.value); });
 
-    this.summaryRows = [
-        new SummaryRow("Subject", ImportedStrings.mha_subject),
-        new SummaryRow("Message-ID", ImportedStrings.mha_messageId),
+    var summaryRows = [
+        SummaryRow("Subject", ImportedStrings.mha_subject),
+        SummaryRow("Message-ID", ImportedStrings.mha_messageId),
         dateRow,
-        new SummaryRow("From", ImportedStrings.mha_from),
-        new SummaryRow("To", ImportedStrings.mha_to),
-        new SummaryRow("CC", ImportedStrings.mha_cc)
+        SummaryRow("From", ImportedStrings.mha_from),
+        SummaryRow("To", ImportedStrings.mha_to),
+        SummaryRow("CC", ImportedStrings.mha_cc)
     ];
 
-    this.totalTime = "";
-};
-
-Summary.prototype.summaryRows = [];
-Summary.prototype.totalTime = "";
-
-Summary.prototype.exists = function () {
-    for (var i = 0; i < this.summaryRows.length; i++) {
-        if (this.summaryRows[i].get()) {
-            return true;
+    function exists() {
+        for (var i = 0; i < this.summaryRows.length; i++) {
+            if (this.summaryRows[i].get()) {
+                return true;
+            }
         }
+
+        return false;
     }
 
-    return false;
-};
-
-Summary.prototype.init = function (header) {
-    if (!header) {
-        return;
-    }
-
-    for (var i = 0; i < this.summaryRows.length; i++) {
-        if (this.summaryRows[i].header === header.header) {
-            this.summaryRows[i].set(header.value);
+    function init(header) {
+        if (!header) {
             return;
         }
-    }
-};
 
-Summary.prototype.creationTime = function (date) {
-    if (!date && !this.totalTime) {
-        return null;
-    }
-
-    var time = [date || ""];
-
-    if (this.totalTime) {
-        time.push(" ", ImportedStrings.mha_deliveredStart, " ", this.totalTime, ImportedStrings.mha_deliveredEnd);
+        for (var i = 0; i < summaryRows.length; i++) {
+            if (summaryRows[i].header === header.header) {
+                summaryRows[i].set(header.value);
+                return;
+            }
+        }
     }
 
-    return time.join("");
-};
+    function creationTime(date) {
+        if (!date && !totalTime) {
+            return null;
+        }
+
+        var time = [date || ""];
+
+        if (totalTime) {
+            time.push(" ", ImportedStrings.mha_deliveredStart, " ", totalTime, ImportedStrings.mha_deliveredEnd);
+        }
+
+        return time.join("");
+    }
+
+    return {
+        init: init,
+        exists: exists,
+        get summaryRows() { return summaryRows; },
+        get totalTime() { return totalTime; },
+        set totalTime(value) { totalTime = value; },
+    }
+});
