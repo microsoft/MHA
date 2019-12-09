@@ -1,11 +1,16 @@
 /* global $ */
 /* global mhaStrings */
 /* global updateStatus */
-/* global viewModel */
 /* exported Table */
 
 var Table = (function () {
-    function initializeTableUI() {
+    var viewModel = null;
+    var Column = function (id, label, columnClass) { return { id: id, label: label, class: columnClass }; };
+
+    // Initializes the UI with a viewModel
+    function initializeTableUI(_viewModel) {
+        viewModel = _viewModel;
+
         // Headers
         makeResizablePane("originalHeaders", mhaStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
         $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
@@ -18,15 +23,15 @@ var Table = (function () {
         makeResizableTable(viewModel.receivedHeaders.tableName, mhaStrings.mha_receivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
 
         var receivedColumns = [
-            new Column("hop", mhaStrings.mha_hop, null),
-            new Column("from", mhaStrings.mha_submittingHost, null),
-            new Column("by", mhaStrings.mha_receivingHost, null),
-            new Column("date", mhaStrings.mha_time, null),
-            new Column("delay", mhaStrings.mha_delay, null),
-            new Column("with", mhaStrings.mha_type, null),
-            new Column("id", mhaStrings.mha_id, "extraCol"),
-            new Column("for", mhaStrings.mha_for, "extraCol"),
-            new Column("via", mhaStrings.mha_via, "extraCol")
+            Column("hop", mhaStrings.mha_hop, null),
+            Column("from", mhaStrings.mha_submittingHost, null),
+            Column("by", mhaStrings.mha_receivingHost, null),
+            Column("date", mhaStrings.mha_time, null),
+            Column("delay", mhaStrings.mha_delay, null),
+            Column("with", mhaStrings.mha_type, null),
+            Column("id", mhaStrings.mha_id, "extraCol"),
+            Column("for", mhaStrings.mha_for, "extraCol"),
+            Column("via", mhaStrings.mha_via, "extraCol")
         ];
 
         addColumns(viewModel.receivedHeaders.tableName, receivedColumns);
@@ -67,21 +72,23 @@ var Table = (function () {
         makeResizableTable(viewModel.otherHeaders.tableName, mhaStrings.mha_otherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
 
         var otherColumns = [
-            new Column("number", mhaStrings.mha_number, null),
-            new Column("header", mhaStrings.mha_header, null),
-            new Column("value", mhaStrings.mha_value, null)
+            Column("number", mhaStrings.mha_number, null),
+            Column("header", mhaStrings.mha_header, null),
+            Column("value", mhaStrings.mha_value, null)
         ];
 
         addColumns(viewModel.otherHeaders.tableName, otherColumns);
 
         setArrows(viewModel.otherHeaders.tableName, "number", 1);
 
-        rebuildSections();
+        rebuildSections(viewModel);
     }
 
-    function rebuildTables() {
+    // Rebuilds the UI with a new viewModel
+    function rebuildTables(_viewModel) {
+        viewModel = _viewModel;
         updateStatus("");
-        rebuildSections();
+        rebuildSections(viewModel);
         hideExtraColumns();
     }
 
@@ -242,16 +249,6 @@ var Table = (function () {
         header.hide();
     }
 
-    var Column = function (id, label, columnClass) {
-        this.id = id;
-        this.label = label;
-        this.class = columnClass;
-    };
-
-    Column.prototype.id = "";
-    Column.prototype.label = "";
-    Column.prototype.class = null;
-
     function addColumns(tableName, columns) {
         var tableHeader = $(document.createElement("thead"));
         if (tableHeader !== null) {
@@ -287,7 +284,7 @@ var Table = (function () {
             viewModel[table].doSort(id);
             setArrows(viewModel[table].tableName, viewModel[table].sortColumn,
                 viewModel[table].sortOrder);
-            rebuildSections();
+            rebuildSections(viewModel);
         });
 
         var downSpan = $(document.createElement("span"));
@@ -379,7 +376,9 @@ var Table = (function () {
     }
 
     // Rebuilds content and recalculates what sections should be displayed
-    function rebuildSections() {
+    function rebuildSections(_viewModel) {
+        viewModel = _viewModel;
+
         var i;
         var row;
 
@@ -460,11 +459,11 @@ var Table = (function () {
     ];
 
     return {
-        initializeTableUI: initializeTableUI,
+        initializeTableUI: initializeTableUI, // Initialize UI with an empty viewModel
         makeResizablePane: makeResizablePane,
-        rebuildSections: rebuildSections,
-        rebuildTables: rebuildTables,
-        recalculateVisibility: recalculateVisibility,
+        rebuildSections: rebuildSections, // Repopulate the UI with the current viewModel
+        rebuildTables: rebuildTables, // Used by Standalone.js and Default.js to rebuild with new viewModel
+        recalculateVisibility: recalculateVisibility, // Recompute visibility with the current viewModel. Does not repopulate.
         setArrows: setArrows
     }
 })();

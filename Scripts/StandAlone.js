@@ -13,7 +13,7 @@ if (window.jQuery) {
     $(document).ready(function () {
         Diagnostics.set("API used", "standalone");
         viewModel = HeaderModel();
-        Table.initializeTableUI();
+        Table.initializeTableUI(viewModel);
         Table.makeResizablePane("inputHeaders", mhaStrings.mha_prompt, null);
     });
 }
@@ -31,7 +31,7 @@ function analyzeHeaders() {
     enableSpinner();
     updateStatus(mhaStrings.mha_loading);
 
-    Table.rebuildTables();
+    Table.rebuildTables(viewModel);
 
     disableSpinner();
 }
@@ -42,7 +42,7 @@ function clearHeaders() {
     viewModel = HeaderModel();
     Table.setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
     Table.setArrows(viewModel.otherHeaders.tableName, "number", 1);
-    Table.rebuildSections();
+    Table.rebuildSections(viewModel);
 }
 
 function enableSpinner() {

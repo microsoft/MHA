@@ -12,7 +12,7 @@ var viewModel = null;
 $(document).ready(function () {
     try {
         viewModel = HeaderModel();
-        Table.initializeTableUI();
+        Table.initializeTableUI(viewModel);
         updateStatus(mhaStrings.mha_loading);
         window.addEventListener("message", eventListener, false);
         postMessageToParent("frameActive");
@@ -79,7 +79,7 @@ function renderItem(headers) {
     updateStatus(mhaStrings.mha_foundHeaders);
     $("#originalHeaders").text(headers);
     viewModel = HeaderModel(headers);
-    Table.rebuildTables();
+    Table.rebuildTables(viewModel);
     hideStatus();
 }
 
@@ -88,5 +88,5 @@ function renderItem(headers) {
 function showError(error, message) {
     updateStatus(message);
     disableSpinner();
-    Table.rebuildSections();
+    Table.rebuildSections(viewModel);
 }
