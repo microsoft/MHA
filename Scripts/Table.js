@@ -7,6 +7,14 @@ var Table = (function () {
     var viewModel = null;
     var Column = function (id, label, columnClass) { return { id: id, label: label, class: columnClass }; };
 
+    var visibilityBindings = [
+        ["#lineBreak", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
+        ["#response", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
+        ["#status", function () { return viewModel.status; }],
+        [".extraCol", function () { return viewModel.showExtra; }],
+        ["#clearButton", function () { return viewModel.hasData; }]
+    ];
+
     // Initializes the UI with a viewModel
     function initializeTableUI(_viewModel) {
         viewModel = _viewModel;
@@ -449,14 +457,6 @@ var Table = (function () {
 
         recalculateVisibility();
     }
-
-    var visibilityBindings = [
-        ["#lineBreak", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
-        ["#response", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
-        ["#status", function () { return viewModel.status; }],
-        [".extraCol", function () { return viewModel.showExtra; }],
-        ["#clearButton", function () { return viewModel.hasData; }]
-    ];
 
     return {
         initializeTableUI: initializeTableUI, // Initialize UI with an empty viewModel
