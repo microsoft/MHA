@@ -47,7 +47,7 @@ var Other = (function () {
             row.value = otherHeader.value));
     }
 
-    function exists() { otherRows.length > 0; }
+    function exists() { return otherRows.length > 0; }
 
     return {
         init: init,
