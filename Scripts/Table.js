@@ -100,6 +100,81 @@ var Table = (function () {
         hideExtraColumns();
     }
 
+    // Rebuilds content and recalculates what sections should be displayed
+    function rebuildSections(_viewModel) {
+        viewModel = _viewModel;
+
+        var i;
+        var row;
+
+        // Summary
+        for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
+            setRowValue(viewModel.summary.summaryRows[i], "SUM");
+        }
+
+        // Received
+        emptyTableUI(viewModel.receivedHeaders.tableName);
+        for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
+            row = document.createElement("tr");
+            $("#" + viewModel.receivedHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].hop, null, null);
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].from, null, null);
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].by, null, null);
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].date, null, null);
+            var labelClass = "hotBarLabel";
+            if (viewModel.receivedHeaders.receivedRows[i].delaySort < 0) {
+                labelClass += " negativeCell";
+            }
+
+            var hotBar =
+                "<div class='hotBarContainer'>" +
+                "   <div class='" + labelClass + "'>" + viewModel.receivedHeaders.receivedRows[i].delay + "</div>" +
+                "   <div class='hotBarBar' style='width:" + viewModel.receivedHeaders.receivedRows[i].percent + "%'></div>" +
+                "</div>";
+            appendCell(row, null, hotBar, "hotBarCell");
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].with, null, null);
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].id, null, "extraCol");
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].for, null, "extraCol");
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].via, null, "extraCol");
+        }
+
+        // Calculate heights for the hotbar cells (progress bars in Delay column)
+        // Not clear why we need to do this
+        $(".hotBarCell").each(function () {
+            $(this).find(".hotBarContainer").height($(this).height());
+        });
+
+        $("#" + viewModel.receivedHeaders.tableName + " tbody tr:odd").addClass("oddRow");
+        hideEmptyColumns(viewModel.receivedHeaders.tableName);
+
+        // Forefront AntiSpam Report
+        for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
+            setRowValue(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i], "FFAS");
+        }
+
+        // AntiSpam Report
+        for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
+            setRowValue(viewModel.antiSpamReport.antiSpamRows[i], "AS");
+        }
+
+        // Other
+        emptyTableUI(viewModel.otherHeaders.tableName);
+        for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
+            row = document.createElement("tr");
+            $("#" + viewModel.otherHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
+            appendCell(row, viewModel.otherHeaders.otherRows[i].number, null, null);
+            appendCell(row, viewModel.otherHeaders.otherRows[i].header, viewModel.otherHeaders.otherRows[i].url, null);
+            appendCell(row, viewModel.otherHeaders.otherRows[i].value, null, "allowBreak");
+        }
+
+        $("#" + viewModel.otherHeaders.tableName + " tbody tr:odd").addClass("oddRow");
+
+        // Original headers
+        $("#originalHeaders").text(viewModel.originalHeaders);
+
+        recalculateVisibility();
+    }
+
     // Adjusts response under our lineBreak
     function positionResponse() {
         var responseTop = $("#lineBreak")[0].offsetTop + $("#lineBreak").height();
@@ -381,81 +456,6 @@ var Table = (function () {
                 makeVisible("#" + row.header + type, false);
             }
         }
-    }
-
-    // Rebuilds content and recalculates what sections should be displayed
-    function rebuildSections(_viewModel) {
-        viewModel = _viewModel;
-
-        var i;
-        var row;
-
-        // Summary
-        for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
-            setRowValue(viewModel.summary.summaryRows[i], "SUM");
-        }
-
-        // Received
-        emptyTableUI(viewModel.receivedHeaders.tableName);
-        for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
-            row = document.createElement("tr");
-            $("#" + viewModel.receivedHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].hop, null, null);
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].from, null, null);
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].by, null, null);
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].date, null, null);
-            var labelClass = "hotBarLabel";
-            if (viewModel.receivedHeaders.receivedRows[i].delaySort < 0) {
-                labelClass += " negativeCell";
-            }
-
-            var hotBar =
-                "<div class='hotBarContainer'>" +
-                "   <div class='" + labelClass + "'>" + viewModel.receivedHeaders.receivedRows[i].delay + "</div>" +
-                "   <div class='hotBarBar' style='width:" + viewModel.receivedHeaders.receivedRows[i].percent + "%'></div>" +
-                "</div>";
-            appendCell(row, null, hotBar, "hotBarCell");
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].with, null, null);
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].id, null, "extraCol");
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].for, null, "extraCol");
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].via, null, "extraCol");
-        }
-
-        // Calculate heights for the hotbar cells (progress bars in Delay column)
-        // Not clear why we need to do this
-        $(".hotBarCell").each(function () {
-            $(this).find(".hotBarContainer").height($(this).height());
-        });
-
-        $("#" + viewModel.receivedHeaders.tableName + " tbody tr:odd").addClass("oddRow");
-        hideEmptyColumns(viewModel.receivedHeaders.tableName);
-
-        // Forefront AntiSpam Report
-        for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
-            setRowValue(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i], "FFAS");
-        }
-
-        // AntiSpam Report
-        for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
-            setRowValue(viewModel.antiSpamReport.antiSpamRows[i], "AS");
-        }
-
-        // Other
-        emptyTableUI(viewModel.otherHeaders.tableName);
-        for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
-            row = document.createElement("tr");
-            $("#" + viewModel.otherHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
-            appendCell(row, viewModel.otherHeaders.otherRows[i].number, null, null);
-            appendCell(row, viewModel.otherHeaders.otherRows[i].header, viewModel.otherHeaders.otherRows[i].url, null);
-            appendCell(row, viewModel.otherHeaders.otherRows[i].value, null, "allowBreak");
-        }
-
-        $("#" + viewModel.otherHeaders.tableName + " tbody tr:odd").addClass("oddRow");
-
-        // Original headers
-        $("#originalHeaders").text(viewModel.originalHeaders);
-
-        recalculateVisibility();
     }
 
     return {
