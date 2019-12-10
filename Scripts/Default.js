@@ -80,6 +80,7 @@ function renderItem(headers) {
     $("#originalHeaders").text(headers);
     viewModel = HeaderModel(headers);
     Table.rebuildTables(viewModel);
+    updateStatus("");
     hideStatus();
 }
 

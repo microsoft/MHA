@@ -32,6 +32,7 @@ function analyzeHeaders() {
     updateStatus(mhaStrings.mha_loading);
 
     Table.rebuildTables(viewModel);
+    updateStatus("");
 
     disableSpinner();
 }

@@ -1,6 +1,5 @@
 /* global $ */
 /* global mhaStrings */
-/* global updateStatus */
 /* exported Table */
 
 var Table = (function () {
@@ -95,7 +94,6 @@ var Table = (function () {
     // Rebuilds the UI with a new viewModel
     function rebuildTables(_viewModel) {
         viewModel = _viewModel;
-        updateStatus("");
         rebuildSections(viewModel);
         hideExtraColumns();
     }
