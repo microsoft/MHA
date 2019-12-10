@@ -16,7 +16,6 @@ var Other = (function () {
         }
     };
 
-    var tableName = "otherHeaders";
     var otherRows = [];
     var sortColumn = "number";
     var sortOrder = 1;
@@ -54,7 +53,7 @@ var Other = (function () {
         exists: exists,
         get otherRows() { return otherRows; },
         doSort: doSort,
-        tableName: tableName,
+        tableName: "otherHeaders",
         get sortColumn() { return sortColumn; },
         get sortOrder() { return sortOrder; }
     }

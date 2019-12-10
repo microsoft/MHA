@@ -3,7 +3,6 @@
 /* exported Received */
 
 var Received = (function () {
-    var tableName = "receivedHeaders";
     var receivedRows = [];
     var sortColumn = "hop";
     var sortOrder = 1;
@@ -274,7 +273,7 @@ var Received = (function () {
         exists: exists,
         doSort: doSort,
         computeDeltas: computeDeltas,
-        tableName: tableName,
+        tableName: "receivedHeaders",
         get receivedRows() { return receivedRows; },
         get sortColumn() { return sortColumn; },
         get sortOrder() { return sortOrder; },
