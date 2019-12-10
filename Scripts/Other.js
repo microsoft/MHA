@@ -53,7 +53,6 @@ var Other = (function () {
         exists: exists,
         get otherRows() { return otherRows; },
         doSort: doSort,
-        tableName: "otherHeaders",
         get sortColumn() { return sortColumn; },
         get sortOrder() { return sortOrder; }
     }

@@ -27,7 +27,7 @@ var Table = (function () {
         makeSummaryTable("#summary", viewModel.summary.summaryRows, "SUM");
 
         // Received
-        makeResizableTable(viewModel.receivedHeaders.tableName, mhaStrings.mha_receivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
+        makeResizableTable("receivedHeaders", mhaStrings.mha_receivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
 
         var receivedColumns = [
             Column("hop", mhaStrings.mha_hop, null),
@@ -41,7 +41,7 @@ var Table = (function () {
             Column("via", mhaStrings.mha_via, "extraCol")
         ];
 
-        addColumns(viewModel.receivedHeaders.tableName, receivedColumns);
+        addColumns("receivedHeaders", receivedColumns);
 
         var withColumn = $("#" + "receivedHeaders" + " #with");
         if (withColumn !== null) {
@@ -74,7 +74,7 @@ var Table = (function () {
         makeSummaryTable("#antiSpamReport", viewModel.antiSpamReport.antiSpamRows, "AS");
 
         // Other
-        makeResizableTable(viewModel.otherHeaders.tableName, mhaStrings.mha_otherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
+        makeResizableTable("otherHeaders", mhaStrings.mha_otherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
 
         var otherColumns = [
             Column("number", mhaStrings.mha_number, null),
@@ -82,7 +82,7 @@ var Table = (function () {
             Column("value", mhaStrings.mha_value, null)
         ];
 
-        addColumns(viewModel.otherHeaders.tableName, otherColumns);
+        addColumns("otherHeaders", otherColumns);
 
         resetArrows();
         rebuildSections(viewModel);
@@ -108,10 +108,10 @@ var Table = (function () {
         }
 
         // Received
-        emptyTableUI(viewModel.receivedHeaders.tableName);
+        emptyTableUI("receivedHeaders");
         for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
             row = document.createElement("tr");
-            $("#" + viewModel.receivedHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
+            $("#" + "receivedHeaders").append(row); // Must happen before we append cells to appease IE7
             appendCell(row, viewModel.receivedHeaders.receivedRows[i].hop, null, null);
             appendCell(row, viewModel.receivedHeaders.receivedRows[i].from, null, null);
             appendCell(row, viewModel.receivedHeaders.receivedRows[i].by, null, null);
@@ -139,8 +139,8 @@ var Table = (function () {
             $(this).find(".hotBarContainer").height($(this).height());
         });
 
-        $("#" + viewModel.receivedHeaders.tableName + " tbody tr:odd").addClass("oddRow");
-        hideEmptyColumns(viewModel.receivedHeaders.tableName);
+        $("#" + "receivedHeaders" + " tbody tr:odd").addClass("oddRow");
+        hideEmptyColumns("receivedHeaders");
 
         // Forefront AntiSpam Report
         for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
@@ -153,16 +153,16 @@ var Table = (function () {
         }
 
         // Other
-        emptyTableUI(viewModel.otherHeaders.tableName);
+        emptyTableUI("otherHeaders");
         for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
             row = document.createElement("tr");
-            $("#" + viewModel.otherHeaders.tableName).append(row); // Must happen before we append cells to appease IE7
+            $("#" + "otherHeaders").append(row); // Must happen before we append cells to appease IE7
             appendCell(row, viewModel.otherHeaders.otherRows[i].number, null, null);
             appendCell(row, viewModel.otherHeaders.otherRows[i].header, viewModel.otherHeaders.otherRows[i].url, null);
             appendCell(row, viewModel.otherHeaders.otherRows[i].value, null, "allowBreak");
         }
 
-        $("#" + viewModel.otherHeaders.tableName + " tbody tr:odd").addClass("oddRow");
+        $("#" + "otherHeaders" + " tbody tr:odd").addClass("oddRow");
 
         // Original headers
         $("#originalHeaders").text(viewModel.originalHeaders);
@@ -424,8 +424,8 @@ var Table = (function () {
     }
 
     function resetArrows() {
-        setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
-        setArrows(viewModel.otherHeaders.tableName, "number", 1);
+        setArrows("receivedHeaders", "hop", 1);
+        setArrows("otherHeaders", "number", 1);
     }
 
     function setArrows(table, colName, sortOrder) {

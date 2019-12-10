@@ -273,7 +273,6 @@ var Received = (function () {
         exists: exists,
         doSort: doSort,
         computeDeltas: computeDeltas,
-        tableName: "receivedHeaders",
         get receivedRows() { return receivedRows; },
         get sortColumn() { return sortColumn; },
         get sortOrder() { return sortOrder; },
