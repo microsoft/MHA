@@ -43,7 +43,7 @@ var Table = (function () {
 
         addColumns("receivedHeaders", receivedColumns);
 
-        var withColumn = $("#" + "receivedHeaders" + " #with");
+        var withColumn = $("#receivedHeaders #with");
         if (withColumn !== null) {
             var leftSpan = $(document.createElement("span"));
             leftSpan.attr("id", "leftArrow");
@@ -111,7 +111,7 @@ var Table = (function () {
         emptyTableUI("receivedHeaders");
         for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
             row = document.createElement("tr");
-            $("#" + "receivedHeaders").append(row); // Must happen before we append cells to appease IE7
+            $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
             appendCell(row, viewModel.receivedHeaders.receivedRows[i].hop, null, null);
             appendCell(row, viewModel.receivedHeaders.receivedRows[i].from, null, null);
             appendCell(row, viewModel.receivedHeaders.receivedRows[i].by, null, null);
@@ -139,7 +139,7 @@ var Table = (function () {
             $(this).find(".hotBarContainer").height($(this).height());
         });
 
-        $("#" + "receivedHeaders" + " tbody tr:odd").addClass("oddRow");
+        $("#receivedHeaders tbody tr:odd").addClass("oddRow");
         hideEmptyColumns("receivedHeaders");
 
         // Forefront AntiSpam Report
@@ -156,13 +156,13 @@ var Table = (function () {
         emptyTableUI("otherHeaders");
         for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
             row = document.createElement("tr");
-            $("#" + "otherHeaders").append(row); // Must happen before we append cells to appease IE7
+            $("#otherHeaders").append(row); // Must happen before we append cells to appease IE7
             appendCell(row, viewModel.otherHeaders.otherRows[i].number, null, null);
             appendCell(row, viewModel.otherHeaders.otherRows[i].header, viewModel.otherHeaders.otherRows[i].url, null);
             appendCell(row, viewModel.otherHeaders.otherRows[i].value, null, "allowBreak");
         }
 
-        $("#" + "otherHeaders" + " tbody tr:odd").addClass("oddRow");
+        $("#otherHeaders tbody tr:odd").addClass("oddRow");
 
         // Original headers
         $("#originalHeaders").text(viewModel.originalHeaders);
