@@ -65,8 +65,6 @@ var Table = (function () {
             eventObject.stopPropagation();
         });
 
-        setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
-
         // FFAS
         makeResizablePane("forefrontAntiSpamReport", mhaStrings.mha_forefrontAntiSpamReport, function () { return viewModel.forefrontAntiSpamReport.exists(); });
         makeSummaryTable("#forefrontAntiSpamReport", viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows, "FFAS");
@@ -86,8 +84,7 @@ var Table = (function () {
 
         addColumns(viewModel.otherHeaders.tableName, otherColumns);
 
-        setArrows(viewModel.otherHeaders.tableName, "number", 1);
-
+        resetArrows();
         rebuildSections(viewModel);
     }
 
@@ -426,6 +423,11 @@ var Table = (function () {
         if (cellClass) { cell.addClass(cellClass); }
     }
 
+    function resetArrows() {
+        setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
+        setArrows(viewModel.otherHeaders.tableName, "number", 1);
+    }
+
     function setArrows(table, colName, sortOrder) {
         $("#" + table + " .tableHeader .downArrow").addClass("hiddenElement");
         $("#" + table + " .tableHeader .upArrow").addClass("hiddenElement");
@@ -462,6 +464,6 @@ var Table = (function () {
         rebuildSections: rebuildSections, // Repopulate the UI with the current viewModel
         rebuildTables: rebuildTables, // Used by Standalone.js and Default.js to rebuild with new viewModel
         recalculateVisibility: recalculateVisibility, // Recompute visibility with the current viewModel. Does not repopulate.
-        setArrows: setArrows
+        resetArrows: resetArrows
     }
 })();

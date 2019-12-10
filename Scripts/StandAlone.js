@@ -25,8 +25,7 @@ var StandAlone = (function () {
         if (!window.jQuery) return;
         if (appInsights) appInsights.trackEvent("analyzeHeaders");
         viewModel = HeaderModel($("#inputHeaders").val());
-        Table.setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
-        Table.setArrows(viewModel.otherHeaders.tableName, "number", 1);
+        Table.resetArrows();
 
         enableSpinner();
         updateStatus(mhaStrings.mha_loading);
@@ -41,8 +40,7 @@ var StandAlone = (function () {
         $("#inputHeaders").val("");
 
         viewModel = HeaderModel();
-        Table.setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
-        Table.setArrows(viewModel.otherHeaders.tableName, "number", 1);
+        Table.resetArrows();
         Table.rebuildSections(viewModel);
     }
 
