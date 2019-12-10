@@ -4,7 +4,7 @@
 
 var Table = (function () {
     var viewModel = null;
-    var Column = function (id, label, columnClass) { return { id: id, label: label, class: columnClass }; };
+    var column = function (id, label, columnClass) { return { id: id, label: label, class: columnClass }; };
 
     var visibilityBindings = [
         ["#lineBreak", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
@@ -30,15 +30,15 @@ var Table = (function () {
         makeResizableTable("receivedHeaders", mhaStrings.mha_receivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
 
         var receivedColumns = [
-            Column("hop", mhaStrings.mha_hop, null),
-            Column("from", mhaStrings.mha_submittingHost, null),
-            Column("by", mhaStrings.mha_receivingHost, null),
-            Column("date", mhaStrings.mha_time, null),
-            Column("delay", mhaStrings.mha_delay, null),
-            Column("with", mhaStrings.mha_type, null),
-            Column("id", mhaStrings.mha_id, "extraCol"),
-            Column("for", mhaStrings.mha_for, "extraCol"),
-            Column("via", mhaStrings.mha_via, "extraCol")
+            column("hop", mhaStrings.mha_hop, null),
+            column("from", mhaStrings.mha_submittingHost, null),
+            column("by", mhaStrings.mha_receivingHost, null),
+            column("date", mhaStrings.mha_time, null),
+            column("delay", mhaStrings.mha_delay, null),
+            column("with", mhaStrings.mha_type, null),
+            column("id", mhaStrings.mha_id, "extraCol"),
+            column("for", mhaStrings.mha_for, "extraCol"),
+            column("via", mhaStrings.mha_via, "extraCol")
         ];
 
         addColumns("receivedHeaders", receivedColumns);
@@ -77,9 +77,9 @@ var Table = (function () {
         makeResizableTable("otherHeaders", mhaStrings.mha_otherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
 
         var otherColumns = [
-            Column("number", mhaStrings.mha_number, null),
-            Column("header", mhaStrings.mha_header, null),
-            Column("value", mhaStrings.mha_value, null)
+            column("number", mhaStrings.mha_number, null),
+            column("header", mhaStrings.mha_header, null),
+            column("value", mhaStrings.mha_value, null)
         ];
 
         addColumns("otherHeaders", otherColumns);
