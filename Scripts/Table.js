@@ -4,13 +4,14 @@
 
 var Table = (function () {
     var viewModel = null;
+    var showExtra = false;
     var column = function (id, label, columnClass) { return { id: id, label: label, class: columnClass }; };
 
     var visibilityBindings = [
         ["#lineBreak", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
         ["#response", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
         ["#status", function () { return viewModel.status; }],
-        [".extraCol", function () { return viewModel.showExtra; }],
+        [".extraCol", function () { return showExtra; }],
         ["#clearButton", function () { return viewModel.hasData; }]
     ];
 
@@ -214,22 +215,22 @@ var Table = (function () {
     }
 
     function hideExtraColumns() {
+        showExtra = false;
         $("#leftArrow").addClass("hiddenElement");
         $("#rightArrow").removeClass("hiddenElement");
     }
 
     function showExtraColumns() {
+        showExtra = true;
         $("#rightArrow").addClass("hiddenElement");
         $("#leftArrow").removeClass("hiddenElement");
     }
 
     function toggleExtraColumns() {
-        viewModel.showExtra = !viewModel.showExtra;
-
-        if (viewModel.showExtra) {
-            showExtraColumns();
-        } else {
+        if (showExtra) {
             hideExtraColumns();
+        } else {
+            showExtraColumns();
         }
 
         recalculateVisibility();
