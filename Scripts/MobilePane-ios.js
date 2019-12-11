@@ -71,7 +71,7 @@
         updateStatus(mhaStrings.mha_loading);
 
         buildViews(headers);
-        hideStatus();
+        if (myApp) myApp.hidePreloader();
     }
 
     function buildViews(headers) {
@@ -126,7 +126,6 @@
             var timelineInner;
 
             for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
-
                 if (i === 0) {
                     currentTime = moment(viewModel.receivedHeaders.receivedRows[i].dateNum).local();
 
@@ -416,10 +415,6 @@
             myApp.hidePreloader();
             myApp.showPreloader(message);
         }
-    }
-
-    function hideStatus() {
-        myApp.hidePreloader();
     }
 
     // Handles rendering of an error.
