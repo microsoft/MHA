@@ -36,7 +36,7 @@ var AntiSpamReport = (function () {
         return false;
     }
 
-    //// https://technet.microsoft.com/en-us/library/dn205071
+    // https://technet.microsoft.com/en-us/library/dn205071
     function parse(report, rows) {
         if (!report) {
             return;
