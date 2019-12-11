@@ -163,6 +163,7 @@ var GetHeadersEWS = (function () {
     }
 
     return {
-        send: send
+        send: send,
+        extractHeadersFromXml: extractHeadersFromXml // for unit tests
     }
 })();
