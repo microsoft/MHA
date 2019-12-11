@@ -59,7 +59,7 @@ var Diagnostics = (function () {
 
     function ensureOfficeDiagnostics() {
         if (window.ParentFrame) {
-            var choice = window.ParentFrame.getChoice();
+            var choice = window.ParentFrame.choice;
             if (choice) {
                 appDiagnostics.ui = choice.label;
             }

@@ -1,10 +1,10 @@
 /* global $ */
+/* global appInsights */
 /* global fabric */
 /* global Office */
-/* global sendHeadersRequest */
 /* global Diagnostics */
 /* global Errors */
-/* global appInsights */
+/* global GetHeaders */
 /* exported ParentFrame */
 
 // Controller for Settings screen which controls what is being displayed
@@ -113,7 +113,7 @@ var ParentFrame = (function () {
 
     function loadNewItem() {
         if (Office.context.mailbox.item) {
-            sendHeadersRequest(function (_headers, apiUsed) {
+            GetHeaders.send(function (_headers, apiUsed) {
                 headers = _headers;
                 Diagnostics.set("API used", apiUsed);
                 render();
@@ -337,13 +337,11 @@ var ParentFrame = (function () {
         }
     }
 
-    function getChoice() { return currentChoice; }
-
     return {
         initUI: initUI,
         updateStatus: updateStatus,
         showError: showError,
-        getChoice: getChoice
+        get choice() { return currentChoice;}
     }
 })();
 

@@ -1,5 +1,5 @@
 ﻿/* global QUnit */
-/* global extractHeadersFromXml */
+/* global GetHeadersEWS */
 
 QUnit.test("XML Tests", function (assert) {
     var xml1 =
@@ -58,7 +58,7 @@ QUnit.test("XML Tests", function (assert) {
         " Test User3 <testuser3@microsoft.com>\r" +
         "To: Test User4 <testuser4@gmail.com>\r";
 
-    assert.propEqual(extractHeadersFromXml(xml1),
+    assert.propEqual(GetHeadersEWS.extractHeadersFromXml(xml1),
         {
             "prop": prop1
         });
@@ -71,9 +71,9 @@ QUnit.test("XML Tests", function (assert) {
     var prop2 =
         "Subject: Test message\r" +
         "From: Test User <testuser@gmail.com>\r";
-    assert.propEqual(extractHeadersFromXml(xml2),
+    assert.propEqual(GetHeadersEWS.extractHeadersFromXml(xml2),
         {
             "prop": prop2
         });
-    assert.propEqual(extractHeadersFromXml("Not xml"), {});
+    assert.propEqual(GetHeadersEWS.extractHeadersFromXml("Not xml"), {});
 });
