@@ -87,7 +87,4 @@
         disableSpinner();
         Table.rebuildSections(viewModel);
     }
-
-    return {
-    }
 })();
