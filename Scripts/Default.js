@@ -18,7 +18,7 @@
             postMessageToParent("frameActive");
         }
         catch (e) {
-            PostError(e, "Failed initializing frame");
+            postError(e, "Failed initializing frame");
             showError(e, "Failed initializing frame");
         }
     });
@@ -47,7 +47,7 @@
         }
     }
 
-    function PostError(error, message) {
+    function postError(error, message) {
         postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
     }
 
