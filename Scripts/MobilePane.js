@@ -5,6 +5,33 @@
 // Check mobile platform
 
 $(document).ready(function () {
+    function insertData(id, headerText, valueText) {
+        var pane = $("#" + id);
+
+        var lf = $(document.createElement("br"));
+
+        var header = $(document.createElement("span"));
+        header.text(headerText + ': ');
+
+        var value = $(document.createElement("span"));
+        value.text(valueText);
+
+        pane.append(header);
+        pane.append(value);
+        pane.append(lf);
+    }
+
+    function insertLastModified() {
+        var client = new XMLHttpRequest();
+        client.open("HEAD", "../dist/MobilePane.min.js", true);
+        client.onreadystatechange = function () {
+            if (this.readyState == 2) {
+                insertData('diag', 'Last update', client.getResponseHeader("Last-Modified"));
+            }
+        }
+        client.send();
+    }
+
     // Temporary hack for oddball Outlook for iOS user agent
     var ios = window.navigator.userAgent.match(/(Outlook-iOS)/);
 
@@ -17,8 +44,7 @@ $(document).ready(function () {
     if (ios) Framework7.prototype.device.ios = true;
     if (Framework7.prototype.device.ios) {
         // Redirect to iOS page
-        var iosPaneUrl = new URI('MobilePane-ios.html').absoluteTo(window.location).toString();
-        window.location.href = iosPaneUrl;
+        window.location.href = "MobilePane-ios.html";
     } else if (Framework7.prototype.device.android) {
         $('#message').text('Android is not yet supported.');
     } else {
@@ -32,30 +58,3 @@ $(document).ready(function () {
     insertData('diag', 'iPhone', Framework7.prototype.device.iphone);
     insertLastModified();
 });
-
-function insertData(id, headerText, valueText) {
-    var pane = $("#" + id);
-
-    var lf = $(document.createElement("br"));
-
-    var header = $(document.createElement("span"));
-    header.text(headerText + ': ');
-
-    var value = $(document.createElement("span"));
-    value.text(valueText);
-
-    pane.append(header);
-    pane.append(value);
-    pane.append(lf);
-}
-
-function insertLastModified() {
-    var client = new XMLHttpRequest();
-    client.open("HEAD", "../dist/MobilePane.min.js", true);
-    client.onreadystatechange = function () {
-        if (this.readyState == 2) {
-            insertData('diag', 'Last update', client.getResponseHeader("Last-Modified"));
-        }
-    }
-    client.send();
-}
