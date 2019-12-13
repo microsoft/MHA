@@ -1,18 +1,14 @@
 /* exported mhaStrings */
-
 var mhaStrings = (function () {
     function htmlEncode(value) { return value ? $('<div />').text(value).html() : ''; }
-
     function mapHeaderToURL(headerName, text) {
         for (var i = 0; i < headerToURLMap.length; i++) {
             if (headerName.toLowerCase() === headerToURLMap[i][0].toLowerCase()) {
                 return ["<a href = '", headerToURLMap[i][1], "' target = '_blank'>", htmlEncode(text || headerName), "</a>"].join("");
             }
         }
-
         return null;
     }
-
     var headerToURLMap = [
         ["Accept-Language", "https://tools.ietf.org/html/rfc3282"],
         ["Authentication-Results", "https://tools.ietf.org/html/rfc7601"],
@@ -68,7 +64,6 @@ var mhaStrings = (function () {
         ["X-Originating-IP", "https://en.wikipedia.org/wiki/X-Originating-IP"],
         ["X-Priority", "https://technet.microsoft.com/en-us/library/bb691107"]
     ];
-
     return {
         mapHeaderToURL: mapHeaderToURL,
         // REST
@@ -79,7 +74,6 @@ var mhaStrings = (function () {
         mha_headersMissing: "Message was missing transport headers. If this is a sent item this may be expected.",
         mha_messageMissing: "Message not located.",
         mha_requestFailed: "Failed to retrieve headers.",
-
         // Headers
         mha_negative: "-",
         mha_minute: "minute",
@@ -97,7 +91,6 @@ var mhaStrings = (function () {
         mha_deliveredEnd: ")",
         mha_parsingHeaders: "Parsing headers to tables",
         mha_processingReceivedHeader: "Processing received header ",
-
         // Summary
         mha_subject: "Subject",
         mha_messageId: "Message Id",
@@ -105,7 +98,6 @@ var mhaStrings = (function () {
         mha_from: "From",
         mha_to: "To",
         mha_cc: "Cc",
-
         // Received
         mha_hop: "Hop",
         mha_submittingHost: "Submitting host",
@@ -116,12 +108,10 @@ var mhaStrings = (function () {
         mha_id: "ID",
         mha_for: "For",
         mha_via: "Via",
-
         // Other
         mha_number: "#",
         mha_header: "Header",
         mha_value: "Value",
-
         // ForefrontAntiSpamReport
         mha_countryRegion: "Country/Region",
         mha_lang: "Language",
@@ -133,8 +123,7 @@ var mhaStrings = (function () {
         mha_ptr: "PTR Record",
         mha_cip: "Connecting IP Address",
         mha_customSpam: "Advanced Spam Filtering",
-
         // AntiSpamReport
         mha_bcl: "Bulk Complaint Level"
-    }
+    };
 })();

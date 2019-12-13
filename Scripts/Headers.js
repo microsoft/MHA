@@ -5,7 +5,6 @@
 /* global Received */
 /* global Summary */
 /* exported HeaderModel */
-
 var HeaderModel = (function (headers) {
     var summary = Summary();
     var receivedHeaders = Received();
@@ -15,27 +14,22 @@ var HeaderModel = (function (headers) {
     var originalHeaders = "";
     var status = "";
     var hasData = false;
-
     var Header = function (_header, _value) {
         return {
             header: _header,
             value: _value
         };
     };
-
     function parseHeaders(headers) {
         // Initialize originalHeaders in case we have parsing problems
         originalHeaders = headers;
         var headerList = GetHeaderList(headers);
-
         if (headerList.length > 0) {
             hasData = true;
         }
-
         for (var i = 0; i < headerList.length; i++) {
             // Grab values for our summary pane
             summary.init(headerList[i]);
-
             // Properties with special parsing
             switch (headerList[i].header) {
                 case "X-Forefront-Antispam-Report":
@@ -45,29 +39,26 @@ var HeaderModel = (function (headers) {
                     antiSpamReport.init(headerList[i].value);
                     break;
             }
-
             if (headerList[i].header === "Received") {
                 receivedHeaders.init(headerList[i].value);
-            } else if (headerList[i].header || headerList[i].value) {
+            }
+            else if (headerList[i].header || headerList[i].value) {
                 otherHeaders.init(headerList[i]);
             }
         }
-
         summary.totalTime = receivedHeaders.computeDeltas();
     }
-
     function GetHeaderList(headers) {
         // First, break up out input by lines.
         var lines = headers.split(/[\n\r]+/);
-
         var headerList = [];
         var iNextHeader = 0;
         // Unfold lines
         for (var iLine = 0; iLine < lines.length; iLine++) {
             var line = lines[iLine];
             // Skip empty lines
-            if (line === "") continue;
-
+            if (line === "")
+                continue;
             // Recognizing a header:
             // - First colon comes before first white space.
             // - We're not strictly honoring white space folding because initial white space
@@ -76,7 +67,6 @@ var HeaderModel = (function (headers) {
             // match[1] - everything before the first colon, assuming no spaces (header).
             // match[2] - everything after the first colon (value).
             var match = line.match(/(^[\w-.]*?): ?(.*)/);
-
             // There's one false positive we might get: if the time in a Received header has been
             // folded to the next line, the line might start with something like "16:20:05 -0400".
             // This matches our regular expression. The RFC does not preclude such a header, but I've
@@ -85,15 +75,18 @@ var HeaderModel = (function (headers) {
             if (match && match[1] && !match[1].match(/^\d{1,2}$/)) {
                 headerList[iNextHeader] = new Header(match[1], match[2]);
                 iNextHeader++;
-            } else {
+            }
+            else {
                 if (iNextHeader > 0) {
                     // Tack this line to the previous line
                     // All folding whitespace should collapse to a single space
                     line = line.replace(/^[\s]+/, "");
-                    if (!line) continue;
+                    if (!line)
+                        continue;
                     var separator = headerList[iNextHeader - 1].value ? " " : "";
                     headerList[iNextHeader - 1].value += separator + line;
-                } else {
+                }
+                else {
                     // If we didn't have a previous line, go ahead and use this line
                     if (line.match(/\S/g)) {
                         headerList[iNextHeader] = new Header("", line);
@@ -102,7 +95,6 @@ var HeaderModel = (function (headers) {
                 }
             }
         }
-
         // 2047 decode our headers now
         for (var iHeader = 0; iHeader < headerList.length; iHeader++) {
             // Clean 2047 encoding
@@ -111,12 +103,11 @@ var HeaderModel = (function (headers) {
             var headerValue = Decoder.clean2047Encoding(headerList[iHeader].value).replace(/\0/g, "").replace(/[\n\r]+$/, "");
             headerList[iHeader].value = headerValue;
         }
-
         return headerList;
     }
-
-    if (headers) { parseHeaders(headers); }
-
+    if (headers) {
+        parseHeaders(headers);
+    }
     return {
         originalHeaders: originalHeaders,
         summary: summary,
@@ -128,5 +119,5 @@ var HeaderModel = (function (headers) {
         GetHeaderList: GetHeaderList,
         get status() { return status; },
         set status(value) { status = value; }
-    }
+    };
 });

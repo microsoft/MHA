@@ -1,12 +1,10 @@
-﻿/* global QUnit */
+/* global QUnit */
 /* global Received */
-
 QUnit.test("DateTime Tests", function (assert) {
     var received = Received();
     QUnit.assert.datesEqual = function (value, expected, message) {
         return assert.propEqual({ date: value.date, dateNum: value.dateNum, dateSort: value.dateSort }, expected, message);
     };
-
     assert.datesEqual(received.row("Received: test; Sat, 21 Apr 2018 03:01:32 +0000"), {
         "date": received.dateString("21 Apr 2018 03:01:32 +0000"), "dateNum": 1524279692000, "dateSort": 1524279692000,
     }, 1);
@@ -49,7 +47,6 @@ QUnit.test("DateTime Tests", function (assert) {
     assert.datesEqual(received.row("Received: test; Mon, 26 Mar 2018 13:35:36.102 +0000 UTC"), {
         "date": received.dateString("26 Mar 2018 13:35:36 +0000"), "dateNum": 1522071336102, "dateSort": 1522071336102
     }, 11);
-
     assert.equal(received.computeTime(9000, 8000), "1 second", 50);
     assert.equal(received.computeTime(99000, 8000), "1 minute 31 seconds", 51);
     assert.equal(received.computeTime(999000, 8000), "16 minutes 31 seconds", 52);

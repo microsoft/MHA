@@ -1,10 +1,8 @@
-﻿/* global $ */
+/* global $ */
 /* global mhaStrings  */
 /* global HeaderModel */
 /* global Table */
-
 // This is the "classic" UI rendered in classicDesktopFrame.html
-
 (function () {
     var viewModel = null;
     // This function is run when the app is ready to start interacting with the host application.
@@ -22,16 +20,13 @@
             showError(e, "Failed initializing frame");
         }
     });
-
     function site() { return window.location.protocol + "//" + window.location.host; }
-
     function postMessageToParent(eventName, data) {
         window.parent.postMessage({ eventName: eventName, data: data }, site());
     }
-
     function eventListener(event) {
-        if (!event || event.origin !== site()) return;
-
+        if (!event || event.origin !== site())
+            return;
         if (event.data) {
             switch (event.data.eventName) {
                 case "showError":
@@ -46,31 +41,25 @@
             }
         }
     }
-
     function postError(error, message) {
         postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
     }
-
     function enableSpinner() {
         $("#response").css("background-image", "url(/Resources/loader.gif)");
         $("#response").css("background-repeat", "no-repeat");
         $("#response").css("background-position", "center");
     }
-
     function disableSpinner() {
         $("#response").css("background", "none");
     }
-
     function updateStatus(statusText) {
         enableSpinner();
         $("#status").text(statusText);
         if (viewModel !== null) {
             viewModel.status = statusText;
         }
-
         Table.recalculateVisibility();
     }
-
     function renderItem(headers) {
         updateStatus(mhaStrings.mha_foundHeaders);
         $("#originalHeaders").text(headers);
@@ -79,7 +68,6 @@
         updateStatus("");
         disableSpinner();
     }
-
     // Handles rendering of an error.
     // Does not log the error - caller is responsible for calling PostError
     function showError(error, message) {

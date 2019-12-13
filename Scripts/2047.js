@@ -1,11 +1,8 @@
-﻿/* global cptable */
+/* global cptable */
 /* exported Decoder */
-
 var Decoder = (function () {
-
     // http://tools.ietf.org/html/rfc2047
     // http://tools.ietf.org/html/rfc2231
-
     // Sample encodings from the RFC:
     ////From: =?US-ASCII?Q?Keith_Moore?= <moore@cs.utk.edu>
     ////To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= <keld@dkuug.dk>
@@ -15,13 +12,11 @@ var Decoder = (function () {
     ////From: Nathaniel Borenstein <nsb@thumper.bellcore.com>
     ////    (=?iso-8859-8?b?7eXs+SDv4SDp7Oj08A==?=)
     ////From: =?US-ASCII*EN?Q?Keith_Moore?= <moore@cs.utk.edu>
-
     function clean2047Encoding(buffer) {
         // We're decoding =?...?= tokens here.
         // Per RFC, white space between tokens is to be ignored.
         // Remove that white space.
         buffer = buffer.replace(/\?=\s*=\?/g, "?==?");
-
         var unparsedblocks = [];
         //split string into blocks
         while (buffer.length) {
@@ -30,21 +25,19 @@ var Decoder = (function () {
                 if (matches[1]) {
                     unparsedblocks.push({ text: matches[1] });
                 }
-
                 unparsedblocks.push(getBlock(matches[2]));
                 buffer = matches[3];
-            } else if (buffer) {
+            }
+            else if (buffer) {
                 // Once we're out of matches, we've parsed the whole string.
                 // Append the rest of the buffer to the result.
                 unparsedblocks.push({ text: buffer });
                 break;
             }
         }
-
         var collapsedBlocks = [];
         for (var i = 0; i < unparsedblocks.length; i++) {
             collapsedBlocks.push(unparsedblocks[i]);
-
             // Combine a Q block with the previous Q block if the charset matches
             if (i >= 1 &&
                 collapsedBlocks[i].type === "Q" && collapsedBlocks[i - 1].type === "Q" &&
@@ -54,7 +47,6 @@ var Decoder = (function () {
                 collapsedBlocks[i - 1] = {};
             }
         }
-
         var result = [];
         collapsedBlocks.forEach(function (block) {
             if (block.type === "B") {
@@ -67,41 +59,35 @@ var Decoder = (function () {
                 result.push(block.text);
             }
         });
-
         return result.join("");
     }
-
     function getBlock(token) {
         var matches = token.match(/=\?(.*?)(?:\*.*)?\?(.)\?(.*?)\?=/m);
         if (matches) {
-            return { charset: matches[1], type: matches[2].toUpperCase(), text: matches[3] }
+            return { charset: matches[1], type: matches[2].toUpperCase(), text: matches[3] };
         }
-
         return { text: token, };
     }
-
     function decodeQuoted(charSet, buffer) {
         if (!buffer) {
             return buffer;
         }
-
         try {
             // 2047 quoted allows _ as a replacement for space. Fix that first.
             var uriBuffer = buffer.replace(/_/g, " ");
             return decodeHex(charSet, uriBuffer);
-        } catch (e) {
+        }
+        catch (e) {
             // Since we failed to decode, put it all back
             return "=?" + charSet + "?Q?" + buffer + "?=";
         }
     }
-
     // Javascript auto converted from C# implementation + improvements.
     var $F = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     function decodeBase64(charSet, input) {
         if (!input) {
             return input;
         }
-
         var $v$0 = [];
         var $v$1, $v$2, $v$3, $v$4, $v$5, $v$6, $v$7;
         var $v$8 = 0;
@@ -113,16 +99,16 @@ var Decoder = (function () {
             $v$1 = $v$4 << 2 | $v$5 >> 4;
             $v$2 = ($v$5 & 15) << 4 | $v$6 >> 2;
             $v$3 = ($v$6 & 3) << 6 | $v$7;
-
             if ($v$7 !== 64) {
                 $v$0.push($v$1, $v$2, $v$3);
-            } else if ($v$6 !== 64) {
+            }
+            else if ($v$6 !== 64) {
                 $v$0.push($v$1, $v$2);
-            } else {
+            }
+            else {
                 $v$0.push($v$1);
             }
         }
-
         try {
             return decodeHexCodepage(charSet, $v$0);
         }
@@ -131,10 +117,8 @@ var Decoder = (function () {
             return "=?" + charSet + "?B?" + input + "?=";
         }
     }
-
     function decodeHex(charSet, buffer) {
         var result = [];
-
         while (buffer.length) {
             var matches = buffer.match(/(.*?)((?:=[0-9a-fA-F]{2,2})+)(.*)/m);
             if (matches) {
@@ -146,20 +130,18 @@ var Decoder = (function () {
                 for (var iHex = 0; iHex < hexes.length; iHex++) {
                     hexArray.push(parseInt("0x" + hexes[iHex], 16));
                 }
-
                 result.push(matches[1], decodeHexCodepage(charSet, hexArray));
                 buffer = matches[3];
-            } else {
+            }
+            else {
                 // Once we're out of matches, we've decoded the whole string.
                 // Append the rest of the buffer to the result.
                 result.push(buffer);
                 break;
             }
         }
-
         return result.join("");
     }
-
     function getCodePage(charSet) {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/dd317756(v=vs.85).aspx
         switch (charSet.toUpperCase()) {
@@ -172,16 +154,14 @@ var Decoder = (function () {
             default: return 65001;
         }
     }
-
     function decodeHexCodepage(charSet, hexArray) {
         return cptable.utils.decode(getCodePage(charSet), hexArray);
     }
-
     return {
         clean2047Encoding: clean2047Encoding,
         decodeBase64: decodeBase64,
         decodeHex: decodeHex,
         decodeHexCodepage: decodeHexCodepage,
         decodeQuoted: decodeQuoted
-    }
+    };
 })();

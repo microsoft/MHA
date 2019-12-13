@@ -1,9 +1,7 @@
-﻿/* global QUnit */
+/* global QUnit */
 /* global GetHeadersEWS */
-
 QUnit.test("XML Tests", function (assert) {
-    var xml1 =
-        "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Header><h:ServerVersionInfo MajorVersion=\"15\" MinorVersion=\"20\" MajorBuildNumber=\"797\" MinorBuildNumber=\"11\" Version=\"V2018_01_08\" xmlns:h=\"http://schemas.microsoft.com/exchange/services/2006/types\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"/></s:Header><s:Body><m:GetItemResponse xmlns:m=\"http://schemas.microsoft.com/exchange/services/2006/messages\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:t=\"http://schemas.microsoft.com/exchange/services/2006/types\"><m:ResponseMessages><m:GetItemResponseMessage ResponseClass=\"Success\"><m:ResponseCode>NoError</m:ResponseCode><m:Items><t:Message><t:ItemId Id=\"AQMkADAwATM0MDAAMS1hYzNiLWIzYjEtMDACLTAwCgBGAAADwxobsfxV00aTGGYxwhj+tgcAzcLQNcgKeEiqUypBuKrhfwAAAgEMAAAAtxZjPqJy40C2DTBmR6PgWgABJcrCkgAAAA==\" ChangeKey=\"CQAAABYAAAC3FmM+onLjQLYNMGZHo+BaAAEl980z\"/><t:ExtendedProperty><t:ExtendedFieldURI PropertyTag=\"0x7d\" PropertyType=\"String\"/><t:Value>Received: from BY2NAM01HT049.eop-nam01.prod.protection.outlook.com&#xD;" +
+    var xml1 = "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Header><h:ServerVersionInfo MajorVersion=\"15\" MinorVersion=\"20\" MajorBuildNumber=\"797\" MinorBuildNumber=\"11\" Version=\"V2018_01_08\" xmlns:h=\"http://schemas.microsoft.com/exchange/services/2006/types\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"/></s:Header><s:Body><m:GetItemResponse xmlns:m=\"http://schemas.microsoft.com/exchange/services/2006/messages\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:t=\"http://schemas.microsoft.com/exchange/services/2006/types\"><m:ResponseMessages><m:GetItemResponseMessage ResponseClass=\"Success\"><m:ResponseCode>NoError</m:ResponseCode><m:Items><t:Message><t:ItemId Id=\"AQMkADAwATM0MDAAMS1hYzNiLWIzYjEtMDACLTAwCgBGAAADwxobsfxV00aTGGYxwhj+tgcAzcLQNcgKeEiqUypBuKrhfwAAAgEMAAAAtxZjPqJy40C2DTBmR6PgWgABJcrCkgAAAA==\" ChangeKey=\"CQAAABYAAAC3FmM+onLjQLYNMGZHo+BaAAEl980z\"/><t:ExtendedProperty><t:ExtendedFieldURI PropertyTag=\"0x7d\" PropertyType=\"String\"/><t:Value>Received: from BY2NAM01HT049.eop-nam01.prod.protection.outlook.com&#xD;" +
         " (2a01:111:e400:5a6b::50) by BY2PR16MB0487.namprd16.prod.outlook.com with&#xD;" +
         " HTTPS via BY2PR1001CA0082.NAMPRD10.PROD.OUTLOOK.COM; Mon, 21 May 2018&#xD;" +
         " 16:08:55 +0000&#xD;" +
@@ -30,8 +28,7 @@ QUnit.test("XML Tests", function (assert) {
         " Test User3 &lt;testuser3@microsoft.com&gt;&#xD;" +
         "To: Test User4 &lt;testuser4@gmail.com&gt;&#xD;" +
         "</t:Value></t:ExtendedProperty></t:Message></m:Items></m:GetItemResponseMessage></m:ResponseMessages></m:GetItemResponse></s:Body></s:Envelope>";
-    var prop1 =
-        "Received: from BY2NAM01HT049.eop-nam01.prod.protection.outlook.com\r" +
+    var prop1 = "Received: from BY2NAM01HT049.eop-nam01.prod.protection.outlook.com\r" +
         " (2a01:111:e400:5a6b::50) by BY2PR16MB0487.namprd16.prod.outlook.com with\r" +
         " HTTPS via BY2PR1001CA0082.NAMPRD10.PROD.OUTLOOK.COM; Mon, 21 May 2018\r" +
         " 16:08:55 +0000\r" +
@@ -57,23 +54,17 @@ QUnit.test("XML Tests", function (assert) {
         " Test User2 <testuser2@outlook.com>,\r" +
         " Test User3 <testuser3@microsoft.com>\r" +
         "To: Test User4 <testuser4@gmail.com>\r";
-
-    assert.propEqual(GetHeadersEWS.extractHeadersFromXml(xml1),
-        {
-            "prop": prop1
-        });
-
-    var xml2 =
-        "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Header><h:ServerVersionInfo MajorVersion=\"15\" MinorVersion=\"20\" MajorBuildNumber=\"797\" MinorBuildNumber=\"11\" Version=\"V2018_01_08\" xmlns:h=\"http://schemas.microsoft.com/exchange/services/2006/types\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"/></s:Header><s:Body><m:GetItemResponse xmlns:m=\"http://schemas.microsoft.com/exchange/services/2006/messages\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:t=\"http://schemas.microsoft.com/exchange/services/2006/types\"><m:ResponseMessages><m:GetItemResponseMessage ResponseClass=\"Success\"><m:ResponseCode>NoError</m:ResponseCode><m:Items><t:Message><t:ItemId Id=\"AQMkADAwATM0MDAAMS1hYzNiLWIzYjEtMDACLTAwCgBGAAADwxobsfxV00aTGGYxwhj+tgcAzcLQNcgKeEiqUypBuKrhfwAAAgEMAAAAtxZjPqJy40C2DTBmR6PgWgABJcrCkgAAAA==\" ChangeKey=\"CQAAABYAAAC3FmM+onLjQLYNMGZHo+BaAAEl980z\"/><t:ExtendedProperty><t:ExtendedFieldURI PropertyTag=\"0x7d\" PropertyType=\"String\"/><t:Value>" +
+    assert.propEqual(GetHeadersEWS.extractHeadersFromXml(xml1), {
+        "prop": prop1
+    });
+    var xml2 = "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Header><h:ServerVersionInfo MajorVersion=\"15\" MinorVersion=\"20\" MajorBuildNumber=\"797\" MinorBuildNumber=\"11\" Version=\"V2018_01_08\" xmlns:h=\"http://schemas.microsoft.com/exchange/services/2006/types\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"/></s:Header><s:Body><m:GetItemResponse xmlns:m=\"http://schemas.microsoft.com/exchange/services/2006/messages\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:t=\"http://schemas.microsoft.com/exchange/services/2006/types\"><m:ResponseMessages><m:GetItemResponseMessage ResponseClass=\"Success\"><m:ResponseCode>NoError</m:ResponseCode><m:Items><t:Message><t:ItemId Id=\"AQMkADAwATM0MDAAMS1hYzNiLWIzYjEtMDACLTAwCgBGAAADwxobsfxV00aTGGYxwhj+tgcAzcLQNcgKeEiqUypBuKrhfwAAAgEMAAAAtxZjPqJy40C2DTBmR6PgWgABJcrCkgAAAA==\" ChangeKey=\"CQAAABYAAAC3FmM+onLjQLYNMGZHo+BaAAEl980z\"/><t:ExtendedProperty><t:ExtendedFieldURI PropertyTag=\"0x7d\" PropertyType=\"String\"/><t:Value>" +
         "Subject: Test message&#xD;" +
         "From: Test User &lt;testuser@gmail.com&gt;&#xD;" +
         "&#x0;</t:Value></t:ExtendedProperty></t:Message></m:Items></m:GetItemResponseMessage></m:ResponseMessages></m:GetItemResponse></s:Body></s:Envelope>";
-    var prop2 =
-        "Subject: Test message\r" +
+    var prop2 = "Subject: Test message\r" +
         "From: Test User <testuser@gmail.com>\r";
-    assert.propEqual(GetHeadersEWS.extractHeadersFromXml(xml2),
-        {
-            "prop": prop2
-        });
+    assert.propEqual(GetHeadersEWS.extractHeadersFromXml(xml2), {
+        "prop": prop2
+    });
     assert.propEqual(GetHeadersEWS.extractHeadersFromXml("Not xml"), {});
 });

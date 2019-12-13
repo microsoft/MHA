@@ -1,7 +1,6 @@
 /* global mhaStrings */
 /* global AntiSpamReport */
 /* exported ForefrontAntiSpamReport */
-
 var ForefrontAntiSpamReport = (function () {
     // cheap inheritance
     var antiSpamReport = AntiSpamReport();
@@ -17,13 +16,11 @@ var ForefrontAntiSpamReport = (function () {
         antiSpamReport.row("CIP", mhaStrings.mha_cip, "X-Forefront-Antispam-Report"),
         antiSpamReport.row("X-CustomSpam", mhaStrings.mha_customSpam, "X-Forefront-Antispam-Report")
     ];
-
     function init(report) { antiSpamReport.parse(report, forefrontAntiSpamRows); }
     function exists() { return antiSpamReport.existsInternal(forefrontAntiSpamRows); }
-
     return {
         init: init,
         exists: exists,
         get forefrontAntiSpamRows() { return forefrontAntiSpamRows; },
-    }
+    };
 });

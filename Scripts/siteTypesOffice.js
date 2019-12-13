@@ -1,11 +1,8 @@
-﻿/* exported Office */
-
+/* exported Office */
 // This file is used for enabling IntelliSense in Visual Studio
-
 var Office = new function () {
     this._appContext = 8;
 };
-
 // 1 Excel appContext = 001
 // 2 Word appContext = 010
 // 3 Word + Excel appContext = 011
