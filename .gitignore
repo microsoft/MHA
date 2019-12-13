@@ -6,5 +6,4 @@
 /node_modules
 *.min.js
 *.min.js.map
-/Scripts/aikey.js
 /Scripts
