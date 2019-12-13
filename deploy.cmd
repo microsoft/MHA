@@ -110,8 +110,17 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
   popd
 )
 
-:: 4. Run npm build script
-echo 4. Run npm build script
+:: 4. Transpile TypeScript
+echo 4. Transpile TypeScript
+IF EXIST "%DEPLOYMENT_TARGET%\tsconfig.json" (
+  pushd "%DEPLOYMENT_TARGET%"
+  call :ExecuteCmd tsc
+  IF !ERRORLEVEL! NEQ 0 goto error
+  popd
+)
+
+:: 5. Run npm build script
+echo 5. Run npm build script
 IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
   pushd "%DEPLOYMENT_TARGET%"
   call :ExecuteCmd !NPM_CMD! run build
