@@ -40,5 +40,8 @@
     "Clean": [
       "clean"
     ]
+  },
+  "devDependencies": {
+    "typescript": "^3.7.3"
   }
 }
