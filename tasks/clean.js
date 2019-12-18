@@ -1,21 +1,29 @@
 const fs = require("fs");
 const path = require("path");
 
-function purge(files, sourcePath) {
-    for (const file of files) {
-        console.log("Considering " + file);
-        if (file.match(/aikey\.js/)) continue;
-        if (file.match(/\.js/)) {
-            console.log("  Deleting " + file);
-            const filePath = path.join(sourcePath, file);
-            fs.unlinkSync(filePath);
-        }
+const rmdir = function (filepath) {
+    if (fs.existsSync(filepath)) {
+        fs.readdirSync(filepath).forEach((file, index) => {
+            const subpath = path.join(filepath, file);
+            if (fs.lstatSync(subpath).isDirectory()) {
+                rmdir(subpath);
+            } else {
+                fs.unlinkSync(subpath);
+            }
+        });
+
+        console.log("Deleting " + filepath);
+        fs.rmdirSync(filepath);
     }
-}
+};
+
+const pagesFolder = path.join(__dirname, "..", "Pages");
+rmdir(pagesFolder);
 
 const scriptsFolder = path.join(__dirname, "..", "Scripts");
-const files = fs.readdirSync(scriptsFolder);
-purge(files, scriptsFolder);
-const utFolder = path.join(__dirname, "..", "Scripts", "unittests");
-const ut = fs.readdirSync(utFolder);
-purge(ut, utFolder);
+fs.readdirSync(scriptsFolder).forEach((file, index) => {
+    const subpath = path.join(scriptsFolder, file);
+    if (fs.lstatSync(subpath).isDirectory()) {
+        rmdir(subpath);
+    }
+});
