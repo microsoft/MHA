@@ -4,8 +4,6 @@
 .vscode
 /.vs
 /node_modules
-*.min.js
-*.min.js.map
 /Scripts
 /src/Compiled
 /Pages
