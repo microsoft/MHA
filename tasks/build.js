@@ -28,7 +28,7 @@ if (key) {
 // TODO: come up with a proper version here
 const version = "test";
 
-const scriptsFolderSrc = path.join(__dirname, "..", "src", "Compiled");
+const scriptsFolderSrc = path.join(__dirname, "..", "src", "transpiled");
 const scriptsFolderDst = path.join(__dirname, "..", "Scripts", version);
 const pagesFolderSrc = path.join(__dirname, "..", "src", "Pages");
 const pagesFolderDst = path.join(__dirname, "..", "Pages");

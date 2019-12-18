@@ -5,5 +5,5 @@
 /.vs
 /node_modules
 /Scripts
-/src/Compiled
+/src/transpiled
 /Pages

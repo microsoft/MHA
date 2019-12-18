@@ -1,9 +1,9 @@
 {
-    "compilerOptions": {
-        "outDir": "./src/Compiled",
-        "allowJs": true,
-        "target": "es5"
-    },
+  "compilerOptions": {
+    "outDir": "./src/transpiled",
+    "allowJs": true,
+    "target": "es5"
+  },
     "include": [
         "./src/Scripts/**/*"
     ]
