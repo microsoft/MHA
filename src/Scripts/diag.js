@@ -30,7 +30,7 @@ var Diagnostics = (function () {
 
     function ensureLastModified() {
         var client = new XMLHttpRequest();
-        client.open("HEAD", window.location.origin + "/Scripts/diag.min.js", true);
+        client.open("HEAD", window.location.origin + "/src/Scripts/diag.js", true);
         client.onreadystatechange = function () {
             if (this.readyState == 2) {
                 lastUpdate = client.getResponseHeader("Last-Modified");

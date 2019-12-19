@@ -9,7 +9,7 @@
   "main": "Pages/mha.html",
   "scripts": {
     "build": "node tasks/build.js",
-    "build-debug": "node tasks/build-debug.js",
+    "build-debug": "node tasks/build.js debug",
     "clean": "node tasks/clean.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -34,11 +34,7 @@
     "uglify-js": "^3.6.8"
   },
   "-vs-binding": {
-    "BeforeBuild": [
-      "build-debug"
-    ],
-    "Clean": [
-      "clean"
-    ]
+    "BeforeBuild": [ "build-debug" ],
+    "Clean": [ "clean" ]
   }
 }
