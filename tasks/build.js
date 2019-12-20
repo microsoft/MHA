@@ -30,29 +30,30 @@ const version = "test";
 
 const scriptsFolderSrc = path.join(__dirname, "..", "src", "Scripts");
 const scriptsFolderDst = path.join(__dirname, "..", "Scripts", version);
-const pagesFolderSrc = path.join(__dirname, "..", "src", "Pages");
-const pagesFolderDst = path.join(__dirname, "..", "Pages");
 
-// Copy pages from pagesFolderSrc to pagesFolderDst, replacing %version% on the way
-if (!fs.existsSync(pagesFolderDst)) {
-    fs.mkdirSync(pagesFolderDst);
-}
+// Copy files from src to dst, replacing %version% on the way if munge is true
+const deploy = function (src, dst, munge) {
+    if (!fs.existsSync(dst)) fs.mkdirSync(dst, { recursive: true });
 
-console.log("Updating pages");
-console.log("Copying from " + pagesFolderSrc);
-console.log("Copying to " + pagesFolderDst);
-const pageFiles = fs.readdirSync(pagesFolderSrc);
-for (const pageFile of pageFiles) {
-    console.log("Considering " + pageFile);
-    var srcPath = path.join(pagesFolderSrc, pageFile);
-    var dstPath = path.join(pagesFolderDst, pageFile);
+    console.log("Copying from " + src + " to " + dst);
+    const srcFiles = fs.readdirSync(src);
+    for (const srcFile of srcFiles) {
+        var srcPath = path.join(src, srcFile);
+        var dstPath = path.join(dst, srcFile);
 
-    console.log("Copying from " + srcPath);
-    console.log("Copying to " + dstPath);
+        console.log("   Copying from " + srcPath + " to " + dstPath);
 
-    var fileBytes = fs.readFileSync(srcPath, "utf8");
-    fs.writeFileSync(dstPath, fileBytes.replace(/%version%/g, version), "utf8");
-}
+        var fileBytes = fs.readFileSync(srcPath, "utf8");
+        if (munge) fileBytes = fileBytes.replace(/%version%/g, version);
+        fs.writeFileSync(dstPath, fileBytes, "utf8");
+    }
+};
+
+console.log("Deploying pages");
+deploy(path.join(__dirname, "..", "src", "Pages"), path.join(__dirname, "..", "Pages"), true);
+
+console.log("Deploying css");
+deploy(path.join(__dirname, "..", "src", "Content"), path.join(__dirname, "..", "Content", version), false);
 
 var options = {
     compress: {},
@@ -91,15 +92,16 @@ const targets = {
     "unittests/ut-XML.min.js": ["unittests/ut-XML.js"]
 };
 
+console.log("Deploying script");
 for (const targetName of Object.keys(targets)) {
     const fileSet = targets[targetName];
     const mapName = targetName + ".map";
-    console.log("Building " + targetName + " and " + mapName);
+    console.log("   Building " + targetName + " and " + mapName);
 
     // Create the list of files and read their sources
     const files = {};
     for (const file of fileSet) {
-        var fileName = path.basename(file);
+        const fileName = path.basename(file);
         files[fileName] = fs.readFileSync(path.join(scriptsFolderSrc, file), "utf8");
         // Copy original over verbatim to the target directory
         const dstPathOrig = path.join(scriptsFolderDst, file);
@@ -107,6 +109,7 @@ for (const targetName of Object.keys(targets)) {
         if (!fs.existsSync(dstDir)) {
             fs.mkdirSync(dstDir);
         }
+
         fs.writeFileSync(dstPathOrig, files[fileName], "utf8");
         if (debug) {
             // Copy min over to the target directory
@@ -118,7 +121,7 @@ for (const targetName of Object.keys(targets)) {
     if (!debug) {
         options.sourceMap.filename = path.basename(targetName);
         options.sourceMap.url = path.basename(mapName);
-        var result = UglifyJS.minify(files, options);
+        const result = UglifyJS.minify(files, options);
         fs.writeFileSync(path.join(scriptsFolderDst, targetName), result.code, "utf8");
         fs.writeFileSync(path.join(scriptsFolderDst, mapName), result.map, "utf8");
     }
