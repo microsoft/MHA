@@ -100,24 +100,25 @@ for (const targetName of Object.keys(targets)) {
     // Create the list of files and read their sources
     const files = {};
     for (const file of fileSet) {
-        files[file] = fs.readFileSync(path.join(scriptsFolderSrc, file), "utf8");
+        var fileName = path.basename(file);
+        files[fileName] = fs.readFileSync(path.join(scriptsFolderSrc, file), "utf8");
         // Copy original over verbatim to the target directory
         const dstPathOrig = path.join(scriptsFolderDst, file);
         const dstDir = path.dirname(dstPathOrig);
         if (!fs.existsSync(dstDir)) {
             fs.mkdirSync(dstDir);
         }
-        fs.writeFileSync(dstPathOrig, files[file], "utf8");
+        fs.writeFileSync(dstPathOrig, files[fileName], "utf8");
         if (debug) {
             // Copy min over to the target directory
             const dstPathMin = path.join(scriptsFolderDst, targetName);
-            fs.writeFileSync(dstPathMin, files[file], "utf8");
+            fs.writeFileSync(dstPathMin, files[fileName], "utf8");
         }
     }
 
     if (!debug) {
-        options.sourceMap.filename = targetName;
-        options.sourceMap.url = mapName;
+        options.sourceMap.filename = path.basename(targetName);
+        options.sourceMap.url = path.basename(mapName);
         var result = UglifyJS.minify(files, options);
         fs.writeFileSync(path.join(scriptsFolderDst, targetName), result.code, "utf8");
         fs.writeFileSync(path.join(scriptsFolderDst, mapName), result.map, "utf8");
