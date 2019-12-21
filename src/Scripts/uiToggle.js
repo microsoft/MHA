@@ -341,8 +341,8 @@ var ParentFrame = (function () {
         initUI: initUI,
         updateStatus: updateStatus,
         showError: showError,
-        get choice() { return currentChoice;}
-    }
+        get choice() { return currentChoice; }
+    };
 })();
 
 Office.initialize = function () {

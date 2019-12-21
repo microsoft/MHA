@@ -58,7 +58,7 @@ var GetHeadersEWS = (function () {
                     header = extractHeadersFromXml(asyncResult.value);
 
                     // We might not have a prop and also no error. This is OK if the prop is just missing.
-                    if (header && !header.prop) {
+                    if (!header.prop) {
                         if (header.responseCode && header.responseCode.length > 0 && header.responseCode[0].firstChild && header.responseCode[0].firstChild.data === "NoError") {
                             headersLoadedCallback(null, "EWS");
                             ParentFrame.showError(null, mhaStrings.mha_headersMissing, true);
@@ -165,5 +165,5 @@ var GetHeadersEWS = (function () {
     return {
         send: send,
         extractHeadersFromXml: extractHeadersFromXml // for unit tests
-    }
+    };
 })();

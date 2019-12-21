@@ -61,5 +61,5 @@ var GetHeaders = (function () {
     return {
         send: send,
         validItem: validItem
-    }
+    };
 })();

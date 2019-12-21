@@ -35,7 +35,7 @@ var Diagnostics = (function () {
             if (this.readyState == 2) {
                 lastUpdate = client.getResponseHeader("Last-Modified");
             }
-        }
+        };
 
         client.send();
     }
@@ -177,7 +177,7 @@ var Diagnostics = (function () {
         get: get,
         set: set,
         clear: clear
-    }
+    };
 })();
 
 var script = document.createElement('script');

@@ -55,5 +55,5 @@ var Other = (function () {
         doSort: doSort,
         get sortColumn() { return sortColumn; },
         get sortOrder() { return sortOrder; }
-    }
+    };
 });

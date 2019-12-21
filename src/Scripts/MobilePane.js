@@ -27,7 +27,7 @@ $(document).ready(function () {
             if (this.readyState == 2) {
                 insertData('diag', 'Last update', client.getResponseHeader("Last-Modified"));
             }
-        }
+        };
         client.send();
     }
 

@@ -150,5 +150,5 @@ var Errors = (function () {
         parse: parse,
         getErrorMessage: getErrorMessage,
         getErrorStack: getErrorStack
-    }
+    };
 })();

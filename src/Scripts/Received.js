@@ -279,5 +279,5 @@ var Received = (function () {
         row: row, // For testing only
         dateString: dateString, // For testing only
         computeTime: computeTime // For testing only
-    }
+    };
 });

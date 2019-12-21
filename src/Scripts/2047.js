@@ -74,7 +74,7 @@ var Decoder = (function () {
     function getBlock(token) {
         var matches = token.match(/=\?(.*?)(?:\*.*)?\?(.)\?(.*?)\?=/m);
         if (matches) {
-            return { charset: matches[1], type: matches[2].toUpperCase(), text: matches[3] }
+            return { charset: matches[1], type: matches[2].toUpperCase(), text: matches[3] };
         }
 
         return { text: token, };
@@ -183,5 +183,5 @@ var Decoder = (function () {
         decodeHex: decodeHex,
         decodeHexCodepage: decodeHexCodepage,
         decodeQuoted: decodeQuoted
-    }
+    };
 })();

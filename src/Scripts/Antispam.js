@@ -17,8 +17,7 @@ var AntiSpamReport = (function () {
             url: url,
             set: set,
             get: get
-        }
-
+        };
     };
 
     var antiSpamRows = [
@@ -80,5 +79,5 @@ var AntiSpamReport = (function () {
         parse: parse,
         get antiSpamRows() { return antiSpamRows; },
         row: row
-    }
+    };
 });

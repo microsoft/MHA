@@ -25,5 +25,5 @@ var ForefrontAntiSpamReport = (function () {
         init: init,
         exists: exists,
         get forefrontAntiSpamRows() { return forefrontAntiSpamRows; },
-    }
+    };
 });

@@ -77,5 +77,5 @@ var Summary = (function () {
         get summaryRows() { return summaryRows; },
         get totalTime() { return totalTime; },
         set totalTime(value) { totalTime = value; }
-    }
+    };
 });

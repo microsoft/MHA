@@ -70,7 +70,6 @@ var options = {
     mangle: {},
     sourceMap: {}
 };
-options.sourceMap.root = path.join("..", "Scripts", version);
 
 const targets = {
     "2047.min.js": ["2047.js"],

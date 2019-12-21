@@ -66,5 +66,5 @@ var StandAlone = (function () {
     return {
         analyze: analyze,
         clear: clear
-    }
+    };
 })();

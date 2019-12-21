@@ -150,5 +150,5 @@ var GetHeadersRest = (function () {
 
     return {
         send: send
-    }
+    };
 })();
