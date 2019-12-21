@@ -85,7 +85,7 @@ var HeaderModel = (function (headers) {
             // never seen one in practice, so we check for and exclude 'headers' that
             // consist only of 1 or 2 digits.
             if (match && match[1] && !match[1].match(/^\d{1,2}$/)) {
-                headerList[iNextHeader] = new Header(match[1], match[2]);
+                headerList[iNextHeader] = Header(match[1], match[2]);
                 iNextHeader++;
             } else {
                 if (iNextHeader > 0) {
@@ -98,7 +98,7 @@ var HeaderModel = (function (headers) {
                 } else {
                     // If we didn't have a previous line, go ahead and use this line
                     if (line.match(/\S/g)) {
-                        headerList[iNextHeader] = new Header("", line);
+                        headerList[iNextHeader] = Header("", line);
                         iNextHeader++;
                     }
                 }

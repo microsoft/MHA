@@ -41,7 +41,7 @@ var Other = (function () {
     }
 
     function init(otherHeader) {
-        otherRows.push(new row(
+        otherRows.push(row(
             otherRows.length + 1,
             otherHeader.header,
             mhaStrings.mapHeaderToURL(otherHeader.header, null),
