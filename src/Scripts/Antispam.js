@@ -2,6 +2,8 @@
 /* exported AntiSpamReport */
 
 var AntiSpamReport = (function () {
+    "use strict";
+
     var row = function (_header, _label, _url) {
         var header = _header;
         var label = _label;

@@ -4,6 +4,8 @@
 // Check mobile platform
 
 $(document).ready(function () {
+    "use strict";
+
     function insertData(id, headerText, valueText) {
         var pane = $("#" + id);
 

@@ -7,6 +7,8 @@
 // diagnostics module
 
 var Diagnostics = (function () {
+    "use strict";
+
     var appDiagnostics = null;
     var itemDiagnostics = null;
     var lastUpdate = "";

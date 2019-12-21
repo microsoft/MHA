@@ -7,6 +7,8 @@
 /* exported StandAlone */
 
 var StandAlone = (function () {
+    "use strict";
+
     var viewModel = null;
 
     if (window.jQuery) {

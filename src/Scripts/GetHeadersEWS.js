@@ -19,6 +19,8 @@
  */
 
 var GetHeadersEWS = (function () {
+    "use strict";
+
     function send(headersLoadedCallback) {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (EWS)", true);

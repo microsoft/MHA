@@ -3,6 +3,8 @@
 /* exported Errors */
 
 var Errors = (function () {
+    "use strict";
+
     var errorArray = [];
     function clear() { errorArray = []; }
 

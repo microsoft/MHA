@@ -7,6 +7,8 @@
 /* exported HeaderModel */
 
 var HeaderModel = (function (headers) {
+    "use strict";
+
     var summary = Summary();
     var receivedHeaders = Received();
     var forefrontAntiSpamReport = ForefrontAntiSpamReport();

@@ -11,6 +11,8 @@
  */
 
 var GetHeaders = (function () {
+    "use strict";
+
     function send(headersLoadedCallback) {
         if (!validItem()) {
             ParentFrame.showError(null, "No item selected", true);

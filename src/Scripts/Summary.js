@@ -2,6 +2,8 @@
 /* exported Summary */
 
 var Summary = (function () {
+    "use strict";
+
     var SummaryRow = function (_header, _label, _set, _get) {
         return {
             header: _header,

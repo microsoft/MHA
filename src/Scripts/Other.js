@@ -2,6 +2,8 @@
 /* exported Other */
 
 var Other = (function () {
+    "use strict";
+
     var row = function (_number, _header, _url, _value) {
         var number = _number;
         var header = _header;

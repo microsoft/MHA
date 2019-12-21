@@ -6,6 +6,8 @@
 // This is the "classic" UI rendered in classicDesktopFrame.html
 
 (function () {
+    "use strict";
+
     var viewModel = null;
     // This function is run when the app is ready to start interacting with the host application.
     // It ensures the DOM is ready before updating the span elements with values from the current message.

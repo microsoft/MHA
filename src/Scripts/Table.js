@@ -3,6 +3,8 @@
 /* exported Table */
 
 var Table = (function () {
+    "use strict";
+
     var viewModel = null;
     var showExtra = false;
     var column = function (id, label, columnClass) { return { id: id, label: label, class: columnClass }; };

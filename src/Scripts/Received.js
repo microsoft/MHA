@@ -3,6 +3,8 @@
 /* exported Received */
 
 var Received = (function () {
+    "use strict";
+
     var receivedRows = [];
     var sortColumn = "hop";
     var sortOrder = 1;

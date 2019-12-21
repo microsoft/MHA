@@ -1,6 +1,8 @@
 /* exported mhaStrings */
 
 var mhaStrings = (function () {
+    "use strict";
+
     function htmlEncode(value) { return value ? $('<div />').text(value).html() : ''; }
 
     function mapHeaderToURL(headerName, text) {

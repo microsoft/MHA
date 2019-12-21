@@ -11,6 +11,8 @@
 // and which UI to use.
 
 var ParentFrame = (function () {
+    "use strict";
+
     var iFrame = null;
     var currentChoice = {};
     var deferredErrors = [];
