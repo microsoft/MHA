@@ -28,6 +28,7 @@ var Summary = (function () {
     var summaryRows = [
         SummaryRow("Subject", mhaStrings.mha_subject),
         SummaryRow("Message-ID", mhaStrings.mha_messageId),
+        SummaryRow("Archived-At", mhaStrings.mha_archivedAt),
         dateRow,
         SummaryRow("From", mhaStrings.mha_from),
         SummaryRow("To", mhaStrings.mha_to),

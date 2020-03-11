@@ -15,6 +15,7 @@ var mhaStrings = (function () {
 
     var headerToURLMap = [
         ["Accept-Language", "https://tools.ietf.org/html/rfc3282"],
+        ["Archived-At", "https://tools.ietf.org/html/rfc5064"],
         ["Authentication-Results", "https://tools.ietf.org/html/rfc7601"],
         ["BCC", "https://tools.ietf.org/html/rfc5322#section-3.6.3"],
         ["CC", "https://tools.ietf.org/html/rfc5322#section-3.6.3"],
