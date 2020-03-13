@@ -13,6 +13,15 @@ var mhaStrings = (function () {
         return null;
     }
 
+    function mapValueToURL(text) {
+        try {
+            var url = new URL(text);
+            return ['<a href="', url.href, '" target="_blank">', url.href, '</a>'].join('');
+        } catch {
+            return text;
+        }
+    }
+
     var headerToURLMap = [
         ["Accept-Language", "https://tools.ietf.org/html/rfc3282"],
         ["Archived-At", "https://tools.ietf.org/html/rfc5064"],
@@ -72,6 +81,7 @@ var mhaStrings = (function () {
 
     return {
         mapHeaderToURL: mapHeaderToURL,
+        mapValueToURL: mapValueToURL,
         // REST
         mha_loading: "Loading...",
         mha_RequestSent: "Retrieving headers from server.",
