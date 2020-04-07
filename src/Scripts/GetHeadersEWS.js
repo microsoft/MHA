@@ -68,6 +68,12 @@ var GetHeadersEWS = (function () {
                         }
                     }
                 }
+                else {
+                    if (asyncResult.status && asyncResult.status == "succeeded") {
+                        Errors.log(null, "Got success with no headers - ignoring for now", true);
+                        return;
+                    }
+                }
 
                 if (header && header.prop) {
                     headersLoadedCallback(header.prop, "EWS");
