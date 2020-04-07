@@ -42,6 +42,7 @@ var GetHeadersEWS = (function () {
             var mailbox = Office.context.mailbox;
             var request = getHeadersRequest(mailbox.item.itemId);
             var envelope = getSoapEnvelope(request);
+            Errors.log(null, "Envelope used\n" + JSON.stringify(envelope, null, 2), true);
             mailbox.makeEwsRequestAsync(envelope, function (asyncResult) {
                 callbackEws(asyncResult, headersLoadedCallback);
             });
@@ -52,6 +53,7 @@ var GetHeadersEWS = (function () {
         // Function called when the EWS request is complete.
         function callbackEws(asyncResult, headersLoadedCallback) {
             try {
+                Errors.log(null, "Async Response (FULL)\n" + JSON.stringify(asyncResult, null, 2), true);
                 // Process the returned response here.
                 var header = null;
                 if (asyncResult.value) {
