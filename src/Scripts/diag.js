@@ -97,11 +97,9 @@ var Diagnostics = (function () {
 
                     if (window.Office.context.mailbox._initialData$p$0) {
                         delete appDiagnostics["Office.context.mailbox.initialData"];
-                        appDiagnostics["permissions"] = window.Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
                     }
                     else if (window.Office.context.mailbox.initialData) {
                         delete appDiagnostics["Office.context.mailbox.initialData"];
-                        appDiagnostics["permissions"] = window.Office.context.mailbox.initialData.permissionLevel;
                     }
                     else {
                         appDiagnostics["Office.context.mailbox.initialData"] = "missing";
