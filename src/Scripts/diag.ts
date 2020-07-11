@@ -3,6 +3,7 @@
 /* global aikey */
 /* global appInsights */
 /* exported Diagnostics */
+/* exported GetHeaders */
 
 // diagnostics module
 
@@ -97,11 +98,13 @@ var Diagnostics = (function () {
                     }
 
                     if (window.Office.context.mailbox._initialData$p$0) {
-                        delete appDiagnostics["Office.context.mailbox._initialData$p$0"];
-                        appDiagnostics["permissions"] = window.Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
+                        delete appDiagnostics["Office.context.mailbox.initialData"];
+                    }
+                    else if (window.Office.context.mailbox.initialData) {
+                        delete appDiagnostics["Office.context.mailbox.initialData"];
                     }
                     else {
-                        appDiagnostics["Office.context.mailbox._initialData$p$0"] = "missing";
+                        appDiagnostics["Office.context.mailbox.initialData"] = "missing";
                     }
                 }
                 else {
@@ -115,6 +118,10 @@ var Diagnostics = (function () {
         else {
             appDiagnostics["Office"] = "missing";
         }
+
+        appDiagnostics.permissionLevel = GetHeaders.permissionLevel();
+        appDiagnostics.canUseRest = GetHeaders.canUseRest();
+        appDiagnostics.sufficientPermission = GetHeaders.sufficientPermission(true);
     }
 
     function ensureItemDiagnostics() {

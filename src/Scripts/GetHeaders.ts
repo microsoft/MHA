@@ -36,13 +36,22 @@ var GetHeaders = (function () {
         }
     }
 
+    function permissionLevel() {
+        if (!Office) return 0;
+        if (!Office.context) return 0;
+        if (!Office.context.mailbox) return 0;
+        if (Office.context.mailbox._initialData$p$0) return Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
+        if (Office.context.mailbox.initialData) return Office.context.mailbox.initialData.permissionLevel;
+        return 0;
+    }
+
     function sufficientPermission(strict) {
         if (!Office.context.mailbox) return false;
         // In strict mode, we must find permissions to conclude we have them
         // In non-strict mode, if we don't find permissions, we assume we might have them
-        // Some down level clients (such as we would use EWS on) don't have _initialData$p$0 at all.
-        if (!Office.context.mailbox._initialData$p$0) return !strict;
-        if (Office.context.mailbox._initialData$p$0._permissionLevel$p$0 < 1) return false;
+        // Some down level clients (such as we would use EWS on) don't have _initialData$p$0 or initialData at all.
+        if (!Office.context.mailbox._initialData$p$0 && !Office.context.mailbox.initialData) return !strict;
+        if (permissionLevel() < 1) return false;
         return true;
     }
 
@@ -62,6 +71,9 @@ var GetHeaders = (function () {
 
     return {
         send: send,
-        validItem: validItem
-    };
+        validItem: validItem,
+        permissionLevel: permissionLevel,
+        sufficientPermission: sufficientPermission,
+        canUseRest: canUseRest,
+    }
 })();
