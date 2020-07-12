@@ -16,7 +16,7 @@ var mhaStrings = (function () {
     function mapValueToURL(text) {
         try {
             return ["<a href='", text, "' target='_blank'>", htmlEncode(text), "</a>"].join("");
-        } catch {
+        } catch (e) {
             return text;
         }
     }
