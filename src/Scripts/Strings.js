@@ -15,8 +15,7 @@ var mhaStrings = (function () {
 
     function mapValueToURL(text) {
         try {
-            var url = new URL(text);
-            return ['<a href="', url.href, '" target="_blank">', url.href, '</a>'].join('');
+            return ["<a href='", text, "' target='_blank'>", htmlEncode(text), "</a>"].join("");
         } catch {
             return text;
         }
@@ -116,6 +115,7 @@ var mhaStrings = (function () {
         mha_from: "From",
         mha_to: "To",
         mha_cc: "Cc",
+        mha_archivedAt: "Archived at",
 
         // Received
         mha_hop: "Hop",

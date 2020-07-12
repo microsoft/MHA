@@ -3,10 +3,12 @@
 
 var Summary = (function () {
     var SummaryRow = function (_header, _label, _set, _get) {
+        var valueUrl = "";
         return {
             header: _header,
             label: _label,
             value: "",
+            valueUrl: valueUrl,
             set: _set || function (_value) { this.value = _value; },
             get: _get || function () { return this.value; }
         };
@@ -25,10 +27,23 @@ var Summary = (function () {
         },
         function () { return creationTime(dateRow.value); });
 
+    var archivedRow = SummaryRow(
+        "Archived-At",
+        mhaStrings.mha_archivedAt,
+        function (value) {
+            if (value) {
+                this.valueUrl = mhaStrings.mapValueToURL(value);
+                this.value = value;
+            } else {
+                this.rawUrl = "";
+                this.value = "";
+            }
+        });
+
     var summaryRows = [
         SummaryRow("Subject", mhaStrings.mha_subject),
         SummaryRow("Message-ID", mhaStrings.mha_messageId),
-        SummaryRow("Archived-At", mhaStrings.mapValueToURL(mhaStrings.mha_archivedAt)),
+        archivedRow,
         dateRow,
         SummaryRow("From", mhaStrings.mha_from),
         SummaryRow("To", mhaStrings.mha_to),
