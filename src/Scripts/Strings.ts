@@ -15,8 +15,17 @@ var mhaStrings = (function () {
         return null;
     }
 
+    function mapValueToURL(text) {
+        try {
+            return ["<a href='", text, "' target='_blank'>", htmlEncode(text), "</a>"].join("");
+        } catch (e) {
+            return text;
+        }
+    }
+
     var headerToURLMap = [
         ["Accept-Language", "https://tools.ietf.org/html/rfc3282"],
+        ["Archived-At", "https://tools.ietf.org/html/rfc5064"],
         ["Authentication-Results", "https://tools.ietf.org/html/rfc7601"],
         ["BCC", "https://tools.ietf.org/html/rfc5322#section-3.6.3"],
         ["CC", "https://tools.ietf.org/html/rfc5322#section-3.6.3"],
@@ -73,6 +82,7 @@ var mhaStrings = (function () {
 
     return {
         mapHeaderToURL: mapHeaderToURL,
+        mapValueToURL: mapValueToURL,
         // REST
         mha_loading: "Loading...",
         mha_RequestSent: "Retrieving headers from server.",
@@ -107,6 +117,7 @@ var mhaStrings = (function () {
         mha_from: "From",
         mha_to: "To",
         mha_cc: "Cc",
+        mha_archivedAt: "Archived at",
 
         // Received
         mha_hop: "Hop",
