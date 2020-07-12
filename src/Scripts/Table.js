@@ -447,7 +447,9 @@ var Table = (function () {
             if (val) {
                 if (row.url) {
                     headerVal.html(mhaStrings.mapHeaderToURL(row.url, val));
-                } else {
+                } else if (row.valueUrl) {
+                    headerVal.html(row.valueUrl);
+                }else {
                     headerVal.text(val);
                 }
 
