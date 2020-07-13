@@ -24,7 +24,7 @@ var Received = (function () {
         }
 
         // Some bad dates don't wrap UTC in paren - fix that first
-        receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/g, "(UTC)");
+        receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/gi, "(UTC)");
 
         // Read out the date first, then clear it from the string
         var iDate = receivedHeader.lastIndexOf(";");
@@ -77,7 +77,7 @@ var Received = (function () {
         // Scan for malformed postFix headers
         // Received: by example.com (Postfix, from userid 1001)
         //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
-        var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/);
+        var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/gi);
         if (postFix) {
             parsedRow.by = postFix[2];
             receivedHeader = postFix[1] + postFix[3];
@@ -86,7 +86,7 @@ var Received = (function () {
 
         // Scan for malformed qmail headers
         // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
-        var qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/);
+        var qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/gi);
         if (qmail) {
             parsedRow.by = qmail[2];
             receivedHeader = qmail[1] + qmail[3];
@@ -99,7 +99,7 @@ var Received = (function () {
         var iMatch = 0;
         receivedHeaderNames.forEach(function (receivedHeaderName, iHeader) {
             tokens.some(function (token, iToken) {
-                if (receivedHeaderName === token) {
+                if (receivedHeaderName.toUpperCase() === token.toUpperCase()) {
                     headerMatches[iMatch++] = { iHeader: iHeader, iToken: iToken };
                     // We don't return true so we can match any duplicate headers
                     // In doing this, we risk failing to parse a string where a header
