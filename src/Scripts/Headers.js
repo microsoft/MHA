@@ -46,7 +46,7 @@ var HeaderModel = (function (headers) {
                     break;
             }
 
-            if (headerList[i].header === "Received") {
+            if (headerList[i].header.toUpperCase() === "Received".toUpperCase()) {
                 receivedHeaders.init(headerList[i].value);
             } else if (headerList[i].header || headerList[i].value) {
                 otherHeaders.init(headerList[i]);

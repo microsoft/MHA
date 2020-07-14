@@ -66,7 +66,7 @@ var Summary = (function () {
         }
 
         for (var i = 0; i < summaryRows.length; i++) {
-            if (summaryRows[i].header === header.header) {
+            if (summaryRows[i].header.toUpperCase() === header.header.toUpperCase()) {
                 summaryRows[i].set(header.value);
                 return;
             }
