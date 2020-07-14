@@ -98,6 +98,7 @@ const targets = {
     "unittests/ut-DateTime.min.js": ["unittests/ut-DateTime.js"],
     "unittests/ut-GetHeaderList.min.js": ["unittests/ut-GetHeaderList.js"],
     "unittests/ut-ParseError.min.js": ["unittests/ut-ParseError.js"],
+    "unittests/ut-parseHeaders.min.js": ["unittests/ut-parseHeaders.js"],
     "unittests/ut-Received.min.js": ["unittests/ut-Received.js"],
     "unittests/ut-XML.min.js": ["unittests/ut-XML.js"]
 };
