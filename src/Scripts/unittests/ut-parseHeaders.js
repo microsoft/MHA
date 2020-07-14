@@ -125,14 +125,16 @@ QUnit.test("parseHeader Tests", function (assert) {
             "header": "BCL",
             "label": "Bulk Complaint Level",
             "set": {},
-            "url": "X-Microsoft-Antispam"
+            "url": "X-Microsoft-Antispam",
+            "value": "1"
         },
         {
             "get": {},
             "header": "PCL",
             "label": "Phishing Confidence Level",
             "set": {},
-            "url": "X-Microsoft-Antispam"
+            "url": "X-Microsoft-Antispam",
+            "value": ""
         }
     ];
 
@@ -142,70 +144,80 @@ QUnit.test("parseHeader Tests", function (assert) {
             "header": "CTRY",
             "label": "Country/Region",
             "set": {},
-            "url": "X-Forefront-Antispam-Report"
+            "url": "X-Forefront-Antispam-Report",
+            "value": "US"
         },
         {
             "get": {},
             "header": "LANG",
             "label": "Language",
             "set": {},
-            "url": "X-Forefront-Antispam-Report"
+            "url": "X-Forefront-Antispam-Report",
+            "value": "en"
         },
         {
             "get": {},
             "header": "SCL",
             "label": "Spam Confidence Level",
             "set": {},
-            "url": "X-MS-Exchange-Organization-SCL"
+            "url": "X-MS-Exchange-Organization-SCL",
+            "value": "0"
         },
         {
             "get": {},
             "header": "PCL",
             "label": "Phishing Confidence Level",
             "set": {},
-            "url": "X-Forefront-Antispam-Report"
+            "url": "X-Forefront-Antispam-Report",
+            "value": ""
         },
         {
             "get": {},
             "header": "SFV",
             "label": "Spam Filtering Verdict",
             "set": {},
-            "url": "X-Forefront-Antispam-Report"
+            "url": "X-Forefront-Antispam-Report",
+            "value": "NSPM"
         },
         {
             "get": {},
             "header": "IPV",
             "label": "IP Filter Verdict",
             "set": {},
-            "url": "X-Forefront-Antispam-Report"
+            "url": "X-Forefront-Antispam-Report",
+            "value": "NLI"
         },
         {
             "get": {},
             "header": "H",
             "label": "HELO/EHLO String",
             "set": {},
-            "url": "X-Forefront-Antispam-Report"
+            "url": "X-Forefront-Antispam-Report",
+            "value": "ccm27.constantcontact.com"
         },
         {
             "get": {},
             "header": "PTR",
             "label": "PTR Record",
             "set": {},
-            "url": "X-Forefront-Antispam-Report"
+            "url": "X-Forefront-Antispam-Report",
+            "value": "ccm27.constantcontact.com"
         },
         {
             "get": {},
             "header": "CIP",
             "label": "Connecting IP Address",
             "set": {},
-            "url": "X-Forefront-Antispam-Report"
+            "url": "X-Forefront-Antispam-Report",
+            "value": "208.75.123.162"
         },
         {
             "get": {},
             "header": "X-CustomSpam",
             "label": "Advanced Spam Filtering",
             "set": {},
-            "url": "X-Forefront-Antispam-Report"
+            "url": "X-Forefront-Antispam-Report",
+            "value": ""
         }];
 
     var goodCaseHeaders = "Received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
