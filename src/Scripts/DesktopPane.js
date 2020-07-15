@@ -128,7 +128,7 @@
         var pre;
         var i;
         for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
-            if (viewModel.summary.summaryRows[i].get()) {
+            if (viewModel.summary.summaryRows[i].value) {
                 $("<div/>")
                     .addClass("ms-font-s")
                     .addClass("ms-fontWeight-semibold")
@@ -139,7 +139,7 @@
                     .appendTo(summaryList);
                 pre = $("<pre/>").appendTo(headerVal);
                 $("<code/>")
-                    .text(viewModel.summary.summaryRows[i].get())
+                    .text(viewModel.summary.summaryRows[i].value)
                     .appendTo(pre);
             }
         }
@@ -283,13 +283,13 @@
             tbody = $("<tbody/>")
                 .appendTo(table);
             for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
-                if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get()) {
+                if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].value) {
                     row = $("<tr/>").appendTo(tbody);
                     $("<td/>")
                         .text(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].label)
                         .appendTo(row);
                     linkVal = mhaStrings.mapHeaderToURL(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url,
-                        viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].get());
+                        viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].value);
                     $("<td/>")
                         .html(linkVal)
                         .appendTo(row);
@@ -313,13 +313,13 @@
             tbody = $("<tbody/>")
                 .appendTo(table);
             for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
-                if (viewModel.antiSpamReport.antiSpamRows[i].get()) {
+                if (viewModel.antiSpamReport.antiSpamRows[i].value) {
                     row = $("<tr/>").appendTo(tbody);
                     $("<td/>")
                         .text(viewModel.antiSpamReport.antiSpamRows[i].label)
                         .appendTo(row);
                     linkVal = mhaStrings.mapHeaderToURL(viewModel.antiSpamReport.antiSpamRows[i].url,
-                        viewModel.antiSpamReport.antiSpamRows[i].get());
+                        viewModel.antiSpamReport.antiSpamRows[i].value);
                     $("<td/>")
                         .html(linkVal)
                         .appendTo(row);

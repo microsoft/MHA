@@ -3,14 +3,16 @@
 
 var Summary = (function () {
     var SummaryRow = function (_header, _label, _set, _get) {
+        var _value = "";
         var valueUrl = "";
+        function __get() { return _value; }
+        function __set(__value) { _value = __value; }
         return {
             header: _header,
             label: _label,
-            value: "",
+            set value(_value) { _set ? _set(_value) : __set(_value); },
+            get value() { return _get ? _get() : __get(); },
             valueUrl: valueUrl,
-            set: _set || function (_value) { this.value = _value; },
-            get: _get || function () { return this.value; }
         };
     };
 
@@ -20,12 +22,12 @@ var Summary = (function () {
         mhaStrings.mha_creationTime,
         function (value) {
             if (value) {
-                this.value = new Date(value).toLocaleString();
+                this._value = new Date(value).toLocaleString();
             } else {
-                this.value = "";
+                this._value = "";
             }
         },
-        function () { return creationTime(dateRow.value); });
+        function () { return creationTime(this._value); });
 
     var archivedRow = SummaryRow(
         "Archived-At",
@@ -52,7 +54,7 @@ var Summary = (function () {
 
     function exists() {
         for (var i = 0; i < summaryRows.length; i++) {
-            if (summaryRows[i].get()) {
+            if (summaryRows[i].value) {
                 return true;
             }
         }
@@ -67,7 +69,7 @@ var Summary = (function () {
 
         for (var i = 0; i < summaryRows.length; i++) {
             if (summaryRows[i].header.toUpperCase() === header.header.toUpperCase()) {
-                summaryRows[i].set(header.value);
+                summaryRows[i].value = header.value;
                 return;
             }
         }

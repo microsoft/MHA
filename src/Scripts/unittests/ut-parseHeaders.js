@@ -4,58 +4,44 @@
 QUnit.test("parseHeader Tests", function (assert) {
     var summaryRows = [
         {
-            "get": {},
             "header": "Subject",
             "label": "Subject",
-            "set": {},
             "value": "Hear Hamilton Anytime, Anywhere",
             "valueUrl": ""
         },
         {
-            "get": {},
             "header": "Message-ID",
             "label": "Message Id",
-            "set": {},
             "value": "<1134542665376.1115276745036.1949397254.0.411440JL.2002@scheduler.constantcontact.com>",
             "valueUrl": ""
         },
         {
-            "get": {},
             "header": "Archived-At",
             "label": "Archived at",
-            "set": {},
             "value": "",
             "valueUrl": ""
         },
         {
-            "get": {},
             "header": "Date",
             "label": "Creation time",
-            "set": {},
-            "value": "7/14/2020, 2:41:20 PM",
+            "value": "7/14/2020, 2:41:20 PM (Delivered after 3 seconds)",
             "valueUrl": ""
         },
         {
-            "get": {},
             "header": "From",
             "label": "From",
-            "set": {},
             "value": "PBS Charlotte <memberservices@wtvi.org>",
             "valueUrl": ""
         },
         {
-            "get": {},
             "header": "To",
             "label": "To",
-            "set": {},
             "value": "test@outlook.com",
             "valueUrl": ""
         },
         {
-            "get": {},
             "header": "CC",
             "label": "Cc",
-            "set": {},
             "value": "",
             "valueUrl": ""
         }];
@@ -121,18 +107,14 @@ QUnit.test("parseHeader Tests", function (assert) {
 
     var antiSpamRows = [
         {
-            "get": {},
             "header": "BCL",
             "label": "Bulk Complaint Level",
-            "set": {},
             "url": "X-Microsoft-Antispam",
             "value": "1"
         },
         {
-            "get": {},
             "header": "PCL",
             "label": "Phishing Confidence Level",
-            "set": {},
             "url": "X-Microsoft-Antispam",
             "value": ""
         }
@@ -140,82 +122,62 @@ QUnit.test("parseHeader Tests", function (assert) {
 
     var forefrontAntiSpamRows = [
         {
-            "get": {},
             "header": "CTRY",
             "label": "Country/Region",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "US"
         },
         {
-            "get": {},
             "header": "LANG",
             "label": "Language",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "en"
         },
         {
-            "get": {},
             "header": "SCL",
             "label": "Spam Confidence Level",
-            "set": {},
             "url": "X-MS-Exchange-Organization-SCL",
             "value": "0"
         },
         {
-            "get": {},
             "header": "PCL",
             "label": "Phishing Confidence Level",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": ""
         },
         {
-            "get": {},
             "header": "SFV",
             "label": "Spam Filtering Verdict",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "NSPM"
         },
         {
-            "get": {},
             "header": "IPV",
             "label": "IP Filter Verdict",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "NLI"
         },
         {
-            "get": {},
             "header": "H",
             "label": "HELO/EHLO String",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "ccm27.constantcontact.com"
         },
         {
-            "get": {},
             "header": "PTR",
             "label": "PTR Record",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "ccm27.constantcontact.com"
         },
         {
-            "get": {},
             "header": "CIP",
             "label": "Connecting IP Address",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "208.75.123.162"
         },
         {
-            "get": {},
             "header": "X-CustomSpam",
             "label": "Advanced Spam Filtering",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": ""
         }];
