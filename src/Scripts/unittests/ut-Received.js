@@ -241,4 +241,23 @@ QUnit.test("Received Tests", function (assert) {
         "sourceHeader": dupe1,
         "with": "this; that; whatever"
     }, "dupe1");
+
+    var case1 =
+        "Received: From BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
+        " (2a01:111:e400:c418::34) By SN1PR16MB0494.namprd16.prod.outlook.com With\n" +
+        " HTTPS Via SN1PR15CA0024.NAMPRD15.PROD.OUTLOOK.COM; Sat, 21 Apr 2018 03:01:33\n" +
+        " +0000";
+    assert.propEqual(received.row(case1),
+        {
+            "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
+            "date": received.dateString("21 Apr 2018 03:01:33 +0000"),
+            "dateNum": 1524279693000,
+            "dateSort": 1524279693000,
+            "delaySort": -1,
+            "from": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (2a01:111:e400:c418::34)",
+            "percent": 0,
+            "sourceHeader": case1,
+            "via": "SN1PR15CA0024.NAMPRD15.PROD.OUTLOOK.COM",
+            "with": "HTTPS"
+        }, "case1");
 });

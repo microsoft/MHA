@@ -15,10 +15,10 @@ var AntiSpamReport = (function () {
             header: header,
             label: label,
             url: url,
+            get value() { return get(); },
             set: set,
             get: get
         }
-
     };
 
     var antiSpamRows = [
