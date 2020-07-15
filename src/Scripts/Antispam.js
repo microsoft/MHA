@@ -12,6 +12,7 @@ var AntiSpamReport = (function () {
     };
 
     var source = "";
+    var unparsed = "";
     var antiSpamRows = [
         row("BCL", mhaStrings.mha_bcl, "X-Microsoft-Antispam"),
         row("PCL", mhaStrings.mha_pcl, "X-Microsoft-Antispam")
@@ -47,15 +48,22 @@ var AntiSpamReport = (function () {
         report = report.replace(/;+/g, ";");
 
         var lines = report.match(/(.*?):(.*?);/g);
+        unparsed = "";
         if (lines) {
             for (var iLine = 0; iLine < lines.length; iLine++) {
                 var line = lines[iLine].match(/(.*?):(.*?);/m);
                 if (line && line[1] && line[2]) {
+                    var matched = false;
                     for (var i = 0; i < rows.length; i++) {
                         if (rows[i].header.toUpperCase() === line[1].toUpperCase()) {
                             rows[i].value = line[2];
+                            matched = true;
                             break;
                         }
+                    }
+
+                    if (!matched) {
+                        unparsed += line[1] + ':' + line[2] + ';';
                     }
                 }
             }
@@ -71,6 +79,7 @@ var AntiSpamReport = (function () {
         existsInternal: existsInternal,
         parse: parse,
         get source() { return source; },
+        get unparsed() { return unparsed; },
         get antiSpamRows() { return antiSpamRows; },
         row: row
     }

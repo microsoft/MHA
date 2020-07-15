@@ -495,6 +495,7 @@ QUnit.test("antiSpam Tests", function (assert) {
     antiSpamReport.init(header);
     assert.propEqual(antiSpamReport.antiSpamRows, antiSpamRows, "antiSpamRows");
     assert.propEqual(antiSpamReport.source, header, "antiSpamRows-sourceHeader");
+    assert.propEqual([antiSpamReport.unparsed], [""], "antiSpamRows-unparsed");
 });
 
 QUnit.test("forefront antiSpam Tests", function (assert) {
@@ -585,4 +586,5 @@ QUnit.test("forefront antiSpam Tests", function (assert) {
     forefrontAntiSpamReport.init(header);
     assert.propEqual(forefrontAntiSpamReport.forefrontAntiSpamRows, forefrontAntiSpamRows, "forefrontAntiSpamRows");
     assert.propEqual(forefrontAntiSpamReport.source, header, "forefrontAntiSpamRows-sourceHeader");
+    assert.propEqual([forefrontAntiSpamReport.unparsed], ["DIR:INB;"], "forefrontAntiSpamReport-unparsed");
 });
