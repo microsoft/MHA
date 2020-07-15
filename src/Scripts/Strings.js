@@ -56,11 +56,11 @@ var mhaStrings = (function () {
         ["Thread-Topic", "https://msdn.microsoft.com/en-us/library/ms526986"],
         ["To", "https://tools.ietf.org/html/rfc5322#section-3.6.3"],
         ["X-Auto-Response-Suppress", "https://msdn.microsoft.com/en-us/library/ee219609"],
-        ["X-Forefront-Antispam-Report", "https://technet.microsoft.com/en-us/library/dn205071"],
+        ["X-Forefront-Antispam-Report", "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers"],
         ["X-Forefront-Antispam-Report-Untrusted", "https://technet.microsoft.com/en-us/library/bb232136"],
         ["X-Forefront-Prvs", "https://technet.microsoft.com/en-us/library/dd639361"],
         ["X-Message-Flag", "https://msdn.microsoft.com/en-us/library/exchange/ms875195"],
-        ["X-Microsoft-Antispam", "https://technet.microsoft.com/en-us/library/dn205071"],
+        ["X-Microsoft-Antispam", "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers"],
         ["X-MS-Exchange-Organization-Antispam-Report", "https://technet.microsoft.com/en-us/library/aa996878"],
         ["X-MS-Exchange-Organization-AuthAs", "https://technet.microsoft.com/en-us/library/bb232136"],
         ["X-MS-Exchange-Organization-AuthMechanism", "https://technet.microsoft.com/en-us/library/bb232136"],
@@ -135,6 +135,7 @@ var mhaStrings = (function () {
         mha_value: "Value",
 
         // ForefrontAntiSpamReport
+        mha_arc: "ARC protocol",
         mha_countryRegion: "Country/Region",
         mha_lang: "Language",
         mha_scl: "Spam Confidence Level",
@@ -144,6 +145,8 @@ var mhaStrings = (function () {
         mha_h: "HELO/EHLO String",
         mha_ptr: "PTR Record",
         mha_cip: "Connecting IP Address",
+        mha_cat: "Protection Policy Category",
+        mha_sfty: "Phishing message",
         mha_customSpam: "Advanced Spam Filtering",
 
         // AntiSpamReport

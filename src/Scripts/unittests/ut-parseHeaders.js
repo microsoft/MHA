@@ -128,6 +128,12 @@ QUnit.test("parseHeader Tests", function (assert) {
 
     var forefrontAntiSpamRows = [
         {
+            "header": "ARC",
+            "label": "ARC protocol",
+            "url": "X-Forefront-Antispam-Report",
+            "value": ""
+        },
+        {
             "header": "CTRY",
             "label": "Country/Region",
             "url": "X-Forefront-Antispam-Report",
@@ -180,6 +186,18 @@ QUnit.test("parseHeader Tests", function (assert) {
             "label": "Connecting IP Address",
             "url": "X-Forefront-Antispam-Report",
             "value": "208.75.123.162"
+        },
+        {
+            "header": "CAT",
+            "label": "Protection Policy Category",
+            "url": "X-Forefront-Antispam-Report",
+            "value": "NONE"
+        },
+        {
+            "header": "SFTY",
+            "label": "Phishing message",
+            "url": "X-Forefront-Antispam-Report",
+            "value": ""
         },
         {
             "header": "X-CustomSpam",
