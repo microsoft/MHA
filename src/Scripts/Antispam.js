@@ -26,7 +26,7 @@ var AntiSpamReport = (function () {
         return false;
     }
 
-    // https://technet.microsoft.com/en-us/library/dn205071
+    // https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers
     function parse(report, rows) {
         if (!report) {
             return;
