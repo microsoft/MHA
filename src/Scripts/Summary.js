@@ -2,10 +2,10 @@
 /* exported Summary */
 
 var Summary = (function () {
-    var SummaryRow = function (header, label, _set, _get) {
+    var SummaryRow = function (header, label, onSet, onGet) {
         var value = "";
-        function get() { return _get ? _get() : value; }
-        function set(_value) { _set ? _set(_value) : value = _value; }
+        function get() { return onGet ? onGet(value) : value; }
+        function set(_value) { value = onSet ? onSet(_value) : _value; }
 
         return {
             header: header,
@@ -22,12 +22,12 @@ var Summary = (function () {
         mhaStrings.mha_creationTime,
         function (value) {
             if (value) {
-                this._value = new Date(value).toLocaleString();
+                return new Date(value).toLocaleString();
             } else {
-                this._value = "";
+                return "";
             }
         },
-        function () { return creationTime(this._value); });
+        function (value) { return creationTime(value); });
 
     var archivedRow = SummaryRow(
         "Archived-At",
@@ -35,10 +35,10 @@ var Summary = (function () {
         function (value) {
             if (value) {
                 this.valueUrl = mhaStrings.mapValueToURL(value);
-                this.value = value;
+                return value;
             } else {
-                this.rawUrl = "";
-                this.value = "";
+                this.valueUrl = "";
+                return "";
             }
         });
 
