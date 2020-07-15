@@ -4,7 +4,6 @@
 var Summary = (function () {
     var SummaryRow = function (_header, _label, _set, _get) {
         var _value = "";
-        var valueUrl = "";
         function __get() { return _value; }
         function __set(__value) { _value = __value; }
         return {
@@ -12,7 +11,7 @@ var Summary = (function () {
             label: _label,
             set value(_value) { _set ? _set(_value) : __set(_value); },
             get value() { return _get ? _get() : __get(); },
-            valueUrl: valueUrl,
+            valueUrl: "",
         };
     };
 

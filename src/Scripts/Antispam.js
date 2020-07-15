@@ -2,10 +2,7 @@
 /* exported AntiSpamReport */
 
 var AntiSpamReport = (function () {
-    var row = function (_header, _label, _url) {
-        var header = _header;
-        var label = _label;
-        var url = _url;
+    var row = function (header, label, url) {
         var _value = "";
         function _get() { return _value; }
         function _set(__value) { _value = __value; }
