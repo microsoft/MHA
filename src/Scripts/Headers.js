@@ -25,7 +25,8 @@ var HeaderModel = (function (headers) {
 
     function parseHeaders(headers) {
         // Initialize originalHeaders in case we have parsing problems
-        originalHeaders = headers;
+        // Flatten CRLF to LF to avoid extra blank lines
+        originalHeaders = headers.replace(/(?:\r\n|\r|\n)/g, '\n');
         var headerList = GetHeaderList(headers);
 
         if (headerList.length > 0) {
