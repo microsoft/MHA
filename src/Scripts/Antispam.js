@@ -3,16 +3,11 @@
 
 var AntiSpamReport = (function () {
     var row = function (header, label, url) {
-        var value = "";
-        function get() { return value; }
-        function set(_value) { value = _value; }
-
         return {
             header: header,
             label: label,
             url: url,
-            get value() { return get(); },
-            set value(_value) { set(_value); }
+            value: ""
         }
     };
 
