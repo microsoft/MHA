@@ -443,14 +443,13 @@ var Table = (function () {
     function setRowValue(row, type) {
         var headerVal = $("#" + row.header + type + "Val");
         if (headerVal) {
-            var val = row.get();
-            if (val) {
+            if (row.value) {
                 if (row.url) {
-                    headerVal.html(mhaStrings.mapHeaderToURL(row.url, val));
+                    headerVal.html(mhaStrings.mapHeaderToURL(row.url, row.value));
                 } else if (row.valueUrl) {
                     headerVal.html(row.valueUrl);
                 }else {
-                    headerVal.text(val);
+                    headerVal.text(row.value);
                 }
 
                 makeVisible("#" + row.header + type, true);

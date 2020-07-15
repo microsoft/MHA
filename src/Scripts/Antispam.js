@@ -2,22 +2,12 @@
 /* exported AntiSpamReport */
 
 var AntiSpamReport = (function () {
-    var row = function (_header, _label, _url) {
-        var header = _header;
-        var label = _label;
-        var url = _url;
-        var value = "";
-
-        function set(_value) { value = _value; }
-        function get() { return value; }
-
+    var row = function (header, label, url) {
         return {
             header: header,
             label: label,
             url: url,
-            get value() { return get(); },
-            set: set,
-            get: get
+            value: ""
         }
     };
 
@@ -28,7 +18,7 @@ var AntiSpamReport = (function () {
 
     function existsInternal(rows) {
         for (var i = 0; i < rows.length; i++) {
-            if (rows[i].get()) {
+            if (rows[i].value) {
                 return true;
             }
         }
@@ -61,7 +51,7 @@ var AntiSpamReport = (function () {
                 if (line && line[1] && line[2]) {
                     for (var i = 0; i < rows.length; i++) {
                         if (rows[i].header.toUpperCase() === line[1].toUpperCase()) {
-                            rows[i].set(line[2]);
+                            rows[i].value = line[2];
                             break;
                         }
                     }

@@ -4,58 +4,44 @@
 QUnit.test("parseHeader Tests", function (assert) {
     var summaryRows = [
         {
-            "get": {},
             "header": "Subject",
             "label": "Subject",
-            "set": {},
             "value": "Hear Hamilton Anytime, Anywhere",
             "valueUrl": ""
         },
         {
-            "get": {},
             "header": "Message-ID",
             "label": "Message Id",
-            "set": {},
             "value": "<1134542665376.1115276745036.1949397254.0.411440JL.2002@scheduler.constantcontact.com>",
             "valueUrl": ""
         },
         {
-            "get": {},
             "header": "Archived-At",
             "label": "Archived at",
-            "set": {},
-            "value": "",
-            "valueUrl": ""
+            "value": "https://www.bing.com",
+            "valueUrl": "<a href='https://www.bing.com' target='_blank'>https://www.bing.com</a>"
         },
         {
-            "get": {},
             "header": "Date",
             "label": "Creation time",
-            "set": {},
-            "value": "7/14/2020, 2:41:20 PM",
+            "value": "7/14/2020, 2:41:20 PM (Delivered after 3 seconds)",
             "valueUrl": ""
         },
         {
-            "get": {},
             "header": "From",
             "label": "From",
-            "set": {},
             "value": "PBS Charlotte <memberservices@wtvi.org>",
             "valueUrl": ""
         },
         {
-            "get": {},
             "header": "To",
             "label": "To",
-            "set": {},
             "value": "test@outlook.com",
             "valueUrl": ""
         },
         {
-            "get": {},
             "header": "CC",
             "label": "Cc",
-            "set": {},
             "value": "",
             "valueUrl": ""
         }];
@@ -121,18 +107,14 @@ QUnit.test("parseHeader Tests", function (assert) {
 
     var antiSpamRows = [
         {
-            "get": {},
             "header": "BCL",
             "label": "Bulk Complaint Level",
-            "set": {},
             "url": "X-Microsoft-Antispam",
             "value": "1"
         },
         {
-            "get": {},
             "header": "PCL",
             "label": "Phishing Confidence Level",
-            "set": {},
             "url": "X-Microsoft-Antispam",
             "value": ""
         }
@@ -140,82 +122,62 @@ QUnit.test("parseHeader Tests", function (assert) {
 
     var forefrontAntiSpamRows = [
         {
-            "get": {},
             "header": "CTRY",
             "label": "Country/Region",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "US"
         },
         {
-            "get": {},
             "header": "LANG",
             "label": "Language",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "en"
         },
         {
-            "get": {},
             "header": "SCL",
             "label": "Spam Confidence Level",
-            "set": {},
             "url": "X-MS-Exchange-Organization-SCL",
             "value": "0"
         },
         {
-            "get": {},
             "header": "PCL",
             "label": "Phishing Confidence Level",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": ""
         },
         {
-            "get": {},
             "header": "SFV",
             "label": "Spam Filtering Verdict",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "NSPM"
         },
         {
-            "get": {},
             "header": "IPV",
             "label": "IP Filter Verdict",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "NLI"
         },
         {
-            "get": {},
             "header": "H",
             "label": "HELO/EHLO String",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "ccm27.constantcontact.com"
         },
         {
-            "get": {},
             "header": "PTR",
             "label": "PTR Record",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "ccm27.constantcontact.com"
         },
         {
-            "get": {},
             "header": "CIP",
             "label": "Connecting IP Address",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": "208.75.123.162"
         },
         {
-            "get": {},
             "header": "X-CustomSpam",
             "label": "Advanced Spam Filtering",
-            "set": {},
             "url": "X-Forefront-Antispam-Report",
             "value": ""
         }];
@@ -258,6 +220,7 @@ QUnit.test("parseHeader Tests", function (assert) {
         "Sender: PBS Charlotte <natascha@pbscharlotte.ccsend.com>\n" +
         "To: test@outlook.com\n" +
         "Subject: Hear Hamilton Anytime, Anywhere\n" +
+        "Archived-At: https://www.bing.com\n" +
         "MIME-Version: 1.0\n" +
         "Content-Type: multipart/alternative; \n" +
         "	boundary=\"----=_Part_636915194_1889124954.1594752080758\"\n" +
@@ -389,6 +352,7 @@ QUnit.test("parseHeader Tests", function (assert) {
         "sender: PBS Charlotte <natascha@pbscharlotte.ccsend.com>\n" +
         "to: test@outlook.com\n" +
         "subject: Hear Hamilton Anytime, Anywhere\n" +
+        "archived-at: https://www.bing.com\n" +
         "mime-version: 1.0\n" +
         "content-type: multipart/alternative; \n" +
         "	boundary=\"----=_Part_636915194_1889124954.1594752080758\"\n" +

@@ -84,7 +84,7 @@
         var pre;
 
         for (var i = 0; i < viewModel.summary.summaryRows.length; i++) {
-            if (viewModel.summary.summaryRows[i].get()) {
+            if (viewModel.summary.summaryRows[i].value) {
                 $("<div/>")
                     .addClass("content-block-title")
                     .text(viewModel.summary.summaryRows[i].label)
@@ -101,7 +101,7 @@
                 pre = $("<pre/>").appendTo(headerVal);
 
                 $("<code/>")
-                    .text(viewModel.summary.summaryRows[i].get())
+                    .text(viewModel.summary.summaryRows[i].value)
                     .appendTo(pre);
             }
         }
@@ -362,7 +362,7 @@
     }
 
     function addSpamReportRow(spamRow, parent) {
-        if (spamRow.get()) {
+        if (spamRow.value) {
             var item = $("<li/>")
                 .addClass("accordion-item")
                 .appendTo(parent);
@@ -393,7 +393,7 @@
             var linkWrap = $("<p/>")
                 .appendTo(contentBlock);
 
-            var linkVal = mhaStrings.mapHeaderToURL(spamRow.url, spamRow.get());
+            var linkVal = mhaStrings.mapHeaderToURL(spamRow.url, spamRow.value);
 
             $($.parseHTML(linkVal))
                 .addClass("external")
