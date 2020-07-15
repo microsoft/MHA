@@ -4,14 +4,12 @@
 var Summary = (function () {
     var SummaryRow = function (header, label, onSet, onGet, onGetUrl) {
         var value = "";
-        function get() { return onGet ? onGet(value) : value; }
-        function set(_value) { value = onSet ? onSet(_value) : _value; }
 
         return {
             header: header,
             label: label,
-            set value(_value) { return set(_value); },
-            get value() { return get(); },
+            set value(_value) { value = onSet ? onSet(_value) : _value; },
+            get value() { return onGet ? onGet(value) : value; },
             get valueUrl() { return onGetUrl ? onGetUrl(value) : ""; },
         };
     };
