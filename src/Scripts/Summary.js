@@ -4,13 +4,13 @@
 var Summary = (function () {
     var SummaryRow = function (_header, _label, _set, _get) {
         var _value = "";
-        function __get() { return _value; }
-        function __set(__value) { _value = __value; }
+        function get() { return _value; }
+        function set(__value) { _value = __value; }
         return {
             header: _header,
             label: _label,
-            set value(_value) { _set ? _set(_value) : __set(_value); },
-            get value() { return _get ? _get() : __get(); },
+            set value(_value) { _set ? _set(_value) : set(_value); },
+            get value() { return _get ? _get() : get(); },
             valueUrl: "",
         };
     };

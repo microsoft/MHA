@@ -4,15 +4,15 @@
 var AntiSpamReport = (function () {
     var row = function (header, label, url) {
         var _value = "";
-        function _get() { return _value; }
-        function _set(__value) { _value = __value; }
+        function get() { return _value; }
+        function set(__value) { _value = __value; }
 
         return {
             header: header,
             label: label,
             url: url,
-            get value() { return _get(); },
-            set value(_value) { _set(_value); }
+            get value() { return get(); },
+            set value(_value) { set(_value); }
         }
     };
 
