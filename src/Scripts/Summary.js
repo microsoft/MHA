@@ -2,7 +2,7 @@
 /* exported Summary */
 
 var Summary = (function () {
-    var SummaryRow = function (header, label, onSet, onGet) {
+    var SummaryRow = function (header, label, onSet, onGet, onGetUrl) {
         var value = "";
         function get() { return onGet ? onGet(value) : value; }
         function set(_value) { value = onSet ? onSet(_value) : _value; }
@@ -12,7 +12,7 @@ var Summary = (function () {
             label: label,
             set value(_value) { return set(_value); },
             get value() { return get(); },
-            valueUrl: "",
+            get valueUrl() { return onGetUrl ? onGetUrl(value) : ""; },
         };
     };
 
@@ -32,15 +32,10 @@ var Summary = (function () {
     var archivedRow = SummaryRow(
         "Archived-At",
         mhaStrings.mha_archivedAt,
-        function (value) {
-            if (value) {
-                this.valueUrl = mhaStrings.mapValueToURL(value);
-                return value;
-            } else {
-                this.valueUrl = "";
-                return "";
-            }
-        });
+        null,
+        null,
+        function (value) { return mhaStrings.mapValueToURL(value); }
+    );
 
     var summaryRows = [
         SummaryRow("Subject", mhaStrings.mha_subject),

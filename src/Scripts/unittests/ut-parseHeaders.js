@@ -19,7 +19,7 @@ QUnit.test("parseHeader Tests", function (assert) {
             "header": "Archived-At",
             "label": "Archived at",
             "value": "https://www.bing.com",
-            "valueUrl": "https://www.bing.com"
+            "valueUrl": "<a href='https://www.bing.com' target='_blank'>https://www.bing.com</a>"
         },
         {
             "header": "Date",
