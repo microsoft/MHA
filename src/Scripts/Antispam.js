@@ -3,9 +3,9 @@
 
 var AntiSpamReport = (function () {
     var row = function (header, label, url) {
-        var _value = "";
-        function get() { return _value; }
-        function set(__value) { _value = __value; }
+        var value = "";
+        function get() { return value; }
+        function set(_value) { value = _value; }
 
         return {
             header: header,

@@ -3,9 +3,10 @@
 
 var Summary = (function () {
     var SummaryRow = function (_header, _label, _set, _get) {
-        var _value = "";
-        function get() { return _value; }
-        function set(__value) { _value = __value; }
+        var value = "";
+        function get() { return value; }
+        function set(_value) { value = _value; }
+
         return {
             header: _header,
             label: _label,
