@@ -1,5 +1,7 @@
 ﻿/* global QUnit */
 /* global HeaderModel */
+/* global AntiSpamReport */
+/* global ForefrontAntiSpamReport */
 
 QUnit.test("parseHeader Tests", function (assert) {
     var summaryRows = [
@@ -469,4 +471,118 @@ QUnit.test("parseHeader Tests", function (assert) {
     assert.propEqual(badCaseHeaderModel.receivedHeaders.receivedRows, receivedRows, "receivedRows-bad-casing");
     assert.propEqual(badCaseHeaderModel.antiSpamReport.antiSpamRows, antiSpamRows, "antiSpamRows-bad-casing");
     assert.propEqual(badCaseHeaderModel.forefrontAntiSpamReport.forefrontAntiSpamRows, forefrontAntiSpamRows, "forefrontAntiSpamRows-bad-casing");
+});
+
+QUnit.test("antiSpam Tests", function (assert) {
+    var antiSpamRows = [
+        {
+            "header": "BCL",
+            "label": "Bulk Complaint Level",
+            "url": "X-Microsoft-Antispam",
+            "value": "1"
+        },
+        {
+            "header": "PCL",
+            "label": "Phishing Confidence Level",
+            "url": "X-Microsoft-Antispam",
+            "value": ""
+        }
+    ];
+
+    var header = "BCL:1;";
+
+    var antiSpamReport = AntiSpamReport();
+    antiSpamReport.init(header);
+    assert.propEqual(antiSpamReport.antiSpamRows, antiSpamRows, "antiSpamRows");
+    assert.propEqual(antiSpamReport.source, header, "antiSpamRows-sourceHeader");
+});
+
+QUnit.test("forefront antiSpam Tests", function (assert) {
+    var forefrontAntiSpamRows = [
+        {
+            "header": "ARC",
+            "label": "ARC protocol",
+            "url": "X-Forefront-Antispam-Report",
+            "value": ""
+        },
+        {
+            "header": "CTRY",
+            "label": "Country/Region",
+            "url": "X-Forefront-Antispam-Report",
+            "value": "US"
+        },
+        {
+            "header": "LANG",
+            "label": "Language",
+            "url": "X-Forefront-Antispam-Report",
+            "value": "en"
+        },
+        {
+            "header": "SCL",
+            "label": "Spam Confidence Level",
+            "url": "X-MS-Exchange-Organization-SCL",
+            "value": "0"
+        },
+        {
+            "header": "PCL",
+            "label": "Phishing Confidence Level",
+            "url": "X-Forefront-Antispam-Report",
+            "value": ""
+        },
+        {
+            "header": "SFV",
+            "label": "Spam Filtering Verdict",
+            "url": "X-Forefront-Antispam-Report",
+            "value": "NSPM"
+        },
+        {
+            "header": "IPV",
+            "label": "IP Filter Verdict",
+            "url": "X-Forefront-Antispam-Report",
+            "value": "NLI"
+        },
+        {
+            "header": "H",
+            "label": "HELO/EHLO String",
+            "url": "X-Forefront-Antispam-Report",
+            "value": "ccm27.constantcontact.com"
+        },
+        {
+            "header": "PTR",
+            "label": "PTR Record",
+            "url": "X-Forefront-Antispam-Report",
+            "value": "ccm27.constantcontact.com"
+        },
+        {
+            "header": "CIP",
+            "label": "Connecting IP Address",
+            "url": "X-Forefront-Antispam-Report",
+            "value": "208.75.123.162"
+        },
+        {
+            "header": "CAT",
+            "label": "Protection Policy Category",
+            "url": "X-Forefront-Antispam-Report",
+            "value": "NONE"
+        },
+        {
+            "header": "SFTY",
+            "label": "Phishing message",
+            "url": "X-Forefront-Antispam-Report",
+            "value": ""
+        },
+        {
+            "header": "X-CustomSpam",
+            "label": "Advanced Spam Filtering",
+            "url": "X-Forefront-Antispam-Report",
+            "value": ""
+        }];
+
+    var header =
+        "CIP:208.75.123.162;CTRY:US;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:ccm27.constantcontact.com;PTR:ccm27.constantcontact.com;CAT:NONE;SFTY:;SFS:;DIR:INB;SFP:;";
+
+    var forefrontAntiSpamReport = ForefrontAntiSpamReport();
+    forefrontAntiSpamReport.init(header);
+    assert.propEqual(forefrontAntiSpamReport.forefrontAntiSpamRows, forefrontAntiSpamRows, "forefrontAntiSpamRows");
+    assert.propEqual(forefrontAntiSpamReport.source, header, "forefrontAntiSpamRows-sourceHeader");
 });

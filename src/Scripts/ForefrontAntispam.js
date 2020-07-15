@@ -27,6 +27,7 @@ var ForefrontAntiSpamReport = (function () {
     return {
         init: init,
         exists: exists,
+        get source() { return antiSpamReport.source; },
         get forefrontAntiSpamRows() { return forefrontAntiSpamRows; },
     }
 });

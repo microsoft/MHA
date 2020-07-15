@@ -11,6 +11,7 @@ var AntiSpamReport = (function () {
         }
     };
 
+    var source = "";
     var antiSpamRows = [
         row("BCL", mhaStrings.mha_bcl, "X-Microsoft-Antispam"),
         row("PCL", mhaStrings.mha_pcl, "X-Microsoft-Antispam")
@@ -28,6 +29,7 @@ var AntiSpamReport = (function () {
 
     // https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers
     function parse(report, rows) {
+        source = report;
         if (!report) {
             return;
         }
@@ -68,6 +70,7 @@ var AntiSpamReport = (function () {
         exists: exists,
         existsInternal: existsInternal,
         parse: parse,
+        get source() { return source; },
         get antiSpamRows() { return antiSpamRows; },
         row: row
     }
