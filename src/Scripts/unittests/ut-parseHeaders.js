@@ -18,8 +18,8 @@ QUnit.test("parseHeader Tests", function (assert) {
         {
             "header": "Archived-At",
             "label": "Archived at",
-            "value": "",
-            "valueUrl": ""
+            "value": "https://www.bing.com",
+            "valueUrl": "https://www.bing.com"
         },
         {
             "header": "Date",
@@ -220,6 +220,7 @@ QUnit.test("parseHeader Tests", function (assert) {
         "Sender: PBS Charlotte <natascha@pbscharlotte.ccsend.com>\n" +
         "To: test@outlook.com\n" +
         "Subject: Hear Hamilton Anytime, Anywhere\n" +
+        "Archived-At: https://www.bing.com\n" +
         "MIME-Version: 1.0\n" +
         "Content-Type: multipart/alternative; \n" +
         "	boundary=\"----=_Part_636915194_1889124954.1594752080758\"\n" +
@@ -351,6 +352,7 @@ QUnit.test("parseHeader Tests", function (assert) {
         "sender: PBS Charlotte <natascha@pbscharlotte.ccsend.com>\n" +
         "to: test@outlook.com\n" +
         "subject: Hear Hamilton Anytime, Anywhere\n" +
+        "archived-at: https://www.bing.com\n" +
         "mime-version: 1.0\n" +
         "content-type: multipart/alternative; \n" +
         "	boundary=\"----=_Part_636915194_1889124954.1594752080758\"\n" +
