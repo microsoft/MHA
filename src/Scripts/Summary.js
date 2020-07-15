@@ -18,13 +18,7 @@ var Summary = (function () {
     var dateRow = SummaryRow(
         "Date",
         mhaStrings.mha_creationTime,
-        function (value) {
-            if (value) {
-                return new Date(value).toLocaleString();
-            } else {
-                return "";
-            }
-        },
+        function (value) { return value ? new Date(value).toLocaleString() : ""; },
         function (value) { return creationTime(value); });
 
     var archivedRow = SummaryRow(
