@@ -113,6 +113,7 @@ var mhaStrings = (function () {
         mha_messageId: "Message Id",
         mha_creationTime: "Creation time",
         mha_from: "From",
+        mha_replyTo: "Reply to",
         mha_to: "To",
         mha_cc: "Cc",
         mha_archivedAt: "Archived at",

@@ -34,6 +34,12 @@ QUnit.test("parseHeader Tests", function (assert) {
             "valueUrl": ""
         },
         {
+            "header": "Reply-To",
+            "label": "Reply to",
+            "value": "memberservices@wtvi.org",
+            "valueUrl": ""
+        },
+        {
             "header": "To",
             "label": "To",
             "value": "test@outlook.com",
