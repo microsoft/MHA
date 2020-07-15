@@ -2,16 +2,16 @@
 /* exported Summary */
 
 var Summary = (function () {
-    var SummaryRow = function (_header, _label, _set, _get) {
+    var SummaryRow = function (header, label, _set, _get) {
         var value = "";
-        function get() { return value; }
-        function set(_value) { value = _value; }
+        function get() { return _get ? _get() : value; }
+        function set(_value) { _set ? _set(_value) : value = _value; }
 
         return {
-            header: _header,
-            label: _label,
-            set value(_value) { _set ? _set(_value) : set(_value); },
-            get value() { return _get ? _get() : get(); },
+            header: header,
+            label: label,
+            set value(_value) { return set(_value); },
+            get value() { return get(); },
             valueUrl: "",
         };
     };
