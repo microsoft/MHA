@@ -125,8 +125,19 @@ QUnit.test("parseHeader Tests", function (assert) {
             "label": "Phishing Confidence Level",
             "url": "X-Microsoft-Antispam",
             "value": ""
-        }
-    ];
+        },
+        {
+            "header": "source",
+            "label": "Source header",
+            "url": "X-Microsoft-Antispam",
+            "value": "BCL:1;"
+        },
+        {
+            "header": "unparsed",
+            "label": "Unknown fields",
+            "url": "X-Microsoft-Antispam",
+            "value": ""
+        }];
 
     var forefrontAntiSpamRows = [
         {
@@ -206,6 +217,18 @@ QUnit.test("parseHeader Tests", function (assert) {
             "label": "Advanced Spam Filtering",
             "url": "X-Forefront-Antispam-Report",
             "value": ""
+        },
+        {
+            "header": "source",
+            "label": "Source header",
+            "url": "X-Microsoft-Antispam",
+            "value": "CIP:208.75.123.162;CTRY:US;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:ccm27.constantcontact.com;PTR:ccm27.constantcontact.com;CAT:NONE;SFTY:;SFS:;DIR:INB;SFP:;"
+        },
+        {
+            "header": "unparsed",
+            "label": "Unknown fields",
+            "url": "X-Microsoft-Antispam",
+            "value": "DIR:INB;"
         }];
 
     var goodCaseHeaders = "Received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
@@ -474,6 +497,7 @@ QUnit.test("parseHeader Tests", function (assert) {
 });
 
 QUnit.test("antiSpam Tests", function (assert) {
+    var header = "BCL:1;";
     var antiSpamRows = [
         {
             "header": "BCL",
@@ -486,10 +510,20 @@ QUnit.test("antiSpam Tests", function (assert) {
             "label": "Phishing Confidence Level",
             "url": "X-Microsoft-Antispam",
             "value": ""
+        },
+        {
+            "header": "source",
+            "label": "Source header",
+            "url": "X-Microsoft-Antispam",
+            "value": header
+        },
+        {
+            "header": "unparsed",
+            "label": "Unknown fields",
+            "url": "X-Microsoft-Antispam",
+            "value": ""
         }
     ];
-
-    var header = "BCL:1;";
 
     var antiSpamReport = AntiSpamReport();
     antiSpamReport.init(header);
@@ -499,6 +533,8 @@ QUnit.test("antiSpam Tests", function (assert) {
 });
 
 QUnit.test("forefront antiSpam Tests", function (assert) {
+    var header =
+        "CIP:208.75.123.162;CTRY:US;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:ccm27.constantcontact.com;PTR:ccm27.constantcontact.com;CAT:NONE;SFTY:;SFS:;DIR:INB;SFP:;";
     var forefrontAntiSpamRows = [
         {
             "header": "ARC",
@@ -577,10 +613,19 @@ QUnit.test("forefront antiSpam Tests", function (assert) {
             "label": "Advanced Spam Filtering",
             "url": "X-Forefront-Antispam-Report",
             "value": ""
+        },
+        {
+            "header": "source",
+            "label": "Source header",
+            "url": "X-Microsoft-Antispam",
+            "value": header
+        },
+        {
+            "header": "unparsed",
+            "label": "Unknown fields",
+            "url": "X-Microsoft-Antispam",
+            "value": "DIR:INB;"
         }];
-
-    var header =
-        "CIP:208.75.123.162;CTRY:US;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:ccm27.constantcontact.com;PTR:ccm27.constantcontact.com;CAT:NONE;SFTY:;SFS:;DIR:INB;SFP:;";
 
     var forefrontAntiSpamReport = ForefrontAntiSpamReport();
     forefrontAntiSpamReport.init(header);

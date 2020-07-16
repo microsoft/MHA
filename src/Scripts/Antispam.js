@@ -15,12 +15,25 @@ var AntiSpamReport = (function () {
     var unparsed = "";
     var antiSpamRows = [
         row("BCL", mhaStrings.mha_bcl, "X-Microsoft-Antispam"),
-        row("PCL", mhaStrings.mha_pcl, "X-Microsoft-Antispam")
+        row("PCL", mhaStrings.mha_pcl, "X-Microsoft-Antispam"),
+        row("source", mhaStrings.mha_source, "X-Microsoft-Antispam"),
+        row("unparsed", mhaStrings.mha_unparsed, "X-Microsoft-Antispam")
     ];
 
     function existsInternal(rows) {
         for (var i = 0; i < rows.length; i++) {
             if (rows[i].value) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function setRowValue(rows, key, value) {
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].header.toUpperCase() === key.toUpperCase()) {
+                rows[i].value = value;
                 return true;
             }
         }
@@ -53,21 +66,15 @@ var AntiSpamReport = (function () {
             for (var iLine = 0; iLine < lines.length; iLine++) {
                 var line = lines[iLine].match(/(.*?):(.*?);/m);
                 if (line && line[1] && line[2]) {
-                    var matched = false;
-                    for (var i = 0; i < rows.length; i++) {
-                        if (rows[i].header.toUpperCase() === line[1].toUpperCase()) {
-                            rows[i].value = line[2];
-                            matched = true;
-                            break;
-                        }
-                    }
-
-                    if (!matched) {
+                    if (!setRowValue(rows, line[1], line[2])) {
                         unparsed += line[1] + ':' + line[2] + ';';
                     }
                 }
             }
         }
+
+        setRowValue(rows, "source", source);
+        setRowValue(rows, "unparsed", unparsed);
     }
 
     function init(report) { parse(report, antiSpamRows); }

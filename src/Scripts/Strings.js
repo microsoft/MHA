@@ -135,6 +135,8 @@ var mhaStrings = (function () {
         mha_value: "Value",
 
         // ForefrontAntiSpamReport
+        mha_source: "Source header",
+        mha_unparsed: "Unknown fields",
         mha_arc: "ARC protocol",
         mha_countryRegion: "Country/Region",
         mha_lang: "Language",
