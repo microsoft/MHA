@@ -11,9 +11,13 @@ var AntiSpamReport = (function () {
         }
     };
 
+    var source = "";
+    var unparsed = "";
     var antiSpamRows = [
         row("BCL", mhaStrings.mha_bcl, "X-Microsoft-Antispam"),
-        row("PCL", mhaStrings.mha_pcl, "X-Microsoft-Antispam")
+        row("PCL", mhaStrings.mha_pcl, "X-Microsoft-Antispam"),
+        row("source", mhaStrings.mha_source, "X-Microsoft-Antispam"),
+        row("unparsed", mhaStrings.mha_unparsed, "X-Microsoft-Antispam")
     ];
 
     function existsInternal(rows) {
@@ -26,8 +30,20 @@ var AntiSpamReport = (function () {
         return false;
     }
 
-    // https://technet.microsoft.com/en-us/library/dn205071
+    function setRowValue(rows, key, value) {
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].header.toUpperCase() === key.toUpperCase()) {
+                rows[i].value = value;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers
     function parse(report, rows) {
+        source = report;
         if (!report) {
             return;
         }
@@ -45,19 +61,20 @@ var AntiSpamReport = (function () {
         report = report.replace(/;+/g, ";");
 
         var lines = report.match(/(.*?):(.*?);/g);
+        unparsed = "";
         if (lines) {
             for (var iLine = 0; iLine < lines.length; iLine++) {
                 var line = lines[iLine].match(/(.*?):(.*?);/m);
                 if (line && line[1] && line[2]) {
-                    for (var i = 0; i < rows.length; i++) {
-                        if (rows[i].header.toUpperCase() === line[1].toUpperCase()) {
-                            rows[i].value = line[2];
-                            break;
-                        }
+                    if (!setRowValue(rows, line[1], line[2])) {
+                        unparsed += line[1] + ':' + line[2] + ';';
                     }
                 }
             }
         }
+
+        setRowValue(rows, "source", source);
+        setRowValue(rows, "unparsed", unparsed);
     }
 
     function init(report) { parse(report, antiSpamRows); }
@@ -68,6 +85,8 @@ var AntiSpamReport = (function () {
         exists: exists,
         existsInternal: existsInternal,
         parse: parse,
+        get source() { return source; },
+        get unparsed() { return unparsed; },
         get antiSpamRows() { return antiSpamRows; },
         row: row
     }

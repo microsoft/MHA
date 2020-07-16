@@ -35,6 +35,7 @@ var Summary = (function () {
         archivedRow,
         dateRow,
         SummaryRow("From", mhaStrings.mha_from),
+        SummaryRow("Reply-To", mhaStrings.mha_replyTo),
         SummaryRow("To", mhaStrings.mha_to),
         SummaryRow("CC", mhaStrings.mha_cc)
     ];
