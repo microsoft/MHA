@@ -11,17 +11,19 @@ var Received = (function () {
     // This algorithm should work regardless of the order of the headers, given:
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
-    var row = function (receivedHeader) {
-        var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
-
-        // Build array of header locations
-        var headerMatches = [];
-
+    function parseHeader(receivedHeader) {
         var parsedRow = {
             sourceHeader: receivedHeader,
             delaySort: -1, // Force the "no previous or current time" rows to sort before the 0 second rows
             percent: 0
         }
+
+        if (!receivedHeader) { return parsedRow; }
+
+        var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
+
+        // Build array of header locations
+        var headerMatches = [];
 
         // Some bad dates don't wrap UTC in paren - fix that first
         receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/gi, "(UTC)");
@@ -129,7 +131,7 @@ var Received = (function () {
         });
 
         return parsedRow;
-    };
+    }
 
     function exists() { return receivedRows.length > 0; }
 
@@ -160,7 +162,7 @@ var Received = (function () {
         return stringArray;
     }
 
-    function init(receivedHeader) { receivedRows.push(row(receivedHeader)); }
+    function init(receivedHeader) { receivedRows.push(parseHeader(receivedHeader)); }
 
     function computeDeltas() {
         // Process received headers in reverse order
@@ -276,7 +278,7 @@ var Received = (function () {
         get receivedRows() { return receivedRows; },
         get sortColumn() { return sortColumn; },
         get sortOrder() { return sortOrder; },
-        row: row, // For testing only
+        parseHeader: parseHeader, // For testing only
         dateString: dateString, // For testing only
         computeTime: computeTime // For testing only
     }
