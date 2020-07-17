@@ -19,6 +19,8 @@ var Received = (function () {
         }
 
         if (!receivedHeader) { return parsedRow; }
+        // Strip linefeeds first
+        receivedHeader = receivedHeader.replace(/\r|\n|\r\n/g, ' ')
 
         var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
 
@@ -79,19 +81,19 @@ var Received = (function () {
         // Scan for malformed postFix headers
         // Received: by example.com (Postfix, from userid 1001)
         //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
-        var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/gi);
-        if (postFix) {
-            parsedRow.by = postFix[2];
-            receivedHeader = postFix[1] + postFix[3];
+        const postFix = [...receivedHeader.matchAll(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/gi)];
+        if (postFix.length === 1) {
+            parsedRow.by = postFix[0][2];
+            receivedHeader = postFix[0][1] + postFix[0][3];
             receivedHeaderNames = removeEntry(receivedHeaderNames, "by");
         }
 
         // Scan for malformed qmail headers
         // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
-        var qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/gi);
-        if (qmail) {
-            parsedRow.by = qmail[2];
-            receivedHeader = qmail[1] + qmail[3];
+        var qmail = [...receivedHeader.matchAll(/(.*)\((qmail .*? invoked from .*?)\)(.*)/gi)];
+        if (qmail.length === 1) {
+            parsedRow.by = qmail[0][2];
+            receivedHeader = qmail[0][1] + qmail[0][3];
             receivedHeaderNames = removeEntry(receivedHeaderNames, "by");
         }
 

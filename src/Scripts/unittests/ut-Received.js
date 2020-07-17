@@ -284,6 +284,32 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         "sourceHeader": null
     }, "null");
 
+    var postfix = "Received: by example.com (Postfix, from userid 1001)\n" +
+        " id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)";
+    assert.propEqual(received.parseHeader(postfix),
+        {
+            "by": "example.com (Postfix, from userid 1001)",
+            "date": "8/21/2014 6:12:48 AM",
+            "dateNum": 1408615968000,
+            "dateSort": 1408615968000,
+            "delaySort": -1,
+            "id": "1234ABCD",
+            "percent": 0,
+            "sourceHeader": postfix
+        }, "postfix");
+
+    var qmail = "Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000"
+    assert.propEqual(received.parseHeader(qmail),
+        {
+            "by": "qmail 10876 invoked from network",
+            "date": "8/24/2014 12:13:38 PM",
+            "dateNum": 1408896818000,
+            "dateSort": 1408896818000,
+            "delaySort": -1,
+            "percent": 0,
+            "sourceHeader": qmail
+        }, "qmail");
+
     var broke1 =
         "Received: Sun, 22 Apr 2018 02:54:19\n" +
         " +0000";
