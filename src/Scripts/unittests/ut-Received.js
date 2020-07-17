@@ -272,9 +272,54 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         "sourceHeader": ""
     }, "empty");
 
+    assert.propEqual(received.parseHeader("Received: "), {
+        "delaySort": -1,
+        "percent": 0,
+        "sourceHeader": "Received: "
+    }, "OtherEmpty");
+
     assert.propEqual(received.parseHeader(null), {
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": null
     }, "null");
+
+    var broke1 =
+        "Received: Sun, 22 Apr 2018 02:54:19\n" +
+        " +0000";
+    assert.propEqual(received.parseHeader(broke1), {
+        "date": "4/21/2018 10:54:19 PM",
+        "dateNum": 1524365659000,
+        "dateSort": 1524365659000,
+        "delaySort": -1,
+        "percent": 0,
+        "sourceHeader": broke1
+    }, "broke1");
+
+    var broke2 =
+        "Received: 22 Apr 2018";
+    assert.propEqual(received.parseHeader(broke2), {
+        "delaySort": -1,
+        "percent": 0,
+        "sourceHeader": broke2
+    }, "broke2");
+
+    var broke3 =
+        "Received: ; 22 Apr 2018";
+    assert.propEqual(received.parseHeader(broke3), {
+        "date": "Invalid Date",
+        "dateNum": NaN,
+        "dateSort": NaN,
+        "delaySort": -1,
+        "percent": 0,
+        "sourceHeader": broke3
+    }, "broke3");
+
+    var broke4 =
+        "Received: ;";
+    assert.propEqual(received.parseHeader(broke4), {
+        "delaySort": -1,
+        "percent": 0,
+        "sourceHeader": broke4
+    }, "broke4");
 });

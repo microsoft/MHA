@@ -40,12 +40,12 @@ var Received = (function () {
         }
 
         if (iDate === -1) {
-            // Next we look for year-month-day
+            // Next we look for year-month-day, 4-1/2-1/2
             receivedHeader = receivedHeader.replace(/\s*(\d{4}-\d{1,2}-\d{1,2})/g, "; $1");
             iDate = receivedHeader.lastIndexOf(";");
         }
 
-        if (iDate !== -1) {
+        if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
             var date = receivedHeader.substring(iDate + 1);
             receivedHeader = receivedHeader.substring(0, iDate);
 
