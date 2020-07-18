@@ -90,7 +90,7 @@ var Received = (function () {
 
         // Scan for malformed qmail headers
         // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
-        var qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/mi);
+        const qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/mi);
         if (qmail) {
             parsedRow.by = qmail[2];
             receivedHeader = qmail[1] + qmail[3];
