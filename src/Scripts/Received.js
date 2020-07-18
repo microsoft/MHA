@@ -81,7 +81,7 @@ var Received = (function () {
         // Scan for malformed postFix headers
         // Received: by example.com (Postfix, from userid 1001)
         //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
-        const postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/mi);
+        var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/mi);
         if (postFix) {
             parsedRow.by = postFix[2];
             receivedHeader = postFix[1] + postFix[3];
@@ -90,7 +90,7 @@ var Received = (function () {
 
         // Scan for malformed qmail headers
         // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
-        const qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/mi);
+        var qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/mi);
         if (qmail) {
             parsedRow.by = qmail[2];
             receivedHeader = qmail[1] + qmail[3];
