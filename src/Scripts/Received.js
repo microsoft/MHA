@@ -11,17 +11,21 @@ var Received = (function () {
     // This algorithm should work regardless of the order of the headers, given:
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
-    var row = function (receivedHeader) {
-        var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
-
-        // Build array of header locations
-        var headerMatches = [];
-
+    function parseHeader(receivedHeader) {
         var parsedRow = {
             sourceHeader: receivedHeader,
             delaySort: -1, // Force the "no previous or current time" rows to sort before the 0 second rows
             percent: 0
         }
+
+        if (!receivedHeader) { return parsedRow; }
+        // Strip linefeeds first
+        receivedHeader = receivedHeader.replace(/\r|\n|\r\n/g, ' ')
+
+        var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
+
+        // Build array of header locations
+        var headerMatches = [];
 
         // Some bad dates don't wrap UTC in paren - fix that first
         receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/gi, "(UTC)");
@@ -38,12 +42,12 @@ var Received = (function () {
         }
 
         if (iDate === -1) {
-            // Next we look for year-month-day
+            // Next we look for year-month-day, 4-1/2-1/2
             receivedHeader = receivedHeader.replace(/\s*(\d{4}-\d{1,2}-\d{1,2})/g, "; $1");
             iDate = receivedHeader.lastIndexOf(";");
         }
 
-        if (iDate !== -1) {
+        if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
             var date = receivedHeader.substring(iDate + 1);
             receivedHeader = receivedHeader.substring(0, iDate);
 
@@ -77,7 +81,7 @@ var Received = (function () {
         // Scan for malformed postFix headers
         // Received: by example.com (Postfix, from userid 1001)
         //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
-        var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/gi);
+        const postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/mi);
         if (postFix) {
             parsedRow.by = postFix[2];
             receivedHeader = postFix[1] + postFix[3];
@@ -86,7 +90,7 @@ var Received = (function () {
 
         // Scan for malformed qmail headers
         // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
-        var qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/gi);
+        var qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/mi);
         if (qmail) {
             parsedRow.by = qmail[2];
             receivedHeader = qmail[1] + qmail[3];
@@ -129,7 +133,7 @@ var Received = (function () {
         });
 
         return parsedRow;
-    };
+    }
 
     function exists() { return receivedRows.length > 0; }
 
@@ -160,7 +164,7 @@ var Received = (function () {
         return stringArray;
     }
 
-    function init(receivedHeader) { receivedRows.push(row(receivedHeader)); }
+    function init(receivedHeader) { receivedRows.push(parseHeader(receivedHeader)); }
 
     function computeDeltas() {
         // Process received headers in reverse order
@@ -276,7 +280,7 @@ var Received = (function () {
         get receivedRows() { return receivedRows; },
         get sortColumn() { return sortColumn; },
         get sortOrder() { return sortOrder; },
-        row: row, // For testing only
+        parseHeader: parseHeader, // For testing only
         dateString: dateString, // For testing only
         computeTime: computeTime // For testing only
     }
