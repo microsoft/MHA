@@ -129,18 +129,19 @@ for (const targetName of Object.keys(targets)) {
         }
     }
 
+    options.sourceMap.filename = path.basename(targetName);
+    options.sourceMap.url = path.basename(mapName);
+    const result = UglifyJS.minify(files, options);
+    if (result.error) {
+        console.log("         result.error " + result.error);
+        throw new Error(result.error);
+    }
+
+    if (result.warnings) {
+        console.log("         result.warnings" + result.warnings);
+    }
+
     if (!debug) {
-        options.sourceMap.filename = path.basename(targetName);
-        options.sourceMap.url = path.basename(mapName);
-        const result = UglifyJS.minify(files, options);
-        if (result.error) {
-            console.log("         result.error " + result.error);
-        }
-
-        if (result.warnings) {
-            console.log("         result.warnings" + result.warnings);
-        }
-
         fs.writeFileSync(path.join(scriptsFolderDst, targetName), result.code, "utf8");
         fs.writeFileSync(path.join(scriptsFolderDst, mapName), result.map, "utf8");
     }
