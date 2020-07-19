@@ -65,7 +65,7 @@ var AntiSpamReport = (function () {
         if (lines) {
             for (var iLine = 0; iLine < lines.length; iLine++) {
                 var line = lines[iLine].match(/(.*?):(.*?);/m);
-                if (line && line[1] && line[2]) {
+                if (line && line[1]) {
                     if (!setRowValue(rows, line[1], line[2])) {
                         unparsed += line[1] + ':' + line[2] + ';';
                     }

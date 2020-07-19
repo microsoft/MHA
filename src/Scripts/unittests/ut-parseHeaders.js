@@ -228,7 +228,7 @@ QUnit.test("parseHeader Tests", function (assert) {
             "header": "unparsed",
             "label": "Unknown fields",
             "url": "X-Microsoft-Antispam",
-            "value": "DIR:INB;"
+            "value": "SRV:;SFS:;DIR:INB;SFP:;"
         }];
 
     var goodCaseHeaders = "Received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
@@ -624,14 +624,14 @@ QUnit.test("forefront antiSpam Tests", function (assert) {
             "header": "unparsed",
             "label": "Unknown fields",
             "url": "X-Microsoft-Antispam",
-            "value": "DIR:INB;"
+            "value": "SRV:;SFS:;DIR:INB;SFP:;"
         }];
 
     var forefrontAntiSpamReport = ForefrontAntiSpamReport();
     forefrontAntiSpamReport.init(header);
     assert.propEqual(forefrontAntiSpamReport.forefrontAntiSpamRows, forefrontAntiSpamRows, "forefrontAntiSpamRows");
     assert.propEqual(forefrontAntiSpamReport.source, header, "forefrontAntiSpamRows-sourceHeader");
-    assert.propEqual([forefrontAntiSpamReport.unparsed], ["DIR:INB;"], "forefrontAntiSpamReport-unparsed");
+    assert.propEqual([forefrontAntiSpamReport.unparsed], ["SRV:;SFS:;DIR:INB;SFP:;"], "forefrontAntiSpamReport-unparsed");
 });
 
 QUnit.test("forefront antiSpam nulls", function (assert) {
@@ -659,7 +659,7 @@ QUnit.test("forefront antiSpam nulls", function (assert) {
             "header": "unparsed",
             "label": "Unknown fields",
             "url": "X-Microsoft-Antispam",
-            "value": "SFV:SKI;"
+            "value": "UIP:;SFV:SKI;"
         }
     ];
 
@@ -669,5 +669,5 @@ QUnit.test("forefront antiSpam nulls", function (assert) {
     antiSpamReport.init(header);
     assert.propEqual(antiSpamReport.antiSpamRows, antiSpamRows, "antiSpamRows nulls");
     assert.propEqual(antiSpamReport.source, header, "antiSpamRows-sourceHeader nulls");
-    assert.propEqual([antiSpamReport.unparsed], ["SFV:SKI;"], "antiSpamRows-unparsed nulls");
+    assert.propEqual([antiSpamReport.unparsed], ["UIP:;SFV:SKI;"], "antiSpamRows-unparsed nulls");
 });
