@@ -149,6 +149,7 @@ var mhaStrings = (function () {
         mha_cip: "Connecting IP Address",
         mha_cat: "Protection Policy Category",
         mha_sfty: "Phishing message",
+        mha_srv: "Bulk email status",
         mha_customSpam: "Advanced Spam Filtering",
 
         // AntiSpamReport

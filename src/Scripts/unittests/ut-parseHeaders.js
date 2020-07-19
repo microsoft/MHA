@@ -213,6 +213,12 @@ QUnit.test("parseHeader Tests", function (assert) {
             "value": ""
         },
         {
+            "header": "SRV",
+            "label": "Bulk email status",
+            "url": "X-Forefront-Antispam-Report",
+            "value": ""
+        },
+        {
             "header": "X-CustomSpam",
             "label": "Advanced Spam Filtering",
             "url": "X-Forefront-Antispam-Report",
@@ -228,7 +234,7 @@ QUnit.test("parseHeader Tests", function (assert) {
             "header": "unparsed",
             "label": "Unknown fields",
             "url": "X-Microsoft-Antispam",
-            "value": "SRV:;SFS:;DIR:INB;SFP:;"
+            "value": "SFS:;DIR:INB;SFP:;"
         }];
 
     var goodCaseHeaders = "Received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
@@ -609,6 +615,12 @@ QUnit.test("forefront antiSpam Tests", function (assert) {
             "value": ""
         },
         {
+            "header": "SRV",
+            "label": "Bulk email status",
+            "url": "X-Forefront-Antispam-Report",
+            "value": ""
+        },
+        {
             "header": "X-CustomSpam",
             "label": "Advanced Spam Filtering",
             "url": "X-Forefront-Antispam-Report",
@@ -624,14 +636,14 @@ QUnit.test("forefront antiSpam Tests", function (assert) {
             "header": "unparsed",
             "label": "Unknown fields",
             "url": "X-Microsoft-Antispam",
-            "value": "SRV:;SFS:;DIR:INB;SFP:;"
+            "value": "SFS:;DIR:INB;SFP:;"
         }];
 
     var forefrontAntiSpamReport = ForefrontAntiSpamReport();
     forefrontAntiSpamReport.init(header);
     assert.propEqual(forefrontAntiSpamReport.forefrontAntiSpamRows, forefrontAntiSpamRows, "forefrontAntiSpamRows");
     assert.propEqual(forefrontAntiSpamReport.source, header, "forefrontAntiSpamRows-sourceHeader");
-    assert.propEqual([forefrontAntiSpamReport.unparsed], ["SRV:;SFS:;DIR:INB;SFP:;"], "forefrontAntiSpamReport-unparsed");
+    assert.propEqual([forefrontAntiSpamReport.unparsed], ["SFS:;DIR:INB;SFP:;"], "forefrontAntiSpamReport-unparsed");
 });
 
 QUnit.test("forefront antiSpam nulls", function (assert) {

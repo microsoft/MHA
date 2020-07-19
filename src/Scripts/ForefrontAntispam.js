@@ -18,6 +18,7 @@ var ForefrontAntiSpamReport = (function () {
         antiSpamReport.row("CIP", mhaStrings.mha_cip, "X-Forefront-Antispam-Report"),
         antiSpamReport.row("CAT", mhaStrings.mha_cat, "X-Forefront-Antispam-Report"),
         antiSpamReport.row("SFTY", mhaStrings.mha_sfty, "X-Forefront-Antispam-Report"),
+        antiSpamReport.row("SRV", mhaStrings.mha_srv, "X-Forefront-Antispam-Report"),
         antiSpamReport.row("X-CustomSpam", mhaStrings.mha_customSpam, "X-Forefront-Antispam-Report"),
         antiSpamReport.row("source", mhaStrings.mha_source, "X-Microsoft-Antispam"),
         antiSpamReport.row("unparsed", mhaStrings.mha_unparsed, "X-Microsoft-Antispam")
