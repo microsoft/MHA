@@ -95,6 +95,7 @@ const targets = {
     "uiToggle.min.js": ["uiToggle.js"],
     "diag.min.js": ["diag.js"],
     "unittests/ut-2047.min.js": ["unittests/ut-2047.js"],
+    "unittests/ut-antispam.min.js": ["unittests/ut-antispam.js"],
     "unittests/ut-DateTime.min.js": ["unittests/ut-DateTime.js"],
     "unittests/ut-GetHeaderList.min.js": ["unittests/ut-GetHeaderList.js"],
     "unittests/ut-ParseError.min.js": ["unittests/ut-ParseError.js"],
