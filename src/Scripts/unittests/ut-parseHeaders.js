@@ -223,6 +223,12 @@ QUnit.test("parseHeader Tests", function (assert) {
             "value": ""
         },
         {
+            "header": "SFS",
+            "label": "Spam rules",
+            "url": "SFS",
+            "value": ""
+        },
+        {
             "header": "source",
             "label": "Source header",
             "url": "X-Microsoft-Antispam",
@@ -232,7 +238,7 @@ QUnit.test("parseHeader Tests", function (assert) {
             "header": "unparsed",
             "label": "Unknown fields",
             "url": "X-Microsoft-Antispam",
-            "value": "SFS:;DIR:INB;SFP:;"
+            "value": "DIR:INB;SFP:;"
         }];
 
     var goodCaseHeaders = "Received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +

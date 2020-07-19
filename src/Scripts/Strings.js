@@ -75,7 +75,8 @@ var mhaStrings = (function () {
         ["X-MS-Has-Attach", "https://msdn.microsoft.com/en-us/library/ee178420"],
         ["X-MS-TNEF-Correlator", "https://msdn.microsoft.com/en-us/library/ee219198"],
         ["X-Originating-IP", "https://en.wikipedia.org/wiki/X-Originating-IP"],
-        ["X-Priority", "https://technet.microsoft.com/en-us/library/bb691107"]
+        ["X-Priority", "https://technet.microsoft.com/en-us/library/bb691107"],
+        ["SFS", "https://docs.microsoft.com/en-us/exchange/monitoring/trace-an-email-message/run-a-message-trace-and-view-results"]
     ];
 
     return {
@@ -151,6 +152,7 @@ var mhaStrings = (function () {
         mha_sfty: "Phishing message",
         mha_srv: "Bulk email status",
         mha_customSpam: "Advanced Spam Filtering",
+        mha_sfs: "Spam rules",
 
         // AntiSpamReport
         mha_bcl: "Bulk Complaint Level"

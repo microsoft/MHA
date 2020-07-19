@@ -20,6 +20,7 @@ var ForefrontAntiSpamReport = (function () {
         antiSpamReport.row("SFTY", mhaStrings.mha_sfty, "X-Forefront-Antispam-Report"),
         antiSpamReport.row("SRV", mhaStrings.mha_srv, "X-Forefront-Antispam-Report"),
         antiSpamReport.row("X-CustomSpam", mhaStrings.mha_customSpam, "X-Forefront-Antispam-Report"),
+        antiSpamReport.row("SFS", mhaStrings.mha_sfs, "SFS"),
         antiSpamReport.row("source", mhaStrings.mha_source, "X-Microsoft-Antispam"),
         antiSpamReport.row("unparsed", mhaStrings.mha_unparsed, "X-Microsoft-Antispam")
 
