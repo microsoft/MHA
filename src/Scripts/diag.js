@@ -117,9 +117,11 @@ var Diagnostics = (function () {
             appDiagnostics["Office"] = "missing";
         }
 
-        appDiagnostics.permissionLevel = GetHeaders.permissionLevel();
-        appDiagnostics.canUseRest = GetHeaders.canUseRest();
-        appDiagnostics.sufficientPermission = GetHeaders.sufficientPermission(true);
+        if ("GetHeaders" in window) {
+            appDiagnostics.permissionLevel = GetHeaders.permissionLevel();
+            appDiagnostics.canUseRest = GetHeaders.canUseRest();
+            appDiagnostics.sufficientPermission = GetHeaders.sufficientPermission(true);
+        }
     }
 
     function ensureItemDiagnostics() {
