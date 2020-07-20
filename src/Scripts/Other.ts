@@ -2,14 +2,7 @@
 /* exported Other */
 
 var Other = (function () {
-    "use strict";
-
-    var row = function (_number, _header, _url, _value) {
-        var number = _number;
-        var header = _header;
-        var url = _url;
-        var value = _value;
-
+    var row = function (number, header, url, value) {
         return {
             number: number,
             header: header,

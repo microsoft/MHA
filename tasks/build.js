@@ -95,9 +95,11 @@ const targets = {
     "uiToggle.min.js": ["uiToggle.js"],
     "diag.min.js": ["diag.js"],
     "unittests/ut-2047.min.js": ["unittests/ut-2047.js"],
+    "unittests/ut-antispam.min.js": ["unittests/ut-antispam.js"],
     "unittests/ut-DateTime.min.js": ["unittests/ut-DateTime.js"],
     "unittests/ut-GetHeaderList.min.js": ["unittests/ut-GetHeaderList.js"],
     "unittests/ut-ParseError.min.js": ["unittests/ut-ParseError.js"],
+    "unittests/ut-parseHeaders.min.js": ["unittests/ut-parseHeaders.js"],
     "unittests/ut-Received.min.js": ["unittests/ut-Received.js"],
     "unittests/ut-XML.min.js": ["unittests/ut-XML.js"]
 };
@@ -128,10 +130,19 @@ for (const targetName of Object.keys(targets)) {
         }
     }
 
+    options.sourceMap.filename = path.basename(targetName);
+    options.sourceMap.url = path.basename(mapName);
+    const result = UglifyJS.minify(files, options);
+    if (result.error) {
+        console.log("         result.error " + result.error);
+        throw new Error(result.error);
+    }
+
+    if (result.warnings) {
+        console.log("         result.warnings" + result.warnings);
+    }
+
     if (!debug) {
-        options.sourceMap.filename = path.basename(targetName);
-        options.sourceMap.url = path.basename(mapName);
-        const result = UglifyJS.minify(files, options);
         fs.writeFileSync(path.join(scriptsFolderDst, targetName), result.code, "utf8");
         fs.writeFileSync(path.join(scriptsFolderDst, mapName), result.map, "utf8");
     }

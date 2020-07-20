@@ -27,7 +27,8 @@ var HeaderModel = (function (headers) {
 
     function parseHeaders(headers) {
         // Initialize originalHeaders in case we have parsing problems
-        originalHeaders = headers;
+        // Flatten CRLF to LF to avoid extra blank lines
+        originalHeaders = headers.replace(/(?:\r\n|\r|\n)/g, '\n');
         var headerList = GetHeaderList(headers);
 
         if (headerList.length > 0) {
@@ -39,16 +40,16 @@ var HeaderModel = (function (headers) {
             summary.init(headerList[i]);
 
             // Properties with special parsing
-            switch (headerList[i].header) {
-                case "X-Forefront-Antispam-Report":
+            switch (headerList[i].header.toUpperCase()) {
+                case "X-Forefront-Antispam-Report".toUpperCase():
                     forefrontAntiSpamReport.init(headerList[i].value);
                     break;
-                case "X-Microsoft-Antispam":
+                case "X-Microsoft-Antispam".toUpperCase():
                     antiSpamReport.init(headerList[i].value);
                     break;
             }
 
-            if (headerList[i].header === "Received") {
+            if (headerList[i].header.toUpperCase() === "Received".toUpperCase()) {
                 receivedHeaders.init(headerList[i].value);
             } else if (headerList[i].header || headerList[i].value) {
                 otherHeaders.init(headerList[i]);

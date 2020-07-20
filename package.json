@@ -37,6 +37,7 @@
   },
   "-vs-binding": {
     "BeforeBuild": [
+      "clean",
       "ts",
       "build-debug"
     ],

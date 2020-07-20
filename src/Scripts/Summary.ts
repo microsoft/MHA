@@ -2,17 +2,15 @@
 /* exported Summary */
 
 var Summary = (function () {
-    "use strict";
+    var SummaryRow = function (header, label, onSet, onGet, onGetUrl) {
+        var value = "";
 
-    var SummaryRow = function (_header, _label, _set, _get) {
-        var valueUrl = "";
         return {
-            header: _header,
-            label: _label,
-            value: "",
-            valueUrl: valueUrl,
-            set: _set || function (_value) { this.value = _value; },
-            get: _get || function () { return this.value; }
+            header: header,
+            label: label,
+            set value(_value) { value = onSet ? onSet(_value) : _value; },
+            get value() { return onGet ? onGet(value) : value; },
+            get valueUrl() { return onGetUrl ? onGetUrl(value) : ""; },
         };
     };
 
@@ -20,27 +18,16 @@ var Summary = (function () {
     var dateRow = SummaryRow(
         "Date",
         mhaStrings.mha_creationTime,
-        function (value) {
-            if (value) {
-                this.value = new Date(value).toLocaleString();
-            } else {
-                this.value = "";
-            }
-        },
-        function () { return creationTime(dateRow.value); });
+        function (value) { return value ? new Date(value).toLocaleString() : ""; },
+        function (value) { return creationTime(value); });
 
     var archivedRow = SummaryRow(
         "Archived-At",
         mhaStrings.mha_archivedAt,
-        function (value) {
-            if (value) {
-                this.valueUrl = mhaStrings.mapValueToURL(value);
-                this.value = value;
-            } else {
-                this.rawUrl = "";
-                this.value = "";
-            }
-        });
+        null,
+        null,
+        function (value) { return mhaStrings.mapValueToURL(value); }
+    );
 
     var summaryRows = [
         SummaryRow("Subject", mhaStrings.mha_subject),
@@ -48,13 +35,14 @@ var Summary = (function () {
         archivedRow,
         dateRow,
         SummaryRow("From", mhaStrings.mha_from),
+        SummaryRow("Reply-To", mhaStrings.mha_replyTo),
         SummaryRow("To", mhaStrings.mha_to),
         SummaryRow("CC", mhaStrings.mha_cc)
     ];
 
     function exists() {
         for (var i = 0; i < summaryRows.length; i++) {
-            if (summaryRows[i].get()) {
+            if (summaryRows[i].value) {
                 return true;
             }
         }
@@ -68,8 +56,8 @@ var Summary = (function () {
         }
 
         for (var i = 0; i < summaryRows.length; i++) {
-            if (summaryRows[i].header === header.header) {
-                summaryRows[i].set(header.value);
+            if (summaryRows[i].header.toUpperCase() === header.header.toUpperCase()) {
+                summaryRows[i].value = header.value;
                 return;
             }
         }

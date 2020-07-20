@@ -58,11 +58,11 @@ var mhaStrings = (function () {
         ["Thread-Topic", "https://msdn.microsoft.com/en-us/library/ms526986"],
         ["To", "https://tools.ietf.org/html/rfc5322#section-3.6.3"],
         ["X-Auto-Response-Suppress", "https://msdn.microsoft.com/en-us/library/ee219609"],
-        ["X-Forefront-Antispam-Report", "https://technet.microsoft.com/en-us/library/dn205071"],
+        ["X-Forefront-Antispam-Report", "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers"],
         ["X-Forefront-Antispam-Report-Untrusted", "https://technet.microsoft.com/en-us/library/bb232136"],
         ["X-Forefront-Prvs", "https://technet.microsoft.com/en-us/library/dd639361"],
         ["X-Message-Flag", "https://msdn.microsoft.com/en-us/library/exchange/ms875195"],
-        ["X-Microsoft-Antispam", "https://technet.microsoft.com/en-us/library/dn205071"],
+        ["X-Microsoft-Antispam", "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers"],
         ["X-MS-Exchange-Organization-Antispam-Report", "https://technet.microsoft.com/en-us/library/aa996878"],
         ["X-MS-Exchange-Organization-AuthAs", "https://technet.microsoft.com/en-us/library/bb232136"],
         ["X-MS-Exchange-Organization-AuthMechanism", "https://technet.microsoft.com/en-us/library/bb232136"],
@@ -77,7 +77,8 @@ var mhaStrings = (function () {
         ["X-MS-Has-Attach", "https://msdn.microsoft.com/en-us/library/ee178420"],
         ["X-MS-TNEF-Correlator", "https://msdn.microsoft.com/en-us/library/ee219198"],
         ["X-Originating-IP", "https://en.wikipedia.org/wiki/X-Originating-IP"],
-        ["X-Priority", "https://technet.microsoft.com/en-us/library/bb691107"]
+        ["X-Priority", "https://technet.microsoft.com/en-us/library/bb691107"],
+        ["SFS", "https://docs.microsoft.com/en-us/exchange/monitoring/trace-an-email-message/run-a-message-trace-and-view-results"]
     ];
 
     return {
@@ -115,6 +116,7 @@ var mhaStrings = (function () {
         mha_messageId: "Message Id",
         mha_creationTime: "Creation time",
         mha_from: "From",
+        mha_replyTo: "Reply to",
         mha_to: "To",
         mha_cc: "Cc",
         mha_archivedAt: "Archived at",
@@ -136,6 +138,9 @@ var mhaStrings = (function () {
         mha_value: "Value",
 
         // ForefrontAntiSpamReport
+        mha_source: "Source header",
+        mha_unparsed: "Unknown fields",
+        mha_arc: "ARC protocol",
         mha_countryRegion: "Country/Region",
         mha_lang: "Language",
         mha_scl: "Spam Confidence Level",
@@ -145,7 +150,11 @@ var mhaStrings = (function () {
         mha_h: "HELO/EHLO String",
         mha_ptr: "PTR Record",
         mha_cip: "Connecting IP Address",
+        mha_cat: "Protection Policy Category",
+        mha_sfty: "Phishing message",
+        mha_srv: "Bulk email status",
         mha_customSpam: "Advanced Spam Filtering",
+        mha_sfs: "Spam rules",
 
         // AntiSpamReport
         mha_bcl: "Bulk Complaint Level"

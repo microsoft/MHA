@@ -22,3 +22,12 @@
     padding-top: 25px;
     background: #efeff4;
 }
+
+.content-block-title{
+    text-transform:none;
+    white-space:normal;
+}
+
+.content-block {
+    word-wrap: break-word;
+}
