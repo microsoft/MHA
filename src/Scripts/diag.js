@@ -3,7 +3,6 @@
 /* global aikey */
 /* global appInsights */
 /* exported Diagnostics */
-/* exported GetHeaders */
 
 // diagnostics module
 
@@ -21,7 +20,7 @@ var Diagnostics = (function () {
                 ensureAppDiagnostics();
                 ensureItemDiagnostics();
             }
-            catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.get", exception: e, }); }
+            catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.get", exception: JSON.stringify(e) }); }
             inGet = false;
         }
 
@@ -35,7 +34,7 @@ var Diagnostics = (function () {
             ensureItemDiagnostics();
             itemDiagnostics[field] = value;
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.set", exception: e, }); }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.set", exception: JSON.stringify(e) }); }
     }
 
     function clear() { itemDiagnostics = null; }
@@ -52,7 +51,7 @@ var Diagnostics = (function () {
 
             client.send();
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureLastModified", exception: e, }); }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureLastModified", exception: JSON.stringify(e) }); }
     }
 
     function ensureAppDiagnostics() {
@@ -72,7 +71,7 @@ var Diagnostics = (function () {
             appDiagnostics["origin"] = window.location.origin;
             appDiagnostics["path"] = window.location.pathname;
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureAppDiagnostics", exception: e, }); }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureAppDiagnostics", exception: JSON.stringify(e) }); }
     }
 
     function ensureOfficeDiagnostics() {
@@ -135,13 +134,13 @@ var Diagnostics = (function () {
                 appDiagnostics["Office"] = "missing";
             }
 
-            if ("GetHeaders" in window) {
-                appDiagnostics.permissionLevel = GetHeaders.permissionLevel();
-                appDiagnostics.canUseRest = GetHeaders.canUseRest();
-                appDiagnostics.sufficientPermission = GetHeaders.sufficientPermission(true);
+            if (window.GetHeaders) {
+                appDiagnostics.permissionLevel = window.GetHeaders.permissionLevel();
+                appDiagnostics.canUseRest = window.GetHeaders.canUseRest();
+                appDiagnostics.sufficientPermission = window.GetHeaders.sufficientPermission(true);
             }
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureOfficeDiagnostics", exception: e, }); }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureOfficeDiagnostics", exception: JSON.stringify(e) }); }
     }
 
     function ensureItemDiagnostics() {
@@ -174,13 +173,14 @@ var Diagnostics = (function () {
                 itemDiagnostics["Office"] = "missing";
             }
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureItemDiagnostics", exception: e, }); }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureItemDiagnostics", exception: JSON.stringify(e) }); }
     }
 
     function getRequirementSet() {
         // https://docs.microsoft.com/en-us/office/dev/add-ins/reference/requirement-sets/outlook-api-requirement-sets
         try {
-            if (!window.Office) return "none";
+            if (!("Office" in window)) return "none";
+            if (!window.Office.context) return "no context";
             if (window.Office.context.requirements && window.Office.context.requirements.isSetSupported) {
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.7)) return "1.7";
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.6)) return "1.6";
@@ -192,15 +192,15 @@ var Diagnostics = (function () {
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.0)) return "1.0";
             }
 
-            if (window.Office.context.mailbox.addHandlerAsync) return "1.5?";
-            if (window.Office.context.ui.displayDialogAsync) return "1.4?";
-            if (window.Office.context.mailbox.item.saveAsync) return "1.3?";
-            if (window.Office.context.mailbox.item.setSelectedDataAsync) return "1.2?";
-            if (window.Office.context.mailbox.item.removeAttachmentAsync) return "1.1?";
+            if (window.Office.context.mailbox && window.Office.context.mailbox.addHandlerAsync) return "1.5?";
+            if (window.Office.context.ui && window.Office.context.ui.displayDialogAsync) return "1.4?";
+            if (window.Office.context.mailbox && window.Office.context.mailbox.item.saveAsync) return "1.3?";
+            if (window.Office.context.mailbox && window.Office.context.mailbox.item.setSelectedDataAsync) return "1.2?";
+            if (window.Office.context.mailbox && window.Office.context.mailbox.item.removeAttachmentAsync) return "1.1?";
             return "1.0?";
         }
         catch (e) {
-            appInsights.trackEvent("diagError", { source: "Diagnostics.getRequirementSet", exception: e, });
+            appInsights.trackEvent("diagError", { source: "Diagnostics.getRequirementSet", exception: JSON.stringify(e) });
             return "Could not detect requirements set";
         }
     }
