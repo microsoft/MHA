@@ -46,6 +46,8 @@ var GetHeaders = (function () {
     }
 
     function sufficientPermission(strict) {
+        if (!Office) return false;
+        if (!Office.context) return false;
         if (!Office.context.mailbox) return false;
         // In strict mode, we must find permissions to conclude we have them
         // In non-strict mode, if we don't find permissions, we assume we might have them
@@ -56,13 +58,19 @@ var GetHeaders = (function () {
     }
 
     function canUseRest() {
+        if (!Office) return false;
+        if (!Office.context) return false;
+        if (!Office.context.requirements) return false;
         if (!Office.context.requirements.isSetSupported("Mailbox", 1.5)) return false;
         if (!sufficientPermission(true)) return false;
+        if (!Office.context.mailbox) return false;
         if (!Office.context.mailbox.getCallbackTokenAsync) return false;
         return true;
     }
 
     function validItem() {
+        if (!Office) return false;
+        if (!Office.context) return false;
         if (!Office.context.mailbox) return false;
         if (!Office.context.mailbox.item) return false;
         if (!Office.context.mailbox.item.itemId) return false;
