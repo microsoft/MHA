@@ -20,7 +20,7 @@ var Diagnostics = (function () {
                 ensureAppDiagnostics();
                 ensureItemDiagnostics();
             }
-            catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.get", exception: JSON.stringify(e) }); }
+            catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.get", exception: e.toString(), message: e.message, stack: e.stack }); }
             inGet = false;
         }
 
@@ -34,7 +34,7 @@ var Diagnostics = (function () {
             ensureItemDiagnostics();
             itemDiagnostics[field] = value;
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.set", exception: JSON.stringify(e) }); }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.set", exception: e.toString(), message: e.message, stack: e.stack }); }
     }
 
     function clear() { itemDiagnostics = null; }
@@ -51,7 +51,7 @@ var Diagnostics = (function () {
 
             client.send();
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureLastModified", exception: JSON.stringify(e) }); }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureLastModified", exception: e.toString(), message: e.message, stack: e.stack }); }
     }
 
     function ensureAppDiagnostics() {
@@ -71,7 +71,7 @@ var Diagnostics = (function () {
             appDiagnostics["origin"] = window.location.origin;
             appDiagnostics["path"] = window.location.pathname;
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureAppDiagnostics", exception: JSON.stringify(e) }); }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureAppDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }); }
     }
 
     function ensureOfficeDiagnostics() {
@@ -140,7 +140,7 @@ var Diagnostics = (function () {
                 appDiagnostics.sufficientPermission = window.GetHeaders.sufficientPermission(true);
             }
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureOfficeDiagnostics", exception: JSON.stringify(e) }); }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureOfficeDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }); }
     }
 
     function ensureItemDiagnostics() {
@@ -173,7 +173,7 @@ var Diagnostics = (function () {
                 itemDiagnostics["Office"] = "missing";
             }
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureItemDiagnostics", exception: JSON.stringify(e) }); }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureItemDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }); }
     }
 
     function getRequirementSet() {
@@ -200,7 +200,7 @@ var Diagnostics = (function () {
             return "1.0?";
         }
         catch (e) {
-            appInsights.trackEvent("diagError", { source: "Diagnostics.getRequirementSet", exception: JSON.stringify(e) });
+            appInsights.trackEvent("diagError", { source: "Diagnostics.getRequirementSet", exception: e.toString(), message: e.message, stack: e.stack });
             return "Could not detect requirements set";
         }
     }
