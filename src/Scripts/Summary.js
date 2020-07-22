@@ -11,6 +11,7 @@ var Summary = (function () {
             set value(_value) { value = onSet ? onSet(_value) : _value; },
             get value() { return onGet ? onGet(value) : value; },
             get valueUrl() { return onGetUrl ? onGetUrl(value) : ""; },
+            toString: function () { return label + " " + value; }
         };
     };
 
@@ -83,6 +84,13 @@ var Summary = (function () {
         get summaryRows() { return summaryRows; },
         get totalTime() { return totalTime; },
         set totalTime(value) { totalTime = value; },
-        toString: function () { return "Summary"; }
+        toString: function () {
+            if (!exists()) return "";
+            var ret = ["Summary"];
+            summaryRows.forEach(function (row) {
+                if (row.value) { ret.push(row); }
+            })
+            return ret.join("\n");
+        }
     };
 });
