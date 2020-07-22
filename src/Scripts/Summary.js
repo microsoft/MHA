@@ -82,6 +82,7 @@ var Summary = (function () {
         exists: exists,
         get summaryRows() { return summaryRows; },
         get totalTime() { return totalTime; },
-        set totalTime(value) { totalTime = value; }
-    }
+        set totalTime(value) { totalTime = value; },
+        toString: function () { return "Summary"; }
+    };
 });

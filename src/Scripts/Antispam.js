@@ -88,6 +88,7 @@ var AntiSpamReport = (function () {
         get source() { return source; },
         get unparsed() { return unparsed; },
         get antiSpamRows() { return antiSpamRows; },
-        row: row
-    }
+        row: row,
+        toString: function () { return "AntiSpamReport"; }
+    };
 });

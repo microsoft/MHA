@@ -49,6 +49,7 @@ var Other = (function () {
         get otherRows() { return otherRows; },
         doSort: doSort,
         get sortColumn() { return sortColumn; },
-        get sortOrder() { return sortOrder; }
+        get sortOrder() { return sortOrder; },
+        toString: function () { return "Other"; }
     }
 });

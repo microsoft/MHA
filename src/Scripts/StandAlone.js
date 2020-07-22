@@ -64,12 +64,12 @@ var StandAlone = (function () {
     }
 
     function copy() {
-        navigator.clipboard.writeText("hello world");
+        navigator.clipboard.writeText(viewModel);
     }
 
     return {
         analyze: analyze,
         clear: clear,
         copy: copy
-    }
+    };
 })();

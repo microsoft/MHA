@@ -282,6 +282,7 @@ var Received = (function () {
         get sortOrder() { return sortOrder; },
         parseHeader: parseHeader, // For testing only
         dateString: dateString, // For testing only
-        computeTime: computeTime // For testing only
-    }
+        computeTime: computeTime, // For testing only
+        toString: function () { return "received"; }
+    };
 });

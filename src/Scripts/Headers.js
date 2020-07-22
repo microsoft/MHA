@@ -128,6 +128,7 @@ var HeaderModel = (function (headers) {
         hasData: hasData,
         GetHeaderList: GetHeaderList,
         get status() { return status; },
-        set status(value) { status = value; }
-    }
+        set status(value) { status = value; },
+        toString: function () { return [summary, receivedHeaders, forefrontAntiSpamReport, antiSpamReport, otherHeaders].join("\n"); }
+    };
 });
