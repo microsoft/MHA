@@ -19,11 +19,11 @@ QUnit.test("RFC 2047 Tests", function (assert) {
 
     assert.equal(Decoder.clean2047Encoding("Nathaniel Borenstein <nsb@thumper.bellcore.com>\n" +
         "    (=?iso-8859-8?b?7eXs+SDv4SDp7Oj08A==?=)"), "Nathaniel Borenstein <nsb@thumper.bellcore.com>\n" +
-        "    (םולש ןב ילטפנ)");
+    "    (םולש ןב ילטפנ)");
 
     assert.equal(Decoder.clean2047Encoding("Greg Vaudreuil <gvaudre@NRI.Reston.VA.US>, Ned Freed\n" +
         "    < ned@innosoft.com>, Keith Moore < moore@cs.utk.edu>"), "Greg Vaudreuil <gvaudre@NRI.Reston.VA.US>, Ned Freed\n" +
-        "    < ned@innosoft.com>, Keith Moore < moore@cs.utk.edu>");
+    "    < ned@innosoft.com>, Keith Moore < moore@cs.utk.edu>");
     assert.equal(Decoder.clean2047Encoding("Test of new header generator"), "Test of new header generator");
     assert.equal(Decoder.clean2047Encoding("=?utf-8?Q?=00=41?=test1"), "\0Atest1");
     assert.equal(Decoder.clean2047Encoding("=?utf-8?Q?=0A=41?=test2"), "\nAtest2");
@@ -154,4 +154,10 @@ QUnit.test("2047 Junkmail Tests", function (assert) {
 QUnit.test("2047 Codepage Tests", function (assert) {
     assert.equal(Decoder.decodeHexCodepage("ISO-8859-8", [0xED, 0xE5, 0xEC, 0xF9, 0x20, 0xEF, 0xE1, 0x20, 0xE9, 0xEC, 0xE8, 0xF4, 0xF0]), "םולש ןב ילטפנ");
     assert.equal(Decoder.decodeHexCodepage("UTF-8", [0xF0, 0x9D, 0x93, 0xA2, 0xF0, 0x9D, 0x93, 0xBB, 0xF0, 0x9D, 0x93, 0xB2, 0x20]), "𝓢𝓻𝓲 ");
+});
+
+QUnit.test("2047 Codepage Tests Korean", function (assert) {
+    assert.equal(Decoder.clean2047Encoding("=?EUC-KR?B?sNTAuLinKGxhemluZXNzKSwgwvzB9ri7seIoaW1w?=" +
+        "=?EUC-KR?B?YXRpZW5jZSksILGzuLgoaHVicmlzKQ==?="),
+        "Subject: 게으름(laziness), 참지말기(impatience), 교만(hubris)");
 });
