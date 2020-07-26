@@ -129,6 +129,15 @@ var HeaderModel = (function (headers) {
         GetHeaderList: GetHeaderList,
         get status() { return status; },
         set status(value) { status = value; },
-        toString: function () { return [summary, receivedHeaders, forefrontAntiSpamReport, antiSpamReport, otherHeaders].join("\n"); }
+        toString: function () {
+            var ret = [];
+            if (summary.exists()) ret.push(summary);
+            if (receivedHeaders.exists()) ret.push(receivedHeaders);
+            if (forefrontAntiSpamReport.exists()) ret.push(forefrontAntiSpamReport);
+            if (antiSpamReport.exists()) ret.push(antiSpamReport);
+            if (otherHeaders.exists()) ret.push(otherHeaders);
+            return ret.join("\n\n");
+        }
+
     };
 });
