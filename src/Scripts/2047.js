@@ -1,5 +1,4 @@
-﻿/* global cptable */
-/* exported Decoder */
+﻿/* exported Decoder */
 
 var Decoder = (function () {
 
@@ -102,7 +101,8 @@ var Decoder = (function () {
             return input;
         }
 
-        if (input.length % 4 === 0) {
+        // Only decode if we think this is valid base64
+        if (RegExp(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/).test(input) === true) {
             var $v$0 = [];
             var $v$1, $v$2, $v$3, $v$4, $v$5, $v$6, $v$7;
             var $v$8 = 0;
