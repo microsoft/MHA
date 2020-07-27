@@ -45,9 +45,9 @@ var Decoder = (function () {
         for (var i = 0; i < unparsedblocks.length; i++) {
             collapsedBlocks.push(unparsedblocks[i]);
 
-            // Combine a Q block with the previous Q block if the charset matches
+            // Combine a block with the previous block if the charset matches
             if (i >= 1 &&
-                collapsedBlocks[i].type === "Q" && collapsedBlocks[i - 1].type === "Q" &&
+                collapsedBlocks[i].type === collapsedBlocks[i - 1].type  &&
                 collapsedBlocks[i].charset === collapsedBlocks[i - 1].charset) {
                 collapsedBlocks[i].text = collapsedBlocks[i - 1].text + collapsedBlocks[i].text;
                 // Clear the previous block so we don't process it later
