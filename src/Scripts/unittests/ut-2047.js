@@ -110,12 +110,12 @@ QUnit.test("Mailsploit Tests", function (assert) {
         "potus@whitehouse.gov(potus@whitehouse.gov\0@mailsploit.com");
     // Generic test #1
     assert.equal(Decoder.clean2047Encoding(
-        "\"=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E=?=\"\r\n <demo@mailsploit.com>"),
-        "\"BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END\0\"\r\n <demo@mailsploit.com>");
+        "\"=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E?=\"\r\n <demo@mailsploit.com>"),
+        "\"BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END\"\r\n <demo@mailsploit.com>");
     // Generic test #2
     assert.equal(Decoder.clean2047Encoding(
-        "=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E=?=@mailsploit.com"),
-        "BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END\0@mailsploit.com");
+        "=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E?=@mailsploit.com"),
+        "BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END@mailsploit.com");
 });
 
 // Should I add test cases from http://greenbytes.de/tech/tc2231/ ?
@@ -159,5 +159,5 @@ QUnit.test("2047 Codepage Tests", function (assert) {
 QUnit.test("2047 Codepage Tests Korean", function (assert) {
     assert.equal(Decoder.clean2047Encoding("=?EUC-KR?B?sNTAuLinKGxhemluZXNzKSwgwvzB9ri7seIoaW1w?=" +
         "=?EUC-KR?B?YXRpZW5jZSksILGzuLgoaHVicmlzKQ==?="),
-        "Subject: 게으름(laziness), 참지말기(impatience), 교만(hubris)");
+        "게으름(laziness), 참지말기(impatience), 교만(hubris)");
 });

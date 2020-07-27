@@ -160,21 +160,16 @@ var Decoder = (function () {
         return result.join("");
     }
 
-    function getCodePage(charSet) {
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/dd317756(v=vs.85).aspx
+    function fixCharSet(charSet) {
         switch (charSet.toUpperCase()) {
-            case "UTF-8": return 65001;
-            case "ISO-8859-8": return 28598;
-            case "ISO-8859-1": return 28591;
-            case "US-ASCII": return 20127;
-            case "WINDOWS-1252": return 1252;
-            case "GB2312": return 936;
-            default: return 65001;
+            case "UTF 8": return "UTF-8";
+            default: return charSet;
         }
     }
 
     function decodeHexCodepage(charSet, hexArray) {
-        return cptable.utils.decode(getCodePage(charSet), hexArray);
+        var str = (new TextDecoder(fixCharSet(charSet))).decode(new Uint8Array(hexArray).buffer);
+        return str;
     }
 
     return {
