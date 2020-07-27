@@ -138,6 +138,9 @@ QUnit.test("2047 Base64 Tests", function (assert) {
     assert.equal(Decoder.decodeBase64("US-ASCII", "IUAjJCVeJiooKV8rLT1bXVx7fXw7JzoiLC4vPD4/"), "!@#$%^&*()_+-=[]\\{}|;':\",./<>?");
     assert.equal(Decoder.decodeBase64("ISO-8859-1", "SWYgeW91IGNhbiByZWFkIHRoaXMgeW8="), "If you can read this yo");
     assert.equal(Decoder.decodeBase64("ISO-8859-2", "dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg=="), "u understand the example.");
+    assert.equal(Decoder.decodeBase64("UTF-8", "RU5E"), "END");
+    assert.equal(Decoder.decodeBase64("UTF-8", "RU5E="), "=?UTF-8?B?RU5E=?="); // this is invalid base64 so it should be rejected
+    // TODO: additional tests on invalid = in base64
 
     // This passes. Is this right?
     assert.equal(Decoder.decodeBase64("iso-8859-8", "7eXs+SDv4SDp7Oj08A=="), "םולש ןב ילטפנ");
