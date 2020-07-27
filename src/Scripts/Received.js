@@ -139,8 +139,8 @@ var Received = (function () {
         };
 
         if (date) ret.date = date;
-        if (dateNum || isNaN(dateNum)) ret.dateNum = dateNum;
-        if (dateSort || isNaN(dateSort)) ret.dateSort = dateSort;
+        if (dateNum) ret.dateNum = dateNum;
+        if (dateSort) ret.dateSort = dateSort;
         if (fields["by"]) ret["by"] = fields["by"];
 
         // Add parsed fields to the row before returning
