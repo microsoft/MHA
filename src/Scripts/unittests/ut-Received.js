@@ -2,6 +2,11 @@
 /* global Received */
 
 QUnit.test("Received Tests", function (assert) {
+    QUnit.assert.rowsEqual = function (value, expected, message) {
+        delete value.toString;
+        return assert.propEqual(value, expected, message);
+    };
+
     var received = Received();
     var header1 =
         "Received: from BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
@@ -28,7 +33,7 @@ QUnit.test("Received Tests", function (assert) {
 
     assert.equal(received.computeDeltas(), "310 minutes 14 seconds", "Deltas");
     assert.equal(received.exists(), true, "Exists");
-    assert.propEqual(received.receivedRows[0],
+    assert.rowsEqual(received.receivedRows[0],
         {
             "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
             "date": received.dateString("20 Apr 2018 21:51:19 +0000"),
@@ -43,7 +48,7 @@ QUnit.test("Received Tests", function (assert) {
             "percent": 0,
             "sourceHeader": header4
         }, "header4");
-    assert.propEqual(received.receivedRows[1],
+    assert.rowsEqual(received.receivedRows[1],
         {
             "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
             "date": received.dateString("21 Apr 2018 03:01:32 +0000"),
@@ -59,7 +64,7 @@ QUnit.test("Received Tests", function (assert) {
             "via": "Frontend Transport",
             "with": "Microsoft SMTP Server"
         }, "header3");
-    assert.propEqual(received.receivedRows[2],
+    assert.rowsEqual(received.receivedRows[2],
         {
             "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
             "date": received.dateString("21 Apr 2018 03:01:32 +0000"),
@@ -74,7 +79,7 @@ QUnit.test("Received Tests", function (assert) {
             "sourceHeader": header2,
             "with": "Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384)"
         }, "header2");
-    assert.propEqual(received.receivedRows[3],
+    assert.rowsEqual(received.receivedRows[3],
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
             "date": received.dateString("21 Apr 2018 03:01:33 +0000"),
@@ -92,6 +97,11 @@ QUnit.test("Received Tests", function (assert) {
 });
 
 QUnit.test("Received Tests github headers", function (assert) {
+    QUnit.assert.rowsEqual = function (value, expected, message) {
+        delete value.toString;
+        return assert.propEqual(value, expected, message);
+    };
+
     var received = Received();
     var githubHeader1 =
         "Received: from CO1NAM03HT217.eop-NAM03.prod.protection.outlook.com\n" +
@@ -124,7 +134,7 @@ QUnit.test("Received Tests github headers", function (assert) {
 
     assert.equal(received.computeDeltas(), "2 seconds", "github Deltas");
     assert.equal(received.exists(), true, "github exists");
-    assert.propEqual(received.receivedRows[0],
+    assert.rowsEqual(received.receivedRows[0],
         {
             "by": "ismtpd0021p1iad2.sendgrid.net (SG)",
             "date": received.dateString("22 Apr 2018 02:54:16 +0000"),
@@ -140,7 +150,7 @@ QUnit.test("Received Tests github headers", function (assert) {
             "sourceHeader": githubHeader5,
             "with": "ESMTP"
         }, "githubHeader5");
-    assert.propEqual(received.receivedRows[1],
+    assert.rowsEqual(received.receivedRows[1],
         {
             "by": "filter0652p1las1.sendgrid.net",
             "date": received.dateString("22 Apr 2018 02:54:17 +0000"),
@@ -154,7 +164,7 @@ QUnit.test("Received Tests github headers", function (assert) {
             "sourceHeader": githubHeader4,
             "with": "SMTP"
         }, "githubHeader4");
-    assert.propEqual(received.receivedRows[2],
+    assert.rowsEqual(received.receivedRows[2],
         {
             "by": "CO1NAM03FT028.mail.protection.outlook.com (10.152.80.189)",
             "date": received.dateString("22 Apr 2018 02:54:17 +0000"),
@@ -170,7 +180,7 @@ QUnit.test("Received Tests github headers", function (assert) {
             "via": "Frontend Transport",
             "with": "Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384)"
         }, "githubHeader3");
-    assert.propEqual(received.receivedRows[3],
+    assert.rowsEqual(received.receivedRows[3],
         {
             "by": "CO1NAM03HT217.eop-NAM03.prod.protection.outlook.com (10.152.81.113)",
             "date": received.dateString("22 Apr 2018 02:54:18 +0000"),
@@ -185,7 +195,7 @@ QUnit.test("Received Tests github headers", function (assert) {
             "sourceHeader": githubHeader2,
             "with": "Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384)"
         }, "githubHeader2");
-    assert.propEqual(received.receivedRows[4],
+    assert.rowsEqual(received.receivedRows[4],
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
             "date": received.dateString("22 Apr 2018 02:54:19 +0000"),
@@ -203,10 +213,15 @@ QUnit.test("Received Tests github headers", function (assert) {
 });
 
 QUnit.test("Received Tests parseHeader", function (assert) {
+    QUnit.assert.rowsEqual = function (value, expected, message) {
+        delete value.toString;
+        return assert.propEqual(value, expected, message);
+    };
+
     var received = Received();
     var sendGrid = "Received: by filter0383p1iad2.sendgrid.net with SMTP id filter0383p1iad2-15318-5AB8F728-C\n" +
         " 2018-03-26 13:35:36.270951634 +0000 UTC";
-    assert.propEqual(received.parseHeader(sendGrid), {
+    assert.rowsEqual(received.parseHeader(sendGrid), {
         "by": "filter0383p1iad2.sendgrid.net",
         "date": received.dateString("26 Mar 2018 13:35:36 +0000"),
         "dateNum": 1522071336270,
@@ -221,7 +236,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
     var sendGrid2 = "Received: from smtp.github.com (out-8.smtp.github.com [192.30.252.199])\n" +
         " by ismtpd0003p1iad2.sendgrid.net (SG) with ESMTP id gDQRSEGgSqCsi9tFtF1Vtg\n" +
         " Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)";
-    assert.propEqual(received.parseHeader(sendGrid2), {
+    assert.rowsEqual(received.parseHeader(sendGrid2), {
         "by": "ismtpd0003p1iad2.sendgrid.net (SG)",
         "date": received.dateString("26 Mar 2018 13:35:36 +0000"),
         "dateNum": 1522071336102,
@@ -236,7 +251,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
 
     var dupe1 = "Received: by me by you with this with that with whatever\n" +
         " 2018-03-26 13:35:36.270951634 +0000 UTC";
-    assert.propEqual(received.parseHeader(dupe1), {
+    assert.rowsEqual(received.parseHeader(dupe1), {
         "by": "me; you",
         "date": "3/26/2018 9:35:36 AM",
         "dateNum": 1522071336270,
@@ -252,7 +267,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         " (2a01:111:e400:c418::34) By SN1PR16MB0494.namprd16.prod.outlook.com With\n" +
         " HTTPS Via SN1PR15CA0024.NAMPRD15.PROD.OUTLOOK.COM; Sat, 21 Apr 2018 03:01:33\n" +
         " +0000";
-    assert.propEqual(received.parseHeader(case1),
+    assert.rowsEqual(received.parseHeader(case1),
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
             "date": received.dateString("21 Apr 2018 03:01:33 +0000"),
@@ -266,19 +281,19 @@ QUnit.test("Received Tests parseHeader", function (assert) {
             "with": "HTTPS"
         }, "case1");
 
-    assert.propEqual(received.parseHeader(""), {
+    assert.rowsEqual(received.parseHeader(""), {
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": ""
     }, "empty");
 
-    assert.propEqual(received.parseHeader("Received: "), {
+    assert.rowsEqual(received.parseHeader("Received: "), {
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": "Received: "
     }, "OtherEmpty");
 
-    assert.propEqual(received.parseHeader(null), {
+    assert.rowsEqual(received.parseHeader(null), {
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": null
@@ -286,7 +301,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
 
     var postfix = "Received: by example.com (Postfix, from userid 1001)\n" +
         " id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)";
-    assert.propEqual(received.parseHeader(postfix),
+    assert.rowsEqual(received.parseHeader(postfix),
         {
             "by": "example.com (Postfix, from userid 1001)",
             "date": "8/21/2014 6:12:48 AM",
@@ -299,7 +314,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         }, "postfix");
 
     var qmail = "Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000"
-    assert.propEqual(received.parseHeader(qmail),
+    assert.rowsEqual(received.parseHeader(qmail),
         {
             "by": "qmail 10876 invoked from network",
             "date": "8/24/2014 12:13:38 PM",
@@ -313,7 +328,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
     var broke1 =
         "Received: Sun, 22 Apr 2018 02:54:19\n" +
         " +0000";
-    assert.propEqual(received.parseHeader(broke1), {
+    assert.rowsEqual(received.parseHeader(broke1), {
         "date": "4/21/2018 10:54:19 PM",
         "dateNum": 1524365659000,
         "dateSort": 1524365659000,
@@ -324,7 +339,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
 
     var broke2 =
         "Received: 22 Apr 2018";
-    assert.propEqual(received.parseHeader(broke2), {
+    assert.rowsEqual(received.parseHeader(broke2), {
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": broke2
@@ -332,7 +347,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
 
     var broke3 =
         "Received: ; 22 Apr 2018";
-    assert.propEqual(received.parseHeader(broke3), {
+    assert.rowsEqual(received.parseHeader(broke3), {
         "date": "Invalid Date",
         "delaySort": -1,
         "percent": 0,
@@ -341,7 +356,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
 
     var broke4 =
         "Received: ;";
-    assert.propEqual(received.parseHeader(broke4), {
+    assert.rowsEqual(received.parseHeader(broke4), {
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": broke4
