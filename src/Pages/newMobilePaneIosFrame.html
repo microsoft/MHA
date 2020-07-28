@@ -23,14 +23,19 @@
 
     <script src="/Scripts/%version%/diag.min.js"></script>
 
-    <script crossorigin="anonymous" src="https://unpkg.com/codepage@1.14.0/dist/sbcs.full.js"></script>
     <script>
-        (window.cptable || document.write('<script src="/node_modules/codepage/dist/sbcs.full.js"><\/script>'));
+        if (!window.TextDecoder) {
+            document.write('<script src="https://unpkg.com/codepage@1.14.0/dist/sbcs.full.js"><\/script>');
+            document.write('<script src="https://unpkg.com/codepage@1.14.0/bits/936.js"><\/script>');
+            document.write('<script src="https://unpkg.com/codepage@1.14.0/bits/51949.js"><\/script>');
+        }
     </script>
-
-    <script crossorigin="anonymous" src="https://unpkg.com/codepage@1.14.0/bits/936.js"></script>
     <script>
-        (window.cptable || document.write('<script src="/node_modules/codepage/bits/936.js"><\/script>'));
+        if (!window.TextDecoder && !window.cptable) {
+            document.write('<script src="/node_modules/codepage/dist/sbcs.full.js"><\/script>');
+            document.write('<script src="/node_modules/codepage/bits/936.js"><\/script>');
+            document.write('<script src="/node_modules/codepage/bits/51949.js"><\/script>');
+        }
     </script>
 
     <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.7.1/js/framework7.min.js" type="text/javascript"></script>

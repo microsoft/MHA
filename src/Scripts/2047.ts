@@ -47,9 +47,9 @@ var Decoder = (function () {
         for (var i = 0; i < unparsedblocks.length; i++) {
             collapsedBlocks.push(unparsedblocks[i]);
 
-            // Combine a Q block with the previous Q block if the charset matches
+            // Combine a block with the previous block if the charset matches
             if (i >= 1 &&
-                collapsedBlocks[i].type === "Q" && collapsedBlocks[i - 1].type === "Q" &&
+                collapsedBlocks[i].type === collapsedBlocks[i - 1].type &&
                 collapsedBlocks[i].charset === collapsedBlocks[i - 1].charset) {
                 collapsedBlocks[i].text = collapsedBlocks[i - 1].text + collapsedBlocks[i].text;
                 // Clear the previous block so we don't process it later
@@ -104,34 +104,38 @@ var Decoder = (function () {
             return input;
         }
 
-        var $v$0 = [];
-        var $v$1, $v$2, $v$3, $v$4, $v$5, $v$6, $v$7;
-        var $v$8 = 0;
-        while ($v$8 < input.length) {
-            $v$4 = $F.indexOf(input.charAt($v$8++));
-            $v$5 = $F.indexOf(input.charAt($v$8++));
-            $v$6 = $F.indexOf(input.charAt($v$8++));
-            $v$7 = $F.indexOf(input.charAt($v$8++));
-            $v$1 = $v$4 << 2 | $v$5 >> 4;
-            $v$2 = ($v$5 & 15) << 4 | $v$6 >> 2;
-            $v$3 = ($v$6 & 3) << 6 | $v$7;
+        // Only decode if we think this is valid base64
+        if (RegExp(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/).test(input) === true) {
+            var $v$0 = [];
+            var $v$1, $v$2, $v$3, $v$4, $v$5, $v$6, $v$7;
+            var $v$8 = 0;
+            while ($v$8 < input.length) {
+                $v$4 = $F.indexOf(input.charAt($v$8++));
+                $v$5 = $F.indexOf(input.charAt($v$8++));
+                $v$6 = $F.indexOf(input.charAt($v$8++));
+                $v$7 = $F.indexOf(input.charAt($v$8++));
+                $v$1 = $v$4 << 2 | $v$5 >> 4;
+                $v$2 = ($v$5 & 15) << 4 | $v$6 >> 2;
+                $v$3 = ($v$6 & 3) << 6 | $v$7;
 
-            if ($v$7 !== 64) {
-                $v$0.push($v$1, $v$2, $v$3);
-            } else if ($v$6 !== 64) {
-                $v$0.push($v$1, $v$2);
-            } else {
-                $v$0.push($v$1);
+                if ($v$7 !== 64) {
+                    $v$0.push($v$1, $v$2, $v$3);
+                } else if ($v$6 !== 64) {
+                    $v$0.push($v$1, $v$2);
+                } else {
+                    $v$0.push($v$1);
+                }
+            }
+
+            try {
+                return decodeHexCodepage(charSet, $v$0);
+            }
+            catch (e) {
             }
         }
 
-        try {
-            return decodeHexCodepage(charSet, $v$0);
-        }
-        catch (e) {
-            // Since we failed to decode, put it all back
-            return "=?" + charSet + "?B?" + input + "?=";
-        }
+        // Since we failed to decode, put it all back
+        return "=?" + charSet + "?B?" + input + "?=";
     }
 
     function decodeHex(charSet, buffer) {
@@ -162,6 +166,13 @@ var Decoder = (function () {
         return result.join("");
     }
 
+    function fixCharSet(charSet) {
+        switch (charSet.toUpperCase()) {
+            case "UTF 8": return "UTF-8";
+            default: return charSet;
+        }
+    }
+
     function getCodePage(charSet) {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/dd317756(v=vs.85).aspx
         switch (charSet.toUpperCase()) {
@@ -171,12 +182,20 @@ var Decoder = (function () {
             case "US-ASCII": return 20127;
             case "WINDOWS-1252": return 1252;
             case "GB2312": return 936;
+            case "EUC-KR": return 51949;
             default: return 65001;
         }
     }
 
     function decodeHexCodepage(charSet, hexArray) {
-        return cptable.utils.decode(getCodePage(charSet), hexArray);
+        if (window.TextDecoder) {
+            return (new TextDecoder(fixCharSet(charSet))).decode(new Uint8Array(hexArray).buffer);
+        }
+        else if (cptable) {
+            return cptable.utils.decode(getCodePage(charSet), hexArray);
+        }
+
+        throw new Error("decodeHexCodepage: no decoder found");
     }
 
     return {
