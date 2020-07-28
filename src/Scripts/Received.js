@@ -63,18 +63,12 @@ var Received = (function () {
                 date += " +0000";
             }
 
-            // Some browsers don't like milliseconds in parse
-            // Trim off milliseconds so we don't pass them into Date.parse
-            var milliseconds = date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
-            date = date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
-
             // And now we can parse our date
-            parsedRow.dateNum = Date.parse(date);
-            if (milliseconds && milliseconds.length >= 2) {
-                parsedRow.dateNum = parsedRow.dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
-            }
+            var time = moment(date);
+            parsedRow.dateNum = time.valueOf();
 
-            parsedRow.date = dateString(date);
+            //                date = time.format("ddd MMM D YYYY HH:mm:ss [GMT]ZZ");
+            parsedRow.date = time.format("LL LTS");
             parsedRow.dateSort = parsedRow.dateNum;
         }
 
@@ -263,8 +257,8 @@ var Received = (function () {
 
     function dateString(value) {
         try {
-
             var ret = new Date(value).toLocaleString().replace(/\u200E|,/g, "");
+            //            var ret = moment(value).format();
             return ret;
         } catch (e) {
             appInsights.trackException(e, { date: value });

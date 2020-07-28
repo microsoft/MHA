@@ -31,7 +31,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(received.receivedRows[0],
         {
             "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
-            "date": received.dateString("20 Apr 2018 21:51:19 +0000"),
+            "date": received.dateString("20 Apr 2018 17:51:19 -0400"),
             "dateNum": 1524261079000,
             "dateSort": 1524261079000,
             "delay": "",
