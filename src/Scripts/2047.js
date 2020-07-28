@@ -1,4 +1,5 @@
-﻿/* exported Decoder */
+﻿/* global cptable */
+/* exported Decoder */
 
 var Decoder = (function () {
 
@@ -170,9 +171,27 @@ var Decoder = (function () {
         }
     }
 
+    function getCodePage(charSet) {
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/dd317756(v=vs.85).aspx
+        switch (charSet.toUpperCase()) {
+            case "UTF-8": return 65001;
+            case "ISO-8859-8": return 28598;
+            case "ISO-8859-1": return 28591;
+            case "US-ASCII": return 20127;
+            case "WINDOWS-1252": return 1252;
+            case "GB2312": return 936;
+            case "EUC-KR": return 51949;
+            default: return 65001;
+        }
+    }
+
     function decodeHexCodepage(charSet, hexArray) {
-        var str = (new TextDecoder(fixCharSet(charSet))).decode(new Uint8Array(hexArray).buffer);
-        return str;
+        if (window.TextDecoder) {
+            return (new TextDecoder(fixCharSet(charSet))).decode(new Uint8Array(hexArray).buffer);
+        }
+        else {
+            return cptable.utils.decode(getCodePage(charSet), hexArray);
+        }
     }
 
     return {
