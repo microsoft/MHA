@@ -149,7 +149,7 @@ var GetHeadersEWS = (function () {
                 // We can do this because we know there's only the one property.
                 var extendedProperty = responseDom.filterNode("t:ExtendedProperty");
                 if (extendedProperty.length > 0) {
-                    ret.prop = extendedProperty[0].textContent;
+                    ret.prop = extendedProperty[0].textContent.replace(/\r|\n|\r\n/g, '\n');
                 }
             }
 
