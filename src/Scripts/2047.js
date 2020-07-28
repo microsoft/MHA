@@ -189,9 +189,11 @@ var Decoder = (function () {
         if (window.TextDecoder) {
             return (new TextDecoder(fixCharSet(charSet))).decode(new Uint8Array(hexArray).buffer);
         }
-        else {
+        else if (cptable) {
             return cptable.utils.decode(getCodePage(charSet), hexArray);
         }
+
+        throw new Error("decodeHexCodepage: no decoder found");
     }
 
     return {
