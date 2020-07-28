@@ -1,5 +1,4 @@
-﻿/* global cptable */
-/* global QUnit */
+﻿/* global QUnit */
 /* global Decoder */
 
 QUnit.test("RFC 2047 Tests", function (assert) {
@@ -140,7 +139,11 @@ QUnit.test("2047 Base64 Tests", function (assert) {
     assert.equal(Decoder.decodeBase64("ISO-8859-2", "dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg=="), "u understand the example.");
     assert.equal(Decoder.decodeBase64("UTF-8", "RU5E"), "END");
     assert.equal(Decoder.decodeBase64("UTF-8", "RU5E="), "=?UTF-8?B?RU5E=?="); // this is invalid base64 so it should be rejected
-    // TODO: additional tests on invalid = in base64
+    assert.equal(Decoder.decodeBase64("UTF-8", "RU5E=="), "=?UTF-8?B?RU5E==?="); // this is invalid base64 so it should be rejected
+    assert.equal(Decoder.decodeBase64("UTF-8", "RU5E==="), "=?UTF-8?B?RU5E===?="); // this is invalid base64 so it should be rejected
+    assert.equal(Decoder.decodeBase64("UTF-8", "RU5E===="), "=?UTF-8?B?RU5E====?="); // this is invalid base64 so it should be rejected
+    assert.equal(Decoder.decodeBase64("UTF-8", "RU5E===x"), "=?UTF-8?B?RU5E===x?="); // this is invalid base64 so it should be rejected
+    assert.equal(Decoder.decodeBase64("UTF-8", "...."), "=?UTF-8?B?....?="); // this is invalid base64 so it should be rejected
 
     // This passes. Is this right?
     assert.equal(Decoder.decodeBase64("iso-8859-8", "7eXs+SDv4SDp7Oj08A=="), "םולש ןב ילטפנ");
@@ -151,7 +154,6 @@ QUnit.test("2047 Junkmail Tests", function (assert) {
     assert.equal(Decoder.clean2047Encoding("=?UTF-8?Q?=F0=9D=93=A2=F0=9D=93=BB=F0=9D=93=B2=20=E2=84=92=F0=9D=93=AA=F0=9D=93=B7=F0=9D=93=B4=F0=9D=93=AA=F0=9D=93=B7=20?= =?UTF-8?Q?=F0=9D=93=B5=20=F0=9D=93=A3=F0=9D=93=BB=F0=9D=93=B2=F0=9D=93=AC=F0=9D=93=B4=20=E2=84=9B=F0=9D=92=86=F0=9D=93=BF=F0=9D=92=86?= =?UTF-8?Q?=F0=9D=93=B2=F0=9D=93=AA=F0=9D=93=AB=F0=9D=92=86=F0=9D=93=BD=F0=9D=92=86=F0=9D=93=BC=20=F0=9D=93=B2=F0=9D=93=B7=20?= =?UTF-8?Q?=F0=9D=93=BC?= "),
         "𝓢𝓻𝓲 ℒ𝓪𝓷𝓴𝓪𝓷 𝓵 𝓣𝓻𝓲𝓬𝓴 ℛ𝒆𝓿𝒆𝓲𝓪𝓫𝒆𝓽𝒆𝓼 𝓲𝓷 𝓼 ");
     assert.equal(Decoder.decodeHex("UTF-8", "Test string=F0=9D=93=A2=F0=9D=93=BB=F0=9D=93=B2=20Woohoo!"), "Test string𝓢𝓻𝓲 Woohoo!");
-    assert.equal(cptable.utils.decode(28598, [0xED, 0xE5, 0xEC, 0xF9, 0x20, 0xEF, 0xE1, 0x20, 0xE9, 0xEC, 0xE8, 0xF4, 0xF0]), "םולש ןב ילטפנ");
 });
 
 QUnit.test("2047 Codepage Tests", function (assert) {
