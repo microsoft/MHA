@@ -1,5 +1,4 @@
-﻿/* global cptable */
-/* global QUnit */
+﻿/* global QUnit */
 /* global Decoder */
 
 QUnit.test("RFC 2047 Tests", function (assert) {
@@ -19,11 +18,11 @@ QUnit.test("RFC 2047 Tests", function (assert) {
 
     assert.equal(Decoder.clean2047Encoding("Nathaniel Borenstein <nsb@thumper.bellcore.com>\n" +
         "    (=?iso-8859-8?b?7eXs+SDv4SDp7Oj08A==?=)"), "Nathaniel Borenstein <nsb@thumper.bellcore.com>\n" +
-        "    (םולש ןב ילטפנ)");
+    "    (םולש ןב ילטפנ)");
 
     assert.equal(Decoder.clean2047Encoding("Greg Vaudreuil <gvaudre@NRI.Reston.VA.US>, Ned Freed\n" +
         "    < ned@innosoft.com>, Keith Moore < moore@cs.utk.edu>"), "Greg Vaudreuil <gvaudre@NRI.Reston.VA.US>, Ned Freed\n" +
-        "    < ned@innosoft.com>, Keith Moore < moore@cs.utk.edu>");
+    "    < ned@innosoft.com>, Keith Moore < moore@cs.utk.edu>");
     assert.equal(Decoder.clean2047Encoding("Test of new header generator"), "Test of new header generator");
     assert.equal(Decoder.clean2047Encoding("=?utf-8?Q?=00=41?=test1"), "\0Atest1");
     assert.equal(Decoder.clean2047Encoding("=?utf-8?Q?=0A=41?=test2"), "\nAtest2");
@@ -110,12 +109,12 @@ QUnit.test("Mailsploit Tests", function (assert) {
         "potus@whitehouse.gov(potus@whitehouse.gov\0@mailsploit.com");
     // Generic test #1
     assert.equal(Decoder.clean2047Encoding(
-        "\"=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E=?=\"\r\n <demo@mailsploit.com>"),
-        "\"BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END\0\"\r\n <demo@mailsploit.com>");
+        "\"=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E?=\"\r\n <demo@mailsploit.com>"),
+        "\"BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END\"\r\n <demo@mailsploit.com>");
     // Generic test #2
     assert.equal(Decoder.clean2047Encoding(
-        "=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E=?=@mailsploit.com"),
-        "BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END\0@mailsploit.com");
+        "=?utf-8?Q?=42=45=47=49=4E=20=2F=20=28=7C=29=7C=3C=7C=3E=7C=40=7C=2C=7C=3B=7C=3A=7C=5C=7C=22=7C=2F=7C=5B=7C=5D=7C=3F=7C=2E=7C=3D=20=2F=20=00=20=50=41=53=53=45=44=20=4E=55=4C=4C=20=42=59=54=45=20=2F=20=0D=0A=20=50=41=53=53=45=44=20=43=52=4C=46=20=2F=20?==?utf-8?b?RU5E?=@mailsploit.com"),
+        "BEGIN / (|)|<|>|@|,|;|:|\\|\"|/|[|]|?|.|= / \0 PASSED NULL BYTE / \r\n PASSED CRLF / END@mailsploit.com");
 });
 
 // Should I add test cases from http://greenbytes.de/tech/tc2231/ ?
@@ -138,6 +137,13 @@ QUnit.test("2047 Base64 Tests", function (assert) {
     assert.equal(Decoder.decodeBase64("US-ASCII", "IUAjJCVeJiooKV8rLT1bXVx7fXw7JzoiLC4vPD4/"), "!@#$%^&*()_+-=[]\\{}|;':\",./<>?");
     assert.equal(Decoder.decodeBase64("ISO-8859-1", "SWYgeW91IGNhbiByZWFkIHRoaXMgeW8="), "If you can read this yo");
     assert.equal(Decoder.decodeBase64("ISO-8859-2", "dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg=="), "u understand the example.");
+    assert.equal(Decoder.decodeBase64("UTF-8", "RU5E"), "END");
+    assert.equal(Decoder.decodeBase64("UTF-8", "RU5E="), "=?UTF-8?B?RU5E=?="); // this is invalid base64 so it should be rejected
+    assert.equal(Decoder.decodeBase64("UTF-8", "RU5E=="), "=?UTF-8?B?RU5E==?="); // this is invalid base64 so it should be rejected
+    assert.equal(Decoder.decodeBase64("UTF-8", "RU5E==="), "=?UTF-8?B?RU5E===?="); // this is invalid base64 so it should be rejected
+    assert.equal(Decoder.decodeBase64("UTF-8", "RU5E===="), "=?UTF-8?B?RU5E====?="); // this is invalid base64 so it should be rejected
+    assert.equal(Decoder.decodeBase64("UTF-8", "RU5E===x"), "=?UTF-8?B?RU5E===x?="); // this is invalid base64 so it should be rejected
+    assert.equal(Decoder.decodeBase64("UTF-8", "...."), "=?UTF-8?B?....?="); // this is invalid base64 so it should be rejected
 
     // This passes. Is this right?
     assert.equal(Decoder.decodeBase64("iso-8859-8", "7eXs+SDv4SDp7Oj08A=="), "םולש ןב ילטפנ");
@@ -148,10 +154,15 @@ QUnit.test("2047 Junkmail Tests", function (assert) {
     assert.equal(Decoder.clean2047Encoding("=?UTF-8?Q?=F0=9D=93=A2=F0=9D=93=BB=F0=9D=93=B2=20=E2=84=92=F0=9D=93=AA=F0=9D=93=B7=F0=9D=93=B4=F0=9D=93=AA=F0=9D=93=B7=20?= =?UTF-8?Q?=F0=9D=93=B5=20=F0=9D=93=A3=F0=9D=93=BB=F0=9D=93=B2=F0=9D=93=AC=F0=9D=93=B4=20=E2=84=9B=F0=9D=92=86=F0=9D=93=BF=F0=9D=92=86?= =?UTF-8?Q?=F0=9D=93=B2=F0=9D=93=AA=F0=9D=93=AB=F0=9D=92=86=F0=9D=93=BD=F0=9D=92=86=F0=9D=93=BC=20=F0=9D=93=B2=F0=9D=93=B7=20?= =?UTF-8?Q?=F0=9D=93=BC?= "),
         "𝓢𝓻𝓲 ℒ𝓪𝓷𝓴𝓪𝓷 𝓵 𝓣𝓻𝓲𝓬𝓴 ℛ𝒆𝓿𝒆𝓲𝓪𝓫𝒆𝓽𝒆𝓼 𝓲𝓷 𝓼 ");
     assert.equal(Decoder.decodeHex("UTF-8", "Test string=F0=9D=93=A2=F0=9D=93=BB=F0=9D=93=B2=20Woohoo!"), "Test string𝓢𝓻𝓲 Woohoo!");
-    assert.equal(cptable.utils.decode(28598, [0xED, 0xE5, 0xEC, 0xF9, 0x20, 0xEF, 0xE1, 0x20, 0xE9, 0xEC, 0xE8, 0xF4, 0xF0]), "םולש ןב ילטפנ");
 });
 
 QUnit.test("2047 Codepage Tests", function (assert) {
     assert.equal(Decoder.decodeHexCodepage("ISO-8859-8", [0xED, 0xE5, 0xEC, 0xF9, 0x20, 0xEF, 0xE1, 0x20, 0xE9, 0xEC, 0xE8, 0xF4, 0xF0]), "םולש ןב ילטפנ");
     assert.equal(Decoder.decodeHexCodepage("UTF-8", [0xF0, 0x9D, 0x93, 0xA2, 0xF0, 0x9D, 0x93, 0xBB, 0xF0, 0x9D, 0x93, 0xB2, 0x20]), "𝓢𝓻𝓲 ");
+});
+
+QUnit.test("2047 Codepage Tests Korean", function (assert) {
+    assert.equal(Decoder.clean2047Encoding("=?EUC-KR?B?sNTAuLinKGxhemluZXNzKSwgwvzB9ri7seIoaW1w?=" +
+        "=?EUC-KR?B?YXRpZW5jZSksILGzuLgoaHVicmlzKQ==?="),
+        "게으름(laziness), 참지말기(impatience), 교만(hubris)");
 });
