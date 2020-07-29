@@ -31,7 +31,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(received.receivedRows[0],
         {
             "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
-            "date": received.dateString("20 Apr 2018 17:51:19 -0400"),
+            "date": "4/20/2018 5:51:19 PM",
             "dateNum": 1524261079000,
             "dateSort": 1524261079000,
             "delay": "",
@@ -46,7 +46,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(received.receivedRows[1],
         {
             "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
-            "date": received.dateString("21 Apr 2018 03:01:32 +0000"),
+            "date": "4/20/2018 11:01:32 PM",
             "dateNum": 1524279692000,
             "dateSort": 1524279692000,
             "delay": "310 minutes 13 seconds",
@@ -62,7 +62,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(received.receivedRows[2],
         {
             "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
-            "date": received.dateString("21 Apr 2018 03:01:32 +0000"),
+            "date": "4/20/2018 11:01:32 PM",
             "dateNum": 1524279692000,
             "dateSort": 1524279692000,
             "delay": "0 seconds",
@@ -77,7 +77,7 @@ QUnit.test("Received Tests", function (assert) {
     assert.propEqual(received.receivedRows[3],
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
-            "date": received.dateString("21 Apr 2018 03:01:33 +0000"),
+            "date": "4/20/2018 11:01:33 PM",
             "dateNum": 1524279693000,
             "dateSort": 1524279693000,
             "delay": "1 second",
@@ -127,7 +127,7 @@ QUnit.test("Received Tests github headers", function (assert) {
     assert.propEqual(received.receivedRows[0],
         {
             "by": "ismtpd0021p1iad2.sendgrid.net (SG)",
-            "date": received.dateString("22 Apr 2018 02:54:16 +0000"),
+            "date": "4/21/2018 10:54:16 PM",
             "dateNum": 1524365656987,
             "dateSort": 1524365656987,
             "delay": "",
@@ -143,7 +143,7 @@ QUnit.test("Received Tests github headers", function (assert) {
     assert.propEqual(received.receivedRows[1],
         {
             "by": "filter0652p1las1.sendgrid.net",
-            "date": received.dateString("22 Apr 2018 02:54:17 +0000"),
+            "date": "4/21/2018 10:54:17 PM",
             "dateNum": 1524365657028,
             "dateSort": 1524365657028,
             "delay": "0 seconds",
@@ -157,7 +157,7 @@ QUnit.test("Received Tests github headers", function (assert) {
     assert.propEqual(received.receivedRows[2],
         {
             "by": "CO1NAM03FT028.mail.protection.outlook.com (10.152.80.189)",
-            "date": received.dateString("22 Apr 2018 02:54:17 +0000"),
+            "date": "4/21/2018 10:54:17 PM",
             "dateNum": 1524365657000,
             "dateSort": 1524365657000,
             "delay": "0 seconds",
@@ -173,7 +173,7 @@ QUnit.test("Received Tests github headers", function (assert) {
     assert.propEqual(received.receivedRows[3],
         {
             "by": "CO1NAM03HT217.eop-NAM03.prod.protection.outlook.com (10.152.81.113)",
-            "date": received.dateString("22 Apr 2018 02:54:18 +0000"),
+            "date": "4/21/2018 10:54:18 PM",
             "dateNum": 1524365658000,
             "dateSort": 1524365658000,
             "delay": "1 second",
@@ -188,7 +188,7 @@ QUnit.test("Received Tests github headers", function (assert) {
     assert.propEqual(received.receivedRows[4],
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
-            "date": received.dateString("22 Apr 2018 02:54:19 +0000"),
+            "date": "4/21/2018 10:54:19 PM",
             "dateNum": 1524365659000,
             "dateSort": 1524365659000,
             "delay": "1 second",
@@ -208,7 +208,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         " 2018-03-26 13:35:36.270951634 +0000 UTC";
     assert.propEqual(received.parseHeader(sendGrid), {
         "by": "filter0383p1iad2.sendgrid.net",
-        "date": received.dateString("26 Mar 2018 13:35:36 +0000"),
+        "date": "3/26/2018 9:35:36 AM",
         "dateNum": 1522071336270,
         "dateSort": 1522071336270,
         "delaySort": -1,
@@ -223,7 +223,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         " Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)";
     assert.propEqual(received.parseHeader(sendGrid2), {
         "by": "ismtpd0003p1iad2.sendgrid.net (SG)",
-        "date": received.dateString("26 Mar 2018 13:35:36 +0000"),
+        "date": "3/26/2018 9:35:36 AM",
         "dateNum": 1522071336102,
         "dateSort": 1522071336102,
         "delaySort": -1,
@@ -255,7 +255,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
     assert.propEqual(received.parseHeader(case1),
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
-            "date": received.dateString("21 Apr 2018 03:01:33 +0000"),
+            "date": "4/20/2018 11:01:33 PM",
             "dateNum": 1524279693000,
             "dateSort": 1524279693000,
             "delaySort": -1,
