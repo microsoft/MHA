@@ -255,17 +255,6 @@ var Received = (function () {
         return time.join("");
     }
 
-    function dateString(value) {
-        try {
-            var ret = new Date(value).toLocaleString().replace(/\u200E|,/g, "");
-            //            var ret = moment(value).format();
-            return ret;
-        } catch (e) {
-            appInsights.trackException(e, { date: value });
-            return value;
-        }
-    }
-
     return {
         init: init,
         exists: exists,
@@ -275,7 +264,6 @@ var Received = (function () {
         get sortColumn() { return sortColumn; },
         get sortOrder() { return sortOrder; },
         parseHeader: parseHeader, // For testing only
-        dateString: dateString, // For testing only
         computeTime: computeTime // For testing only
     }
 });
