@@ -65,9 +65,7 @@ var Received = (function () {
             // And now we can parse our date
             var time = moment(date);
             parsedRow.dateNum = time.valueOf();
-
-            //                date = time.format("ddd MMM D YYYY HH:mm:ss [GMT]ZZ");
-            parsedRow.date = time.format("LL LTS");
+            parsedRow.date = time.format("l LTS");
             parsedRow.dateSort = parsedRow.dateNum;
         }
 
