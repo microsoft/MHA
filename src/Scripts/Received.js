@@ -1,5 +1,4 @@
-﻿/* global appInsights */
-/* global mhaStrings */
+﻿/* global mhaStrings */
 /* exported Received */
 
 var Received = (function () {
