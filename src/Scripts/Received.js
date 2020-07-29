@@ -66,7 +66,6 @@ var Received = (function () {
             var time = moment(date);
             parsedRow.dateNum = time.valueOf();
             parsedRow.date = time.format("l LTS");
-            parsedRow.dateSort = parsedRow.dateNum;
         }
 
         // Scan for malformed postFix headers
