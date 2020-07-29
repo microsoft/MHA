@@ -333,7 +333,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
     var broke3 =
         "Received: ; 22 Apr 2018";
     assert.propEqual(received.parseHeader(broke3), {
-        "date": "Invalid Date",
+        "date": "Invalid date",
         "dateNum": NaN,
         "dateSort": NaN,
         "delaySort": -1,
