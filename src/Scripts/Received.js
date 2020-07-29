@@ -50,8 +50,6 @@ var Received = (function () {
             var date = receivedHeader.substring(iDate + 1);
             receivedHeader = receivedHeader.substring(0, iDate);
 
-            // Invert any backwards dates: 2018-01-28 -> 01-28-2018
-            date = date.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2/$3/$1");
             // Replace dashes with slashes
             date = date.replace(/\s*(\d{1,2})-(\d{1,2})-(\d{4})/g, "$1/$2/$3");
 
