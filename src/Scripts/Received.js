@@ -61,7 +61,7 @@ var Received = (function () {
             }
 
             // And now we can parse our date
-            var time = moment(date);
+            var time = window.moment(date);
             parsedRow.dateNum = time.valueOf();
             parsedRow.date = time.format("l LTS");
         }
