@@ -47,9 +47,14 @@ var Received = (function () {
         }
 
         if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
+            // Cross browser dates - ugh!
+            // http://dygraphs.com/date-formats.html
             var date = receivedHeader.substring(iDate + 1);
             receivedHeader = receivedHeader.substring(0, iDate);
 
+            // Invert any backwards dates: 2018-01-28 -> 01-28-2018
+            // moment can handle these, but inverting manually makes it easier for the dash replacement
+            date = date.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2/$3/$1");
             // Replace dashes with slashes
             date = date.replace(/\s*(\d{1,2})-(\d{1,2})-(\d{4})/g, "$1/$2/$3");
 
@@ -60,8 +65,17 @@ var Received = (function () {
                 date += " +0000";
             }
 
+            // Some browsers don't like milliseconds in dates, and moment doesn't hide that from us
+            // Trim off milliseconds so we don't pass them into moment
+            var milliseconds = date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
+            date = date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
+
             // And now we can parse our date
-            var time = window.moment(date);
+            var time = window.moment(date, window.moment.ISO_8601);
+            if (milliseconds && milliseconds.length >= 2) {
+                time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), 'ms');
+            }
+
             parsedRow.dateNum = time.valueOf();
             parsedRow.date = time.format("l LTS");
         }
