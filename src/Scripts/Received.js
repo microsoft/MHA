@@ -61,8 +61,11 @@ var Received = (function () {
             // If we don't have a +xxxx or -xxxx on our date, it will be interpreted in local time
             // This likely isn't the intended timezone, so we add a +0000 to get UTC
             var offset = date.match(/[+|-]\d{4}/);
+            var originalDate = date;
+            var offsetAdded = false;
             if (!offset || offset.length !== 1) {
                 date += " +0000";
+                offsetAdded = true;
             }
 
             // Some browsers don't like milliseconds in dates, and moment doesn't hide that from us
@@ -72,6 +75,9 @@ var Received = (function () {
 
             // And now we can parse our date
             var time = window.moment(date);
+
+            // If adding offset didn't work, try adding time and offset
+            if (!time.isValid() && offsetAdded) { time = window.moment(originalDate + " 12:00:00 AM +0000"); }
             if (milliseconds && milliseconds.length >= 2) {
                 time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), 'ms');
             }
