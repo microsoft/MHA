@@ -24,7 +24,7 @@ QUnit.test("parseHeader Tests", function (assert) {
         {
             "header": "Date",
             "label": "Creation time",
-            "value": "7/14/2020, 2:41:20 PM (Delivered after 3 seconds)",
+            "value": "7/14/2020 2:41:20 PM (Delivered after 3 seconds)",
             "valueUrl": ""
         },
         {
