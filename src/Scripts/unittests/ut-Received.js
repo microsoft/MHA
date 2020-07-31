@@ -206,7 +206,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         "percent": 0,
         "sourceHeader": sendGrid,
         "with": "SMTP"
-    }, "sendGrid");
+    }, sendGrid);
 
     var sendGrid2 = "Received: from smtp.github.com (out-8.smtp.github.com [192.30.252.199])\n" +
         " by ismtpd0003p1iad2.sendgrid.net (SG) with ESMTP id gDQRSEGgSqCsi9tFtF1Vtg\n" +
@@ -221,7 +221,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         "percent": 0,
         "sourceHeader": sendGrid2,
         "with": "ESMTP"
-    }, "sendGrid2");
+    }, sendGrid2);
 
     var dupe1 = "Received: by me by you with this with that with whatever\n" +
         " 2018-03-26 13:35:36.270951634 +0000 UTC";
@@ -233,7 +233,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         "percent": 0,
         "sourceHeader": dupe1,
         "with": "this; that; whatever"
-    }, "dupe1");
+    }, dupe1);
 
     var case1 =
         "Received: From BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
@@ -251,7 +251,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
             "sourceHeader": case1,
             "via": "SN1PR15CA0024.NAMPRD15.PROD.OUTLOOK.COM",
             "with": "HTTPS"
-        }, "case1");
+        }, case1);
 
     assert.propEqual(received.parseHeader(""), {
         "delaySort": -1,
@@ -263,7 +263,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": "Received: "
-    }, "OtherEmpty");
+    }, "otherEmpty");
 
     assert.propEqual(received.parseHeader(null), {
         "delaySort": -1,
@@ -282,7 +282,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
             "id": "1234ABCD",
             "percent": 0,
             "sourceHeader": postfix
-        }, "postfix");
+        }, postfix);
 
     var qmail = "Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000"
     assert.propEqual(received.parseHeader(qmail),
@@ -293,7 +293,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
             "delaySort": -1,
             "percent": 0,
             "sourceHeader": qmail
-        }, "qmail");
+        }, qmail);
 
     var broke1 =
         "Received: Sun, 22 Apr 2018 02:54:19\n" +
@@ -304,7 +304,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": broke1
-    }, "broke1");
+    }, broke1);
 
     var broke2 =
         "Received: 22 Apr 2018";
@@ -312,17 +312,17 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": broke2
-    }, "broke2");
+    }, broke2);
 
     var broke3 =
         "Received: ; 22 Apr 2018";
     assert.propEqual(received.parseHeader(broke3), {
-        "date": "Invalid date",
-        "dateNum": NaN,
+        "date": "4/21/2018 8:00:00 PM",
+        "dateNum": 1524355200000,
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": broke3
-    }, "broke3");
+    }, broke3);
 
     var broke4 =
         "Received: ;";
@@ -330,5 +330,5 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": broke4
-    }, "broke4");
+    }, broke4);
 });
