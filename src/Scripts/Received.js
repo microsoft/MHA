@@ -71,7 +71,7 @@ var Received = (function () {
             date = date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
 
             // And now we can parse our date
-            var time = window.moment(date, window.moment.ISO_8601);
+            var time = window.moment(date);
             if (milliseconds && milliseconds.length >= 2) {
                 time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), 'ms');
             }
