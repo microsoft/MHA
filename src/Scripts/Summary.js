@@ -19,7 +19,7 @@ var Summary = (function () {
     var dateRow = SummaryRow(
         "Date",
         mhaStrings.mha_creationTime,
-        function (value) { return value ? new Date(value).toLocaleString() : ""; },
+        function (value) { return value ? new window.moment(value).format("l LTS") : ""; }, // 7/14/2020, 2:41:20 PM 
         function (value) { return creationTime(value); });
 
     var archivedRow = SummaryRow(

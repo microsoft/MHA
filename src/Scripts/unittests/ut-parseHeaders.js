@@ -31,7 +31,7 @@ QUnit.test("parseHeader Tests", function (assert) {
         {
             "header": "Date",
             "label": "Creation time",
-            "value": "7/14/2020, 2:41:20 PM (Delivered after 3 seconds)",
+            "value": "7/14/2020 2:41:20 PM (Delivered after 3 seconds)",
             "valueUrl": ""
         },
         {
@@ -64,7 +64,6 @@ QUnit.test("parseHeader Tests", function (assert) {
             "by": "10.249.244.10 (envelope-from <AqeHmUtTNRpaUZj9CNd6Rxg==_1115276745036_oCND0ALXEeiiWdSuUo6yew==@in.constantcontact.com>) (ecelerity 4.3.1.69340 r(Core:4.3.1.0))",
             "date": "7/14/2020 2:41:20 PM",
             "dateNum": 1594752080000,
-            "dateSort": 1594752080000,
             "delay": "",
             "delaySort": -1,
             "from": "[10.252.1.143] ([10.252.1.143:47944] helo=p2-jbemailsyndicator32.ctct.net)",
@@ -78,7 +77,6 @@ QUnit.test("parseHeader Tests", function (assert) {
             "by": "HE1EUR04FT039.mail.protection.outlook.com (10.152.26.153)",
             "date": "7/14/2020 2:41:21 PM",
             "dateNum": 1594752081000,
-            "dateSort": 1594752081000,
             "delay": "1 second",
             "delaySort": 1000,
             "from": "ccm27.constantcontact.com (208.75.123.162)",
@@ -93,7 +91,6 @@ QUnit.test("parseHeader Tests", function (assert) {
             "by": "HE1EUR04HT207.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0d::405)",
             "date": "7/14/2020 2:41:22 PM",
             "dateNum": 1594752082000,
-            "dateSort": 1594752082000,
             "delay": "1 second",
             "delaySort": 1000,
             "from": "HE1EUR04FT039.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0d::4f)",
@@ -107,7 +104,6 @@ QUnit.test("parseHeader Tests", function (assert) {
             "by": "BN8PR19MB2915.namprd19.prod.outlook.com",
             "date": "7/14/2020 2:41:23 PM",
             "dateNum": 1594752083000,
-            "dateSort": 1594752083000,
             "delay": "1 second",
             "delaySort": 1000,
             "from": "HE1EUR04HT207.eop-eur04.prod.protection.outlook.com (2603:10b6:408:c0::39)",

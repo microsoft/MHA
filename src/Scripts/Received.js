@@ -1,5 +1,4 @@
-﻿/* global appInsights */
-/* global mhaStrings */
+﻿/* global mhaStrings */
 /* exported Received */
 
 var Received = (function () {
@@ -15,7 +14,6 @@ var Received = (function () {
         var sourceHeader = receivedHeader;
         var date = "";
         var dateNum = 0;
-        var dateSort = 0;
         var fields = {};
         var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
 
@@ -46,36 +44,45 @@ var Received = (function () {
                 iDate = receivedHeader.lastIndexOf(";");
             }
 
-            if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
-                date = receivedHeader.substring(iDate + 1);
-                receivedHeader = receivedHeader.substring(0, iDate);
+        if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
+            // Cross browser dates - ugh!
+            // http://dygraphs.com/date-formats.html
+            var dateField = receivedHeader.substring(iDate + 1);
+            receivedHeader = receivedHeader.substring(0, iDate);
 
-                // Invert any backwards dates: 2018-01-28 -> 01-28-2018
-                date = date.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2/$3/$1");
-                // Replace dashes with slashes
-                date = date.replace(/\s*(\d{1,2})-(\d{1,2})-(\d{4})/g, "$1/$2/$3");
+            // Invert any backwards dates: 2018-01-28 -> 01-28-2018
+            // moment can handle these, but inverting manually makes it easier for the dash replacement
+            dateField = dateField.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2/$3/$1");
+            // Replace dashes with slashes
+            dateField = dateField.replace(/\s*(\d{1,2})-(\d{1,2})-(\d{4})/g, "$1/$2/$3");
 
-                // If we don't have a +xxxx or -xxxx on our date, it will be interpreted in local time
-                // This likely isn't the intended timezone, so we add a +0000 to get UTC
-                var offset = date.match(/[+|-]\d{4}/);
-                if (!offset || offset.length !== 1) {
-                    date += " +0000";
-                }
-
-                // Some browsers don't like milliseconds in parse
-                // Trim off milliseconds so we don't pass them into Date.parse
-                var milliseconds = date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
-                date = date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
-
-                // And now we can parse our date
-                dateNum = Date.parse(date);
-                if (milliseconds && milliseconds.length >= 2) {
-                    dateNum = dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
-                }
-
-                date = dateString(date);
-                dateSort = dateNum;
+            // If we don't have a +xxxx or -xxxx on our date, it will be interpreted in local time
+            // This likely isn't the intended timezone, so we add a +0000 to get UTC
+            var offset = dateField.match(/[+|-]\d{4}/);
+            var originalDate = dateField;
+            var offsetAdded = false;
+            if (!offset || offset.length !== 1) {
+                dateField += " +0000";
+                offsetAdded = true;
             }
+
+            // Some browsers don't like milliseconds in dates, and moment doesn't hide that from us
+            // Trim off milliseconds so we don't pass them into moment
+            var milliseconds = dateField.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
+            dateField = dateField.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
+
+            // And now we can parse our date
+            var time = window.moment(dateField);
+
+            // If adding offset didn't work, try adding time and offset
+            if (!time.isValid() && offsetAdded) { time = window.moment(originalDate + " 12:00:00 AM +0000"); }
+            if (milliseconds && milliseconds.length >= 2) {
+                time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), 'ms');
+            }
+
+            dateNum = time.valueOf();
+            date = time.format("l LTS");
+        }
 
             // Scan for malformed postFix headers
             // Received: by example.com (Postfix, from userid 1001)
@@ -140,7 +147,6 @@ var Received = (function () {
 
         if (date) ret.date = date;
         if (dateNum) ret.dateNum = dateNum;
-        if (dateSort) ret.dateSort = dateSort;
         if (fields["by"]) ret["by"] = fields["by"];
         ret.toString = function () {
             var str = [];
@@ -292,17 +298,6 @@ var Received = (function () {
         return time.join("");
     }
 
-    function dateString(value) {
-        try {
-
-            var ret = new Date(value).toLocaleString().replace(/\u200E|,/g, "");
-            return ret;
-        } catch (e) {
-            appInsights.trackException(e, { date: value });
-            return value;
-        }
-    }
-
     return {
         init: init,
         exists: exists,
@@ -312,7 +307,6 @@ var Received = (function () {
         get sortColumn() { return sortColumn; },
         get sortOrder() { return sortOrder; },
         parseHeader: parseHeader, // For testing only
-        dateString: dateString, // For testing only
         computeTime: computeTime, // For testing only
         toString: function () {
             if (!exists()) return "";
