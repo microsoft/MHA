@@ -79,11 +79,11 @@ var AntiSpamReport = (function () {
         setRowValue(rows, "unparsed", unparsed);
     }
 
-    function init(report) { parse(report, antiSpamRows); }
+    function add(report) { parse(report, antiSpamRows); }
     function exists() { return existsInternal(antiSpamRows); }
 
     return {
-        init: init,
+        add: add,
         exists: exists,
         existsInternal: existsInternal,
         parse: parse,

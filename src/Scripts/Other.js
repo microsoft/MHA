@@ -33,7 +33,7 @@ var Other = (function () {
         });
     }
 
-    function init(otherHeader) {
+    function add(otherHeader) {
         otherRows.push(new row(
             otherRows.length + 1,
             otherHeader.header,
@@ -44,7 +44,7 @@ var Other = (function () {
 
     return {
         tableName: "otherHeaders",
-        init: init,
+        add: add,
         exists: exists,
         get otherRows() { return otherRows; },
         doSort: doSort,
