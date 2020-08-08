@@ -270,6 +270,7 @@ var Received = (function () {
     }
 
     return {
+        tableName: "receivedHeaders",
         init: init,
         exists: exists,
         doSort: doSort,

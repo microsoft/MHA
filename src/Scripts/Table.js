@@ -42,7 +42,7 @@ var Table = (function () {
             column("via", mhaStrings.mha_via, "extraCol")
         ];
 
-        addColumns("receivedHeaders", receivedColumns);
+        addColumns(viewModel.receivedHeaders.tableName, receivedColumns);
 
         var withColumn = $("#receivedHeaders #with");
         if (withColumn !== null) {
@@ -83,7 +83,7 @@ var Table = (function () {
             column("value", mhaStrings.mha_value, null)
         ];
 
-        addColumns("otherHeaders", otherColumns);
+        addColumns(viewModel.otherHeaders.tableName, otherColumns);
 
         resetArrows();
         rebuildSections(viewModel);
