@@ -44,6 +44,7 @@ var Other = (function () {
     function exists() { return otherRows.length > 0; }
 
     return {
+        tableName: "otherHeaders",
         init: init,
         exists: exists,
         get otherRows() { return otherRows; },
