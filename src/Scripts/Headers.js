@@ -35,7 +35,7 @@ var HeaderModel = (function (headers) {
 
         for (var i = 0; i < headerList.length; i++) {
             // Grab values for our summary pane
-            summary.init(headerList[i]);
+            if (summary.add(headerList[i])) continue;
 
             // Properties with special parsing
             switch (headerList[i].header.toUpperCase()) {

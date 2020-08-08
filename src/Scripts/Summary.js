@@ -8,6 +8,7 @@ var Summary = (function () {
         return {
             header: header,
             label: label,
+            url: mhaStrings.mapHeaderToURL(header, label),
             set value(_value) { value = onSet ? onSet(_value) : _value; },
             get value() { return onGet ? onGet(value) : value; },
             get valueUrl() { return onGetUrl ? onGetUrl(value) : ""; },
@@ -50,17 +51,19 @@ var Summary = (function () {
         return false;
     }
 
-    function init(header) {
+    function add(header) {
         if (!header) {
-            return;
+            return false;
         }
 
         for (var i = 0; i < summaryRows.length; i++) {
             if (summaryRows[i].header.toUpperCase() === header.header.toUpperCase()) {
                 summaryRows[i].value = header.value;
-                return;
+                return true;
             }
         }
+
+        return false;
     }
 
     function creationTime(date) {
@@ -78,7 +81,7 @@ var Summary = (function () {
     }
 
     return {
-        init: init,
+        add: add,
         exists: exists,
         get summaryRows() { return summaryRows; },
         get totalTime() { return totalTime; },

@@ -2,11 +2,11 @@
 /* exported Other */
 
 var Other = (function () {
-    var row = function (number, header, url, value) {
+    var row = function (number, header, value) {
         return {
             number: number,
             header: header,
-            url: url,
+            url: mhaStrings.mapHeaderToURL(header, null),
             value: value
         }
     };
@@ -37,7 +37,6 @@ var Other = (function () {
         otherRows.push(new row(
             otherRows.length + 1,
             otherHeader.header,
-            mhaStrings.mapHeaderToURL(otherHeader.header, null),
             row.value = otherHeader.value));
     }
 
