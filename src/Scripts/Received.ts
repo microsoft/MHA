@@ -174,7 +174,7 @@ var Received = (function () {
         return stringArray;
     }
 
-    function init(receivedHeader) { receivedRows.push(parseHeader(receivedHeader)); }
+    function add(receivedHeader) { receivedRows.push(parseHeader(receivedHeader)); }
 
     function computeDeltas() {
         // Process received headers in reverse order
@@ -272,7 +272,8 @@ var Received = (function () {
     }
 
     return {
-        init: init,
+        tableName: "receivedHeaders",
+        add: add,
         exists: exists,
         doSort: doSort,
         computeDeltas: computeDeltas,

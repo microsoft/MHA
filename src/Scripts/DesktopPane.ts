@@ -290,10 +290,8 @@
                     $("<td/>")
                         .text(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].label)
                         .appendTo(row);
-                    linkVal = mhaStrings.mapHeaderToURL(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].url,
-                        viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].value);
                     $("<td/>")
-                        .html(linkVal)
+                        .html(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].valueUrl)
                         .appendTo(row);
                 }
             }
@@ -320,10 +318,8 @@
                     $("<td/>")
                         .text(viewModel.antiSpamReport.antiSpamRows[i].label)
                         .appendTo(row);
-                    linkVal = mhaStrings.mapHeaderToURL(viewModel.antiSpamReport.antiSpamRows[i].url,
-                        viewModel.antiSpamReport.antiSpamRows[i].value);
                     $("<td/>")
-                        .html(linkVal)
+                        .html(viewModel.antiSpamReport.antiSpamRows[i].valueUrl)
                         .appendTo(row);
                 }
             }

@@ -395,9 +395,7 @@
             var linkWrap = $("<p/>")
                 .appendTo(contentBlock);
 
-            var linkVal = mhaStrings.mapHeaderToURL(spamRow.url, spamRow.value);
-
-            $($.parseHTML(linkVal))
+            $($.parseHTML(spamRow.valueUrl))
                 .addClass("external")
                 .appendTo(linkWrap);
         }

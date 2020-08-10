@@ -37,22 +37,22 @@ var HeaderModel = (function (headers) {
 
         for (var i = 0; i < headerList.length; i++) {
             // Grab values for our summary pane
-            summary.init(headerList[i]);
+            if (summary.add(headerList[i])) continue;
 
             // Properties with special parsing
             switch (headerList[i].header.toUpperCase()) {
                 case "X-Forefront-Antispam-Report".toUpperCase():
-                    forefrontAntiSpamReport.init(headerList[i].value);
-                    break;
+                    forefrontAntiSpamReport.add(headerList[i].value);
+                    continue;
                 case "X-Microsoft-Antispam".toUpperCase():
-                    antiSpamReport.init(headerList[i].value);
-                    break;
+                    antiSpamReport.add(headerList[i].value);
+                    continue;
             }
 
             if (headerList[i].header.toUpperCase() === "Received".toUpperCase()) {
-                receivedHeaders.init(headerList[i].value);
+                receivedHeaders.add(headerList[i].value);
             } else if (headerList[i].header || headerList[i].value) {
-                otherHeaders.init(headerList[i]);
+                otherHeaders.add(headerList[i]);
             }
         }
 

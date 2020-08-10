@@ -2,11 +2,11 @@
 /* exported Other */
 
 var Other = (function () {
-    var row = function (number, header, url, value) {
+    var row = function (number, header, value) {
         return {
             number: number,
             header: header,
-            url: url,
+            url: mhaStrings.mapHeaderToURL(header, null),
             value: value
         }
     };
@@ -33,18 +33,18 @@ var Other = (function () {
         });
     }
 
-    function init(otherHeader) {
+    function add(otherHeader) {
         otherRows.push(row(
             otherRows.length + 1,
             otherHeader.header,
-            mhaStrings.mapHeaderToURL(otherHeader.header, null),
             row.value = otherHeader.value));
     }
 
     function exists() { return otherRows.length > 0; }
 
     return {
-        init: init,
+        tableName: "otherHeaders",
+        add: add,
         exists: exists,
         get otherRows() { return otherRows; },
         doSort: doSort,
