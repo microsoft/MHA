@@ -26,11 +26,11 @@ var ForefrontAntiSpamReport = (function () {
 
     ];
 
-    function init(report) { antiSpamReport.parse(report, forefrontAntiSpamRows); }
+    function add(report) { antiSpamReport.parse(report, forefrontAntiSpamRows); }
     function exists() { return antiSpamReport.existsInternal(forefrontAntiSpamRows); }
 
     return {
-        init: init,
+        add: add,
         exists: exists,
         get source() { return antiSpamReport.source; },
         get unparsed() { return antiSpamReport.unparsed; },

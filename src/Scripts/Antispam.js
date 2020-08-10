@@ -2,12 +2,13 @@
 /* exported AntiSpamReport */
 
 var AntiSpamReport = (function () {
-    var row = function (header, label, url) {
+    var row = function (header, label, headerName) {
         return {
             header: header,
             label: label,
-            url: url,
-            value: ""
+            headerName: headerName,
+            value: "",
+            valueUrl: ""
         }
     };
 
@@ -34,6 +35,7 @@ var AntiSpamReport = (function () {
         for (var i = 0; i < rows.length; i++) {
             if (rows[i].header.toUpperCase() === key.toUpperCase()) {
                 rows[i].value = value;
+                rows[i].valueUrl = mhaStrings.mapHeaderToURL(rows[i].headerName, value);
                 return true;
             }
         }
@@ -77,11 +79,11 @@ var AntiSpamReport = (function () {
         setRowValue(rows, "unparsed", unparsed);
     }
 
-    function init(report) { parse(report, antiSpamRows); }
+    function add(report) { parse(report, antiSpamRows); }
     function exists() { return existsInternal(antiSpamRows); }
 
     return {
-        init: init,
+        add: add,
         exists: exists,
         existsInternal: existsInternal,
         parse: parse,

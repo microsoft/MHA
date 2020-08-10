@@ -43,7 +43,7 @@ var Table = (function () {
             column("via", mhaStrings.mha_via, "extraCol")
         ];
 
-        addColumns("receivedHeaders", receivedColumns);
+        addColumns(viewModel.receivedHeaders.tableName, receivedColumns);
 
         var withColumn = $("#receivedHeaders #with");
         if (withColumn !== null) {
@@ -84,7 +84,7 @@ var Table = (function () {
             column("value", mhaStrings.mha_value, null)
         ];
 
-        addColumns("otherHeaders", otherColumns);
+        addColumns(viewModel.otherHeaders.tableName, otherColumns);
 
         resetArrows();
         rebuildSections(viewModel);
@@ -395,7 +395,11 @@ var Table = (function () {
                     summaryList.append(row); // Must happen before we append cells to appease IE7
                     var headerCell = $(row.insertCell(-1));
                     if (headerCell) {
-                        headerCell.text(rows[i].label);
+                        if (rows[i].url) {
+                            headerCell.html(rows[i].url);
+                        } else {
+                            headerCell.text(rows[i].label);
+                        }
                         headerCell.addClass("summaryHeader");
                     }
 
@@ -445,11 +449,9 @@ var Table = (function () {
         var headerVal = $("#" + row.header + type + "Val");
         if (headerVal) {
             if (row.value) {
-                if (row.url) {
-                    headerVal.html(mhaStrings.mapHeaderToURL(row.url, row.value));
-                } else if (row.valueUrl) {
+                if (row.valueUrl) {
                     headerVal.html(row.valueUrl);
-                }else {
+                } else {
                     headerVal.text(row.value);
                 }
 

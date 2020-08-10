@@ -13,48 +13,56 @@ QUnit.test("parseHeader Tests", function (assert) {
         {
             "header": "Subject",
             "label": "Subject",
+            "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.5' target = '_blank'>Subject</a>",
             "value": "Hear Hamilton Anytime, Anywhere",
             "valueUrl": ""
         },
         {
             "header": "Message-ID",
             "label": "Message Id",
+            "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.4' target = '_blank'>Message Id</a>",
             "value": "<1134542665376.1115276745036.1949397254.0.411440JL.2002@scheduler.constantcontact.com>",
             "valueUrl": ""
         },
         {
             "header": "Archived-At",
             "label": "Archived at",
+            "url": "<a href = 'https://tools.ietf.org/html/rfc5064' target = '_blank'>Archived at</a>",
             "value": "https://www.bing.com",
             "valueUrl": "<a href='https://www.bing.com' target='_blank'>https://www.bing.com</a>"
         },
         {
             "header": "Date",
             "label": "Creation time",
+            "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.1' target = '_blank'>Creation time</a>",
             "value": "7/14/2020 2:41:20 PM (Delivered after 3 seconds)",
             "valueUrl": ""
         },
         {
             "header": "From",
             "label": "From",
+            "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.2' target = '_blank'>From</a>",
             "value": "PBS Charlotte <memberservices@wtvi.org>",
             "valueUrl": ""
         },
         {
             "header": "Reply-To",
             "label": "Reply to",
+            "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.2' target = '_blank'>Reply to</a>",
             "value": "memberservices@wtvi.org",
             "valueUrl": ""
         },
         {
             "header": "To",
             "label": "To",
+            "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.3' target = '_blank'>To</a>",
             "value": "test@outlook.com",
             "valueUrl": ""
         },
         {
             "header": "CC",
             "label": "Cc",
+            "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.3' target = '_blank'>Cc</a>",
             "value": "",
             "valueUrl": ""
         }];
@@ -117,131 +125,153 @@ QUnit.test("parseHeader Tests", function (assert) {
     var antiSpamRows = [
         {
             "header": "BCL",
+            "headerName": "X-Microsoft-Antispam",
             "label": "Bulk Complaint Level",
-            "url": "X-Microsoft-Antispam",
-            "value": "1"
+            "value": "1",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>1</a>"
         },
         {
             "header": "PCL",
+            "headerName": "X-Microsoft-Antispam",
             "label": "Phishing Confidence Level",
-            "url": "X-Microsoft-Antispam",
-            "value": ""
+            "value": "",
+            "valueUrl": ""
         },
         {
             "header": "source",
+            "headerName": "X-Microsoft-Antispam",
             "label": "Source header",
-            "url": "X-Microsoft-Antispam",
-            "value": "BCL:1;"
+            "value": "BCL:1;",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>BCL:1;</a>"
         },
         {
             "header": "unparsed",
+            "headerName": "X-Microsoft-Antispam",
             "label": "Unknown fields",
-            "url": "X-Microsoft-Antispam",
-            "value": ""
-        }];
+            "value": "",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>X-Microsoft-Antispam</a>"
+        }
+    ];
 
     var forefrontAntiSpamRows = [
         {
             "header": "ARC",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "ARC protocol",
-            "url": "X-Forefront-Antispam-Report",
-            "value": ""
+            "value": "",
+            "valueUrl": ""
         },
         {
             "header": "CTRY",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "Country/Region",
-            "url": "X-Forefront-Antispam-Report",
-            "value": "US"
+            "value": "US",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>US</a>"
         },
         {
             "header": "LANG",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "Language",
-            "url": "X-Forefront-Antispam-Report",
-            "value": "en"
+            "value": "en",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>en</a>"
         },
         {
             "header": "SCL",
+            "headerName": "X-MS-Exchange-Organization-SCL",
             "label": "Spam Confidence Level",
-            "url": "X-MS-Exchange-Organization-SCL",
-            "value": "0"
+            "value": "0",
+            "valueUrl": "<a href = 'https://technet.microsoft.com/en-us/library/aa996878' target = '_blank'>0</a>"
         },
         {
             "header": "PCL",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "Phishing Confidence Level",
-            "url": "X-Forefront-Antispam-Report",
-            "value": ""
+            "value": "",
+            "valueUrl": ""
         },
         {
             "header": "SFV",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "Spam Filtering Verdict",
-            "url": "X-Forefront-Antispam-Report",
-            "value": "NSPM"
+            "value": "NSPM",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>NSPM</a>"
         },
         {
             "header": "IPV",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "IP Filter Verdict",
-            "url": "X-Forefront-Antispam-Report",
-            "value": "NLI"
+            "value": "NLI",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>NLI</a>"
         },
         {
             "header": "H",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "HELO/EHLO String",
-            "url": "X-Forefront-Antispam-Report",
-            "value": "ccm27.constantcontact.com"
+            "value": "ccm27.constantcontact.com",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>ccm27.constantcontact.com</a>"
         },
         {
             "header": "PTR",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "PTR Record",
-            "url": "X-Forefront-Antispam-Report",
-            "value": "ccm27.constantcontact.com"
+            "value": "ccm27.constantcontact.com",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>ccm27.constantcontact.com</a>"
         },
         {
             "header": "CIP",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "Connecting IP Address",
-            "url": "X-Forefront-Antispam-Report",
-            "value": "208.75.123.162"
+            "value": "208.75.123.162",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>208.75.123.162</a>"
         },
         {
             "header": "CAT",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "Protection Policy Category",
-            "url": "X-Forefront-Antispam-Report",
-            "value": "NONE"
+            "value": "NONE",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>NONE</a>"
         },
         {
             "header": "SFTY",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "Phishing message",
-            "url": "X-Forefront-Antispam-Report",
-            "value": ""
+            "value": "",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>X-Forefront-Antispam-Report</a>"
         },
         {
             "header": "SRV",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "Bulk email status",
-            "url": "X-Forefront-Antispam-Report",
-            "value": ""
+            "value": "",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>X-Forefront-Antispam-Report</a>"
         },
         {
             "header": "X-CustomSpam",
+            "headerName": "X-Forefront-Antispam-Report",
             "label": "Advanced Spam Filtering",
-            "url": "X-Forefront-Antispam-Report",
-            "value": ""
+            "value": "",
+            "valueUrl": ""
         },
         {
             "header": "SFS",
+            "headerName": "SFS",
             "label": "Spam rules",
-            "url": "SFS",
-            "value": ""
+            "value": "",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/exchange/monitoring/trace-an-email-message/run-a-message-trace-and-view-results' target = '_blank'>SFS</a>"
         },
         {
             "header": "source",
+            "headerName": "X-Microsoft-Antispam",
             "label": "Source header",
-            "url": "X-Microsoft-Antispam",
-            "value": "CIP:208.75.123.162;CTRY:US;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:ccm27.constantcontact.com;PTR:ccm27.constantcontact.com;CAT:NONE;SFTY:;SFS:;DIR:INB;SFP:;"
+            "value": "CIP:208.75.123.162;CTRY:US;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:ccm27.constantcontact.com;PTR:ccm27.constantcontact.com;CAT:NONE;SFTY:;SFS:;DIR:INB;SFP:;",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>CIP:208.75.123.162;CTRY:US;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:ccm27.constantcontact.com;PTR:ccm27.constantcontact.com;CAT:NONE;SFTY:;SFS:;DIR:INB;SFP:;</a>"
         },
         {
             "header": "unparsed",
+            "headerName": "X-Microsoft-Antispam",
             "label": "Unknown fields",
-            "url": "X-Microsoft-Antispam",
-            "value": "DIR:INB;SFP:;"
+            "value": "DIR:INB;SFP:;",
+            "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>DIR:INB;SFP:;</a>"
         }];
 
     var goodCaseHeaders = "Received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
