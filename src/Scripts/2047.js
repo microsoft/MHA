@@ -72,7 +72,7 @@ var Decoder = (function () {
     }
 
     function getBlock(token) {
-        var matches = token.match(/=\?(.*?)(?:\*.*)?\?(.)\?(.*?)\?=/m);
+        var matches = token.match(/=\?(.*?)\?(.)\?(.*?)\?=/m);
         if (matches) {
             return { charset: matches[1], type: matches[2].toUpperCase(), text: matches[3] }
         }
