@@ -28,7 +28,7 @@ QUnit.test("parseHeader Tests", function (assert) {
             "header": "Date",
             "label": "Creation time",
             "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.1' target = '_blank'>Creation time</a>",
-            "value": "7/14/2020 2:41:20 PM (Delivered after 3 seconds)",
+            "value": "Tue, 14 Jul 2020 14:41:20 -0400 (EDT) (Delivered after 3 seconds)",
             "valueUrl": ""
         },
         {
