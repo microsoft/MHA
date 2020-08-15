@@ -1,4 +1,5 @@
 ﻿/* global mhaStrings */
+/* global mhaDates */
 /* exported Received */
 
 var Received = (function () {
@@ -45,43 +46,14 @@ var Received = (function () {
             }
 
         if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
-            // Cross browser dates - ugh!
-            // http://dygraphs.com/date-formats.html
-            var dateField = receivedHeader.substring(iDate + 1);
+            var date = receivedHeader.substring(iDate + 1);
             receivedHeader = receivedHeader.substring(0, iDate);
+            var parsedDate = mhaDates.parseDate(date);
 
-            // Invert any backwards dates: 2018-01-28 -> 01-28-2018
-            // moment can handle these, but inverting manually makes it easier for the dash replacement
-            dateField = dateField.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2/$3/$1");
-            // Replace dashes with slashes
-            dateField = dateField.replace(/\s*(\d{1,2})-(\d{1,2})-(\d{4})/g, "$1/$2/$3");
-
-            // If we don't have a +xxxx or -xxxx on our date, it will be interpreted in local time
-            // This likely isn't the intended timezone, so we add a +0000 to get UTC
-            var offset = dateField.match(/[+|-]\d{4}/);
-            var originalDate = dateField;
-            var offsetAdded = false;
-            if (!offset || offset.length !== 1) {
-                dateField += " +0000";
-                offsetAdded = true;
+            if (parsedDate) {
+                parsedRow.dateNum = parsedDate.dateNum;
+                parsedRow.date = parsedDate.date;
             }
-
-            // Some browsers don't like milliseconds in dates, and moment doesn't hide that from us
-            // Trim off milliseconds so we don't pass them into moment
-            var milliseconds = dateField.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
-            dateField = dateField.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
-
-            // And now we can parse our date
-            var time = window.moment(dateField);
-
-            // If adding offset didn't work, try adding time and offset
-            if (!time.isValid() && offsetAdded) { time = window.moment(originalDate + " 12:00:00 AM +0000"); }
-            if (milliseconds && milliseconds.length >= 2) {
-                time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), 'ms');
-            }
-
-            dateNum = time.valueOf();
-            date = time.format("l LTS");
         }
 
             // Scan for malformed postFix headers
