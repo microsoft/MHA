@@ -1,4 +1,5 @@
 /* global mhaStrings */
+/* global mhaDates */
 /* exported Summary */
 
 var Summary = (function () {
@@ -19,7 +20,7 @@ var Summary = (function () {
     var dateRow = SummaryRow(
         "Date",
         mhaStrings.mha_creationTime,
-        function (value) { return value ? new window.moment(value).format("l LTS") : ""; }, // 7/14/2020, 2:41:20 PM 
+        function (value) { var parsedDate = mhaDates.parseDate(value); return parsedDate ? parsedDate.date : value; },
         function (value) { return creationTime(value); });
 
     var archivedRow = SummaryRow(
