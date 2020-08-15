@@ -20,7 +20,7 @@ var Summary = (function () {
     var dateRow = SummaryRow(
         "Date",
         mhaStrings.mha_creationTime,
-        function (value) { var parsedDate = mhaDates.parseDate(value); return parsedDate ? parsedDate.date : value; },
+        function (value) { return mhaDates.parseDate(value); },
         function (value) { return creationTime(value); });
 
     var archivedRow = SummaryRow(

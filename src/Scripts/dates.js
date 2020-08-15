@@ -39,7 +39,8 @@ var mhaDates = (function () {
 
             return {
                 dateNum: time.valueOf(),
-                date: time.format("l LTS")
+                date: time.format("l LTS"),
+                toString: function () { return date; }
             };
         }
         else {
@@ -50,7 +51,8 @@ var mhaDates = (function () {
 
             return {
                 dateNum: dateNum,
-                date: new Date(dateNum).toLocaleString().replace(/\u200E|,/g, "")
+                date: new Date(dateNum).toLocaleString().replace(/\u200E|,/g, ""),
+                toString: function () { return date; }
             };
         }
     }
