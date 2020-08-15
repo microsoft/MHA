@@ -45,16 +45,16 @@ var Received = (function () {
                 iDate = receivedHeader.lastIndexOf(";");
             }
 
-        if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
-            var date = receivedHeader.substring(iDate + 1);
-            receivedHeader = receivedHeader.substring(0, iDate);
-            var parsedDate = mhaDates.parseDate(date);
+            if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
+                var dateField = receivedHeader.substring(iDate + 1);
+                receivedHeader = receivedHeader.substring(0, iDate);
+                var parsedDate = mhaDates.parseDate(dateField);
 
-            if (parsedDate) {
-                parsedRow.dateNum = parsedDate.dateNum;
-                parsedRow.date = parsedDate.date;
+                if (parsedDate) {
+                    dateNum = parsedDate.dateNum;
+                    date = parsedDate.date;
+                }
             }
-        }
 
             // Scan for malformed postFix headers
             // Received: by example.com (Postfix, from userid 1001)
