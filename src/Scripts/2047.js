@@ -75,6 +75,8 @@ var Decoder = (function () {
                 }
             }
             catch (e) {
+                // Firefox will throw when passed a large non-matching buffer
+                // Such a buffer isn't a match anyway, so we just push it as raw text
                 unparsedblocks.push({ text: buffer });
                 buffer = "";
             }
