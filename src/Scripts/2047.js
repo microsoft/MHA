@@ -58,19 +58,25 @@ var Decoder = (function () {
         var unparsedblocks = [];
         //split string into blocks
         while (buffer.length) {
-            var matches = buffer.match(/([\S\s]*?)(=\?.*?\?.\?.*?\?=)([\S\s]*)/m);
-            if (matches) {
-                if (matches[1]) {
-                    unparsedblocks.push({ text: matches[1] });
-                }
+            try {
+                var matches = buffer.match(/([\S\s]*?)(=\?.*?\?.\?.*?\?=)([\S\s]*)/m);
+                if (matches) {
+                    if (matches[1]) {
+                        unparsedblocks.push({ text: matches[1] });
+                    }
 
-                unparsedblocks.push(getBlock(matches[2]));
-                buffer = matches[3];
-            } else if (buffer) {
-                // Once we're out of matches, we've parsed the whole string.
-                // Append the rest of the buffer to the result.
+                    unparsedblocks.push(getBlock(matches[2]));
+                    buffer = matches[3];
+                } else if (buffer) {
+                    // Once we're out of matches, we've parsed the whole string.
+                    // Append the rest of the buffer to the result.
+                    unparsedblocks.push({ text: buffer });
+                    break;
+                }
+            }
+            catch (e) {
                 unparsedblocks.push({ text: buffer });
-                break;
+                buffer = "";
             }
         }
 
