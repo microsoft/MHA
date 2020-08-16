@@ -76,7 +76,7 @@ var GetHeadersEWS = (function () {
             }
             catch (e) {
                 if (asyncResult) {
-                    Errors.log(null, "Async Response\n" + stripHeaderFromXml(JSON.stringify(asyncResult, null, 2)));
+                    Errors.log(asyncResult.error, "Async Response\n" + stripHeaderFromXml(JSON.stringify(asyncResult, null, 2)));
                 }
 
                 if (logResponse) {
