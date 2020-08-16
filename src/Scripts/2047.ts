@@ -24,24 +24,7 @@ var Decoder = (function () {
         // Remove that white space.
         buffer = buffer.replace(/\?=\s*=\?/g, "?==?");
 
-        var unparsedblocks = [];
-        //split string into blocks
-        while (buffer.length) {
-            var matches = buffer.match(/([\S\s]*?)(=\?.*?\?.\?.*?\?=)([\S\s]*)/m);
-            if (matches) {
-                if (matches[1]) {
-                    unparsedblocks.push({ text: matches[1] });
-                }
-
-                unparsedblocks.push(getBlock(matches[2]));
-                buffer = matches[3];
-            } else if (buffer) {
-                // Once we're out of matches, we've parsed the whole string.
-                // Append the rest of the buffer to the result.
-                unparsedblocks.push({ text: buffer });
-                break;
-            }
-        }
+        var unparsedblocks = splitToBlocks(buffer);
 
         var collapsedBlocks = [];
         for (var i = 0; i < unparsedblocks.length; i++) {
@@ -73,8 +56,39 @@ var Decoder = (function () {
         return result.join("");
     }
 
+    function splitToBlocks(buffer) {
+        var unparsedblocks = [];
+        //split string into blocks
+        while (buffer.length) {
+            try {
+                var matches = buffer.match(/([\S\s]*?)(=\?.*?\?.\?.*?\?=)([\S\s]*)/m);
+                if (matches) {
+                    if (matches[1]) {
+                        unparsedblocks.push({ text: matches[1] });
+                    }
+
+                    unparsedblocks.push(getBlock(matches[2]));
+                    buffer = matches[3];
+                } else if (buffer) {
+                    // Once we're out of matches, we've parsed the whole string.
+                    // Append the rest of the buffer to the result.
+                    unparsedblocks.push({ text: buffer });
+                    break;
+                }
+            }
+            catch (e) {
+                // Firefox will throw when passed a large non-matching buffer
+                // Such a buffer isn't a match anyway, so we just push it as raw text
+                unparsedblocks.push({ text: buffer });
+                buffer = "";
+            }
+        }
+
+        return unparsedblocks;
+    }
+
     function getBlock(token) {
-        var matches = token.match(/=\?(.*?)(?:\*.*)?\?(.)\?(.*?)\?=/m);
+        var matches = token.match(/=\?(.*?)\?(.)\?(.*?)\?=/m);
         if (matches) {
             return { charset: matches[1], type: matches[2].toUpperCase(), text: matches[3] };
         }
