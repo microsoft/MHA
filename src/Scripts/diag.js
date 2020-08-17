@@ -42,7 +42,8 @@ var Diagnostics = (function () {
     function ensureLastModified() {
         try {
             var client = new XMLHttpRequest();
-            client.open("HEAD", window.location.origin + "/src/Scripts/diag.js", true);
+            // aikey.js is generated on build so it's the true signal of the last modified time
+            client.open("HEAD", window.location.origin + "/Scripts/aikey.js", true);
             client.onreadystatechange = function () {
                 if (this.readyState == 2) {
                     lastUpdate = client.getResponseHeader("Last-Modified");
