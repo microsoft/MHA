@@ -2,6 +2,7 @@ const UglifyJS = require("uglify-js");
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
+const scriptsFolder = path.join(__dirname, "..", "Scripts");
 
 const args = process.argv.slice(2);
 const debug = args[0] && args[0] === "debug";
@@ -10,7 +11,6 @@ console.log('debug = ' + debug);
 const key = process.env.APPINSIGHTS_INSTRUMENTATIONKEY;
 if (key) {
     console.log("key found in env: " + key);
-    const scriptsFolder = path.join(__dirname, "..", "Scripts");
     const aiscript = path.join(scriptsFolder, "aikey.js");
 
     console.log("Merging AppInsights key (" + key + ") into js");
@@ -37,6 +37,18 @@ if (!commitID) commitID = "test";
 const version = getHash(commitID);
 console.log("commitID: " + commitID);
 console.log("version: " + version);
+if (version) {
+    const versionscript = path.join(scriptsFolder, "version.js");
+
+    console.log("Merging version (" + version + ") into js");
+    if (fs.existsSync(versionscript)) {
+        console.log("  Deleting " + versionscript);
+        fs.unlinkSync(versionscript);
+    }
+
+    console.log("Building " + versionscript);
+    fs.writeFileSync(versionscript, "/* exported mhaVersion */ window.mhaVersion = function () { return \"" + version + "\"; };", "utf8");
+}
 
 const scriptsFolderSrc = path.join(__dirname, "..", "src", "Scripts");
 const scriptsFolderDst = path.join(__dirname, "..", "Scripts", version);
