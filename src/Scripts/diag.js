@@ -2,6 +2,7 @@
 /* global StackTrace */
 /* global aikey */
 /* global appInsights */
+/* global mhaVersion */
 /* exported Diagnostics */
 
 // diagnostics module
@@ -42,8 +43,8 @@ var Diagnostics = (function () {
     function ensureLastModified() {
         try {
             var client = new XMLHttpRequest();
-            // aikey.js is generated on build so it's the true signal of the last modified time
-            client.open("HEAD", window.location.origin + "/Scripts/aikey.js", true);
+            // version.js is generated on build and is the true signal of the last modified time
+            client.open("HEAD", window.location.origin + "/Scripts/version.js", true);
             client.onreadystatechange = function () {
                 if (this.readyState == 2) {
                     lastUpdate = client.getResponseHeader("Last-Modified");
@@ -89,6 +90,10 @@ var Diagnostics = (function () {
 
             if (lastUpdate) {
                 appDiagnostics["Last Update"] = lastUpdate;
+            }
+
+            if (mhaVersion) {
+                appDiagnostics["mhaVersion"] = mhaVersion();
             }
 
             if (window.Office) {
@@ -257,3 +262,8 @@ script.onload = function () {
 };
 script.src = window.location.origin + '/Scripts/aikey.js';
 document.getElementsByTagName('script')[0].parentNode.appendChild(script);
+
+// Inject our version variable
+var version = document.createElement('script');
+version.src = window.location.origin + '/Scripts/version.js';
+document.getElementsByTagName('script')[0].parentNode.appendChild(version);
