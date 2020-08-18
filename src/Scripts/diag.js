@@ -7,6 +7,14 @@
 
 // diagnostics module
 
+// Find the path of the current script so we can inject a script we know lives alongside it
+var mhaVersionScriptPath = (function () {
+    var scripts = document.getElementsByTagName('script');
+    var script = scripts[scripts.length - 1];
+    var path = script.getAttribute('src', 2);
+    return path.split('diag')[0] + 'version.js'; // current script is diag*, so splitting here will put our path in [0]
+}());
+
 var Diagnostics = (function () {
     var appDiagnostics = null;
     var itemDiagnostics = null;
@@ -44,7 +52,7 @@ var Diagnostics = (function () {
         try {
             var client = new XMLHttpRequest();
             // version.js is generated on build and is the true signal of the last modified time
-            client.open("HEAD", window.location.origin + "/Scripts/version.js", true);
+            client.open("HEAD", mhaVersionScriptPath, true);
             client.onreadystatechange = function () {
                 if (this.readyState == 2) {
                     lastUpdate = client.getResponseHeader("Last-Modified");
@@ -219,17 +227,9 @@ var Diagnostics = (function () {
     }
 })();
 
-// Find the path of the current script so we can inject a script we know lives alongside it
-var scriptPath = (function () {
-    var scripts = document.getElementsByTagName('script');
-    var script = scripts[scripts.length - 1];
-    var path = script.getAttribute('src', 2);
-    return path.split('diag')[0]; // current script is diag*, so splitting here will put our path in [0]
-}());
-
 // Inject our version variable
 var version = document.createElement('script');
-version.src = scriptPath + 'version.js';
+version.src = mhaVersionScriptPath;
 document.getElementsByTagName('script')[0].parentNode.appendChild(version);
 
 var script = document.createElement('script');
