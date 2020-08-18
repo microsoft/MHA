@@ -219,6 +219,19 @@ var Diagnostics = (function () {
     }
 })();
 
+// Find the path of the current script so we can inject a script we know lives alongside it
+var scriptPath = (function () {
+    var scripts = document.getElementsByTagName('script');
+    var script = scripts[scripts.length - 1];
+    var path = script.getAttribute('src', 2);
+    return path.split('diag')[0]; // current script is diag*, so splitting here will put our path in [0]
+}());
+
+// Inject our version variable
+var version = document.createElement('script');
+version.src = scriptPath + 'version.js';
+document.getElementsByTagName('script')[0].parentNode.appendChild(version);
+
 var script = document.createElement('script');
 script.onload = function () {
     // app Insights initialization
@@ -263,7 +276,3 @@ script.onload = function () {
 script.src = window.location.origin + '/Scripts/aikey.js';
 document.getElementsByTagName('script')[0].parentNode.appendChild(script);
 
-// Inject our version variable
-var version = document.createElement('script');
-version.src = window.location.origin + '/Scripts/version.js';
-document.getElementsByTagName('script')[0].parentNode.appendChild(version);

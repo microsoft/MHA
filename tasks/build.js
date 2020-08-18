@@ -2,7 +2,6 @@ const UglifyJS = require("uglify-js");
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
-const scriptsFolder = path.join(__dirname, "..", "Scripts");
 
 const args = process.argv.slice(2);
 const debug = args[0] && args[0] === "debug";
@@ -11,6 +10,7 @@ console.log('debug = ' + debug);
 const key = process.env.APPINSIGHTS_INSTRUMENTATIONKEY;
 if (key) {
     console.log("key found in env: " + key);
+    const scriptsFolder = path.join(__dirname, "..", "Scripts");
     const aiscript = path.join(scriptsFolder, "aikey.js");
 
     console.log("Merging AppInsights key (" + key + ") into js");
@@ -37,21 +37,6 @@ if (!commitID) commitID = "test";
 const version = getHash(commitID);
 console.log("commitID: " + commitID);
 console.log("version: " + version);
-if (version) {
-    const versionscript = path.join(scriptsFolder, "version.js");
-
-    console.log("Merging version (" + version + ") into js");
-    if (fs.existsSync(versionscript)) {
-        console.log("  Deleting " + versionscript);
-        fs.unlinkSync(versionscript);
-    }
-
-    console.log("Building " + versionscript);
-    fs.writeFileSync(versionscript, "/* exported mhaVersion */ window.mhaVersion = function () { return \"" + version + "\"; };", "utf8");
-}
-
-const scriptsFolderSrc = path.join(__dirname, "..", "src", "Scripts");
-const scriptsFolderDst = path.join(__dirname, "..", "Scripts", version);
 
 // Copy files from src to dst, replacing %version% on the way if munge is true
 const deploy = function (src, dst, munge) {
@@ -118,6 +103,8 @@ const targets = {
 };
 
 console.log("Deploying script");
+const scriptsFolderSrc = path.join(__dirname, "..", "src", "Scripts");
+const scriptsFolderDst = path.join(__dirname, "..", "Scripts", version);
 for (const targetName of Object.keys(targets)) {
     const fileSet = targets[targetName];
     const mapName = targetName + ".map";
@@ -159,4 +146,17 @@ for (const targetName of Object.keys(targets)) {
         fs.writeFileSync(path.join(scriptsFolderDst, targetName), result.code, "utf8");
         fs.writeFileSync(path.join(scriptsFolderDst, mapName), result.map, "utf8");
     }
+}
+
+if (version) {
+    const versionscript = path.join(scriptsFolderDst, "version.js");
+
+    console.log("Merging version (" + version + ") into js");
+    if (fs.existsSync(versionscript)) {
+        console.log("  Deleting " + versionscript);
+        fs.unlinkSync(versionscript);
+    }
+
+    console.log("Building " + versionscript);
+    fs.writeFileSync(versionscript, "/* exported mhaVersion */ window.mhaVersion = function () { return \"" + version + "\"; };", "utf8");
 }
