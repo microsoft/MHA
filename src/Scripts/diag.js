@@ -2,9 +2,18 @@
 /* global StackTrace */
 /* global aikey */
 /* global appInsights */
+/* global mhaVersion */
 /* exported Diagnostics */
 
 // diagnostics module
+
+// Find the path of the current script so we can inject a script we know lives alongside it
+var mhaVersionScriptPath = (function () {
+    var scripts = document.getElementsByTagName('script');
+    var script = scripts[scripts.length - 1];
+    var path = script.getAttribute('src', 2);
+    return path.split('diag')[0] + 'version.js'; // current script is diag*, so splitting here will put our path in [0]
+}());
 
 var Diagnostics = (function () {
     var appDiagnostics = null;
@@ -42,7 +51,8 @@ var Diagnostics = (function () {
     function ensureLastModified() {
         try {
             var client = new XMLHttpRequest();
-            client.open("HEAD", window.location.origin + "/src/Scripts/diag.js", true);
+            // version.js is generated on build and is the true signal of the last modified time
+            client.open("HEAD", mhaVersionScriptPath, true);
             client.onreadystatechange = function () {
                 if (this.readyState == 2) {
                     lastUpdate = client.getResponseHeader("Last-Modified");
@@ -88,6 +98,10 @@ var Diagnostics = (function () {
 
             if (lastUpdate) {
                 appDiagnostics["Last Update"] = lastUpdate;
+            }
+
+            if (mhaVersion) {
+                appDiagnostics["mhaVersion"] = mhaVersion();
             }
 
             if (window.Office) {
@@ -213,6 +227,11 @@ var Diagnostics = (function () {
     }
 })();
 
+// Inject our version variable
+var version = document.createElement('script');
+version.src = mhaVersionScriptPath;
+document.getElementsByTagName('script')[0].parentNode.appendChild(version);
+
 var script = document.createElement('script');
 script.onload = function () {
     // app Insights initialization
@@ -256,3 +275,4 @@ script.onload = function () {
 };
 script.src = window.location.origin + '/Scripts/aikey.js';
 document.getElementsByTagName('script')[0].parentNode.appendChild(script);
+
