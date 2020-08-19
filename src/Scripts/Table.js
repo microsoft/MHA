@@ -8,8 +8,8 @@ var Table = (function () {
     var column = function (id, label, columnClass) { return { id: id, label: label, class: columnClass }; };
 
     var visibilityBindings = [
-        ["#lineBreak", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
-        ["#response", function () { return viewModel.status || viewModel.summary.exists() || viewModel.receivedHeaders.exists() || viewModel.otherHeaders.exists(); }],
+        ["#lineBreak", function () { return viewModel.hasData; }],
+        ["#response", function () { return viewModel.hasData; }],
         ["#status", function () { return viewModel.status; }],
         [".extraCol", function () { return showExtra; }],
         ["#clearButton", function () { return viewModel.hasData; }]
