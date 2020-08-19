@@ -127,7 +127,7 @@ var HeaderModel = (function (headers) {
         forefrontAntiSpamReport: forefrontAntiSpamReport,
         antiSpamReport: antiSpamReport,
         otherHeaders: otherHeaders,
-        hasData: hasData,
+        get hasData() { return hasData || status; },
         GetHeaderList: GetHeaderList,
         get status() { return status; },
         set status(value) { status = value; }
