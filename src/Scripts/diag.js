@@ -196,6 +196,8 @@ var Diagnostics = (function () {
             if (!("Office" in window)) return "none";
             if (!window.Office.context) return "no context";
             if (window.Office.context.requirements && window.Office.context.requirements.isSetSupported) {
+                if (window.Office.context.requirements.isSetSupported("Mailbox", 1.9)) return "1.9";
+                if (window.Office.context.requirements.isSetSupported("Mailbox", 1.8)) return "1.8";
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.7)) return "1.7";
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.6)) return "1.6";
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.5)) return "1.5";
