@@ -31,8 +31,8 @@
     "jwt-decode": "^2.2.0",
     "moment": "^2.27.0",
     "office-ui-fabric-js": "^1.5.0",
-    "stacktrace-js": "^2.0.1",
-    "uglify-js": "^3.7.2"
+    "stacktrace-js": "^2.0.2",
+    "uglify-js": "^3.10.2"
   },
   "-vs-binding": {
     "BeforeBuild": [
