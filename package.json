@@ -24,15 +24,15 @@
   },
   "homepage": "https://github.com/stephenegriffin/mha#readme",
   "dependencies": {
-    "@microsoft/office-js": "^1.1.36",
+    "@microsoft/office-js": "^1.1.43",
     "codepage": "^1.14.0",
-    "framework7-icons": "^2.3.1",
-    "jquery": "^3.5.0",
+    "framework7-icons": "^3.0.1",
+    "jquery": "^3.5.1",
     "jwt-decode": "^2.2.0",
     "moment": "^2.27.0",
     "office-ui-fabric-js": "^1.5.0",
-    "stacktrace-js": "^2.0.1",
-    "uglify-js": "^3.7.2"
+    "stacktrace-js": "^2.0.2",
+    "uglify-js": "^3.10.2"
   },
   "-vs-binding": {
     "BeforeBuild": [
