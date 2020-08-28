@@ -12,7 +12,7 @@ function cleanStack(stack) {
             .replace(/^.*?\.(.*)@/, "$1@")
             .replace(/^.*\/<\(\)@http/, "Anonymous function()@http")
             .replace(/{anonymous}/, "Anonymous function")
-            .replace(/:\d*$/, "");
+            .replace(/(js:\d+):\d*/, "$1"); // remove column # since they may vary by browser
     }).filter(function (item) {
         return !!item;
     });
