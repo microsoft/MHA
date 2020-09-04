@@ -93,7 +93,7 @@ var Summary = (function () {
             var ret = ["Summary"];
             summaryRows.forEach(function (row) {
                 if (row.value) { ret.push(row); }
-            })
+            });
             return ret.join("\n");
         }
     };

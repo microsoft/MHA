@@ -56,7 +56,7 @@ var Other = (function () {
             var ret = ["Other"];
             otherRows.forEach(function (row) {
                 if (row.value) { ret.push(row); }
-            })
+            });
             return ret.join("\n");
         }
     }

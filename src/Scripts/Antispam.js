@@ -98,7 +98,7 @@ var AntiSpamReport = (function () {
             var ret = ["AntiSpamReport"];
             antiSpamRows.forEach(function (row) {
                 if (row.value) { ret.push(row); }
-            })
+            });
             return ret.join("\n");
         }
     };

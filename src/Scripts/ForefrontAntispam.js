@@ -40,7 +40,7 @@ var ForefrontAntiSpamReport = (function () {
             var ret = ["ForefrontAntiSpamReport"];
             forefrontAntiSpamRows.forEach(function (row) {
                 if (row.value) { ret.push(row); }
-            })
+            });
             return ret.join("\n");
         }
     };
