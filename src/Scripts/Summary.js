@@ -13,7 +13,7 @@ var Summary = (function () {
             set value(_value) { value = onSet ? onSet(_value) : _value; },
             get value() { return onGet ? onGet(value) : value; },
             get valueUrl() { return onGetUrl ? onGetUrl(value) : ""; },
-            toString: function () { return label + " " + value; }
+            toString: function () { return label + ": " + value; }
         };
     };
 
