@@ -286,7 +286,7 @@ var Received = (function () {
             var ret = ["Received"];
             receivedRows.forEach(function (row) {
                 ret.push(row);
-            })
+            });
             return ret.join("\n");
         }
     };
