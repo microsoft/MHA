@@ -122,17 +122,13 @@ var Received = (function () {
         if (fields["by"]) ret["by"] = fields["by"];
         ret.toString = function () {
             var str = [];
-            var fieldNames = ["from", "by", "with", "id", "for", "via"];
-            if (ret["hop"]) str.push("hop: " + ret["hop"]);
+            var fieldNames = ["hop", "from", "by", "with", "id", "for", "via", "date", "delay", "percent"];
             fieldNames.forEach(function (fieldName) {
                 if (ret[fieldName]) {
                     str.push(fieldName + ": " + ret[fieldName]);
                 }
-            })
+            });
 
-            if (ret["date"]) str.push("date: " + ret["date"]);
-            if (ret["delay"]) str.push("delay: " + ret["delay"]);
-            if (ret["percent"]) str.push("percent: " + ret["percent"]);
             return str.join("\n");
         }
 
