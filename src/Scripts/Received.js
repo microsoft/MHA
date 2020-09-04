@@ -284,9 +284,11 @@ var Received = (function () {
         toString: function () {
             if (!exists()) return "";
             var ret = ["Received"];
+            var rows = [];
             receivedRows.forEach(function (row) {
-                ret.push(row);
-            })
+                rows.push(row);
+            });
+            if (rows.length) ret.push(rows.join("\n\n"));
             return ret.join("\n");
         }
     };
