@@ -79,7 +79,7 @@ var Errors = (function () {
     function filterStack(stack) {
         return stack.filter(function (item) {
             if (!item.fileName) return true;
-            if (item.fileName.indexOf("stacktrace") !== -1) return false;
+            if (item.fileName.indexOf("stacktrace") !== -1) return false; // remove stacktrace.js frames
             //if (item.functionName === "ShowError") return false;
             //if (item.functionName === "showError") return false;
             //if (item.functionName === "Errors.log") return false; // Logs with Errors.log in them usually have location where it was called from - keep those
