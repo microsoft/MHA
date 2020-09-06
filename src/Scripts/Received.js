@@ -12,7 +12,12 @@ var Received = (function () {
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
     var parseHeader = function (receivedHeader) {
-        var sourceHeader = receivedHeader;
+        var parsedRow = {
+            sourceHeader: receivedHeader,
+            delaySort: -1, // Force the "no previous or current time" rows to sort before the 0 second rows
+            percent: 0,
+        };
+
         var date = "";
         var dateNum = 0;
         var fields = {};
@@ -111,21 +116,16 @@ var Received = (function () {
             });
         }
 
-        var ret = {
-            sourceHeader: sourceHeader,
-            delaySort: -1, // Force the "no previous or current time" rows to sort before the 0 second rows
-            percent: 0,
-        };
+        if (date) parsedRow["date"] = date;
+        if (dateNum) parsedRow["dateNum"] = dateNum;
+        if (fields["by"]) parsedRow["by"] = fields["by"];
 
-        if (date) ret.date = date;
-        if (dateNum) ret.dateNum = dateNum;
-        if (fields["by"]) ret["by"] = fields["by"];
-        ret.toString = function () {
+        parsedRow.toString = function () {
             var str = [];
             var fieldNames = ["hop", "from", "by", "with", "id", "for", "via", "date", "delay", "percent"];
             fieldNames.forEach(function (fieldName) {
-                if (ret[fieldName]) {
-                    str.push(fieldName + ": " + ret[fieldName]);
+                if (parsedRow[fieldName]) {
+                    str.push(fieldName + ": " + parsedRow[fieldName]);
                 }
             });
 
@@ -134,10 +134,10 @@ var Received = (function () {
 
         // Add parsed fields to the row before returning
         receivedHeaderNames.forEach(function (receivedHeaderName) {
-            if (fields[receivedHeaderName]) ret[receivedHeaderName] = fields[receivedHeaderName];
+            if (fields[receivedHeaderName]) parsedRow[receivedHeaderName] = fields[receivedHeaderName];
         });
 
-        return ret;
+        return parsedRow;
     };
 
     function exists() { return receivedRows.length > 0; }
