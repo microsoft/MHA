@@ -12,41 +12,34 @@ var Received = (function () {
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
     var parseHeader = function (receivedHeader) {
-        var ReceivedField = function (fieldName, label) {
+        var sourceHeader = receivedHeader;
+        var ReceivedField = function (label) {
             var value = "";
 
             return {
-                fieldName: fieldName,
                 label: label,
                 set value(_value) { value = _value; },
                 get value() { return value; },
             };
         };
 
-        var receivedFields = [
-            ReceivedField("from", mhaStrings.mha_receivedFrom),
-            ReceivedField("by", mhaStrings.mha_receivedBy),
-            ReceivedField("with", mhaStrings.mha_receivedWith),
-            ReceivedField("id", mhaStrings.mha_receivedId),
-            ReceivedField("for", mhaStrings.mha_receivedFor),
-            ReceivedField("via", mhaStrings.mha_receivedVia),
-            ReceivedField("date", mhaStrings.mha_receivedDate),
-            ReceivedField("dateNum", mhaStrings.mha_receivedDateNum)
-        ];
+        var receivedFields = {};
+        receivedFields["from"] = ReceivedField(mhaStrings.mha_receivedFrom);
+        receivedFields["by"] = ReceivedField(mhaStrings.mha_receivedBy);
+        receivedFields["with"] = ReceivedField(mhaStrings.mha_receivedWith);
+        receivedFields["id"] = ReceivedField(mhaStrings.mha_receivedId);
+        receivedFields["for"] = ReceivedField(mhaStrings.mha_receivedFor);
+        receivedFields["via"] = ReceivedField(mhaStrings.mha_receivedVia);
+        receivedFields["date"] = ReceivedField(mhaStrings.mha_receivedDate);
+        receivedFields["datenum"] = ReceivedField(mhaStrings.mha_receivedDateNum);
 
         function setField(fieldName, fieldValue) {
-            if (!fieldName || !fieldValue) {
+            if (!fieldName || !fieldValue || !receivedFields[fieldName.toLowerCase()]) {
                 return false;
             }
 
-            for (var i = 0; i < receivedFields.length; i++) {
-                if (receivedFields[i].fieldName.toUpperCase() === fieldName.toUpperCase()) {
-                    if (receivedFields[i].value) { receivedFields[i].value += "; " + fieldValue; }
-                    else { receivedFields[i].value = fieldValue; }
-
-                    return true;
-                }
-            }
+            if (receivedFields[fieldName.toLowerCase()].value) { receivedFields[fieldName.toLowerCase()].value += "; " + fieldValue; }
+            else { receivedFields[fieldName.toLowerCase()].value = fieldValue; }
 
             return false;
         }
@@ -85,7 +78,7 @@ var Received = (function () {
 
                 if (parsedDate) {
                     setField("date", parsedDate.date);
-                    setField("dateNum", parsedDate.dateNum);
+                    setField("datenum", parsedDate.dateNum);
                 }
             }
 
@@ -109,10 +102,10 @@ var Received = (function () {
             // Split up the string now so we can look for our headers
             var tokens = receivedHeader.split(/\s+/);
 
-            receivedFields.forEach(function (receivedField) {
+            for (var fieldName in receivedFields) {
                 tokens.some(function (token, iToken) {
-                    if (receivedField.fieldName.toUpperCase() === token.toUpperCase()) {
-                        headerMatches.push({ fieldName: receivedField.fieldName, iToken: iToken });
+                    if (fieldName.toLowerCase() === token.toLowerCase()) {
+                        headerMatches.push({ fieldName: fieldName, iToken: iToken });
                         // We don't return true so we can match any duplicate headers
                         // In doing this, we risk failing to parse a string where a header
                         // keyword appears as the value for another header
@@ -120,7 +113,7 @@ var Received = (function () {
                         // We're just picking which one we'd prefer to handle
                     }
                 });
-            });
+            }
 
             // Next bit assumes headerMatches[iField,iToken] is increasing on iToken.
             // Sort it so it is.
@@ -139,15 +132,15 @@ var Received = (function () {
         }
 
         var parsedRow = {
-            sourceHeader: receivedHeader,
+            sourceHeader: sourceHeader,
             delaySort: -1, // Force the "no previous or current time" rows to sort before the 0 second rows
             percent: 0,
         };
 
         // Add parsed fields to the row before returning
-        receivedFields.forEach(function (receivedField) {
-            if (receivedField.value) parsedRow[receivedField.fieldName] = receivedField.value;
-        });
+        for (var fieldName in receivedFields) {
+            if (receivedFields[fieldName].value) parsedRow[fieldName] = receivedFields[fieldName].value;
+        }
 
         return parsedRow;
     };
@@ -185,14 +178,14 @@ var Received = (function () {
         var iDelta = 0; // This will be the sum of our positive deltas
 
         receivedRows.forEach(function (row) {
-            if (!isNaN(row.dateNum)) {
-                if (!isNaN(iLastTime) && iLastTime < row.dateNum) {
-                    iDelta += row.dateNum - iLastTime;
+            if (!isNaN(row.datenum)) {
+                if (!isNaN(iLastTime) && iLastTime < row.datenum) {
+                    iDelta += row.datenum - iLastTime;
                 }
 
-                iStartTime = iStartTime || row.dateNum;
-                iEndTime = row.dateNum;
-                iLastTime = row.dateNum;
+                iStartTime = iStartTime || row.datenum;
+                iEndTime = row.datenum;
+                iLastTime = row.datenum;
             }
         });
 
@@ -200,10 +193,10 @@ var Received = (function () {
 
         receivedRows.forEach(function (row, index) {
             row.hop = index + 1;
-            row.delay = computeTime(row.dateNum, iLastTime);
+            row.delay = computeTime(row.datenum, iLastTime);
 
-            if (!isNaN(row.dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
-                row.delaySort = row.dateNum - iLastTime;
+            if (!isNaN(row.datenum) && !isNaN(iLastTime) && iDelta !== 0) {
+                row.delaySort = row.datenum - iLastTime;
 
                 // Only positive delays will get percentage bars. Negative delays will be color coded at render time.
                 if (row.delaySort > 0) {
@@ -211,8 +204,8 @@ var Received = (function () {
                 }
             }
 
-            if (!isNaN(row.dateNum)) {
-                iLastTime = row.dateNum;
+            if (!isNaN(row.datenum)) {
+                iLastTime = row.datenum;
             }
         });
 

@@ -32,7 +32,7 @@ QUnit.test("Received Tests", function (assert) {
         {
             "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
             "date": "4/20/2018 5:51:19 PM",
-            "dateNum": 1524261079000,
+            "datenum": 1524261079000,
             "delay": "",
             "delaySort": -1,
             "for": "<sgriffin@outlook.com>",
@@ -46,7 +46,7 @@ QUnit.test("Received Tests", function (assert) {
         {
             "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
             "date": "4/20/2018 11:01:32 PM",
-            "dateNum": 1524279692000,
+            "datenum": 1524279692000,
             "delay": "310 minutes 13 seconds",
             "delaySort": 18613000,
             "from": "vmta6.response.nfcu.org (199.204.166.217)",
@@ -61,7 +61,7 @@ QUnit.test("Received Tests", function (assert) {
         {
             "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
             "date": "4/20/2018 11:01:32 PM",
-            "dateNum": 1524279692000,
+            "datenum": 1524279692000,
             "delay": "0 seconds",
             "delaySort": 0,
             "from": "BN3NAM04FT003.eop-NAM04.prod.protection.outlook.com (10.152.92.53)",
@@ -75,7 +75,7 @@ QUnit.test("Received Tests", function (assert) {
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
             "date": "4/20/2018 11:01:33 PM",
-            "dateNum": 1524279693000,
+            "datenum": 1524279693000,
             "delay": "1 second",
             "delaySort": 1000,
             "from": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (2a01:111:e400:c418::34)",
@@ -124,7 +124,7 @@ QUnit.test("Received Tests github headers", function (assert) {
         {
             "by": "ismtpd0021p1iad2.sendgrid.net (SG)",
             "date": "4/21/2018 10:54:16 PM",
-            "dateNum": 1524365656987,
+            "datenum": 1524365656987,
             "delay": "",
             "delaySort": -1,
             "for": "<sgriffin@outlook.com>",
@@ -139,7 +139,7 @@ QUnit.test("Received Tests github headers", function (assert) {
         {
             "by": "filter0652p1las1.sendgrid.net",
             "date": "4/21/2018 10:54:17 PM",
-            "dateNum": 1524365657028,
+            "datenum": 1524365657028,
             "delay": "0 seconds",
             "delaySort": 41,
             "hop": 2,
@@ -152,7 +152,7 @@ QUnit.test("Received Tests github headers", function (assert) {
         {
             "by": "CO1NAM03FT028.mail.protection.outlook.com (10.152.80.189)",
             "date": "4/21/2018 10:54:17 PM",
-            "dateNum": 1524365657000,
+            "datenum": 1524365657000,
             "delay": "0 seconds",
             "delaySort": -28,
             "from": "o9.sgmail.github.com (167.89.101.2)",
@@ -167,7 +167,7 @@ QUnit.test("Received Tests github headers", function (assert) {
         {
             "by": "CO1NAM03HT217.eop-NAM03.prod.protection.outlook.com (10.152.81.113)",
             "date": "4/21/2018 10:54:18 PM",
-            "dateNum": 1524365658000,
+            "datenum": 1524365658000,
             "delay": "1 second",
             "delaySort": 1000,
             "from": "CO1NAM03FT028.eop-NAM03.prod.protection.outlook.com (10.152.80.60)",
@@ -181,7 +181,7 @@ QUnit.test("Received Tests github headers", function (assert) {
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
             "date": "4/21/2018 10:54:19 PM",
-            "dateNum": 1524365659000,
+            "datenum": 1524365659000,
             "delay": "1 second",
             "delaySort": 1000,
             "from": "CO1NAM03HT217.eop-NAM03.prod.protection.outlook.com (2a01:111:e400:c418::43)",
@@ -200,7 +200,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
     assert.propEqual(received.parseHeader(sendGrid), {
         "by": "filter0383p1iad2.sendgrid.net",
         "date": "3/26/2018 9:35:36 AM",
-        "dateNum": 1522071336270,
+        "datenum": 1522071336270,
         "delaySort": -1,
         "id": "filter0383p1iad2-15318-5AB8F728-C",
         "percent": 0,
@@ -214,7 +214,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
     assert.propEqual(received.parseHeader(sendGrid2), {
         "by": "ismtpd0003p1iad2.sendgrid.net (SG)",
         "date": "3/26/2018 9:35:36 AM",
-        "dateNum": 1522071336102,
+        "datenum": 1522071336102,
         "delaySort": -1,
         "from": "smtp.github.com (out-8.smtp.github.com [192.30.252.199])",
         "id": "gDQRSEGgSqCsi9tFtF1Vtg",
@@ -228,7 +228,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
     assert.propEqual(received.parseHeader(dupe1), {
         "by": "me; you",
         "date": "3/26/2018 9:35:36 AM",
-        "dateNum": 1522071336270,
+        "datenum": 1522071336270,
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": dupe1,
@@ -244,7 +244,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
             "date": "4/20/2018 11:01:33 PM",
-            "dateNum": 1524279693000,
+            "datenum": 1524279693000,
             "delaySort": -1,
             "from": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (2a01:111:e400:c418::34)",
             "percent": 0,
@@ -277,7 +277,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         {
             "by": "example.com (Postfix, from userid 1001)",
             "date": "8/21/2014 6:12:48 AM",
-            "dateNum": 1408615968000,
+            "datenum": 1408615968000,
             "delaySort": -1,
             "id": "1234ABCD",
             "percent": 0,
@@ -289,7 +289,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         {
             "by": "qmail 10876 invoked from network",
             "date": "8/24/2014 12:13:38 PM",
-            "dateNum": 1408896818000,
+            "datenum": 1408896818000,
             "delaySort": -1,
             "percent": 0,
             "sourceHeader": qmail
@@ -300,7 +300,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         " +0000";
     assert.propEqual(received.parseHeader(broke1), {
         "date": "4/21/2018 10:54:19 PM",
-        "dateNum": 1524365659000,
+        "datenum": 1524365659000,
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": broke1
@@ -318,7 +318,7 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         "Received: ; 22 Apr 2018";
     assert.propEqual(received.parseHeader(broke3), {
         "date": "4/21/2018 8:00:00 PM",
-        "dateNum": 1524355200000,
+        "datenum": 1524355200000,
         "delaySort": -1,
         "percent": 0,
         "sourceHeader": broke3
