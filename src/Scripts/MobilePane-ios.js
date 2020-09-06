@@ -127,7 +127,7 @@
 
             for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
                 if (i === 0) {
-                    currentTime = moment(viewModel.receivedHeaders.receivedRows[i].datenum).local();
+                    currentTime = moment(viewModel.receivedHeaders.receivedRows[i].dateNum).local();
 
                     timelineItem = $("<div/>")
                         .addClass("timeline-item")
@@ -172,7 +172,7 @@
                         .appendTo(timelineInner);
                 } else {
                     // Determine if new timeline item is needed
-                    var entryTime = moment(viewModel.receivedHeaders.receivedRows[i].datenum).local();
+                    var entryTime = moment(viewModel.receivedHeaders.receivedRows[i].dateNum).local();
 
                     if (entryTime.minute() > currentTime.minute()) {
                         // Into a new minute, create a new timeline item

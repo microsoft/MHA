@@ -31,7 +31,7 @@ var Received = (function () {
         receivedFields["for"] = ReceivedField(mhaStrings.mha_receivedFor);
         receivedFields["via"] = ReceivedField(mhaStrings.mha_receivedVia);
         receivedFields["date"] = ReceivedField(mhaStrings.mha_receivedDate);
-        receivedFields["datenum"] = ReceivedField(mhaStrings.mha_receivedDateNum);
+        receivedFields["dateNum"] = ReceivedField(mhaStrings.mha_receivedDateNum);
 
         function setField(fieldName, fieldValue) {
             if (!fieldName || !fieldValue || !receivedFields[fieldName.toLowerCase()]) {
@@ -77,8 +77,8 @@ var Received = (function () {
                 var parsedDate = mhaDates.parseDate(dateField);
 
                 if (parsedDate) {
-                    setField("date", parsedDate.date);
-                    setField("datenum", parsedDate.dateNum);
+                    receivedFields["date"].value = parsedDate.date;
+                    receivedFields["dateNum"].value = parsedDate.dateNum;
                 }
             }
 
@@ -179,14 +179,14 @@ var Received = (function () {
         var iDelta = 0; // This will be the sum of our positive deltas
 
         receivedRows.forEach(function (row) {
-            if (!isNaN(row.datenum)) {
-                if (!isNaN(iLastTime) && iLastTime < row.datenum) {
-                    iDelta += row.datenum - iLastTime;
+            if (!isNaN(row.dateNum)) {
+                if (!isNaN(iLastTime) && iLastTime < row.dateNum) {
+                    iDelta += row.dateNum - iLastTime;
                 }
 
-                iStartTime = iStartTime || row.datenum;
-                iEndTime = row.datenum;
-                iLastTime = row.datenum;
+                iStartTime = iStartTime || row.dateNum;
+                iEndTime = row.dateNum;
+                iLastTime = row.dateNum;
             }
         });
 
@@ -194,10 +194,10 @@ var Received = (function () {
 
         receivedRows.forEach(function (row, index) {
             row.hop = index + 1;
-            row.delay = computeTime(row.datenum, iLastTime);
+            row.delay = computeTime(row.dateNum, iLastTime);
 
-            if (!isNaN(row.datenum) && !isNaN(iLastTime) && iDelta !== 0) {
-                row.delaySort = row.datenum - iLastTime;
+            if (!isNaN(row.dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
+                row.delaySort = row.dateNum - iLastTime;
 
                 // Only positive delays will get percentage bars. Negative delays will be color coded at render time.
                 if (row.delaySort > 0) {
@@ -205,8 +205,8 @@ var Received = (function () {
                 }
             }
 
-            if (!isNaN(row.datenum)) {
-                iLastTime = row.datenum;
+            if (!isNaN(row.dateNum)) {
+                iLastTime = row.dateNum;
             }
         });
 
