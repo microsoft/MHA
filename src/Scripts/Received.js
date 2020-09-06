@@ -29,7 +29,9 @@ var Received = (function () {
             ReceivedField("with", mhaStrings.mha_receivedWith),
             ReceivedField("id", mhaStrings.mha_receivedId),
             ReceivedField("for", mhaStrings.mha_receivedFor),
-            ReceivedField("via", mhaStrings.mha_receivedVia)
+            ReceivedField("via", mhaStrings.mha_receivedVia),
+            ReceivedField("date", mhaStrings.mha_receivedDate),
+            ReceivedField("dateNum", mhaStrings.mha_receivedDateNum)
         ];
 
         function setField(fieldName, fieldValue) {
@@ -39,10 +41,9 @@ var Received = (function () {
 
             for (var i = 0; i < receivedFields.length; i++) {
                 if (receivedFields[i].fieldName.toUpperCase() === fieldName.toUpperCase()) {
-                    if (receivedFields[i].value === undefined) { receivedFields[i].value = ""; }
-                    if (receivedFields[i].value !== "") { receivedFields[i].value += "; "; }
+                    if (receivedFields[i].value) { receivedFields[i].value += "; " + fieldValue; }
+                    else { receivedFields[i].value = fieldValue; }
 
-                    receivedFields[i].value += fieldValue;
                     return true;
                 }
             }
@@ -55,10 +56,6 @@ var Received = (function () {
             delaySort: -1, // Force the "no previous or current time" rows to sort before the 0 second rows
             percent: 0,
         };
-
-        var date = "";
-        var dateNum = 0;
-        var fields = {};
 
         if (receivedHeader) {
             // Strip linefeeds first
@@ -93,8 +90,8 @@ var Received = (function () {
                 var parsedDate = mhaDates.parseDate(dateField);
 
                 if (parsedDate) {
-                    dateNum = parsedDate.dateNum;
-                    date = parsedDate.date;
+                    setField("date", parsedDate.date);
+                    setField("dateNum", parsedDate.dateNum);
                 }
             }
 
@@ -146,10 +143,6 @@ var Received = (function () {
                 setField(receivedFields[headerMatch.iField].fieldName, tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim())
             });
         }
-
-        if (date) parsedRow["date"] = date;
-        if (dateNum) parsedRow["dateNum"] = dateNum;
-        if (fields["by"]) parsedRow["by"] = fields["by"];
 
         // Add parsed fields to the row before returning
         receivedFields.forEach(function (receivedField) {

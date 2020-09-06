@@ -132,6 +132,8 @@ var mhaStrings = (function () {
         mha_receivedId: "Id",
         mha_receivedFor: "For",
         mha_receivedVia: "Via",
+        mha_receivedDate: "Date",
+        mha_receivedDateNum: "DateNum",
 
         // Other
         mha_number: "#",
