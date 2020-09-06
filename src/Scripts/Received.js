@@ -109,10 +109,10 @@ var Received = (function () {
             // Split up the string now so we can look for our headers
             var tokens = receivedHeader.split(/\s+/);
 
-            receivedFields.forEach(function (receivedField, iField) {
+            receivedFields.forEach(function (receivedField) {
                 tokens.some(function (token, iToken) {
                     if (receivedField.fieldName.toUpperCase() === token.toUpperCase()) {
-                        headerMatches.push({ iField: iField, iToken: iToken });
+                        headerMatches.push({ fieldName: receivedField.fieldName, iToken: iToken });
                         // We don't return true so we can match any duplicate headers
                         // In doing this, we risk failing to parse a string where a header
                         // keyword appears as the value for another header
@@ -134,7 +134,7 @@ var Received = (function () {
                     iNextTokenHeader = tokens.length;
                 }
 
-                setField(receivedFields[headerMatch.iField].fieldName, tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim())
+                setField(headerMatch.fieldName, tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim())
             });
         }
 
