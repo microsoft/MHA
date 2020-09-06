@@ -51,12 +51,6 @@ var Received = (function () {
             return false;
         }
 
-        var parsedRow = {
-            sourceHeader: receivedHeader,
-            delaySort: -1, // Force the "no previous or current time" rows to sort before the 0 second rows
-            percent: 0,
-        };
-
         if (receivedHeader) {
             // Strip linefeeds first
             receivedHeader = receivedHeader.replace(/\r|\n|\r\n/g, ' ')
@@ -143,6 +137,12 @@ var Received = (function () {
                 setField(receivedFields[headerMatch.iField].fieldName, tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim())
             });
         }
+
+        var parsedRow = {
+            sourceHeader: receivedHeader,
+            delaySort: -1, // Force the "no previous or current time" rows to sort before the 0 second rows
+            percent: 0,
+        };
 
         // Add parsed fields to the row before returning
         receivedFields.forEach(function (receivedField) {
