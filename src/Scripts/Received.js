@@ -102,7 +102,8 @@ var Received = (function () {
             // Split up the string now so we can look for our headers
             var tokens = receivedHeader.split(/\s+/);
 
-            for (var fieldName in receivedFields) {
+            var fieldName;
+            for (fieldName in receivedFields) {
                 tokens.some(function (token, iToken) {
                     if (fieldName.toLowerCase() === token.toLowerCase()) {
                         headerMatches.push({ fieldName: fieldName, iToken: iToken });
@@ -138,7 +139,7 @@ var Received = (function () {
         };
 
         // Add parsed fields to the row before returning
-        for (var fieldName in receivedFields) {
+        for (fieldName in receivedFields) {
             if (receivedFields[fieldName].value) parsedRow[fieldName] = receivedFields[fieldName].value;
         }
 
