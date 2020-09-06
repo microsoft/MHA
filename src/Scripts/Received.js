@@ -12,6 +12,44 @@ var Received = (function () {
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
     var parseHeader = function (receivedHeader) {
+        var ReceivedField = function (fieldName, label) {
+            var value = "";
+
+            return {
+                fieldName: fieldName,
+                label: label,
+                set value(_value) { value = _value; },
+                get value() { return value; },
+            };
+        };
+
+        var receivedFields = [
+            ReceivedField("from", mhaStrings.mha_receivedFrom),
+            ReceivedField("by", mhaStrings.mha_receivedBy),
+            ReceivedField("with", mhaStrings.mha_receivedWith),
+            ReceivedField("id", mhaStrings.mha_receivedId),
+            ReceivedField("for", mhaStrings.mha_receivedFor),
+            ReceivedField("via", mhaStrings.mha_receivedVia)
+        ];
+
+        function setField(fieldName, fieldValue) {
+            if (!fieldName || !fieldValue) {
+                return false;
+            }
+
+            for (var i = 0; i < receivedFields.length; i++) {
+                if (receivedFields[i].fieldName.toUpperCase() === fieldName.toUpperCase()) {
+                    if (receivedFields[i].value === undefined) { receivedFields[i].value = ""; }
+                    if (receivedFields[i].value !== "") { receivedFields[i].value += "; "; }
+
+                    receivedFields[i].value += fieldValue;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         var parsedRow = {
             sourceHeader: receivedHeader,
             delaySort: -1, // Force the "no previous or current time" rows to sort before the 0 second rows
@@ -21,7 +59,6 @@ var Received = (function () {
         var date = "";
         var dateNum = 0;
         var fields = {};
-        var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
 
         if (receivedHeader) {
             // Strip linefeeds first
@@ -66,28 +103,25 @@ var Received = (function () {
             //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
             var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/mi);
             if (postFix) {
-                fields["by"] = postFix[2];
+                setField("by", postFix[2]);
                 receivedHeader = postFix[1] + postFix[3];
-                receivedHeaderNames = removeEntry(receivedHeaderNames, "by");
             }
 
             // Scan for malformed qmail headers
             // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
             var qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/mi);
             if (qmail) {
-                fields["by"] = qmail[2];
+                setField("by", qmail[2]);
                 receivedHeader = qmail[1] + qmail[3];
-                receivedHeaderNames = removeEntry(receivedHeaderNames, "by");
             }
 
             // Split up the string now so we can look for our headers
             var tokens = receivedHeader.split(/\s+/);
 
-            var iMatch = 0;
-            receivedHeaderNames.forEach(function (receivedHeaderName, iHeader) {
+            receivedFields.forEach(function (receivedField, iField) {
                 tokens.some(function (token, iToken) {
-                    if (receivedHeaderName.toUpperCase() === token.toUpperCase()) {
-                        headerMatches[iMatch++] = { iHeader: iHeader, iToken: iToken };
+                    if (receivedField.fieldName.toUpperCase() === token.toUpperCase()) {
+                        headerMatches.push({ iField: iField, iToken: iToken });
                         // We don't return true so we can match any duplicate headers
                         // In doing this, we risk failing to parse a string where a header
                         // keyword appears as the value for another header
@@ -97,7 +131,7 @@ var Received = (function () {
                 });
             });
 
-            // Next bit assumes headerMatches[x,y] is increasing on y.
+            // Next bit assumes headerMatches[iField,iToken] is increasing on iToken.
             // Sort it so it is.
             headerMatches.sort(function (a, b) { return a.iToken - b.iToken; });
 
@@ -109,10 +143,7 @@ var Received = (function () {
                     iNextTokenHeader = tokens.length;
                 }
 
-                var headerName = receivedHeaderNames[headerMatch.iHeader];
-                if (fields[headerName] === undefined) { fields[headerName] = ""; }
-                if (fields[headerName] !== "") { fields[headerName] += "; "; }
-                fields[headerName] += tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim();
+                setField(receivedFields[headerMatch.iField].fieldName, tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim())
             });
         }
 
@@ -121,8 +152,8 @@ var Received = (function () {
         if (fields["by"]) parsedRow["by"] = fields["by"];
 
         // Add parsed fields to the row before returning
-        receivedHeaderNames.forEach(function (receivedHeaderName) {
-            if (fields[receivedHeaderName]) parsedRow[receivedHeaderName] = fields[receivedHeaderName];
+        receivedFields.forEach(function (receivedField) {
+            if (receivedField.value) parsedRow[receivedField.fieldName] = receivedField.value;
         });
 
         return parsedRow;
@@ -146,15 +177,6 @@ var Received = (function () {
         receivedRows.sort(function (a, b) {
             return that.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
-    }
-
-    function removeEntry(stringArray, entry) {
-        var i = stringArray.indexOf(entry);
-        if (i >= 0) {
-            stringArray.splice(i, 1);
-        }
-
-        return stringArray;
     }
 
     function add(receivedHeader) { receivedRows.push(parseHeader(receivedHeader)); }

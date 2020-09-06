@@ -126,9 +126,12 @@ var mhaStrings = (function () {
         mha_time: "Time",
         mha_delay: "Delay",
         mha_type: "Type",
-        mha_id: "ID",
-        mha_for: "For",
-        mha_via: "Via",
+        mha_receivedFrom: "From",
+        mha_receivedBy: "By",
+        mha_receivedWith: "With",
+        mha_receivedId: "Id",
+        mha_receivedFor: "For",
+        mha_receivedVia: "Via",
 
         // Other
         mha_number: "#",

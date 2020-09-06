@@ -38,8 +38,8 @@ var Table = (function () {
             column("delay", mhaStrings.mha_delay, null),
             column("with", mhaStrings.mha_type, null),
             column("id", mhaStrings.mha_id, "extraCol"),
-            column("for", mhaStrings.mha_for, "extraCol"),
-            column("via", mhaStrings.mha_via, "extraCol")
+            column("for", mhaStrings.mha_receivedFor, "extraCol"),
+            column("via", mhaStrings.mha_receivedVia, "extraCol")
         ];
 
         addColumns(viewModel.receivedHeaders.tableName, receivedColumns);
