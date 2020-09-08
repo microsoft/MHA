@@ -116,7 +116,7 @@ var Received = (function () {
                 });
             }
 
-            // Next bit assumes headerMatches[iField,iToken] is increasing on iToken.
+            // Next bit assumes headerMatches[fieldName,iToken] is increasing on iToken.
             // Sort it so it is.
             headerMatches.sort(function (a, b) { return a.iToken - b.iToken; });
 
