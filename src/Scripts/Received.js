@@ -14,12 +14,9 @@ var Received = (function () {
     var parseHeader = function (receivedHeader) {
         var sourceHeader = receivedHeader;
         var ReceivedField = function (label) {
-            var value = "";
-
             return {
                 label: label,
-                set value(_value) { value = _value; },
-                get value() { return value; },
+                value: ""
             };
         };
 
