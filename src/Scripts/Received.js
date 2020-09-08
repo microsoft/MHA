@@ -122,17 +122,13 @@ var Received = (function () {
 
         parsedRow.toString = function () {
             var str = [];
-            var fieldNames = ["from", "by", "with", "id", "for", "via"];
-            if (parsedRow["hop"]) str.push("hop: " + parsedRow["hop"]);
+            var fieldNames = ["hop", "from", "by", "with", "id", "for", "via", "date", "delay", "percent"];
             fieldNames.forEach(function (fieldName) {
                 if (parsedRow[fieldName]) {
                     str.push(fieldName + ": " + parsedRow[fieldName]);
                 }
-            })
+            });
 
-            if (parsedRow["date"]) str.push("date: " + parsedRow["date"]);
-            if (parsedRow["delay"]) str.push("delay: " + parsedRow["delay"]);
-            if (parsedRow["percent"]) str.push("percent: " + parsedRow["percent"]);
             return str.join("\n");
         }
 
@@ -284,9 +280,11 @@ var Received = (function () {
         toString: function () {
             if (!exists()) return "";
             var ret = ["Received"];
+            var rows = [];
             receivedRows.forEach(function (row) {
-                ret.push(row);
+                rows.push(row);
             });
+            if (rows.length) ret.push(rows.join("\n\n"));
             return ret.join("\n");
         }
     };
