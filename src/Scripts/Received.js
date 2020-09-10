@@ -12,15 +12,19 @@ var Received = (function () {
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
     var parseHeader = function (receivedHeader) {
-        var sourceHeader = receivedHeader;
-        var ReceivedField = function (label) {
+        var ReceivedField = function (_label, _value) {
             return {
-                label: label,
-                value: ""
+                label: _label,
+                value: _value !== undefined ? _value : "",
+                toString: function () { return this.value; }
             };
         };
 
         var receivedFields = {};
+        receivedFields["sourceHeader"] = ReceivedField("", receivedHeader);
+        receivedFields["delaySort"] = ReceivedField("", -1);
+        receivedFields["percent"] = ReceivedField("", 0);
+
         receivedFields["from"] = ReceivedField(mhaStrings.mha_receivedFrom);
         receivedFields["by"] = ReceivedField(mhaStrings.mha_receivedBy);
         receivedFields["with"] = ReceivedField(mhaStrings.mha_receivedWith);
@@ -129,18 +133,7 @@ var Received = (function () {
             });
         }
 
-        var parsedRow = {
-            sourceHeader: sourceHeader,
-            delaySort: -1, // Force the "no previous or current time" rows to sort before the 0 second rows
-            percent: 0,
-        };
-
-        // Add parsed fields to the row before returning
-        for (fieldName in receivedFields) {
-            if (receivedFields[fieldName].value) parsedRow[fieldName] = receivedFields[fieldName].value;
-        }
-
-        return parsedRow;
+        return receivedFields;
     };
 
     function exists() { return receivedRows.length > 0; }
