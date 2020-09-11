@@ -2,27 +2,18 @@
 /* global HeaderModel */
 
 QUnit.test("parseHeader Tests", function (assert) {
-    QUnit.assert.rowsEqual = function (value, expected, message) {
-        value.forEach(function (row) {
-            delete row.toString;
-        })
-        return assert.propEqual(value, expected, message);
-    };
-
     var summaryRows = [
         {
             "header": "Subject",
             "label": "Subject",
             "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.5' target = '_blank'>Subject</a>",
-            "value": "Hear Hamilton Anytime, Anywhere",
-            "valueUrl": ""
+            "value": "Hear Hamilton Anytime, Anywhere"
         },
         {
             "header": "Message-ID",
             "label": "Message Id",
             "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.4' target = '_blank'>Message Id</a>",
-            "value": "<1134542665376.1115276745036.1949397254.0.411440JL.2002@scheduler.constantcontact.com>",
-            "valueUrl": ""
+            "value": "<1134542665376.1115276745036.1949397254.0.411440JL.2002@scheduler.constantcontact.com>"
         },
         {
             "header": "Archived-At",
@@ -35,36 +26,30 @@ QUnit.test("parseHeader Tests", function (assert) {
             "header": "Date",
             "label": "Creation time",
             "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.1' target = '_blank'>Creation time</a>",
-            "value": "Tue, 14 Jul 2020 14:41:20 -0400 (EDT) (Delivered after 3 seconds)",
-            "valueUrl": ""
+            "value": "Tue, 14 Jul 2020 14:41:20 -0400 (EDT) (Delivered after 3 seconds)"
         },
         {
             "header": "From",
             "label": "From",
             "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.2' target = '_blank'>From</a>",
-            "value": "PBS Charlotte <memberservices@wtvi.org>",
-            "valueUrl": ""
+            "value": "PBS Charlotte <memberservices@wtvi.org>"
         },
         {
             "header": "Reply-To",
             "label": "Reply to",
             "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.2' target = '_blank'>Reply to</a>",
-            "value": "memberservices@wtvi.org",
-            "valueUrl": ""
+            "value": "memberservices@wtvi.org"
         },
         {
             "header": "To",
             "label": "To",
             "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.3' target = '_blank'>To</a>",
-            "value": "test@outlook.com",
-            "valueUrl": ""
+            "value": "test@outlook.com"
         },
         {
             "header": "CC",
             "label": "Cc",
-            "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.3' target = '_blank'>Cc</a>",
-            "value": "",
-            "valueUrl": ""
+            "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.3' target = '_blank'>Cc</a>"
         }];
 
     var receivedRows = [
@@ -72,7 +57,6 @@ QUnit.test("parseHeader Tests", function (assert) {
             "by": "10.249.244.10 (envelope-from <AqeHmUtTNRpaUZj9CNd6Rxg==_1115276745036_oCND0ALXEeiiWdSuUo6yew==@in.constantcontact.com>) (ecelerity 4.3.1.69340 r(Core:4.3.1.0))",
             "date": "7/14/2020 2:41:20 PM",
             "dateNum": 1594752080000,
-            "delay": "",
             "delaySort": -1,
             "from": "[10.252.1.143] ([10.252.1.143:47944] helo=p2-jbemailsyndicator32.ctct.net)",
             "hop": 1,
@@ -133,9 +117,7 @@ QUnit.test("parseHeader Tests", function (assert) {
         {
             "header": "PCL",
             "headerName": "X-Microsoft-Antispam",
-            "label": "Phishing Confidence Level",
-            "value": "",
-            "valueUrl": ""
+            "label": "Phishing Confidence Level"
         },
         {
             "header": "source",
@@ -148,7 +130,6 @@ QUnit.test("parseHeader Tests", function (assert) {
             "header": "unparsed",
             "headerName": "X-Microsoft-Antispam",
             "label": "Unknown fields",
-            "value": "",
             "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>X-Microsoft-Antispam</a>"
         }
     ];
@@ -157,9 +138,7 @@ QUnit.test("parseHeader Tests", function (assert) {
         {
             "header": "ARC",
             "headerName": "X-Forefront-Antispam-Report",
-            "label": "ARC protocol",
-            "value": "",
-            "valueUrl": ""
+            "label": "ARC protocol"
         },
         {
             "header": "CTRY",
@@ -185,9 +164,7 @@ QUnit.test("parseHeader Tests", function (assert) {
         {
             "header": "PCL",
             "headerName": "X-Forefront-Antispam-Report",
-            "label": "Phishing Confidence Level",
-            "value": "",
-            "valueUrl": ""
+            "label": "Phishing Confidence Level"
         },
         {
             "header": "SFV",
@@ -235,28 +212,23 @@ QUnit.test("parseHeader Tests", function (assert) {
             "header": "SFTY",
             "headerName": "X-Forefront-Antispam-Report",
             "label": "Phishing message",
-            "value": "",
             "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>X-Forefront-Antispam-Report</a>"
         },
         {
             "header": "SRV",
             "headerName": "X-Forefront-Antispam-Report",
             "label": "Bulk email status",
-            "value": "",
             "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>X-Forefront-Antispam-Report</a>"
         },
         {
             "header": "X-CustomSpam",
             "headerName": "X-Forefront-Antispam-Report",
-            "label": "Advanced Spam Filtering",
-            "value": "",
-            "valueUrl": ""
+            "label": "Advanced Spam Filtering"
         },
         {
             "header": "SFS",
             "headerName": "SFS",
             "label": "Spam rules",
-            "value": "",
             "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/exchange/monitoring/trace-an-email-message/run-a-message-trace-and-view-results' target = '_blank'>SFS</a>"
         },
         {
@@ -401,10 +373,10 @@ QUnit.test("parseHeader Tests", function (assert) {
         " =?us-ascii?Q?yRknnr9cw9mFk72T6z2Ul2LZYL/Ebw=3D=3D?=\n";
 
     var goodCaseHeaderModel = HeaderModel(goodCaseHeaders);
-    assert.rowsEqual(goodCaseHeaderModel.summary.summaryRows, summaryRows, "summaryRows-good-casing");
-    assert.rowsEqual(goodCaseHeaderModel.receivedHeaders.receivedRows, receivedRows, "receivedRows-good-casing");
-    assert.rowsEqual(goodCaseHeaderModel.antiSpamReport.antiSpamRows, antiSpamRows, "antiSpamRows-good-casing");
-    assert.rowsEqual(goodCaseHeaderModel.forefrontAntiSpamReport.forefrontAntiSpamRows, forefrontAntiSpamRows, "forefrontAntiSpamRows-good-casing");
+    assert.arrayEqual(goodCaseHeaderModel.summary.summaryRows, summaryRows, "summaryRows-good-casing");
+    assert.arrayEqual(goodCaseHeaderModel.receivedHeaders.receivedRows, receivedRows, "receivedRows-good-casing");
+    assert.arrayEqual(goodCaseHeaderModel.antiSpamReport.antiSpamRows, antiSpamRows, "antiSpamRows-good-casing");
+    assert.arrayEqual(goodCaseHeaderModel.forefrontAntiSpamReport.forefrontAntiSpamRows, forefrontAntiSpamRows, "forefrontAntiSpamRows-good-casing");
 
     var badCaseHeaders = "received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
         " (2603:10b6:408:c0::39) by BN8PR19MB2915.namprd19.prod.outlook.com with HTTPS\n" +
@@ -533,8 +505,8 @@ QUnit.test("parseHeader Tests", function (assert) {
         " =?us-ascii?Q?yRknnr9cw9mFk72T6z2Ul2LZYL/Ebw=3D=3D?=\n";
 
     var badCaseHeaderModel = HeaderModel(badCaseHeaders);
-    assert.rowsEqual(badCaseHeaderModel.summary.summaryRows, summaryRows, "summaryRows-bad-casing");
-    assert.rowsEqual(badCaseHeaderModel.receivedHeaders.receivedRows, receivedRows, "receivedRows-bad-casing");
-    assert.rowsEqual(badCaseHeaderModel.antiSpamReport.antiSpamRows, antiSpamRows, "antiSpamRows-bad-casing");
-    assert.rowsEqual(badCaseHeaderModel.forefrontAntiSpamReport.forefrontAntiSpamRows, forefrontAntiSpamRows, "forefrontAntiSpamRows-bad-casing");
+    assert.arrayEqual(badCaseHeaderModel.summary.summaryRows, summaryRows, "summaryRows-bad-casing");
+    assert.arrayEqual(badCaseHeaderModel.receivedHeaders.receivedRows, receivedRows, "receivedRows-bad-casing");
+    assert.arrayEqual(badCaseHeaderModel.antiSpamReport.antiSpamRows, antiSpamRows, "antiSpamRows-bad-casing");
+    assert.arrayEqual(badCaseHeaderModel.forefrontAntiSpamReport.forefrontAntiSpamRows, forefrontAntiSpamRows, "forefrontAntiSpamRows-bad-casing");
 });
