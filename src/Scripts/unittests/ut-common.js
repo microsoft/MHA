@@ -1,24 +1,24 @@
 ﻿/* global QUnit */
 
-QUnit.assert.shallowEqual = function (value, expected, message) {
+QUnit.assert.shallowEqual = function (actual, expected, message) {
     var field;
     for (field in expected) {
-        if (expected[field] === value[field]) continue;
-        if (value[field] && expected[field] === value[field].value) continue;
+        if (expected[field] === actual[field]) continue;
+        if (actual[field] && expected[field] === actual[field].value) continue;
         this.pushResult({
             result: false,
-            actual: field + " = " + value[field],
+            actual: field + " = " + actual[field],
             expected: field + " = " + expected[field],
             message: message
         });
     }
 
-    for (field in value) {
+    for (field in actual) {
         // If a field in value is non-null/empty there must also be a field in expected
-        if (value[field].toString() && expected[field] === undefined) {
+        if (actual[field].toString() && expected[field] === undefined) {
             this.pushResult({
                 result: false,
-                actual: field + " = " + value[field],
+                actual: field + " = " + actual[field],
                 expected: field + " = " + expected[field],
                 message: message
             });
@@ -27,44 +27,44 @@ QUnit.assert.shallowEqual = function (value, expected, message) {
 
     this.pushResult({
         result: true,
-        actual: value,
+        actual: actual,
         expected: expected,
         message: message
     });
 };
 
-QUnit.assert.arrayEqual = function (value, expected, message) {
-    if (value.length !== expected.length) {
+QUnit.assert.arrayEqual = function (actual, expected, message) {
+    if (actual.length !== expected.length) {
         this.pushResult({
             result: false,
-            actual: "length = " + value.length,
+            actual: "length = " + actual.length,
             expected: "length = " + expected.length,
             message: message + " length"
         });
     }
 
-    for (var i = 0; i < value.length; i++) {
-        this.shallowEqual(value[i], expected[i], message + "[" + i + "]");
+    for (var i = 0; i < actual.length; i++) {
+        this.shallowEqual(actual[i], expected[i], message + "[" + i + "]");
     }
 
     this.pushResult({
         result: true,
-        actual: value,
+        actual: actual,
         expected: expected,
         message: message
     });
 };
 
-QUnit.assert.datesEqual = function (value, expected, message) {
-    return this.propEqual({ date: value.date.toString(), dateNum: value.dateNum.toString() }, expected, message);
+QUnit.assert.datesEqual = function (actual, expected, message) {
+    return this.propEqual({ date: actual.date.toString(), dateNum: actual.dateNum.toString() }, expected, message);
 };
 
-QUnit.assert.errorsEqual = function (value, expectedValues, message) {
+QUnit.assert.errorsEqual = function (actual, expectedValues, message) {
     var found = expectedValues.some(function (expected) {
-        if (value === expected) {
+        if (actual === expected) {
             this.pushResult({
                 result: true,
-                actual: value,
+                actual: actual,
                 expected: expected,
                 message: message
             });
@@ -76,7 +76,7 @@ QUnit.assert.errorsEqual = function (value, expectedValues, message) {
     if (!found) {
         this.pushResult({
             result: false,
-            actual: value,
+            actual: actual,
             expected: expectedValues,
             message: message
         });
