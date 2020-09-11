@@ -3,8 +3,8 @@
 QUnit.assert.shallowEqual = function (value, expected, message) {
     var field;
     for (field in expected) {
-        if (expected[field] === value[field].value) continue;
         if (expected[field] === value[field]) continue;
+        if (value[field] && expected[field] === value[field].value) continue;
         this.pushResult({
             result: false,
             actual: field + " = " + value[field],
@@ -14,8 +14,8 @@ QUnit.assert.shallowEqual = function (value, expected, message) {
     }
 
     for (field in value) {
-        if (expected[field] === undefined) {
-            if (!value[field].toString()) continue;
+        // If a field in value is non-null/empty there must also be a field in expected
+        if (value[field].toString() && expected[field] === undefined) {
             this.pushResult({
                 result: false,
                 actual: field + " = " + value[field],
