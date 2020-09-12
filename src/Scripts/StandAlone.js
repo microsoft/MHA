@@ -64,7 +64,7 @@ var StandAlone = (function () {
     }
 
     function copy() {
-        navigator.clipboard.writeText(viewModel);
+        if (viewModel) viewModel.copy();
     }
 
     return {

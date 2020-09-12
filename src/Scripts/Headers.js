@@ -137,7 +137,9 @@ var HeaderModel = (function (headers) {
             if (antiSpamReport.exists()) ret.push(antiSpamReport);
             if (otherHeaders.exists()) ret.push(otherHeaders);
             return ret.join("\n\n");
+        },
+        copy: function () {
+            navigator.clipboard.writeText(this);
         }
-
     };
 });

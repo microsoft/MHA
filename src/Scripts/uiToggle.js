@@ -295,6 +295,7 @@ var ParentFrame = (function () {
         var copyButton = header.querySelector(".copy-button");
         copyButton.onclick = function () {
             // Do the copy.
+            postMessageToFrame("copy");
         };
 
         function actionHandler() {

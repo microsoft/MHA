@@ -7,6 +7,7 @@
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
 (function () {
+    var viewModel = null;
     // Framework7 app object
     var myApp = null;
 
@@ -43,6 +44,9 @@
                 case "renderItem":
                     renderItem(event.data.data);
                     break;
+                case "copy":
+                    if (viewModel) viewModel.copy();
+                    break;
             }
         }
     }
@@ -75,7 +79,7 @@
     }
 
     function buildViews(headers) {
-        var viewModel = HeaderModel(headers);
+        viewModel = HeaderModel(headers);
 
         // Build summary view
         var summaryContent = $("#summary-content");

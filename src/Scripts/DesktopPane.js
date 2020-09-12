@@ -5,6 +5,7 @@
 // This is the "new" UI rendered in newDesktopFrame.html
 
 (function () {
+    var viewModel = null;
     var overlay = null;
     var spinner = null;
 
@@ -40,6 +41,9 @@
                     break;
                 case "renderItem":
                     renderItem(event.data.data);
+                    break;
+                case "copy":
+                    if (viewModel) viewModel.copy();
                     break;
             }
         }
@@ -121,7 +125,7 @@
     }
 
     function buildViews(headers) {
-        var viewModel = HeaderModel(headers);
+        viewModel = HeaderModel(headers);
         // Build summary view
         var summaryList = $(".summary-list");
         var headerVal;
