@@ -276,9 +276,9 @@ var ParentFrame = (function () {
             new fabric["ChoiceFieldGroup"](choiceFieldGroupElements[i]);
         }
 
-        var button = header.querySelector(".dialog-button");
+        var settingsButton = header.querySelector(".gear-button");
         // When clicking the button, open the dialog
-        button.onclick = function () {
+        settingsButton.onclick = function () {
             // Set the current choice in the UI.
             $("#uiChoice input").attr("checked", false);
             var labels = $("#uiChoice label");
@@ -290,6 +290,11 @@ var ParentFrame = (function () {
             var input = currentSelected.prevAll("input:first");
             input.prop("checked", "true");
             dialogSettingsComponent.open();
+        };
+
+        var copyButton = header.querySelector(".copy-button");
+        copyButton.onclick = function () {
+            // Do the copy.
         };
 
         function actionHandler() {
