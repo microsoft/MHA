@@ -28,20 +28,6 @@ body, html {
         border: none;
     }
 
-.gear-button {
-    min-width: 0;
-    width: 35px;
-    height: 44px;
-    margin-top: 1px;
-}
-
-.copy-button {
-    min-width: 0;
-    width: 35px;
-    height: 44px;
-    margin-top: 1px;
-}
-
 .code-box > pre {
     background-color: #eaeaea;
     border: 1px solid #ccc;

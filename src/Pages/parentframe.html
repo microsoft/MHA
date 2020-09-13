@@ -50,20 +50,20 @@
 <body class="ms-Fabric">
     <div id="uiToggleFrame">
         <div class="header-row">
-            <span class="ms-Style-button">
-                <button class="ms-Button ms-Button--hero copy-button">
-                    <span class="ms-Button-label">
-                        <i class="ms-Icon ms-Icon--Copy" aria-hidden="true"></i>
-                    </span>
-                </button>
-            </span>
-            <span class="ms-Style-button">
-                <button class="ms-Button ms-Button--hero gear-button">
-                    <span class="ms-Button-label">
-                        <i class="ms-Icon ms-Icon--Settings" aria-hidden="true"></i>
-                    </span>
-                </button>
-            </span>
+            <div class="ms-CommandBar">
+                <div class="ms-CommandBar-mainArea">
+                    <div class="ms-CommandButton">
+                        <button class="ms-CommandButton-button copy-button">
+                            <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Copy"></i></span>
+                        </button>
+                    </div>
+                    <div class="ms-CommandButton">
+                        <button class="ms-CommandButton-button gear-button">
+                            <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Settings"></i></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             <!-- Settings Dialog-->
             <div class="ms-Dialog ms-Dialog--lgHeader" id="dialog-Settings">
