@@ -16,6 +16,7 @@ var ParentFrame = (function () {
     var deferredErrors = [];
     var deferredStatus = [];
     var headers = "";
+    var modelToString = "";
 
     function choice(label, url, checked) {
         return { label: label, url: url, checked: checked };
@@ -71,6 +72,9 @@ var ParentFrame = (function () {
                     break;
                 case "LogError":
                     Errors.log(JSON.parse(event.data.data.error), event.data.data.message);
+                    break;
+                case "modelToString":
+                    modelToString = event.data.data;
                     break;
             }
         }
@@ -295,7 +299,18 @@ var ParentFrame = (function () {
         var copyButton = header.querySelector(".copy-button");
         copyButton.onclick = function () {
             // Do the copy.
-            postMessageToFrame("copy");
+            function writeText(str) {
+                function setData(e) {
+                    e.clipboardData.setData("text/plain", str);
+                    e.preventDefault();
+                }
+
+                document.addEventListener("copy", setData);
+                document.execCommand("copy");
+                document.removeEventListener("copy", setData);
+            }
+
+            writeText(modelToString);
         };
 
         function actionHandler() {
@@ -347,7 +362,7 @@ var ParentFrame = (function () {
         initUI: initUI,
         updateStatus: updateStatus,
         showError: showError,
-        get choice() { return currentChoice;}
+        get choice() { return currentChoice; }
     }
 })();
 

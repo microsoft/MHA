@@ -116,7 +116,26 @@ var HeaderModel = (function (headers) {
         return headerList;
     }
 
-    if (headers) { parseHeaders(headers); }
+    function toString() {
+        var ret = [];
+        if (summary.exists()) ret.push(summary);
+        if (receivedHeaders.exists()) ret.push(receivedHeaders);
+        if (forefrontAntiSpamReport.exists()) ret.push(forefrontAntiSpamReport);
+        if (antiSpamReport.exists()) ret.push(antiSpamReport);
+        if (otherHeaders.exists()) ret.push(otherHeaders);
+        return ret.join("\n\n");
+    }
+
+    function site() { return window.location.protocol + "//" + window.location.host; }
+
+    function postMessageToParent(eventName, data) {
+        window.parent.postMessage({ eventName: eventName, data: data }, site());
+    }
+
+    if (headers) {
+        parseHeaders(headers);
+        postMessageToParent("modelToString", toString());
+    }
 
     return {
         originalHeaders: originalHeaders,
@@ -129,17 +148,6 @@ var HeaderModel = (function (headers) {
         GetHeaderList: GetHeaderList,
         get status() { return status; },
         set status(value) { status = value; },
-        toString: function () {
-            var ret = [];
-            if (summary.exists()) ret.push(summary);
-            if (receivedHeaders.exists()) ret.push(receivedHeaders);
-            if (forefrontAntiSpamReport.exists()) ret.push(forefrontAntiSpamReport);
-            if (antiSpamReport.exists()) ret.push(antiSpamReport);
-            if (otherHeaders.exists()) ret.push(otherHeaders);
-            return ret.join("\n\n");
-        },
-        copy: function () {
-            navigator.clipboard.writeText(this);
-        }
+        toString: toString()
     };
 });

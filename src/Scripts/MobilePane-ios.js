@@ -44,9 +44,6 @@
                 case "renderItem":
                     renderItem(event.data.data);
                     break;
-                case "copy":
-                    if (viewModel) viewModel.copy();
-                    break;
             }
         }
     }
