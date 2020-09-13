@@ -47,6 +47,7 @@ QUnit.test("RFC 2047 Tests", function (assert) {
         "=?gb2312?Q?=D0=B9=AB=CB=BE=B6=AD=CA=C2=BB=E1=C3=D8=CA=E9?="),
         "Subject: 与奥马药业总经理，阿里巴巴总监，斯必克总裁，一起研究上市公司董事会秘书");
     assert.equal(Decoder.clean2047Encoding("To: \"=?utf-8?q?=E3=82=A2=E3=83=A1=E3=83=AA=E3=82=AB    =E3=82=A2=E3=83=A1=E3=83=AA=E3=82=AB?=\" <test@example.com>"), "To: \"アメリカ    アメリカ\" <test@example.com>");
+    assert.equal(Decoder.clean2047Encoding("=?utf-8?B?VE9EQVk6IFdlc3QgSGFtIHYuIE5ld2Nhc3RsZSBhdCAzUE0gRVQ=?==?utf-8?B?4pq9?="), "TODAY: West Ham v. Newcastle at 3PM ET⚽");
 });
 
 QUnit.test("Mailsploit Tests", function (assert) {
