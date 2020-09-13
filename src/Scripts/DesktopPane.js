@@ -1,6 +1,7 @@
 /* global $ */
 /* global mhaStrings */
 /* global HeaderModel */
+/* global message */
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -13,7 +14,7 @@
             initializeFabric();
             updateStatus(mhaStrings.mha_loading);
             window.addEventListener("message", eventListener, false);
-            postMessageToParent("frameActive");
+            message.postMessageToParent("frameActive");
         }
         catch (e) {
             postError(e, "Failed initializing frame");
@@ -21,14 +22,8 @@
         }
     });
 
-    function site() { return window.location.protocol + "//" + window.location.host; }
-
-    function postMessageToParent(eventName, data) {
-        window.parent.postMessage({ eventName: eventName, data: data }, site());
-    }
-
     function eventListener(event) {
-        if (!event || event.origin !== site()) return;
+        if (!event || event.origin !== message.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {
@@ -46,7 +41,7 @@
     }
 
     function postError(error, message) {
-        postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+        message.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
     }
 
     function initializeFabric() {
@@ -267,7 +262,6 @@
         var tbody;
         var table;
         var row;
-        var linkVal;
         if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length > 0) {
             $("<div/>")
                 .addClass("ms-font-m")

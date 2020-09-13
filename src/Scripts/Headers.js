@@ -4,6 +4,7 @@
 /* global Other */
 /* global Received */
 /* global Summary */
+/* global message */
 /* exported HeaderModel */
 
 var HeaderModel = (function (headers) {
@@ -126,15 +127,9 @@ var HeaderModel = (function (headers) {
         return ret.join("\n\n");
     }
 
-    function site() { return window.location.protocol + "//" + window.location.host; }
-
-    function postMessageToParent(eventName, data) {
-        window.parent.postMessage({ eventName: eventName, data: data }, site());
-    }
-
     if (headers) {
         parseHeaders(headers);
-        postMessageToParent("modelToString", toString());
+        message.postMessageToParent("modelToString", toString());
     }
 
     return {

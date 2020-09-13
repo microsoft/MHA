@@ -5,6 +5,7 @@
 /* global Diagnostics */
 /* global Errors */
 /* global GetHeaders */
+/* global message */
 /* exported ParentFrame */
 
 // Controller for Settings screen which controls what is being displayed
@@ -54,16 +55,12 @@ var ParentFrame = (function () {
         return null;
     }
 
-    function site() { return window.location.protocol + "//" + window.location.host; }
-
     function postMessageToFrame(eventName, data) {
-        if (iFrame) {
-            iFrame.postMessage({ eventName: eventName, data: data }, site());
-        }
+        message.postMessageToFrame(iFrame, eventName, data);
     }
 
     function eventListener(event) {
-        if (!event || event.origin !== site()) return;
+        if (!event || event.origin !== message.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {
