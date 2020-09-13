@@ -13,109 +13,130 @@ var Received = (function () {
     // This algorithm should work regardless of the order of the headers, given:
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
-    function parseHeader(receivedHeader) {
-        var parsedRow = {
-            sourceHeader: receivedHeader,
-            delaySort: -1, // Force the "no previous or current time" rows to sort before the 0 second rows
-            percent: 0
-        }
+    var parseHeader = function (receivedHeader) {
+        var ReceivedField = function (_label, _value) {
+            return {
+                label: _label,
+                value: _value !== undefined ? _value : "",
+                toString: function () { return this.value; }
+            };
+        };
 
-        if (!receivedHeader) { return parsedRow; }
-        // Strip linefeeds first
-        receivedHeader = receivedHeader.replace(/\r|\n|\r\n/g, ' ')
+        var receivedFields = {};
+        receivedFields["sourceHeader"] = ReceivedField("", receivedHeader);
+        receivedFields["delaySort"] = ReceivedField("", -1);
+        receivedFields["percent"] = ReceivedField("", 0);
 
-        var receivedHeaderNames = ["from", "by", "with", "id", "for", "via"];
+        receivedFields["from"] = ReceivedField(mhaStrings.mha_receivedFrom);
+        receivedFields["by"] = ReceivedField(mhaStrings.mha_receivedBy);
+        receivedFields["with"] = ReceivedField(mhaStrings.mha_receivedWith);
+        receivedFields["id"] = ReceivedField(mhaStrings.mha_receivedId);
+        receivedFields["for"] = ReceivedField(mhaStrings.mha_receivedFor);
+        receivedFields["via"] = ReceivedField(mhaStrings.mha_receivedVia);
+        receivedFields["date"] = ReceivedField(mhaStrings.mha_receivedDate);
+        receivedFields["dateNum"] = ReceivedField(mhaStrings.mha_receivedDateNum);
 
-        // Build array of header locations
-        var headerMatches = [];
-
-        // Some bad dates don't wrap UTC in paren - fix that first
-        receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/gi, "(UTC)");
-
-        // Read out the date first, then clear it from the string
-        var iDate = receivedHeader.lastIndexOf(";");
-
-        // No semicolon means no date - or maybe there's one there?
-        // Sendgrid is bad about this
-        if (iDate === -1) {
-            // First try to find a day of the week
-            receivedHeader = receivedHeader.replace(/\s*(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/g, "; $1");
-            iDate = receivedHeader.lastIndexOf(";");
-        }
-
-        if (iDate === -1) {
-            // Next we look for year-month-day, 4-1/2-1/2
-            receivedHeader = receivedHeader.replace(/\s*(\d{4}-\d{1,2}-\d{1,2})/g, "; $1");
-            iDate = receivedHeader.lastIndexOf(";");
-        }
-
-        if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
-            var date = receivedHeader.substring(iDate + 1);
-            receivedHeader = receivedHeader.substring(0, iDate);
-            var parsedDate = mhaDates.parseDate(date);
-
-            if (parsedDate) {
-                parsedRow.dateNum = parsedDate.dateNum;
-                parsedRow.date = parsedDate.date;
+        function setField(fieldName, fieldValue) {
+            if (!fieldName || !fieldValue || !receivedFields[fieldName.toLowerCase()]) {
+                return false;
             }
+
+            if (receivedFields[fieldName.toLowerCase()].value) { receivedFields[fieldName.toLowerCase()].value += "; " + fieldValue; }
+            else { receivedFields[fieldName.toLowerCase()].value = fieldValue; }
+
+            return false;
         }
 
-        // Scan for malformed postFix headers
-        // Received: by example.com (Postfix, from userid 1001)
-        //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
-        var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/mi);
-        if (postFix) {
-            parsedRow.by = postFix[2];
-            receivedHeader = postFix[1] + postFix[3];
-            receivedHeaderNames = removeEntry(receivedHeaderNames, "by");
-        }
+        if (receivedHeader) {
+            // Strip linefeeds first
+            receivedHeader = receivedHeader.replace(/\r|\n|\r\n/g, ' ')
 
-        // Scan for malformed qmail headers
-        // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
-        var qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/mi);
-        if (qmail) {
-            parsedRow.by = qmail[2];
-            receivedHeader = qmail[1] + qmail[3];
-            receivedHeaderNames = removeEntry(receivedHeaderNames, "by");
-        }
+            // Build array of header locations
+            var headerMatches = [];
 
-        // Split up the string now so we can look for our headers
-        var tokens = receivedHeader.split(/\s+/);
+            // Some bad dates don't wrap UTC in paren - fix that first
+            receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/gi, "(UTC)");
 
-        var iMatch = 0;
-        receivedHeaderNames.forEach(function (receivedHeaderName, iHeader) {
-            tokens.some(function (token, iToken) {
-                if (receivedHeaderName.toUpperCase() === token.toUpperCase()) {
-                    headerMatches[iMatch++] = { iHeader: iHeader, iToken: iToken };
-                    // We don't return true so we can match any duplicate headers
-                    // In doing this, we risk failing to parse a string where a header
-                    // keyword appears as the value for another header
-                    // Both situations are invalid input
-                    // We're just picking which one we'd prefer to handle
+            // Read out the date first, then clear it from the string
+            var iDate = receivedHeader.lastIndexOf(";");
+
+            // No semicolon means no date - or maybe there's one there?
+            // Sendgrid is bad about this
+            if (iDate === -1) {
+                // First try to find a day of the week
+                receivedHeader = receivedHeader.replace(/\s*(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/g, "; $1");
+                iDate = receivedHeader.lastIndexOf(";");
+            }
+
+            if (iDate === -1) {
+                // Next we look for year-month-day, 4-1/2-1/2
+                receivedHeader = receivedHeader.replace(/\s*(\d{4}-\d{1,2}-\d{1,2})/g, "; $1");
+                iDate = receivedHeader.lastIndexOf(";");
+            }
+
+            if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
+                var dateField = receivedHeader.substring(iDate + 1);
+                receivedHeader = receivedHeader.substring(0, iDate);
+                var parsedDate = mhaDates.parseDate(dateField);
+
+                if (parsedDate) {
+                    receivedFields["date"].value = parsedDate.date;
+                    receivedFields["dateNum"].value = parsedDate.dateNum;
                 }
-            });
-        });
-
-        // Next bit assumes headerMatches[x,y] is increasing on y.
-        // Sort it so it is.
-        headerMatches.sort(function (a, b) { return a.iToken - b.iToken; });
-
-        headerMatches.forEach(function (headerMatch, iMatch) {
-            var iNextTokenHeader;
-            if (iMatch + 1 < headerMatches.length) {
-                iNextTokenHeader = headerMatches[iMatch + 1].iToken;
-            } else {
-                iNextTokenHeader = tokens.length;
             }
 
-            var headerName = receivedHeaderNames[headerMatch.iHeader];
-            if (parsedRow[headerName] === undefined) { parsedRow[headerName] = ""; }
-            if (parsedRow[headerName] !== "") { parsedRow[headerName] += "; "; }
-            parsedRow[headerName] += tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim();
-        });
+            // Scan for malformed postFix headers
+            // Received: by example.com (Postfix, from userid 1001)
+            //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
+            var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/mi);
+            if (postFix) {
+                setField("by", postFix[2]);
+                receivedHeader = postFix[1] + postFix[3];
+            }
 
-        return parsedRow;
-    }
+            // Scan for malformed qmail headers
+            // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
+            var qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/mi);
+            if (qmail) {
+                setField("by", qmail[2]);
+                receivedHeader = qmail[1] + qmail[3];
+            }
+
+            // Split up the string now so we can look for our headers
+            var tokens = receivedHeader.split(/\s+/);
+
+            var fieldName;
+            for (fieldName in receivedFields) {
+                tokens.some(function (token, iToken) {
+                    if (fieldName.toLowerCase() === token.toLowerCase()) {
+                        headerMatches.push({ fieldName: fieldName, iToken: iToken });
+                        // We don't return true so we can match any duplicate headers
+                        // In doing this, we risk failing to parse a string where a header
+                        // keyword appears as the value for another header
+                        // Both situations are invalid input
+                        // We're just picking which one we'd prefer to handle
+                    }
+                });
+            }
+
+            // Next bit assumes headerMatches[fieldName,iToken] is increasing on iToken.
+            // Sort it so it is.
+            headerMatches.sort(function (a, b) { return a.iToken - b.iToken; });
+
+            headerMatches.forEach(function (headerMatch, iMatch) {
+                var iNextTokenHeader;
+                if (iMatch + 1 < headerMatches.length) {
+                    iNextTokenHeader = headerMatches[iMatch + 1].iToken;
+                } else {
+                    iNextTokenHeader = tokens.length;
+                }
+
+                setField(headerMatch.fieldName, tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim())
+            });
+        }
+
+        return receivedFields;
+    };
 
     function exists() { return receivedRows.length > 0; }
 
@@ -135,15 +156,6 @@ var Received = (function () {
         receivedRows.sort(function (a, b) {
             return that.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
-    }
-
-    function removeEntry(stringArray, entry) {
-        var i = stringArray.indexOf(entry);
-        if (i >= 0) {
-            stringArray.splice(i, 1);
-        }
-
-        return stringArray;
     }
 
     function add(receivedHeader) { receivedRows.push(parseHeader(receivedHeader)); }

@@ -34,7 +34,7 @@
     "moment": "^2.27.0",
     "office-ui-fabric-js": "^1.5.0",
     "stacktrace-js": "^2.0.2",
-    "uglify-js": "^3.10.3"
+    "uglify-js": "^3.10.4"
   },
   "-vs-binding": {
     "BeforeBuild": [

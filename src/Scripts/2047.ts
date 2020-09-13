@@ -32,6 +32,7 @@ var Decoder = (function () {
 
             // Combine a block with the previous block if the charset matches
             if (i >= 1 &&
+                collapsedBlocks[i].type === "Q" &&
                 collapsedBlocks[i].type === collapsedBlocks[i - 1].type &&
                 collapsedBlocks[i].charset === collapsedBlocks[i - 1].charset) {
                 collapsedBlocks[i].text = collapsedBlocks[i - 1].text + collapsedBlocks[i].text;

@@ -21,30 +21,6 @@ function cleanStack(stack) {
     });
 }
 
-QUnit.assert.errorsEqual = function (value, expectedValues, message) {
-    var found = expectedValues.some(function (expected) {
-        if (value === expected) {
-            this.pushResult({
-                result: true,
-                actual: value,
-                expected: expected,
-                message: message
-            });
-
-            return true;
-        }
-    }, this);
-
-    if (!found) {
-        this.pushResult({
-            result: false,
-            actual: value,
-            expected: expectedValues,
-            message: message
-        });
-    }
-};
-
 QUnit.test("Errors.parse Tests", function (assert) {
 
     assert.expect(20); // Count of assert calls in the tests below

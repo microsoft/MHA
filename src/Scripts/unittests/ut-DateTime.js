@@ -3,9 +3,6 @@
 
 QUnit.test("DateTime Tests", function (assert) {
     var received = Received();
-    QUnit.assert.datesEqual = function (value, expected, message) {
-        return assert.propEqual({ date: value.date, dateNum: value.dateNum }, expected, message);
-    };
 
     var h1 = "Received: test; Sat, 21 Apr 2018 03:01:32 +0000";
     assert.datesEqual(received.parseHeader(h1), { "date": "4/20/2018 11:01:32 PM", "dateNum": 1524279692000 }, h1);
