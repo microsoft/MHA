@@ -133,7 +133,7 @@ var mhaStrings = (function () {
         mha_receivedFor: "For",
         mha_receivedVia: "Via",
         mha_receivedDate: "Date",
-        mha_receivedDateNum: "DateNum",
+        mha_receivedPercent: "Percent",
 
         // Other
         mha_number: "#",

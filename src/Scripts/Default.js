@@ -2,6 +2,7 @@
 /* global mhaStrings  */
 /* global HeaderModel */
 /* global Table */
+/* global message */
 
 // This is the "classic" UI rendered in classicDesktopFrame.html
 
@@ -15,7 +16,7 @@
             Table.initializeTableUI(viewModel);
             updateStatus(mhaStrings.mha_loading);
             window.addEventListener("message", eventListener, false);
-            postMessageToParent("frameActive");
+            message.postMessageToParent("frameActive");
         }
         catch (e) {
             postError(e, "Failed initializing frame");
@@ -23,14 +24,8 @@
         }
     });
 
-    function site() { return window.location.protocol + "//" + window.location.host; }
-
-    function postMessageToParent(eventName, data) {
-        window.parent.postMessage({ eventName: eventName, data: data }, site());
-    }
-
     function eventListener(event) {
-        if (!event || event.origin !== site()) return;
+        if (!event || event.origin !== message.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {
@@ -48,7 +43,7 @@
     }
 
     function postError(error, message) {
-        postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+        message.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
     }
 
     function enableSpinner() {

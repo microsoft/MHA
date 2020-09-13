@@ -8,7 +8,9 @@ var AntiSpamReport = (function () {
             label: label,
             headerName: headerName,
             value: "",
-            valueUrl: ""
+            valueUrl: "",
+            toString: function () { return this.label + ": " + this.value; }
+
         }
     };
 
@@ -90,6 +92,14 @@ var AntiSpamReport = (function () {
         get source() { return source; },
         get unparsed() { return unparsed; },
         get antiSpamRows() { return antiSpamRows; },
-        row: row
-    }
+        row: row,
+        toString: function () {
+            if (!exists()) return "";
+            var ret = ["AntiSpamReport"];
+            antiSpamRows.forEach(function (row) {
+                if (row.value) { ret.push(row); }
+            });
+            return ret.join("\n");
+        }
+    };
 });

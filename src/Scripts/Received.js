@@ -22,9 +22,7 @@ var Received = (function () {
 
         var receivedFields = {};
         receivedFields["sourceHeader"] = ReceivedField("", receivedHeader);
-        receivedFields["delaySort"] = ReceivedField("", -1);
-        receivedFields["percent"] = ReceivedField("", 0);
-
+        receivedFields["hop"] = ReceivedField(mhaStrings.mha_hop);
         receivedFields["from"] = ReceivedField(mhaStrings.mha_receivedFrom);
         receivedFields["by"] = ReceivedField(mhaStrings.mha_receivedBy);
         receivedFields["with"] = ReceivedField(mhaStrings.mha_receivedWith);
@@ -32,9 +30,22 @@ var Received = (function () {
         receivedFields["for"] = ReceivedField(mhaStrings.mha_receivedFor);
         receivedFields["via"] = ReceivedField(mhaStrings.mha_receivedVia);
         receivedFields["date"] = ReceivedField(mhaStrings.mha_receivedDate);
-        receivedFields["dateNum"] = ReceivedField(mhaStrings.mha_receivedDateNum);
+        receivedFields["delay"] = ReceivedField(mhaStrings.mha_delay);
+        receivedFields["percent"] = ReceivedField(mhaStrings.mha_receivedPercent, 0);
+        receivedFields["delaySort"] = ReceivedField("", -1);
+        receivedFields["dateNum"] = ReceivedField("");
+        receivedFields.toString = function () {
+            var str = [];
+            for (var fieldName in receivedFields) {
+                if (receivedFields[fieldName].label && receivedFields[fieldName].toString()) {
+                    str.push(receivedFields[fieldName].label + ": " + receivedFields[fieldName].toString());
+                }
+            }
 
-        function setField(fieldName, fieldValue) {
+            return str.join("\n");
+        }
+
+        var setField = function (fieldName, fieldValue) {
             if (!fieldName || !fieldValue || !receivedFields[fieldName.toLowerCase()]) {
                 return false;
             }
@@ -183,20 +194,20 @@ var Received = (function () {
         iLastTime = NaN;
 
         receivedRows.forEach(function (row, index) {
-            row.hop = index + 1;
-            row.delay = computeTime(row.dateNum, iLastTime);
+            row.hop.value = index + 1;
+            row.delay.value = computeTime(row.dateNum, iLastTime);
 
             if (!isNaN(row.dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
-                row.delaySort = row.dateNum - iLastTime;
+                row.delaySort.value = row.dateNum.value - iLastTime;
 
                 // Only positive delays will get percentage bars. Negative delays will be color coded at render time.
-                if (row.delaySort > 0) {
-                    row.percent = 100 * row.delaySort / iDelta;
+                if (row.delaySort.value > 0) {
+                    row.percent.value = 100 * row.delaySort.value / iDelta;
                 }
             }
 
             if (!isNaN(row.dateNum)) {
-                iLastTime = row.dateNum;
+                iLastTime = row.dateNum.value;
             }
         });
 
@@ -263,6 +274,16 @@ var Received = (function () {
         get sortColumn() { return sortColumn; },
         get sortOrder() { return sortOrder; },
         parseHeader: parseHeader, // For testing only
-        computeTime: computeTime // For testing only
+        computeTime: computeTime, // For testing only
+        toString: function () {
+            if (!exists()) return "";
+            var ret = ["Received"];
+            var rows = [];
+            receivedRows.forEach(function (row) {
+                rows.push(row);
+            });
+            if (rows.length) ret.push(rows.join("\n\n"));
+            return ret.join("\n");
+        }
     };
 });

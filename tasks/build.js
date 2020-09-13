@@ -81,6 +81,7 @@ const targets = {
     "GetHeadersEWS.min.js": ["GetHeadersEWS.js"],
     "GetHeadersRest.min.js": ["GetHeadersRest.js"],
     "Headers.min.js": ["Headers.js"],
+    "message.min.js": ["message.js"],
     "MobilePane-ios.min.js": ["MobilePane-ios.js"],
     "MobilePane.min.js": ["MobilePane.js"],
     "Other.min.js": ["Other.js"],

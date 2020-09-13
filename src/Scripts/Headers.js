@@ -4,6 +4,7 @@
 /* global Other */
 /* global Received */
 /* global Summary */
+/* global message */
 /* exported HeaderModel */
 
 var HeaderModel = (function (headers) {
@@ -116,7 +117,20 @@ var HeaderModel = (function (headers) {
         return headerList;
     }
 
-    if (headers) { parseHeaders(headers); }
+    function toString() {
+        var ret = [];
+        if (summary.exists()) ret.push(summary);
+        if (receivedHeaders.exists()) ret.push(receivedHeaders);
+        if (forefrontAntiSpamReport.exists()) ret.push(forefrontAntiSpamReport);
+        if (antiSpamReport.exists()) ret.push(antiSpamReport);
+        if (otherHeaders.exists()) ret.push(otherHeaders);
+        return ret.join("\n\n");
+    }
+
+    if (headers) {
+        parseHeaders(headers);
+        message.postMessageToParent("modelToString", toString());
+    }
 
     return {
         originalHeaders: originalHeaders,
@@ -128,6 +142,7 @@ var HeaderModel = (function (headers) {
         get hasData() { return hasData || status; },
         GetHeaderList: GetHeaderList,
         get status() { return status; },
-        set status(value) { status = value; }
-    }
+        set status(value) { status = value; },
+        toString: toString
+    };
 });
