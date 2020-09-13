@@ -5,7 +5,6 @@
 // This is the "new" UI rendered in newDesktopFrame.html
 
 (function () {
-    var viewModel = null;
     var overlay = null;
     var spinner = null;
 
@@ -122,7 +121,7 @@
     }
 
     function buildViews(headers) {
-        viewModel = HeaderModel(headers);
+        var viewModel = HeaderModel(headers);
         // Build summary view
         var summaryList = $(".summary-list");
         var headerVal;

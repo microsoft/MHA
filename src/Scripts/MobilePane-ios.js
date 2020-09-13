@@ -7,7 +7,6 @@
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
 (function () {
-    var viewModel = null;
     // Framework7 app object
     var myApp = null;
 
@@ -76,7 +75,7 @@
     }
 
     function buildViews(headers) {
-        viewModel = HeaderModel(headers);
+        var viewModel = HeaderModel(headers);
 
         // Build summary view
         var summaryContent = $("#summary-content");

@@ -148,6 +148,6 @@ var HeaderModel = (function (headers) {
         GetHeaderList: GetHeaderList,
         get status() { return status; },
         set status(value) { status = value; },
-        toString: toString()
+        toString: toString
     };
 });
