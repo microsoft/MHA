@@ -61,9 +61,16 @@
     </div>
     <div id="SectionContent">
         <textarea id="inputHeaders" autofocus="autofocus" placeholder="Paste headers here." required="required" rows="15"></textarea>
-        <input onclick="StandAlone.analyze()" type="button" value="Analyze headers" />
-        <input id="clearButton" class="hiddenElement" onclick="StandAlone.clear()" type="button" value="Clear" />
-        <input id="copyButton" class="hiddenElement" onclick="StandAlone.copy()" type="button" value="&#x1f4cb; Copy" />
+        <button class="ms-Button ms-Button--primary" onclick="StandAlone.analyze()">
+            <span class="ms-Button-label">Analyze headers</span>
+        </button>
+        <button class="ms-Button hiddenElement" id="clearButton" onclick="StandAlone.clear()" value="Clear">
+            <span class="ms-Button-label">Clear</span>
+        </button>
+        <button class="ms-Button hiddenElement" id="copyButton" onclick="StandAlone.copy()" value="Copy">
+            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--Copy"></i></span>
+            <span class="ms-Button-label">Copy</span>
+        </button>
         <span id="mhaFooter">
             <a href="https://github.com/stephenegriffin/mha" target="_blank">Submit feedback on github</a>
         </span>
