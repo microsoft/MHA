@@ -1,6 +1,20 @@
+/* global $ */
+/* global appInsights */
 /* exported mhaStrings */
 
 var mhaStrings = (function () {
+    function copyToClipboard(str) {
+        var textArea = document.createElement('textarea');
+        textArea.style.position = 'absolute';
+        textArea.style.opacity = '0';
+        textArea.value = str;
+        document.body.appendChild(textArea);
+        textArea.select();
+        var succeeded = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (appInsights) appInsights.trackEvent("copy", { succeeded: succeeded });
+    }
+
     function htmlEncode(value) { return value ? $('<div />').text(value).html() : ''; }
 
     function mapHeaderToURL(headerName, text) {
@@ -80,6 +94,7 @@ var mhaStrings = (function () {
     ];
 
     return {
+        copyToClipboard: copyToClipboard,
         mapHeaderToURL: mapHeaderToURL,
         mapValueToURL: mapValueToURL,
         // REST

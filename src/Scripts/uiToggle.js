@@ -6,6 +6,7 @@
 /* global Errors */
 /* global GetHeaders */
 /* global message */
+/* global mhaStrings */
 /* exported ParentFrame */
 
 // Controller for Settings screen which controls what is being displayed
@@ -295,19 +296,7 @@ var ParentFrame = (function () {
 
         var copyButton = header.querySelector(".copy-button");
         copyButton.onclick = function () {
-            // Do the copy.
-            function writeText(str) {
-                function setData(e) {
-                    e.clipboardData.setData("text/plain", str);
-                    e.preventDefault();
-                }
-
-                document.addEventListener("copy", setData);
-                document.execCommand("copy");
-                document.removeEventListener("copy", setData);
-            }
-
-            writeText(modelToString);
+            mhaStrings.copyToClipboard(modelToString);
         };
 
         function actionHandler() {
