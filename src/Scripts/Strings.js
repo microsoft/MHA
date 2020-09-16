@@ -12,7 +12,28 @@ var mhaStrings = (function () {
         textArea.select();
         var succeeded = document.execCommand('copy');
         document.body.removeChild(textArea);
-        if (appInsights) appInsights.trackEvent("copy", { succeeded: succeeded });
+        if (appInsights) appInsights.trackEvent("copy", { succeeded: succeeded, style: "textarea" });
+
+        if (!succeeded) {
+            try {
+                navigator.clipboard.writeText(str).then(function () {
+                    if (appInsights) appInsights.trackEvent("copy", { succeeded: "true", style: "navigator" });
+                }, function () {
+                    if (appInsights) appInsights.trackEvent("copy", { succeeded: "false", style: "navigator" });
+                });
+            }
+            catch (e) { }
+        }
+
+        try {
+            if (appInsights) {
+                var queryOpts = { name: 'clipboard-write', allowWithoutGesture: false };
+                navigator.permissions.query(queryOpts).then(function (result) {
+                    appInsights.trackEvent("copy", { succeeded: succeeded, style: "permissions", clipboardWrite: result.state });
+                });
+            }
+        }
+        catch (e) { }
     }
 
     function htmlEncode(value) { return value ? $('<div />').text(value).html() : ''; }
