@@ -65,8 +65,13 @@ var StandAlone = (function () {
         Table.recalculateVisibility();
     }
 
+    function copy() {
+        mhaStrings.copyToClipboard(viewModel.toString());
+    }
+
     return {
         analyze: analyze,
-        clear: clear
+        clear: clear,
+        copy: copy
     };
 })();

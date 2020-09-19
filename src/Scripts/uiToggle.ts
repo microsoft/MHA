@@ -5,6 +5,8 @@
 /* global Diagnostics */
 /* global Errors */
 /* global GetHeaders */
+/* global message */
+/* global mhaStrings */
 /* exported ParentFrame */
 
 // Controller for Settings screen which controls what is being displayed
@@ -18,6 +20,7 @@ var ParentFrame = (function () {
     var deferredErrors = [];
     var deferredStatus = [];
     var headers = "";
+    var modelToString = "";
 
     function choice(label, url, checked) {
         return { label: label, url: url, checked: checked };
@@ -55,16 +58,12 @@ var ParentFrame = (function () {
         return null;
     }
 
-    function site() { return window.location.protocol + "//" + window.location.host; }
-
     function postMessageToFrame(eventName, data) {
-        if (iFrame) {
-            iFrame.postMessage({ eventName: eventName, data: data }, site());
-        }
+        message.postMessageToFrame(iFrame, eventName, data);
     }
 
     function eventListener(event) {
-        if (!event || event.origin !== site()) return;
+        if (!event || event.origin !== message.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {
@@ -73,6 +72,9 @@ var ParentFrame = (function () {
                     break;
                 case "LogError":
                     Errors.log(JSON.parse(event.data.data.error), event.data.data.message);
+                    break;
+                case "modelToString":
+                    modelToString = event.data.data;
                     break;
             }
         }
@@ -278,9 +280,9 @@ var ParentFrame = (function () {
             new fabric["ChoiceFieldGroup"](choiceFieldGroupElements[i]);
         }
 
-        var button = header.querySelector(".dialog-button");
+        var settingsButton = header.querySelector(".gear-button");
         // When clicking the button, open the dialog
-        button.onclick = function () {
+        settingsButton.onclick = function () {
             // Set the current choice in the UI.
             $("#uiChoice input").attr("checked", false);
             var labels = $("#uiChoice label");
@@ -292,6 +294,11 @@ var ParentFrame = (function () {
             var input = currentSelected.prevAll("input:first");
             input.prop("checked", "true");
             dialogSettingsComponent.open();
+        };
+
+        var copyButton = header.querySelector(".copy-button");
+        copyButton.onclick = function () {
+            mhaStrings.copyToClipboard(modelToString);
         };
 
         function actionHandler() {

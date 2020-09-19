@@ -1,7 +1,42 @@
+/* global $ */
+/* global appInsights */
 /* exported mhaStrings */
 
 var mhaStrings = (function () {
     "use strict";
+
+    function copyToClipboard(str) {
+        var textArea = document.createElement('textarea');
+        textArea.style.position = 'absolute';
+        textArea.style.opacity = '0';
+        textArea.value = str;
+        document.body.appendChild(textArea);
+        textArea.select();
+        var succeeded = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (appInsights) appInsights.trackEvent("copy", { succeeded: succeeded, style: "textarea" });
+
+        if (!succeeded) {
+            try {
+                navigator.clipboard.writeText(str).then(function () {
+                    if (appInsights) appInsights.trackEvent("copy", { succeeded: "true", style: "navigator" });
+                }, function () {
+                    if (appInsights) appInsights.trackEvent("copy", { succeeded: "false", style: "navigator" });
+                });
+            }
+            catch (e) { }
+        }
+
+        try {
+            if (appInsights) {
+                var queryOpts = { name: 'clipboard-write', allowWithoutGesture: false };
+                navigator.permissions.query(queryOpts).then(function (result) {
+                    appInsights.trackEvent("copy", { succeeded: succeeded, style: "permissions", clipboardWrite: result.state });
+                });
+            }
+        }
+        catch (e) { }
+    }
 
     function htmlEncode(value) { return value ? $('<div />').text(value).html() : ''; }
 
@@ -82,6 +117,7 @@ var mhaStrings = (function () {
     ];
 
     return {
+        copyToClipboard: copyToClipboard,
         mapHeaderToURL: mapHeaderToURL,
         mapValueToURL: mapValueToURL,
         // REST
@@ -135,7 +171,7 @@ var mhaStrings = (function () {
         mha_receivedFor: "For",
         mha_receivedVia: "Via",
         mha_receivedDate: "Date",
-        mha_receivedDateNum: "DateNum",
+        mha_receivedPercent: "Percent",
 
         // Other
         mha_number: "#",

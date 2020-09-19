@@ -37,5 +37,13 @@ var ForefrontAntiSpamReport = (function () {
         get source() { return antiSpamReport.source; },
         get unparsed() { return antiSpamReport.unparsed; },
         get forefrontAntiSpamRows() { return forefrontAntiSpamRows; },
+        toString: function () {
+            if (!exists()) return "";
+            var ret = ["ForefrontAntiSpamReport"];
+            forefrontAntiSpamRows.forEach(function (row) {
+                if (row.value) { ret.push(row); }
+            });
+            return ret.join("\n");
+        }
     };
 });

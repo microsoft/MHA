@@ -7,7 +7,8 @@ var Other = (function () {
             number: number,
             header: header,
             url: mhaStrings.mapHeaderToURL(header, null),
-            value: value
+            value: value,
+            toString: function () { return header + ": " + value; }
         }
     };
 
@@ -49,6 +50,14 @@ var Other = (function () {
         get otherRows() { return otherRows; },
         doSort: doSort,
         get sortColumn() { return sortColumn; },
-        get sortOrder() { return sortOrder; }
-    };
+        get sortOrder() { return sortOrder; },
+        toString: function () {
+            if (!exists()) return "";
+            var ret = ["Other"];
+            otherRows.forEach(function (row) {
+                if (row.value) { ret.push(row); }
+            });
+            return ret.join("\n");
+        }
+    }
 });

@@ -14,7 +14,8 @@ var Table = (function () {
         ["#response", function () { return viewModel.hasData; }],
         ["#status", function () { return viewModel.status; }],
         [".extraCol", function () { return showExtra; }],
-        ["#clearButton", function () { return viewModel.hasData; }]
+        ["#clearButton", function () { return viewModel.hasData; }],
+        ["#copyButton", function () { return viewModel.hasData; }]
     ];
 
     // Initializes the UI with a viewModel
