@@ -3,6 +3,8 @@
 /* exported Summary */
 
 var Summary = (function () {
+    "use strict";
+
     var SummaryRow = function (header, label, onSet, onGet, onGetUrl) {
         var value = "";
 

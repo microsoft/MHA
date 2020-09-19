@@ -1,6 +1,5 @@
 ﻿/* global cptable */
 /* exported Decoder */
-/// <reference path="..." />
 
 var Decoder = (function () {
     "use strict";

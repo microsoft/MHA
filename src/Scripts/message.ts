@@ -1,6 +1,8 @@
 /* exported message*/
 
 var message = (function () {
+    "use strict";
+
     function site() { return window.location.protocol + "//" + window.location.host; }
 
     function postMessageToFrame(frame, eventName, data) {
@@ -17,5 +19,5 @@ var message = (function () {
         postMessageToParent: postMessageToParent,
         postMessageToFrame: postMessageToFrame,
         site: site
-    }
+    };
 })();
