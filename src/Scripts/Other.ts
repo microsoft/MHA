@@ -2,6 +2,8 @@
 /* exported Other */
 
 var Other = (function () {
+    "use strict";
+
     var row = function (number, header, value) {
         return {
             number: number,
@@ -35,7 +37,7 @@ var Other = (function () {
     }
 
     function add(otherHeader) {
-        otherRows.push(new row(
+        otherRows.push(row(
             otherRows.length + 1,
             otherHeader.header,
             row.value = otherHeader.value));

@@ -4,6 +4,8 @@
 // Check mobile platform
 
 $(document).ready(function () {
+    "use strict";
+
     function insertData(id, headerText, valueText) {
         var pane = $("#" + id);
 
@@ -27,12 +29,12 @@ $(document).ready(function () {
             if (this.readyState == 2) {
                 insertData('diag', 'Last update', client.getResponseHeader("Last-Modified"));
             }
-        }
+        };
         client.send();
     }
 
     // Temporary hack for oddball Outlook for iOS user agent
-    var ios = window.navigator.userAgent.match(/(Outlook-iOS)/);
+    var ios = !!window.navigator.userAgent.match(/(Outlook-iOS)/);
 
     // iPad OS no longer includes iOS, so we detect it differently
     if (window.navigator.userAgent.match(/(Mac OS X)/)) {

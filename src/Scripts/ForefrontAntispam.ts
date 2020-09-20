@@ -3,6 +3,8 @@
 /* exported ForefrontAntiSpamReport */
 
 var ForefrontAntiSpamReport = (function () {
+    "use strict";
+
     // cheap inheritance
     var antiSpamReport = AntiSpamReport();
     var forefrontAntiSpamRows = [

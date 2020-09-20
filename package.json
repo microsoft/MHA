@@ -8,6 +8,7 @@
   },
   "main": "Pages/mha.html",
   "scripts": {
+    "ts": "tsc",
     "build": "node tasks/build.js",
     "build-debug": "node tasks/build.js debug",
     "clean": "node tasks/clean.js",
@@ -25,6 +26,7 @@
   "homepage": "https://github.com/stephenegriffin/mha#readme",
   "dependencies": {
     "@microsoft/office-js": "^1.1.43",
+    "@types/jquery": "^3.3.31",
     "codepage": "^1.14.0",
     "framework7-icons": "^3.0.1",
     "jquery": "^3.5.1",
@@ -37,10 +39,14 @@
   "-vs-binding": {
     "BeforeBuild": [
       "clean",
+      "ts",
       "build-debug"
     ],
     "Clean": [
       "clean"
     ]
+  },
+  "devDependencies": {
+    "typescript": "^3.7.3"
   }
 }

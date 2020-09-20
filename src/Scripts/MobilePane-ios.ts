@@ -8,6 +8,8 @@
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
 (function () {
+    "use strict";
+
     // Framework7 app object
     var myApp = null;
 

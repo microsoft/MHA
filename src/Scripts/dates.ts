@@ -1,6 +1,8 @@
 /* exported mhaDates */
 
 var mhaDates = (function () {
+    "use strict";
+
     // parse date using moment, with fallback to browser based parsing
     function parseDate(date) {
         // Cross browser dates - ugh!
@@ -59,5 +61,5 @@ var mhaDates = (function () {
 
     return {
         parseDate: parseDate
-    }
+    };
 })();

@@ -20,6 +20,8 @@
  */
 
 var GetHeadersRest = (function () {
+    "use strict";
+
     function send(headersLoadedCallback) {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (REST)", true);
@@ -150,5 +152,5 @@ var GetHeadersRest = (function () {
 
     return {
         send: send
-    }
+    };
 })();

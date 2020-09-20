@@ -105,7 +105,7 @@ const targets = {
 };
 
 console.log("Deploying script");
-const scriptsFolderSrc = path.join(__dirname, "..", "src", "Scripts");
+const scriptsFolderSrc = path.join(__dirname, "..", "src", "transpiled");
 const scriptsFolderDst = path.join(__dirname, "..", "Scripts", version);
 for (const targetName of Object.keys(targets)) {
     const fileSet = targets[targetName];

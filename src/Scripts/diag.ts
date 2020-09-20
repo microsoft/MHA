@@ -16,6 +16,8 @@ var mhaVersionScriptPath = (function () {
 }());
 
 var Diagnostics = (function () {
+    "use strict";
+
     var appDiagnostics = null;
     var itemDiagnostics = null;
     var lastUpdate = "";
@@ -226,7 +228,7 @@ var Diagnostics = (function () {
         get: get,
         set: set,
         clear: clear
-    }
+    };
 })();
 
 // Inject our version variable
@@ -277,4 +279,3 @@ script.onload = function () {
 };
 script.src = window.location.origin + '/Scripts/aikey.js';
 document.getElementsByTagName('script')[0].parentNode.appendChild(script);
-

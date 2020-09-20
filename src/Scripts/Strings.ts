@@ -3,6 +3,8 @@
 /* exported mhaStrings */
 
 var mhaStrings = (function () {
+    "use strict";
+
     function copyToClipboard(str) {
         var textArea = document.createElement('textarea');
         textArea.style.position = 'absolute';
@@ -197,5 +199,5 @@ var mhaStrings = (function () {
 
         // AntiSpamReport
         mha_bcl: "Bulk Complaint Level"
-    }
+    };
 })();

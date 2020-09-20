@@ -6,6 +6,8 @@
 // This is the "new" UI rendered in newDesktopFrame.html
 
 (function () {
+    "use strict";
+
     var overlay = null;
     var spinner = null;
 

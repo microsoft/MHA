@@ -3,6 +3,8 @@
 /* exported Errors */
 
 var Errors = (function () {
+    "use strict";
+
     var errorArray = [];
     function clear() { errorArray = []; }
 
@@ -150,5 +152,5 @@ var Errors = (function () {
         parse: parse,
         getErrorMessage: getErrorMessage,
         getErrorStack: getErrorStack
-    }
+    };
 })();

@@ -3,6 +3,8 @@
 /* exported Table */
 
 var Table = (function () {
+    "use strict";
+
     var viewModel = null;
     var showExtra = false;
     var column = function (id, label, columnClass) { return { id: id, label: label, class: columnClass }; };
@@ -470,5 +472,5 @@ var Table = (function () {
         rebuildTables: rebuildTables, // Used by Standalone.js and Default.js to rebuild with new viewModel
         recalculateVisibility: recalculateVisibility, // Recompute visibility with the current viewModel. Does not repopulate.
         resetArrows: resetArrows
-    }
+    };
 })();

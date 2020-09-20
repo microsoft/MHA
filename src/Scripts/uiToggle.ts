@@ -13,6 +13,8 @@
 // and which UI to use.
 
 var ParentFrame = (function () {
+    "use strict";
+
     var iFrame = null;
     var currentChoice = {};
     var deferredErrors = [];
@@ -349,7 +351,7 @@ var ParentFrame = (function () {
         updateStatus: updateStatus,
         showError: showError,
         get choice() { return currentChoice; }
-    }
+    };
 })();
 
 Office.initialize = function () {

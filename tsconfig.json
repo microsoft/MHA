@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "./src/transpiled",
+    "allowJs": true,
+    "target": "es5"
+  },
+    "include": [
+        "./src/Scripts/**/*"
+    ]
+}
