@@ -113,10 +113,10 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
 
 :: 4. Restore nuget packages
 echo 4. Restore nuget packages
-IF EXIST "%DEPLOYMENT_TARGET%\package.config" (
+IF EXIST "%DEPLOYMENT_TARGET%\packages.config" (
   echo Running nuget restore
   pushd "%DEPLOYMENT_TARGET%"
-  call :ExecuteCmd nuget restore "%DEPLOYMENT_TARGET%\package.config"
+  call :ExecuteCmd nuget restore "%DEPLOYMENT_TARGET%\packages.config"
   IF !ERRORLEVEL! NEQ 0 goto error
   echo Completed nuget restore
   popd
