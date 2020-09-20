@@ -99,7 +99,7 @@ var AntiSpamReport = (function () {
             if (!exists()) return "";
             var ret = ["AntiSpamReport"];
             antiSpamRows.forEach(function (row) {
-                if (row.value) { ret.push(row); }
+                if (row.value) { ret.push(row.toString()); }
             });
             return ret.join("\n");
         }

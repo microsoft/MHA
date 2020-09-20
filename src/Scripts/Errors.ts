@@ -51,7 +51,7 @@ var Errors = (function () {
     // error - an exception object
     // message - a string describing the error
     // suppressTracking - boolean indicating if we should suppress tracking
-    function log(error, message, suppressTracking) {
+    function log(error, message: string, suppressTracking?: boolean) {
         if (error && !suppressTracking && appInsights) {
             var props = {
                 Message: message,

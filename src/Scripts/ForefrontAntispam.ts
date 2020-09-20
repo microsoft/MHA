@@ -41,7 +41,7 @@ var ForefrontAntiSpamReport = (function () {
             if (!exists()) return "";
             var ret = ["ForefrontAntiSpamReport"];
             forefrontAntiSpamRows.forEach(function (row) {
-                if (row.value) { ret.push(row); }
+                if (row.value) { ret.push(row.toString()); }
             });
             return ret.join("\n");
         }

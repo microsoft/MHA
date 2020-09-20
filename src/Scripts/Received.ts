@@ -14,7 +14,7 @@ var Received = (function () {
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
     var parseHeader = function (receivedHeader) {
-        var ReceivedField = function (_label, _value) {
+        var ReceivedField = function (_label: string, _value?) {
             return {
                 label: _label,
                 value: _value !== undefined ? _value : "",

@@ -159,7 +159,7 @@ var ParentFrame = (function () {
     }
 
     // Tells the UI to show an error.
-    function showError(error, message, suppressTracking) {
+    function showError(error, message: string, suppressTracking?: boolean) {
         Errors.log(error, message, suppressTracking);
 
         if (iFrame) {

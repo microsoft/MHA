@@ -7,7 +7,7 @@
 /* global message */
 /* exported HeaderModel */
 
-var HeaderModel = (function (headers) {
+var HeaderModel = (function (headers?: string) {
     "use strict";
 
     var summary = Summary();

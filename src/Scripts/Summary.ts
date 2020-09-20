@@ -5,7 +5,7 @@
 var Summary = (function () {
     "use strict";
 
-    var SummaryRow = function (header, label, onSet, onGet, onGetUrl) {
+    var SummaryRow = function (header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {
         var value = "";
 
         return {
@@ -94,7 +94,7 @@ var Summary = (function () {
             if (!exists()) return "";
             var ret = ["Summary"];
             summaryRows.forEach(function (row) {
-                if (row.value) { ret.push(row); }
+                if (row.value) { ret.push(row.toString()); }
             });
             return ret.join("\n");
         }
