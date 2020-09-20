@@ -9,40 +9,7 @@
 (function () {
     "use strict";
 
-    var viewModel = null;
-    // This function is run when the app is ready to start interacting with the host application.
-    // It ensures the DOM is ready before updating the span elements with values from the current message.
-    $(document).ready(function () {
-        try {
-            viewModel = HeaderModel();
-            Table.initializeTableUI(viewModel);
-            updateStatus(mhaStrings.mha_loading);
-            window.addEventListener("message", eventListener, false);
-            message.postMessageToParent("frameActive");
-        }
-        catch (e) {
-            postError(e, "Failed initializing frame");
-            showError(e, "Failed initializing frame");
-        }
-    });
-
-    function eventListener(event) {
-        if (!event || event.origin !== message.site()) return;
-
-        if (event.data) {
-            switch (event.data.eventName) {
-                case "showError":
-                    showError(JSON.parse(event.data.data.error), event.data.data.message);
-                    break;
-                case "updateStatus":
-                    updateStatus(event.data.data);
-                    break;
-                case "renderItem":
-                    renderItem(event.data.data);
-                    break;
-            }
-        }
-    }
+    let viewModel = null;
 
     function postError(error, message) {
         message.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
@@ -84,4 +51,38 @@
         disableSpinner();
         Table.rebuildSections(viewModel);
     }
+
+    function eventListener(event) {
+        if (!event || event.origin !== message.site()) return;
+
+        if (event.data) {
+            switch (event.data.eventName) {
+                case "showError":
+                    showError(JSON.parse(event.data.data.error), event.data.data.message);
+                    break;
+                case "updateStatus":
+                    updateStatus(event.data.data);
+                    break;
+                case "renderItem":
+                    renderItem(event.data.data);
+                    break;
+            }
+        }
+    }
+
+    // This function is run when the app is ready to start interacting with the host application.
+    // It ensures the DOM is ready before updating the span elements with values from the current message.
+    $(document).ready(function () {
+        try {
+            viewModel = HeaderModel();
+            Table.initializeTableUI(viewModel);
+            updateStatus(mhaStrings.mha_loading);
+            window.addEventListener("message", eventListener, false);
+            message.postMessageToParent("frameActive");
+        }
+        catch (e) {
+            postError(e, "Failed initializing frame");
+            showError(e, "Failed initializing frame");
+        }
+    });
 })();

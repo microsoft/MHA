@@ -1,6 +1,6 @@
 /* exported message*/
 
-var message = (function () {
+const message = (function () {
     "use strict";
 
     function site() { return window.location.protocol + "//" + window.location.host; }

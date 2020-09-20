@@ -2,17 +2,17 @@
 /* global appInsights */
 /* exported mhaStrings */
 
-var mhaStrings = (function () {
+const mhaStrings = (function () {
     "use strict";
 
     function copyToClipboard(str) {
-        var textArea = document.createElement('textarea');
+        const textArea = document.createElement('textarea');
         textArea.style.position = 'absolute';
         textArea.style.opacity = '0';
         textArea.value = str;
         document.body.appendChild(textArea);
         textArea.select();
-        var succeeded = document.execCommand('copy');
+        const succeeded = document.execCommand('copy');
         document.body.removeChild(textArea);
         if (appInsights) appInsights.trackEvent("copy", { succeeded: succeeded, style: "textarea" });
 
@@ -29,7 +29,7 @@ var mhaStrings = (function () {
 
         try {
             if (appInsights) {
-                var queryOpts = { name: 'clipboard-write', allowWithoutGesture: false };
+                const queryOpts = { name: 'clipboard-write', allowWithoutGesture: false };
                 navigator.permissions.query(queryOpts).then(function (result) {
                     appInsights.trackEvent("copy", { succeeded: succeeded, style: "permissions", clipboardWrite: result.state });
                 });
@@ -38,27 +38,7 @@ var mhaStrings = (function () {
         catch (e) { }
     }
 
-    function htmlEncode(value) { return value ? $('<div />').text(value).html() : ''; }
-
-    function mapHeaderToURL(headerName, text) {
-        for (var i = 0; i < headerToURLMap.length; i++) {
-            if (headerName.toLowerCase() === headerToURLMap[i][0].toLowerCase()) {
-                return ["<a href = '", headerToURLMap[i][1], "' target = '_blank'>", htmlEncode(text || headerName), "</a>"].join("");
-            }
-        }
-
-        return null;
-    }
-
-    function mapValueToURL(text) {
-        try {
-            return ["<a href='", text, "' target='_blank'>", htmlEncode(text), "</a>"].join("");
-        } catch (e) {
-            return text;
-        }
-    }
-
-    var headerToURLMap = [
+    const headerToURLMap = [
         ["Accept-Language", "https://tools.ietf.org/html/rfc3282"],
         ["Archived-At", "https://tools.ietf.org/html/rfc5064"],
         ["Authentication-Results", "https://tools.ietf.org/html/rfc7601"],
@@ -115,6 +95,26 @@ var mhaStrings = (function () {
         ["X-Priority", "https://technet.microsoft.com/en-us/library/bb691107"],
         ["SFS", "https://docs.microsoft.com/en-us/exchange/monitoring/trace-an-email-message/run-a-message-trace-and-view-results"]
     ];
+
+    function htmlEncode(value) { return value ? $('<div />').text(value).html() : ''; }
+
+    function mapHeaderToURL(headerName, text) {
+        for (let i = 0; i < headerToURLMap.length; i++) {
+            if (headerName.toLowerCase() === headerToURLMap[i][0].toLowerCase()) {
+                return ["<a href = '", headerToURLMap[i][1], "' target = '_blank'>", htmlEncode(text || headerName), "</a>"].join("");
+            }
+        }
+
+        return null;
+    }
+
+    function mapValueToURL(text) {
+        try {
+            return ["<a href='", text, "' target='_blank'>", htmlEncode(text), "</a>"].join("");
+        } catch (e) {
+            return text;
+        }
+    }
 
     return {
         copyToClipboard: copyToClipboard,

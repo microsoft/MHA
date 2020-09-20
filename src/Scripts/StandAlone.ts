@@ -6,18 +6,28 @@
 /* global Table */
 /* exported StandAlone */
 
-var StandAlone = (function () {
+const StandAlone = (function () {
     "use strict";
 
-    var viewModel = null;
+    let viewModel = null;
 
-    if (window.jQuery) {
-        $(document).ready(function () {
-            Diagnostics.set("API used", "standalone");
-            viewModel = HeaderModel();
-            Table.initializeTableUI(viewModel);
-            Table.makeResizablePane("inputHeaders", mhaStrings.mha_prompt, null);
-        });
+    function enableSpinner() {
+        $("#response").css("background-image", "url(/Resources/loader.gif)");
+        $("#response").css("background-repeat", "no-repeat");
+        $("#response").css("background-position", "center");
+    }
+
+    function disableSpinner() {
+        $("#response").css("background", "none");
+    }
+
+    function updateStatus(statusText) {
+        $("#status").text(statusText);
+        if (viewModel !== null) {
+            viewModel.status = statusText;
+        }
+
+        Table.recalculateVisibility();
     }
 
     // Do our best at recognizing RFC 2822 headers:
@@ -46,27 +56,17 @@ var StandAlone = (function () {
         Table.rebuildSections(viewModel);
     }
 
-    function enableSpinner() {
-        $("#response").css("background-image", "url(/Resources/loader.gif)");
-        $("#response").css("background-repeat", "no-repeat");
-        $("#response").css("background-position", "center");
-    }
-
-    function disableSpinner() {
-        $("#response").css("background", "none");
-    }
-
-    function updateStatus(statusText) {
-        $("#status").text(statusText);
-        if (viewModel !== null) {
-            viewModel.status = statusText;
-        }
-
-        Table.recalculateVisibility();
-    }
-
     function copy() {
         mhaStrings.copyToClipboard(viewModel.toString());
+    }
+
+    if (window.jQuery) {
+        $(document).ready(function () {
+            Diagnostics.set("API used", "standalone");
+            viewModel = HeaderModel();
+            Table.initializeTableUI(viewModel);
+            Table.makeResizablePane("inputHeaders", mhaStrings.mha_prompt, null);
+        });
     }
 
     return {

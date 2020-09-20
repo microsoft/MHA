@@ -7,14 +7,14 @@ $(document).ready(function () {
     "use strict";
 
     function insertData(id, headerText, valueText) {
-        var pane = $("#" + id);
+        const pane = $("#" + id);
 
-        var lf = $(document.createElement("br"));
+        const lf = $(document.createElement("br"));
 
-        var header = $(document.createElement("span"));
+        const header = $(document.createElement("span"));
         header.text(headerText + ': ');
 
-        var value = $(document.createElement("span"));
+        const value = $(document.createElement("span"));
         value.text(valueText);
 
         pane.append(header);
@@ -23,10 +23,10 @@ $(document).ready(function () {
     }
 
     function insertLastModified() {
-        var client = new XMLHttpRequest();
+        const client = new XMLHttpRequest();
         client.open("HEAD", "../dist/MobilePane.min.js", true);
         client.onreadystatechange = function () {
-            if (this.readyState == 2) {
+            if (this.readyState === 2) {
                 insertData('diag', 'Last update', client.getResponseHeader("Last-Modified"));
             }
         };
@@ -34,7 +34,7 @@ $(document).ready(function () {
     }
 
     // Temporary hack for oddball Outlook for iOS user agent
-    var ios = !!window.navigator.userAgent.match(/(Outlook-iOS)/);
+    let ios = !!window.navigator.userAgent.match(/(Outlook-iOS)/);
 
     // iPad OS no longer includes iOS, so we detect it differently
     if (window.navigator.userAgent.match(/(Mac OS X)/)) {

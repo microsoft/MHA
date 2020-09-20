@@ -11,38 +11,7 @@
     "use strict";
 
     // Framework7 app object
-    var myApp = null;
-
-    $(document).ready(function () {
-        try {
-            initializeFramework7();
-            updateStatus(mhaStrings.mha_loading);
-            window.addEventListener("message", eventListener, false);
-            message.postMessageToParent("frameActive");
-        }
-        catch (e) {
-            postError(e, "Failed initializing frame");
-            showError(e, "Failed initializing frame");
-        }
-    });
-
-    function eventListener(event) {
-        if (!event || event.origin !== message.site()) return;
-
-        if (event.data) {
-            switch (event.data.eventName) {
-                case "showError":
-                    showError(JSON.parse(event.data.data.error), event.data.data.message);
-                    break;
-                case "updateStatus":
-                    updateStatus(event.data.data);
-                    break;
-                case "renderItem":
-                    renderItem(event.data.data);
-                    break;
-            }
-        }
-    }
+    let myApp = null;
 
     function postError(error, message) {
         message.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
@@ -57,30 +26,71 @@
         myApp.addView("#other-view");
     }
 
-    function renderItem(headers) {
-        // Empty data
-        $("#summary-content").empty();
-        $("#received-content").empty();
-        $("#antispam-content").empty();
-        $("#other-content").empty();
-        $("#original-headers").empty();
+    function updateStatus(message) {
+        if (myApp) {
+            myApp.hidePreloader();
+            myApp.showPreloader(message);
+        }
+    }
 
-        updateStatus(mhaStrings.mha_loading);
+    function addCalloutEntry(name, value, parent) {
+        if (value) {
+            $("<p/>")
+                .addClass("wrap-line")
+                .html("<strong>" + name + ": </strong>" + value)
+                .appendTo(parent);
+        }
+    }
 
-        buildViews(headers);
-        if (myApp) myApp.hidePreloader();
+    function addSpamReportRow(spamRow, parent) {
+        if (spamRow.value) {
+            const item = $("<li/>")
+                .addClass("accordion-item")
+                .appendTo(parent);
+
+            const link = $("<a/>")
+                .addClass("item-content")
+                .addClass("item-link")
+                .attr("href", "#")
+                .appendTo(item);
+
+            const innerItem = $("<div/>")
+                .addClass("item-inner")
+                .appendTo(link);
+
+            $("<div/>")
+                .addClass("item-title")
+                .text(spamRow.label)
+                .appendTo(innerItem);
+
+            const itemContent = $("<div/>")
+                .addClass("accordion-item-content")
+                .appendTo(item);
+
+            const contentBlock = $("<div/>")
+                .addClass("content-block")
+                .appendTo(itemContent);
+
+            const linkWrap = $("<p/>")
+                .appendTo(contentBlock);
+
+            $($.parseHTML(spamRow.valueUrl))
+                .addClass("external")
+                .appendTo(linkWrap);
+        }
     }
 
     function buildViews(headers) {
-        var viewModel = HeaderModel(headers);
+        const viewModel = HeaderModel(headers);
 
         // Build summary view
-        var summaryContent = $("#summary-content");
-        var contentBlock;
-        var headerVal;
-        var pre;
+        const summaryContent = $("#summary-content");
+        let contentBlock;
+        let headerVal;
+        let pre;
+        let i;
 
-        for (var i = 0; i < viewModel.summary.summaryRows.length; i++) {
+        for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
             if (viewModel.summary.summaryRows[i].value) {
                 $("<div/>")
                     .addClass("content-block-title")
@@ -109,18 +119,18 @@
         }
 
         // Build received view
-        var receivedContent = $("#received-content");
+        const receivedContent = $("#received-content");
 
         if (viewModel.receivedHeaders.receivedRows.length > 0) {
-            var timeline = $("<div/>")
+            const timeline = $("<div/>")
                 .addClass("timeline")
                 .appendTo(receivedContent);
 
-            var currentTime = null;
-            var currentTimeEntry = null;
-            var timelineItem;
-            var timelineDate;
-            var timelineInner;
+            let currentTime = null;
+            let currentTimeEntry = null;
+            let timelineItem;
+            let timelineDate;
+            let timelineInner;
 
             for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
                 if (i === 0) {
@@ -169,7 +179,7 @@
                         .appendTo(timelineInner);
                 } else {
                     // Determine if new timeline item is needed
-                    var entryTime = moment(viewModel.receivedHeaders.receivedRows[i].dateNum).local();
+                    const entryTime = moment(viewModel.receivedHeaders.receivedRows[i].dateNum).local();
 
                     if (entryTime.minute() > currentTime.minute()) {
                         // Into a new minute, create a new timeline item
@@ -213,7 +223,7 @@
                         .html("<strong>To: </strong>" + viewModel.receivedHeaders.receivedRows[i].by)
                         .appendTo(timelineInner);
 
-                    var progress = $("<div/>")
+                    const progress = $("<div/>")
                         .addClass("timeline-item-text")
                         .appendTo(timelineInner);
 
@@ -234,7 +244,7 @@
                 }
 
                 // popover
-                var popover = $("<div/>")
+                const popover = $("<div/>")
                     .addClass("popover")
                     .addClass("popover-" + i)
                     .appendTo(receivedContent);
@@ -243,11 +253,11 @@
                     .addClass("popover-angle")
                     .appendTo(popover);
 
-                var popoverInner = $("<div/>")
+                const popoverInner = $("<div/>")
                     .addClass("popover-inner")
                     .appendTo(popover);
 
-                var popoverContent = $("<div/>")
+                const popoverContent = $("<div/>")
                     .addClass("content-block")
                     .appendTo(popoverInner);
 
@@ -262,12 +272,12 @@
 
             // Add a final empty timeline item to extend
             // timeline
-            var endTimelineItem = $("<div/>")
+            const endTimelineItem = $("<div/>")
                 .addClass("timeline-item")
                 .appendTo(timeline);
 
             currentTime.add(1, "m");
-            var endTimelineDate = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
+            const endTimelineDate = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
             $("<div/>")
                 .addClass("timeline-item-date")
                 .html(endTimelineDate)
@@ -279,9 +289,9 @@
         }
 
         // Build antispam view
-        var antispamContent = $("#antispam-content");
-        var list;
-        var ul;
+        const antispamContent = $("#antispam-content");
+        let list;
+        let ul;
 
         // Forefront
         if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length > 0) {
@@ -324,11 +334,11 @@
         }
 
         // Build other view
-        var otherContent = $("#other-content");
+        const otherContent = $("#other-content");
 
         for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
             if (viewModel.otherHeaders.otherRows[i].value) {
-                var headerName = $("<div/>")
+                const headerName = $("<div/>")
                     .addClass("content-block-title")
                     .text(viewModel.otherHeaders.otherRows[i].header)
                     .appendTo(otherContent);
@@ -358,58 +368,18 @@
         }
     }
 
-    function addSpamReportRow(spamRow, parent) {
-        if (spamRow.value) {
-            var item = $("<li/>")
-                .addClass("accordion-item")
-                .appendTo(parent);
+    function renderItem(headers) {
+        // Empty data
+        $("#summary-content").empty();
+        $("#received-content").empty();
+        $("#antispam-content").empty();
+        $("#other-content").empty();
+        $("#original-headers").empty();
 
-            var link = $("<a/>")
-                .addClass("item-content")
-                .addClass("item-link")
-                .attr("href", "#")
-                .appendTo(item);
+        updateStatus(mhaStrings.mha_loading);
 
-            var innerItem = $("<div/>")
-                .addClass("item-inner")
-                .appendTo(link);
-
-            $("<div/>")
-                .addClass("item-title")
-                .text(spamRow.label)
-                .appendTo(innerItem);
-
-            var itemContent = $("<div/>")
-                .addClass("accordion-item-content")
-                .appendTo(item);
-
-            var contentBlock = $("<div/>")
-                .addClass("content-block")
-                .appendTo(itemContent);
-
-            var linkWrap = $("<p/>")
-                .appendTo(contentBlock);
-
-            $($.parseHTML(spamRow.valueUrl))
-                .addClass("external")
-                .appendTo(linkWrap);
-        }
-    }
-
-    function addCalloutEntry(name, value, parent) {
-        if (value) {
-            $("<p/>")
-                .addClass("wrap-line")
-                .html("<strong>" + name + ": </strong>" + value)
-                .appendTo(parent);
-        }
-    }
-
-    function updateStatus(message) {
-        if (myApp) {
-            myApp.hidePreloader();
-            myApp.showPreloader(message);
-        }
+        buildViews(headers);
+        if (myApp) myApp.hidePreloader();
     }
 
     // Handles rendering of an error.
@@ -420,4 +390,35 @@
             myApp.alert(message, "An Error Occurred");
         }
     }
+
+    function eventListener(event) {
+        if (!event || event.origin !== message.site()) return;
+
+        if (event.data) {
+            switch (event.data.eventName) {
+                case "showError":
+                    showError(JSON.parse(event.data.data.error), event.data.data.message);
+                    break;
+                case "updateStatus":
+                    updateStatus(event.data.data);
+                    break;
+                case "renderItem":
+                    renderItem(event.data.data);
+                    break;
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        try {
+            initializeFramework7();
+            updateStatus(mhaStrings.mha_loading);
+            window.addEventListener("message", eventListener, false);
+            message.postMessageToParent("frameActive");
+        }
+        catch (e) {
+            postError(e, "Failed initializing frame");
+            showError(e, "Failed initializing frame");
+        }
+    });
 })();

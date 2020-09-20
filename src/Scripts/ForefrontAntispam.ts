@@ -2,12 +2,12 @@
 /* global AntiSpamReport */
 /* exported ForefrontAntiSpamReport */
 
-var ForefrontAntiSpamReport = (function () {
+const ForefrontAntiSpamReport = (function () {
     "use strict";
 
     // cheap inheritance
-    var antiSpamReport = AntiSpamReport();
-    var forefrontAntiSpamRows = [
+    const antiSpamReport = AntiSpamReport();
+    const forefrontAntiSpamRows = [
         antiSpamReport.row("ARC", mhaStrings.mha_arc, "X-Forefront-Antispam-Report"),
         antiSpamReport.row("CTRY", mhaStrings.mha_countryRegion, "X-Forefront-Antispam-Report"),
         antiSpamReport.row("LANG", mhaStrings.mha_lang, "X-Forefront-Antispam-Report"),
@@ -39,7 +39,7 @@ var ForefrontAntiSpamReport = (function () {
         get forefrontAntiSpamRows() { return forefrontAntiSpamRows; },
         toString: function () {
             if (!exists()) return "";
-            var ret = ["ForefrontAntiSpamReport"];
+            const ret = ["ForefrontAntiSpamReport"];
             forefrontAntiSpamRows.forEach(function (row) {
                 if (row.value) { ret.push(row.toString()); }
             });
