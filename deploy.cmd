@@ -115,7 +115,7 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
 echo 4. Transpile TypeScript
 IF EXIST "%DEPLOYMENT_TARGET%\tsconfig.json" (
   pushd "%DEPLOYMENT_TARGET%"
-  call :ExecuteCmd tsc
+  call :ExecuteCmd node %DEPLOYMENT_TARGET%\node_modules\typescript\bin\tsc -p "%DEPLOYMENT_TARGET%"
   IF !ERRORLEVEL! NEQ 0 goto error
   popd
 )
