@@ -1,10 +1,10 @@
 /* global mhaStrings  */
 /* exported AntiSpamReport */
 
-var AntiSpamReport = (function () {
+const AntiSpamReport = (function () {
     "use strict";
 
-    var row = function (header, label, headerName) {
+    const row = function (header, label, headerName) {
         return {
             header: header,
             label: label,
@@ -16,9 +16,9 @@ var AntiSpamReport = (function () {
         }
     };
 
-    var source = "";
-    var unparsed = "";
-    var antiSpamRows = [
+    let source = "";
+    let unparsed = "";
+    const antiSpamRows = [
         row("BCL", mhaStrings.mha_bcl, "X-Microsoft-Antispam"),
         row("PCL", mhaStrings.mha_pcl, "X-Microsoft-Antispam"),
         row("source", mhaStrings.mha_source, "X-Microsoft-Antispam"),
@@ -26,7 +26,7 @@ var AntiSpamReport = (function () {
     ];
 
     function existsInternal(rows) {
-        for (var i = 0; i < rows.length; i++) {
+        for (let i = 0; i < rows.length; i++) {
             if (rows[i].value) {
                 return true;
             }
@@ -36,7 +36,7 @@ var AntiSpamReport = (function () {
     }
 
     function setRowValue(rows, key, value) {
-        for (var i = 0; i < rows.length; i++) {
+        for (let i = 0; i < rows.length; i++) {
             if (rows[i].header.toUpperCase() === key.toUpperCase()) {
                 rows[i].value = value;
                 rows[i].valueUrl = mhaStrings.mapHeaderToURL(rows[i].headerName, value);
@@ -66,11 +66,11 @@ var AntiSpamReport = (function () {
         // Third pass: Collapse them.
         report = report.replace(/;+/g, ";");
 
-        var lines = report.match(/(.*?):(.*?);/g);
+        const lines = report.match(/(.*?):(.*?);/g);
         unparsed = "";
         if (lines) {
-            for (var iLine = 0; iLine < lines.length; iLine++) {
-                var line = lines[iLine].match(/(.*?):(.*?);/m);
+            for (let iLine = 0; iLine < lines.length; iLine++) {
+                const line = lines[iLine].match(/(.*?):(.*?);/m);
                 if (line && line[1]) {
                     if (!setRowValue(rows, line[1], line[2])) {
                         unparsed += line[1] + ':' + line[2] + ';';
@@ -97,7 +97,7 @@ var AntiSpamReport = (function () {
         row: row,
         toString: function () {
             if (!exists()) return "";
-            var ret = ["AntiSpamReport"];
+            const ret = ["AntiSpamReport"];
             antiSpamRows.forEach(function (row) {
                 if (row.value) { ret.push(row.toString()); }
             });
