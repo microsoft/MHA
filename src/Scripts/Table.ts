@@ -389,26 +389,26 @@ const Table = (function () {
         viewModel = _viewModel;
 
         // Headers
-        makeResizablePane("originalHeaders", mhaStrings.mha_originalHeaders, function () { return viewModel.originalHeaders.length; });
+        makeResizablePane("originalHeaders", mhaStrings.mhaOriginalHeaders, function () { return viewModel.originalHeaders.length; });
         $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
 
         // Summary
-        makeResizablePane("summary", mhaStrings.mha_summary, function () { return viewModel.summary.exists(); });
+        makeResizablePane("summary", mhaStrings.mhaSummary, function () { return viewModel.summary.exists(); });
         makeSummaryTable("#summary", viewModel.summary.summaryRows, "SUM");
 
         // Received
-        makeResizableTable("receivedHeaders", mhaStrings.mha_receivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
+        makeResizableTable("receivedHeaders", mhaStrings.mhaReceivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
 
         const receivedColumns = [
-            column("hop", mhaStrings.mha_hop, null),
-            column("from", mhaStrings.mha_submittingHost, null),
-            column("by", mhaStrings.mha_receivingHost, null),
-            column("date", mhaStrings.mha_time, null),
-            column("delay", mhaStrings.mha_delay, null),
-            column("with", mhaStrings.mha_type, null),
-            column("id", mhaStrings.mha_receivedId, "extraCol"),
-            column("for", mhaStrings.mha_receivedFor, "extraCol"),
-            column("via", mhaStrings.mha_receivedVia, "extraCol")
+            column("hop", mhaStrings.mhaReceivedHop, null),
+            column("from", mhaStrings.mhaReceivedSubmittingHost, null),
+            column("by", mhaStrings.mhaReceivedReceivingHost, null),
+            column("date", mhaStrings.mhaReceivedTime, null),
+            column("delay", mhaStrings.mhaReceivedDelay, null),
+            column("with", mhaStrings.mhaReceivedType, null),
+            column("id", mhaStrings.mhaReceivedId, "extraCol"),
+            column("for", mhaStrings.mhaReceivedFor, "extraCol"),
+            column("via", mhaStrings.mhaReceivedVia, "extraCol")
         ];
 
         addColumns(viewModel.receivedHeaders.tableName, receivedColumns);
@@ -436,20 +436,20 @@ const Table = (function () {
         });
 
         // FFAS
-        makeResizablePane("forefrontAntiSpamReport", mhaStrings.mha_forefrontAntiSpamReport, function () { return viewModel.forefrontAntiSpamReport.exists(); });
+        makeResizablePane("forefrontAntiSpamReport", mhaStrings.mhaForefrontAntiSpamReport, function () { return viewModel.forefrontAntiSpamReport.exists(); });
         makeSummaryTable("#forefrontAntiSpamReport", viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows, "FFAS");
 
         // AntiSpam
-        makeResizablePane("antiSpamReport", mhaStrings.mha_antiSpamReport, function () { return viewModel.antiSpamReport.exists(); });
+        makeResizablePane("antiSpamReport", mhaStrings.mhaAntiSpamReport, function () { return viewModel.antiSpamReport.exists(); });
         makeSummaryTable("#antiSpamReport", viewModel.antiSpamReport.antiSpamRows, "AS");
 
         // Other
-        makeResizableTable("otherHeaders", mhaStrings.mha_otherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
+        makeResizableTable("otherHeaders", mhaStrings.mhaOtherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
 
         const otherColumns = [
-            column("number", mhaStrings.mha_number, null),
-            column("header", mhaStrings.mha_header, null),
-            column("value", mhaStrings.mha_value, null)
+            column("number", mhaStrings.mhaNumber, null),
+            column("header", mhaStrings.mhaHeader, null),
+            column("value", mhaStrings.mhaValue, null)
         ];
 
         addColumns(viewModel.otherHeaders.tableName, otherColumns);

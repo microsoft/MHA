@@ -376,7 +376,7 @@
         $("#other-content").empty();
         $("#original-headers").empty();
 
-        updateStatus(mhaStrings.mha_loading);
+        updateStatus(mhaStrings.mhaLoading);
 
         buildViews(headers);
         if (myApp) myApp.hidePreloader();
@@ -412,7 +412,7 @@
     $(document).ready(function () {
         try {
             initializeFramework7();
-            updateStatus(mhaStrings.mha_loading);
+            updateStatus(mhaStrings.mhaLoading);
             window.addEventListener("message", eventListener, false);
             message.postMessageToParent("frameActive");
         }

@@ -103,7 +103,7 @@ const GetHeadersRest = (function () {
                     headersLoadedCallback(item.SingleValueExtendedProperties[0].Value, "REST");
                 } else {
                     headersLoadedCallback(null, "REST");
-                    ParentFrame.showError(null, mhaStrings.mha_headersMissing, true);
+                    ParentFrame.showError(null, mhaStrings.mhaHeadersMissing, true);
                 }
             }
             catch (e) {
@@ -115,7 +115,7 @@ const GetHeadersRest = (function () {
                     // TODO: Log this, but don't error for the user
                     GetHeadersEWS.send(headersLoadedCallback);
                 } else if (textStatus === "error" && jqXHR.status === 404) {
-                    ParentFrame.showError(null, mhaStrings.mha_messageMissing, true);
+                    ParentFrame.showError(null, mhaStrings.mhaMessageMissing, true);
                 } else {
                     ParentFrame.showError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
                 }
@@ -132,7 +132,7 @@ const GetHeadersRest = (function () {
             return;
         }
 
-        ParentFrame.updateStatus(mhaStrings.mha_RequestSent);
+        ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
 
         Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
             try {

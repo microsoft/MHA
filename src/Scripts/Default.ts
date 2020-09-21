@@ -36,7 +36,7 @@
     }
 
     function renderItem(headers) {
-        updateStatus(mhaStrings.mha_foundHeaders);
+        updateStatus(mhaStrings.mhaFoundHeaders);
         $("#originalHeaders").text(headers);
         viewModel = HeaderModel(headers);
         Table.rebuildTables(viewModel);
@@ -76,7 +76,7 @@
         try {
             viewModel = HeaderModel();
             Table.initializeTableUI(viewModel);
-            updateStatus(mhaStrings.mha_loading);
+            updateStatus(mhaStrings.mhaLoading);
             window.addEventListener("message", eventListener, false);
             message.postMessageToParent("frameActive");
         }

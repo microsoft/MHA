@@ -40,7 +40,7 @@ var GetHeadersEWS = (function () {
         }
 
         try {
-            ParentFrame.updateStatus(mhaStrings.mha_RequestSent);
+            ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
             var mailbox = Office.context.mailbox;
             var request = getHeadersRequest(mailbox.item.itemId);
             var envelope = getSoapEnvelope(request);
@@ -48,7 +48,7 @@ var GetHeadersEWS = (function () {
                 callbackEws(asyncResult, headersLoadedCallback);
             });
         } catch (e2) {
-            ParentFrame.showError(e2, mhaStrings.mha_requestFailed);
+            ParentFrame.showError(e2, mhaStrings.mhaRequestFailed);
         }
 
         // Function called when the EWS request is complete.
@@ -63,7 +63,7 @@ var GetHeadersEWS = (function () {
                     if (!header.prop) {
                         if (header.responseCode && header.responseCode.length > 0 && header.responseCode[0].firstChild && header.responseCode[0].firstChild.data === "NoError") {
                             headersLoadedCallback(null, "EWS");
-                            ParentFrame.showError(null, mhaStrings.mha_headersMissing, true);
+                            ParentFrame.showError(null, mhaStrings.mhaHeadersMissing, true);
                             return;
                         }
                     }
@@ -73,7 +73,7 @@ var GetHeadersEWS = (function () {
                     headersLoadedCallback(header.prop, "EWS");
                 }
                 else {
-                    throw new Error(mhaStrings.mha_requestFailed);
+                    throw new Error(mhaStrings.mhaRequestFailed);
                 }
             }
             catch (e) {

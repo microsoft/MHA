@@ -24,16 +24,16 @@ const Received = (function () {
 
         const receivedFields = {};
         receivedFields["sourceHeader"] = ReceivedField("", receivedHeader);
-        receivedFields["hop"] = ReceivedField(mhaStrings.mha_hop);
-        receivedFields["from"] = ReceivedField(mhaStrings.mha_receivedFrom);
-        receivedFields["by"] = ReceivedField(mhaStrings.mha_receivedBy);
-        receivedFields["with"] = ReceivedField(mhaStrings.mha_receivedWith);
-        receivedFields["id"] = ReceivedField(mhaStrings.mha_receivedId);
-        receivedFields["for"] = ReceivedField(mhaStrings.mha_receivedFor);
-        receivedFields["via"] = ReceivedField(mhaStrings.mha_receivedVia);
-        receivedFields["date"] = ReceivedField(mhaStrings.mha_receivedDate);
-        receivedFields["delay"] = ReceivedField(mhaStrings.mha_delay);
-        receivedFields["percent"] = ReceivedField(mhaStrings.mha_receivedPercent, 0);
+        receivedFields["hop"] = ReceivedField(mhaStrings.mhaReceivedHop);
+        receivedFields["from"] = ReceivedField(mhaStrings.mhaReceivedFrom);
+        receivedFields["by"] = ReceivedField(mhaStrings.mhaReceivedBy);
+        receivedFields["with"] = ReceivedField(mhaStrings.mhaReceivedWith);
+        receivedFields["id"] = ReceivedField(mhaStrings.mhaReceivedId);
+        receivedFields["for"] = ReceivedField(mhaStrings.mhaReceivedFor);
+        receivedFields["via"] = ReceivedField(mhaStrings.mhaReceivedVia);
+        receivedFields["date"] = ReceivedField(mhaStrings.mhaReceivedDate);
+        receivedFields["delay"] = ReceivedField(mhaStrings.mhaReceivedDelay);
+        receivedFields["percent"] = ReceivedField(mhaStrings.mhaReceivedPercent, 0);
         receivedFields["delaySort"] = ReceivedField("", -1);
         receivedFields["dateNum"] = ReceivedField("");
         receivedFields.toString = function () {
@@ -182,11 +182,11 @@ const Received = (function () {
         let printedMinutes = false;
 
         if (Math.abs(diff) < 1000) {
-            return "0 " + mhaStrings.mha_seconds;
+            return "0 " + mhaStrings.mhaSeconds;
         }
 
         if (diff < 0) {
-            time.push(mhaStrings.mha_negative);
+            time.push(mhaStrings.mhaNegative);
             diff = -diff;
         }
 
@@ -194,9 +194,9 @@ const Received = (function () {
             iDelay = Math.floor(diff / 1000 / 60);
             time.push(iDelay, " ");
             if (iDelay === 1) {
-                time.push(mhaStrings.mha_minute);
+                time.push(mhaStrings.mhaMinute);
             } else {
-                time.push(mhaStrings.mha_minutes);
+                time.push(mhaStrings.mhaMinutes);
             }
 
             diff -= iDelay * 1000 * 60;
@@ -211,9 +211,9 @@ const Received = (function () {
             iDelay = Math.floor(diff / 1000);
             time.push(iDelay, " ");
             if (iDelay === 1) {
-                time.push(mhaStrings.mha_second);
+                time.push(mhaStrings.mhaSecond);
             } else {
-                time.push(mhaStrings.mha_seconds);
+                time.push(mhaStrings.mhaSeconds);
             }
         }
 

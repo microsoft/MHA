@@ -19,10 +19,10 @@ const AntiSpamReport = (function () {
     let source = "";
     let unparsed = "";
     const antiSpamRows = [
-        row("BCL", mhaStrings.mha_bcl, "X-Microsoft-Antispam"),
-        row("PCL", mhaStrings.mha_pcl, "X-Microsoft-Antispam"),
-        row("source", mhaStrings.mha_source, "X-Microsoft-Antispam"),
-        row("unparsed", mhaStrings.mha_unparsed, "X-Microsoft-Antispam")
+        row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
+        row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
+        row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
+        row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
     ];
 
     function existsInternal(rows) {

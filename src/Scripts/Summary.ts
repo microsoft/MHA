@@ -28,7 +28,7 @@ const Summary = (function () {
         const time = [date || ""];
 
         if (totalTime) {
-            time.push(" ", mhaStrings.mha_deliveredStart, " ", totalTime, mhaStrings.mha_deliveredEnd);
+            time.push(" ", mhaStrings.mhaDeliveredStart, " ", totalTime, mhaStrings.mhaDeliveredEnd);
         }
 
         return time.join("");
@@ -36,27 +36,27 @@ const Summary = (function () {
 
     const dateRow = SummaryRow(
         "Date",
-        mhaStrings.mha_creationTime,
+        mhaStrings.mhaCreationTime,
         function (value) { return mhaDates.parseDate(value); },
         function (value) { return creationTime(value); });
 
     const archivedRow = SummaryRow(
         "Archived-At",
-        mhaStrings.mha_archivedAt,
+        mhaStrings.mhaArchivedAt,
         null,
         null,
         function (value) { return mhaStrings.mapValueToURL(value); }
     );
 
     const summaryRows = [
-        SummaryRow("Subject", mhaStrings.mha_subject),
-        SummaryRow("Message-ID", mhaStrings.mha_messageId),
+        SummaryRow("Subject", mhaStrings.mhaSubject),
+        SummaryRow("Message-ID", mhaStrings.mhaMessageId),
         archivedRow,
         dateRow,
-        SummaryRow("From", mhaStrings.mha_from),
-        SummaryRow("Reply-To", mhaStrings.mha_replyTo),
-        SummaryRow("To", mhaStrings.mha_to),
-        SummaryRow("CC", mhaStrings.mha_cc)
+        SummaryRow("From", mhaStrings.mhaFrom),
+        SummaryRow("Reply-To", mhaStrings.mhaReplyTo),
+        SummaryRow("To", mhaStrings.mhaTo),
+        SummaryRow("CC", mhaStrings.mhaCc)
     ];
 
     function exists() {

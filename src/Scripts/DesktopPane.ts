@@ -346,7 +346,7 @@
         $("#error-display").hide();
 
         // Load new itemDescription
-        updateStatus(mhaStrings.mha_loading);
+        updateStatus(mhaStrings.mhaLoading);
         buildViews(headers);
         hideStatus();
     }
@@ -379,7 +379,7 @@
     $(document).ready(function () {
         try {
             initializeFabric();
-            updateStatus(mhaStrings.mha_loading);
+            updateStatus(mhaStrings.mhaLoading);
             window.addEventListener("message", eventListener, false);
             message.postMessageToParent("frameActive");
         }
