@@ -1,4 +1,5 @@
 /* global $ */
+/* global fabric */
 /* global mhaStrings */
 /* global HeaderModel */
 /* global message */
@@ -22,25 +23,25 @@
             e.preventDefault();
             e.stopImmediatePropagation();
         });
-        overlay = new window.fabric["Overlay"](overlayComponent);
+        overlay = new fabric["Overlay"](overlayComponent);
 
         const spinnerElement = document.querySelector(".ms-Spinner");
-        spinner = new window.fabric["Spinner"](spinnerElement);
+        spinner = new fabric["Spinner"](spinnerElement);
         spinner.stop();
 
         const commandBarElements = document.querySelectorAll(".ms-CommandBar");
         let i;
         for (i = 0; i < commandBarElements.length; i++) {
-            new window.fabric["CommandBar"](commandBarElements[i]);
+            new fabric["CommandBar"](commandBarElements[i]);
         }
 
         const commandButtonElements = document.querySelectorAll(".ms-CommandButton");
         for (i = 0; i < commandButtonElements.length; i++) {
-            new window.fabric["CommandButton"](commandButtonElements[i]);
+            new fabric["CommandButton"](commandButtonElements[i]);
         }
 
         const buttonElement = document.querySelector("#orig-header-btn");
-        new window.fabric["Button"](buttonElement, function () {
+        new fabric["Button"](buttonElement, function () {
             const btnIcon = $(this).find(".ms-Icon");
             if (btnIcon.hasClass("ms-Icon--Add")) {
                 $("#original-headers").show();
@@ -316,16 +317,16 @@
         // Initialize any fabric lists added
         const listElements = document.querySelectorAll(".ms-List");
         for (i = 0; i < listElements.length; i++) {
-            new window.fabric["List"](listElements[i]);
+            new fabric["List"](listElements[i]);
         }
 
         const listItemElements = document.querySelectorAll(".ms-ListItem");
         for (i = 0; i < listItemElements.length; i++) {
-            new window.fabric["ListItem"](listItemElements[i]);
+            new fabric["ListItem"](listItemElements[i]);
 
             // Init corresponding callout
             const calloutElement = listItemElements[i].querySelector(".ms-Callout");
-            new window.fabric["Callout"](calloutElement, listItemElements[i], "right");
+            new fabric["Callout"](calloutElement, listItemElements[i], "right");
         }
     }
 
