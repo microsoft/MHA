@@ -24,7 +24,7 @@ const mhaStrings = (function () {
                     if (appInsights) appInsights.trackEvent("copy", { succeeded: "false", style: "navigator" });
                 });
             }
-            catch (e) { }
+            catch (e) { /**/ }
         }
 
         try {
@@ -35,7 +35,7 @@ const mhaStrings = (function () {
                 });
             }
         }
-        catch (e) { }
+        catch (e) { /**/ }
     }
 
     const headerToURLMap = [

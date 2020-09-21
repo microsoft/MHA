@@ -112,8 +112,7 @@ const Decoder = (function () {
             try {
                 return decodeHexCodepage(charSet, $v$0);
             }
-            catch (e) {
-            }
+            catch (e) { /**/ }
         }
 
         // Since we failed to decode, put it all back
