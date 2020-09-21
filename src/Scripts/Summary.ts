@@ -6,7 +6,7 @@ const Summary = (function () {
     "use strict";
 
     const SummaryRow = function (header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {
-        const value = "";
+        let value = "";
 
         return {
             header: header,
@@ -19,7 +19,7 @@ const Summary = (function () {
         };
     };
 
-    const totalTime = "";
+    let totalTime = "";
     function creationTime(date) {
         if (!date && !totalTime) {
             return null;
@@ -60,7 +60,7 @@ const Summary = (function () {
     ];
 
     function exists() {
-        for (const i = 0; i < summaryRows.length; i++) {
+        for (let i = 0; i < summaryRows.length; i++) {
             if (summaryRows[i].value) {
                 return true;
             }
@@ -74,7 +74,7 @@ const Summary = (function () {
             return false;
         }
 
-        for (const i = 0; i < summaryRows.length; i++) {
+        for (let i = 0; i < summaryRows.length; i++) {
             if (summaryRows[i].header.toUpperCase() === header.header.toUpperCase()) {
                 summaryRows[i].value = header.value;
                 return true;
