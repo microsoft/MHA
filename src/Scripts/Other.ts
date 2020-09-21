@@ -30,9 +30,8 @@ const Other = (function () {
             col = col + "Sort";
         }
 
-        const that = this;
-        otherRows.sort(function (a, b) {
-            return that.sortOrder * (a[col] < b[col] ? -1 : 1);
+        otherRows.sort((a, b) => {
+            return this.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 

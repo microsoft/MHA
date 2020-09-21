@@ -163,9 +163,8 @@ const Received = (function () {
             col = col + "Sort";
         }
 
-        const that = this;
-        receivedRows.sort(function (a, b) {
-            return that.sortOrder * (a[col] < b[col] ? -1 : 1);
+        receivedRows.sort((a, b) => {
+            return this.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 
