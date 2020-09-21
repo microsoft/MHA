@@ -23,6 +23,11 @@ const GetHeadersEWS = (function () {
 
     let logResponse;
 
+    interface HeaderProp {
+        prop: string;
+        responseCode: string;
+    }
+
     function extractHeadersFromXml(xml) {
         // This function plug in filters nodes for the one that matches the given name.
         // This sidesteps the issues in jquery's selector logic.
@@ -34,7 +39,7 @@ const GetHeadersEWS = (function () {
             };
         })(jQuery);
 
-        const ret = {};
+        const ret = {} as headerProp;
         try {
             // Strip encoded embedded null characters from our XML. parseXML doesn't like them.
             xml = xml.replace(/&#x0;/g, "");
