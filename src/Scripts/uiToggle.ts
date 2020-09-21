@@ -15,21 +15,23 @@
 const ParentFrame = (function () {
     "use strict";
 
+    class Choice {
+        label: string;
+        url: string;
+        checked: boolean;
+    }
+
     let iFrame = null;
-    let currentChoice = {};
+    let currentChoice = {} as Choice;
     let deferredErrors = [];
     let deferredStatus = [];
     let headers = "";
     let modelToString = "";
 
-    function choice(label, url, checked) {
-        return { label: label, url: url, checked: checked };
-    }
-
-    const choices = [
-        choice("classic", "classicDesktopFrame.html", false),
-        choice("new", "newDesktopFrame.html", true),
-        choice("new-mobile", "newMobilePaneIosFrame.html", false)
+    const choices: Array<Choice> = [
+        { label: "classic", url: "classicDesktopFrame.html", checked: false },
+        { label: "new", url: "newDesktopFrame.html", checked: true },
+        { label: "new-mobile", url: "newMobilePaneIosFrame.html", checked: false }
     ];
 
     function getQueryVariable(variable) {
@@ -169,7 +171,7 @@ const ParentFrame = (function () {
     }
 
     // Display primary UI
-    function go(choice) {
+    function go(choice: Choice) {
         iFrame = null;
         currentChoice = choice;
         document.getElementById("uiFrame").src = choice.url;
@@ -278,7 +280,7 @@ const ParentFrame = (function () {
                 case "actionsSettings-OK": {
                     // How did the user say to display it (UI to display)
                     const iChoice = $("#uiChoice input:checked")[0].value;
-                    const choice = choices[iChoice];
+                    const choice: Choice = choices[iChoice];
                     if (choice.label !== currentChoice.label) {
                         go(choice);
                     }
@@ -335,7 +337,7 @@ const ParentFrame = (function () {
         initFabric();
 
         try {
-            const choice = Office.context.roamingSettings.get(getSettingsKey());
+            const choice: Choice = Office.context.roamingSettings.get(getSettingsKey());
             const input = $("#uiToggle" + choice.label);
             input.prop("checked", true);
             go(choice);
@@ -353,7 +355,7 @@ const ParentFrame = (function () {
         initUI: initUI,
         updateStatus: updateStatus,
         showError: showError,
-        get choice() { return currentChoice; }
+        get choice(): Choice { return currentChoice; }
     };
 })();
 
