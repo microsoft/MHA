@@ -29,7 +29,7 @@ const mhaStrings = (function () {
 
         try {
             if (appInsights) {
-                const queryOpts = { name: 'clipboard-write', allowWithoutGesture: false };
+                const queryOpts: PermissionDescriptor = { name: 'clipboard-write', allowWithoutGesture: false };
                 navigator.permissions.query(queryOpts).then(function (result) {
                     appInsights.trackEvent("copy", { succeeded: succeeded, style: "permissions", clipboardWrite: result.state });
                 });
