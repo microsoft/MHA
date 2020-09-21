@@ -275,20 +275,22 @@ const ParentFrame = (function () {
             }
 
             switch (action) {
-                case "actionsSettings-OK":
+                case "actionsSettings-OK": {
                     // How did the user say to display it (UI to display)
-
                     const iChoice = $("#uiChoice input:checked")[0].value;
                     const choice = choices[iChoice];
                     if (choice.label !== currentChoice.label) {
                         go(choice);
                     }
+
                     break;
-                case "actionsSettings-diag":
+                }
+                case "actionsSettings-diag": {
                     const diagnostics = getDiagnostics();
                     $("#diagnostics").text(diagnostics);
                     dialogDiagnosticsComponent.open();
                     break;
+                }
             }
         }
 
