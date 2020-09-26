@@ -1,8 +1,7 @@
-/* global mhaStrings */
-/* global mhaDates */
-/* exported Summary */
+import { mhaStrings } from "./Strings";
+import { mhaDates} from "./Dates";
 
-const Summary = (function () {
+export const Summary = (function () {
     "use strict";
 
     const SummaryRow = function (header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {

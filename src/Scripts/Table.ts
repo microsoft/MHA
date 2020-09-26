@@ -1,8 +1,7 @@
 /* global $ */
-/* global mhaStrings */
-/* exported Table */
+import { mhaStrings } from "./Strings";
 
-const Table = (function () {
+export const Table = (function () {
     "use strict";
 
     let viewModel = null;

@@ -1,14 +1,13 @@
 /* global $ */
-/* global mhaStrings */
-/* global Errors */
 /* global Office */
-/* global ParentFrame */
-/* global GetHeaders */
-/* global GetHeadersEWS */
-/* exported GetHeadersRest*/
+import { mhaStrings } from "./Strings";
+import { Errors } from "./Errors";
+import { ParentFrame } from "./uiToggle"
+import { GetHeaders } from "./GetHeaders"
+import { GetHeadersEWS } from "./GetHeadersEWS"
 
 /*
- * GetHeadersRest.js
+ * GetHeadersRest.ts
  *
  * This file has all the methods to get PR_TRANSPORT_MESSAGE_HEADERS
  * from the current message via REST.
@@ -19,7 +18,7 @@
  * restUrl requires 1.5 and ReadItem
  */
 
-const GetHeadersRest = (function () {
+export const GetHeadersRest = (function () {
     "use strict";
 
     function getItemRestId() {

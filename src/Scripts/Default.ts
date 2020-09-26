@@ -1,8 +1,8 @@
 ﻿/* global $ */
-/* global mhaStrings  */
-/* global HeaderModel */
-/* global Table */
-/* global message */
+import { mhaStrings } from "./Strings";
+import { HeaderModel } from "./Headers";
+import { Table } from "./Table";
+import { message } from "./message";
 
 // This is the "classic" UI rendered in classicDesktopFrame.html
 

@@ -3,19 +3,21 @@
 /* global aikey */
 /* global appInsights */
 /* global mhaVersion */
-/* exported Diagnostics */
 
 // diagnostics module
 
 // Find the path of the current script so we can inject a script we know lives alongside it
 const mhaVersionScriptPath = (function () {
     const scripts = document.getElementsByTagName('script');
-    const script = scripts[scripts.length - 1];
-    const path = script.getAttribute('src', 2);
-    return path.split('diag')[0] + 'version.js'; // current script is diag*, so splitting here will put our path in [0]
+    for (const script of scripts) {
+        const path = script.getAttribute('src', 2);
+        if (path && path.includes("diag")) {
+            return path.split('diag')[0] + 'version.js'; // current script is diag*, so splitting here will put our path in [0]
+        }
+    }
 }());
 
-const Diagnostics = (function () {
+export const Diagnostics = (function () {
     "use strict";
 
     let appDiagnostics = null;

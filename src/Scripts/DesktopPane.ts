@@ -1,8 +1,8 @@
 /* global $ */
 /* global fabric */
-/* global mhaStrings */
-/* global HeaderModel */
-/* global message */
+import { mhaStrings } from "./Strings";
+import { HeaderModel} from "./Headers";
+import { message } from "./message";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 

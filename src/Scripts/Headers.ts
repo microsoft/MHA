@@ -1,13 +1,12 @@
-/* global AntiSpamReport */
-/* global ForefrontAntiSpamReport */
-/* global Decoder */
-/* global Other */
-/* global Received */
-/* global Summary */
-/* global message */
-/* exported HeaderModel */
+import { AntiSpamReport } from "./AntiSpam";
+import { ForefrontAntiSpamReport } from "./ForefrontAntiSpam";
+import { Decoder } from "./2047";
+import { Other } from "./Other";
+import { Received } from "./Received";
+import { Summary } from "./Summary";
+import { message } from "./message";
 
-const HeaderModel = (function (headers?: string) {
+export const HeaderModel = (function (headers?: string) {
     "use strict";
 
     const summary = Summary();

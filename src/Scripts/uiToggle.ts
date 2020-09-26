@@ -2,17 +2,16 @@
 /* global appInsights */
 /* global fabric */
 /* global Office */
-/* global Diagnostics */
-/* global Errors */
-/* global GetHeaders */
-/* global message */
-/* global mhaStrings */
-/* exported ParentFrame */
+import { Diagnostics } from "./diag";
+import { Errors } from "./Errors";
+import { GetHeaders } from "./GetHeaders";
+import { message } from "./message";
+import { mhaStrings } from "./Strings";
 
 // Controller for Settings screen which controls what is being displayed
 // and which UI to use.
 
-const ParentFrame = (function () {
+export const ParentFrame = (function () {
     "use strict";
 
     class Choice {

@@ -1,8 +1,7 @@
 /* global appInsights */
 /* global StackTrace */
-/* exported Errors */
 
-const Errors = (function () {
+export const Errors = (function () {
     "use strict";
 
     let errorArray = [];

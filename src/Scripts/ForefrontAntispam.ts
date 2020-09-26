@@ -1,8 +1,7 @@
-/* global mhaStrings */
-/* global AntiSpamReport */
-/* exported ForefrontAntiSpamReport */
+import { mhaStrings } from "./Strings";
+import { AntiSpamReport } from "./AntiSpam";
 
-const ForefrontAntiSpamReport = (function () {
+export const ForefrontAntiSpamReport = (function () {
     "use strict";
 
     // cheap inheritance

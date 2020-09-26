@@ -1,7 +1,6 @@
-﻿/* global mhaStrings */
-/* exported Other */
+﻿import { mhaStrings } from "./Strings";
 
-const Other = (function () {
+export const Other = (function () {
     "use strict";
 
     const row = function (number, header, value) {

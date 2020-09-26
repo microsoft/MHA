@@ -1,9 +1,9 @@
 /* global $ */
 /* global Framework7 */
 /* global moment */
-/* global mhaStrings */
-/* global HeaderModel */
-/* global message */
+import { mhaStrings } from "./Strings";
+import { HeaderModel } from "./Headers";
+import { message } from "./message";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 

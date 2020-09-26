@@ -1,8 +1,7 @@
 /* global $ */
 /* global appInsights */
-/* exported mhaStrings */
 
-const mhaStrings = (function () {
+export const mhaStrings = (function () {
     "use strict";
 
     function copyToClipboard(str) {

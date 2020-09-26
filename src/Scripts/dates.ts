@@ -1,7 +1,6 @@
 /* global moment */
-/* exported mhaDates */
 
-const mhaDates = (function () {
+export const mhaDates = (function () {
     "use strict";
 
     // parse date using moment, with fallback to browser based parsing

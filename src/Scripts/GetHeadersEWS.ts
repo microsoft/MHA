@@ -1,12 +1,11 @@
 /* global $ */
 /* global $h */
 /* global jQuery */
-/* global mhaStrings */
-/* global Errors */
 /* global Office */
-/* global ParentFrame */
-/* global GetHeaders */
-/* exported GetHeadersEWS */
+import { mhaStrings } from "./Strings";
+import { Errors } from "./Errors";
+import { ParentFrame } from "./uiToggle"
+import { GetHeaders } from "./GetHeaders"
 
 /*
  * GetHeadersEWS.js
@@ -18,7 +17,7 @@
  * makeEwsRequestAsync requires 1.0 and ReadWriteMailbox
  */
 
-const GetHeadersEWS = (function () {
+export const GetHeadersEWS = (function () {
     "use strict";
 
     let logResponse;

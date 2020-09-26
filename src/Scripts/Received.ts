@@ -1,8 +1,7 @@
-﻿/* global mhaStrings */
-/* global mhaDates */
-/* exported Received */
+﻿import { mhaStrings } from "./Strings";
+import { mhaDates  } from "./Dates";
 
-const Received = (function () {
+export const Received = (function () {
     "use strict";
 
     const receivedRows = [];

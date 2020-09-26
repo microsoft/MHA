@@ -2,7 +2,8 @@
   "compilerOptions": {
     "outDir": "./src/transpiled",
     "allowJs": true,
-    "target": "es5"
+    "target": "es5",
+    "module": "AMD"
   },
     "include": [
         "./src/Scripts/**/*"

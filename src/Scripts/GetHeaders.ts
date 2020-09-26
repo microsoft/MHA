@@ -1,16 +1,15 @@
 /* global Office */
-/* global GetHeadersEWS */
-/* global GetHeadersRest */
-/* global ParentFrame */
-/* exported GetHeaders */
+import { GetHeadersEWS } from "./GetHeadersEWS";
+import { GetHeadersRest } from "./GetHeadersRest";
+import { ParentFrame } from "./uiToggle"
 
 /*
- * GetHeaders.js
+ * GetHeaders.ts
  *
  * Selector for switching between EWS and Rest logic
  */
 
-const GetHeaders = (function () {
+export const GetHeaders = (function () {
     "use strict";
 
     function permissionLevel() {
