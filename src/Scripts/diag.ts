@@ -6,8 +6,11 @@
 
 // diagnostics module
 
+console.log("loading diag");
+
 // Find the path of the current script so we can inject a script we know lives alongside it
 const mhaVersionScriptPath = (function () {
+    console.log("mhaVersionScriptPath");
     const scripts = document.getElementsByTagName('script');
     for (const script of scripts) {
         const path = script.getAttribute('src', 2);
@@ -20,12 +23,14 @@ const mhaVersionScriptPath = (function () {
 export const Diagnostics = (function () {
     "use strict";
 
+    console.log("Diagnostics enter");
     let appDiagnostics = null;
     let itemDiagnostics = null;
     let lastUpdate = "";
     let inGet = false;
 
     function ensureItemDiagnostics() {
+        console.log("Diagnostics ensureItemDiagnostics");
         try {
             if (itemDiagnostics) return;
             itemDiagnostics = {};
@@ -59,6 +64,7 @@ export const Diagnostics = (function () {
     }
 
     function ensureOfficeDiagnostics() {
+        console.log("Diagnostics ensureOfficeDiagnostics");
         try {
             if (window.ParentFrame) {
                 const choice = window.ParentFrame.choice;
@@ -132,6 +138,7 @@ export const Diagnostics = (function () {
     }
 
     function getRequirementSet() {
+        console.log("Diagnostics getRequirementSet");
         // https://docs.microsoft.com/en-us/office/dev/add-ins/reference/requirement-sets/outlook-api-requirement-sets
         try {
             if (!("Office" in window)) return "none";
@@ -163,6 +170,7 @@ export const Diagnostics = (function () {
     }
 
     function ensureAppDiagnostics() {
+        console.log("Diagnostics ensureAppDiagnostics");
         try {
             if (appDiagnostics) {
                 // We may have initialized earlier before we had an Office object, so repopulate it
@@ -184,7 +192,8 @@ export const Diagnostics = (function () {
 
     // Combines appDiagnostics and itemDiagnostics and returns a single object
     function get() {
-        if (!inGet) {
+        console.log("Diagnostics get");
+       if (!inGet) {
             inGet = true;
             try {
                 ensureAppDiagnostics();
@@ -200,6 +209,7 @@ export const Diagnostics = (function () {
     }
 
     function set(field, value) {
+        console.log("Diagnostics set");
         try {
             ensureItemDiagnostics();
             itemDiagnostics[field] = value;
@@ -210,7 +220,8 @@ export const Diagnostics = (function () {
     function clear() { itemDiagnostics = null; }
 
     function ensureLastModified() {
-        try {
+        console.log("Diagnostics ensureLastModified");
+       try {
             const client = new XMLHttpRequest();
             // version.js is generated on build and is the true signal of the last modified time
             client.open("HEAD", mhaVersionScriptPath, true);
@@ -236,19 +247,20 @@ export const Diagnostics = (function () {
 })();
 
 // Inject our version variable
-const version = document.createElement('script');
-version.src = mhaVersionScriptPath;
-document.getElementsByTagName('script')[0].parentNode.appendChild(version);
 
-const script = document.createElement('script');
-script.onload = function () {
+console.log("Diagnostics loading aikey and version");
+requirejs(["version", "../aikey"], function () {
+    console.log("Diagnostics aikey and version loaded");
     // app Insights initialization
+    console.log("Diagnostics init app insights");
     var sdkInstance = "appInsightsSDK"; window[sdkInstance] = "appInsights"; var aiName = window[sdkInstance], aisdk = window[aiName] || function (e) { function n(e) { t[e] = function () { var n = arguments; t.queue.push(function () { t[e].apply(t, n) }) } } var t = { config: e }; t.initialize = !0; var i = document, a = window; setTimeout(function () { var n = i.createElement("script"); n.src = e.url || "https://az416426.vo.msecnd.net/scripts/b/ai.2.min.js", i.getElementsByTagName("script")[0].parentNode.appendChild(n) }); try { t.cookie = i.cookie } catch (e) { } t.queue = [], t.version = 2; for (var r = ["Event", "PageView", "Exception", "Trace", "DependencyData", "Metric", "PageViewPerformance"]; r.length;) n("track" + r.pop()); n("startTrackPage"), n("stopTrackPage"); var s = "Track" + r[0]; if (n("start" + s), n("stop" + s), n("setAuthenticatedUserContext"), n("clearAuthenticatedUserContext"), n("flush"), !(!0 === e.disableExceptionTracking || e.extensionConfig && e.extensionConfig.ApplicationInsightsAnalytics && !0 === e.extensionConfig.ApplicationInsightsAnalytics.disableExceptionTracking)) { n("_" + (r = "onerror")); var o = a[r]; a[r] = function (e, n, i, a, s) { var c = o && o(e, n, i, a, s); return !0 !== c && t["_" + r]({ message: e, url: n, lineNumber: i, columnNumber: a, error: s }), c }, e.autoExceptionInstrumented = !0 } return t }(
         {
             instrumentationKey: aikey()
         }
     ); window[aiName] = aisdk, aisdk.queue.push(function () {
         aisdk.addTelemetryInitializer(function (envelope) {
+            console.log("Diagnostics addTelemetryInitializer");
+            console.log(envelope);
             envelope.data.baseType = envelope.baseType;
             envelope.data.baseData = envelope.baseData;
             // This will get called for any appInsights tracking - we can augment or suppress logging from here
@@ -280,6 +292,4 @@ script.onload = function () {
             return doLog;
         });
     }), aisdk.queue && 0 === aisdk.queue.length; aisdk.trackPageView({});
-};
-script.src = window.location.origin + '/Scripts/aikey.js';
-document.getElementsByTagName('script')[0].parentNode.appendChild(script);
+});
