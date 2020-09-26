@@ -4,7 +4,6 @@
 /* global HeaderModel */
 /* global Diagnostics */
 /* global Table */
-/* exported StandAlone */
 
 const StandAlone = (function () {
     "use strict";
