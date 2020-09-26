@@ -66,12 +66,12 @@ const StandAlone = (function () {
             viewModel = HeaderModel();
             Table.initializeTableUI(viewModel);
             Table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, null);
+
+            document.querySelector("#analyzeButton").onclick = analyze;
+            document.querySelector("#clearButton").onclick = clear;
+            document.querySelector("#copyButton").onclick = copy;
         });
     }
 
-    return {
-        analyze: analyze,
-        clear: clear,
-        copy: copy
-    };
+    return;
 })();
