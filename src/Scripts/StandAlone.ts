@@ -5,7 +5,7 @@
 /* global Diagnostics */
 /* global Table */
 
-const StandAlone = (function () {
+(function () {
     "use strict";
 
     let viewModel = null;
