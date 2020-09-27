@@ -20,7 +20,7 @@ if (key) {
     }
 
     console.log("Building " + aiscript);
-    fs.writeFileSync(aiscript, "/* exported aikey */ window.aikey = function () { return \"" + key + "\"; };", "utf8");
+    fs.writeFileSync(aiscript, "define([\"require\", \"exports\"], function (require, exports) { exports.aikey = \"" + key + "\"; });", "utf8");
 } else {
     console.log("No key found - skipping aikey.js generation");
 }
@@ -159,5 +159,5 @@ if (version) {
     }
 
     console.log("Building " + versionscript);
-    fs.writeFileSync(versionscript, "/* exported mhaVersion */ window.mhaVersion = function () { return \"" + version + "\"; };", "utf8");
+    fs.writeFileSync(versionscript, "define([\"require\", \"exports\"], function (require, exports) { exports.mhaVersion = \"" + version + "\"; });", "utf8");
 }
