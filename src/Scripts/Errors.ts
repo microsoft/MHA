@@ -1,4 +1,4 @@
-/* global appInsights */
+import { appInsights } from './diag'
 import { StackTrace } from "StackTrace";
 
 export const Errors = (function () {

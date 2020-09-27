@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/stephenegriffin/mha#readme",
   "dependencies": {
+    "@microsoft/applicationinsights-web": "^2.5.8",
     "@microsoft/office-js": "^1.1.43",
     "@types/jquery": "^3.5.1",
     "codepage": "^1.14.0",

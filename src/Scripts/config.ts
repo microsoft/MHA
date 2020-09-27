@@ -11,7 +11,11 @@ requirejs.config({
         StackTrace: [
             'https://cdnjs.cloudflare.com/ajax/libs/stacktrace.js/2.0.2/stacktrace-with-promises-and-json-polyfills.min',
             '../../node_modules/stacktrace-js/dist/stacktrace-with-promises-and-json-polyfills.min'
-        ]
+        ],
+        ApplicationInsights: [
+            'https://az416426.vo.msecnd.net/scripts/b/ai.2.min',
+            '../../node_modules/@microsoft/applicationinsights-web/dist/applicationinsights-web.min'
+        ],
     }
 });
 

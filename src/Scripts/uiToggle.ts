@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-/* global appInsights */
+import { appInsights } from './diag'
 /* global fabric */
 /* global Office */
 import { Diagnostics } from "./diag";
