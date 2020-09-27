@@ -1,4 +1,4 @@
-/* global moment */
+import { moment } from "moment";
 
 export const mhaDates = (function () {
     "use strict";

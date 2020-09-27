@@ -3,7 +3,11 @@
     "outDir": "./src/transpiled",
     "allowJs": true,
     "target": "es5",
-    "module": "AMD"
+    "module": "AMD",
+    "baseUrl": ".",
+    "paths": {
+      "moment": [ "node_modules/moment/min" ]
+    }
   },
     "include": [
         "./src/Scripts/**/*"
