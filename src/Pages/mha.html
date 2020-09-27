@@ -10,21 +10,6 @@
     <link rel="stylesheet" type="text/css" href="/Content/%version%/Office.css" />
     <link rel="stylesheet" type="text/css" href="/Content/%version%/App.css" />
 
-    <script>
-        if (!window.TextDecoder) {
-            document.write('<script src="https://unpkg.com/codepage@1.14.0/dist/sbcs.full.js"><\/script>');
-            document.write('<script src="https://unpkg.com/codepage@1.14.0/bits/936.js"><\/script>');
-            document.write('<script src="https://unpkg.com/codepage@1.14.0/bits/51949.js"><\/script>');
-        }
-    </script>
-    <script>
-        if (!window.TextDecoder && !window.cptable) {
-            document.write('<script src="/node_modules/codepage/dist/sbcs.full.js"><\/script>');
-            document.write('<script src="/node_modules/codepage/bits/936.js"><\/script>');
-            document.write('<script src="/node_modules/codepage/bits/51949.js"><\/script>');
-        }
-    </script>
-
     <script data-main="/Scripts/%version%/config" src="/node_modules/requirejs/require.js"></script>
 </head>
 <body>

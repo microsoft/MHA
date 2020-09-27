@@ -16,6 +16,18 @@ requirejs.config({
             'https://az416426.vo.msecnd.net/scripts/b/ai.2.min',
             '../../node_modules/@microsoft/applicationinsights-web/dist/applicationinsights-web.min'
         ],
+        codepage: [
+            'https://unpkg.com/codepage@1.14.0/dist/sbcs.full',
+            '../../node_modules/codepage/dist/sbcs.full'
+        ],
+        codepage936: [
+            'https://unpkg.com/codepage@1.14.0/bits/936',
+            '../../node_modules/codepage/bits/936'
+        ],
+        codepage51949: [
+            'https://unpkg.com/codepage@1.14.0/bits/51949',
+            '../../node_modules/codepage/bits/51949'
+        ]
     }
 });
 

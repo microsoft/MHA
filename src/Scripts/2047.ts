@@ -1,4 +1,6 @@
-﻿/* global cptable */
+﻿import { cptable } from "codepage";
+import "codepage936";
+import "codepage51949";
 
 export const Decoder = (function () {
     "use strict";
