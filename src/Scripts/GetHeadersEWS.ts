@@ -1,4 +1,4 @@
-/* global $ */
+import * as $ from "jquery";
 /* global $h */
 /* global jQuery */
 /* global Office */

@@ -1,4 +1,4 @@
-/* global $ */
+import * as $ from "jquery";
 /* global Framework7 */
 
 // Check mobile platform

@@ -1,4 +1,4 @@
-/* global $ */
+import * as $ from "jquery";
 /* global appInsights */
 /* global fabric */
 /* global Office */

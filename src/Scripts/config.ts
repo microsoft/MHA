@@ -1,5 +1,9 @@
 requirejs.config({
     paths: {
+        jquery: [
+            'https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min',
+            '../../node_modules/jquery/dist/jquery.min'
+        ],
         moment: [
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min',
             '../../node_modules/moment/min/moment.min'

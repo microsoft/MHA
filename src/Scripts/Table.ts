@@ -1,4 +1,4 @@
-/* global $ */
+import * as $ from "jquery";
 import { mhaStrings } from "./Strings";
 
 export const Table = (function () {

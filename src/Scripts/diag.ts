@@ -1,4 +1,4 @@
-/* global $ */
+import * as $ from "jquery";
 /* global appInsights */
 import { StackTrace } from "StackTrace";
 import { aikey } from "../aikey";

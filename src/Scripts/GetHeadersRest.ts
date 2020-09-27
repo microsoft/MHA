@@ -1,4 +1,4 @@
-/* global $ */
+import * as $ from "jquery";
 /* global Office */
 import { mhaStrings } from "./Strings";
 import { Errors } from "./Errors";

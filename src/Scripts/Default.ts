@@ -1,4 +1,4 @@
-﻿/* global $ */
+﻿import * as $ from "jquery";
 import { mhaStrings } from "./Strings";
 import { HeaderModel } from "./Headers";
 import { Table } from "./Table";

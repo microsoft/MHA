@@ -1,4 +1,4 @@
-/* global $ */
+import * as $ from "jquery";
 /* global appInsights */
 import { mhaStrings } from "./Strings";
 import { HeaderModel } from "./Headers";
