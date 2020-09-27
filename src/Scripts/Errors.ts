@@ -1,5 +1,5 @@
 /* global appInsights */
-/* global StackTrace */
+import { StackTrace } from "StackTrace";
 
 export const Errors = (function () {
     "use strict";

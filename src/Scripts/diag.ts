@@ -1,6 +1,6 @@
 /* global $ */
-/* global StackTrace */
 /* global appInsights */
+import { StackTrace } from "StackTrace";
 import { aikey } from "../aikey";
 import { mhaVersion } from "./version";
 
