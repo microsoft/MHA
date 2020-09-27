@@ -1,6 +1,6 @@
 import * as $ from "jquery";
 /* global Framework7 */
-/* global moment */
+import { moment } from "moment";
 import { mhaStrings } from "./Strings";
 import { HeaderModel } from "./Headers";
 import { message } from "./message";
