@@ -1,6 +1,5 @@
 import * as $ from "jquery";
 /* global $h */
-/* global jQuery */
 /* global Office */
 import { mhaStrings } from "./Strings";
 import { Errors } from "./Errors";
@@ -36,7 +35,7 @@ export const GetHeadersEWS = (function () {
                     return this.nodeName === node;
                 });
             };
-        })(jQuery);
+        })($);
 
         const ret = {} as headerProp;
         try {
