@@ -1,5 +1,5 @@
 ﻿/* global QUnit */
-/* global GetHeadersEWS */
+import { GetHeadersEWS } from "../GetHeadersEWS"
 
 QUnit.test("XML Tests", function (assert) {
     var xml1 =

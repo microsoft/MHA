@@ -1,5 +1,5 @@
 import { appInsights } from './diag'
-import { StackTrace } from "StackTrace";
+import * as StackTrace from "StackTrace";
 
 export const Errors = (function () {
     "use strict";

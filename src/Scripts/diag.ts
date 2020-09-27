@@ -1,6 +1,6 @@
 import * as $ from "jquery";
 import { ApplicationInsights } from "ApplicationInsights"
-import { StackTrace } from "StackTrace";
+import * as StackTrace from "StackTrace";
 import { aikey } from "../aikey";
 import { mhaVersion } from "./version";
 

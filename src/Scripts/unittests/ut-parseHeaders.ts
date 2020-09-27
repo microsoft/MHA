@@ -1,5 +1,5 @@
 ﻿/* global QUnit */
-/* global HeaderModel */
+import { HeaderModel} from "../Headers"
 
 QUnit.test("parseHeader Tests", function (assert) {
     var summaryRows = [

@@ -30,5 +30,3 @@ requirejs.config({
         ]
     }
 });
-
-require(["StandAlone"]);

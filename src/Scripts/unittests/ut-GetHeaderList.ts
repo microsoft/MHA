@@ -1,5 +1,5 @@
 ﻿/* global QUnit */
-/* global HeaderModel */
+import { HeaderModel } from "../Headers"
 
 QUnit.test("GetHeaderList Tests", function (assert) {
     var headers = HeaderModel();

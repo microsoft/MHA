@@ -1,5 +1,5 @@
 ﻿/* global QUnit */
-/* global Received */
+import { Received } from "../Received"
 
 QUnit.test("DateTime Tests", function (assert) {
     var received = Received();

@@ -1,6 +1,6 @@
 ﻿/* global QUnit */
-/* global AntiSpamReport */
-/* global ForefrontAntiSpamReport */
+import { AntiSpamReport } from "../AntiSpam";
+import { ForefrontAntiSpamReport } from "../ForefrontAntispam";
 
 QUnit.test("antiSpam Tests", function (assert) {
     var header = "BCL:1;";
