@@ -1,4 +1,4 @@
-﻿/* global QUnit */
+﻿import * as QUnit from "QUnit";
 
 QUnit.assert.shallowEqual = function (actual, expected, message) {
     var field;

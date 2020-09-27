@@ -1,4 +1,11 @@
-requirejs(['./config'], function () {
+requirejs.config({
+    paths: {
+        QUnit: [
+            'https://code.jquery.com/qunit/qunit-2.4.0'
+        ],
+    }
+});
+requirejs(['./config', 'QUnit'], function () {
     requirejs([
         'unittests/ut-2047',
         'unittests/ut-antispam',
@@ -9,4 +16,5 @@ requirejs(['./config'], function () {
         'unittests/ut-parseHeaders',
         'unittests/ut-Received',
         'unittests/ut-XML']);
+    QUnit.start();
 });

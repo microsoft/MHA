@@ -1,4 +1,4 @@
-﻿/* global QUnit */
+﻿import * as QUnit from "QUnit";
 import { GetHeadersEWS } from "../GetHeadersEWS"
 
 QUnit.test("XML Tests", function (assert) {

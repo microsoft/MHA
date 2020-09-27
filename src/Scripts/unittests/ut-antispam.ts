@@ -1,4 +1,4 @@
-﻿/* global QUnit */
+﻿import * as QUnit from "QUnit";
 import { AntiSpamReport } from "../AntiSpam";
 import { ForefrontAntiSpamReport } from "../ForefrontAntispam";
 

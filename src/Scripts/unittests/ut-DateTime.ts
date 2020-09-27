@@ -1,4 +1,4 @@
-﻿/* global QUnit */
+﻿import * as QUnit from "QUnit";
 import { Received } from "../Received"
 
 QUnit.test("DateTime Tests", function (assert) {

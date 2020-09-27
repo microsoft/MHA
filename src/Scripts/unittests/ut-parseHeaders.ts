@@ -1,4 +1,4 @@
-﻿/* global QUnit */
+﻿import * as QUnit from "QUnit";
 import { HeaderModel} from "../Headers"
 
 QUnit.test("parseHeader Tests", function (assert) {

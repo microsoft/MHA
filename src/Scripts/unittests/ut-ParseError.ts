@@ -1,4 +1,4 @@
-﻿/* global QUnit */
+﻿import * as QUnit from "QUnit";
 import { Errors } from "../Errors"
 
 // Strip stack of rows with unittests.html.
