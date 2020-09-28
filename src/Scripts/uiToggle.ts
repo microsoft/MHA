@@ -357,9 +357,3 @@ export const ParentFrame = (function () {
         get choice(): Choice { return currentChoice; }
     };
 })();
-
-Office.initialize = function () {
-    $(document).ready(function () {
-        ParentFrame.initUI();
-    });
-};

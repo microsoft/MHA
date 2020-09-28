@@ -76,9 +76,7 @@ export const Diagnostics = (function () {
                 appDiagnostics.ui = "standalone";
             }
 
-            if (lastUpdate) {
-                appDiagnostics["Last Update"] = lastUpdate;
-            }
+            ensureLastModified(function (_lastUpdate) { appDiagnostics["Last Update"] = _lastUpdate; });
 
             if (mhaVersion) {
                 appDiagnostics["mhaVersion"] = mhaVersion;
@@ -219,8 +217,12 @@ export const Diagnostics = (function () {
 
     function clear() { itemDiagnostics = null; }
 
-    function ensureLastModified() {
-        console.log("Diagnostics ensureLastModified");
+    function ensureLastModified(callback) {
+        if (lastUpdate) {
+            if (callback) callback(lastUpdate);
+            return;
+        }
+
         try {
             const client = new XMLHttpRequest();
             // version.js is generated on build and is the true signal of the last modified time
@@ -228,6 +230,7 @@ export const Diagnostics = (function () {
             client.onreadystatechange = function () {
                 if (this.readyState === 2) {
                     lastUpdate = client.getResponseHeader("Last-Modified");
+                    if (callback) callback(lastUpdate);
                 }
             }
 
@@ -236,13 +239,13 @@ export const Diagnostics = (function () {
         catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureLastModified", exception: e.toString(), message: e.message, stack: e.stack }); }
     }
 
-
     ensureLastModified();
 
     return {
         get: get,
         set: set,
-        clear: clear
+        clear: clear,
+        ensureLastModified: ensureLastModified
     };
 })();
 
