@@ -1,11 +1,11 @@
 import * as $ from "jquery";
-import { appInsights } from './diag'
+import { appInsights } from './diag';
 /* global fabric */
 /* global Office */
 import { Diagnostics } from "./diag";
 import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";
-import { message } from "./message";
+import { postMessage } from "./postMessage";
 import { mhaStrings } from "./Strings";
 
 // Controller for Settings screen which controls what is being displayed
@@ -60,7 +60,7 @@ export const ParentFrame = (function () {
     }
 
     function postMessageToFrame(eventName, data) {
-        message.postMessageToFrame(iFrame, eventName, data);
+        postMessage.postMessageToFrame(iFrame, eventName, data);
     }
 
     function render() {

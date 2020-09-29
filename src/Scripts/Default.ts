@@ -2,7 +2,7 @@
 import { mhaStrings } from "./Strings";
 import { HeaderModel } from "./Headers";
 import { Table } from "./Table";
-import { message } from "./message";
+import { postMessage } from "./postMessage";
 
 // This is the "classic" UI rendered in classicDesktopFrame.html
 
@@ -12,7 +12,7 @@ import { message } from "./message";
     let viewModel = null;
 
     function postError(error, message) {
-        message.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+        postMessage.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
     }
 
     function enableSpinner() {
@@ -78,7 +78,7 @@ import { message } from "./message";
             Table.initializeTableUI(viewModel);
             updateStatus(mhaStrings.mhaLoading);
             window.addEventListener("message", eventListener, false);
-            message.postMessageToParent("frameActive");
+            postMessage.postMessageToParent("frameActive");
         }
         catch (e) {
             postError(e, "Failed initializing frame");

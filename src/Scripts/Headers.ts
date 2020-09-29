@@ -4,7 +4,7 @@ import { Decoder } from "./2047";
 import { Other } from "./Other";
 import { Received } from "./Received";
 import { Summary } from "./Summary";
-import { message } from "./message";
+import { postMessage } from "./postMessage";
 
 export const HeaderModel = (function (headers?: string) {
     "use strict";
@@ -130,7 +130,7 @@ export const HeaderModel = (function (headers?: string) {
 
     if (headers) {
         parseHeaders(headers);
-        message.postMessageToParent("modelToString", toString());
+        postMessage.postMessageToParent("modelToString", toString());
     }
 
     return {
