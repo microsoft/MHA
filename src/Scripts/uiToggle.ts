@@ -1,6 +1,6 @@
 import * as $ from "jquery";
+import "fabric";
 import { appInsights } from './diag';
-/* global fabric */
 /* global Office */
 import { Diagnostics } from "./diag";
 import { Errors } from "./Errors";
@@ -97,7 +97,7 @@ export const ParentFrame = (function () {
     }
 
     function eventListener(event) {
-        if (!event || event.origin !== message.site()) return;
+        if (!event || event.origin !== postMessage.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {

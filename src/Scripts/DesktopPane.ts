@@ -1,7 +1,7 @@
 import * as $ from "jquery";
-/* global fabric */
+import "fabric";
 import { mhaStrings } from "./Strings";
-import { HeaderModel} from "./Headers";
+import { HeaderModel } from "./Headers";
 import { postMessage } from "./postMessage";
 
 // This is the "new" UI rendered in newDesktopFrame.html
@@ -360,7 +360,7 @@ import { postMessage } from "./postMessage";
     }
 
     function eventListener(event) {
-        if (!event || event.origin !== message.site()) return;
+        if (!event || event.origin !== postMessage.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {

@@ -392,7 +392,7 @@ import { postMessage } from "./postMessage";
     }
 
     function eventListener(event) {
-        if (!event || event.origin !== message.site()) return;
+        if (!event || event.origin !== postMessage.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {

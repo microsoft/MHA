@@ -27,6 +27,10 @@ requirejs.config({
         codepage51949: [
             'https://unpkg.com/codepage@1.14.0/bits/51949',
             '../../node_modules/codepage/bits/51949'
+        ],
+        fabric: [
+            'https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.5.0/js/fabric.min',
+            '../../node_modules/office-ui-fabric-js/dist/js/fabric.min'
         ]
     }
 });
