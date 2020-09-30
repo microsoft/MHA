@@ -1,6 +1,6 @@
 import * as $ from "jquery";
 import { Diagnostics } from "./diag";
-/* global Framework7 */
+import "Framework7";
 
 // Check mobile platform
 

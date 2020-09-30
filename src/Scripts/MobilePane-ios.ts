@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-/* global Framework7 */
+import "Framework7";
 import * as moment from "moment";
 import { mhaStrings } from "./Strings";
 import { HeaderModel } from "./Headers";

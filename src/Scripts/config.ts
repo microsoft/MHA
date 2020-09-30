@@ -31,6 +31,10 @@ requirejs.config({
         fabric: [
             'https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.5.0/js/fabric.min',
             '../../node_modules/office-ui-fabric-js/dist/js/fabric.min'
+        ],
+        Framework7: [
+            'https://cdnjs.cloudflare.com/ajax/libs/framework7/1.7.1/js/framework7.min',
+            '../../node_modules/framework7/js/framework7.min'
         ]
     }
 });
