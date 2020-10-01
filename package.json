@@ -38,7 +38,7 @@
     "requirejs": "^2.3.6",
     "stacktrace-js": "^2.0.2",
     "typescript": "^4.0.3",
-    "uglify-js": "^3.10.4"
+    "uglify-js": "^3.11.0"
   },
   "-vs-binding": {
     "BeforeBuild": [
