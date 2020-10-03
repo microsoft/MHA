@@ -1,6 +1,6 @@
+import "Office";
 import * as $ from "jquery";
 /* global $h */
-/* global Office */
 import { mhaStrings } from "./Strings";
 import { Errors } from "./Errors";
 import { ParentFrame } from "./uiToggle"

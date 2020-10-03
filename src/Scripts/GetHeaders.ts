@@ -1,4 +1,4 @@
-/* global Office */
+import "Office";
 import { GetHeadersEWS } from "./GetHeadersEWS";
 import { GetHeadersRest } from "./GetHeadersRest";
 import { ParentFrame } from "./uiToggle"

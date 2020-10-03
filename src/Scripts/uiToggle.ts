@@ -1,7 +1,7 @@
+import "Office";
 import * as $ from "jquery";
 import "fabric";
 import { appInsights } from './diag';
-/* global Office */
 import { Diagnostics } from "./diag";
 import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";

@@ -1,4 +1,4 @@
-/* global Office */
+import "Office";
 import * as $ from "jquery";
 import { ParentFrame } from './uiToggle'
 

@@ -1,5 +1,9 @@
 requirejs.config({
     paths: {
+        Office: [
+            'https://appsforoffice.microsoft.com/lib/1/hosted/office.debug',
+            '../../@microsoft/office-js/dist/office.debug'
+        ],
         jquery: [
             'https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min',
             '../../node_modules/jquery/dist/jquery.min'
