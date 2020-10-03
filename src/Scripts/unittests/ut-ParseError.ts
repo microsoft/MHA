@@ -33,8 +33,8 @@ QUnit.test("Errors.parse Tests", function (assert) {
             "run (https://code.jquery.com/qunit/qunit-2.4.0.js:1457)",
             "https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
             "advance (https://code.jquery.com/qunit/qunit-2.4.0.js:1116)",
-            "queue (https://code.jquery.com/qunit/qunit-2.4.0.js:1682)",
-            "test (https://code.jquery.com/qunit/qunit-2.4.0.js:1914)"
+            "begin (https://code.jquery.com/qunit/qunit-2.4.0.js:2928)",
+            "https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
         ], "Errors.parse 1 stack");
         done();
     });
@@ -51,8 +51,8 @@ QUnit.test("Errors.parse Tests", function (assert) {
                 "run (https://code.jquery.com/qunit/qunit-2.4.0.js:1457)",
                 "https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
                 "advance (https://code.jquery.com/qunit/qunit-2.4.0.js:1116)",
-                "queue (https://code.jquery.com/qunit/qunit-2.4.0.js:1682)",
-                "test (https://code.jquery.com/qunit/qunit-2.4.0.js:1914)"
+                "begin (https://code.jquery.com/qunit/qunit-2.4.0.js:2928)",
+                "https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
             ], "Try 1 stack");
             done();
         });
@@ -70,8 +70,8 @@ QUnit.test("Errors.parse Tests", function (assert) {
                 "run (https://code.jquery.com/qunit/qunit-2.4.0.js:1457)",
                 "https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
                 "advance (https://code.jquery.com/qunit/qunit-2.4.0.js:1116)",
-                "queue (https://code.jquery.com/qunit/qunit-2.4.0.js:1682)",
-                "test (https://code.jquery.com/qunit/qunit-2.4.0.js:1914)"
+                "begin (https://code.jquery.com/qunit/qunit-2.4.0.js:2928)",
+                "https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
             ], "Try 2 stack");
             done();
         });
@@ -88,8 +88,8 @@ QUnit.test("Errors.parse Tests", function (assert) {
                 "run (https://code.jquery.com/qunit/qunit-2.4.0.js:1457)",
                 "https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
                 "advance (https://code.jquery.com/qunit/qunit-2.4.0.js:1116)",
-                "queue (https://code.jquery.com/qunit/qunit-2.4.0.js:1682)",
-                "test (https://code.jquery.com/qunit/qunit-2.4.0.js:1914)"
+                "begin (https://code.jquery.com/qunit/qunit-2.4.0.js:2928)",
+                "https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
             ], "Try 3 stack");
             done();
         });
@@ -111,8 +111,8 @@ QUnit.test("Errors.parse Tests", function (assert) {
                 "run (https://code.jquery.com/qunit/qunit-2.4.0.js:1457)",
                 "https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
                 "advance (https://code.jquery.com/qunit/qunit-2.4.0.js:1116)",
-                "queue (https://code.jquery.com/qunit/qunit-2.4.0.js:1682)",
-                "test (https://code.jquery.com/qunit/qunit-2.4.0.js:1914)"
+                "begin (https://code.jquery.com/qunit/qunit-2.4.0.js:2928)",
+                "https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
             ], "Try 4 stack");
             done();
         });
@@ -129,8 +129,8 @@ QUnit.test("Errors.parse Tests", function (assert) {
                 "run (https://code.jquery.com/qunit/qunit-2.4.0.js:1457)",
                 "https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
                 "advance (https://code.jquery.com/qunit/qunit-2.4.0.js:1116)",
-                "queue (https://code.jquery.com/qunit/qunit-2.4.0.js:1682)",
-                "test (https://code.jquery.com/qunit/qunit-2.4.0.js:1914)"
+                "begin (https://code.jquery.com/qunit/qunit-2.4.0.js:2928)",
+                "https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
             ], "Try 5 stack");
             done();
         });
@@ -143,8 +143,8 @@ QUnit.test("Errors.parse Tests", function (assert) {
             "run (https://code.jquery.com/qunit/qunit-2.4.0.js:1457)",
             "https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
             "advance (https://code.jquery.com/qunit/qunit-2.4.0.js:1116)",
-            "queue (https://code.jquery.com/qunit/qunit-2.4.0.js:1682)",
-            "test (https://code.jquery.com/qunit/qunit-2.4.0.js:1914)"
+            "begin (https://code.jquery.com/qunit/qunit-2.4.0.js:2928)",
+            "https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
         ], "Errors.parse 2 stack");
         done();
     });
@@ -156,8 +156,8 @@ QUnit.test("Errors.parse Tests", function (assert) {
             "run (https://code.jquery.com/qunit/qunit-2.4.0.js:1457)",
             "https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
             "advance (https://code.jquery.com/qunit/qunit-2.4.0.js:1116)",
-            "queue (https://code.jquery.com/qunit/qunit-2.4.0.js:1682)",
-            "test (https://code.jquery.com/qunit/qunit-2.4.0.js:1914)"
+            "begin (https://code.jquery.com/qunit/qunit-2.4.0.js:2928)",
+            "https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
         ], "Errors.parse 3 stack");
         done();
     });
@@ -170,8 +170,8 @@ QUnit.test("Errors.parse Tests", function (assert) {
             "run (https://code.jquery.com/qunit/qunit-2.4.0.js:1457)",
             "https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
             "advance (https://code.jquery.com/qunit/qunit-2.4.0.js:1116)",
-            "queue (https://code.jquery.com/qunit/qunit-2.4.0.js:1682)",
-            "test (https://code.jquery.com/qunit/qunit-2.4.0.js:1914)"
+            "begin (https://code.jquery.com/qunit/qunit-2.4.0.js:2928)",
+            "https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
         ], "brokenError stack");
         done();
     });
@@ -183,8 +183,8 @@ QUnit.test("Errors.parse Tests", function (assert) {
             "run (https://code.jquery.com/qunit/qunit-2.4.0.js:1457)",
             "https://code.jquery.com/qunit/qunit-2.4.0.js:1663",
             "advance (https://code.jquery.com/qunit/qunit-2.4.0.js:1116)",
-            "queue (https://code.jquery.com/qunit/qunit-2.4.0.js:1682)",
-            "test (https://code.jquery.com/qunit/qunit-2.4.0.js:1914)"
+            "begin (https://code.jquery.com/qunit/qunit-2.4.0.js:2928)",
+            "https://code.jquery.com/qunit/qunit-2.4.0.js:2888"
         ], "Errors.parse 4 stack");
         done();
     });

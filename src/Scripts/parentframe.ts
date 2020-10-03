@@ -1,1 +1,1 @@
-requirejs(['./config'], function () { requirejs(['./parentframeinit'], function () { }); });
+requirejs(['config', 'parentframeinit']);

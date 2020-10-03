@@ -1,1 +1,1 @@
-requirejs(['./config'], function () { requirejs(['DesktopPane']); });
+requirejs(['config', 'DesktopPane']);

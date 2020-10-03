@@ -1,1 +1,1 @@
-requirejs(['./config'], function () { requirejs(['StandAlone']); });
+requirejs(['config', 'StandAlone']);

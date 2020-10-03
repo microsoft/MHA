@@ -1,1 +1,1 @@
-requirejs(['./config'], function () { requirejs(['./MobileToggle']); });
+requirejs(['config', 'MobileToggle']);
