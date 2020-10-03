@@ -1,6 +1,5 @@
 import "Office";
 import * as $ from "jquery";
-/* global $h */
 import { mhaStrings } from "./Strings";
 import { Errors } from "./Errors";
 import { ParentFrame } from "./uiToggle"
@@ -142,16 +141,6 @@ export const GetHeadersEWS = (function () {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (EWS)", true);
             return;
-        }
-
-        try {
-            if ($h && $h.EwsRequest && $h.EwsRequest.prototype && $h.EwsRequest.prototype._parseExtraResponseData$i$1) {
-                $h.EwsRequest.prototype._parseExtraResponseData$i$1 = function (response) {
-                    logResponse = response;
-                };
-            }
-        } catch (e) {
-            Errors.log(e, null);
         }
 
         try {
