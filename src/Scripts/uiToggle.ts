@@ -5,7 +5,7 @@
 /* global Diagnostics */
 /* global Errors */
 /* global GetHeaders */
-/* global message */
+/* global poster */
 /* global mhaStrings */
 /* exported ParentFrame */
 
@@ -59,11 +59,11 @@ var ParentFrame = (function () {
     }
 
     function postMessageToFrame(eventName, data) {
-        message.postMessageToFrame(iFrame, eventName, data);
+        poster.postMessageToFrame(iFrame, eventName, data);
     }
 
     function eventListener(event) {
-        if (!event || event.origin !== message.site()) return;
+        if (!event || event.origin !== poster.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {

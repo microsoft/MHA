@@ -1,7 +1,7 @@
 /* global $ */
 /* global mhaStrings */
 /* global HeaderModel */
-/* global message */
+/* global poster */
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -16,7 +16,7 @@
             initializeFabric();
             updateStatus(mhaStrings.mha_loading);
             window.addEventListener("message", eventListener, false);
-            message.postMessageToParent("frameActive");
+            poster.postMessageToParent("frameActive");
         }
         catch (e) {
             postError(e, "Failed initializing frame");
@@ -25,7 +25,7 @@
     });
 
     function eventListener(event) {
-        if (!event || event.origin !== message.site()) return;
+        if (!event || event.origin !== poster.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {
@@ -43,7 +43,7 @@
     }
 
     function postError(error, message) {
-        message.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+        poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
     }
 
     function initializeFabric() {
