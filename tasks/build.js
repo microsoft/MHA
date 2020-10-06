@@ -82,7 +82,7 @@ const targets = {
     "GetHeadersEWS.min.js": ["GetHeadersEWS.js"],
     "GetHeadersRest.min.js": ["GetHeadersRest.js"],
     "Headers.min.js": ["Headers.js"],
-    "postMessage.min.js": ["postMessage.js"],
+    "poster.min.js": ["poster.js"],
     "mha.min.js": ["mha.js"],
     "newDesktopFrame.min.js": ["newDesktopFrame.js"],
     "newMobilePaneIosFrame.min.js": ["newMobilePaneIosFrame.js"],

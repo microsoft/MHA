@@ -2,7 +2,7 @@ import * as $ from "jquery";
 import "fabric";
 import { mhaStrings } from "./Strings";
 import { HeaderModel } from "./Headers";
-import { postMessage } from "./postMessage";
+import { poster } from "./poster";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -13,7 +13,7 @@ import { postMessage } from "./postMessage";
     let spinner = null;
 
     function postError(error, message) {
-        postMessage.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+        poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
     }
 
     function initializeFabric() {
@@ -360,7 +360,7 @@ import { postMessage } from "./postMessage";
     }
 
     function eventListener(event) {
-        if (!event || event.origin !== postMessage.site()) return;
+        if (!event || event.origin !== poster.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {
@@ -382,7 +382,7 @@ import { postMessage } from "./postMessage";
             initializeFabric();
             updateStatus(mhaStrings.mhaLoading);
             window.addEventListener("message", eventListener, false);
-            postMessage.postMessageToParent("frameActive");
+            poster.postMessageToParent("frameActive");
         }
         catch (e) {
             postError(e, "Failed initializing frame");

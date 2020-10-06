@@ -1,4 +1,4 @@
-export const postMessage = (function () {
+export const poster = (function () {
     "use strict";
 
     function site() { return window.location.protocol + "//" + window.location.host; }

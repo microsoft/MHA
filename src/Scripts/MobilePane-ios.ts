@@ -3,7 +3,7 @@ import "Framework7";
 import * as moment from "moment";
 import { mhaStrings } from "./Strings";
 import { HeaderModel } from "./Headers";
-import { postMessage } from "./postMessage";
+import { poster } from "./poster";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
@@ -14,7 +14,7 @@ import { postMessage } from "./postMessage";
     let myApp = null;
 
     function postError(error, message) {
-        postMessage.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+        poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
     }
 
     function initializeFramework7() {
@@ -392,7 +392,7 @@ import { postMessage } from "./postMessage";
     }
 
     function eventListener(event) {
-        if (!event || event.origin !== postMessage.site()) return;
+        if (!event || event.origin !== poster.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {
@@ -414,7 +414,7 @@ import { postMessage } from "./postMessage";
             initializeFramework7();
             updateStatus(mhaStrings.mhaLoading);
             window.addEventListener("message", eventListener, false);
-            postMessage.postMessageToParent("frameActive");
+            poster.postMessageToParent("frameActive");
         }
         catch (e) {
             postError(e, "Failed initializing frame");

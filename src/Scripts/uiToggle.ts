@@ -5,7 +5,7 @@ import { appInsights } from './diag';
 import { Diagnostics } from "./diag";
 import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";
-import { postMessage } from "./postMessage";
+import { poster } from "./poster";
 import { mhaStrings } from "./Strings";
 
 // Controller for Settings screen which controls what is being displayed
@@ -60,7 +60,7 @@ export const ParentFrame = (function () {
     }
 
     function postMessageToFrame(eventName, data) {
-        postMessage.postMessageToFrame(iFrame, eventName, data);
+        poster.postMessageToFrame(iFrame, eventName, data);
     }
 
     function render() {
@@ -97,7 +97,7 @@ export const ParentFrame = (function () {
     }
 
     function eventListener(event) {
-        if (!event || event.origin !== postMessage.site()) return;
+        if (!event || event.origin !== poster.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {
