@@ -4,7 +4,7 @@
 /* global Other */
 /* global Received */
 /* global Summary */
-/* global message */
+/* global poster */
 /* exported HeaderModel */
 
 const HeaderModel = (function (headers?: string) {
@@ -131,7 +131,7 @@ const HeaderModel = (function (headers?: string) {
 
     if (headers) {
         parseHeaders(headers);
-        message.postMessageToParent("modelToString", toString());
+        poster.postMessageToParent("modelToString", toString());
     }
 
     return {

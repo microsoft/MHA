@@ -3,7 +3,7 @@
 /* global moment */
 /* global mhaStrings */
 /* global HeaderModel */
-/* global message */
+/* global poster */
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
@@ -14,7 +14,7 @@
     let myApp = null;
 
     function postError(error, message) {
-        message.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+        poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
     }
 
     function initializeFramework7() {
@@ -392,7 +392,7 @@
     }
 
     function eventListener(event) {
-        if (!event || event.origin !== message.site()) return;
+        if (!event || event.origin !== poster.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {
@@ -414,7 +414,7 @@
             initializeFramework7();
             updateStatus(mhaStrings.mhaLoading);
             window.addEventListener("message", eventListener, false);
-            message.postMessageToParent("frameActive");
+            poster.postMessageToParent("frameActive");
         }
         catch (e) {
             postError(e, "Failed initializing frame");
