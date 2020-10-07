@@ -1,5 +1,4 @@
 /* global $ */
-/* global $h */
 /* global jQuery */
 /* global mhaStrings */
 /* global Errors */
@@ -28,16 +27,6 @@ var GetHeadersEWS = (function () {
         }
 
         var logResponse;
-
-        try {
-            if ($h && $h.EwsRequest && $h.EwsRequest.prototype && $h.EwsRequest.prototype._parseExtraResponseData$i$1) {
-                $h.EwsRequest.prototype._parseExtraResponseData$i$1 = function (response) {
-                    logResponse = response;
-                };
-            }
-        } catch (e) {
-            Errors.log(e, null);
-        }
 
         try {
             ParentFrame.updateStatus(mhaStrings.mha_RequestSent);
