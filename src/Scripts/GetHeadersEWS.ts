@@ -60,7 +60,7 @@ export const GetHeadersEWS = (function () {
         }
 
         return ret;
-    }
+        }
 
     function stripHeaderFromXml(xml) {
         if (!xml) return null;

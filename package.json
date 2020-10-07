@@ -27,7 +27,7 @@
   "dependencies": {
     "@microsoft/applicationinsights-web": "^2.5.8",
     "@microsoft/office-js": "^1.1.43",
-    "@types/jquery": "^3.5.1",
+    "@types/jquery": "^3.5.2",
     "codepage": "^1.14.0",
     "framework7": "^5.7.12",
     "framework7-icons": "^3.0.1",
@@ -38,7 +38,7 @@
     "requirejs": "^2.3.6",
     "stacktrace-js": "^2.0.2",
     "typescript": "^4.0.3",
-    "uglify-js": "^3.11.0"
+    "uglify-js": "^3.11.1"
   },
   "-vs-binding": {
     "BeforeBuild": [
