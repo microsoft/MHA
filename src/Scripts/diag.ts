@@ -6,11 +6,8 @@ import { mhaVersion } from "./version";
 
 // diagnostics module
 
-console.log("loading diag");
-
 // Find the path of the current script so we can inject a script we know lives alongside it
 const mhaVersionScriptPath = (function () {
-    console.log("mhaVersionScriptPath");
     const scripts = document.getElementsByTagName('script');
     for (const script of scripts) {
         const path = script.getAttribute('src', 2);
@@ -23,14 +20,12 @@ const mhaVersionScriptPath = (function () {
 export const Diagnostics = (function () {
     "use strict";
 
-    console.log("Diagnostics enter");
     let appDiagnostics = null;
     let itemDiagnostics = null;
     let lastUpdate = "";
     let inGet = false;
 
     function ensureItemDiagnostics() {
-        console.log("Diagnostics ensureItemDiagnostics");
         try {
             if (itemDiagnostics) return;
             itemDiagnostics = {};
@@ -64,7 +59,6 @@ export const Diagnostics = (function () {
     }
 
     function ensureOfficeDiagnostics() {
-        console.log("Diagnostics ensureOfficeDiagnostics");
         try {
             if (window.ParentFrame) {
                 const choice = window.ParentFrame.choice;
@@ -136,7 +130,6 @@ export const Diagnostics = (function () {
     }
 
     function getRequirementSet() {
-        console.log("Diagnostics getRequirementSet");
         // https://docs.microsoft.com/en-us/office/dev/add-ins/reference/requirement-sets/outlook-api-requirement-sets
         try {
             if (!("Office" in window)) return "none";
@@ -168,7 +161,6 @@ export const Diagnostics = (function () {
     }
 
     function ensureAppDiagnostics() {
-        console.log("Diagnostics ensureAppDiagnostics");
         try {
             if (appDiagnostics) {
                 // We may have initialized earlier before we had an Office object, so repopulate it
@@ -190,7 +182,6 @@ export const Diagnostics = (function () {
 
     // Combines appDiagnostics and itemDiagnostics and returns a single object
     function get() {
-        console.log("Diagnostics get");
         if (!inGet) {
             inGet = true;
             try {
@@ -207,7 +198,6 @@ export const Diagnostics = (function () {
     }
 
     function set(field, value) {
-        console.log("Diagnostics set");
         try {
             ensureItemDiagnostics();
             itemDiagnostics[field] = value;
@@ -250,7 +240,6 @@ export const Diagnostics = (function () {
 })();
 
 // app Insights initialization
-console.log("Diagnostics new ApplicationInsights");
 export const appInsights = new ApplicationInsights({
     config: {
         instrumentationKey: aikey
@@ -259,8 +248,6 @@ export const appInsights = new ApplicationInsights({
 
 appInsights.loadAppInsights();
 appInsights.addTelemetryInitializer(function (envelope) {
-    console.log("Diagnostics TelemetryInitializer");
-    console.log(envelope);
     envelope.data.baseType = envelope.baseType;
     envelope.data.baseData = envelope.baseData;
     // This will get called for any appInsights tracking - we can augment or suppress logging from here

@@ -59,10 +59,8 @@ function copy() {
     mhaStrings.copyToClipboard(viewModel.toString());
 }
 
-console.log("Setting up UI")
 if ($) {
     $(document).ready(function () {
-        console.log("Inside ready")
         Diagnostics.set("API used", "standalone");
         viewModel = HeaderModel();
         Table.initializeTableUI(viewModel);
@@ -71,6 +69,5 @@ if ($) {
         document.querySelector("#analyzeButton").onclick = analyze;
         document.querySelector("#clearButton").onclick = clear;
         document.querySelector("#copyButton").onclick = copy;
-        console.log("Finished ready")
     });
 }
