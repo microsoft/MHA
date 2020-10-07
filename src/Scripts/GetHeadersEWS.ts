@@ -1,5 +1,4 @@
 /* global $ */
-/* global $h */
 /* global jQuery */
 /* global mhaStrings */
 /* global Errors */
@@ -63,7 +62,7 @@ const GetHeadersEWS = (function () {
         }
 
         return ret;
-    }
+        }
 
     function stripHeaderFromXml(xml) {
         if (!xml) return null;
@@ -144,16 +143,6 @@ const GetHeadersEWS = (function () {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (EWS)", true);
             return;
-        }
-
-        try {
-            if ($h && $h.EwsRequest && $h.EwsRequest.prototype && $h.EwsRequest.prototype._parseExtraResponseData$i$1) {
-                $h.EwsRequest.prototype._parseExtraResponseData$i$1 = function (response) {
-                    logResponse = response;
-                };
-            }
-        } catch (e) {
-            Errors.log(e, null);
         }
 
         try {
