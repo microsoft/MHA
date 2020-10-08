@@ -33,7 +33,7 @@
     // http://tools.ietf.org/html/rfc2822
     function analyze() {
         // Can't do anything without jQuery
-        if (!window.jQuery) return;
+        if (!$) return;
         if (appInsights) appInsights.trackEvent("analyzeHeaders");
         viewModel = HeaderModel($("#inputHeaders").val());
         Table.resetArrows();
@@ -59,7 +59,7 @@
         mhaStrings.copyToClipboard(viewModel.toString());
     }
 
-    if (window.jQuery) {
+    if ($) {
         $(document).ready(function () {
             Diagnostics.set("API used", "standalone");
             viewModel = HeaderModel();
