@@ -4,12 +4,11 @@
 /* global HeaderModel */
 /* global Diagnostics */
 /* global Table */
-/* exported StandAlone */
 
-var StandAlone = (function () {
+(function () {
     "use strict";
 
-    var viewModel = null;
+    let viewModel = null;
 
     function enableSpinner() {
         $("#response").css("background-image", "url(/Resources/loader.gif)");
@@ -40,7 +39,7 @@ var StandAlone = (function () {
         Table.resetArrows();
 
         enableSpinner();
-        updateStatus(mhaStrings.mha_loading);
+        updateStatus(mhaStrings.mhaLoading);
 
         Table.rebuildTables(viewModel);
         updateStatus("");
@@ -65,7 +64,7 @@ var StandAlone = (function () {
             Diagnostics.set("API used", "standalone");
             viewModel = HeaderModel();
             Table.initializeTableUI(viewModel);
-            Table.makeResizablePane("inputHeaders", mhaStrings.mha_prompt, null);
+            Table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, null);
 
             document.querySelector("#analyzeButton").onclick = analyze;
             document.querySelector("#clearButton").onclick = clear;
@@ -73,5 +72,5 @@ var StandAlone = (function () {
         });
     }
 
-    return {};
+    return;
 })();

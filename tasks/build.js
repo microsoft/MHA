@@ -76,7 +76,6 @@ const targets = {
     "DesktopPane.min.js": ["DesktopPane.js"],
     "Errors.min.js": ["Errors.js"],
     "ForefrontAntispam.min.js": ["ForefrontAntispam.js"],
-    "Functions.min.js": ["Functions.js"],
     "GetHeaders.min.js": ["GetHeaders.js"],
     "GetHeadersEWS.min.js": ["GetHeadersEWS.js"],
     "GetHeadersRest.min.js": ["GetHeadersRest.js"],

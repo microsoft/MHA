@@ -2,10 +2,10 @@
 /* global StackTrace */
 /* exported Errors */
 
-var Errors = (function () {
+const Errors = (function () {
     "use strict";
 
-    var errorArray = [];
+    let errorArray = [];
     function clear() { errorArray = []; }
 
     function get() { return errorArray; }
@@ -18,7 +18,7 @@ var Errors = (function () {
 
     function add(eventName, stack, suppressTracking) {
         if (eventName || stack) {
-            var stackString = Errors.joinArray(stack, "\n");
+            const stackString = Errors.joinArray(stack, "\n");
             errorArray.push(Errors.joinArray([eventName, stackString], "\n"));
 
             if (!suppressTracking && appInsights) {
@@ -51,9 +51,9 @@ var Errors = (function () {
     // error - an exception object
     // message - a string describing the error
     // suppressTracking - boolean indicating if we should suppress tracking
-    function log(error, message, suppressTracking) {
+    function log(error, message: string, suppressTracking?: boolean) {
         if (error && !suppressTracking && appInsights) {
-            var props = {
+            const props = {
                 Message: message,
                 Error: JSON.stringify(error, null, 2)
             };
@@ -96,10 +96,10 @@ var Errors = (function () {
     // message - a string describing the error
     // handler - function to call with parsed error
     function parse(exception, message, handler) {
-        var stack;
-        var exceptionMessage = Errors.getErrorMessage(exception);
+        let stack;
+        const exceptionMessage = Errors.getErrorMessage(exception);
 
-        var eventName = Errors.joinArray([message, exceptionMessage], ' : ');
+        let eventName = Errors.joinArray([message, exceptionMessage], ' : ');
         if (!eventName) {
             eventName = "Unknown exception";
         }

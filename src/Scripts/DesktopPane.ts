@@ -1,4 +1,5 @@
 /* global $ */
+/* global fabric */
 /* global mhaStrings */
 /* global HeaderModel */
 /* global poster */
@@ -8,71 +9,40 @@
 (function () {
     "use strict";
 
-    var overlay = null;
-    var spinner = null;
-
-    $(document).ready(function () {
-        try {
-            initializeFabric();
-            updateStatus(mhaStrings.mha_loading);
-            window.addEventListener("message", eventListener, false);
-            poster.postMessageToParent("frameActive");
-        }
-        catch (e) {
-            postError(e, "Failed initializing frame");
-            showError(e, "Failed initializing frame");
-        }
-    });
-
-    function eventListener(event) {
-        if (!event || event.origin !== poster.site()) return;
-
-        if (event.data) {
-            switch (event.data.eventName) {
-                case "showError":
-                    showError(JSON.parse(event.data.data.error), event.data.data.message);
-                    break;
-                case "updateStatus":
-                    updateStatus(event.data.data);
-                    break;
-                case "renderItem":
-                    renderItem(event.data.data);
-                    break;
-            }
-        }
-    }
+    let overlay = null;
+    let spinner = null;
 
     function postError(error, message) {
         poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
     }
 
     function initializeFabric() {
-        var overlayComponent = document.querySelector(".ms-Overlay");
+        const overlayComponent = document.querySelector(".ms-Overlay");
         // Override click so user can't dismiss overlay
         overlayComponent.addEventListener("click", function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
         });
-        overlay = new window.fabric["Overlay"](overlayComponent);
+        overlay = new fabric["Overlay"](overlayComponent);
 
-        var spinnerElement = document.querySelector(".ms-Spinner");
-        spinner = new window.fabric["Spinner"](spinnerElement);
+        const spinnerElement = document.querySelector(".ms-Spinner");
+        spinner = new fabric["Spinner"](spinnerElement);
         spinner.stop();
 
-        var commandBarElements = document.querySelectorAll(".ms-CommandBar");
-        var i;
+        const commandBarElements = document.querySelectorAll(".ms-CommandBar");
+        let i;
         for (i = 0; i < commandBarElements.length; i++) {
-            new window.fabric["CommandBar"](commandBarElements[i]);
+            new fabric["CommandBar"](commandBarElements[i]);
         }
 
-        var commandButtonElements = document.querySelectorAll(".ms-CommandButton");
+        const commandButtonElements = document.querySelectorAll(".ms-CommandButton");
         for (i = 0; i < commandButtonElements.length; i++) {
-            new window.fabric["CommandButton"](commandButtonElements[i]);
+            new fabric["CommandButton"](commandButtonElements[i]);
         }
 
-        var buttonElement = document.querySelector("#orig-header-btn");
-        new window.fabric["Button"](buttonElement, function () {
-            var btnIcon = $(this).find(".ms-Icon");
+        const buttonElement = document.querySelector("#orig-header-btn");
+        new fabric["Button"](buttonElement, function () {
+            const btnIcon = $(this).find(".ms-Icon");
             if (btnIcon.hasClass("ms-Icon--Add")) {
                 $("#original-headers").show();
                 btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
@@ -93,37 +63,39 @@
             $(this).addClass("is-active");
 
             // Get content marker
-            var content = $(this).attr("data-content");
+            const content = $(this).attr("data-content");
             // Hide sub-views
             $(".header-view").hide();
             $(".header-view[data-content='" + content + "']").show();
         });
     }
 
-    function renderItem(headers) {
-        // Empty data
-        $(".summary-list").empty();
-        $("#original-headers code").empty();
-        $(".orig-header-ui").hide();
-        $(".received-list").empty();
-        $(".antispam-list").empty();
-        $(".other-list").empty();
-        $("#error-display .ms-MessageBar-text").empty();
-        $("#error-display").hide();
+    function updateStatus(message) {
+        $(".status-message").text(message);
+        overlay.show();
+        spinner.start();
+    }
 
-        // Load new itemDescription
-        updateStatus(mhaStrings.mha_loading);
-        buildViews(headers);
-        hideStatus();
+    function makeBold(text) {
+        return '<span class="ms-fontWeight-semibold">' + text + "</span>";
+    }
+
+    function addCalloutEntry(name, value, parent) {
+        if (value) {
+            $("<p/>")
+                .addClass("ms-Callout-subText")
+                .html(makeBold(name + ": ") + value)
+                .appendTo(parent);
+        }
     }
 
     function buildViews(headers) {
-        var viewModel = HeaderModel(headers);
+        const viewModel = HeaderModel(headers);
         // Build summary view
-        var summaryList = $(".summary-list");
-        var headerVal;
-        var pre;
-        var i;
+        const summaryList = $(".summary-list");
+        let headerVal;
+        let pre;
+        let i;
         for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
             if (viewModel.summary.summaryRows[i].value) {
                 $("<div/>")
@@ -148,16 +120,16 @@
         }
 
         // Build received view
-        var receivedList = $(".received-list");
+        const receivedList = $(".received-list");
 
         if (viewModel.receivedHeaders.receivedRows.length > 0) {
-            var list = $("<ul/>")
+            const list = $("<ul/>")
                 .addClass("ms-List")
                 .appendTo(receivedList);
 
             for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
 
-                var listItem = $("<li/>")
+                const listItem = $("<li/>")
                     .addClass("ms-ListItem")
                     .addClass("ms-ListItem--document")
                     .appendTo(list);
@@ -173,11 +145,11 @@
                         .html(makeBold("To: ") + viewModel.receivedHeaders.receivedRows[i].by)
                         .appendTo(listItem);
                 } else {
-                    var wrap = $("<div/>")
+                    const wrap = $("<div/>")
                         .addClass("progress-icon")
                         .appendTo(listItem);
 
-                    var iconbox = $("<div/>")
+                    const iconbox = $("<div/>")
                         .addClass("ms-font-xxl")
                         .addClass("down-icon")
                         .appendTo(wrap);
@@ -187,11 +159,11 @@
                         .addClass("ms-Icon--Down")
                         .appendTo(iconbox);
 
-                    var delay = $("<div/>")
+                    const delay = $("<div/>")
                         .addClass("ms-ProgressIndicator")
                         .appendTo(wrap);
 
-                    var bar = $("<div/>")
+                    const bar = $("<div/>")
                         .addClass("ms-ProgressIndicator-itemProgress")
                         .appendTo(delay);
 
@@ -199,7 +171,7 @@
                         .addClass("ms-ProgressIndicator-progressTrack")
                         .appendTo(bar);
 
-                    var width = 1.8 * viewModel.receivedHeaders.receivedRows[i].percent;
+                    const width = 1.8 * viewModel.receivedHeaders.receivedRows[i].percent;
 
                     $("<div/>")
                         .addClass("ms-ProgressIndicator-progressBar")
@@ -222,15 +194,15 @@
                     .appendTo(listItem);
 
                 // Callout
-                var callout = $("<div/>")
+                const callout = $("<div/>")
                     .addClass("ms-Callout is-hidden")
                     .appendTo(listItem);
 
-                var calloutMain = $("<div/>")
+                const calloutMain = $("<div/>")
                     .addClass("ms-Callout-main")
                     .appendTo(callout);
 
-                var calloutHeader = $("<div/>")
+                const calloutHeader = $("<div/>")
                     .addClass("ms-Callout-header")
                     .appendTo(calloutMain);
 
@@ -239,11 +211,11 @@
                     .text("Hop Details")
                     .appendTo(calloutHeader);
 
-                var calloutInner = $("<div/>")
+                const calloutInner = $("<div/>")
                     .addClass("ms-Callout-inner")
                     .appendTo(calloutMain);
 
-                var calloutContent = $("<div/>")
+                const calloutContent = $("<div/>")
                     .addClass("ms-Callout-content")
                     .appendTo(calloutInner);
 
@@ -258,12 +230,12 @@
         }
 
         // Build antispam view
-        var antispamList = $(".antispam-list");
+        const antispamList = $(".antispam-list");
 
         // Forefront
-        var tbody;
-        var table;
-        var row;
+        let tbody;
+        let table;
+        let row;
         if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length > 0) {
             $("<div/>")
                 .addClass("ms-font-m")
@@ -320,11 +292,11 @@
         }
 
         // Build other view
-        var otherList = $(".other-list");
+        const otherList = $(".other-list");
 
         for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
             if (viewModel.otherHeaders.otherRows[i].value) {
-                var headerName = $("<div/>")
+                const headerName = $("<div/>")
                     .addClass("ms-font-s")
                     .addClass("ms-fontWeight-semibold")
                     .text(viewModel.otherHeaders.otherRows[i].header)
@@ -343,43 +315,41 @@
         }
 
         // Initialize any fabric lists added
-        var listElements = document.querySelectorAll(".ms-List");
+        const listElements = document.querySelectorAll(".ms-List");
         for (i = 0; i < listElements.length; i++) {
-            new window.fabric["List"](listElements[i]);
+            new fabric["List"](listElements[i]);
         }
 
-        var listItemElements = document.querySelectorAll(".ms-ListItem");
+        const listItemElements = document.querySelectorAll(".ms-ListItem");
         for (i = 0; i < listItemElements.length; i++) {
-            new window.fabric["ListItem"](listItemElements[i]);
+            new fabric["ListItem"](listItemElements[i]);
 
             // Init corresponding callout
-            var calloutElement = listItemElements[i].querySelector(".ms-Callout");
-            new window.fabric["Callout"](calloutElement, listItemElements[i], "right");
+            const calloutElement = listItemElements[i].querySelector(".ms-Callout");
+            new fabric["Callout"](calloutElement, listItemElements[i], "right");
         }
-    }
-
-    function makeBold(text) {
-        return '<span class="ms-fontWeight-semibold">' + text + "</span>";
-    }
-
-    function addCalloutEntry(name, value, parent) {
-        if (value) {
-            $("<p/>")
-                .addClass("ms-Callout-subText")
-                .html(makeBold(name + ": ") + value)
-                .appendTo(parent);
-        }
-    }
-
-    function updateStatus(message) {
-        $(".status-message").text(message);
-        overlay.show();
-        spinner.start();
     }
 
     function hideStatus() {
         spinner.stop();
         overlay.hide();
+    }
+
+    function renderItem(headers) {
+        // Empty data
+        $(".summary-list").empty();
+        $("#original-headers code").empty();
+        $(".orig-header-ui").hide();
+        $(".received-list").empty();
+        $(".antispam-list").empty();
+        $(".other-list").empty();
+        $("#error-display .ms-MessageBar-text").empty();
+        $("#error-display").hide();
+
+        // Load new itemDescription
+        updateStatus(mhaStrings.mhaLoading);
+        buildViews(headers);
+        hideStatus();
     }
 
     // Handles rendering of an error.
@@ -388,4 +358,35 @@
         $("#error-display .ms-MessageBar-text").text(message);
         $("#error-display").show();
     }
+
+    function eventListener(event) {
+        if (!event || event.origin !== poster.site()) return;
+
+        if (event.data) {
+            switch (event.data.eventName) {
+                case "showError":
+                    showError(JSON.parse(event.data.data.error), event.data.data.message);
+                    break;
+                case "updateStatus":
+                    updateStatus(event.data.data);
+                    break;
+                case "renderItem":
+                    renderItem(event.data.data);
+                    break;
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        try {
+            initializeFabric();
+            updateStatus(mhaStrings.mhaLoading);
+            window.addEventListener("message", eventListener, false);
+            poster.postMessageToParent("frameActive");
+        }
+        catch (e) {
+            postError(e, "Failed initializing frame");
+            showError(e, "Failed initializing frame");
+        }
+    });
 })();
