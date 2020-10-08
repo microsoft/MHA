@@ -1,6 +1,6 @@
-import { mhaStrings } from "./Strings";
+import mhaStrings from "./Strings";
 
-export const AntiSpamReport = (function () {
+const AntiSpamReport = (function () {
     "use strict";
 
     const row = function (header, label, headerName) {
@@ -104,3 +104,5 @@ export const AntiSpamReport = (function () {
         }
     };
 });
+
+export default AntiSpamReport;

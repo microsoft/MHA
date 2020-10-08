@@ -1,7 +1,7 @@
 import * as $ from "jquery";
 import { appInsights } from "./diag"
 
-export const mhaStrings = (function () {
+const mhaStrings = (function () {
     "use strict";
 
     function copyToClipboard(str) {
@@ -200,3 +200,5 @@ export const mhaStrings = (function () {
         mhaBcl: "Bulk Complaint Level"
     };
 })();
+
+export default mhaStrings;

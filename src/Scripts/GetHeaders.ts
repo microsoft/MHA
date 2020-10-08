@@ -1,7 +1,7 @@
 import "Office";
-import { GetHeadersEWS } from "./GetHeadersEWS";
-import { GetHeadersRest } from "./GetHeadersRest";
-import { ParentFrame } from "./uiToggle"
+import GetHeadersEWS from "./GetHeadersEWS";
+import GetHeadersRest from "./GetHeadersRest";
+import ParentFrame from "./uiToggle"
 
 /*
  * GetHeaders.ts
@@ -9,7 +9,7 @@ import { ParentFrame } from "./uiToggle"
  * Selector for switching between EWS and Rest logic
  */
 
-export const GetHeaders = (function () {
+const GetHeaders = (function () {
     "use strict";
 
     function permissionLevel() {
@@ -82,5 +82,7 @@ export const GetHeaders = (function () {
         permissionLevel: permissionLevel,
         sufficientPermission: sufficientPermission,
         canUseRest: canUseRest,
-    }
+    };
 })();
+
+export default GetHeaders;

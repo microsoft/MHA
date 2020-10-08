@@ -1,10 +1,10 @@
 import "Office";
 import * as $ from "jquery";
-import { mhaStrings } from "./Strings";
-import { Errors } from "./Errors";
-import { ParentFrame } from "./uiToggle"
-import { GetHeaders } from "./GetHeaders"
-import { GetHeadersEWS } from "./GetHeadersEWS"
+import mhaStrings from "./Strings";
+import Errors from "./Errors";
+import ParentFrame from "./uiToggle"
+import GetHeaders from "./GetHeaders"
+import GetHeadersEWS from "./GetHeadersEWS"
 
 /*
  * GetHeadersRest.ts
@@ -18,7 +18,7 @@ import { GetHeadersEWS } from "./GetHeadersEWS"
  * restUrl requires 1.5 and ReadItem
  */
 
-export const GetHeadersRest = (function () {
+const GetHeadersRest = (function () {
     "use strict";
 
     function getItemRestId() {
@@ -153,3 +153,5 @@ export const GetHeadersRest = (function () {
         send: send
     };
 })();
+
+export default GetHeadersRest;

@@ -1,7 +1,7 @@
-import { mhaStrings } from "./Strings";
-import { AntiSpamReport } from "./AntiSpam";
+import mhaStrings from "./Strings";
+import AntiSpamReport from "./AntiSpam";
 
-export const ForefrontAntiSpamReport = (function () {
+const ForefrontAntiSpamReport = (function () {
     "use strict";
 
     // cheap inheritance
@@ -46,3 +46,5 @@ export const ForefrontAntiSpamReport = (function () {
         }
     };
 });
+
+export default ForefrontAntiSpamReport;

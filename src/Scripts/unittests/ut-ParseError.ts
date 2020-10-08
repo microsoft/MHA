@@ -1,5 +1,5 @@
 ﻿import * as QUnit from "QUnit";
-import { Errors } from "../Errors"
+import Errors from "../Errors"
 
 // Strip stack of rows with unittests.html.
 // Used to normalize cross browser differences strictly for testing purposes

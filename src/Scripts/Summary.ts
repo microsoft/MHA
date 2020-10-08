@@ -1,7 +1,7 @@
-import { mhaStrings } from "./Strings";
-import { mhaDates} from "./Dates";
+import mhaStrings from "./Strings";
+import mhaDates from "./Dates";
 
-export const Summary = (function () {
+const Summary = (function () {
     "use strict";
 
     const SummaryRow = function (header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {
@@ -99,3 +99,5 @@ export const Summary = (function () {
         }
     };
 });
+
+export default Summary;

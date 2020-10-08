@@ -1,4 +1,4 @@
-export const poster = (function () {
+const poster = (function () {
     "use strict";
 
     function site() { return window.location.protocol + "//" + window.location.host; }
@@ -19,3 +19,5 @@ export const poster = (function () {
         site: site
     };
 })();
+
+export default poster;

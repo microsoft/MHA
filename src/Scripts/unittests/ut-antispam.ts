@@ -1,6 +1,6 @@
 ﻿import * as QUnit from "QUnit";
-import { AntiSpamReport } from "../AntiSpam";
-import { ForefrontAntiSpamReport } from "../ForefrontAntispam";
+import AntiSpamReport from "../AntiSpam";
+import ForefrontAntiSpamReport from "../ForefrontAntispam";
 
 QUnit.test("antiSpam Tests", function (assert) {
     var header = "BCL:1;";

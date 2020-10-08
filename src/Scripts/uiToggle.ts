@@ -3,15 +3,15 @@ import * as $ from "jquery";
 import "fabric";
 import { appInsights } from "./diag";
 import { Diagnostics } from "./diag";
-import { Errors } from "./Errors";
-import { GetHeaders } from "./GetHeaders";
-import { poster } from "./poster";
-import { mhaStrings } from "./Strings";
+import Errors from "./Errors";
+import GetHeaders from "./GetHeaders";
+import poster from "./poster";
+import mhaStrings from "./Strings";
 
 // Controller for Settings screen which controls what is being displayed
 // and which UI to use.
 
-export const ParentFrame = (function () {
+const ParentFrame = (function () {
     "use strict";
 
     class Choice {
@@ -357,3 +357,5 @@ export const ParentFrame = (function () {
         get choice(): Choice { return currentChoice; }
     };
 })();
+
+export default ParentFrame;

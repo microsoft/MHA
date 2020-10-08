@@ -1,7 +1,7 @@
 import { appInsights } from "./diag"
 import * as StackTrace from "StackTrace";
 
-export const Errors = (function () {
+const Errors = (function () {
     "use strict";
 
     let errorArray = [];
@@ -153,3 +153,5 @@ export const Errors = (function () {
         getErrorStack: getErrorStack
     };
 })();
+
+export default Errors;

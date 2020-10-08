@@ -1,8 +1,8 @@
 import * as $ from "jquery";
 import "fabric";
-import { mhaStrings } from "./Strings";
-import { HeaderModel } from "./Headers";
-import { poster } from "./poster";
+import mhaStrings from "./Strings";
+import HeaderModel from "./Headers";
+import poster from "./poster";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 

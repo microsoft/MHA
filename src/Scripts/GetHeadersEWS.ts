@@ -1,9 +1,9 @@
 import "Office";
 import * as $ from "jquery";
-import { mhaStrings } from "./Strings";
-import { Errors } from "./Errors";
-import { ParentFrame } from "./uiToggle"
-import { GetHeaders } from "./GetHeaders"
+import mhaStrings from "./Strings";
+import Errors from "./Errors";
+import ParentFrame from "./uiToggle"
+import GetHeaders from "./GetHeaders"
 
 /*
  * GetHeadersEWS.js
@@ -15,7 +15,7 @@ import { GetHeaders } from "./GetHeaders"
  * makeEwsRequestAsync requires 1.0 and ReadWriteMailbox
  */
 
-export const GetHeadersEWS = (function () {
+const GetHeadersEWS = (function () {
     "use strict";
 
     let logResponse;
@@ -161,3 +161,5 @@ export const GetHeadersEWS = (function () {
         extractHeadersFromXml: extractHeadersFromXml // for unit tests
     };
 })();
+
+export default GetHeadersEWS;

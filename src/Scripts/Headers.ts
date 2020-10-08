@@ -1,12 +1,12 @@
-import { AntiSpamReport } from "./AntiSpam";
-import { ForefrontAntiSpamReport } from "./ForefrontAntiSpam";
-import { Decoder } from "./2047";
-import { Other } from "./Other";
-import { Received } from "./Received";
-import { Summary } from "./Summary";
-import { poster } from "./poster";
+import AntiSpamReport from "./AntiSpam";
+import ForefrontAntiSpamReport from "./ForefrontAntiSpam";
+import Decoder from "./2047";
+import Other from "./Other";
+import Received from "./Received";
+import Summary from "./Summary";
+import poster from "./poster";
 
-export const HeaderModel = (function (headers?: string) {
+const HeaderModel = (function (headers?: string) {
     "use strict";
 
     const summary = Summary();
@@ -147,3 +147,5 @@ export const HeaderModel = (function (headers?: string) {
         toString: toString
     };
 });
+
+export default HeaderModel;

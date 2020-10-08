@@ -2,7 +2,7 @@
 import "codepage936";
 import "codepage51949";
 
-export const Decoder = (function () {
+const Decoder = (function () {
     "use strict";
 
     // http://tools.ietf.org/html/rfc2047
@@ -220,3 +220,5 @@ export const Decoder = (function () {
         decodeQuoted: decodeQuoted
     };
 })();
+
+export default Decoder;

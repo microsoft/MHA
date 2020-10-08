@@ -1,9 +1,9 @@
 import * as $ from "jquery";
 import { appInsights } from "./diag"
-import { mhaStrings } from "./Strings";
-import { HeaderModel } from "./Headers";
+import mhaStrings from "./Strings";
+import HeaderModel from "./Headers";
 import { Diagnostics } from "./diag";
-import { Table } from "./Table";
+import Table from "./Table";
 
 "use strict";
 console.log("Loaded standalone.js")

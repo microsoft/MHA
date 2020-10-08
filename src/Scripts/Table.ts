@@ -1,7 +1,7 @@
 import * as $ from "jquery";
-import { mhaStrings } from "./Strings";
+import mhaStrings from "./Strings";
 
-export const Table = (function () {
+const Table = (function () {
     "use strict";
 
     let viewModel = null;
@@ -473,3 +473,5 @@ export const Table = (function () {
         resetArrows: resetArrows
     };
 })();
+
+export default Table;

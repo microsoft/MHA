@@ -1,6 +1,6 @@
-﻿import { mhaStrings } from "./Strings";
+﻿import mhaStrings from "./Strings";
 
-export const Other = (function () {
+const Other = (function () {
     "use strict";
 
     const row = function (number, header, value) {
@@ -61,3 +61,5 @@ export const Other = (function () {
         }
     }
 });
+
+export default Other;

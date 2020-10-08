@@ -145,6 +145,7 @@ for (const targetName of Object.keys(targets)) {
     const result = UglifyJS.minify(files, options);
     if (result.error) {
         console.log("         result.error " + result.error);
+        console.log(JSON.stringify(result, null, 2));
         throw new Error(result.error);
     }
 

@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-export const mhaDates = (function () {
+const mhaDates = (function () {
     "use strict";
 
     // parse date using moment, with fallback to browser based parsing
@@ -63,3 +63,5 @@ export const mhaDates = (function () {
         parseDate: parseDate
     };
 })();
+
+export default mhaDates;

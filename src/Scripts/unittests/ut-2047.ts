@@ -1,5 +1,5 @@
 ﻿import * as QUnit from "QUnit";
-import { Decoder } from "../2047";
+import Decoder from "../2047";
 
 QUnit.test("RFC 2047 Tests", function (assert) {
     // Tests from https://tools.ietf.org/html/rfc2047
