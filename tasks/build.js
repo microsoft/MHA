@@ -71,6 +71,7 @@ var options = {
 const targets = {
     "2047.min.js": ["2047.js"],
     "Antispam.min.js": ["Antispam.js"],
+    "appInsights.min.js": ["appInsights.js"],
     "classicDesktopFrame.min.js": ["classicDesktopFrame.js"],
     "config.min.js": ["config.js"],
     "Dates.min.js": ["Dates.js"],

@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import { Diagnostics } from "./diag";
+import Diagnostics from "./diag";
 import "Framework7";
 
 // Check mobile platform

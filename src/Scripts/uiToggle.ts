@@ -1,8 +1,8 @@
 import "Office";
 import * as $ from "jquery";
 import "fabric";
-import { appInsights } from "./diag";
-import { Diagnostics } from "./diag";
+import appInsights from "./appInsights"
+import Diagnostics from "./diag";
 import Errors from "./Errors";
 import GetHeaders from "./GetHeaders";
 import poster from "./poster";

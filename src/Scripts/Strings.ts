@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import { appInsights } from "./diag"
+import appInsights from "./appInsights"
 
 const mhaStrings = (function () {
     "use strict";
