@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import { appInsights } from './diag'
+import { appInsights } from "./diag"
 import { mhaStrings } from "./Strings";
 import { HeaderModel } from "./Headers";
 import { Diagnostics } from "./diag";

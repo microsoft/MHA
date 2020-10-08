@@ -1,4 +1,4 @@
-import { appInsights } from './diag'
+import { appInsights } from "./diag"
 import * as StackTrace from "StackTrace";
 
 export const Errors = (function () {
