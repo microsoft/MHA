@@ -6,17 +6,6 @@ import { mhaVersion } from "./version";
 
 // diagnostics module
 
-// Find the path of the current script so we can inject a script we know lives alongside it
-const mhaVersionScriptPath = (function () {
-    const scripts = document.getElementsByTagName('script');
-    for (const script of scripts) {
-        const path = script.getAttribute('src', 2);
-        if (path && path.includes("diag")) {
-            return path.split('diag')[0] + 'version.js'; // current script is diag*, so splitting here will put our path in [0]
-        }
-    }
-}());
-
 export const Diagnostics = (function () {
     "use strict";
 
@@ -206,6 +195,17 @@ export const Diagnostics = (function () {
     }
 
     function clear() { itemDiagnostics = null; }
+
+    // Find the path of the current script so we can inject a script we know lives alongside it
+    const mhaVersionScriptPath = (function () {
+        const scripts = document.getElementsByTagName('script');
+        for (const script of scripts) {
+            const path = script.getAttribute('src', 2);
+            if (path && path.includes("diag")) {
+                return path.split('diag')[0] + 'version.js'; // current script is diag*, so splitting here will put our path in [0]
+            }
+        }
+    }());
 
     function ensureLastModified(callback) {
         if (lastUpdate) {
