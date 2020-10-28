@@ -2,19 +2,19 @@
 /* global mhaDates */
 /* exported Received */
 
-var Received = (function () {
+const Received = (function () {
     "use strict";
 
-    var receivedRows = [];
-    var sortColumn = "hop";
-    var sortOrder = 1;
+    const receivedRows = [];
+    let sortColumn = "hop";
+    let sortOrder = 1;
 
     // Builds array of values for each header in receivedHeaderNames.
     // This algorithm should work regardless of the order of the headers, given:
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
-    var parseHeader = function (receivedHeader) {
-        var ReceivedField = function (_label, _value) {
+    const parseHeader = function (receivedHeader) {
+        const ReceivedField = function (_label: string, _value?) {
             return {
                 label: _label,
                 value: _value !== undefined ? _value : "",
@@ -22,23 +22,23 @@ var Received = (function () {
             };
         };
 
-        var receivedFields = {};
+        const receivedFields = {};
         receivedFields["sourceHeader"] = ReceivedField("", receivedHeader);
-        receivedFields["hop"] = ReceivedField(mhaStrings.mha_hop);
-        receivedFields["from"] = ReceivedField(mhaStrings.mha_receivedFrom);
-        receivedFields["by"] = ReceivedField(mhaStrings.mha_receivedBy);
-        receivedFields["with"] = ReceivedField(mhaStrings.mha_receivedWith);
-        receivedFields["id"] = ReceivedField(mhaStrings.mha_receivedId);
-        receivedFields["for"] = ReceivedField(mhaStrings.mha_receivedFor);
-        receivedFields["via"] = ReceivedField(mhaStrings.mha_receivedVia);
-        receivedFields["date"] = ReceivedField(mhaStrings.mha_receivedDate);
-        receivedFields["delay"] = ReceivedField(mhaStrings.mha_delay);
-        receivedFields["percent"] = ReceivedField(mhaStrings.mha_receivedPercent, 0);
+        receivedFields["hop"] = ReceivedField(mhaStrings.mhaReceivedHop);
+        receivedFields["from"] = ReceivedField(mhaStrings.mhaReceivedFrom);
+        receivedFields["by"] = ReceivedField(mhaStrings.mhaReceivedBy);
+        receivedFields["with"] = ReceivedField(mhaStrings.mhaReceivedWith);
+        receivedFields["id"] = ReceivedField(mhaStrings.mhaReceivedId);
+        receivedFields["for"] = ReceivedField(mhaStrings.mhaReceivedFor);
+        receivedFields["via"] = ReceivedField(mhaStrings.mhaReceivedVia);
+        receivedFields["date"] = ReceivedField(mhaStrings.mhaReceivedDate);
+        receivedFields["delay"] = ReceivedField(mhaStrings.mhaReceivedDelay);
+        receivedFields["percent"] = ReceivedField(mhaStrings.mhaReceivedPercent, 0);
         receivedFields["delaySort"] = ReceivedField("", -1);
         receivedFields["dateNum"] = ReceivedField("");
         receivedFields.toString = function () {
-            var str = [];
-            for (var fieldName in receivedFields) {
+            const str = [];
+            for (const fieldName in receivedFields) {
                 if (receivedFields[fieldName].label && receivedFields[fieldName].toString()) {
                     str.push(receivedFields[fieldName].label + ": " + receivedFields[fieldName].toString());
                 }
@@ -47,7 +47,7 @@ var Received = (function () {
             return str.join("\n");
         }
 
-        var setField = function (fieldName, fieldValue) {
+        const setField = function (fieldName, fieldValue) {
             if (!fieldName || !fieldValue || !receivedFields[fieldName.toLowerCase()]) {
                 return false;
             }
@@ -63,13 +63,13 @@ var Received = (function () {
             receivedHeader = receivedHeader.replace(/\r|\n|\r\n/g, ' ')
 
             // Build array of header locations
-            var headerMatches = [];
+            const headerMatches = [];
 
             // Some bad dates don't wrap UTC in paren - fix that first
             receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/gi, "(UTC)");
 
             // Read out the date first, then clear it from the string
-            var iDate = receivedHeader.lastIndexOf(";");
+            let iDate = receivedHeader.lastIndexOf(";");
 
             // No semicolon means no date - or maybe there's one there?
             // Sendgrid is bad about this
@@ -86,9 +86,9 @@ var Received = (function () {
             }
 
             if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
-                var dateField = receivedHeader.substring(iDate + 1);
+                const dateField = receivedHeader.substring(iDate + 1);
                 receivedHeader = receivedHeader.substring(0, iDate);
-                var parsedDate = mhaDates.parseDate(dateField);
+                const parsedDate = mhaDates.parseDate(dateField);
 
                 if (parsedDate) {
                     receivedFields["date"].value = parsedDate.date;
@@ -99,7 +99,7 @@ var Received = (function () {
             // Scan for malformed postFix headers
             // Received: by example.com (Postfix, from userid 1001)
             //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
-            var postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/mi);
+            const postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/mi);
             if (postFix) {
                 setField("by", postFix[2]);
                 receivedHeader = postFix[1] + postFix[3];
@@ -107,16 +107,16 @@ var Received = (function () {
 
             // Scan for malformed qmail headers
             // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
-            var qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/mi);
+            const qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/mi);
             if (qmail) {
                 setField("by", qmail[2]);
                 receivedHeader = qmail[1] + qmail[3];
             }
 
             // Split up the string now so we can look for our headers
-            var tokens = receivedHeader.split(/\s+/);
+            const tokens = receivedHeader.split(/\s+/);
 
-            var fieldName;
+            let fieldName;
             for (fieldName in receivedFields) {
                 tokens.some(function (token, iToken) {
                     if (fieldName.toLowerCase() === token.toLowerCase()) {
@@ -135,7 +135,7 @@ var Received = (function () {
             headerMatches.sort(function (a, b) { return a.iToken - b.iToken; });
 
             headerMatches.forEach(function (headerMatch, iMatch) {
-                var iNextTokenHeader;
+                let iNextTokenHeader;
                 if (iMatch + 1 < headerMatches.length) {
                     iNextTokenHeader = headerMatches[iMatch + 1].iToken;
                 } else {
@@ -163,23 +163,71 @@ var Received = (function () {
             col = col + "Sort";
         }
 
-        var that = this;
-        receivedRows.sort(function (a, b) {
-            return that.sortOrder * (a[col] < b[col] ? -1 : 1);
+        receivedRows.sort((a, b) => {
+            return this.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 
     function add(receivedHeader) { receivedRows.push(parseHeader(receivedHeader)); }
+
+    // Computes min/sec from the diff of current and last.
+    // Returns nothing if last or current is NaN.
+    function computeTime(current, last) {
+        const time = [];
+
+        if (isNaN(current) || isNaN(last)) { return ""; }
+        let diff = current - last;
+        let iDelay;
+        let printedMinutes = false;
+
+        if (Math.abs(diff) < 1000) {
+            return "0 " + mhaStrings.mhaSeconds;
+        }
+
+        if (diff < 0) {
+            time.push(mhaStrings.mhaNegative);
+            diff = -diff;
+        }
+
+        if (diff >= 1000 * 60) {
+            iDelay = Math.floor(diff / 1000 / 60);
+            time.push(iDelay, " ");
+            if (iDelay === 1) {
+                time.push(mhaStrings.mhaMinute);
+            } else {
+                time.push(mhaStrings.mhaMinutes);
+            }
+
+            diff -= iDelay * 1000 * 60;
+            printedMinutes = true;
+        }
+
+        if (printedMinutes && diff) {
+            time.push(" ");
+        }
+
+        if (!printedMinutes || diff) {
+            iDelay = Math.floor(diff / 1000);
+            time.push(iDelay, " ");
+            if (iDelay === 1) {
+                time.push(mhaStrings.mhaSecond);
+            } else {
+                time.push(mhaStrings.mhaSeconds);
+            }
+        }
+
+        return time.join("");
+    }
 
     function computeDeltas() {
         // Process received headers in reverse order
         receivedRows.reverse();
 
         // Parse rows and compute values needed for the "Delay" column
-        var iStartTime = 0;
-        var iEndTime = 0;
-        var iLastTime = NaN;
-        var iDelta = 0; // This will be the sum of our positive deltas
+        let iStartTime = 0;
+        let iEndTime = 0;
+        let iLastTime = NaN;
+        let iDelta = 0; // This will be the sum of our positive deltas
 
         receivedRows.forEach(function (row) {
             if (!isNaN(row.dateNum)) {
@@ -217,55 +265,6 @@ var Received = (function () {
         return iEndTime !== iStartTime ? computeTime(iEndTime, iStartTime) : "";
     }
 
-    // Computes min/sec from the diff of current and last.
-    // Returns nothing if last or current is NaN.
-    function computeTime(current, last) {
-        var time = [];
-
-        if (isNaN(current) || isNaN(last)) { return ""; }
-        var diff = current - last;
-        var iDelay;
-        var printedMinutes = false;
-
-        if (Math.abs(diff) < 1000) {
-            return "0 " + mhaStrings.mha_seconds;
-        }
-
-        if (diff < 0) {
-            time.push(mhaStrings.mha_negative);
-            diff = -diff;
-        }
-
-        if (diff >= 1000 * 60) {
-            iDelay = Math.floor(diff / 1000 / 60);
-            time.push(iDelay, " ");
-            if (iDelay === 1) {
-                time.push(mhaStrings.mha_minute);
-            } else {
-                time.push(mhaStrings.mha_minutes);
-            }
-
-            diff -= iDelay * 1000 * 60;
-            printedMinutes = true;
-        }
-
-        if (printedMinutes && diff) {
-            time.push(" ");
-        }
-
-        if (!printedMinutes || diff) {
-            iDelay = Math.floor(diff / 1000);
-            time.push(iDelay, " ");
-            if (iDelay === 1) {
-                time.push(mhaStrings.mha_second);
-            } else {
-                time.push(mhaStrings.mha_seconds);
-            }
-        }
-
-        return time.join("");
-    }
-
     return {
         tableName: "receivedHeaders",
         add: add,
@@ -279,8 +278,8 @@ var Received = (function () {
         computeTime: computeTime, // For testing only
         toString: function () {
             if (!exists()) return "";
-            var ret = ["Received"];
-            var rows = [];
+            const ret = ["Received"];
+            const rows = [];
             receivedRows.forEach(function (row) {
                 rows.push(row);
             });

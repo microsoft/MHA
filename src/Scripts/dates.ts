@@ -1,6 +1,7 @@
+/* global moment */
 /* exported mhaDates */
 
-var mhaDates = (function () {
+const mhaDates = (function () {
     "use strict";
 
     // parse date using moment, with fallback to browser based parsing
@@ -16,9 +17,9 @@ var mhaDates = (function () {
 
         // If we don't have a +xxxx or -xxxx on our date, it will be interpreted in local time
         // This likely isn't the intended timezone, so we add a +0000 to get UTC
-        var offset = date.match(/[+|-]\d{4}/);
-        var originalDate = date;
-        var offsetAdded = false;
+        const offset = date.match(/[+|-]\d{4}/);
+        const originalDate = date;
+        let offsetAdded = false;
         if (!offset || offset.length !== 1) {
             date += " +0000";
             offsetAdded = true;
@@ -26,15 +27,15 @@ var mhaDates = (function () {
 
         // Some browsers don't like milliseconds in dates, and moment doesn't hide that from us
         // Trim off milliseconds so we don't pass them into moment
-        var milliseconds = date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
+        const milliseconds = date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
         date = date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
 
-        if (window.moment) {
+        if (moment) {
             // And now we can parse our date
-            var time = window.moment(date);
+            let time = moment(date);
 
             // If adding offset didn't work, try adding time and offset
-            if (!time.isValid() && offsetAdded) { time = window.moment(originalDate + " 12:00:00 AM +0000"); }
+            if (!time.isValid() && offsetAdded) { time = moment(originalDate + " 12:00:00 AM +0000"); }
             if (milliseconds && milliseconds.length >= 2) {
                 time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), 'ms');
             }
@@ -46,7 +47,7 @@ var mhaDates = (function () {
             };
         }
         else {
-            var dateNum = Date.parse(date);
+            let dateNum = Date.parse(date);
             if (milliseconds && milliseconds.length >= 2) {
                 dateNum = dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
             }

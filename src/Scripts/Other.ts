@@ -1,10 +1,10 @@
 ﻿/* global mhaStrings */
 /* exported Other */
 
-var Other = (function () {
+const Other = (function () {
     "use strict";
 
-    var row = function (number, header, value) {
+    const row = function (number, header, value) {
         return {
             number: number,
             header: header,
@@ -14,9 +14,9 @@ var Other = (function () {
         }
     };
 
-    var otherRows = [];
-    var sortColumn = "number";
-    var sortOrder = 1;
+    const otherRows = [];
+    let sortColumn = "number";
+    let sortOrder = 1;
 
     function doSort(col) {
         if (sortColumn === col) {
@@ -30,9 +30,8 @@ var Other = (function () {
             col = col + "Sort";
         }
 
-        var that = this;
-        otherRows.sort(function (a, b) {
-            return that.sortOrder * (a[col] < b[col] ? -1 : 1);
+        otherRows.sort((a, b) => {
+            return this.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 
@@ -55,7 +54,7 @@ var Other = (function () {
         get sortOrder() { return sortOrder; },
         toString: function () {
             if (!exists()) return "";
-            var ret = ["Other"];
+            const ret = ["Other"];
             otherRows.forEach(function (row) {
                 if (row.value) { ret.push(row); }
             });
