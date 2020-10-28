@@ -2,7 +2,7 @@
 Message Header Analyzer mail app.
 
 This is the source for the Message Header Analyzer. Install the app from the store here:
-https://store.office.com/message-header-analyzer-WA104005406.aspx
+https://appsource.microsoft.com/en-us/product/office/WA104005406
 
 ## Installation Procedure
 Because MHA requires the ReadWriteMailbox permission it can only be installed by the Administrator through the Exchange admin center. Here are some steps I put together:
