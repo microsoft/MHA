@@ -277,5 +277,6 @@ script.onload = function () {
         });
     }), aisdk.queue && 0 === aisdk.queue.length; aisdk.trackPageView({});
 };
+script.onerror = function () { appInsights = null; };
 script.src = window.location.origin + '/Scripts/aikey.js';
 document.getElementsByTagName('script')[0].parentNode.appendChild(script);
