@@ -35,7 +35,7 @@
     "office-ui-fabric-js": "^1.5.0",
     "stacktrace-js": "^2.0.2",
     "typescript": "^4.0.3",
-    "uglify-js": "^3.11.1"
+    "uglify-js": "^3.13.2"
   },
   "-vs-binding": {
     "BeforeBuild": [
