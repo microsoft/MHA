@@ -39,7 +39,8 @@ console.log("commitID: " + commitID);
 console.log("version: " + version);
 
 const scriptsFolderSrc = path.join(__dirname, "..", "src", "Scripts");
-const scriptsFolderDst = path.join(__dirname, "..", "Scripts", version);
+const scriptsFolderDstRoot = path.join(__dirname, "..", "Scripts");
+const scriptsFolderDst = path.join(scriptsFolderDstRoot , version);
 
 // Copy files from src to dst, replacing %version% on the way if munge is true
 const deploy = function (src, dst, munge) {
@@ -105,6 +106,9 @@ const targets = {
 };
 
 console.log("Deploying script");
+if (!fs.existsSync(scriptsFolderDstRoot)) {
+    fs.mkdirSync(scriptsFolderDstRoot);
+}
 for (const targetName of Object.keys(targets)) {
     const fileSet = targets[targetName];
     const mapName = targetName + ".map";
