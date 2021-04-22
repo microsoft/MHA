@@ -20,7 +20,11 @@
 
 .tabs .tab {
     padding-top: 25px;
-    background: #efeff4;
+    background: #f4f4f4;
+}
+
+.page {
+    background: #f4f4f4;
 }
 
 .content-block-title{

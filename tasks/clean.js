@@ -17,6 +17,16 @@ const rmdir = function (filepath) {
     }
 };
 
+// Remove build output directories
 rmdir(path.join(__dirname, "..", "Pages"));
 rmdir(path.join(__dirname, "..", "Content"));
-rmdir(path.join(__dirname, "..", "Scripts"));
+rmdir(path.join(__dirname, "..", "src", "transpiled"));
+
+// We don't remove Scripts, but instead remove child directories of Scripts
+const scriptsFolder = path.join(__dirname, "..", "Scripts");
+fs.readdirSync(scriptsFolder).forEach((file, index) => {
+    const subpath = path.join(scriptsFolder, file);
+    if (fs.lstatSync(subpath).isDirectory()) {
+        rmdir(subpath);
+    }
+});

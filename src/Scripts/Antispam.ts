@@ -1,27 +1,32 @@
 /* global mhaStrings  */
 /* exported AntiSpamReport */
 
-var AntiSpamReport = (function () {
-    var row = function (header, label, url) {
+const AntiSpamReport = (function () {
+    "use strict";
+
+    const row = function (header, label, headerName) {
         return {
             header: header,
             label: label,
-            url: url,
-            value: ""
+            headerName: headerName,
+            value: "",
+            valueUrl: "",
+            toString: function () { return this.label + ": " + this.value; }
+
         }
     };
 
-    var source = "";
-    var unparsed = "";
-    var antiSpamRows = [
-        row("BCL", mhaStrings.mha_bcl, "X-Microsoft-Antispam"),
-        row("PCL", mhaStrings.mha_pcl, "X-Microsoft-Antispam"),
-        row("source", mhaStrings.mha_source, "X-Microsoft-Antispam"),
-        row("unparsed", mhaStrings.mha_unparsed, "X-Microsoft-Antispam")
+    let source = "";
+    let unparsed = "";
+    const antiSpamRows = [
+        row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
+        row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
+        row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
+        row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
     ];
 
     function existsInternal(rows) {
-        for (var i = 0; i < rows.length; i++) {
+        for (let i = 0; i < rows.length; i++) {
             if (rows[i].value) {
                 return true;
             }
@@ -31,9 +36,10 @@ var AntiSpamReport = (function () {
     }
 
     function setRowValue(rows, key, value) {
-        for (var i = 0; i < rows.length; i++) {
+        for (let i = 0; i < rows.length; i++) {
             if (rows[i].header.toUpperCase() === key.toUpperCase()) {
                 rows[i].value = value;
+                rows[i].valueUrl = mhaStrings.mapHeaderToURL(rows[i].headerName, value);
                 return true;
             }
         }
@@ -60,11 +66,11 @@ var AntiSpamReport = (function () {
         // Third pass: Collapse them.
         report = report.replace(/;+/g, ";");
 
-        var lines = report.match(/(.*?):(.*?);/g);
+        const lines = report.match(/(.*?):(.*?);/g);
         unparsed = "";
         if (lines) {
-            for (var iLine = 0; iLine < lines.length; iLine++) {
-                var line = lines[iLine].match(/(.*?):(.*?);/m);
+            for (let iLine = 0; iLine < lines.length; iLine++) {
+                const line = lines[iLine].match(/(.*?):(.*?);/m);
                 if (line && line[1]) {
                     if (!setRowValue(rows, line[1], line[2])) {
                         unparsed += line[1] + ':' + line[2] + ';';
@@ -77,17 +83,25 @@ var AntiSpamReport = (function () {
         setRowValue(rows, "unparsed", unparsed);
     }
 
-    function init(report) { parse(report, antiSpamRows); }
+    function add(report) { parse(report, antiSpamRows); }
     function exists() { return existsInternal(antiSpamRows); }
 
     return {
-        init: init,
+        add: add,
         exists: exists,
         existsInternal: existsInternal,
         parse: parse,
         get source() { return source; },
         get unparsed() { return unparsed; },
         get antiSpamRows() { return antiSpamRows; },
-        row: row
-    }
+        row: row,
+        toString: function () {
+            if (!exists()) return "";
+            const ret = ["AntiSpamReport"];
+            antiSpamRows.forEach(function (row) {
+                if (row.value) { ret.push(row.toString()); }
+            });
+            return ret.join("\n");
+        }
+    };
 });
