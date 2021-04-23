@@ -2,82 +2,64 @@
 /* global StackTrace */
 /* global aikey */
 /* global appInsights */
+/* global mhaVersion */
 /* exported Diagnostics */
 
 // diagnostics module
 
-var Diagnostics = (function () {
-    var appDiagnostics = null;
-    var itemDiagnostics = null;
-    var lastUpdate = "";
-    var inGet = false;
+// Find the path of the current script so we can inject a script we know lives alongside it
+const mhaVersionScriptPath = (function () {
+    const scripts = document.getElementsByTagName('script');
+    const script = scripts[scripts.length - 1];
+    const path = script.getAttribute('src', 2);
+    return path.split('diag')[0] + 'version.js'; // current script is diag*, so splitting here will put our path in [0]
+}());
 
-    // Combines appDiagnostics and itemDiagnostics and returns a single object
-    function get() {
-        if (!inGet) {
-            inGet = true;
-            try {
-                ensureAppDiagnostics();
-                ensureItemDiagnostics();
-            }
-            catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.get", exception: e.toString(), message: e.message, stack: e.stack }); }
-            inGet = false;
-        }
+const Diagnostics = (function () {
+    "use strict";
 
-        // Ideally we'd combine with Object.assign or the spread operator(...) but not all our browsers (IE) support that.
-        // jQuery's extend should work everywhere.
-        return $.extend({}, appDiagnostics, itemDiagnostics);
-    }
+    let appDiagnostics = null;
+    let itemDiagnostics = null;
+    let lastUpdate = "";
+    let inGet = false;
 
-    function set(field, value) {
+    function ensureItemDiagnostics() {
         try {
-            ensureItemDiagnostics();
-            itemDiagnostics[field] = value;
-        }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.set", exception: e.toString(), message: e.message, stack: e.stack }); }
-    }
+            if (itemDiagnostics) return;
+            itemDiagnostics = {};
 
-    function clear() { itemDiagnostics = null; }
-
-    function ensureLastModified() {
-        try {
-            var client = new XMLHttpRequest();
-            client.open("HEAD", window.location.origin + "/src/Scripts/diag.js", true);
-            client.onreadystatechange = function () {
-                if (this.readyState == 2) {
-                    lastUpdate = client.getResponseHeader("Last-Modified");
+            itemDiagnostics["API used"] = "Not set";
+            if (window.Office) {
+                if (window.Office.context) {
+                    if (window.Office.context.mailbox) {
+                        if (window.Office.context.mailbox.item) {
+                            itemDiagnostics["itemId"] = !!window.Office.context.mailbox.item.itemId;
+                            itemDiagnostics["itemType"] = window.Office.context.mailbox.item.itemType;
+                            itemDiagnostics["itemClass"] = window.Office.context.mailbox.item.itemClass;
+                        }
+                        else {
+                            itemDiagnostics["Office.context.mailbox.item"] = "missing";
+                        }
+                    }
+                    else {
+                        itemDiagnostics["Office.context.mailbox"] = "missing";
+                    }
+                }
+                else {
+                    itemDiagnostics["Office.context"] = "missing";
                 }
             }
-
-            client.send();
-        }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureLastModified", exception: e.toString(), message: e.message, stack: e.stack }); }
-    }
-
-    function ensureAppDiagnostics() {
-        try {
-            if (appDiagnostics) {
-                // We may have initialized earlier before we had an Office object, so repopulate it
-                ensureOfficeDiagnostics();
-                return;
+            else {
+                itemDiagnostics["Office"] = "missing";
             }
-
-            appDiagnostics = {};
-
-            if (window.navigator) appDiagnostics["User Agent"] = window.navigator.userAgent;
-            appDiagnostics["Requirement set"] = getRequirementSet();
-            ensureOfficeDiagnostics();
-
-            appDiagnostics["origin"] = window.location.origin;
-            appDiagnostics["path"] = window.location.pathname;
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureAppDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }); }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureItemDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }); }
     }
 
     function ensureOfficeDiagnostics() {
         try {
             if (window.ParentFrame) {
-                var choice = window.ParentFrame.choice;
+                const choice = window.ParentFrame.choice;
                 if (choice) {
                     appDiagnostics.ui = choice.label;
                 }
@@ -88,6 +70,10 @@ var Diagnostics = (function () {
 
             if (lastUpdate) {
                 appDiagnostics["Last Update"] = lastUpdate;
+            }
+
+            if (mhaVersion) {
+                appDiagnostics["mhaVersion"] = mhaVersion();
             }
 
             if (window.Office) {
@@ -143,45 +129,14 @@ var Diagnostics = (function () {
         catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureOfficeDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }); }
     }
 
-    function ensureItemDiagnostics() {
-        try {
-            if (itemDiagnostics) return;
-            itemDiagnostics = {};
-
-            itemDiagnostics["API used"] = "Not set";
-            if (window.Office) {
-                if (window.Office.context) {
-                    if (window.Office.context.mailbox) {
-                        if (window.Office.context.mailbox.item) {
-                            itemDiagnostics["itemId"] = !!window.Office.context.mailbox.item.itemId;
-                            itemDiagnostics["itemType"] = window.Office.context.mailbox.item.itemType;
-                            itemDiagnostics["itemClass"] = window.Office.context.mailbox.item.itemClass;
-                        }
-                        else {
-                            itemDiagnostics["Office.context.mailbox.item"] = "missing";
-                        }
-                    }
-                    else {
-                        itemDiagnostics["Office.context.mailbox"] = "missing";
-                    }
-                }
-                else {
-                    itemDiagnostics["Office.context"] = "missing";
-                }
-            }
-            else {
-                itemDiagnostics["Office"] = "missing";
-            }
-        }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureItemDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }); }
-    }
-
     function getRequirementSet() {
         // https://docs.microsoft.com/en-us/office/dev/add-ins/reference/requirement-sets/outlook-api-requirement-sets
         try {
             if (!("Office" in window)) return "none";
             if (!window.Office.context) return "no context";
             if (window.Office.context.requirements && window.Office.context.requirements.isSetSupported) {
+                if (window.Office.context.requirements.isSetSupported("Mailbox", 1.9)) return "1.9";
+                if (window.Office.context.requirements.isSetSupported("Mailbox", 1.8)) return "1.8";
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.7)) return "1.7";
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.6)) return "1.6";
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.5)) return "1.5";
@@ -205,15 +160,85 @@ var Diagnostics = (function () {
         }
     }
 
+    function ensureAppDiagnostics() {
+        try {
+            if (appDiagnostics) {
+                // We may have initialized earlier before we had an Office object, so repopulate it
+                ensureOfficeDiagnostics();
+                return;
+            }
+
+            appDiagnostics = {};
+
+            if (window.navigator) appDiagnostics["User Agent"] = window.navigator.userAgent;
+            appDiagnostics["Requirement set"] = getRequirementSet();
+            ensureOfficeDiagnostics();
+
+            appDiagnostics["origin"] = window.location.origin;
+            appDiagnostics["path"] = window.location.pathname;
+        }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureAppDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }); }
+    }
+
+    // Combines appDiagnostics and itemDiagnostics and returns a single object
+    function get() {
+        if (!inGet) {
+            inGet = true;
+            try {
+                ensureAppDiagnostics();
+                ensureItemDiagnostics();
+            }
+            catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.get", exception: e.toString(), message: e.message, stack: e.stack }); }
+            inGet = false;
+        }
+
+        // Ideally we'd combine with Object.assign or the spread operator(...) but not all our browsers (IE) support that.
+        // jQuery's extend should work everywhere.
+        return $.extend({}, appDiagnostics, itemDiagnostics);
+    }
+
+    function set(field, value) {
+        try {
+            ensureItemDiagnostics();
+            itemDiagnostics[field] = value;
+        }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.set", exception: e.toString(), message: e.message, stack: e.stack }); }
+    }
+
+    function clear() { itemDiagnostics = null; }
+
+    function ensureLastModified() {
+        try {
+            const client = new XMLHttpRequest();
+            // version.js is generated on build and is the true signal of the last modified time
+            client.open("HEAD", mhaVersionScriptPath, true);
+            client.onreadystatechange = function () {
+                if (this.readyState === 2) {
+                    lastUpdate = client.getResponseHeader("Last-Modified");
+                }
+            }
+
+            client.send();
+        }
+        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureLastModified", exception: e.toString(), message: e.message, stack: e.stack }); }
+    }
+
+
     ensureLastModified();
+
     return {
         get: get,
         set: set,
         clear: clear
-    }
+    };
 })();
 
-var script = document.createElement('script');
+// Inject our version variable
+const version = document.createElement('script');
+version.src = mhaVersionScriptPath;
+document.getElementsByTagName('script')[0].parentNode.appendChild(version);
+
+const script = document.createElement('script');
 script.onload = function () {
     // app Insights initialization
     var sdkInstance = "appInsightsSDK"; window[sdkInstance] = "appInsights"; var aiName = window[sdkInstance], aisdk = window[aiName] || function (e) { function n(e) { t[e] = function () { var n = arguments; t.queue.push(function () { t[e].apply(t, n) }) } } var t = { config: e }; t.initialize = !0; var i = document, a = window; setTimeout(function () { var n = i.createElement("script"); n.src = e.url || "https://az416426.vo.msecnd.net/scripts/b/ai.2.min.js", i.getElementsByTagName("script")[0].parentNode.appendChild(n) }); try { t.cookie = i.cookie } catch (e) { } t.queue = [], t.version = 2; for (var r = ["Event", "PageView", "Exception", "Trace", "DependencyData", "Metric", "PageViewPerformance"]; r.length;) n("track" + r.pop()); n("startTrackPage"), n("stopTrackPage"); var s = "Track" + r[0]; if (n("start" + s), n("stop" + s), n("setAuthenticatedUserContext"), n("clearAuthenticatedUserContext"), n("flush"), !(!0 === e.disableExceptionTracking || e.extensionConfig && e.extensionConfig.ApplicationInsightsAnalytics && !0 === e.extensionConfig.ApplicationInsightsAnalytics.disableExceptionTracking)) { n("_" + (r = "onerror")); var o = a[r]; a[r] = function (e, n, i, a, s) { var c = o && o(e, n, i, a, s); return !0 !== c && t["_" + r]({ message: e, url: n, lineNumber: i, columnNumber: a, error: s }), c }, e.autoExceptionInstrumented = !0 } return t }(
@@ -226,7 +251,7 @@ script.onload = function () {
             envelope.data.baseData = envelope.baseData;
             // This will get called for any appInsights tracking - we can augment or suppress logging from here
             // No appInsights logging for localhost/dev
-            var doLog = (document.domain !== "localhost");
+            const doLog = (document.domain !== "localhost");
             if (envelope.baseType === "RemoteDependencyData") return doLog;
             if (envelope.baseType === "PageviewData") return doLog;
             if (envelope.baseType === "PageviewPerformanceData") return doLog;
@@ -254,5 +279,6 @@ script.onload = function () {
         });
     }), aisdk.queue && 0 === aisdk.queue.length; aisdk.trackPageView({});
 };
+script.onerror = function () { appInsights = null; };
 script.src = window.location.origin + '/Scripts/aikey.js';
 document.getElementsByTagName('script')[0].parentNode.appendChild(script);

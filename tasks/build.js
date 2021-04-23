@@ -38,10 +38,6 @@ const version = getHash(commitID);
 console.log("commitID: " + commitID);
 console.log("version: " + version);
 
-const scriptsFolderSrc = path.join(__dirname, "..", "src", "Scripts");
-const scriptsFolderDstRoot = path.join(__dirname, "..", "Scripts");
-const scriptsFolderDst = path.join(scriptsFolderDstRoot , version);
-
 // Copy files from src to dst, replacing %version% on the way if munge is true
 const deploy = function (src, dst, munge) {
     if (!fs.existsSync(dst)) fs.mkdirSync(dst, { recursive: true });
@@ -75,11 +71,11 @@ var options = {
 const targets = {
     "2047.min.js": ["2047.js"],
     "Antispam.min.js": ["Antispam.js"],
+    "Dates.min.js": ["Dates.js"],
     "Default.min.js": ["Default.js"],
     "DesktopPane.min.js": ["DesktopPane.js"],
     "Errors.min.js": ["Errors.js"],
     "ForefrontAntispam.min.js": ["ForefrontAntispam.js"],
-    "Functions.min.js": ["Functions.js"],
     "GetHeaders.min.js": ["GetHeaders.js"],
     "GetHeadersEWS.min.js": ["GetHeadersEWS.js"],
     "GetHeadersRest.min.js": ["GetHeadersRest.js"],
@@ -87,6 +83,7 @@ const targets = {
     "MobilePane-ios.min.js": ["MobilePane-ios.js"],
     "MobilePane.min.js": ["MobilePane.js"],
     "Other.min.js": ["Other.js"],
+    "poster.min.js": ["poster.js"],
     "Received.min.js": ["Received.js"],
     "siteTypesOffice.min.js": ["siteTypesOffice.js"],
     "StandAlone.min.js": ["StandAlone.js"],
@@ -95,6 +92,7 @@ const targets = {
     "Table.min.js": ["Table.js"],
     "uiToggle.min.js": ["uiToggle.js"],
     "diag.min.js": ["diag.js"],
+    "unittests/ut-common.min.js": ["unittests/ut-common.js"],
     "unittests/ut-2047.min.js": ["unittests/ut-2047.js"],
     "unittests/ut-antispam.min.js": ["unittests/ut-antispam.js"],
     "unittests/ut-DateTime.min.js": ["unittests/ut-DateTime.js"],
@@ -106,9 +104,14 @@ const targets = {
 };
 
 console.log("Deploying script");
+const scriptsFolderSrc = path.join(__dirname, "..", "src", "transpiled");
+const scriptsFolderDstRoot = path.join(__dirname, "..", "Scripts");
+const scriptsFolderDst = path.join(scriptsFolderDstRoot, version);
+
 if (!fs.existsSync(scriptsFolderDstRoot)) {
     fs.mkdirSync(scriptsFolderDstRoot);
 }
+
 for (const targetName of Object.keys(targets)) {
     const fileSet = targets[targetName];
     const mapName = targetName + ".map";
@@ -150,4 +153,17 @@ for (const targetName of Object.keys(targets)) {
         fs.writeFileSync(path.join(scriptsFolderDst, targetName), result.code, "utf8");
         fs.writeFileSync(path.join(scriptsFolderDst, mapName), result.map, "utf8");
     }
+}
+
+if (version) {
+    const versionscript = path.join(scriptsFolderDst, "version.js");
+
+    console.log("Merging version (" + version + ") into js");
+    if (fs.existsSync(versionscript)) {
+        console.log("  Deleting " + versionscript);
+        fs.unlinkSync(versionscript);
+    }
+
+    console.log("Building " + versionscript);
+    fs.writeFileSync(versionscript, "/* exported mhaVersion */ window.mhaVersion = function () { return \"" + version + "\"; };", "utf8");
 }

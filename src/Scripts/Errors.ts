@@ -2,8 +2,10 @@
 /* global StackTrace */
 /* exported Errors */
 
-var Errors = (function () {
-    var errorArray = [];
+const Errors = (function () {
+    "use strict";
+
+    let errorArray = [];
     function clear() { errorArray = []; }
 
     function get() { return errorArray; }
@@ -16,7 +18,7 @@ var Errors = (function () {
 
     function add(eventName, stack, suppressTracking) {
         if (eventName || stack) {
-            var stackString = Errors.joinArray(stack, "\n");
+            const stackString = Errors.joinArray(stack, "\n");
             errorArray.push(Errors.joinArray([eventName, stackString], "\n"));
 
             if (!suppressTracking && appInsights) {
@@ -49,9 +51,9 @@ var Errors = (function () {
     // error - an exception object
     // message - a string describing the error
     // suppressTracking - boolean indicating if we should suppress tracking
-    function log(error, message, suppressTracking) {
+    function log(error, message: string, suppressTracking?: boolean) {
         if (error && !suppressTracking && appInsights) {
-            var props = {
+            const props = {
                 Message: message,
                 Error: JSON.stringify(error, null, 2)
             };
@@ -79,7 +81,7 @@ var Errors = (function () {
     function filterStack(stack) {
         return stack.filter(function (item) {
             if (!item.fileName) return true;
-            if (item.fileName.indexOf("stacktrace") !== -1) return false;
+            if (item.fileName.indexOf("stacktrace") !== -1) return false; // remove stacktrace.js frames
             //if (item.functionName === "ShowError") return false;
             //if (item.functionName === "showError") return false;
             //if (item.functionName === "Errors.log") return false; // Logs with Errors.log in them usually have location where it was called from - keep those
@@ -94,10 +96,10 @@ var Errors = (function () {
     // message - a string describing the error
     // handler - function to call with parsed error
     function parse(exception, message, handler) {
-        var stack;
-        var exceptionMessage = Errors.getErrorMessage(exception);
+        let stack;
+        const exceptionMessage = Errors.getErrorMessage(exception);
 
-        var eventName = Errors.joinArray([message, exceptionMessage], ' : ');
+        let eventName = Errors.joinArray([message, exceptionMessage], ' : ');
         if (!eventName) {
             eventName = "Unknown exception";
         }
@@ -150,5 +152,5 @@ var Errors = (function () {
         parse: parse,
         getErrorMessage: getErrorMessage,
         getErrorStack: getErrorStack
-    }
+    };
 })();

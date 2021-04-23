@@ -10,29 +10,8 @@
  * Selector for switching between EWS and Rest logic
  */
 
-var GetHeaders = (function () {
-    function send(headersLoadedCallback) {
-        if (!validItem()) {
-            ParentFrame.showError(null, "No item selected", true);
-            return;
-        }
-
-        if (!sufficientPermission(false)) {
-            ParentFrame.showError(null, "Insufficient permissions to request headers", false);
-            return;
-        }
-
-        try {
-            if (canUseRest()) {
-                GetHeadersRest.send(headersLoadedCallback);
-            }
-            else {
-                GetHeadersEWS.send(headersLoadedCallback);
-            }
-        } catch (e) {
-            ParentFrame.showError(e, "Could not send header request");
-        }
-    }
+const GetHeaders = (function () {
+    "use strict";
 
     function permissionLevel() {
         if (!Office) return 0;
@@ -73,6 +52,29 @@ var GetHeaders = (function () {
         if (!Office.context.mailbox.item) return false;
         if (!Office.context.mailbox.item.itemId) return false;
         return true;
+    }
+
+    function send(headersLoadedCallback) {
+        if (!validItem()) {
+            ParentFrame.showError(null, "No item selected", true);
+            return;
+        }
+
+        if (!sufficientPermission(false)) {
+            ParentFrame.showError(null, "Insufficient permissions to request headers", false);
+            return;
+        }
+
+        try {
+            if (canUseRest()) {
+                GetHeadersRest.send(headersLoadedCallback);
+            }
+            else {
+                GetHeadersEWS.send(headersLoadedCallback);
+            }
+        } catch (e) {
+            ParentFrame.showError(e, "Could not send header request");
+        }
     }
 
     return {

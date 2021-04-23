@@ -111,8 +111,28 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
   popd
 )
 
-:: 4. Run npm build script
-echo 4. Run npm build script
+:: 4. Restore nuget packages
+echo 4. Restore nuget packages
+IF EXIST "%DEPLOYMENT_TARGET%\packages.config" (
+  echo Running nuget restore
+  pushd "%DEPLOYMENT_TARGET%"
+  call :ExecuteCmd nuget restore "%DEPLOYMENT_TARGET%\packages.config" -PackagesDirectory "%DEPLOYMENT_TARGET%\packages"
+  IF !ERRORLEVEL! NEQ 0 goto error
+  echo Completed nuget restore
+  popd
+)
+
+:: 5. Transpile TypeScript
+echo 5. Transpile TypeScript
+IF EXIST "%DEPLOYMENT_TARGET%\tsconfig.json" (
+  pushd "%DEPLOYMENT_TARGET%"
+  call :ExecuteCmd node %DEPLOYMENT_TARGET%\node_modules\typescript\bin\tsc -p "%DEPLOYMENT_TARGET%"
+::  IF !ERRORLEVEL! NEQ 0 goto error
+  popd
+)
+
+:: 6. Run npm build script
+echo 6. Run npm build script
 IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
   pushd "%DEPLOYMENT_TARGET%"
   call :ExecuteCmd !NPM_CMD! run build
