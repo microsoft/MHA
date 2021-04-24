@@ -41,7 +41,10 @@ const mhaStrings = (function () {
     const headerToURLMap = [
         ["Accept-Language", "https://tools.ietf.org/html/rfc3282"],
         ["Archived-At", "https://tools.ietf.org/html/rfc5064"],
-        ["Authentication-Results", "https://tools.ietf.org/html/rfc7601"],
+        ["ARC-Authentication-Results", "https://tools.ietf.org/html/rfc8617#section-4.1.1"],
+        ["ARC-Message-Signature", "https://tools.ietf.org/html/rfc8617#section-4.1.2"],
+        ["ARC-Seal", "https://tools.ietf.org/html/rfc8617#section-4.1.3"],
+        ["Authentication-Results", "https://tools.ietf.org/html/rfc8601"],
         ["BCC", "https://tools.ietf.org/html/rfc5322#section-3.6.3"],
         ["CC", "https://tools.ietf.org/html/rfc5322#section-3.6.3"],
         ["Content-Description", "https://tools.ietf.org/html/rfc2045#section-8"],
