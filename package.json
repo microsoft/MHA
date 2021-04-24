@@ -32,7 +32,7 @@
     "codepage": "^1.14.0",
     "framework7-icons": "^3.0.1",
     "jquery": "^3.5.1",
-    "jwt-decode": "^3.0.0",
+    "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
     "office-ui-fabric-js": "^1.5.0",
     "stacktrace-js": "^2.0.2",
