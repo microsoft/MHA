@@ -9,7 +9,9 @@
   "main": "Pages/mha.html",
   "scripts": {
     "ts": "tsc",
+    "prebuild": "npm install && npm run clean && tsc || exit 0",
     "build": "node tasks/build.js",
+    "prebuild-debug": "npm install && npm run clean && tsc || exit 0",
     "build-debug": "node tasks/build.js debug",
     "clean": "node tasks/clean.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,22 +27,20 @@
   },
   "homepage": "https://github.com/stephenegriffin/mha#readme",
   "dependencies": {
-    "@microsoft/office-js": "^1.1.43",
-    "@types/jquery": "^3.5.2",
+    "@microsoft/office-js": "^1.1.53",
+    "@types/jquery": "^3.5.5",
     "codepage": "^1.14.0",
     "framework7-icons": "^3.0.1",
     "jquery": "^3.5.1",
-    "jwt-decode": "^3.0.0",
+    "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
     "office-ui-fabric-js": "^1.5.0",
     "stacktrace-js": "^2.0.2",
     "typescript": "^4.0.3",
-    "uglify-js": "^3.11.1"
+    "uglify-js": "^3.13.4"
   },
   "-vs-binding": {
     "BeforeBuild": [
-      "clean",
-      "ts",
       "build-debug"
     ],
     "Clean": [
