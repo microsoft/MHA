@@ -30,6 +30,9 @@ https://mha.azurewebsites.net/pages/mha.html
 ## Unit Tests
 https://mha.azurewebsites.net/pages/unittests.html
 
+## Mobile
+For both IOS and Android click on the from of an open email.  For IOS then you hit the addin's button on the right, for Android you hit the 3 dots on the right. There you should see MAH. See Microsofts [outlook-mobile-addins](https://docs.microsoft.com/en-us/office/dev/add-ins/outlook/outlook-mobile-addins) page for more details.
+
 ## Development & Custom Deployment
 You can run multiple copies at once as long as you change the add-ins ID (and recommend changing the name to make it clear).  Recommend setting the cache-control header to "no-store" so you don't need to redeploy a new version every time during development.
 
