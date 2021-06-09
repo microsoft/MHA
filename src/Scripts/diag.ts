@@ -14,6 +14,7 @@ const mhaVersionScriptPath = (function () {
     const path = script.getAttribute('src', 2);
     return path.split('diag')[0] + 'version.js'; // current script is diag*, so splitting here will put our path in [0]
 }());
+appInsights = null;
 
 const Diagnostics = (function () {
     "use strict";
@@ -22,6 +23,18 @@ const Diagnostics = (function () {
     let itemDiagnostics = null;
     let lastUpdate = "";
     let inGet = false;
+    let USE_APP_INSIGHTS=true;
+
+    function trackError(eventType : string, source : string, e : Error){
+    	if (Diagnostics.USE_APP_INSIGHTS){
+    		appInsights.trackEvent(eventType, { source: source, exception: e.toString(), message: e.message, stack: e.stack });
+    	}else {
+    		var msg_base = `error ${eventType} from ${source}: ${e.message}`;
+			console.log(msg_base + " exception: " + e.toString());
+         	alert(msg_base);
+    	}
+    }
+
 
     function ensureItemDiagnostics() {
         try {
@@ -53,7 +66,9 @@ const Diagnostics = (function () {
                 itemDiagnostics["Office"] = "missing";
             }
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureItemDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }); }
+        catch (e) {
+        	Diagnostics.trackError("diagError", "Diagnostics.ensureItemDiagnostics", e);
+          }
     }
 
     function ensureOfficeDiagnostics() {
@@ -126,7 +141,9 @@ const Diagnostics = (function () {
                 appDiagnostics.sufficientPermission = window.GetHeaders.sufficientPermission(true);
             }
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureOfficeDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }); }
+        catch (e) { 
+        	Diagnostics.trackError("diagError", "Diagnostics.ensureOfficeDiagnostics", e);
+        	 }
     }
 
     function getRequirementSet() {
@@ -155,7 +172,7 @@ const Diagnostics = (function () {
             return "1.0?";
         }
         catch (e) {
-            appInsights.trackEvent("diagError", { source: "Diagnostics.getRequirementSet", exception: e.toString(), message: e.message, stack: e.stack });
+        	Diagnostics.trackError("diagError", "Diagnostics.getRequirementSet", e);
             return "Could not detect requirements set";
         }
     }
@@ -177,7 +194,9 @@ const Diagnostics = (function () {
             appDiagnostics["origin"] = window.location.origin;
             appDiagnostics["path"] = window.location.pathname;
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureAppDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }); }
+        catch (e) { 
+        	Diagnostics.trackError("diagError", "Diagnostics.ensureAppDiagnostics", e);
+        }
     }
 
     // Combines appDiagnostics and itemDiagnostics and returns a single object
@@ -188,7 +207,9 @@ const Diagnostics = (function () {
                 ensureAppDiagnostics();
                 ensureItemDiagnostics();
             }
-            catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.get", exception: e.toString(), message: e.message, stack: e.stack }); }
+            catch (e) { 
+            	Diagnostics.trackError("diagError", "Diagnostics.get", e);
+            	 }
             inGet = false;
         }
 
@@ -202,7 +223,7 @@ const Diagnostics = (function () {
             ensureItemDiagnostics();
             itemDiagnostics[field] = value;
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.set", exception: e.toString(), message: e.message, stack: e.stack }); }
+        catch (e) { Diagnostics.trackError("diagError", "Diagnostics.set", e); }
     }
 
     function clear() { itemDiagnostics = null; }
@@ -220,7 +241,7 @@ const Diagnostics = (function () {
 
             client.send();
         }
-        catch (e) { appInsights.trackEvent("diagError", { source: "Diagnostics.ensureLastModified", exception: e.toString(), message: e.message, stack: e.stack }); }
+        catch (e) { Diagnostics.trackError("diagError", "Diagnostics.ensureLastModified", e); }
     }
 
 
@@ -229,56 +250,61 @@ const Diagnostics = (function () {
     return {
         get: get,
         set: set,
-        clear: clear
+        clear: clear,
+        trackError: trackError,
+        USE_APP_INSIGHTS: USE_APP_INSIGHTS
     };
 })();
-
 // Inject our version variable
 const version = document.createElement('script');
 version.src = mhaVersionScriptPath;
 document.getElementsByTagName('script')[0].parentNode.appendChild(version);
 
-const script = document.createElement('script');
-script.onload = function () {
-    // app Insights initialization
-    var sdkInstance = "appInsightsSDK"; window[sdkInstance] = "appInsights"; var aiName = window[sdkInstance], aisdk = window[aiName] || function (e) { function n(e) { t[e] = function () { var n = arguments; t.queue.push(function () { t[e].apply(t, n) }) } } var t = { config: e }; t.initialize = !0; var i = document, a = window; setTimeout(function () { var n = i.createElement("script"); n.src = e.url || "https://az416426.vo.msecnd.net/scripts/b/ai.2.min.js", i.getElementsByTagName("script")[0].parentNode.appendChild(n) }); try { t.cookie = i.cookie } catch (e) { } t.queue = [], t.version = 2; for (var r = ["Event", "PageView", "Exception", "Trace", "DependencyData", "Metric", "PageViewPerformance"]; r.length;) n("track" + r.pop()); n("startTrackPage"), n("stopTrackPage"); var s = "Track" + r[0]; if (n("start" + s), n("stop" + s), n("setAuthenticatedUserContext"), n("clearAuthenticatedUserContext"), n("flush"), !(!0 === e.disableExceptionTracking || e.extensionConfig && e.extensionConfig.ApplicationInsightsAnalytics && !0 === e.extensionConfig.ApplicationInsightsAnalytics.disableExceptionTracking)) { n("_" + (r = "onerror")); var o = a[r]; a[r] = function (e, n, i, a, s) { var c = o && o(e, n, i, a, s); return !0 !== c && t["_" + r]({ message: e, url: n, lineNumber: i, columnNumber: a, error: s }), c }, e.autoExceptionInstrumented = !0 } return t }(
-        {
-            instrumentationKey: aikey()
-        }
-    ); window[aiName] = aisdk, aisdk.queue.push(function () {
-        aisdk.addTelemetryInitializer(function (envelope) {
-            envelope.data.baseType = envelope.baseType;
-            envelope.data.baseData = envelope.baseData;
-            // This will get called for any appInsights tracking - we can augment or suppress logging from here
-            // No appInsights logging for localhost/dev
-            const doLog = (document.domain !== "localhost");
-            if (envelope.baseType === "RemoteDependencyData") return doLog;
-            if (envelope.baseType === "PageviewData") return doLog;
-            if (envelope.baseType === "PageviewPerformanceData") return doLog;
 
-            // If we're not one of the above types, tag in our diagnostics data
-            if (envelope.baseType === "ExceptionData") {
-                // custom data for the ExceptionData type lives in a different place
-                envelope.baseData.properties = envelope.baseData.properties || {};
-                $.extend(envelope.baseData.properties, Diagnostics.get());
-                // Log an extra event with parsed stack frame
-                if (envelope.baseData.exceptions.length) {
-                    StackTrace.fromError(envelope.baseData.exceptions[0]).then(function (stackframes) {
-                        appInsights.trackEvent("Exception Details", {
-                            stack: stackframes,
-                            error: envelope.baseData.exceptions[0]
-                        });
-                    });
-                }
-            }
-            else {
-                $.extend(envelope.data, Diagnostics.get());
-            }
+if (Diagnostics.USE_APP_INSIGHTS){
 
-            return doLog;
-        });
-    }), aisdk.queue && 0 === aisdk.queue.length; aisdk.trackPageView({});
-};
-script.onerror = function () { appInsights = null; };
-script.src = window.location.origin + '/Scripts/aikey.js';
-document.getElementsByTagName('script')[0].parentNode.appendChild(script);
+	const script = document.createElement('script');
+	script.onload = function () {
+	    // app Insights initialization
+	    var sdkInstance = "appInsightsSDK"; window[sdkInstance] = "appInsights"; var aiName = window[sdkInstance], aisdk = window[aiName] || function (e) { function n(e) { t[e] = function () { var n = arguments; t.queue.push(function () { t[e].apply(t, n) }) } } var t = { config: e }; t.initialize = !0; var i = document, a = window; setTimeout(function () { var n = i.createElement("script"); n.src = e.url || "https://az416426.vo.msecnd.net/scripts/b/ai.2.min.js", i.getElementsByTagName("script")[0].parentNode.appendChild(n) }); try { t.cookie = i.cookie } catch (e) { } t.queue = [], t.version = 2; for (var r = ["Event", "PageView", "Exception", "Trace", "DependencyData", "Metric", "PageViewPerformance"]; r.length;) n("track" + r.pop()); n("startTrackPage"), n("stopTrackPage"); var s = "Track" + r[0]; if (n("start" + s), n("stop" + s), n("setAuthenticatedUserContext"), n("clearAuthenticatedUserContext"), n("flush"), !(!0 === e.disableExceptionTracking || e.extensionConfig && e.extensionConfig.ApplicationInsightsAnalytics && !0 === e.extensionConfig.ApplicationInsightsAnalytics.disableExceptionTracking)) { n("_" + (r = "onerror")); var o = a[r]; a[r] = function (e, n, i, a, s) { var c = o && o(e, n, i, a, s); return !0 !== c && t["_" + r]({ message: e, url: n, lineNumber: i, columnNumber: a, error: s }), c }, e.autoExceptionInstrumented = !0 } return t }(
+	        {
+	            instrumentationKey: aikey()
+	        }
+	    ); window[aiName] = aisdk, aisdk.queue.push(function () {
+	        aisdk.addTelemetryInitializer(function (envelope) {
+	            envelope.data.baseType = envelope.baseType;
+	            envelope.data.baseData = envelope.baseData;
+	            // This will get called for any appInsights tracking - we can augment or suppress logging from here
+	            // No appInsights logging for localhost/dev
+	            const doLog = (document.domain !== "localhost");
+	            if (envelope.baseType === "RemoteDependencyData") return doLog;
+	            if (envelope.baseType === "PageviewData") return doLog;
+	            if (envelope.baseType === "PageviewPerformanceData") return doLog;
+
+	            // If we're not one of the above types, tag in our diagnostics data
+	            if (envelope.baseType === "ExceptionData") {
+	                // custom data for the ExceptionData type lives in a different place
+	                envelope.baseData.properties = envelope.baseData.properties || {};
+	                $.extend(envelope.baseData.properties, Diagnostics.get());
+	                // Log an extra event with parsed stack frame
+	                if (envelope.baseData.exceptions.length) {
+	                    StackTrace.fromError(envelope.baseData.exceptions[0]).then(function (stackframes) {
+	                        appInsights.trackEvent("Exception Details", {
+	                            stack: stackframes,
+	                            error: envelope.baseData.exceptions[0]
+	                        });
+	                    });
+	                }
+	            }
+	            else {
+	                $.extend(envelope.data, Diagnostics.get());
+	            }
+
+	            return doLog;
+	        });
+	    }), aisdk.queue && 0 === aisdk.queue.length; aisdk.trackPageView({});
+	};
+	script.onerror = function () { appInsights = null; };
+	script.src = '../Scripts/aikey.js';
+	document.getElementsByTagName('script')[0].parentNode.appendChild(script);
+}

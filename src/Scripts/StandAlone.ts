@@ -11,7 +11,7 @@
     let viewModel = null;
 
     function enableSpinner() {
-        $("#response").css("background-image", "url(/Resources/loader.gif)");
+        $("#response").css("background-image", "url(../Resources/loader.gif)");
         $("#response").css("background-repeat", "no-repeat");
         $("#response").css("background-position", "center");
     }
@@ -34,7 +34,7 @@
     function analyze() {
         // Can't do anything without jQuery
         if (!$) return;
-        if (appInsights) appInsights.trackEvent("analyzeHeaders");
+        if (window.appInsights) appInsights.trackEvent("analyzeHeaders");
         viewModel = HeaderModel($("#inputHeaders").val());
         Table.resetArrows();
 

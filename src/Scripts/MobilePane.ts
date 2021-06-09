@@ -24,7 +24,7 @@ $(document).ready(function () {
 
     function insertLastModified() {
         const client = new XMLHttpRequest();
-        client.open("HEAD", "../dist/MobilePane.min.js", true);
+        client.open("HEAD", "../Scripts/" + window.mhaVersion + "/MobilePane.min.js", true);
         client.onreadystatechange = function () {
             if (this.readyState === 2) {
                 insertData('diag', 'Last update', client.getResponseHeader("Last-Modified"));
@@ -43,11 +43,11 @@ $(document).ready(function () {
     }
 
     if (ios) Framework7.prototype.device.ios = true;
-    if (Framework7.prototype.device.ios) {
+    if (Framework7.prototype.device.ios || Framework7.prototype.device.android) {
         // Redirect to iOS page
         window.location.href = "MobilePane-ios.html";
-    } else if (Framework7.prototype.device.android) {
-        $('#message').text('Android is not yet supported.');
+    //} else if (Framework7.prototype.device.android) {
+        //$('#message').text('Android is not yet supported.');
     } else {
         $('#message').html("If you see this page something has gone wrong. Please open an issue at <a hRef = 'https://github.com/stephenegriffin/mha'>https://github.com/stephenegriffin/mha</a> and include the diagnostics below.");
     }
