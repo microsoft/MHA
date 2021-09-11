@@ -56,7 +56,7 @@ QUnit.assert.arrayEqual = function (actual, expected, message) {
 };
 
 QUnit.assert.datesEqual = function (actual, expected, message) {
-    return this.propEqual({ date: actual.date.toString(), dateNum: actual.dateNum.toString() }, expected, message);
+    return this.propEqual({ date: (new Date(actual.date)).toLocaleString("en-US", { timeZone: "America/New_York" }), dateNum: actual.dateNum.toString() }, expected, message);
 };
 
 QUnit.assert.errorsEqual = function (actual, expectedValues, message) {

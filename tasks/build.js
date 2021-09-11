@@ -40,9 +40,9 @@ console.log("version: " + version);
 
 // Copy files from src to dst, replacing %version% on the way if munge is true
 const deploy = function (src, dst, munge) {
+    console.log("Copying from " + src + " to " + dst);
     if (!fs.existsSync(dst)) fs.mkdirSync(dst, { recursive: true });
 
-    console.log("Copying from " + src + " to " + dst);
     const srcFiles = fs.readdirSync(src);
     for (const srcFile of srcFiles) {
         var srcPath = path.join(src, srcFile);
@@ -60,7 +60,9 @@ console.log("Deploying pages");
 deploy(path.join(__dirname, "..", "src", "Pages"), path.join(__dirname, "..", "Pages"), true);
 
 console.log("Deploying css");
-deploy(path.join(__dirname, "..", "src", "Content"), path.join(__dirname, "..", "Content", version), false);
+var contentPath = path.join(__dirname, "..", "Content")
+if (!fs.existsSync(contentPath)) fs.mkdirSync(contentPath, { recursive: true });
+deploy(path.join(__dirname, "..", "src", "Content"), path.join(contentPath, version), false);
 
 var options = {
     compress: {},
@@ -115,7 +117,13 @@ const targets = {
 
 console.log("Deploying script");
 const scriptsFolderSrc = path.join(__dirname, "..", "src", "transpiled");
-const scriptsFolderDst = path.join(__dirname, "..", "Scripts", version);
+const scriptsFolderDstRoot = path.join(__dirname, "..", "Scripts");
+const scriptsFolderDst = path.join(scriptsFolderDstRoot, version);
+
+if (!fs.existsSync(scriptsFolderDstRoot)) {
+    fs.mkdirSync(scriptsFolderDstRoot);
+}
+
 for (const targetName of Object.keys(targets)) {
     const fileSet = targets[targetName];
     const mapName = targetName + ".map";

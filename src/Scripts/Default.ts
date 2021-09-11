@@ -16,7 +16,7 @@ import poster from "./poster";
     }
 
     function enableSpinner() {
-        $("#response").css("background-image", "url(/Resources/loader.gif)");
+        $("#response").css("background-image", "url(../Resources/loader.gif)");
         $("#response").css("background-repeat", "no-repeat");
         $("#response").css("background-position", "center");
     }
