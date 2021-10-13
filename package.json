@@ -30,7 +30,7 @@
     "@microsoft/office-js": "^1.1.71",
     "@types/jquery": "^3.5.6",
     "codepage": "^1.14.0",
-    "framework7-icons": "^5.0.3",
+    "framework7-icons": "^5.0.5",
     "jquery": "^3.5.1",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
