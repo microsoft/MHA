@@ -28,7 +28,7 @@
   "homepage": "https://github.com/stephenegriffin/mha#readme",
   "dependencies": {
     "@microsoft/office-js": "^1.1.71",
-    "@types/jquery": "^3.5.6",
+    "@types/jquery": "^3.5.14",
     "codepage": "^1.14.0",
     "framework7-icons": "^5.0.3",
     "jquery": "^3.5.1",
