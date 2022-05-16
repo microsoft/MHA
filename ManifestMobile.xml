@@ -12,8 +12,8 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Message Header Analyzer" />
   <Description DefaultValue="Microsoft Message Header Analyzer" />
-  <IconUrl DefaultValue="https://mha.azurewebsites.net/resources/mhaLogo.jpg" />
-  <HighResolutionIconUrl DefaultValue="https://mha.azurewebsites.net/resources/mhaLogo128.jpg" />
+  <IconUrl DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo.jpg" />
+  <HighResolutionIconUrl DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo128.jpg" />
   <SupportUrl DefaultValue="https://github.com/stephenegriffin/MHA/issues" />
   <Hosts>
     <Host Name="Mailbox" />
@@ -27,17 +27,17 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://mha.azurewebsites.net/pages/default.html" />
+        <SourceLocation DefaultValue="https://mha.azurewebsites.net/Pages/Default.html" />
         <RequestedHeight>450</RequestedHeight>
       </DesktopSettings>
 
       <TabletSettings>
-        <SourceLocation DefaultValue="https://mha.azurewebsites.net/pages/defaulttablet.html" />
+        <SourceLocation DefaultValue="https://mha.azurewebsites.net/Pages/DefaultTablet.html" />
         <RequestedHeight>350</RequestedHeight>
       </TabletSettings>
 
       <PhoneSettings>
-        <SourceLocation DefaultValue="https://mha.azurewebsites.net/pages/defaultphone.html" />
+        <SourceLocation DefaultValue="https://mha.azurewebsites.net/Pages/DefaultPhone.html" />
       </PhoneSettings>
     </Form>
   </FormSettings>
@@ -93,13 +93,13 @@
     <Resources>
       <bt:Images>
         <!-- MHA icon -->
-        <bt:Image id="mha-icon-16" DefaultValue="https://mha.azurewebsites.net/resources/mhaLogo.jpg"/>
-        <bt:Image id="mha-icon-32" DefaultValue="https://mha.azurewebsites.net/resources/mhaLogo.jpg"/>
-        <bt:Image id="mha-icon-80" DefaultValue="https://mha.azurewebsites.net/resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-16" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-32" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-80" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo.jpg"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="functionFile" DefaultValue="https://mha.azurewebsites.net/pages/functions.html"/>
-        <bt:Url id="mhaTaskPaneUrl" DefaultValue="https://mha.azurewebsites.net/pages/default.html"/>
+        <bt:Url id="functionFile" DefaultValue="https://mha.azurewebsites.net/Pages/Functions.html"/>
+        <bt:Url id="mhaTaskPaneUrl" DefaultValue="https://mha.azurewebsites.net/Pages/Default.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="groupLabel" DefaultValue=" "/>
@@ -187,14 +187,14 @@
       <Resources>
         <bt:Images>
           <!-- MHA icon -->
-          <bt:Image id="mha-icon-16" DefaultValue="https://mha.azurewebsites.net/resources/mhaLogo.jpg"/>
-          <bt:Image id="mha-icon-32" DefaultValue="https://mha.azurewebsites.net/resources/mhaLogo.jpg"/>
-          <bt:Image id="mha-icon-80" DefaultValue="https://mha.azurewebsites.net/resources/mhaLogo.jpg"/>
+          <bt:Image id="mha-icon-16" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo.jpg"/>
+          <bt:Image id="mha-icon-32" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo.jpg"/>
+          <bt:Image id="mha-icon-80" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo.jpg"/>
         </bt:Images>
         <bt:Urls>
-          <bt:Url id="functionFile" DefaultValue="https://mha.azurewebsites.net/pages/functions.html"/>
-          <bt:Url id="mhaDesktopPaneUrl" DefaultValue="https://mha.azurewebsites.net/pages/desktoppane.html"/>
-          <bt:Url id="mhaMobilePaneUrl" DefaultValue="https://mha.azurewebsites.net/pages/mobilepane.html"/>
+          <bt:Url id="functionFile" DefaultValue="https://mha.azurewebsites.net/Pages/Functions.html"/>
+          <bt:Url id="mhaDesktopPaneUrl" DefaultValue="https://mha.azurewebsites.net/Pages/DesktopPane.html"/>
+          <bt:Url id="mhaMobilePaneUrl" DefaultValue="https://mha.azurewebsites.net/Pages/MobilePane.html"/>
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="groupLabel" DefaultValue=" "/>
