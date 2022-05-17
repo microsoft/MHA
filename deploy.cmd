@@ -134,7 +134,8 @@ echo 5. Transpile TypeScript
 IF EXIST "%DEPLOYMENT_TARGET%\tsconfig.json" (
   pushd "%DEPLOYMENT_TARGET%"
   call :ExecuteCmd node --version
-  call :ExecuteCmd node --log-all --use-verbose-printer --trace-exit --trace-sigint %DEPLOYMENT_TARGET%\node_modules\typescript\bin\tsc -p "%DEPLOYMENT_TARGET%"
+  call :ExecuteCmd node %DEPLOYMENT_TARGET%\node_modules\typescript\bin\tsc -v
+  node --log-all --use-verbose-printer --trace-exit --trace-sigint %DEPLOYMENT_TARGET%\node_modules\typescript\bin\tsc -p "%DEPLOYMENT_TARGET%"
 ::  IF !ERRORLEVEL! NEQ 0 goto error
   popd
 )
