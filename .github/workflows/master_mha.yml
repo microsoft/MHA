@@ -72,5 +72,5 @@ jobs:
         with:
           app-name: 'mha'
           slot-name: 'build'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A455AD3D13CD4A3BB8ED32BF340DF072 }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_c9d531080386438a94727488457d849c }}
           package: .
