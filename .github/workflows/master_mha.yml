@@ -14,26 +14,45 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup MSBuild path
-        uses: microsoft/setup-msbuild@v1.0.2
+      - uses: actions/checkout@v3
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
 
       - name: Restore NuGet packages
-        run: nuget restore
+        run: nuget restore packages.config -PackagesDirectory packages
 
-      - name: Publish to folder
-        run: msbuild /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="\published\"
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: NPM install, build
+        env:
+          SCM_COMMIT_ID: ${{ github.sha }}
+        run: |
+          npm install
+          npm run build --if-present
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: ASP-app
-          path: '/published/**'
-
+          name: mha-assets
+          path: |
+            Scripts
+            Pages
+            Resources
+            Content
+            favicon.ico
+            Manifest*
+            LICENSE
+            README.md
+            packages.config
+            package.json
+            .deployment
+            deploy.cmd
+    
   deploy:
     runs-on: windows-latest
     needs: build
@@ -45,7 +64,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: ASP-app
+          name: mha-assets
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
