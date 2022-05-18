@@ -50,6 +50,8 @@ jobs:
             README.md
             packages.config
             package.json
+            .deployment
+            deploy.cmd
     
   deploy:
     runs-on: windows-latest
