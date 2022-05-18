@@ -50,6 +50,10 @@ IF NOT DEFINED KUDU_SYNC_CMD (
   :: Locally just running "kuduSync" would also work
   SET KUDU_SYNC_CMD=%appdata%\npm\kuduSync.cmd
 )
+
+IF NOT DEFINED SYNC_CMD (
+  SET SYNC_CMD=robocopy.exe
+)
 goto Deployment
 
 :: Utility Functions
@@ -93,9 +97,15 @@ goto :EOF
 echo Handling node.js deployment.
 
 :: 1. KuduSync
+::echo 1. KuduSync
+::IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
+::  call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_SOURCE%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
+::  IF !ERRORLEVEL! NEQ 0 goto error
+::)
+
 echo 1. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-  call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_SOURCE%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
+  call :ExecuteCmd "%SYNC_CMD%" "%DEPLOYMENT_SOURCE%" "%DEPLOYMENT_TARGET%" /s /mt
   IF !ERRORLEVEL! NEQ 0 goto error
 )
 
