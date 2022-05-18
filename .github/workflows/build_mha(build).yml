@@ -38,7 +38,7 @@ jobs:
         with:
           name: mha-assets
           path: |
-            ~
+            .
             !node_modules
             !.git
             !.github
