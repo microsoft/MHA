@@ -44,6 +44,8 @@ jobs:
           cache: 'npm'
 
       - name: NPM install, build
+        env:
+          SCM_COMMIT_ID: ${{ github.sha }}
         run: |
           npm install
           npm run build --if-present
