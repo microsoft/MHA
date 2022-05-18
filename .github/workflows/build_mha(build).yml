@@ -26,10 +26,10 @@ jobs:
 #          RUNNER_CONTEXT: ${{ toJson(runner) }}
 #        run: echo "$RUNNER_CONTEXT"
 
-      - name: Using Variables
+      - name: Locate Commit ID
         env:
-          COMMIT_ID: ${{ github.sha }}
-        run: echo "$COMMIT_ID"
+          SCM_COMMIT_ID: ${{ github.sha }}
+        run: echo "$SCM_COMMIT_ID"
       
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
