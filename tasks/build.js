@@ -33,6 +33,7 @@ const getHash = function (str) {
 };
 
 var commitID = process.env.SCM_COMMIT_ID;
+if (!commitID) commitID = process.env.github.sha;
 if (!commitID) commitID = "test";
 const version = getHash(commitID);
 console.log("commitID: " + commitID);
