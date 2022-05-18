@@ -36,9 +36,13 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: node-app
-          path: .
-
+          name: mha-assets
+          path: |
+             ~/**/*
+            !node_modules 
+            !.git
+            !.github
+    
   deploy:
     runs-on: windows-latest
     needs: build
@@ -50,7 +54,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: ASP-app
+          name: mha-assets
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
