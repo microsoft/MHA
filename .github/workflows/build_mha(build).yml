@@ -16,6 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Environment
+        run: set
+
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
 
