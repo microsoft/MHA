@@ -20,7 +20,7 @@ jobs:
         uses: NuGet/setup-nuget@v1.0.5
 
       - name: Restore NuGet packages
-        run: nuget restore
+        run: nuget restore packages.config -PackagesDirectory packages
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -28,7 +28,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: npm install, build, and test
+      - name: NPM install, build
         run: |
           npm install
           npm run build --if-present
