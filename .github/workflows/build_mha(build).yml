@@ -48,6 +48,8 @@ jobs:
             Manifest*
             LICENSE
             README.md
+            packages.config
+            package.json
     
   deploy:
     runs-on: windows-latest
