@@ -29,7 +29,7 @@ jobs:
       - name: Using Variables
         env:
           COMMIT_ID: ${{ github.event.commits.id }}
-      - run: echo "$COMMIT_ID"
+        run: echo "$COMMIT_ID"
       
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
