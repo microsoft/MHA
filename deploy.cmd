@@ -105,8 +105,8 @@ echo Handling node.js deployment.
 
 echo 1. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-  call :ExecuteCmd "%SYNC_CMD%" "%DEPLOYMENT_SOURCE%" "%DEPLOYMENT_TARGET%" /s /mt
-  IF !ERRORLEVEL! NEQ 0 goto error
+  "%SYNC_CMD%" "%DEPLOYMENT_SOURCE%" "%DEPLOYMENT_TARGET%" /s /mt
+  IF !ERRORLEVEL! GEQ 8 goto error
 )
 
 :: 2. Select node version
