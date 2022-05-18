@@ -42,6 +42,7 @@ jobs:
             !node_modules
             !.git
             !.github
+            !src
     
   deploy:
     runs-on: windows-latest
