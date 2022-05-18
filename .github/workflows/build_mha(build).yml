@@ -21,14 +21,14 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
 
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo "$RUNNER_CONTEXT"
+#      - name: Dump runner context
+#        env:
+#          RUNNER_CONTEXT: ${{ toJson(runner) }}
+#        run: echo "$RUNNER_CONTEXT"
 
       - name: Using Variables
         env:
-          COMMIT_ID: ${{ github.event.commits.id }}
+          COMMIT_ID: ${{ github.sha }}
         run: echo "$COMMIT_ID"
       
       - name: Setup NuGet
