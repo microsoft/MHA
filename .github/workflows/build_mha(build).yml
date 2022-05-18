@@ -16,21 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-#      - name: Dump GitHub context
-#        env:
-#          GITHUB_CONTEXT: ${{ toJson(github) }}
-#        run: echo "$GITHUB_CONTEXT"
-
-#      - name: Dump runner context
-#        env:
-#          RUNNER_CONTEXT: ${{ toJson(runner) }}
-#        run: echo "$RUNNER_CONTEXT"
-
-      - name: Locate Commit ID
-        env:
-          SCM_COMMIT_ID: ${{ github.sha }}
-        run: echo "$SCM_COMMIT_ID"
-      
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
 
@@ -55,11 +40,14 @@ jobs:
         with:
           name: mha-assets
           path: |
-            .
-            !node_modules
-            !.git
-            !.github
-            !src
+            Scripts
+            Pages
+            Resources
+            Content
+            favicon.ico
+            Manifest*
+            LICENSE
+            README.md
     
   deploy:
     runs-on: windows-latest
