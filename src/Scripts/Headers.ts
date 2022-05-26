@@ -4,7 +4,7 @@ import { Decoder } from "./2047"
 import { Other } from "./Other"
 import { Received } from "./Received"
 import { Summary } from "./Summary"
-import { poster } from "./Poster"
+import { poster } from "./poster"
 
 export const HeaderModel = (function (headers?: string) {
     "use strict";

@@ -1,6 +1,6 @@
 import * as $ from "jquery";
 import { ApplicationInsights } from '@microsoft/applicationinsights-web'
-import { ParentFrame } from "./uiToggle";
+import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 /* global aikey */
 /* global mhaVersion */

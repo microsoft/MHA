@@ -1,8 +1,8 @@
-﻿/* global $ */
-/* global mhaStrings  */
-/* global HeaderModel */
-/* global Table */
-/* global poster */
+﻿import * as $ from "jquery";
+import { mhaStrings } from "./Strings";
+import { HeaderModel } from "./Headers"
+import { Table } from "./Table";
+import { poster } from "./poster";
 
 // This is the "classic" UI rendered in classicDesktopFrame.html
 

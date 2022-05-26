@@ -1,7 +1,7 @@
 import * as $ from "jquery";
 import { mhaStrings } from "./Strings";
 import { Errors } from "./Errors";
-import { ParentFrame } from "./uiToggle";
+import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersEWS } from "./GetHeadersEWS";
 import jwt_decode, { JwtPayload } from 'jwt-decode'

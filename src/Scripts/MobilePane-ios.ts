@@ -1,9 +1,9 @@
-/* global $ */
-/* global Framework7 */
-/* global moment */
-/* global mhaStrings */
-/* global HeaderModel */
-/* global poster */
+import * as $ from "jquery";
+import Framework7 from "framework7"
+import * as moment from "moment";
+import { mhaStrings } from "./Strings";
+import { HeaderModel } from "./Headers"
+import { poster } from "./poster";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 

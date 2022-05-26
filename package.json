@@ -4,7 +4,6 @@
   "description": "Message Header Analyzer",
   "private": true,
   "scripts": {
-    "prebuild": "npm install && npm run clean || exit 0",
     "watch": "webpack --watch",
     "build": "webpack",
     "clean": "node tasks/clean.js",

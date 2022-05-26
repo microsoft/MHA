@@ -1,8 +1,8 @@
-/* global $ */
-/* global fabric */
-/* global mhaStrings */
-/* global HeaderModel */
-/* global poster */
+import * as $ from "jquery";
+import * as fabric from "office-ui-fabric-js/dist/js/fabric";
+import { mhaStrings } from "./Strings";
+import { HeaderModel } from "./Headers"
+import { poster } from "./poster";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 

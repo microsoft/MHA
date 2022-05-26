@@ -1,6 +1,6 @@
 import { GetHeadersEWS } from "./GetHeadersEWS";
 import { GetHeadersRest } from "./GetHeadersRest";
-import { ParentFrame } from "./uiToggle";
+import { ParentFrame } from "./parentFrame";
 
 /*
  * GetHeaders.js
