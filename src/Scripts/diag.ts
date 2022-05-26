@@ -23,10 +23,12 @@ import { GetHeaders } from "./GetHeaders";
 
 const aikey = function () { return "2f12afed-6139-456e-9de3-49003d3a1fb1" };
 
-export const appInsights = new ApplicationInsights({ config: {
-    instrumentationKey: aikey(),
-    /* ...Other Configuration Options... */
-  } });
+export const appInsights = new ApplicationInsights({
+    config: {
+        instrumentationKey: aikey(),
+        /* ...Other Configuration Options... */
+    }
+});
 appInsights.addTelemetryInitializer(function (envelope) {
     envelope.data.baseType = envelope.baseType;
     envelope.data.baseData = envelope.baseData;
@@ -45,10 +47,12 @@ appInsights.addTelemetryInitializer(function (envelope) {
         // Log an extra event with parsed stack frame
         if (envelope.baseData.exceptions.length) {
             StackTrace.fromError(envelope.baseData.exceptions[0]).then(function (stackframes) {
-                appInsights.trackEvent({name:"Exception Details", properties:{
-                    stack: stackframes,
-                    error: envelope.baseData.exceptions[0]
-                }});
+                appInsights.trackEvent({
+                    name: "Exception Details", properties: {
+                        stack: stackframes,
+                        error: envelope.baseData.exceptions[0]
+                    }
+                });
             });
         }
     }
@@ -106,7 +110,7 @@ export const Diagnostics = (function () {
                 itemDiagnostics["Office"] = "missing";
             }
         }
-        catch (e) { appInsights.trackEvent({name:"diagError", properties:{ source: "Diagnostics.ensureItemDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }}); }
+        catch (e) { appInsights.trackEvent({ name: "diagError", properties: { source: "Diagnostics.ensureItemDiagnostics", exception: e.toString(), message: e.message, stack: e.stack } }); }
     }
 
     function ensureOfficeDiagnostics() {
@@ -182,7 +186,7 @@ export const Diagnostics = (function () {
                 appDiagnostics.sufficientPermission = GetHeaders.sufficientPermission(true);
             }
         }
-        catch (e) { appInsights.trackEvent({name:"diagError", properties:{ source: "Diagnostics.ensureOfficeDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }}); }
+        catch (e) { appInsights.trackEvent({ name: "diagError", properties: { source: "Diagnostics.ensureOfficeDiagnostics", exception: e.toString(), message: e.message, stack: e.stack } }); }
     }
 
     function getRequirementSet() {
@@ -211,7 +215,7 @@ export const Diagnostics = (function () {
             return "1.0?";
         }
         catch (e) {
-            appInsights.trackEvent({name:"diagError", properties:{ source: "Diagnostics.getRequirementSet", exception: e.toString(), message: e.message, stack: e.stack }});
+            appInsights.trackEvent({ name: "diagError", properties: { source: "Diagnostics.getRequirementSet", exception: e.toString(), message: e.message, stack: e.stack } });
             return "Could not detect requirements set";
         }
     }
@@ -233,7 +237,7 @@ export const Diagnostics = (function () {
             appDiagnostics["origin"] = window.location.origin;
             appDiagnostics["path"] = window.location.pathname;
         }
-        catch (e) { appInsights.trackEvent({name:"diagError", properties:{ source: "Diagnostics.ensureAppDiagnostics", exception: e.toString(), message: e.message, stack: e.stack }}); }
+        catch (e) { appInsights.trackEvent({ name: "diagError", properties: { source: "Diagnostics.ensureAppDiagnostics", exception: e.toString(), message: e.message, stack: e.stack } }); }
     }
 
     // Combines appDiagnostics and itemDiagnostics and returns a single object
@@ -244,7 +248,7 @@ export const Diagnostics = (function () {
                 ensureAppDiagnostics();
                 ensureItemDiagnostics();
             }
-            catch (e) { appInsights.trackEvent({name:"diagError", properties:{ source: "Diagnostics.get", exception: e.toString(), message: e.message, stack: e.stack }}); }
+            catch (e) { appInsights.trackEvent({ name: "diagError", properties: { source: "Diagnostics.get", exception: e.toString(), message: e.message, stack: e.stack } }); }
             inGet = false;
         }
 
@@ -258,7 +262,7 @@ export const Diagnostics = (function () {
             ensureItemDiagnostics();
             itemDiagnostics[field] = value;
         }
-        catch (e) { appInsights.trackEvent({name:"diagError", properties:{ source: "Diagnostics.set", exception: e.toString(), message: e.message, stack: e.stack }}); }
+        catch (e) { appInsights.trackEvent({ name: "diagError", properties: { source: "Diagnostics.set", exception: e.toString(), message: e.message, stack: e.stack } }); }
     }
 
     function clear() { itemDiagnostics = null; }
@@ -277,7 +281,7 @@ export const Diagnostics = (function () {
 
             client.send();
         }
-        catch (e) { appInsights.trackEvent({name:"diagError", properties:{ source: "Diagnostics.ensureLastModified", exception: e.toString(), message: e.message, stack: e.stack }}); }
+        catch (e) { appInsights.trackEvent({ name: "diagError", properties: { source: "Diagnostics.ensureLastModified", exception: e.toString(), message: e.message, stack: e.stack } }); }
     }
 
     ensureLastModified();

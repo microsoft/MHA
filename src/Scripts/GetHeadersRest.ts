@@ -1,4 +1,4 @@
-/* global $ */
+import * as $ from "jquery";
 import { mhaStrings } from "./Strings";
 import { Errors } from "./Errors";
 import { ParentFrame } from "./uiToggle";
@@ -55,7 +55,7 @@ export const GetHeadersRest = (function () {
         // 'aud' parameter from token can be in a couple of
         // different formats.
         const aud = Array.isArray(jwt.aud) ? jwt.aud[0] : jwt.aud;
-        
+
         // Format 1: It's just the URL
         if (aud.match(/https:\/\/([^@]*)/)) {
             return jwt.aud;

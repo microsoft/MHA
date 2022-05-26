@@ -64,7 +64,7 @@ export const ParentFrame = (function () {
     }
 
     function render() {
-        if (appInsights && headers) appInsights.trackEvent({name:"analyzeHeaders"});
+        if (appInsights && headers) appInsights.trackEvent({ name: "analyzeHeaders" });
         postMessageToFrame("renderItem", headers);
     }
 
@@ -363,7 +363,7 @@ export const ParentFrame = (function () {
     };
 })();
 
-if (typeof(Office) !== "undefined"){
+if (typeof (Office) !== "undefined") {
     Office.initialize = function () {
         $(document).ready(function () {
             ParentFrame.initUI();

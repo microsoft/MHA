@@ -40,8 +40,8 @@ export const Errors = (function () {
                 if ("stack" in error) return true;
             }
         } catch (e) {
-            if (appInsights) appInsights.trackEvent({name:"isError exception"});
-            if (appInsights) appInsights.trackEvent({name:"isError exception with error", properties:e});
+            if (appInsights) appInsights.trackEvent({ name: "isError exception" });
+            if (appInsights) appInsights.trackEvent({ name: "isError exception with error", properties: e });
         }
 
         return false;
@@ -113,7 +113,7 @@ export const Errors = (function () {
         }
 
         function errback(err) {
-            if (appInsights) appInsights.trackEvent({name:"Errors.parse errback"});
+            if (appInsights) appInsights.trackEvent({ name: "Errors.parse errback" });
             stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
             handler(eventName, stack);
         }

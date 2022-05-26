@@ -38,7 +38,7 @@ import { Table } from "./Table"
     function analyze() {
         // Can't do anything without jQuery
         if (!$) return;
-        if (appInsights) appInsights.trackEvent({name:"analyzeHeaders"});
+        if (appInsights) appInsights.trackEvent({ name: "analyzeHeaders" });
         // @ts-ignore TODO Fix this
         viewModel = HeaderModel($("#inputHeaders").val());
         Table.resetArrows();

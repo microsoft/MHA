@@ -13,25 +13,25 @@ export const mhaStrings = (function () {
         textArea.select();
         const succeeded = document.execCommand('copy');
         document.body.removeChild(textArea);
-        if (appInsights) appInsights.trackEvent({name:"copy",properties:{ succeeded: succeeded, style: "textarea" }});
+        if (appInsights) appInsights.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "textarea" } });
 
         if (!succeeded) {
             try {
                 navigator.clipboard.writeText(str).then(function () {
-                    if (appInsights) appInsights.trackEvent({name:"copy", properties:{ succeeded: "true", style: "navigator" }});
+                    if (appInsights) appInsights.trackEvent({ name: "copy", properties: { succeeded: "true", style: "navigator" } });
                 }, function () {
-                    if (appInsights) appInsights.trackEvent({name:"copy", properties:{ succeeded: "false", style: "navigator" }});
+                    if (appInsights) appInsights.trackEvent({ name: "copy", properties: { succeeded: "false", style: "navigator" } });
                 });
             }
             catch (e) { /**/ }
         }
 
         try {
-            if (typeof(appInsights) !== "undefined" ) {
+            if (typeof (appInsights) !== "undefined") {
                 // @ts-ignore TODO: fix this
                 const queryOpts: PermissionDescriptor = { name: 'clipboard-write', allowWithoutGesture: false };
                 navigator.permissions.query(queryOpts).then(function (result) {
-                    appInsights.trackEvent({name:"copy", properties:{ succeeded: succeeded, style: "permissions", clipboardWrite: result.state }});
+                    appInsights.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "permissions", clipboardWrite: result.state } });
                 });
             }
         }

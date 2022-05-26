@@ -28,8 +28,8 @@ export const GetHeadersEWS = (function () {
         // This function plug in filters nodes for the one that matches the given name.
         // This sidesteps the issues in jquery's selector logic.
         (function ($) {
-        // @ts-ignore TODO: FIX THIS
-        $.fn.filterNode = function (node) {
+            // @ts-ignore TODO: FIX THIS
+            $.fn.filterNode = function (node) {
                 return this.find("*").filter(function () {
                     return this.nodeName === node;
                 });
@@ -63,7 +63,7 @@ export const GetHeadersEWS = (function () {
         }
 
         return ret;
-        }
+    }
 
     function stripHeaderFromXml(xml) {
         if (!xml) return null;
