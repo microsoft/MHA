@@ -4,12 +4,9 @@
   "description": "Message Header Analyzer",
   "private": true,
   "scripts": {
-    "ts": "tsc",
-    "_prebuild": "npm install && npm run clean && tsc || exit 0",
+    "prebuild": "npm install && npm run clean || exit 0",
     "watch": "webpack --watch",
     "build": "webpack",
-    "_prebuild-debug": "npm install && npm run clean && tsc || exit 0",
-    "build-debug": "node tasks/build.js debug",
     "clean": "node tasks/clean.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -52,7 +49,7 @@
   },
   "-vs-binding": {
     "BeforeBuild": [
-      "build-debug"
+      "build"
     ],
     "Clean": [
       "clean"
