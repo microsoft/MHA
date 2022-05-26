@@ -1,4 +1,6 @@
-﻿import * as $ from "jquery";
+﻿import "../Content/Office.css";
+import "../Content/App.css";
+import * as $ from "jquery";
 import { mhaStrings } from "./Strings";
 import { HeaderModel } from "./Headers"
 import { Table } from "./Table";

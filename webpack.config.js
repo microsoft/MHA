@@ -6,6 +6,10 @@ const pages =
         { "pagename": "unittests", "chunk": "unittests" },
         { "pagename": "mha", "chunk": "standalone" },
         { "pagename": "parentframe", "chunk": "uiToggle" },
+        { "pagename": "newDesktopFrame", "chunk": "desktoppane" },
+        { "pagename": "classicDesktopFrame", "chunk": "default" },
+        { "pagename": "MobilePane", "chunk": "mobilepane" },
+        { "pagename": "MobilePane-ios", "chunk": "mobilepaneios" },
     ];
 
 function generateHtmlWebpackPlugins() {
@@ -25,8 +29,8 @@ module.exports = {
         standalone: './src/Scripts/StandAlone.ts',
         default: './src/Scripts/Default.ts',
         desktoppane: './src/Scripts/DesktopPane.ts',
-        mobilepaneios: './src/Scripts/MobilePane-ios.ts',
         mobilepane: './src/Scripts/MobilePane.ts',
+        mobilepaneios: './src/Scripts/MobilePane-ios.ts',
         uitoggle: './src/Scripts/uiToggle.ts',
     },
     mode: 'development',

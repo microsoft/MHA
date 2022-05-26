@@ -1,3 +1,7 @@
+import "framework7/dist/css/framework7.ios.min.css";
+import "framework7/dist/css/framework7.ios.colors.min.css";
+import "framework7-icons/css/framework7-icons.css";
+import "../Content/MobilePane-ios.css";
 import * as $ from "jquery";
 import Framework7 from "framework7"
 import * as moment from "moment";
