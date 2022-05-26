@@ -3,7 +3,7 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web'
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 /* global aikey */
-/* global mhaVersion */
+import { mhaVersion } from "./version";
 
 // diagnostics module
 
@@ -21,7 +21,7 @@ import { GetHeaders } from "./GetHeaders";
 // version.src = mhaVersionScriptPath;
 // document.getElementsByTagName('script')[0].parentNode.appendChild(version);
 
-const aikey = function () { return "2f12afed-6139-456e-9de3-49003d3a1fb1" };
+const aikey = function () { return "2f12afed-6139-456e-9de3-49003d3a1fb1"; };
 
 export const appInsights = new ApplicationInsights({
     config: {
@@ -129,10 +129,9 @@ export const Diagnostics = (function () {
                 appDiagnostics["Last Update"] = lastUpdate;
             }
 
-            // TODO: Restore this
-            // if (mhaVersion) {
-            //     appDiagnostics["mhaVersion"] = mhaVersion();
-            // }
+            if (mhaVersion) {
+                appDiagnostics["mhaVersion"] = mhaVersion();
+            }
 
             if (window.Office) {
                 delete appDiagnostics["Office"];

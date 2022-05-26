@@ -1,5 +1,19 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+
+// Simple stupid hash to reduce commit ID to something short
+const getHash = function (str) {
+    var hash = 42;
+    if (str.length) { for (var i = 0; i < str.length; i++) { hash = Math.abs((hash << 5) - hash + str.charCodeAt(i)); } }
+    return hash.toString(16);
+};
+
+var commitID = process.env.SCM_COMMIT_ID;
+if (!commitID) commitID = "test";
+const version = getHash(commitID);
+console.log("commitID: " + commitID);
+console.log("version: " + version);
 
 const pages =
     [
@@ -18,6 +32,14 @@ const pages =
         { "name": "Functions" },
     ];
 
+function generateEntry() {
+    return pages.reduce((config, page) => {
+        if (typeof (page.script) === "undefined") return config;
+        config[page.script] = `./src/Scripts/${page.script}.ts`;
+        return config;
+    }, {});
+}
+
 function generateHtmlWebpackPlugins() {
     return pages.map(function (page) {
         return new HtmlWebpackPlugin({
@@ -29,17 +51,11 @@ function generateHtmlWebpackPlugins() {
     });
 }
 
-function generateEntry() {
-    return pages.reduce((config, page) => {
-        if (typeof (page.script) === "undefined") return config;
-        config[page.script] = `./src/Scripts/${page.script}.ts`;
-        return config;
-    }, {});
-}
-
 module.exports = {
     entry: generateEntry(),
-    plugins: [].concat(generateHtmlWebpackPlugins()),
+    plugins: [new webpack.DefinePlugin({
+        __VERSION__: JSON.stringify(version)
+    })].concat(generateHtmlWebpackPlugins()),
     mode: 'development',
     devtool: 'source-map',
     module: {
