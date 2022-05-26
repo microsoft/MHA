@@ -1,9 +1,13 @@
-/* global $ */
-/* global appInsights */
-/* global mhaStrings */
-/* global HeaderModel */
-/* global Diagnostics */
-/* global Table */
+import "office-ui-fabric-js/dist/css/fabric.min.css"
+import "office-ui-fabric-js/dist/css/fabric.components.min.css"
+import "../Content/Office.css";
+import "../Content/App.css";
+import * as $ from "jquery";
+import { appInsights } from "./diag"
+import { mhaStrings } from "./Strings";
+import { HeaderModel } from "./Headers"
+import { Diagnostics } from "./diag"
+import { Table } from "./Table"
 
 (function () {
     "use strict";
@@ -34,7 +38,8 @@
     function analyze() {
         // Can't do anything without jQuery
         if (!$) return;
-        if (appInsights) appInsights.trackEvent("analyzeHeaders");
+        if (appInsights) appInsights.trackEvent({name:"analyzeHeaders"});
+        // @ts-ignore TODO Fix this
         viewModel = HeaderModel($("#inputHeaders").val());
         Table.resetArrows();
 
@@ -66,8 +71,11 @@
             Table.initializeTableUI(viewModel);
             Table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, null);
 
+            // @ts-ignore TODO Fix this
             document.querySelector("#analyzeButton").onclick = analyze;
+            // @ts-ignore TODO Fix this
             document.querySelector("#clearButton").onclick = clear;
+            // @ts-ignore TODO Fix this
             document.querySelector("#copyButton").onclick = copy;
         });
     }

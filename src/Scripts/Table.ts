@@ -1,8 +1,7 @@
-/* global $ */
-/* global mhaStrings */
-/* exported Table */
+import * as $ from "jquery";
+import { mhaStrings } from "./Strings";
 
-const Table = (function () {
+export const Table = (function () {
     "use strict";
 
     let viewModel = null;
@@ -156,6 +155,7 @@ const Table = (function () {
 
     function recalculateVisibility() {
         for (let i = 0; i < visibilityBindings.length; i++) {
+            // @ts-ignore TODO Fix this
             makeVisible(visibilityBindings[i][0], visibilityBindings[i][1]());
         }
 
@@ -352,6 +352,7 @@ const Table = (function () {
         pane.wrap(wrap);
         pane.before(header);
         pane.append(tbody);
+        // @ts-ignore TODO Fix this
         const caption = $(pane[0].createCaption());
         caption.prepend(captionDiv);
         header.hide();

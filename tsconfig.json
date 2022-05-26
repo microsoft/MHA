@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
-    "outDir": "./src/transpiled",
+    "outDir": "./dist/",
+    // "noImplicitAny": true,
+    "jsx": "react",
     "allowJs": true,
-    "extendedDiagnostics": true,
-    "explainFiles": true,
+    "moduleResolution": "node",
+    "module": "es6",
     "target": "es5"
-  },
-    "include": [
-        "./src/Scripts/**/*"
-    ]
+  }
 }

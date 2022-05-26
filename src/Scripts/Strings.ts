@@ -1,8 +1,7 @@
-/* global $ */
-/* global appInsights */
-/* exported mhaStrings */
+import * as $ from "jquery";
+import { appInsights } from "./diag"
 
-const mhaStrings = (function () {
+export const mhaStrings = (function () {
     "use strict";
 
     function copyToClipboard(str) {
@@ -14,24 +13,25 @@ const mhaStrings = (function () {
         textArea.select();
         const succeeded = document.execCommand('copy');
         document.body.removeChild(textArea);
-        if (appInsights) appInsights.trackEvent("copy", { succeeded: succeeded, style: "textarea" });
+        if (appInsights) appInsights.trackEvent({name:"copy",properties:{ succeeded: succeeded, style: "textarea" }});
 
         if (!succeeded) {
             try {
                 navigator.clipboard.writeText(str).then(function () {
-                    if (appInsights) appInsights.trackEvent("copy", { succeeded: "true", style: "navigator" });
+                    if (appInsights) appInsights.trackEvent({name:"copy", properties:{ succeeded: "true", style: "navigator" }});
                 }, function () {
-                    if (appInsights) appInsights.trackEvent("copy", { succeeded: "false", style: "navigator" });
+                    if (appInsights) appInsights.trackEvent({name:"copy", properties:{ succeeded: "false", style: "navigator" }});
                 });
             }
             catch (e) { /**/ }
         }
 
         try {
-            if (appInsights) {
+            if (typeof(appInsights) !== "undefined" ) {
+                // @ts-ignore TODO: fix this
                 const queryOpts: PermissionDescriptor = { name: 'clipboard-write', allowWithoutGesture: false };
                 navigator.permissions.query(queryOpts).then(function (result) {
-                    appInsights.trackEvent("copy", { succeeded: succeeded, style: "permissions", clipboardWrite: result.state });
+                    appInsights.trackEvent({name:"copy", properties:{ succeeded: succeeded, style: "permissions", clipboardWrite: result.state }});
                 });
             }
         }

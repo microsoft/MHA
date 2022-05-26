@@ -2,20 +2,18 @@
   "name": "mha",
   "version": "1.0.0",
   "description": "Message Header Analyzer",
-  "engines": {
-    "node": ">=10.12.0",
-    "npm": ">=6.0.0"
-  },
-  "main": "Pages/mha.html",
+  "private": true,
   "scripts": {
     "ts": "tsc",
-    "prebuild": "npm install && npm run clean && tsc || exit 0",
-    "build": "node tasks/build.js",
-    "prebuild-debug": "npm install && npm run clean && tsc || exit 0",
+    "_prebuild": "npm install && npm run clean && tsc || exit 0",
+    "watch": "webpack --watch",
+    "build": "webpack",
+    "_prebuild-debug": "npm install && npm run clean && tsc || exit 0",
     "build-debug": "node tasks/build.js debug",
     "clean": "node tasks/clean.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stephenegriffin/mha.git"
@@ -26,18 +24,31 @@
     "url": "https://github.com/stephenegriffin/mha/issues"
   },
   "homepage": "https://github.com/stephenegriffin/mha#readme",
-  "dependencies": {
-    "@microsoft/office-js": "^1.1.73",
+  "devDependencies": {
     "@types/jquery": "^3.5.14",
+    "@types/office-js": "^1.0.256",
+    "css-loader": "^6.7.1",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "source-map-loader": "^3.0.1",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.6.4",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
+  },
+  "dependencies": {
+    "@microsoft/applicationinsights-web": "^2.8.3",
+    "@microsoft/office-js": "^1.1.73",
     "codepage": "^1.15.0",
+    "framework7": "^1.7.1",
     "framework7-icons": "^5.0.5",
-    "jquery": "^3.5.1",
+    "jquery": "^3.6.0",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.3",
     "office-ui-fabric-js": "^1.5.0",
-    "stacktrace-js": "^2.0.2",
-    "typescript": "<=4.6.4",
-    "uglify-js": "^3.15.5"
+    "qunit": "^2.19.1",
+    "stacktrace-js": "^2.0.2"
   },
   "-vs-binding": {
     "BeforeBuild": [
@@ -46,6 +57,5 @@
     "Clean": [
       "clean"
     ]
-  },
-  "devDependencies": {}
+  }
 }

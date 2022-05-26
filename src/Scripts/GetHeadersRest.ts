@@ -1,11 +1,10 @@
 /* global $ */
-/* global mhaStrings */
-/* global Errors */
-/* global Office */
-/* global ParentFrame */
-/* global GetHeaders */
-/* global GetHeadersEWS */
-/* exported GetHeadersRest*/
+import { mhaStrings } from "./Strings";
+import { Errors } from "./Errors";
+import { ParentFrame } from "./uiToggle";
+import { GetHeaders } from "./GetHeaders";
+import { GetHeadersEWS } from "./GetHeadersEWS";
+import jwt_decode, { JwtPayload } from 'jwt-decode'
 
 /*
  * GetHeadersRest.js
@@ -19,7 +18,7 @@
  * restUrl requires 1.5 and ReadItem
  */
 
-const GetHeadersRest = (function () {
+export const GetHeadersRest = (function () {
     "use strict";
 
     function getItemRestId() {
@@ -51,18 +50,19 @@ const GetHeadersRest = (function () {
         }
 
         // parse the token
-        const jwt = window.jwt_decode(accessToken);
+        const jwt = jwt_decode<JwtPayload>(accessToken);
 
         // 'aud' parameter from token can be in a couple of
         // different formats.
-
+        const aud = Array.isArray(jwt.aud) ? jwt.aud[0] : jwt.aud;
+        
         // Format 1: It's just the URL
-        if (jwt.aud.match(/https:\/\/([^@]*)/)) {
+        if (aud.match(/https:\/\/([^@]*)/)) {
             return jwt.aud;
         }
 
         // Format 2: GUID/hostname@GUID
-        const match = jwt.aud.match(/\/([^@]*)@/);
+        const match = aud.match(/\/([^@]*)@/);
         if (match && match[1]) {
             return "https://" + match[1];
         }
@@ -136,7 +136,7 @@ const GetHeadersRest = (function () {
 
         Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
             try {
-                if (result.status === "succeeded") {
+                if (result.status === Office.AsyncResultStatus.Succeeded) {
                     const accessToken = result.value;
                     getHeaders(accessToken, headersLoadedCallback);
                 } else {

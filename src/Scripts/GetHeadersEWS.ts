@@ -1,11 +1,8 @@
-/* global $ */
-/* global jQuery */
-/* global mhaStrings */
-/* global Errors */
-/* global Office */
-/* global ParentFrame */
-/* global GetHeaders */
-/* exported GetHeadersEWS */
+import * as $ from "jquery";
+import { mhaStrings } from "./Strings";
+import { Errors } from "./Errors";
+import { ParentFrame } from "./uiToggle";
+import { GetHeaders } from "./GetHeaders";
 
 /*
  * GetHeadersEWS.js
@@ -17,7 +14,7 @@
  * makeEwsRequestAsync requires 1.0 and ReadWriteMailbox
  */
 
-const GetHeadersEWS = (function () {
+export const GetHeadersEWS = (function () {
     "use strict";
 
     let logResponse;
@@ -31,13 +28,15 @@ const GetHeadersEWS = (function () {
         // This function plug in filters nodes for the one that matches the given name.
         // This sidesteps the issues in jquery's selector logic.
         (function ($) {
-            $.fn.filterNode = function (node) {
+        // @ts-ignore TODO: FIX THIS
+        $.fn.filterNode = function (node) {
                 return this.find("*").filter(function () {
                     return this.nodeName === node;
                 });
             };
-        })(jQuery);
+        })($);
 
+        // @ts-ignore TODO: FIX THIS
         const ret = {} as headerProp;
         try {
             // Strip encoded embedded null characters from our XML. parseXML doesn't like them.
@@ -47,6 +46,7 @@ const GetHeadersEWS = (function () {
 
             if (responseDom) {
                 // We can do this because we know there's only the one property.
+                // @ts-ignore TODO: FIX THIS
                 const extendedProperty = responseDom.filterNode("t:ExtendedProperty");
                 if (extendedProperty.length > 0) {
                     ret.prop = extendedProperty[0].textContent.replace(/\r|\n|\r\n/g, '\n');
@@ -54,6 +54,7 @@ const GetHeadersEWS = (function () {
             }
 
             if (!ret.prop) {
+                // @ts-ignore TODO: FIX THIS
                 ret.responseCode = responseDom.filterNode("m:ResponseCode");
             }
         } catch (e) {

@@ -1,8 +1,7 @@
-/* global appInsights */
-/* global StackTrace */
-/* exported Errors */
+import { appInsights } from "./diag"
+import * as StackTrace from "stacktrace-js";
 
-const Errors = (function () {
+export const Errors = (function () {
     "use strict";
 
     let errorArray = [];
@@ -41,8 +40,8 @@ const Errors = (function () {
                 if ("stack" in error) return true;
             }
         } catch (e) {
-            if (appInsights) appInsights.trackEvent("isError exception");
-            if (appInsights) appInsights.trackEvent("isError exception with error", e);
+            if (appInsights) appInsights.trackEvent({name:"isError exception"});
+            if (appInsights) appInsights.trackEvent({name:"isError exception with error", properties:e});
         }
 
         return false;
@@ -55,7 +54,9 @@ const Errors = (function () {
         if (error && !suppressTracking && appInsights) {
             const props = {
                 Message: message,
-                Error: JSON.stringify(error, null, 2)
+                Error: JSON.stringify(error, null, 2),
+                Source: "",
+                Stack: "",
             };
 
             if (Errors.isError(error) && error.exception) {
@@ -112,7 +113,7 @@ const Errors = (function () {
         }
 
         function errback(err) {
-            if (appInsights) appInsights.trackEvent("Errors.parse errback");
+            if (appInsights) appInsights.trackEvent({name:"Errors.parse errback"});
             stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
             handler(eventName, stack);
         }

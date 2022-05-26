@@ -1,18 +1,17 @@
-/* global $ */
-/* global appInsights */
-/* global fabric */
+import * as $ from "jquery";
+import { appInsights } from "./diag"
+import * as fabric from "office-ui-fabric-js/dist/js/fabric";
 /* global Office */
-/* global Diagnostics */
-/* global Errors */
-/* global GetHeaders */
-/* global poster */
-/* global mhaStrings */
-/* exported ParentFrame */
+import { Diagnostics } from "./diag"
+import { Errors } from "./Errors";
+import { GetHeaders } from "./GetHeaders";
+import { poster } from "./Poster"
+import { mhaStrings } from "./Strings";
 
 // Controller for Settings screen which controls what is being displayed
 // and which UI to use.
 
-const ParentFrame = (function () {
+export const ParentFrame = (function () {
     "use strict";
 
     class Choice {
@@ -65,7 +64,7 @@ const ParentFrame = (function () {
     }
 
     function render() {
-        if (appInsights && headers) appInsights.trackEvent("analyzeHeaders");
+        if (appInsights && headers) appInsights.trackEvent({name:"analyzeHeaders"});
         postMessageToFrame("renderItem", headers);
     }
 
@@ -174,6 +173,7 @@ const ParentFrame = (function () {
     function go(choice: Choice) {
         iFrame = null;
         currentChoice = choice;
+        // @ts-ignore TODO Fix this
         document.getElementById("uiFrame").src = choice.url;
         if (Office.context) {
             Office.context.roamingSettings.set(getSettingsKey(), choice);
@@ -279,6 +279,7 @@ const ParentFrame = (function () {
             switch (action) {
                 case "actionsSettings-OK": {
                     // How did the user say to display it (UI to display)
+                    // @ts-ignore TODO Fix this
                     const iChoice = $("#uiChoice input:checked")[0].value;
                     const choice: Choice = choices[iChoice];
                     if (choice.label !== currentChoice.label) {
@@ -311,8 +312,10 @@ const ParentFrame = (function () {
 
         const settingsButton = header.querySelector(".gear-button");
         // When clicking the button, open the dialog
+        // @ts-ignore TODO Fix this
         settingsButton.onclick = function () {
             // Set the current choice in the UI.
+            // @ts-ignore TODO Fix this
             $("#uiChoice input").attr("checked", false);
             const labels = $("#uiChoice label");
             labels.removeClass("is-checked");
@@ -326,6 +329,7 @@ const ParentFrame = (function () {
         };
 
         const copyButton = header.querySelector(".copy-button");
+        // @ts-ignore TODO Fix this
         copyButton.onclick = function () {
             mhaStrings.copyToClipboard(modelToString);
         };
@@ -359,8 +363,10 @@ const ParentFrame = (function () {
     };
 })();
 
-Office.initialize = function () {
-    $(document).ready(function () {
-        ParentFrame.initUI();
-    });
-};
+if (typeof(Office) !== "undefined"){
+    Office.initialize = function () {
+        $(document).ready(function () {
+            ParentFrame.initUI();
+        });
+    };
+}
