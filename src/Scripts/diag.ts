@@ -7,20 +7,6 @@ import { mhaVersion } from "./version";
 
 // diagnostics module
 
-// Find the path of the current script so we can inject a script we know lives alongside it
-// const mhaVersionScriptPath = (function () {
-//     const scripts = document.getElementsByTagName('script');
-//     const script = scripts[scripts.length - 1];
-//     const path = script.getAttribute('src', 2);
-//     return path.split('diag')[0] + 'version.js'; // current script is diag*, so splitting here will put our path in [0]
-// }());
-
-// Inject our version variable
-// TODO: Restore this
-// const version = document.createElement('script');
-// version.src = mhaVersionScriptPath;
-// document.getElementsByTagName('script')[0].parentNode.appendChild(version);
-
 export const appInsights = new ApplicationInsights({
     config: {
         instrumentationKey: aikey(),
@@ -63,12 +49,6 @@ appInsights.addTelemetryInitializer(function (envelope) {
 
 appInsights.loadAppInsights();
 appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pageview
-
-const script = document.createElement('script');
-
-// script.onerror = function () { appInsights = null; };
-script.src = window.location.origin + '/Scripts/aikey.js';
-document.getElementsByTagName('script')[0].parentNode.appendChild(script);
 
 export const Diagnostics = (function () {
     "use strict";
