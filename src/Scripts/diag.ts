@@ -4,6 +4,7 @@ import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { aikey } from "./aikey";
 import { mhaVersion } from "./version";
+import { buildTime } from "./buildTime";
 
 // diagnostics module
 
@@ -55,7 +56,6 @@ export const Diagnostics = (function () {
 
     let appDiagnostics = null;
     let itemDiagnostics = null;
-    let lastUpdate = "";
     let inGet = false;
 
     function ensureItemDiagnostics() {
@@ -103,13 +103,8 @@ export const Diagnostics = (function () {
                 appDiagnostics.ui = "standalone";
             }
 
-            if (lastUpdate) {
-                appDiagnostics["Last Update"] = lastUpdate;
-            }
-
-            if (mhaVersion) {
-                appDiagnostics["mhaVersion"] = mhaVersion();
-            }
+            appDiagnostics["Last Update"] = buildTime();
+            appDiagnostics["mhaVersion"] = mhaVersion();
 
             if (window.Office) {
                 delete appDiagnostics["Office"];
@@ -243,25 +238,6 @@ export const Diagnostics = (function () {
     }
 
     function clear() { itemDiagnostics = null; }
-
-    function ensureLastModified() {
-        try {
-            const client = new XMLHttpRequest();
-            // version.js is generated on build and is the true signal of the last modified time
-            // TODO: Restore this
-            // client.open("HEAD", mhaVersionScriptPath, true);
-            client.onreadystatechange = function () {
-                if (this.readyState === 2) {
-                    lastUpdate = client.getResponseHeader("Last-Modified");
-                }
-            }
-
-            client.send();
-        }
-        catch (e) { appInsights.trackEvent({ name: "diagError", properties: { source: "Diagnostics.ensureLastModified", exception: e.toString(), message: e.message, stack: e.stack } }); }
-    }
-
-    ensureLastModified();
 
     return {
         get: get,

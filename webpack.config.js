@@ -19,6 +19,9 @@ var aikey = process.env.APPINSIGHTS_INSTRUMENTATIONKEY;
 if (typeof (aikey) === "undefined" || aikey === "") aikey = "unknown";
 console.log("aikey: " + aikey);
 
+const buildTime = new Date().toUTCString();
+console.log("buildTime: " + buildTime);
+
 const pages =
     [
         { "name": "unittests", "script": "unittests" },
@@ -59,7 +62,8 @@ module.exports = {
     entry: generateEntry(),
     plugins: [new webpack.DefinePlugin({
         __VERSION__: JSON.stringify(version),
-        __AIKEY__: JSON.stringify(aikey)
+        __AIKEY__: JSON.stringify(aikey),
+        __BUILDTIME__: JSON.stringify(buildTime)
     })].concat(generateHtmlWebpackPlugins()),
     mode: 'development',
     devtool: 'source-map',
