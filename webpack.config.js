@@ -10,6 +10,12 @@ const pages =
         { "pagename": "classicDesktopFrame", "chunk": "default" },
         { "pagename": "MobilePane", "chunk": "mobilepane" },
         { "pagename": "MobilePane-ios", "chunk": "mobilepaneios" },
+        { "pagename": "Privacy", "chunk": "privacy" },
+        // Redirection/static pages
+        { "pagename": "Default" },
+        { "pagename": "DefaultPhone" },
+        { "pagename": "DefaultTablet" },
+        { "pagename": "Functions" },
     ];
 
 function generateHtmlWebpackPlugins() {
@@ -32,6 +38,7 @@ module.exports = {
         mobilepane: './src/Scripts/MobilePane.ts',
         mobilepaneios: './src/Scripts/MobilePane-ios.ts',
         uitoggle: './src/Scripts/uiToggle.ts',
+        privacy: './src/Scripts/privacy.ts',
     },
     mode: 'development',
     devtool: 'source-map',
