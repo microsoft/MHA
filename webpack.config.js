@@ -3,46 +3,45 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const pages =
     [
-        { "pagename": "unittests", "chunk": "unittests" },
-        { "pagename": "mha", "chunk": "standalone" },
-        { "pagename": "parentframe", "chunk": "uiToggle" },
-        { "pagename": "newDesktopFrame", "chunk": "desktoppane" },
-        { "pagename": "classicDesktopFrame", "chunk": "default" },
-        { "pagename": "MobilePane", "chunk": "mobilepane" },
-        { "pagename": "MobilePane-ios", "chunk": "mobilepaneios" },
-        { "pagename": "Privacy", "chunk": "privacy" },
+        { "name": "unittests", "script": "unittests" },
+        { "name": "mha", "script": "StandAlone" },
+        { "name": "parentframe", "script": "uiToggle" },
+        { "name": "newDesktopFrame", "script": "DesktopPane" },
+        { "name": "classicDesktopFrame", "script": "Default" },
+        { "name": "MobilePane", "script": "MobilePane" },
+        { "name": "MobilePane-ios", "script": "MobilePane-ios" },
+        { "name": "Privacy", "script": "privacy" },
         // Redirection/static pages
-        { "pagename": "Default" },
-        { "pagename": "DefaultPhone" },
-        { "pagename": "DefaultTablet" },
-        { "pagename": "Functions" },
+        { "name": "Default" },
+        { "name": "DefaultPhone" },
+        { "name": "DefaultTablet" },
+        { "name": "Functions" },
     ];
 
 function generateHtmlWebpackPlugins() {
-    return pages.map(function (val) {
+    return pages.map(function (page) {
         return new HtmlWebpackPlugin({
             inject: true,
-            template: `./src/Pages/${val.pagename}.html`,
-            filename: `${val.pagename}.html`,
-            chunks: [val.chunk]
+            template: `./src/Pages/${page.name}.html`,
+            filename: `${page.name}.html`,
+            chunks: [page.script]
         })
     });
 }
 
+function generateEntry() {
+    return pages.reduce((config, page) => {
+        if (typeof (page.script) === "undefined") return config;
+        config[page.script] = `./src/Scripts/${page.script}.ts`;
+        return config;
+    }, {});
+}
+
 module.exports = {
-    entry: {
-        unittests: './src/Scripts/unittests.ts',
-        standalone: './src/Scripts/StandAlone.ts',
-        default: './src/Scripts/Default.ts',
-        desktoppane: './src/Scripts/DesktopPane.ts',
-        mobilepane: './src/Scripts/MobilePane.ts',
-        mobilepaneios: './src/Scripts/MobilePane-ios.ts',
-        uitoggle: './src/Scripts/uiToggle.ts',
-        privacy: './src/Scripts/privacy.ts',
-    },
+    entry: generateEntry(),
+    plugins: [].concat(generateHtmlWebpackPlugins()),
     mode: 'development',
     devtool: 'source-map',
-    plugins: [].concat(generateHtmlWebpackPlugins()),
     module: {
         rules: [
             {
