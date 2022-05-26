@@ -2,7 +2,7 @@ import * as $ from "jquery";
 import { ApplicationInsights } from '@microsoft/applicationinsights-web'
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
-/* global aikey */
+import { aikey } from "./aikey";
 import { mhaVersion } from "./version";
 
 // diagnostics module
@@ -20,8 +20,6 @@ import { mhaVersion } from "./version";
 // const version = document.createElement('script');
 // version.src = mhaVersionScriptPath;
 // document.getElementsByTagName('script')[0].parentNode.appendChild(version);
-
-const aikey = function () { return "2f12afed-6139-456e-9de3-49003d3a1fb1"; };
 
 export const appInsights = new ApplicationInsights({
     config: {

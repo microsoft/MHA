@@ -15,6 +15,10 @@ const version = getHash(commitID);
 console.log("commitID: " + commitID);
 console.log("version: " + version);
 
+var aikey = process.env.APPINSIGHTS_INSTRUMENTATIONKEY;
+if (typeof (aikey) === "undefined" || aikey === "") aikey = "unknown";
+console.log("aikey: " + aikey);
+
 const pages =
     [
         { "name": "unittests", "script": "unittests" },
@@ -54,7 +58,8 @@ function generateHtmlWebpackPlugins() {
 module.exports = {
     entry: generateEntry(),
     plugins: [new webpack.DefinePlugin({
-        __VERSION__: JSON.stringify(version)
+        __VERSION__: JSON.stringify(version),
+        __AIKEY__: JSON.stringify(aikey)
     })].concat(generateHtmlWebpackPlugins()),
     mode: 'development',
     devtool: 'source-map',
