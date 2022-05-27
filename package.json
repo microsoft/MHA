@@ -24,6 +24,7 @@
     "@types/jquery": "^3.5.14",
     "@types/office-js": "^1.0.256",
     "css-loader": "^6.7.1",
+    "exports-loader": "^4.0.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
     "source-map-loader": "^3.0.1",

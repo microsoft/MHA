@@ -1,6 +1,6 @@
 ﻿import * as $ from "jquery";
 import { appInsights } from "./diag"
-import * as fabric from "office-ui-fabric-js/dist/js/fabric";
+import { fabric } from "./fabric"
 import { Diagnostics } from "./diag"
 import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";

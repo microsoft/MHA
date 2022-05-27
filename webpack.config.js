@@ -70,6 +70,7 @@ module.exports = {
     devtool: 'source-map',
     module: {
         rules: [
+            { test: /fabric(\.min)?\.js$/, use: 'exports-loader?exports=fabric' },
             {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
