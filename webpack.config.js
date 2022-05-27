@@ -36,6 +36,7 @@ const pages =
         { "name": "Default" },
         { "name": "DefaultPhone" },
         { "name": "DefaultTablet" },
+        { "name": "DesktopPane" },
         { "name": "Functions" },
     ];
 
@@ -99,7 +100,7 @@ module.exports = {
     },
     output: {
         filename: '[name].js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'Pages'),
         clean: true,
     },
 };
