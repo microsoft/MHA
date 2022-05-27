@@ -1,6 +1,7 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // Simple stupid hash to reduce commit ID to something short
 const getHash = function (str) {
@@ -61,7 +62,9 @@ function generateHtmlWebpackPlugins() {
 
 module.exports = {
     entry: generateEntry(),
-    plugins: [new webpack.DefinePlugin({
+    plugins: [
+        new MiniCssExtractPlugin(),
+        new webpack.DefinePlugin({
         __VERSION__: JSON.stringify(version),
         __AIKEY__: JSON.stringify(aikey),
         __BUILDTIME__: JSON.stringify(buildTime)
@@ -70,15 +73,15 @@ module.exports = {
     devtool: 'source-map',
     module: {
         rules: [
+            {
+                test: /\.css$/i,
+                use: [MiniCssExtractPlugin.loader, "css-loader"],
+            },
             { test: /fabric(\.min)?\.js$/, use: 'exports-loader?exports=fabric' },
             {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
-            },
-            {
-                test: /\.css$/i,
-                use: ['style-loader', 'css-loader'],
             },
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
