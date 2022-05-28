@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin');
 const webpack = require('webpack');
 
 // Simple stupid hash to reduce commit ID to something short
@@ -65,7 +66,18 @@ module.exports = {
         __VERSION__: JSON.stringify(version),
         __AIKEY__: JSON.stringify(aikey),
         __BUILDTIME__: JSON.stringify(buildTime)
-    })].concat(generateHtmlWebpackPlugins()),
+    }),
+    new FileManagerPlugin({
+        events: {
+            onEnd: {
+                copy: [
+                    { source: './src/Resources/*.gif', destination: './Resources/' },
+                    { source: './src/Resources/*.jpg', destination: './Resources/' }
+                ]
+            }
+        }
+    })
+    ].concat(generateHtmlWebpackPlugins()),
     mode: 'development',
     devtool: 'source-map',
     module: {
@@ -79,10 +91,6 @@ module.exports = {
             {
                 test: /\.css$/i,
                 use: ['style-loader', 'css-loader'],
-            },
-            {
-                test: /\.(png|svg|jpg|jpeg|gif)$/i,
-                type: 'asset/resource',
             },
             {
                 test: /\.js$/,
