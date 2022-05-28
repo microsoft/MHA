@@ -31,13 +31,14 @@ const pages =
         { "name": "newDesktopFrame", "script": "DesktopPane" },
         { "name": "classicDesktopFrame", "script": "Default" },
         { "name": "MobilePane", "script": "MobilePane" },
-        { "name": "MobilePane-ios", "script": "MobilePane-ios" },
+        { "name": "newMobilePaneIosFrame", "script": "MobilePane-ios" },
         { "name": "Privacy", "script": "privacy" },
         // Redirection/static pages
         { "name": "Default" },
         { "name": "DefaultPhone" },
         { "name": "DefaultTablet" },
         { "name": "DesktopPane" },
+        { "name": "MobilePane-ios" },
         { "name": "Functions" },
     ];
 
