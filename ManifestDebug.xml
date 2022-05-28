@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Created:cbbc9d22-5cf7-4e4c-8ee9-42a772aae58a-->
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
+  xsi:type="MailApp">
+  <Id>62916641-fc48-44ae-a2a3-163811f1c945</Id>
+  <Version>3.0</Version>
+  <ProviderName>Stephen Griffin</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Message Header Analyzer" />
+  <Description DefaultValue="Microsoft Message Header Analyzer" />
+  <IconUrl DefaultValue="https://localhost:44336//Resources/mhaLogo.jpg" />
+  <HighResolutionIconUrl DefaultValue="https://localhost:44336//Resources/mhaLogo128.jpg" />
+  <SupportUrl DefaultValue="https://github.com/stephenegriffin/MHA/issues" />
+  <Hosts>
+    <Host Name="Mailbox" />
+  </Hosts>
+  <Requirements>
+    <Sets DefaultMinVersion="1.1">
+      <Set Name="Mailbox" />
+    </Sets>
+  </Requirements>
+
+  <FormSettings>
+    <Form xsi:type="ItemRead">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://localhost:44336//Pages/Default.html" />
+        <RequestedHeight>450</RequestedHeight>
+      </DesktopSettings>
+
+      <TabletSettings>
+        <SourceLocation DefaultValue="https://localhost:44336//Pages/DefaultTablet.html" />
+        <RequestedHeight>350</RequestedHeight>
+      </TabletSettings>
+
+      <PhoneSettings>
+        <SourceLocation DefaultValue="https://localhost:44336//Pages/DefaultPhone.html" />
+      </PhoneSettings>
+    </Form>
+  </FormSettings>
+
+  <!-- TODO: Dial this down to ReadItem when the token bug is fixed -->
+  <Permissions>ReadWriteMailbox</Permissions>
+
+  <Rule xsi:type="RuleCollection" Mode="And">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
+  </Rule>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.3">
+        <bt:Set Name="Mailbox" />
+      </bt:Sets>
+    </Requirements>
+
+    <Hosts>
+      <Host xsi:type="MailHost">
+
+        <DesktopFormFactor>
+          <FunctionFile resid="functionFile" />
+
+          <!-- Message read form -->
+          <ExtensionPoint xsi:type="MessageReadCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="mhaCmdGroup">
+                <Label resid="groupLabel" />
+                <!-- Task pane button -->
+                <Control xsi:type="Button" id="mhaOpenPaneButton">
+                  <Label resid="mhaOpenPaneBtnLabel" />
+                  <Supertip>
+                    <Title resid="mhaOpenPaneBtnTipTitle" />
+                    <Description resid="mhaOpenPaneBtnTipDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="mha-icon-16" />
+                    <bt:Image size="32" resid="mha-icon-32" />
+                    <bt:Image size="80" resid="mha-icon-80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="mhaTaskPaneUrl" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <Resources>
+      <bt:Images>
+        <!-- MHA icon -->
+        <bt:Image id="mha-icon-16" DefaultValue="https://localhost:44336//Resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-32" DefaultValue="https://localhost:44336//Resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-80" DefaultValue="https://localhost:44336//Resources/mhaLogo.jpg"/>
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="functionFile" DefaultValue="https://localhost:44336//Pages/Functions.html"/>
+        <bt:Url id="mhaTaskPaneUrl" DefaultValue="https://localhost:44336//Pages/Default.html"/>
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="groupLabel" DefaultValue=" "/>
+        <bt:String id="mhaOpenPaneBtnLabel" DefaultValue="View Headers"/>
+        <bt:String id="mhaOpenPaneBtnTipTitle" DefaultValue="Open a pane to view the available headers on the current message"/>
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="mhaOpenPaneBtnTipDescription" DefaultValue="Retrieves the transport message headers of the current message and displays them in an easy-to-read format." />
+      </bt:LongStrings>
+    </Resources>
+
+    <!-- VersionOverrides v1.1 -->
+    <!-- Use this to enable taskpane pinning -->
+    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+      <Requirements>
+        <bt:Sets DefaultMinVersion="1.3">
+          <bt:Set Name="Mailbox" />
+        </bt:Sets>
+      </Requirements>
+
+      <Hosts>
+        <Host xsi:type="MailHost">
+
+          <DesktopFormFactor>
+            <FunctionFile resid="functionFile" />
+
+            <!-- Message read form -->
+            <ExtensionPoint xsi:type="MessageReadCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="mhaCmdGroup">
+                  <Label resid="groupLabel" />
+                  <!-- Task pane button -->
+                  <Control xsi:type="Button" id="mhaOpenPaneButton">
+                    <Label resid="mhaOpenPaneBtnLabel" />
+                    <Supertip>
+                      <Title resid="mhaOpenPaneBtnTipTitle" />
+                      <Description resid="mhaOpenPaneBtnTipDescription" />
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="mha-icon-16" />
+                      <bt:Image size="32" resid="mha-icon-32" />
+                      <bt:Image size="80" resid="mha-icon-80" />
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <SourceLocation resid="mhaDesktopPaneUrl" />
+                      <SupportsPinning>true</SupportsPinning>
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+          </DesktopFormFactor>
+        </Host>
+      </Hosts>
+
+      <Resources>
+        <bt:Images>
+          <!-- MHA icon -->
+          <bt:Image id="mha-icon-16" DefaultValue="https://localhost:44336//Resources/mhaLogo.jpg"/>
+          <bt:Image id="mha-icon-32" DefaultValue="https://localhost:44336//Resources/mhaLogo.jpg"/>
+          <bt:Image id="mha-icon-80" DefaultValue="https://localhost:44336//Resources/mhaLogo.jpg"/>
+        </bt:Images>
+        <bt:Urls>
+          <bt:Url id="functionFile" DefaultValue="https://localhost:44336//Pages/functions.html"/>
+          <bt:Url id="mhaDesktopPaneUrl" DefaultValue="https://localhost:44336//Pages/desktoppane.html"/>
+        </bt:Urls>
+        <bt:ShortStrings>
+          <bt:String id="groupLabel" DefaultValue=" "/>
+          <bt:String id="mhaOpenPaneBtnLabel" DefaultValue="View Headers"/>
+          <bt:String id="mhaOpenPaneBtnTipTitle" DefaultValue="Open a pane to view the available headers on the current message"/>
+        </bt:ShortStrings>
+        <bt:LongStrings>
+          <bt:String id="mhaOpenPaneBtnTipDescription" DefaultValue="Retrieves the transport message headers of the current message and displays them in an easy-to-read format." />
+        </bt:LongStrings>
+      </Resources>
+    </VersionOverrides>
+  </VersionOverrides>
+</OfficeApp>
