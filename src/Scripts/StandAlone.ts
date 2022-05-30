@@ -39,8 +39,7 @@ import { Table } from "./Table"
         // Can't do anything without jQuery
         if (!$) return;
         if (appInsights) appInsights.trackEvent({ name: "analyzeHeaders" });
-        // @ts-ignore TODO Fix this
-        viewModel = HeaderModel($("#inputHeaders").val());
+        viewModel = HeaderModel($("#inputHeaders").val() as string);
         Table.resetArrows();
 
         enableSpinner();
@@ -71,12 +70,9 @@ import { Table } from "./Table"
             Table.initializeTableUI(viewModel);
             Table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, null);
 
-            // @ts-ignore TODO Fix this
-            document.querySelector("#analyzeButton").onclick = analyze;
-            // @ts-ignore TODO Fix this
-            document.querySelector("#clearButton").onclick = clear;
-            // @ts-ignore TODO Fix this
-            document.querySelector("#copyButton").onclick = copy;
+            (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;
+            (document.querySelector("#clearButton") as HTMLButtonElement).onclick = clear;
+            (document.querySelector("#copyButton") as HTMLButtonElement).onclick = copy;
         });
     }
 
