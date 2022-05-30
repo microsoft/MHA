@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require('webpack');
 
 // Simple stupid hash to reduce commit ID to something short
@@ -63,21 +64,23 @@ function generateHtmlWebpackPlugins() {
 
 module.exports = {
     entry: generateEntry(),
-    plugins: [new webpack.DefinePlugin({
-        __VERSION__: JSON.stringify(version),
-        __AIKEY__: JSON.stringify(aikey),
-        __BUILDTIME__: JSON.stringify(buildTime)
-    }),
-    new FileManagerPlugin({
-        events: {
-            onEnd: {
-                copy: [
-                    { source: './src/Resources/*.gif', destination: './Resources/' },
-                    { source: './src/Resources/*.jpg', destination: './Resources/' }
-                ]
+    plugins: [
+        new MiniCssExtractPlugin(),
+        new webpack.DefinePlugin({
+            __VERSION__: JSON.stringify(version),
+            __AIKEY__: JSON.stringify(aikey),
+            __BUILDTIME__: JSON.stringify(buildTime)
+        }),
+        new FileManagerPlugin({
+            events: {
+                onEnd: {
+                    copy: [
+                        { source: './src/Resources/*.gif', destination: './Resources/' },
+                        { source: './src/Resources/*.jpg', destination: './Resources/' }
+                    ]
+                }
             }
-        }
-    })
+        })
     ].concat(generateHtmlWebpackPlugins()),
     mode: 'development',
     devtool: 'source-map',
@@ -91,7 +94,7 @@ module.exports = {
             },
             {
                 test: /\.css$/i,
-                use: ['style-loader', 'css-loader'],
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
             },
             {
                 test: /\.js$/,
