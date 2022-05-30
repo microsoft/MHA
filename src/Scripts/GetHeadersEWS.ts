@@ -36,8 +36,7 @@ export const GetHeadersEWS = (function () {
             };
         })($);
 
-        // @ts-ignore TODO: FIX THIS
-        const ret = {} as headerProp;
+        const ret = {} as HeaderProp;
         try {
             // Strip encoded embedded null characters from our XML. parseXML doesn't like them.
             xml = xml.replace(/&#x0;/g, "");
