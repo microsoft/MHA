@@ -15,9 +15,9 @@ export const GetHeaders = (function () {
         if (!Office) return 0;
         if (!Office.context) return 0;
         if (!Office.context.mailbox) return 0;
-        // @ts-ignore TODO: FIX THIS
+        // @ts-ignore early version of initialData
         if (Office.context.mailbox._initialData$p$0) return Office.context.mailbox._initialData$p$0._permissionLevel$p$0;
-        // @ts-ignore TODO: FIX THIS
+        // @ts-ignore initialData is missing from the type file
         if (Office.context.mailbox.initialData) return Office.context.mailbox.initialData.permissionLevel;
         return 0;
     }
@@ -29,7 +29,7 @@ export const GetHeaders = (function () {
         // In strict mode, we must find permissions to conclude we have them
         // In non-strict mode, if we don't find permissions, we assume we might have them
         // Some down level clients (such as we would use EWS on) don't have _initialData$p$0 or initialData at all.
-        // @ts-ignore TODO: FIX THIS
+        // @ts-ignore initialData is missing from the type file
         if (!Office.context.mailbox._initialData$p$0 && !Office.context.mailbox.initialData) return !strict;
         if (permissionLevel() < 1) return false;
         return true;
