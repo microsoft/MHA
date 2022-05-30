@@ -128,11 +128,11 @@ export const Diagnostics = (function () {
                             appDiagnostics["Office.context.mailbox.diagnostics"] = "missing";
                         }
 
-                        // @ts-ignore TODO Fix this
+                        // @ts-ignore early version of initialData
                         if (window.Office.context.mailbox._initialData$p$0) {
                             delete appDiagnostics["Office.context.mailbox.initialData"];
                         }
-                        // @ts-ignore TODO Fix this
+                        // @ts-ignore initialData is missing from the type file
                         else if (window.Office.context.mailbox.initialData) {
                             delete appDiagnostics["Office.context.mailbox.initialData"];
                         }

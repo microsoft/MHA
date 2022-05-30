@@ -169,8 +169,7 @@ export const ParentFrame = (function () {
     function go(choice: Choice) {
         iFrame = null;
         currentChoice = choice;
-        // @ts-ignore TODO Fix this
-        document.getElementById("uiFrame").src = choice.url;
+        (document.getElementById("uiFrame") as HTMLIFrameElement).src = choice.url;
         if (Office.context) {
             Office.context.roamingSettings.set(getSettingsKey(), choice);
             Office.context.roamingSettings.saveAsync();
@@ -275,8 +274,7 @@ export const ParentFrame = (function () {
             switch (action) {
                 case "actionsSettings-OK": {
                     // How did the user say to display it (UI to display)
-                    // @ts-ignore TODO Fix this
-                    const iChoice = $("#uiChoice input:checked")[0].value;
+                    const iChoice = ($("#uiChoice input:checked")[0] as HTMLInputElement).value;
                     const choice: Choice = choices[iChoice];
                     if (choice.label !== currentChoice.label) {
                         go(choice);
@@ -306,13 +304,11 @@ export const ParentFrame = (function () {
             new fabric["ChoiceFieldGroup"](choiceFieldGroupElements[i]);
         }
 
-        const settingsButton = header.querySelector(".gear-button");
+        const settingsButton = header.querySelector(".gear-button") as HTMLButtonElement;
         // When clicking the button, open the dialog
-        // @ts-ignore TODO Fix this
         settingsButton.onclick = function () {
             // Set the current choice in the UI.
-            // @ts-ignore TODO Fix this
-            $("#uiChoice input").attr("checked", false);
+            $("#uiChoice input").attr("checked", "false");
             const labels = $("#uiChoice label");
             labels.removeClass("is-checked");
             labels.attr("aria-checked", "false");
@@ -324,8 +320,7 @@ export const ParentFrame = (function () {
             dialogSettingsComponent.open();
         };
 
-        const copyButton = header.querySelector(".copy-button");
-        // @ts-ignore TODO Fix this
+        const copyButton = header.querySelector(".copy-button") as HTMLButtonElement;
         copyButton.onclick = function () {
             mhaStrings.copyToClipboard(modelToString);
         };
@@ -339,7 +334,7 @@ export const ParentFrame = (function () {
         try {
             const choice: Choice = Office.context.roamingSettings.get(getSettingsKey());
             const input = $("#uiToggle" + choice.label);
-            input.prop("checked", true);
+            input.prop("checked", "true");
             go(choice);
         } catch (e) {
             goDefaultChoice();
