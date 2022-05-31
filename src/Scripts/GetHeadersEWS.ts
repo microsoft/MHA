@@ -25,19 +25,14 @@ export const GetHeadersEWS = (function () {
     }
 
     function extractHeadersFromXml(xml) {
-        // This function plug in filters nodes for the one that matches the given name.
-        // This sidesteps the issues in jquery's selector logic.
-        (function ($) {
-            // @ts-ignore TODO: FIX THIS
-            $.fn.filterNode = function (node) {
-                return this.find("*").filter(function () {
-                    return this.nodeName === node;
-                });
-            };
-        })($);
+        // This filters nodes for the one that matches the given name.
+        function filterNode(xmlResponse: JQuery<XMLDocument>, node: string) {
+            return xmlResponse.find("*").filter(function () {
+                return this.nodeName === node;
+            });
+        }
 
-        // @ts-ignore TODO: FIX THIS
-        const ret = {} as headerProp;
+        const ret = {} as HeaderProp;
         try {
             // Strip encoded embedded null characters from our XML. parseXML doesn't like them.
             xml = xml.replace(/&#x0;/g, "");
@@ -46,16 +41,18 @@ export const GetHeadersEWS = (function () {
 
             if (responseDom) {
                 // We can do this because we know there's only the one property.
-                // @ts-ignore TODO: FIX THIS
-                const extendedProperty = responseDom.filterNode("t:ExtendedProperty");
+                const extendedProperty = filterNode(responseDom, "t:ExtendedProperty");
                 if (extendedProperty.length > 0) {
                     ret.prop = extendedProperty[0].textContent.replace(/\r|\n|\r\n/g, '\n');
                 }
             }
 
             if (!ret.prop) {
-                // @ts-ignore TODO: FIX THIS
-                ret.responseCode = responseDom.filterNode("m:ResponseCode");
+                // TODO: Get and return more
+                const responseCode = filterNode(responseDom, "m:ResponseCode");
+                if (responseCode.length > 0) {
+                    ret.responseCode = responseCode[0].textContent.replace(/\r|\n|\r\n/g, '\n');
+                }
             }
         } catch (e) {
             // Exceptions thrown from parseXML are super chatty and we do not want to log them.

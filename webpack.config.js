@@ -1,7 +1,8 @@
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const webpack = require('webpack');
 
 // Simple stupid hash to reduce commit ID to something short
 const getHash = function (str) {
@@ -31,13 +32,14 @@ const pages =
         { "name": "newDesktopFrame", "script": "DesktopPane" },
         { "name": "classicDesktopFrame", "script": "Default" },
         { "name": "MobilePane", "script": "MobilePane" },
-        { "name": "MobilePane-ios", "script": "MobilePane-ios" },
+        { "name": "newMobilePaneIosFrame", "script": "MobilePane-ios" },
         { "name": "Privacy", "script": "privacy" },
         // Redirection/static pages
         { "name": "Default" },
         { "name": "DefaultPhone" },
         { "name": "DefaultTablet" },
         { "name": "DesktopPane" },
+        { "name": "MobilePane-ios" },
         { "name": "Functions" },
     ];
 
@@ -65,18 +67,25 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin(),
         new webpack.DefinePlugin({
-        __VERSION__: JSON.stringify(version),
-        __AIKEY__: JSON.stringify(aikey),
-        __BUILDTIME__: JSON.stringify(buildTime)
-    })].concat(generateHtmlWebpackPlugins()),
+            __VERSION__: JSON.stringify(version),
+            __AIKEY__: JSON.stringify(aikey),
+            __BUILDTIME__: JSON.stringify(buildTime)
+        }),
+        new FileManagerPlugin({
+            events: {
+                onEnd: {
+                    copy: [
+                        { source: './src/Resources/*.gif', destination: './Resources/' },
+                        { source: './src/Resources/*.jpg', destination: './Resources/' }
+                    ]
+                }
+            }
+        })
+    ].concat(generateHtmlWebpackPlugins()),
     mode: 'development',
     devtool: 'source-map',
     module: {
         rules: [
-            {
-                test: /\.css$/i,
-                use: [MiniCssExtractPlugin.loader, "css-loader"],
-            },
             { test: /fabric(\.min)?\.js$/, use: 'exports-loader?exports=fabric' },
             {
                 test: /\.tsx?$/,
@@ -84,8 +93,8 @@ module.exports = {
                 exclude: /node_modules/,
             },
             {
-                test: /\.(png|svg|jpg|jpeg|gif)$/i,
-                type: 'asset/resource',
+                test: /\.css$/i,
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
             },
             {
                 test: /\.js$/,

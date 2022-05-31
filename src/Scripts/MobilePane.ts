@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import Framework7 from "framework7"
+import { Framework7 } from "./framework7";
 
 // Check mobile platform
 
