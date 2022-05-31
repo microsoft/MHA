@@ -28,8 +28,7 @@ export const mhaStrings = (function () {
 
         try {
             if (typeof (appInsights) !== "undefined") {
-                // @ts-ignore TODO: fix this
-                const queryOpts: PermissionDescriptor = { name: 'clipboard-write', allowWithoutGesture: false };
+                const queryOpts: PermissionDescriptor = { name: 'clipboard-write' };
                 navigator.permissions.query(queryOpts).then(function (result) {
                     appInsights.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "permissions", clipboardWrite: result.state } });
                 });
