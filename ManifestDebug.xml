@@ -6,7 +6,7 @@
   xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
   xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
   xsi:type="MailApp">
-  <Id>62916641-fc48-44ae-a2a3-163811f1c945</Id>
+  <Id>62916641-fc48-44ae-a2a3-163811f1c946</Id>
   <Version>3.0</Version>
   <ProviderName>Stephen Griffin</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
@@ -107,7 +107,7 @@
         <bt:String id="mhaOpenPaneBtnTipTitle" DefaultValue="Open a pane to view the available headers on the current message - Debug build on localhost::44336"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="mhaOpenPaneBtnTipDescription" DefaultValue="Retrieves the transport message headers of the current message and displays them in an easy-to-read format." />
+        <bt:String id="mhaOpenPaneBtnTipDescription" DefaultValue="Retrieves the transport message headers of the current message and displays them in an easy-to-read format. Debug build on localhost::44336" />
       </bt:LongStrings>
     </Resources>
 
