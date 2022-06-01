@@ -17,7 +17,6 @@ const version = getHash(commitID);
 console.log("commitID: " + commitID);
 console.log("version: " + version);
 
-console.log(JSON.stringify(process.env));
 var aikey = process.env.APPINSIGHTS_INSTRUMENTATIONKEY;
 if (typeof (aikey) === "undefined" || aikey === "") aikey = "unknown";
 console.log("aikey: " + aikey);
