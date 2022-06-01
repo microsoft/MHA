@@ -168,11 +168,11 @@
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="groupLabel" DefaultValue=" "/>
-          <bt:String id="mhaOpenPaneBtnLabel" DefaultValue="View Headers"/>
-          <bt:String id="mhaOpenPaneBtnTipTitle" DefaultValue="Open a pane to view the available headers on the current message"/>
+          <bt:String id="mhaOpenPaneBtnLabel" DefaultValue="View Headers Debug"/>
+          <bt:String id="mhaOpenPaneBtnTipTitle" DefaultValue="Open a pane to view the available headers on the current message - Debug build on localhost::44336"/>
         </bt:ShortStrings>
         <bt:LongStrings>
-          <bt:String id="mhaOpenPaneBtnTipDescription" DefaultValue="Retrieves the transport message headers of the current message and displays them in an easy-to-read format." />
+          <bt:String id="mhaOpenPaneBtnTipDescription" DefaultValue="Retrieves the transport message headers of the current message and displays them in an easy-to-read format. Debug build on localhost::44336" />
         </bt:LongStrings>
       </Resources>
     </VersionOverrides>
