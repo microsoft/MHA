@@ -96,13 +96,6 @@ goto :EOF
 :Deployment
 echo Handling node.js deployment.
 
-:: 1. KuduSync
-::echo 1. KuduSync
-::IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-::  call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_SOURCE%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
-::  IF !ERRORLEVEL! NEQ 0 goto error
-::)
-
 echo 1. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
   "%SYNC_CMD%" "%DEPLOYMENT_SOURCE%" "%DEPLOYMENT_TARGET%" /s /mt
@@ -121,17 +114,6 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
   call :ExecuteCmd !NPM_CMD! install --production
   IF !ERRORLEVEL! NEQ 0 goto error
   echo Completed npm install --production
-  popd
-)
-
-:: 4. Restore nuget packages
-echo 4. Restore nuget packages
-IF EXIST "%DEPLOYMENT_TARGET%\packages.config" (
-  echo Running nuget restore
-  pushd "%DEPLOYMENT_TARGET%"
-  call :ExecuteCmd nuget restore "%DEPLOYMENT_TARGET%\packages.config" -PackagesDirectory "%DEPLOYMENT_TARGET%\packages"
-  IF !ERRORLEVEL! NEQ 0 goto error
-  echo Completed nuget restore
   popd
 )
 
