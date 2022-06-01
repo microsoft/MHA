@@ -19,7 +19,7 @@ appInsights.addTelemetryInitializer(function (envelope) {
     envelope.data.baseData = envelope.baseData;
     // This will get called for any appInsights tracking - we can augment or suppress logging from here
     // No appInsights logging for localhost/dev
-    const doLog = (document.domain !== "localhost");
+    const doLog = (document.domain !== "localhost" && document.location.protocol !== "file:");
     if (envelope.baseType === "RemoteDependencyData") return doLog;
     if (envelope.baseType === "PageviewData") return doLog;
     if (envelope.baseType === "PageviewPerformanceData") return doLog;
