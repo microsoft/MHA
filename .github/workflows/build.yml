@@ -16,12 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.5
-
-      - name: Restore NuGet packages
-        run: nuget restore packages.config -PackagesDirectory packages
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -40,15 +34,13 @@ jobs:
         with:
           name: mha-assets
           path: |
-            Scripts
             Pages
             Resources
-            Content
             favicon.ico
             Manifest*
             LICENSE
             README.md
-            packages.config
             package.json
             .deployment
             deploy.cmd
+            Web.config
