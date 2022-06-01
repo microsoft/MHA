@@ -112,7 +112,7 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
-        filename: '[name].js',
+        filename: '\\' + version + '\\[name].js',
         path: path.resolve(__dirname, 'Pages'),
         clean: true,
     },
