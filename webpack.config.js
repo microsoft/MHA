@@ -65,7 +65,9 @@ function generateHtmlWebpackPlugins() {
 module.exports = {
     entry: generateEntry(),
     plugins: [
-        new MiniCssExtractPlugin(),
+        new MiniCssExtractPlugin({
+            filename: version + '/[name].css'
+        }),
         new webpack.DefinePlugin({
             __VERSION__: JSON.stringify(version),
             __AIKEY__: JSON.stringify(aikey),
@@ -112,7 +114,7 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
-        filename: '\\' + version + '\\[name].js',
+        filename: version + '/[name].js',
         path: path.resolve(__dirname, 'Pages'),
         clean: true,
     },
