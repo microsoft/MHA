@@ -1,5 +1,4 @@
 ﻿import * as $ from "jquery";
-import { appInsights } from "./diag"
 import { fabric } from "./fabric"
 import { Diagnostics } from "./diag"
 import { Errors } from "./Errors";
@@ -60,7 +59,7 @@ export const ParentFrame = (function () {
     }
 
     function render() {
-        if (appInsights && headers) appInsights.trackEvent({ name: "analyzeHeaders" });
+        if (headers) Diagnostics.trackEvent({ name: "analyzeHeaders" });
         postMessageToFrame("renderItem", headers);
     }
 

@@ -8,56 +8,60 @@ import { buildTime } from "./buildTime";
 
 // diagnostics module
 
-export const appInsights = new ApplicationInsights({
-    config: {
-        instrumentationKey: aikey(),
-        /* ...Other Configuration Options... */
-    }
-});
-appInsights.addTelemetryInitializer(function (envelope) {
-    envelope.data.baseType = envelope.baseType;
-    envelope.data.baseData = envelope.baseData;
-    // This will get called for any appInsights tracking - we can augment or suppress logging from here
-    // No appInsights logging for localhost/dev
-    const doLog = (document.domain !== "localhost" && document.location.protocol !== "file:");
-    if (envelope.baseType === "RemoteDependencyData") return doLog;
-    if (envelope.baseType === "PageviewData") return doLog;
-    if (envelope.baseType === "PageviewPerformanceData") return doLog;
-
-    // If we're not one of the above types, tag in our diagnostics data
-    if (envelope.baseType === "ExceptionData") {
-        // custom data for the ExceptionData type lives in a different place
-        envelope.baseData.properties = envelope.baseData.properties || {};
-        $.extend(envelope.baseData.properties, Diagnostics.get());
-        // Log an extra event with parsed stack frame
-        if (envelope.baseData.exceptions.length) {
-            StackTrace.fromError(envelope.baseData.exceptions[0]).then(function (stackframes) {
-                appInsights.trackEvent({
-                    name: "Exception Details", properties: {
-                        stack: stackframes,
-                        error: envelope.baseData.exceptions[0]
-                    }
-                });
-            });
-        }
-    }
-    else {
-        $.extend(envelope.data, Diagnostics.get());
-    }
-
-    return doLog;
-});
-
-appInsights.loadAppInsights();
-appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pageview
-
 export const Diagnostics = (function () {
     "use strict";
 
     let appDiagnostics = null;
     let itemDiagnostics = null;
     let inGet = false;
-    let USE_APP_INSIGHTS = true;
+    let USE_APP_INSIGHTS = false;
+
+    const appInsights = new ApplicationInsights({
+        config: {
+            instrumentationKey: aikey(),
+            /* ...Other Configuration Options... */
+        }
+    });
+
+    appInsights.addTelemetryInitializer(function (envelope) {
+        envelope.data.baseType = envelope.baseType;
+        envelope.data.baseData = envelope.baseData;
+        // This will get called for any appInsights tracking - we can augment or suppress logging from here
+        // No appInsights logging for localhost/dev
+        if (!USE_APP_INSIGHTS) {
+            return false;
+        }
+        const doLog = (document.domain !== "localhost" && document.location.protocol !== "file:");
+        if (envelope.baseType === "RemoteDependencyData") return doLog;
+        if (envelope.baseType === "PageviewData") return doLog;
+        if (envelope.baseType === "PageviewPerformanceData") return doLog;
+
+        // If we're not one of the above types, tag in our diagnostics data
+        if (envelope.baseType === "ExceptionData") {
+            // custom data for the ExceptionData type lives in a different place
+            envelope.baseData.properties = envelope.baseData.properties || {};
+            $.extend(envelope.baseData.properties, Diagnostics.get());
+            // Log an extra event with parsed stack frame
+            if (envelope.baseData.exceptions.length) {
+                StackTrace.fromError(envelope.baseData.exceptions[0]).then(function (stackframes) {
+                    appInsights.trackEvent({
+                        name: "Exception Details", properties: {
+                            stack: stackframes,
+                            error: envelope.baseData.exceptions[0]
+                        }
+                    });
+                });
+            }
+        }
+        else {
+            $.extend(envelope.data, Diagnostics.get());
+        }
+
+        return doLog;
+    });
+
+    appInsights.loadAppInsights();
+    appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pageview
 
     function trackEvent(event: IEventTelemetry, customProperties?: ICustomProperties) {
         if (Diagnostics.USE_APP_INSIGHTS) {
@@ -69,14 +73,23 @@ export const Diagnostics = (function () {
         }
     }
 
+    function trackException(event: IEventTelemetry, customProperties?: ICustomProperties) {
+        if (Diagnostics.USE_APP_INSIGHTS) {
+            appInsights.trackException(event, customProperties);
+        }
+        else {
+            var msg_base = `Exception ${JSON.stringify(event)}: ${JSON.stringify(customProperties)}`;
+            console.log(msg_base);
+        }
+    }
+
     function trackError(eventType: string, source: string, e: Error) {
         if (Diagnostics.USE_APP_INSIGHTS) {
             appInsights.trackEvent({ name: eventType, properties: { source: source, exception: e.toString(), message: e.message, stack: e.stack } });
         }
         else {
-            var msg_base = `error ${eventType} from ${source}: ${e.message}`;
+            var msg_base = `Error ${eventType} from ${source}: ${e.message}`;
             console.log(msg_base + " exception: " + e.toString());
-            alert(msg_base);
         }
     }
 
@@ -274,6 +287,7 @@ export const Diagnostics = (function () {
         set: set,
         clear: clear,
         trackEvent: trackEvent,
+        trackException: trackException,
         trackError: trackError,
         USE_APP_INSIGHTS: USE_APP_INSIGHTS
     };
