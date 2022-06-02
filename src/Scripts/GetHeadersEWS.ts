@@ -1,11 +1,8 @@
-/* global $ */
-/* global jQuery */
-/* global mhaStrings */
-/* global Errors */
-/* global Office */
-/* global ParentFrame */
-/* global GetHeaders */
-/* exported GetHeadersEWS */
+import * as $ from "jquery";
+import { mhaStrings } from "./Strings";
+import { Errors } from "./Errors";
+import { ParentFrame } from "./parentFrame";
+import { GetHeaders } from "./GetHeaders";
 
 /*
  * GetHeadersEWS.js
@@ -17,7 +14,7 @@
  * makeEwsRequestAsync requires 1.0 and ReadWriteMailbox
  */
 
-const GetHeadersEWS = (function () {
+export const GetHeadersEWS = (function () {
     "use strict";
 
     let logResponse;
@@ -28,17 +25,14 @@ const GetHeadersEWS = (function () {
     }
 
     function extractHeadersFromXml(xml) {
-        // This function plug in filters nodes for the one that matches the given name.
-        // This sidesteps the issues in jquery's selector logic.
-        (function ($) {
-            $.fn.filterNode = function (node) {
-                return this.find("*").filter(function () {
-                    return this.nodeName === node;
-                });
-            };
-        })(jQuery);
+        // This filters nodes for the one that matches the given name.
+        function filterNode(xmlResponse: JQuery<XMLDocument>, node: string) {
+            return xmlResponse.find("*").filter(function () {
+                return this.nodeName === node;
+            });
+        }
 
-        const ret = {} as headerProp;
+        const ret = {} as HeaderProp;
         try {
             // Strip encoded embedded null characters from our XML. parseXML doesn't like them.
             xml = xml.replace(/&#x0;/g, "");
@@ -47,14 +41,18 @@ const GetHeadersEWS = (function () {
 
             if (responseDom) {
                 // We can do this because we know there's only the one property.
-                const extendedProperty = responseDom.filterNode("t:ExtendedProperty");
+                const extendedProperty = filterNode(responseDom, "t:ExtendedProperty");
                 if (extendedProperty.length > 0) {
                     ret.prop = extendedProperty[0].textContent.replace(/\r|\n|\r\n/g, '\n');
                 }
             }
 
             if (!ret.prop) {
-                ret.responseCode = responseDom.filterNode("m:ResponseCode");
+                // TODO: Get and return more
+                const responseCode = filterNode(responseDom, "m:ResponseCode");
+                if (responseCode.length > 0) {
+                    ret.responseCode = responseCode[0].textContent.replace(/\r|\n|\r\n/g, '\n');
+                }
             }
         } catch (e) {
             // Exceptions thrown from parseXML are super chatty and we do not want to log them.
@@ -62,7 +60,7 @@ const GetHeadersEWS = (function () {
         }
 
         return ret;
-        }
+    }
 
     function stripHeaderFromXml(xml) {
         if (!xml) return null;

@@ -1,9 +1,13 @@
-/* global $ */
-/* global appInsights */
-/* global mhaStrings */
-/* global HeaderModel */
-/* global Diagnostics */
-/* global Table */
+import "office-ui-fabric-js/dist/css/fabric.min.css"
+import "office-ui-fabric-js/dist/css/fabric.components.min.css"
+import "../Content/Office.css";
+import "../Content/App.css";
+import * as $ from "jquery";
+import { appInsights } from "./diag"
+import { mhaStrings } from "./Strings";
+import { HeaderModel } from "./Headers"
+import { Diagnostics } from "./diag"
+import { Table } from "./Table"
 
 (function () {
     "use strict";
@@ -34,8 +38,8 @@
     function analyze() {
         // Can't do anything without jQuery
         if (!$) return;
-        if (window.appInsights) appInsights.trackEvent("analyzeHeaders");
-        viewModel = HeaderModel($("#inputHeaders").val());
+        if (appInsights) appInsights.trackEvent({ name: "analyzeHeaders" });
+        viewModel = HeaderModel($("#inputHeaders").val() as string);
         Table.resetArrows();
 
         enableSpinner();
@@ -66,9 +70,9 @@
             Table.initializeTableUI(viewModel);
             Table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, null);
 
-            document.querySelector("#analyzeButton").onclick = analyze;
-            document.querySelector("#clearButton").onclick = clear;
-            document.querySelector("#copyButton").onclick = copy;
+            (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;
+            (document.querySelector("#clearButton") as HTMLButtonElement).onclick = clear;
+            (document.querySelector("#copyButton") as HTMLButtonElement).onclick = copy;
         });
     }
 

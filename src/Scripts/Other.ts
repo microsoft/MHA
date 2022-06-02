@@ -1,7 +1,6 @@
-﻿/* global mhaStrings */
-/* exported Other */
+﻿import { mhaStrings } from "./Strings";
 
-const Other = (function () {
+export const Other = (function () {
     "use strict";
 
     const row = function (number, header, value) {
@@ -39,7 +38,7 @@ const Other = (function () {
         otherRows.push(row(
             otherRows.length + 1,
             otherHeader.header,
-            row.value = otherHeader.value));
+            otherHeader.value));
     }
 
     function exists() { return otherRows.length > 0; }

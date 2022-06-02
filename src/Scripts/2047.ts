@@ -1,7 +1,6 @@
-﻿/* global cptable */
-/* exported Decoder */
+﻿import cptable from "Codepage"
 
-const Decoder = (function () {
+export const Decoder = (function () {
     "use strict";
 
     // http://tools.ietf.org/html/rfc2047

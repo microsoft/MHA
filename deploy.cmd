@@ -38,6 +38,9 @@ IF NOT DEFINED NEXT_MANIFEST_PATH (
   )
 )
 
+echo NEXT_MANIFEST_PATH=%NEXT_MANIFEST_PATH%
+echo PREVIOUS_MANIFEST_PATH=%PREVIOUS_MANIFEST_PATH%
+
 IF NOT DEFINED KUDU_SYNC_CMD (
   :: Install kudu sync
   echo Installing Kudu Sync
@@ -46,6 +49,10 @@ IF NOT DEFINED KUDU_SYNC_CMD (
 
   :: Locally just running "kuduSync" would also work
   SET KUDU_SYNC_CMD=%appdata%\npm\kuduSync.cmd
+)
+
+IF NOT DEFINED SYNC_CMD (
+  SET SYNC_CMD=robocopy.exe
 )
 goto Deployment
 
@@ -89,11 +96,10 @@ goto :EOF
 :Deployment
 echo Handling node.js deployment.
 
-:: 1. KuduSync
 echo 1. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-  call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_SOURCE%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
-  IF !ERRORLEVEL! NEQ 0 goto error
+  "%SYNC_CMD%" "%DEPLOYMENT_SOURCE%" "%DEPLOYMENT_TARGET%" /s /mt
+  IF !ERRORLEVEL! GEQ 8 goto error
 )
 
 :: 2. Select node version
@@ -108,35 +114,6 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
   call :ExecuteCmd !NPM_CMD! install --production
   IF !ERRORLEVEL! NEQ 0 goto error
   echo Completed npm install --production
-  popd
-)
-
-:: 4. Restore nuget packages
-echo 4. Restore nuget packages
-IF EXIST "%DEPLOYMENT_TARGET%\packages.config" (
-  echo Running nuget restore
-  pushd "%DEPLOYMENT_TARGET%"
-  call :ExecuteCmd nuget restore "%DEPLOYMENT_TARGET%\packages.config" -PackagesDirectory "%DEPLOYMENT_TARGET%\packages"
-  IF !ERRORLEVEL! NEQ 0 goto error
-  echo Completed nuget restore
-  popd
-)
-
-:: 5. Transpile TypeScript
-echo 5. Transpile TypeScript
-IF EXIST "%DEPLOYMENT_TARGET%\tsconfig.json" (
-  pushd "%DEPLOYMENT_TARGET%"
-  call :ExecuteCmd node %DEPLOYMENT_TARGET%\node_modules\typescript\bin\tsc -p "%DEPLOYMENT_TARGET%"
-::  IF !ERRORLEVEL! NEQ 0 goto error
-  popd
-)
-
-:: 6. Run npm build script
-echo 6. Run npm build script
-IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
-  pushd "%DEPLOYMENT_TARGET%"
-  call :ExecuteCmd !NPM_CMD! run build
-  IF !ERRORLEVEL! NEQ 0 goto error
   popd
 )
 

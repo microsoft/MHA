@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
-    "outDir": "./src/transpiled",
-    "allowJs": true,
+    "outDir": "./dist/",
+    // "noImplicitAny": true,
+    "moduleResolution": "node",
+    "module": "es6",
     "target": "es5"
-  },
-    "include": [
-        "./src/Scripts/**/*"
-    ]
+  }
 }

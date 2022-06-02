@@ -1,8 +1,7 @@
-/* global $ */
-/* global mhaStrings */
-/* exported Table */
+import * as $ from "jquery";
+import { mhaStrings } from "./Strings";
 
-const Table = (function () {
+export const Table = (function () {
     "use strict";
 
     let viewModel = null;
@@ -10,12 +9,12 @@ const Table = (function () {
     const column = function (id, label, columnClass) { return { id: id, label: label, class: columnClass }; };
 
     const visibilityBindings = [
-        ["#lineBreak", function () { return viewModel.hasData; }],
-        ["#response", function () { return viewModel.hasData; }],
-        ["#status", function () { return viewModel.status; }],
-        [".extraCol", function () { return showExtra; }],
-        ["#clearButton", function () { return viewModel.hasData; }],
-        ["#copyButton", function () { return viewModel.hasData; }]
+        { name: "#lineBreak", visible: function () { return viewModel.hasData; } },
+        { name: "#response", visible: function () { return viewModel.hasData; } },
+        { name: "#status", visible: function () { return viewModel.status; } },
+        { name: ".extraCol", visible: function () { return showExtra; } },
+        { name: "#clearButton", visible: function () { return viewModel.hasData; } },
+        { name: "#copyButton", visible: function () { return viewModel.hasData; } }
     ];
 
     // Adjusts response under our lineBreak
@@ -42,7 +41,7 @@ const Table = (function () {
         wrap.addClass("collapsibleWrapper");
         if (visibility) {
             wrap.attr("id", id + "Wrapper");
-            visibilityBindings.push(["#" + id + "Wrapper", visibility]);
+            visibilityBindings.push({ name: "#" + id + "Wrapper", visible: visibility });
         }
         const header = $(document.createElement("div"));
         header.addClass("sectionHeader");
@@ -71,7 +70,7 @@ const Table = (function () {
         }
     }
 
-    function makeVisible(id, visible) {
+    function makeVisible(id: string, visible: boolean) {
         if (visible) {
             $(id).removeClass("hiddenElement");
         } else {
@@ -156,7 +155,7 @@ const Table = (function () {
 
     function recalculateVisibility() {
         for (let i = 0; i < visibilityBindings.length; i++) {
-            makeVisible(visibilityBindings[i][0], visibilityBindings[i][1]());
+            makeVisible(visibilityBindings[i].name, visibilityBindings[i].visible());
         }
 
         positionResponse();
@@ -322,7 +321,7 @@ const Table = (function () {
         wrap.addClass("collapsibleWrapper");
         if (visibility) {
             wrap.attr("id", id + "Wrapper");
-            visibilityBindings.push(["#" + id + "Wrapper", visibility]);
+            visibilityBindings.push({ name: "#" + id + "Wrapper", visible: visibility });
         }
 
         const header = $(document.createElement("div"));
@@ -352,7 +351,7 @@ const Table = (function () {
         pane.wrap(wrap);
         pane.before(header);
         pane.append(tbody);
-        const caption = $(pane[0].createCaption());
+        const caption = $((pane[0] as HTMLTableElement).createCaption());
         caption.prepend(captionDiv);
         header.hide();
     }
