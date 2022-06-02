@@ -2,7 +2,6 @@
   "compilerOptions": {
     "outDir": "./dist/",
     // "noImplicitAny": true,
-    "jsx": "react",
     "moduleResolution": "node",
     "module": "es6",
     "target": "es5"
