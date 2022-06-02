@@ -2,6 +2,10 @@
   "name": "mha",
   "version": "1.0.0",
   "description": "Message Header Analyzer",
+  "engines": {
+    "node": ">=10.12.0",
+    "npm": ">=6.0.0"
+  },
   "private": true,
   "scripts": {
     "watch": "webpack --watch",
