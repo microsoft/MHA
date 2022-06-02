@@ -1,0 +1,1 @@
+export const fabric = require('office-ui-fabric-js/dist/js/fabric.js').fabric;

@@ -1,6 +1,4 @@
-/* exported poster */
-
-const poster = (function () {
+export const poster = (function () {
     "use strict";
 
     function site() { return window.location.protocol + "//" + window.location.host; }
@@ -11,7 +9,7 @@ const poster = (function () {
         }
     }
 
-    function postMessageToParent(eventName: string, data?: object) {
+    function postMessageToParent(eventName: string, data?: any) {
         window.parent.postMessage({ eventName: eventName, data: data }, site());
     }
 

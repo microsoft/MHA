@@ -1,5 +1,5 @@
-/* global $ */
-/* global Framework7 */
+import * as $ from "jquery";
+import { Framework7 } from "./framework7";
 
 // Check mobile platform
 

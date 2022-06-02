@@ -1,11 +1,5 @@
-/Web.config
-/Debug
-/vwd.webinfo
 .vscode
 /.vs
 /node_modules
-/Scripts
-/src/transpiled
 /Pages
-/Content
-/packages/MicrosoftAjax.4.0.20526.0
+/Resources

@@ -1,8 +1,11 @@
-/* global $ */
-/* global fabric */
-/* global mhaStrings */
-/* global HeaderModel */
-/* global poster */
+import "office-ui-fabric-js/dist/css/fabric.min.css"
+import "office-ui-fabric-js/dist/css/fabric.components.min.css"
+import "../Content/DesktopPane.css";
+import * as $ from "jquery";
+import { fabric } from "./fabric"
+import { mhaStrings } from "./Strings";
+import { HeaderModel } from "./Headers"
+import { poster } from "./poster";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
