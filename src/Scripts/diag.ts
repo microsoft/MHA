@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import { ApplicationInsights } from '@microsoft/applicationinsights-web'
+import { ApplicationInsights, IEventTelemetry, ICustomProperties } from '@microsoft/applicationinsights-web'
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { aikey } from "./aikey";
@@ -59,10 +59,21 @@ export const Diagnostics = (function () {
     let inGet = false;
     let USE_APP_INSIGHTS = true;
 
+    function trackEvent(event: IEventTelemetry, customProperties?: ICustomProperties) {
+        if (Diagnostics.USE_APP_INSIGHTS) {
+            appInsights.trackEvent(event, customProperties);
+        }
+        else {
+            var msg_base = `Event ${JSON.stringify(event)}: ${JSON.stringify(customProperties)}`;
+            console.log(msg_base);
+        }
+    }
+
     function trackError(eventType: string, source: string, e: Error) {
         if (Diagnostics.USE_APP_INSIGHTS) {
             appInsights.trackEvent({ name: eventType, properties: { source: source, exception: e.toString(), message: e.message, stack: e.stack } });
-        } else {
+        }
+        else {
             var msg_base = `error ${eventType} from ${source}: ${e.message}`;
             console.log(msg_base + " exception: " + e.toString());
             alert(msg_base);
@@ -262,6 +273,7 @@ export const Diagnostics = (function () {
         get: get,
         set: set,
         clear: clear,
+        trackEvent: trackEvent,
         trackError: trackError,
         USE_APP_INSIGHTS: USE_APP_INSIGHTS
     };
