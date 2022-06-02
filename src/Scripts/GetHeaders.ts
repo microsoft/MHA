@@ -12,6 +12,7 @@ export const GetHeaders = (function () {
     "use strict";
 
     function permissionLevel() {
+        if (typeof (Office) === "undefined") return 0;
         if (!Office) return 0;
         if (!Office.context) return 0;
         if (!Office.context.mailbox) return 0;
@@ -23,6 +24,7 @@ export const GetHeaders = (function () {
     }
 
     function sufficientPermission(strict) {
+        if (typeof (Office) === "undefined") return false;
         if (!Office) return false;
         if (!Office.context) return false;
         if (!Office.context.mailbox) return false;
@@ -36,6 +38,7 @@ export const GetHeaders = (function () {
     }
 
     function canUseRest() {
+        if (typeof (Office) === "undefined") return false;
         if (!Office) return false;
         if (!Office.context) return false;
         if (!Office.context.requirements) return false;
@@ -47,6 +50,7 @@ export const GetHeaders = (function () {
     }
 
     function validItem() {
+        if (typeof (Office) === "undefined") return false;
         if (!Office) return false;
         if (!Office.context) return false;
         if (!Office.context.mailbox) return false;
