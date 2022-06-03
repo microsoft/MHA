@@ -7,7 +7,7 @@
   xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
   xsi:type="MailApp">
   <Id>62916641-fc48-44ae-a2a3-163811f1c945</Id>
-  <Version>3.0</Version>
+  <Version>3.1</Version>
   <ProviderName>Stephen Griffin</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Message Header Analyzer" />
@@ -152,6 +152,35 @@
               </OfficeTab>
             </ExtensionPoint>
           </DesktopFormFactor>
+
+          <MobileFormFactor>
+            <FunctionFile resid="functionFile" />
+
+            <ExtensionPoint xsi:type="MobileMessageReadCommandSurface">
+              <Group id="mobileMsgRead">
+                <Label resid="groupLabel" />
+                <Control xsi:type="MobileButton" id="mblOpenPaneButton">
+                  <Label resid="mhaOpenPaneBtnLabel" />
+                  <Icon xsi:type="bt:MobileIconList">
+                    <bt:Image size="25" scale="1" resid="mha-icon-32" />
+                    <bt:Image size="25" scale="2" resid="mha-icon-32" />
+                    <bt:Image size="25" scale="3" resid="mha-icon-32" />
+
+                    <bt:Image size="32" scale="1" resid="mha-icon-32" />
+                    <bt:Image size="32" scale="2" resid="mha-icon-32" />
+                    <bt:Image size="32" scale="3" resid="mha-icon-32" />
+
+                    <bt:Image size="48" scale="1" resid="mha-icon-32" />
+                    <bt:Image size="48" scale="2" resid="mha-icon-32" />
+                    <bt:Image size="48" scale="3" resid="mha-icon-32" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="mhaMobilePaneUrl" />
+                  </Action>
+                </Control>
+              </Group>
+            </ExtensionPoint>
+          </MobileFormFactor>
         </Host>
       </Hosts>
 
@@ -163,8 +192,9 @@
           <bt:Image id="mha-icon-80" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo.jpg"/>
         </bt:Images>
         <bt:Urls>
-          <bt:Url id="functionFile" DefaultValue="https://mha.azurewebsites.net/Pages/functions.html"/>
-          <bt:Url id="mhaDesktopPaneUrl" DefaultValue="https://mha.azurewebsites.net/Pages/desktoppane.html"/>
+          <bt:Url id="functionFile" DefaultValue="https://mha.azurewebsites.net/Pages/Functions.html"/>
+          <bt:Url id="mhaDesktopPaneUrl" DefaultValue="https://mha.azurewebsites.net/Pages/DesktopPane.html"/>
+          <bt:Url id="mhaMobilePaneUrl" DefaultValue="https://mha.azurewebsites.net/Pages/MobilePane.html"/>
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="groupLabel" DefaultValue=" "/>
