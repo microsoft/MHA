@@ -244,6 +244,10 @@ export const ParentFrame = (function () {
 
         const actionButtonElements = header.querySelectorAll(".ms-Dialog-action");
 
+        const telemetryCheckbox = document.querySelector("#dialog-enableTelemetry");
+        const telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
+        Diagnostics.canSendTelemetry() ? telemetryCheckboxComponent.check() : telemetryCheckboxComponent.unCheck();
+
         function actionHandler() {
             const action = this.id;
 
@@ -269,6 +273,8 @@ export const ParentFrame = (function () {
 
                 return diagnostics;
             }
+
+            Diagnostics.setSendTelemetry(telemetryCheckboxComponent.getValue());
 
             switch (action) {
                 case "actionsSettings-OK": {

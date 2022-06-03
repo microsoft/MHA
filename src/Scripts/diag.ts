@@ -14,7 +14,21 @@ export const Diagnostics = (function () {
     let appDiagnostics = null;
     let itemDiagnostics = null;
     let inGet = false;
-    let USE_APP_INSIGHTS = false;
+    let sendTelemetry = true;
+
+    if (typeof (Office) !== "undefined" && Office.context) {
+        sendTelemetry = Office.context.roamingSettings.get("sendTelemetry");
+    }
+
+    function setSendTelemetry(_sendTelemetry: boolean) {
+        sendTelemetry = _sendTelemetry;
+        if (typeof (Office) !== "undefined" && Office.context) {
+            Office.context.roamingSettings.set("sendTelemetry", sendTelemetry);
+            Office.context.roamingSettings.saveAsync();
+        }
+    }
+
+    function canSendTelemetry() { return sendTelemetry; }
 
     const appInsights = new ApplicationInsights({
         config: {
@@ -28,7 +42,7 @@ export const Diagnostics = (function () {
         envelope.data.baseData = envelope.baseData;
         // This will get called for any appInsights tracking - we can augment or suppress logging from here
         // No appInsights logging for localhost/dev
-        if (!USE_APP_INSIGHTS) {
+        if (!sendTelemetry) {
             return false;
         }
         const doLog = (document.domain !== "localhost" && document.location.protocol !== "file:");
@@ -64,7 +78,7 @@ export const Diagnostics = (function () {
     appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pageview
 
     function trackEvent(event: IEventTelemetry, customProperties?: ICustomProperties) {
-        if (Diagnostics.USE_APP_INSIGHTS) {
+        if (sendTelemetry) {
             appInsights.trackEvent(event, customProperties);
         }
         else {
@@ -74,7 +88,7 @@ export const Diagnostics = (function () {
     }
 
     function trackException(event: IEventTelemetry, customProperties?: ICustomProperties) {
-        if (Diagnostics.USE_APP_INSIGHTS) {
+        if (sendTelemetry) {
             appInsights.trackException(event, customProperties);
         }
         else {
@@ -84,7 +98,7 @@ export const Diagnostics = (function () {
     }
 
     function trackError(eventType: string, source: string, e: Error) {
-        if (Diagnostics.USE_APP_INSIGHTS) {
+        if (sendTelemetry) {
             appInsights.trackEvent({ name: eventType, properties: { source: source, exception: e.toString(), message: e.message, stack: e.stack } });
         }
         else {
@@ -289,6 +303,7 @@ export const Diagnostics = (function () {
         trackEvent: trackEvent,
         trackException: trackException,
         trackError: trackError,
-        USE_APP_INSIGHTS: USE_APP_INSIGHTS
+        setSendTelemetry: setSendTelemetry,
+        canSendTelemetry: canSendTelemetry
     };
 })();
