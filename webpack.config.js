@@ -116,6 +116,7 @@ module.exports = {
     output: {
         filename: version + '/[name].js',
         path: path.resolve(__dirname, 'Pages'),
+        publicPath: '/Pages',
         clean: true,
     },
 };
