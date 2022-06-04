@@ -1,8 +1,14 @@
 const path = require('path');
+const devCerts = require("office-addin-dev-certs");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require('webpack');
+
+async function getHttpsOptions() {
+    const httpsOptions = await devCerts.getHttpsServerOptions();
+    return { cacert: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
+}
 
 // Simple stupid hash to reduce commit ID to something short
 const getHash = function (str) {
@@ -62,61 +68,73 @@ function generateHtmlWebpackPlugins() {
     });
 }
 
-module.exports = {
-    entry: generateEntry(),
-    plugins: [
-        new MiniCssExtractPlugin({
-            filename: version + '/[name].css'
-        }),
-        new webpack.DefinePlugin({
-            __VERSION__: JSON.stringify(version),
-            __AIKEY__: JSON.stringify(aikey),
-            __BUILDTIME__: JSON.stringify(buildTime)
-        }),
-        new FileManagerPlugin({
-            events: {
-                onEnd: {
-                    copy: [
-                        { source: './src/Resources/*.gif', destination: './Resources/' },
-                        { source: './src/Resources/*.jpg', destination: './Resources/' }
-                    ]
+module.exports = async (env, options) => {
+    const config = {
+        entry: generateEntry(),
+        plugins: [
+            new MiniCssExtractPlugin({
+                filename: version + '/[name].css'
+            }),
+            new webpack.DefinePlugin({
+                __VERSION__: JSON.stringify(version),
+                __AIKEY__: JSON.stringify(aikey),
+                __BUILDTIME__: JSON.stringify(buildTime)
+            }),
+            new FileManagerPlugin({
+                events: {
+                    onEnd: {
+                        copy: [
+                            { source: './src/Resources/*.gif', destination: './Resources/' },
+                            { source: './src/Resources/*.jpg', destination: './Resources/' }
+                        ]
+                    }
                 }
-            }
-        })
-    ].concat(generateHtmlWebpackPlugins()),
-    mode: 'development',
-    devtool: 'source-map',
-    module: {
-        rules: [
-            { test: /fabric(\.min)?\.js$/, use: 'exports-loader?exports=fabric' },
-            {
-                test: /\.tsx?$/,
-                use: 'ts-loader',
-                exclude: /node_modules/,
-            },
-            {
-                test: /\.css$/i,
-                use: [MiniCssExtractPlugin.loader, 'css-loader'],
-            },
-            {
-                test: /\.js$/,
-                enforce: "pre",
-                use: ["source-map-loader"],
-            },
-        ],
-    },
-    optimization: {
-        splitChunks: {
-            chunks: "all",
+            })
+        ].concat(generateHtmlWebpackPlugins()),
+        mode: 'development',
+        devtool: 'source-map',
+        module: {
+            rules: [
+                { test: /fabric(\.min)?\.js$/, use: 'exports-loader?exports=fabric' },
+                {
+                    test: /\.tsx?$/,
+                    use: 'ts-loader',
+                    exclude: /node_modules/,
+                },
+                {
+                    test: /\.css$/i,
+                    use: [MiniCssExtractPlugin.loader, 'css-loader'],
+                },
+                {
+                    test: /\.js$/,
+                    enforce: "pre",
+                    use: ["source-map-loader"],
+                },
+            ],
         },
-    },
-    resolve: {
-        extensions: ['.tsx', '.ts', '.js'],
-    },
-    output: {
-        filename: version + '/[name].js',
-        path: path.resolve(__dirname, 'Pages'),
-        publicPath: '/Pages',
-        clean: true,
-    },
+        optimization: {
+            splitChunks: {
+                chunks: "all",
+            },
+        },
+        resolve: {
+            extensions: ['.tsx', '.ts', '.js'],
+        },
+        output: {
+            filename: version + '/[name].js',
+            path: path.resolve(__dirname, 'Pages'),
+            publicPath: '/Pages',
+            clean: true,
+        },
+        devServer: {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+            },
+            static: __dirname,
+            https: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
+            port: process.env.npm_package_config_dev_server_port || 44336,
+        },
+    };
+
+    return config;
 };
