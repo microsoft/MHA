@@ -338,6 +338,8 @@ export const ParentFrame = (function () {
 
         try {
             const choice: Choice = Office.context.roamingSettings.get(getSettingsKey());
+            Diagnostics.setSendTelemetry(Office.context.roamingSettings.get("sendTelemetry"));
+
             const input = $("#uiToggle" + choice.label);
             input.prop("checked", "true");
             go(choice);

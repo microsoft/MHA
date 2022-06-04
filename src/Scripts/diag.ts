@@ -16,10 +16,6 @@ export const Diagnostics = (function () {
     let inGet = false;
     let sendTelemetry = true;
 
-    if (typeof (Office) !== "undefined" && Office.context) {
-        sendTelemetry = Office.context.roamingSettings.get("sendTelemetry");
-    }
-
     function setSendTelemetry(_sendTelemetry: boolean) {
         sendTelemetry = _sendTelemetry;
         if (typeof (Office) !== "undefined" && Office.context) {
