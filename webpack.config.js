@@ -7,7 +7,7 @@ const webpack = require('webpack');
 
 async function getHttpsOptions() {
     const httpsOptions = await devCerts.getHttpsServerOptions();
-    return { cacert: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
+    return { ca: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
 }
 
 // Simple stupid hash to reduce commit ID to something short
@@ -131,7 +131,10 @@ module.exports = async (env, options) => {
                 "Access-Control-Allow-Origin": "*",
             },
             static: __dirname,
-            https: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
+            server:{
+                type: 'https',
+                options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
+            },
             port: process.env.npm_package_config_dev_server_port || 44336,
         },
     };
