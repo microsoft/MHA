@@ -15,7 +15,7 @@
     "clean": "node tasks/clean.js",
     "start": "office-addin-debugging start ManifestDebugLocal.xml",
     "start:server": "office-addin-debugging start manifestDebugServer.xml",
-    "stop": "office-addin-debugging stop ManifestDebugLocal.xml",
+    "stop": "office-addin-debugging stop ManifestDebugLocal.xml && office-addin-debugging stop manifestDebugServer.xml",
     "validate": "office-addin-manifest validate Manifest.xml",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
