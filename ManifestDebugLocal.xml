@@ -11,7 +11,7 @@
   <ProviderName>Stephen Griffin</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Message Header Analyzer Debug" />
-  <Description DefaultValue="Microsoft Message Header Analyzer debug" />
+  <Description DefaultValue="Microsoft Message Header Analyzer Debug" />
   <IconUrl DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg" />
   <HighResolutionIconUrl DefaultValue="https://localhost:44336/Resources/mhaLogo128.jpg" />
   <SupportUrl DefaultValue="https://github.com/stephenegriffin/MHA/issues" />
