@@ -37,7 +37,6 @@ const pages =
         { "name": "parentframe", "script": "uiToggle" },
         { "name": "newDesktopFrame", "script": "DesktopPane" },
         { "name": "classicDesktopFrame", "script": "Default" },
-        { "name": "MobilePane", "script": "MobilePane" },
         { "name": "newMobilePaneIosFrame", "script": "MobilePane-ios" },
         { "name": "Privacy", "script": "privacy" },
         // Redirection/static pages
@@ -45,7 +44,7 @@ const pages =
         { "name": "DefaultPhone" },
         { "name": "DefaultTablet" },
         { "name": "DesktopPane" },
-        { "name": "MobilePane-ios" },
+        { "name": "MobilePane" },
         { "name": "Functions" },
     ];
 
