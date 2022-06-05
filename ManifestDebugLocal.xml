@@ -10,8 +10,8 @@
   <Version>3.1</Version>
   <ProviderName>Stephen Griffin</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Message Header Analyzer Debug" />
-  <Description DefaultValue="Microsoft Message Header Analyzer Debug" />
+  <DisplayName DefaultValue="Message Header Analyzer Debug Local" />
+  <Description DefaultValue="Microsoft Message Header Analyzer Debug Local" />
   <IconUrl DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg" />
   <HighResolutionIconUrl DefaultValue="https://localhost:44336/Resources/mhaLogo128.jpg" />
   <SupportUrl DefaultValue="https://github.com/stephenegriffin/MHA/issues" />
