@@ -134,7 +134,7 @@ export const Diagnostics = (function () {
             }
         }
         catch (e) {
-            Diagnostics.trackError("diagError", "Diagnostics.ensureItemDiagnostics", e);
+            trackError("diagError", "Diagnostics.ensureItemDiagnostics", e);
         }
     }
 
@@ -206,7 +206,7 @@ export const Diagnostics = (function () {
             }
         }
         catch (e) {
-            Diagnostics.trackError("diagError", "Diagnostics.ensureOfficeDiagnostics", e);
+            trackError("diagError", "Diagnostics.ensureOfficeDiagnostics", e);
         }
     }
 
