@@ -1,5 +1,4 @@
 ﻿import * as $ from "jquery";
-import { appInsights } from "./diag"
 import { fabric } from "./fabric"
 import { Diagnostics } from "./diag"
 import { Errors } from "./Errors";
@@ -60,7 +59,7 @@ export const ParentFrame = (function () {
     }
 
     function render() {
-        if (appInsights && headers) appInsights.trackEvent({ name: "analyzeHeaders" });
+        if (headers) Diagnostics.trackEvent({ name: "analyzeHeaders" });
         postMessageToFrame("renderItem", headers);
     }
 
@@ -245,6 +244,10 @@ export const ParentFrame = (function () {
 
         const actionButtonElements = header.querySelectorAll(".ms-Dialog-action");
 
+        const telemetryCheckbox = document.querySelector("#dialog-enableTelemetry");
+        const telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
+        Diagnostics.canSendTelemetry() ? telemetryCheckboxComponent.check() : telemetryCheckboxComponent.unCheck();
+
         function actionHandler() {
             const action = this.id;
 
@@ -270,6 +273,8 @@ export const ParentFrame = (function () {
 
                 return diagnostics;
             }
+
+            Diagnostics.setSendTelemetry(telemetryCheckboxComponent.getValue());
 
             switch (action) {
                 case "actionsSettings-OK": {
@@ -333,6 +338,8 @@ export const ParentFrame = (function () {
 
         try {
             const choice: Choice = Office.context.roamingSettings.get(getSettingsKey());
+            Diagnostics.setSendTelemetry(Office.context.roamingSettings.get("sendTelemetry"));
+
             const input = $("#uiToggle" + choice.label);
             input.prop("checked", "true");
             go(choice);

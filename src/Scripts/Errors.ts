@@ -1,4 +1,4 @@
-import { appInsights } from "./diag"
+import { Diagnostics } from "./diag"
 import * as StackTrace from "stacktrace-js";
 
 export const Errors = (function () {
@@ -20,8 +20,8 @@ export const Errors = (function () {
             const stackString = Errors.joinArray(stack, "\n");
             errorArray.push(Errors.joinArray([eventName, stackString], "\n"));
 
-            if (!suppressTracking && appInsights) {
-                appInsights.trackEvent(eventName,
+            if (!suppressTracking) {
+                Diagnostics.trackEvent(eventName,
                     {
                         Stack: stackString,
                         Source: "Errors.add"
@@ -40,8 +40,8 @@ export const Errors = (function () {
                 if ("stack" in error) return true;
             }
         } catch (e) {
-            if (appInsights) appInsights.trackEvent({ name: "isError exception" });
-            if (appInsights) appInsights.trackEvent({ name: "isError exception with error", properties: e });
+            Diagnostics.trackEvent({ name: "isError exception" });
+            Diagnostics.trackEvent({ name: "isError exception with error", properties: e });
         }
 
         return false;
@@ -51,7 +51,7 @@ export const Errors = (function () {
     // message - a string describing the error
     // suppressTracking - boolean indicating if we should suppress tracking
     function log(error, message: string, suppressTracking?: boolean) {
-        if (error && !suppressTracking && appInsights) {
+        if (error && !suppressTracking) {
             const props = {
                 Message: message,
                 Error: JSON.stringify(error, null, 2),
@@ -61,7 +61,7 @@ export const Errors = (function () {
 
             if (Errors.isError(error) && error.exception) {
                 props.Source = "Error.log Exception";
-                appInsights.trackException(error, props);
+                Diagnostics.trackException(error, props);
             }
             else {
                 props.Source = "Error.log Event";
@@ -69,7 +69,7 @@ export const Errors = (function () {
                 if (error.message) props["Error message"] = error.message;
                 if (error.stack) props.Stack = error.stack;
 
-                appInsights.trackEvent(error.description || error.message || props.Message || "Unknown error object", props);
+                Diagnostics.trackEvent(error.description || error.message || props.Message || "Unknown error object", props);
             }
         }
 
@@ -113,7 +113,7 @@ export const Errors = (function () {
         }
 
         function errback(err) {
-            if (appInsights) appInsights.trackEvent({ name: "Errors.parse errback" });
+            Diagnostics.trackEvent({ name: "Errors.parse errback" });
             stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
             handler(eventName, stack);
         }

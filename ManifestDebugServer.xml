@@ -6,14 +6,14 @@
   xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
   xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
   xsi:type="MailApp">
-  <Id>62916641-fc48-44ae-a2a3-163811f1c946</Id>
+  <Id>62916641-fc48-44ae-a2a3-163811f1c947</Id>
   <Version>3.1</Version>
   <ProviderName>Stephen Griffin</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Message Header Analyzer Debug" />
-  <Description DefaultValue="Microsoft Message Header Analyzer debug" />
-  <IconUrl DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg" />
-  <HighResolutionIconUrl DefaultValue="https://localhost:44336/Resources/mhaLogo128.jpg" />
+  <DisplayName DefaultValue="Message Header Analyzer Debug Server" />
+  <Description DefaultValue="Microsoft Message Header Analyzer Debug Server" />
+  <IconUrl DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo.jpg" />
+  <HighResolutionIconUrl DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo128.jpg" />
   <SupportUrl DefaultValue="https://github.com/stephenegriffin/MHA/issues" />
   <Hosts>
     <Host Name="Mailbox" />
@@ -27,17 +27,17 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://localhost:44336/Pages/Default.html" />
+        <SourceLocation DefaultValue="https://mha-test3ff4.azurewebsites.net/Pages/Default.html" />
         <RequestedHeight>450</RequestedHeight>
       </DesktopSettings>
 
       <TabletSettings>
-        <SourceLocation DefaultValue="https://localhost:44336/Pages/DefaultTablet.html" />
+        <SourceLocation DefaultValue="https://mha-test3ff4.azurewebsites.net/Pages/DefaultTablet.html" />
         <RequestedHeight>350</RequestedHeight>
       </TabletSettings>
 
       <PhoneSettings>
-        <SourceLocation DefaultValue="https://localhost:44336/Pages/DefaultPhone.html" />
+        <SourceLocation DefaultValue="https://mha-test3ff4.azurewebsites.net/Pages/DefaultPhone.html" />
       </PhoneSettings>
     </Form>
   </FormSettings>
@@ -93,21 +93,21 @@
     <Resources>
       <bt:Images>
         <!-- MHA icon -->
-        <bt:Image id="mha-icon-16" DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg"/>
-        <bt:Image id="mha-icon-32" DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg"/>
-        <bt:Image id="mha-icon-80" DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-16" DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-32" DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-80" DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo.jpg"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="functionFile" DefaultValue="https://localhost:44336/Pages/Functions.html"/>
-        <bt:Url id="mhaTaskPaneUrl" DefaultValue="https://localhost:44336/Pages/Default.html"/>
+        <bt:Url id="functionFile" DefaultValue="https://mha-test3ff4.azurewebsites.net/Pages/Functions.html"/>
+        <bt:Url id="mhaTaskPaneUrl" DefaultValue="https://mha-test3ff4.azurewebsites.net/Pages/Default.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="groupLabel" DefaultValue=" "/>
-        <bt:String id="mhaOpenPaneBtnLabel" DefaultValue="View Headers Debug"/>
-        <bt:String id="mhaOpenPaneBtnTipTitle" DefaultValue="Open a pane to view the available headers on the current message - Debug build on localhost::44336"/>
+        <bt:String id="mhaOpenPaneBtnLabel" DefaultValue="View Headers Debug Server"/>
+        <bt:String id="mhaOpenPaneBtnTipTitle" DefaultValue="Open a pane to view the available headers on the current message - Debug build on server"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="mhaOpenPaneBtnTipDescription" DefaultValue="Retrieves the transport message headers of the current message and displays them in an easy-to-read format. Debug build on localhost::44336" />
+        <bt:String id="mhaOpenPaneBtnTipDescription" DefaultValue="Retrieves the transport message headers of the current message and displays them in an easy-to-read format." />
       </bt:LongStrings>
     </Resources>
 
@@ -187,22 +187,22 @@
       <Resources>
         <bt:Images>
           <!-- MHA icon -->
-          <bt:Image id="mha-icon-16" DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg"/>
-          <bt:Image id="mha-icon-32" DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg"/>
-          <bt:Image id="mha-icon-80" DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg"/>
+          <bt:Image id="mha-icon-16" DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo.jpg"/>
+          <bt:Image id="mha-icon-32" DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo.jpg"/>
+          <bt:Image id="mha-icon-80" DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo.jpg"/>
         </bt:Images>
         <bt:Urls>
-          <bt:Url id="functionFile" DefaultValue="https://localhost:44336/Pages/Functions.html"/>
-          <bt:Url id="mhaDesktopPaneUrl" DefaultValue="https://localhost:44336/Pages/DesktopPane.html"/>
-<bt:Url id="mhaMobilePaneUrl" DefaultValue="https://localhost:44336/Pages/MobilePane.html"/>
+          <bt:Url id="functionFile" DefaultValue="https://mha-test3ff4.azurewebsites.net/Pages/Functions.html"/>
+          <bt:Url id="mhaDesktopPaneUrl" DefaultValue="https://mha-test3ff4.azurewebsites.net/Pages/DesktopPane.html"/>
+          <bt:Url id="mhaMobilePaneUrl" DefaultValue="https://mha-test3ff4.azurewebsites.net/Pages/MobilePane.html"/>
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="groupLabel" DefaultValue=" "/>
-          <bt:String id="mhaOpenPaneBtnLabel" DefaultValue="View Headers Debug"/>
-          <bt:String id="mhaOpenPaneBtnTipTitle" DefaultValue="Open a pane to view the available headers on the current message - Debug build on localhost::44336"/>
+          <bt:String id="mhaOpenPaneBtnLabel" DefaultValue="View Headers Debug Server"/>
+          <bt:String id="mhaOpenPaneBtnTipTitle" DefaultValue="Open a pane to view the available headers on the current message - Debug build on server"/>
         </bt:ShortStrings>
         <bt:LongStrings>
-          <bt:String id="mhaOpenPaneBtnTipDescription" DefaultValue="Retrieves the transport message headers of the current message and displays them in an easy-to-read format. Debug build on localhost::44336" />
+          <bt:String id="mhaOpenPaneBtnTipDescription" DefaultValue="Retrieves the transport message headers of the current message and displays them in an easy-to-read format. Debug build on server" />
         </bt:LongStrings>
       </Resources>
     </VersionOverrides>

@@ -5,7 +5,7 @@ This is the source for the Message Header Analyzer. Install the app from the sto
 https://appsource.microsoft.com/en-us/product/office/WA104005406
 
 ## Installation Procedure
-Because MHA requires the ReadWriteMailbox permission it can only be installed by the Administrator through the Exchange admin center. Here are some steps I put together:
+Because MHA requires the ReadWriteMailbox permission it can only be installed by the Administrator through the Exchange admin center or by a user as a custom addon. Here are some steps I put together:
 1. In Office365, go to the Exchange Admin Center.
 2. Click on the Organization tab
 3. From there, select the add-ins tab
@@ -29,3 +29,11 @@ https://mha.azurewebsites.net/pages/mha.html
 
 ## Unit Tests
 https://mha.azurewebsites.net/pages/unittests.html
+
+## Mobile
+For both IOS and Android click open an email, then press the three dots under the date. There you should see the MHA icon. See [outlook-mobile-addins](https://docs.microsoft.com/en-us/office/dev/add-ins/outlook/outlook-mobile-addins) page for more details.
+
+## Development & Custom Deployment
+- Clone the repo to your local drive
+- npm install
+- npm start

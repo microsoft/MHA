@@ -3,7 +3,6 @@ import "office-ui-fabric-js/dist/css/fabric.components.min.css"
 import "../Content/Office.css";
 import "../Content/App.css";
 import * as $ from "jquery";
-import { appInsights } from "./diag"
 import { mhaStrings } from "./Strings";
 import { HeaderModel } from "./Headers"
 import { Diagnostics } from "./diag"
@@ -38,7 +37,7 @@ import { Table } from "./Table"
     function analyze() {
         // Can't do anything without jQuery
         if (!$) return;
-        if (appInsights) appInsights.trackEvent({ name: "analyzeHeaders" });
+        Diagnostics.trackEvent({ name: "analyzeHeaders" });
         viewModel = HeaderModel($("#inputHeaders").val() as string);
         Table.resetArrows();
 

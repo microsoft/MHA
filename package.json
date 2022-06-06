@@ -9,17 +9,28 @@
   "private": true,
   "scripts": {
     "watch": "webpack --watch",
-    "build": "webpack",
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development",
+    "dev-server": "webpack serve --mode development",
     "clean": "node tasks/clean.js",
+    "start": "office-addin-debugging start ManifestDebugLocal.xml",
+    "start:server": "office-addin-debugging start manifestDebugServer.xml",
+    "stop": "office-addin-debugging stop ManifestDebugLocal.xml && office-addin-debugging stop manifestDebugServer.xml",
+    "validate": "office-addin-manifest validate Manifest.xml",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stephenegriffin/mha.git"
+    "url": "https://github.com/stephenegriffin/mha.git"
   },
   "author": "Stephen Griffin",
   "license": "MIT",
+  "config": {
+    "app_to_debug": "outlook",
+    "app_type_to_debug": "desktop",
+    "dev_server_port": 44336
+  },
   "bugs": {
     "url": "https://github.com/stephenegriffin/mha/issues"
   },
@@ -33,12 +44,16 @@
     "filemanager-webpack-plugin": "^7.0.0-beta.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",
+    "office-addin-debugging": "^4.3.14",
+    "office-addin-dev-certs": "^1.7.10",
+    "office-addin-manifest": "^1.8.1",
     "source-map-loader": "^3.0.1",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.3.0",
     "typescript": "^4.6.4",
     "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.1"
   },
   "dependencies": {
     "@microsoft/applicationinsights-web": "^2.8.3",

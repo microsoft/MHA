@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import { appInsights } from "./diag"
+import { Diagnostics } from "./diag"
 
 export const mhaStrings = (function () {
     "use strict";
@@ -13,26 +13,24 @@ export const mhaStrings = (function () {
         textArea.select();
         const succeeded = document.execCommand('copy');
         document.body.removeChild(textArea);
-        if (appInsights) appInsights.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "textarea" } });
+        Diagnostics.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "textarea" } });
 
         if (!succeeded) {
             try {
                 navigator.clipboard.writeText(str).then(function () {
-                    if (appInsights) appInsights.trackEvent({ name: "copy", properties: { succeeded: "true", style: "navigator" } });
+                    Diagnostics.trackEvent({ name: "copy", properties: { succeeded: "true", style: "navigator" } });
                 }, function () {
-                    if (appInsights) appInsights.trackEvent({ name: "copy", properties: { succeeded: "false", style: "navigator" } });
+                    Diagnostics.trackEvent({ name: "copy", properties: { succeeded: "false", style: "navigator" } });
                 });
             }
             catch (e) { /**/ }
         }
 
         try {
-            if (typeof (appInsights) !== "undefined") {
-                const queryOpts: PermissionDescriptor = { name: "clipboard-write" as PermissionName };
-                navigator.permissions.query(queryOpts).then(function (result) {
-                    appInsights.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "permissions", clipboardWrite: result.state } });
-                });
-            }
+            const queryOpts: PermissionDescriptor = { name: "clipboard-write" as PermissionName };
+            navigator.permissions.query(queryOpts).then(function (result) {
+                Diagnostics.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "permissions", clipboardWrite: result.state } });
+            });
         }
         catch (e) { /**/ }
     }
