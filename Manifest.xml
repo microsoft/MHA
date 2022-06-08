@@ -187,9 +187,9 @@
       <Resources>
         <bt:Images>
           <!-- MHA icon -->
-          <bt:Image id="mha-icon-16" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo.jpg"/>
-          <bt:Image id="mha-icon-32" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo.jpg"/>
-          <bt:Image id="mha-icon-80" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo.jpg"/>
+          <bt:Image id="mha-icon-16" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo64.jpg"/>
+          <bt:Image id="mha-icon-32" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo64.jpg"/>
+          <bt:Image id="mha-icon-80" DefaultValue="https://mha.azurewebsites.net/Resources/mhaLogo64.jpg"/>
         </bt:Images>
         <bt:Urls>
           <bt:Url id="functionFile" DefaultValue="https://mha.azurewebsites.net/Pages/Functions.html"/>
