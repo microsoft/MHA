@@ -7,7 +7,7 @@
   xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
   xsi:type="MailApp">
   <Id>62916641-fc48-44ae-a2a3-163811f1c945</Id>
-  <Version>3.1</Version>
+  <Version>4.0</Version>
   <ProviderName>Stephen Griffin</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Message Header Analyzer" />
