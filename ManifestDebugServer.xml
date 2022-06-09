@@ -12,7 +12,7 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Message Header Analyzer Debug Server" />
   <Description DefaultValue="Microsoft Message Header Analyzer Debug Server" />
-  <IconUrl DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo.jpg" />
+  <IconUrl DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo64.jpg" />
   <HighResolutionIconUrl DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo128.jpg" />
   <SupportUrl DefaultValue="https://github.com/stephenegriffin/MHA/issues" />
   <Hosts>
@@ -93,9 +93,9 @@
     <Resources>
       <bt:Images>
         <!-- MHA icon -->
-        <bt:Image id="mha-icon-16" DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo64.jpg"/>
-        <bt:Image id="mha-icon-32" DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo64.jpg"/>
-        <bt:Image id="mha-icon-80" DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo64.jpg"/>
+        <bt:Image id="mha-icon-16" DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-32" DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-80" DefaultValue="https://mha-test3ff4.azurewebsites.net/Resources/mhaLogo.jpg"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="functionFile" DefaultValue="https://mha-test3ff4.azurewebsites.net/Pages/Functions.html"/>
