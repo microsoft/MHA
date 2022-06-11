@@ -92,6 +92,7 @@ module.exports = async (env, options) => {
         ].concat(generateHtmlWebpackPlugins()),
         mode: 'development',
         devtool: 'source-map',
+        target: ['web', 'es5'],
         module: {
             rules: [
                 { test: /fabric(\.min)?\.js$/, use: 'exports-loader?exports=fabric' },
