@@ -1,4 +1,4 @@
-﻿import cptable from "Codepage"
+﻿import cptable from "codepage"
 
 export const Decoder = (function () {
     "use strict";
