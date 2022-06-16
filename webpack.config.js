@@ -38,7 +38,7 @@ const pages =
         { "name": "newDesktopFrame", "script": "DesktopPane" },
         { "name": "classicDesktopFrame", "script": "Default" },
         { "name": "newMobilePaneIosFrame", "script": "MobilePane-ios" },
-        { "name": "Privacy", "script": "privacy" },
+        { "name": "privacy", "script": "privacy" },
         // Redirection/static pages
         { "name": "Default" },
         { "name": "DefaultPhone" },
