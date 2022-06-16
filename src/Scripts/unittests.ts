@@ -13,6 +13,6 @@ import "./unittests/ut-GetHeaderList";
 import "./unittests/ut-Received";
 import "./unittests/ut-ParseError";
 import "./unittests/ut-parseHeaders";
-import "./unittests/ut-Xml";
+import "./unittests/ut-XML";
 
 QUnit.start();
