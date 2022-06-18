@@ -1,1 +1,21 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
 
+name: QUnit MHA
+
+on:
+  workflow_dispatch:
+  # push:
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: NPM build, test
+        run: |
+          npm ci
+          npm run build --if-present
+          npm run test --if-present
