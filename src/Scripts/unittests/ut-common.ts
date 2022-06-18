@@ -1,6 +1,9 @@
 ﻿import * as QUnit from "qunit";
 
-QUnit.assert.shallowEqual = function (actual, expected, message) {
+QUnit.assert.receivedEqual = function (actual, expected, message) {
+    // Remove date fields which are computed from dateNum anyway and will differ depending on timezone
+    delete actual["date"];
+    delete expected["date"];
     var field;
     for (field in expected) {
         if (expected[field] === actual[field]) continue;
@@ -44,7 +47,7 @@ QUnit.assert.arrayEqual = function (actual, expected, message) {
     }
 
     for (var i = 0; i < actual.length; i++) {
-        this.shallowEqual(actual[i], expected[i], message + "[" + i + "]");
+        this.receivedEqual(actual[i], expected[i], message + "[" + i + "]");
     }
 
     this.pushResult({

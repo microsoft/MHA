@@ -17,7 +17,7 @@
     "start:server": "office-addin-debugging start manifestDebugServer.xml",
     "stop": "office-addin-debugging stop ManifestDebugLocal.xml && office-addin-debugging stop manifestDebugServer.xml",
     "validate": "office-addin-manifest validate Manifest.xml",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "grunt test"
   },
   "keywords": [],
   "repository": {
@@ -42,6 +42,9 @@
     "exports-loader": "^4.0.0",
     "file-loader": "^6.2.0",
     "filemanager-webpack-plugin": "^7.0.0-beta.0",
+    "grunt": "^1.5.3",
+    "grunt-contrib-connect": "^3.0.0",
+    "grunt-contrib-qunit": "^6.1.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",
     "office-addin-debugging": "^4.3.14",
