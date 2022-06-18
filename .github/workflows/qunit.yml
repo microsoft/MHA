@@ -5,7 +5,7 @@ name: QUnit MHA
 
 on:
   workflow_dispatch:
-  # push:
+  push:
 
 jobs:
   build-test:
