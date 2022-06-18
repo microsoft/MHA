@@ -1,13 +1,26 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     grunt.initConfig({
-        qunit: {
-            all:['Pages/unittests.html'],
-            options:{
-                force: true,
-                tiemout: 20000,
+        connect: {
+            server: {
+                options: {
+                    port: 44337,
+                    base: '.',
+                }
             }
         },
+        qunit: {
+            all: {
+                options: {
+                    urls: [
+                        'http://localhost:44337/Pages/unittests.html'
+                    ]
+                }
+            }
+        }
     });
-  
+
+    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-qunit');
+
+    grunt.registerTask('test', ['connect', 'qunit']);
 };
