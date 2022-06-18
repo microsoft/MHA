@@ -31,7 +31,6 @@ QUnit.test("Received Tests", function (assert) {
     assert.shallowEqual(received.receivedRows[0],
         {
             "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
-            "date": "4/20/2018 5:51:19 PM",
             "dateNum": 1524261079000,
             "delaySort": -1,
             "for": "<sgriffin@outlook.com>",
@@ -44,7 +43,6 @@ QUnit.test("Received Tests", function (assert) {
     assert.shallowEqual(received.receivedRows[1],
         {
             "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
-            "date": "4/20/2018 11:01:32 PM",
             "dateNum": 1524279692000,
             "delay": "310 minutes 13 seconds",
             "delaySort": 18613000,
@@ -59,7 +57,6 @@ QUnit.test("Received Tests", function (assert) {
     assert.shallowEqual(received.receivedRows[2],
         {
             "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
-            "date": "4/20/2018 11:01:32 PM",
             "dateNum": 1524279692000,
             "delay": "0 seconds",
             "delaySort": 0,
@@ -73,7 +70,6 @@ QUnit.test("Received Tests", function (assert) {
     assert.shallowEqual(received.receivedRows[3],
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
-            "date": "4/20/2018 11:01:33 PM",
             "dateNum": 1524279693000,
             "delay": "1 second",
             "delaySort": 1000,
@@ -122,7 +118,6 @@ QUnit.test("Received Tests github headers", function (assert) {
     assert.shallowEqual(received.receivedRows[0],
         {
             "by": "ismtpd0021p1iad2.sendgrid.net (SG)",
-            "date": "4/21/2018 10:54:16 PM",
             "dateNum": 1524365656987,
             "delaySort": -1,
             "for": "<sgriffin@outlook.com>",
@@ -136,7 +131,6 @@ QUnit.test("Received Tests github headers", function (assert) {
     assert.shallowEqual(received.receivedRows[1],
         {
             "by": "filter0652p1las1.sendgrid.net",
-            "date": "4/21/2018 10:54:17 PM",
             "dateNum": 1524365657028,
             "delay": "0 seconds",
             "delaySort": 41,
@@ -149,7 +143,6 @@ QUnit.test("Received Tests github headers", function (assert) {
     assert.shallowEqual(received.receivedRows[2],
         {
             "by": "CO1NAM03FT028.mail.protection.outlook.com (10.152.80.189)",
-            "date": "4/21/2018 10:54:17 PM",
             "dateNum": 1524365657000,
             "delay": "0 seconds",
             "delaySort": -28,
@@ -164,7 +157,6 @@ QUnit.test("Received Tests github headers", function (assert) {
     assert.shallowEqual(received.receivedRows[3],
         {
             "by": "CO1NAM03HT217.eop-NAM03.prod.protection.outlook.com (10.152.81.113)",
-            "date": "4/21/2018 10:54:18 PM",
             "dateNum": 1524365658000,
             "delay": "1 second",
             "delaySort": 1000,
@@ -178,7 +170,6 @@ QUnit.test("Received Tests github headers", function (assert) {
     assert.shallowEqual(received.receivedRows[4],
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
-            "date": "4/21/2018 10:54:19 PM",
             "dateNum": 1524365659000,
             "delay": "1 second",
             "delaySort": 1000,
@@ -197,7 +188,6 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         " 2018-03-26 13:35:36.270951634 +0000 UTC";
     assert.shallowEqual(received.parseHeader(sendGrid), {
         "by": "filter0383p1iad2.sendgrid.net",
-        "date": "3/26/2018 9:35:36 AM",
         "dateNum": 1522071336270,
         "delaySort": -1,
         "id": "filter0383p1iad2-15318-5AB8F728-C",
@@ -211,7 +201,6 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         " Mon, 26 Mar 2018 13:35:36.102 +0000 (UTC)";
     assert.shallowEqual(received.parseHeader(sendGrid2), {
         "by": "ismtpd0003p1iad2.sendgrid.net (SG)",
-        "date": "3/26/2018 9:35:36 AM",
         "dateNum": 1522071336102,
         "delaySort": -1,
         "from": "smtp.github.com (out-8.smtp.github.com [192.30.252.199])",
@@ -225,7 +214,6 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         " 2018-03-26 13:35:36.270951634 +0000 UTC";
     assert.shallowEqual(received.parseHeader(dupe1), {
         "by": "me; you",
-        "date": "3/26/2018 9:35:36 AM",
         "dateNum": 1522071336270,
         "delaySort": -1,
         "percent": 0,
@@ -241,7 +229,6 @@ QUnit.test("Received Tests parseHeader", function (assert) {
     assert.shallowEqual(received.parseHeader(case1),
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
-            "date": "4/20/2018 11:01:33 PM",
             "dateNum": 1524279693000,
             "delaySort": -1,
             "from": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (2a01:111:e400:c418::34)",
@@ -273,7 +260,6 @@ QUnit.test("Received Tests parseHeader", function (assert) {
     assert.shallowEqual(received.parseHeader(postfix),
         {
             "by": "example.com (Postfix, from userid 1001)",
-            "date": "8/21/2014 6:12:48 AM",
             "dateNum": 1408615968000,
             "delaySort": -1,
             "id": "1234ABCD",
@@ -285,7 +271,6 @@ QUnit.test("Received Tests parseHeader", function (assert) {
     assert.shallowEqual(received.parseHeader(qmail),
         {
             "by": "qmail 10876 invoked from network",
-            "date": "8/24/2014 12:13:38 PM",
             "dateNum": 1408896818000,
             "delaySort": -1,
             "percent": 0,
@@ -296,7 +281,6 @@ QUnit.test("Received Tests parseHeader", function (assert) {
         "Received: Sun, 22 Apr 2018 02:54:19\n" +
         " +0000";
     assert.shallowEqual(received.parseHeader(broke1), {
-        "date": "4/21/2018 10:54:19 PM",
         "dateNum": 1524365659000,
         "delaySort": -1,
         "percent": 0,
@@ -314,7 +298,6 @@ QUnit.test("Received Tests parseHeader", function (assert) {
     var broke3 =
         "Received: ; 22 Apr 2018";
     assert.shallowEqual(received.parseHeader(broke3), {
-        "date": "4/21/2018 8:00:00 PM",
         "dateNum": 1524355200000,
         "delaySort": -1,
         "percent": 0,
