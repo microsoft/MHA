@@ -1,7 +1,10 @@
-import * as moment from 'moment';
+import * as dayjs from "dayjs";
+import * as localizedFormat from "dayjs/plugin/localizedFormat";
 
 export const mhaDates = (function () {
     "use strict";
+
+    dayjs.extend(localizedFormat);
 
     // parse date using moment, with fallback to browser based parsing
     function parseDate(date) {
@@ -29,14 +32,14 @@ export const mhaDates = (function () {
         const milliseconds = date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
         date = date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
 
-        if (moment) {
+        if (dayjs) {
             // And now we can parse our date
-            let time = moment(date);
+            let time = dayjs(date);
 
             // If adding offset didn't work, try adding time and offset
-            if (!time.isValid() && offsetAdded) { time = moment(originalDate + " 12:00:00 AM +0000"); }
+            if (!time.isValid() && offsetAdded) { time = dayjs(originalDate + " 12:00:00 AM +0000"); }
             if (milliseconds && milliseconds.length >= 2) {
-                time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), 'ms');
+                time = time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), 'ms');
             }
 
             return {

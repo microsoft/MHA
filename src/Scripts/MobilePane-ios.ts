@@ -4,7 +4,8 @@ import "framework7-icons/css/framework7-icons.css";
 import "../Content/MobilePane-ios.css";
 import * as $ from "jquery";
 import { Framework7 } from "./framework7";
-import * as moment from "moment";
+import * as dayjs from "dayjs";
+import * as utc from "dayjs/plugin/utc";
 import { mhaStrings } from "./Strings";
 import { HeaderModel } from "./Headers"
 import { poster } from "./poster";
@@ -16,6 +17,8 @@ import { poster } from "./poster";
 
     // Framework7 app object
     let myApp = null;
+
+    dayjs.extend(utc);
 
     function postError(error, message) {
         poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
@@ -138,7 +141,7 @@ import { poster } from "./poster";
 
             for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
                 if (i === 0) {
-                    currentTime = moment(viewModel.receivedHeaders.receivedRows[i].dateNum).local();
+                    currentTime = dayjs(viewModel.receivedHeaders.receivedRows[i].dateNum).local();
 
                     timelineItem = $("<div/>")
                         .addClass("timeline-item")
@@ -183,7 +186,7 @@ import { poster } from "./poster";
                         .appendTo(timelineInner);
                 } else {
                     // Determine if new timeline item is needed
-                    const entryTime = moment(viewModel.receivedHeaders.receivedRows[i].dateNum).local();
+                    const entryTime = dayjs(viewModel.receivedHeaders.receivedRows[i].dateNum).local();
 
                     if (entryTime.minute() > currentTime.minute()) {
                         // Into a new minute, create a new timeline item
