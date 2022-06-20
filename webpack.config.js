@@ -100,7 +100,14 @@ module.exports = async (env, options) => {
                 { test: /fabric(\.min)?\.js$/, use: 'exports-loader?exports=fabric' },
                 {
                     test: /\.tsx?$/,
-                    use: 'ts-loader',
+                    use: [
+                        {
+                            loader: 'ts-loader',
+                            options: {
+                                logLevel: "info"
+                            }
+                        }
+                    ],
                     exclude: /node_modules/,
                 },
                 {
