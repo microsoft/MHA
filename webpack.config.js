@@ -122,8 +122,11 @@ module.exports = async (env, options) => {
             ],
         },
         optimization: {
+            runtimeChunk: 'single',
             splitChunks: {
-                chunks: "all",
+                chunks: 'all',
+                maxInitialRequests: Infinity,
+                minSize: 0,
             },
         },
         resolve: {
