@@ -6,13 +6,13 @@ export const mhaDates = (function () {
 
     dayjs.extend(localizedFormat);
 
-    // parse date using moment, with fallback to browser based parsing
+    // parse date using dayjs, with fallback to browser based parsing
     function parseDate(date) {
         // Cross browser dates - ugh!
         // http://dygraphs.com/date-formats.html
 
         // Invert any backwards dates: 2018-01-28 -> 01-28-2018
-        // moment can handle these, but inverting manually makes it easier for the dash replacement
+        // dayjs can handle these, but inverting manually makes it easier for the dash replacement
         date = date.replace(/\s*(\d{4})-(\d{1,2})-(\d{1,2})/g, "$2/$3/$1");
         // Replace dashes with slashes
         date = date.replace(/\s*(\d{1,2})-(\d{1,2})-(\d{4})/g, "$1/$2/$3");
@@ -27,8 +27,8 @@ export const mhaDates = (function () {
             offsetAdded = true;
         }
 
-        // Some browsers don't like milliseconds in dates, and moment doesn't hide that from us
-        // Trim off milliseconds so we don't pass them into moment
+        // Some browsers (firefox) don't like milliseconds in dates, and dayjs doesn't hide that from us
+        // Trim off milliseconds so we don't pass them into dayjs
         const milliseconds = date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
         date = date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
 
