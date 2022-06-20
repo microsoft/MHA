@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Message Header Analyzer",
   "engines": {
-    "node": ">=10.12.0",
+    "node": ">=12.13.0",
     "npm": ">=6.0.0"
   },
   "private": true,
@@ -42,6 +42,7 @@
     "exports-loader": "^4.0.0",
     "file-loader": "^6.2.0",
     "filemanager-webpack-plugin": "^7.0.0-beta.0",
+    "fork-ts-checker-webpack-plugin": "^7.2.11",
     "grunt": "^1.5.3",
     "grunt-contrib-connect": "^3.0.0",
     "grunt-contrib-qunit": "^6.1.0",
