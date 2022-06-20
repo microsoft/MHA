@@ -141,6 +141,7 @@ export const GetHeadersRest = (function () {
 
         if (!canUseRest()) {
             GetHeadersEWS.send(headersLoadedCallback);
+            return;
         }
 
         ParentFrame.updateStatus(mhaStrings.mhaRequestSent);

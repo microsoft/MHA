@@ -30,6 +30,7 @@ export const GetHeadersAPI = (function () {
 
         if (!canUseAPI()) {
             GetHeadersRest.send(headersLoadedCallback);
+            return;
         }
 
         ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
