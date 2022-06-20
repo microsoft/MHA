@@ -3,6 +3,7 @@ const devCerts = require("office-addin-dev-certs");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const webpack = require('webpack');
 
 async function getHttpsOptions() {
@@ -88,7 +89,8 @@ module.exports = async (env, options) => {
                         ]
                     }
                 }
-            })
+            }),
+            new ForkTsCheckerWebpackPlugin(),
         ].concat(generateHtmlWebpackPlugins()),
         mode: 'development',
         devtool: 'source-map',
@@ -98,7 +100,14 @@ module.exports = async (env, options) => {
                 { test: /fabric(\.min)?\.js$/, use: 'exports-loader?exports=fabric' },
                 {
                     test: /\.tsx?$/,
-                    use: 'ts-loader',
+                    use: [
+                        {
+                            loader: 'ts-loader',
+                            options: {
+                                logLevel: "info"
+                            }
+                        }
+                    ],
                     exclude: /node_modules/,
                 },
                 {
@@ -131,7 +140,7 @@ module.exports = async (env, options) => {
                 "Access-Control-Allow-Origin": "*",
             },
             static: __dirname,
-            server:{
+            server: {
                 type: 'https',
                 options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
             },
