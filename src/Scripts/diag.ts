@@ -2,6 +2,7 @@ import * as $ from "jquery";
 import { ApplicationInsights, IEventTelemetry, ICustomProperties } from '@microsoft/applicationinsights-web'
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
+import { GetHeadersAPI } from "./GetHeadersAPI";
 import { GetHeadersRest } from "./GetHeadersRest";
 import { aikey } from "./aikey";
 import { mhaVersion } from "./version";
@@ -202,6 +203,7 @@ export const Diagnostics = (function () {
 
             if (GetHeaders) {
                 appDiagnostics.permissionLevel = GetHeaders.permissionLevel();
+                appDiagnostics.canUseAPI = GetHeadersAPI.canUseAPI();
                 appDiagnostics.canUseRest = GetHeadersRest.canUseRest();
                 appDiagnostics.sufficientPermission = GetHeaders.sufficientPermission(true);
             }

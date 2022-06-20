@@ -24,17 +24,7 @@ export const GetHeadersRest = (function () {
 
     const minRestSet: string = "1.5";
 
-    function canUseRest(): boolean {
-        if (typeof (Office) === "undefined") { Diagnostics.set("noUseRestReason", "Office undefined"); return false; }
-        if (!Office) { Diagnostics.set("noUseRestReason", "Office false"); return false; }
-        if (!Office.context) { Diagnostics.set("noUseRestReason", "context false"); return false; }
-        if (!Office.context.requirements) { Diagnostics.set("noUseRestReason", "requirements false"); return false; }
-        if (!Office.context.requirements.isSetSupported("Mailbox", minRestSet)) { Diagnostics.set("noUseRestReason", "requirements too low"); return false; }
-        if (!GetHeaders.sufficientPermission(true)) { Diagnostics.set("noUseRestReason", "sufficientPermission false"); return false; }
-        if (!Office.context.mailbox) { Diagnostics.set("noUseRestReason", "mailbox false"); return false; }
-        if (!Office.context.mailbox.getCallbackTokenAsync) { Diagnostics.set("noUseRestReason", "getCallbackTokenAsync false"); return false; }
-        return true;
-    }
+    function canUseRest(): boolean { return GetHeaders.canUseAPI("Rest", minRestSet); }
 
     function getItemRestId(): string {
         // Currently the only Outlook Mobile version that supports add-ins
