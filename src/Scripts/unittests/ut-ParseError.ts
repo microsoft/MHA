@@ -10,6 +10,7 @@ function cleanStack(stack) {
         return item
             .replace(/.*localhost.*/, "") // test stacks don't have files from the site
             .replace(/.*azurewebsites.*/, "") // test stacks don't have files from the site
+            .replace(/.*qunit.*/, "") // test stacks don't mention QUnit
             .replace(/.*\.\.\/Scripts\/.*/, "")
             .replace(/\n+/, "\n") // collapse extra linefeeds
             .replace(/^.*?\.(.*) \(http/, "$1 (http") // Remove namespace scopes that only appear in some browsers
