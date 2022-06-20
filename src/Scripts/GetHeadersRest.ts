@@ -22,7 +22,21 @@ import jwt_decode, { JwtPayload } from 'jwt-decode'
 export const GetHeadersRest = (function () {
     "use strict";
 
-    function getItemRestId() {
+    const minRestSet: string = "1.5";
+
+    function canUseRest(): boolean {
+        if (typeof (Office) === "undefined") { Diagnostics.set("noUseRestReason", "Office undefined"); return false; }
+        if (!Office) { Diagnostics.set("noUseRestReason", "Office false"); return false; }
+        if (!Office.context) { Diagnostics.set("noUseRestReason", "context false"); return false; }
+        if (!Office.context.requirements) { Diagnostics.set("noUseRestReason", "requirements false"); return false; }
+        if (!Office.context.requirements.isSetSupported("Mailbox", minRestSet)) { Diagnostics.set("noUseRestReason", "requirements too low"); return false; }
+        if (!GetHeaders.sufficientPermission(true)) { Diagnostics.set("noUseRestReason", "sufficientPermission false"); return false; }
+        if (!Office.context.mailbox) { Diagnostics.set("noUseRestReason", "mailbox false"); return false; }
+        if (!Office.context.mailbox.getCallbackTokenAsync) { Diagnostics.set("noUseRestReason", "getCallbackTokenAsync false"); return false; }
+        return true;
+    }
+
+    function getItemRestId(): string {
         // Currently the only Outlook Mobile version that supports add-ins
         // is Outlook for iOS.
         if (Office.context.mailbox.diagnostics.hostName === "OutlookIOS") {
@@ -37,7 +51,7 @@ export const GetHeadersRest = (function () {
         }
     }
 
-    function getBaseUrl(url) {
+    function getBaseUrl(url): string {
         const parts = url.split("/");
 
         return parts[0] + "//" + parts[2];
@@ -135,6 +149,10 @@ export const GetHeadersRest = (function () {
             return;
         }
 
+        if (!canUseRest()) {
+            GetHeadersEWS.send(headersLoadedCallback);
+        }
+
         ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
 
         Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
@@ -155,6 +173,7 @@ export const GetHeadersRest = (function () {
     }
 
     return {
+        canUseRest: canUseRest,
         send: send
     };
 })();
