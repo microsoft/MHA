@@ -1,6 +1,7 @@
 import { GetHeadersEWS } from "./GetHeadersEWS";
 import { GetHeadersRest } from "./GetHeadersRest";
 import { ParentFrame } from "./parentFrame";
+import { Diagnostics } from "./diag"
 
 /*
  * GetHeaders.js
@@ -38,14 +39,14 @@ export const GetHeaders = (function () {
     }
 
     function canUseRest() {
-        if (typeof (Office) === "undefined") return false;
-        if (!Office) return false;
-        if (!Office.context) return false;
-        if (!Office.context.requirements) return false;
-        if (!Office.context.requirements.isSetSupported("Mailbox", 1.5)) return false;
-        if (!sufficientPermission(true)) return false;
-        if (!Office.context.mailbox) return false;
-        if (!Office.context.mailbox.getCallbackTokenAsync) return false;
+        if (typeof (Office) === "undefined") { Diagnostics.set("noUseRestReason", "Office undefined"); return false; }
+        if (!Office) { Diagnostics.set("noUseRestReason", "Office false"); return false; }
+        if (!Office.context) { Diagnostics.set("noUseRestReason", "context false"); return false; }
+        if (!Office.context.requirements) { Diagnostics.set("noUseRestReason", "requirements false"); return false; }
+        if (!Office.context.requirements.isSetSupported("Mailbox", 1.5)) { Diagnostics.set("noUseRestReason", "requirements too low"); return false; }
+        if (!sufficientPermission(true)) { Diagnostics.set("noUseRestReason", "sufficientPermission false"); return false; }
+        if (!Office.context.mailbox) { Diagnostics.set("noUseRestReason", "mailbox false"); return false; }
+        if (!Office.context.mailbox.getCallbackTokenAsync) { Diagnostics.set("noUseRestReason", "getCallbackTokenAsync false"); return false; }
         return true;
     }
 

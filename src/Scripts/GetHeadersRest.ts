@@ -4,6 +4,7 @@ import { Errors } from "./Errors";
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersEWS } from "./GetHeadersEWS";
+import { Diagnostics } from "./diag"
 import jwt_decode, { JwtPayload } from 'jwt-decode'
 
 /*
@@ -111,8 +112,10 @@ export const GetHeadersRest = (function () {
             }
         }).fail(function (jqXHR, textStatus, errorThrown) {
             try {
+                Diagnostics.set("jqXHR", JSON.stringify(jqXHR));
+                Diagnostics.set("textStatus", JSON.stringify(textStatus));
+                Diagnostics.set("resterror", JSON.stringify(errorThrown));
                 if (textStatus === "error" && jqXHR.status === 0) {
-                    // TODO: Log this, but don't error for the user
                     GetHeadersEWS.send(headersLoadedCallback);
                 } else if (textStatus === "error" && jqXHR.status === 404) {
                     ParentFrame.showError(null, mhaStrings.mhaMessageMissing, true);
@@ -140,6 +143,7 @@ export const GetHeadersRest = (function () {
                     const accessToken = result.value;
                     getHeaders(accessToken, headersLoadedCallback);
                 } else {
+                    Diagnostics.set("callbackTokenFailure", JSON.stringify(result));
                     Errors.log(result.error, 'Unable to obtain callback token.\nFallback to EWS.\n' + JSON.stringify(result, null, 2), true);
                     GetHeadersEWS.send(headersLoadedCallback);
                 }
