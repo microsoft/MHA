@@ -75,7 +75,7 @@
   },
   "-vs-binding": {
     "BeforeBuild": [
-      "build"
+      "build:dev"
     ],
     "Clean": [
       "clean"
