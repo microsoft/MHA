@@ -11,12 +11,12 @@ import { buildTime } from "./buildTime";
 // diagnostics module
 
 export const Diagnostics = (function () {
-    let appDiagnostics = null;
-    let itemDiagnostics = null;
-    let inGet = false;
-    let sendTelemetry = true;
+    var appDiagnostics: { [k: string]: any } = {};
+    var itemDiagnostics: { [k: string]: any } = {};
+    let inGet: boolean = false;
+    let sendTelemetry: boolean = true;
 
-    function setSendTelemetry(_sendTelemetry: boolean) {
+    function setSendTelemetry(_sendTelemetry: boolean): void {
         sendTelemetry = _sendTelemetry;
         if (typeof (Office) !== "undefined" && Office.context) {
             Office.context.roamingSettings.set("sendTelemetry", sendTelemetry);
@@ -24,7 +24,7 @@ export const Diagnostics = (function () {
         }
     }
 
-    function canSendTelemetry() { return sendTelemetry; }
+    function canSendTelemetry(): boolean { return sendTelemetry; }
 
     const appInsights = new ApplicationInsights({
         config: {
@@ -41,7 +41,7 @@ export const Diagnostics = (function () {
         if (!sendTelemetry) {
             return false;
         }
-        const doLog = (document.domain !== "localhost" && document.location.protocol !== "file:");
+        const doLog: boolean = (document.domain !== "localhost" && document.location.protocol !== "file:");
         if (envelope.baseType === "RemoteDependencyData") return doLog;
         if (envelope.baseType === "PageviewData") return doLog;
         if (envelope.baseType === "PageviewPerformanceData") return doLog;
@@ -73,7 +73,7 @@ export const Diagnostics = (function () {
     appInsights.loadAppInsights();
     appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pageview
 
-    function trackEvent(event: IEventTelemetry, customProperties?: ICustomProperties) {
+    function trackEvent(event: IEventTelemetry, customProperties?: ICustomProperties): void {
         if (sendTelemetry) {
             appInsights.trackEvent(event, customProperties);
         }
@@ -83,7 +83,7 @@ export const Diagnostics = (function () {
         }
     }
 
-    function trackException(event: IEventTelemetry, customProperties?: ICustomProperties) {
+    function trackException(event: IEventTelemetry, customProperties?: ICustomProperties): void {
         if (sendTelemetry) {
             appInsights.trackException(event, customProperties);
         }
@@ -93,7 +93,7 @@ export const Diagnostics = (function () {
         }
     }
 
-    function trackError(eventType: string, source: string, e: Error) {
+    function trackError(eventType: string, source: string, e: Error): void {
         if (sendTelemetry) {
             appInsights.trackEvent({ name: eventType, properties: { source: source, exception: e.toString(), message: e.message, stack: e.stack } });
         }
@@ -103,7 +103,7 @@ export const Diagnostics = (function () {
         }
     }
 
-    function ensureItemDiagnostics() {
+    function ensureItemDiagnostics(): void {
         try {
             if (itemDiagnostics) return;
             itemDiagnostics = {};
@@ -138,16 +138,16 @@ export const Diagnostics = (function () {
         }
     }
 
-    function ensureOfficeDiagnostics() {
+    function ensureOfficeDiagnostics(): void {
         try {
             if (ParentFrame) {
                 const choice = ParentFrame.choice;
                 if (choice) {
-                    appDiagnostics.ui = choice.label;
+                    appDiagnostics['ui'] = choice.label;
                 }
             }
             else {
-                appDiagnostics.ui = "standalone";
+                appDiagnostics['ui'] = "standalone";
             }
 
             appDiagnostics["Last Update"] = buildTime();
@@ -200,10 +200,10 @@ export const Diagnostics = (function () {
             }
 
             if (GetHeaders) {
-                appDiagnostics.permissionLevel = GetHeaders.permissionLevel();
-                appDiagnostics.canUseAPI = GetHeadersAPI.canUseAPI();
-                appDiagnostics.canUseRest = GetHeadersRest.canUseRest();
-                appDiagnostics.sufficientPermission = GetHeaders.sufficientPermission(true);
+                appDiagnostics["permissionLevel"] = GetHeaders.permissionLevel();
+                appDiagnostics["canUseAPI"] = GetHeadersAPI.canUseAPI();
+                appDiagnostics["canUseRest"] = GetHeadersRest.canUseRest();
+                appDiagnostics["sufficientPermission"] = GetHeaders.sufficientPermission(true);
             }
         }
         catch (e) {
@@ -211,7 +211,7 @@ export const Diagnostics = (function () {
         }
     }
 
-    function getRequirementSet() {
+    function getRequirementSet(): string {
         // https://docs.microsoft.com/en-us/office/dev/add-ins/reference/requirement-sets/outlook-api-requirement-sets
         try {
             if (!("Office" in window)) return "none";
@@ -242,7 +242,7 @@ export const Diagnostics = (function () {
         }
     }
 
-    function ensureAppDiagnostics() {
+    function ensureAppDiagnostics(): void {
         try {
             if (appDiagnostics) {
                 // We may have initialized earlier before we had an Office object, so repopulate it
@@ -265,7 +265,7 @@ export const Diagnostics = (function () {
     }
 
     // Combines appDiagnostics and itemDiagnostics and returns a single object
-    function get() {
+    function get(): { [k: string]: any } {
         if (!inGet) {
             inGet = true;
             try {
@@ -283,7 +283,7 @@ export const Diagnostics = (function () {
         return $.extend({}, appDiagnostics, itemDiagnostics);
     }
 
-    function set(field, value) {
+    function set(field: string, value: string): void {
         try {
             ensureItemDiagnostics();
             itemDiagnostics[field] = value;
@@ -291,7 +291,7 @@ export const Diagnostics = (function () {
         catch (e) { Diagnostics.trackError("diagError", "Diagnostics.set", e); }
     }
 
-    function clear() { itemDiagnostics = null; }
+    function clear(): void { itemDiagnostics = null; }
 
     return {
         get: get,
