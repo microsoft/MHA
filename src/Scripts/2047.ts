@@ -4,24 +4,30 @@ export const Decoder = (function () {
     // http://tools.ietf.org/html/rfc2047
     // http://tools.ietf.org/html/rfc2231
 
-    function getBlock(token) {
-        const matches = token.match(/=\?(.*?)\?(.)\?(.*?)\?=/m);
-        if (matches) {
-            return { charset: matches[1], type: matches[2].toUpperCase(), text: matches[3] };
-        }
-
-        return { text: token, };
+    interface block {
+        charset: string;
+        type: string;
+        text: string;
     }
 
-    function splitToBlocks(buffer) {
-        const unparsedblocks = [];
+    function getBlock(token: string): block {
+        const matches = token.match(/=\?(.*?)\?(.)\?(.*?)\?=/m);
+        if (matches) {
+            return <block>{ charset: matches[1], type: matches[2].toUpperCase(), text: matches[3] };
+        }
+
+        return <block>{ text: token, };
+    }
+
+    function splitToBlocks(buffer: string): block[] {
+        const unparsedblocks: block[] = [];
         //split string into blocks
         while (buffer.length) {
             try {
                 const matches = buffer.match(/([\S\s]*?)(=\?.*?\?.\?.*?\?=)([\S\s]*)/m);
                 if (matches) {
                     if (matches[1]) {
-                        unparsedblocks.push({ text: matches[1] });
+                        unparsedblocks.push(<block>{ text: matches[1] });
                     }
 
                     unparsedblocks.push(getBlock(matches[2]));
@@ -29,14 +35,14 @@ export const Decoder = (function () {
                 } else if (buffer) {
                     // Once we're out of matches, we've parsed the whole string.
                     // Append the rest of the buffer to the result.
-                    unparsedblocks.push({ text: buffer });
+                    unparsedblocks.push(<block>{ text: buffer });
                     break;
                 }
             }
             catch (e) {
                 // Firefox will throw when passed a large non-matching buffer
                 // Such a buffer isn't a match anyway, so we just push it as raw text
-                unparsedblocks.push({ text: buffer });
+                unparsedblocks.push(<block>{ text: buffer });
                 buffer = "";
             }
         }
@@ -44,14 +50,14 @@ export const Decoder = (function () {
         return unparsedblocks;
     }
 
-    function fixCharSet(charSet) {
+    function fixCharSet(charSet: string): string {
         switch (charSet.toUpperCase()) {
             case "UTF 8": return "UTF-8";
             default: return charSet;
         }
     }
 
-    function getCodePage(charSet) {
+    function getCodePage(charSet: string): number {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/dd317756(v=vs.85).aspx
         switch (charSet.toUpperCase()) {
             case "UTF-8": return 65001;
@@ -65,7 +71,7 @@ export const Decoder = (function () {
         }
     }
 
-    function decodeHexCodepage(charSet, hexArray) {
+    function decodeHexCodepage(charSet: string, hexArray: number[]): string {
         if (window.TextDecoder) {
             return (new TextDecoder(fixCharSet(charSet))).decode(new Uint8Array(hexArray).buffer);
         }
@@ -78,7 +84,7 @@ export const Decoder = (function () {
 
     // Javascript auto converted from C# implementation + improvements.
     const $F = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    function decodeBase64(charSet, input) {
+    function decodeBase64(charSet: string, input: string): string {
         if (!input) {
             return input;
         }
@@ -116,8 +122,8 @@ export const Decoder = (function () {
         return "=?" + charSet + "?B?" + input + "?=";
     }
 
-    function decodeHex(charSet, buffer) {
-        const result = [];
+    function decodeHex(charSet: string, buffer: string): string {
+        const result: string[] = [];
 
         while (buffer.length) {
             const matches = buffer.match(/(.*?)((?:=[0-9a-fA-F]{2,2})+)(.*)/m);
@@ -144,7 +150,7 @@ export const Decoder = (function () {
         return result.join("");
     }
 
-    function decodeQuoted(charSet, buffer) {
+    function decodeQuoted(charSet: string, buffer: string): string {
         if (!buffer) {
             return buffer;
         }
@@ -169,7 +175,7 @@ export const Decoder = (function () {
     ////    (=?iso-8859-8?b?7eXs+SDv4SDp7Oj08A==?=)
     ////From: =?US-ASCII*EN?Q?Keith_Moore?= <moore@cs.utk.edu>
 
-    function clean2047Encoding(buffer) {
+    function clean2047Encoding(buffer: string): string {
         // We're decoding =?...?= tokens here.
         // Per RFC, white space between tokens is to be ignored.
         // Remove that white space.
@@ -177,7 +183,7 @@ export const Decoder = (function () {
 
         const unparsedblocks = splitToBlocks(buffer);
 
-        const collapsedBlocks = [];
+        const collapsedBlocks: block[] = [];
         for (let i = 0; i < unparsedblocks.length; i++) {
             collapsedBlocks.push(unparsedblocks[i]);
 
@@ -188,11 +194,11 @@ export const Decoder = (function () {
                 collapsedBlocks[i].charset === collapsedBlocks[i - 1].charset) {
                 collapsedBlocks[i].text = collapsedBlocks[i - 1].text + collapsedBlocks[i].text;
                 // Clear the previous block so we don't process it later
-                collapsedBlocks[i - 1] = {};
+                collapsedBlocks[i - 1] = <block>{};
             }
         }
 
-        const result = [];
+        const result: string[] = [];
         collapsedBlocks.forEach(function (block) {
             if (block.type === "B") {
                 result.push(decodeBase64(block.charset, block.text));
