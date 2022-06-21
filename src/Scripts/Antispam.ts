@@ -1,28 +1,33 @@
 import { mhaStrings } from "./Strings";
 
+export class row {
+    constructor(header: string, label: string, headerName: string) {
+        this.header = header;
+        this.label = label;
+        this.headerName = headerName;
+        this.value = "";
+        this.valueUrl = "";
+        this.toString = function () { return this.label + ": " + this.value; };
+    }
+    header: string;
+    label: string;
+    headerName: string;
+    value: string;
+    valueUrl: string;
+    toString: () => string;
+};
+
 export const AntiSpamReport = (function () {
-    const row = function (header, label, headerName) {
-        return {
-            header: header,
-            label: label,
-            headerName: headerName,
-            value: "",
-            valueUrl: "",
-            toString: function () { return this.label + ": " + this.value; }
-
-        }
-    };
-
-    let source = "";
-    let unparsed = "";
-    const antiSpamRows = [
-        row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
-        row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
-        row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
-        row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
+    let source: string = "";
+    let unparsed: string = "";
+    const antiSpamRows: row[] = [
+        new row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
+        new row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
+        new row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
+        new row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
     ];
 
-    function existsInternal(rows) {
+    function existsInternal(rows: row[]): boolean {
         for (let i = 0; i < rows.length; i++) {
             if (rows[i].value) {
                 return true;
@@ -32,7 +37,7 @@ export const AntiSpamReport = (function () {
         return false;
     }
 
-    function setRowValue(rows, key, value) {
+    function setRowValue(rows: row[], key: string, value: string): boolean {
         for (let i = 0; i < rows.length; i++) {
             if (rows[i].header.toUpperCase() === key.toUpperCase()) {
                 rows[i].value = value;
@@ -45,7 +50,7 @@ export const AntiSpamReport = (function () {
     }
 
     // https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers
-    function parse(report, rows) {
+    function parse(report: string, rows: row[]): void {
         source = report;
         if (!report) {
             return;
@@ -80,19 +85,18 @@ export const AntiSpamReport = (function () {
         setRowValue(rows, "unparsed", unparsed);
     }
 
-    function add(report) { parse(report, antiSpamRows); }
-    function exists() { return existsInternal(antiSpamRows); }
+    function add(report: string): void { parse(report, antiSpamRows); }
+    function exists(): boolean { return existsInternal(antiSpamRows); }
 
     return {
         add: add,
         exists: exists,
         existsInternal: existsInternal,
         parse: parse,
-        get source() { return source; },
-        get unparsed() { return unparsed; },
-        get antiSpamRows() { return antiSpamRows; },
-        row: row,
-        toString: function () {
+        get source(): string { return source; },
+        get unparsed(): string { return unparsed; },
+        get antiSpamRows(): row[] { return antiSpamRows; },
+        toString: function (): string {
             if (!exists()) return "";
             const ret = ["AntiSpamReport"];
             antiSpamRows.forEach(function (row) {

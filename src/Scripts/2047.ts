@@ -8,7 +8,7 @@ export const Decoder = (function () {
         charset: string;
         type: string;
         text: string;
-    }
+    };
 
     function getBlock(token: string): block {
         const matches = token.match(/=\?(.*?)\?(.)\?(.*?)\?=/m);
