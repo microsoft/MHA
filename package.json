@@ -8,7 +8,7 @@
   },
   "private": true,
   "scripts": {
-    "watch": "webpack --watch",
+    "watch": "webpack --watch --mode development",
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
     "dev-server": "webpack serve --mode development",
