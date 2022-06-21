@@ -36,8 +36,8 @@ export const Diagnostics = (function () {
     });
 
     appInsights.addTelemetryInitializer(function (envelope) {
-        envelope.data.baseType = envelope.baseType;
-        envelope.data.baseData = envelope.baseData;
+        envelope.data[`baseType`] = envelope.baseType;
+        envelope.data[`baseType`] = envelope.baseData;
         // This will get called for any appInsights tracking - we can augment or suppress logging from here
         // No appInsights logging for localhost/dev
         if (!sendTelemetry) {
@@ -51,15 +51,15 @@ export const Diagnostics = (function () {
         // If we're not one of the above types, tag in our diagnostics data
         if (envelope.baseType === "ExceptionData") {
             // custom data for the ExceptionData type lives in a different place
-            envelope.baseData.properties = envelope.baseData.properties || {};
-            $.extend(envelope.baseData.properties, Diagnostics.get());
+            envelope.baseData[`properties`] = envelope.baseData[`properties`] || {};
+            $.extend(envelope.baseData[`properties`], Diagnostics.get());
             // Log an extra event with parsed stack frame
-            if (envelope.baseData.exceptions.length) {
-                StackTrace.fromError(envelope.baseData.exceptions[0]).then(function (stackframes) {
+            if (envelope.baseData[`exceptions`].length) {
+                StackTrace.fromError(envelope.baseData[`exceptions`][0]).then(function (stackframes) {
                     appInsights.trackEvent({
                         name: "Exception Details", properties: {
                             stack: stackframes,
-                            error: envelope.baseData.exceptions[0]
+                            error: envelope.baseData[`exceptions`][0]
                         }
                     });
                 });
