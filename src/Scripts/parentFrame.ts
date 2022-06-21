@@ -7,8 +7,6 @@ import { poster } from "./poster"
 import { mhaStrings } from "./Strings";
 
 export const ParentFrame = (function () {
-    "use strict";
-
     class Choice {
         label: string;
         url: string;

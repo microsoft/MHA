@@ -20,8 +20,6 @@ import jwt_decode, { JwtPayload } from 'jwt-decode'
  */
 
 export const GetHeadersRest = (function () {
-    "use strict";
-
     const minRestSet: string = "1.5";
 
     function canUseRest(): boolean { return GetHeaders.canUseAPI("Rest", minRestSet); }

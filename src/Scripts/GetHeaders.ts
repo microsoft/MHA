@@ -9,8 +9,6 @@ import { Diagnostics } from "./diag"
  */
 
 export const GetHeaders = (function () {
-    "use strict";
-
     function permissionLevel() {
         if (typeof (Office) === "undefined") return 0;
         if (!Office) return 0;

@@ -13,8 +13,6 @@ import { poster } from "./poster";
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
 (function () {
-    "use strict";
-
     // Framework7 app object
     let myApp = null;
 

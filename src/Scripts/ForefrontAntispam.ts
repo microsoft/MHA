@@ -2,8 +2,6 @@ import { mhaStrings } from "./Strings";
 import { AntiSpamReport } from "./Antispam";
 
 export const ForefrontAntiSpamReport = (function () {
-    "use strict";
-
     // cheap inheritance
     const antiSpamReport = AntiSpamReport();
     const forefrontAntiSpamRows = [

@@ -9,8 +9,6 @@ import { Diagnostics } from "./diag"
 import { Table } from "./Table"
 
 (function () {
-    "use strict";
-
     let viewModel = null;
 
     function enableSpinner() {

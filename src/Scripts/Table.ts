@@ -2,8 +2,6 @@ import * as $ from "jquery";
 import { mhaStrings } from "./Strings";
 
 export const Table = (function () {
-    "use strict";
-
     let viewModel = null;
     let showExtra = false;
     const column = function (id, label, columnClass) { return { id: id, label: label, class: columnClass }; };

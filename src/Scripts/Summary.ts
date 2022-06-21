@@ -2,8 +2,6 @@ import { mhaStrings } from "./Strings";
 import { mhaDates } from "./dates";
 
 export const Summary = (function () {
-    "use strict";
-
     const SummaryRow = function (header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {
         let value = "";
 

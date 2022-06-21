@@ -15,8 +15,6 @@ import { GetHeaders } from "./GetHeaders";
  */
 
 export const GetHeadersEWS = (function () {
-    "use strict";
-
     let logResponse;
 
     interface HeaderProp {

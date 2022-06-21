@@ -2,8 +2,6 @@ import * as dayjs from "dayjs";
 import * as localizedFormat from "dayjs/plugin/localizedFormat";
 
 export const mhaDates = (function () {
-    "use strict";
-
     dayjs.extend(localizedFormat);
 
     // parse date using dayjs, with fallback to browser based parsing

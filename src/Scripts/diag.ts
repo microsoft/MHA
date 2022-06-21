@@ -11,8 +11,6 @@ import { buildTime } from "./buildTime";
 // diagnostics module
 
 export const Diagnostics = (function () {
-    "use strict";
-
     let appDiagnostics = null;
     let itemDiagnostics = null;
     let inGet = false;

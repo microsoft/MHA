@@ -2,8 +2,6 @@
 import { mhaDates } from "./dates";
 
 export const Received = (function () {
-    "use strict";
-
     const receivedRows = [];
     let sortColumn = "hop";
     let sortOrder = 1;

@@ -9,8 +9,6 @@ import { poster } from "./poster";
 // This is the "classic" UI rendered in classicDesktopFrame.html
 
 (function () {
-    "use strict";
-
     let viewModel = null;
 
     function postError(error, message) {

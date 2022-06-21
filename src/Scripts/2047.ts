@@ -1,8 +1,6 @@
 ﻿import cptable from "codepage"
 
 export const Decoder = (function () {
-    "use strict";
-
     // http://tools.ietf.org/html/rfc2047
     // http://tools.ietf.org/html/rfc2231
 

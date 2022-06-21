@@ -1,6 +1,4 @@
 export const poster = (function () {
-    "use strict";
-
     function site() { return window.location.protocol + "//" + window.location.host; }
 
     function postMessageToFrame(frame, eventName: string, data?: object) {

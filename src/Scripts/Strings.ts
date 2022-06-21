@@ -2,8 +2,6 @@ import * as $ from "jquery";
 import { Diagnostics } from "./diag"
 
 export const mhaStrings = (function () {
-    "use strict";
-
     function copyToClipboard(str) {
         const textArea = document.createElement('textarea');
         textArea.style.position = 'absolute';

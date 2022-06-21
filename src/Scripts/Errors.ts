@@ -2,8 +2,6 @@ import { Diagnostics } from "./diag"
 import * as StackTrace from "stacktrace-js";
 
 export const Errors = (function () {
-    "use strict";
-
     let errorArray = [];
     function clear() { errorArray = []; }
 

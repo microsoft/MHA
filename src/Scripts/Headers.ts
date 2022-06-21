@@ -7,8 +7,6 @@ import { Summary } from "./Summary"
 import { poster } from "./poster"
 
 export const HeaderModel = (function (headers?: string) {
-    "use strict";
-
     const summary = Summary();
     const receivedHeaders = Received();
     const forefrontAntiSpamReport = ForefrontAntiSpamReport();

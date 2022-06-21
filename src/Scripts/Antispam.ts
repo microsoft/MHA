@@ -1,8 +1,6 @@
 import { mhaStrings } from "./Strings";
 
 export const AntiSpamReport = (function () {
-    "use strict";
-
     const row = function (header, label, headerName) {
         return {
             header: header,

@@ -10,8 +10,6 @@ import { poster } from "./poster";
 // This is the "new" UI rendered in newDesktopFrame.html
 
 (function () {
-    "use strict";
-
     let overlay = null;
     let spinner = null;
 
