@@ -13,11 +13,11 @@
     "noFallthroughCasesInSwitch": true,
     //"noImplicitAny": true,
     "noImplicitOverride": true,
-    //"noImplicitReturns": true,
+    "noImplicitReturns": true,
     //"noImplicitThis": true,
     //"noPropertyAccessFromIndexSignature": true,
     //"noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": true
     //"noUnusedParameters": true,
     //"strict": true, // maybe not until we do more other switches
     //"strictBindCallApply": true,

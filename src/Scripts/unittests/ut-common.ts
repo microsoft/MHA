@@ -63,7 +63,7 @@ QUnit.assert.datesEqual = function (actual, expected, message) {
 };
 
 QUnit.assert.errorsEqual = function (actual, expectedValues, message) {
-    var found = expectedValues.some(function (expected) {
+    var found = expectedValues.some(function (expected): boolean {
         if (actual === expected) {
             this.pushResult({
                 result: true,
@@ -74,6 +74,8 @@ QUnit.assert.errorsEqual = function (actual, expectedValues, message) {
 
             return true;
         }
+
+        return false;
     }, this);
 
     if (!found) {
