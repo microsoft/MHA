@@ -1,5 +1,5 @@
 import { mhaStrings } from "./Strings";
-import { mhaDates } from "./dates";
+import { mhaDates, date } from "./dates";
 
 export const Summary = (function () {
     const SummaryRow = function (header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {
@@ -34,7 +34,7 @@ export const Summary = (function () {
     const dateRow = SummaryRow(
         "Date",
         mhaStrings.mhaCreationTime,
-        function (value) { return mhaDates.parseDate(value); },
+        function (value): date { return mhaDates.parseDate(value); },
         function (value) { return creationTime(value); });
 
     const archivedRow = SummaryRow(

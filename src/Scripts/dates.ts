@@ -1,11 +1,17 @@
 import * as dayjs from "dayjs";
 import * as localizedFormat from "dayjs/plugin/localizedFormat";
 
+export class date {
+    dateNum: number;
+    date: string;
+    toString: () => string;
+};
+
 export const mhaDates = (function () {
     dayjs.extend(localizedFormat);
 
     // parse date using dayjs, with fallback to browser based parsing
-    function parseDate(date) {
+    function parseDate(date: string): date {
         // Cross browser dates - ugh!
         // http://dygraphs.com/date-formats.html
 
@@ -17,9 +23,9 @@ export const mhaDates = (function () {
 
         // If we don't have a +xxxx or -xxxx on our date, it will be interpreted in local time
         // This likely isn't the intended timezone, so we add a +0000 to get UTC
-        const offset = date.match(/[+|-]\d{4}/);
-        const originalDate = date;
-        let offsetAdded = false;
+        const offset: RegExpMatchArray | null = date.match(/[+|-]\d{4}/);
+        const originalDate: string = date;
+        let offsetAdded: boolean = false;
         if (!offset || offset.length !== 1) {
             date += " +0000";
             offsetAdded = true;
@@ -27,12 +33,12 @@ export const mhaDates = (function () {
 
         // Some browsers (firefox) don't like milliseconds in dates, and dayjs doesn't hide that from us
         // Trim off milliseconds so we don't pass them into dayjs
-        const milliseconds = date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
+        const milliseconds: RegExpMatchArray | null = date.match(/\d{1,2}:\d{2}:\d{2}.(\d+)/);
         date = date.replace(/(\d{1,2}:\d{2}:\d{2}).(\d+)/, "$1");
 
         if (dayjs) {
             // And now we can parse our date
-            let time = dayjs(date);
+            let time: dayjs.Dayjs = dayjs(date);
 
             // If adding offset didn't work, try adding time and offset
             if (!time.isValid() && offsetAdded) { time = dayjs(originalDate + " 12:00:00 AM +0000"); }
@@ -40,7 +46,7 @@ export const mhaDates = (function () {
                 time = time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), 'ms');
             }
 
-            return {
+            return <date>{
                 dateNum: time.valueOf(),
                 date: time.format("l LTS"),
                 toString: function () { return date; }
@@ -52,7 +58,7 @@ export const mhaDates = (function () {
                 dateNum = dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
             }
 
-            return {
+            return <date>{
                 dateNum: dateNum,
                 date: new Date(dateNum).toLocaleString().replace(/\u200E|,/g, ""),
                 toString: function () { return date; }

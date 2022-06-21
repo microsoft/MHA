@@ -1,5 +1,5 @@
 ﻿import { mhaStrings } from "./Strings";
-import { mhaDates } from "./dates";
+import { mhaDates, date } from "./dates";
 
 export const Received = (function () {
     const receivedRows = [];
@@ -85,7 +85,7 @@ export const Received = (function () {
             if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
                 const dateField = receivedHeader.substring(iDate + 1);
                 receivedHeader = receivedHeader.substring(0, iDate);
-                const parsedDate = mhaDates.parseDate(dateField);
+                const parsedDate: date = mhaDates.parseDate(dateField);
 
                 if (parsedDate) {
                     receivedFields["date"].value = parsedDate.date;
