@@ -16,11 +16,11 @@
     //"noImplicitThis": true,
     "noPropertyAccessFromIndexSignature": true,
     //"noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
     //"noUnusedParameters": true,
     //"strict": true, // maybe not until we do more other switches
     //"strictBindCallApply": true,
-    //"strictFunctionTypes": true,
+    "strictFunctionTypes": true
     //"strictNullChecks": true,
     //"strictPropertyInitialization": true,
     //"useUnknownInCatchVariables": true
