@@ -11,21 +11,21 @@ import { poster } from "./poster";
 (function () {
     let viewModel = null;
 
-    function postError(error, message) {
+    function postError(error, message: string): void {
         poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
     }
 
-    function enableSpinner() {
+    function enableSpinner(): void {
         $("#response").css("background-image", "url(../Resources/loader.gif)");
         $("#response").css("background-repeat", "no-repeat");
         $("#response").css("background-position", "center");
     }
 
-    function disableSpinner() {
+    function disableSpinner(): void {
         $("#response").css("background", "none");
     }
 
-    function updateStatus(statusText) {
+    function updateStatus(statusText: string): void {
         enableSpinner();
         $("#status").text(statusText);
         if (viewModel !== null) {
@@ -46,13 +46,13 @@ import { poster } from "./poster";
 
     // Handles rendering of an error.
     // Does not log the error - caller is responsible for calling PostError
-    function showError(error, message) {
+    function showError(error, message: string) {
         updateStatus(message);
         disableSpinner();
         Table.rebuildSections(viewModel);
     }
 
-    function eventListener(event) {
+    function eventListener(event): void {
         if (!event || event.origin !== poster.site()) return;
 
         if (event.data) {
@@ -72,7 +72,7 @@ import { poster } from "./poster";
 
     // This function is run when the app is ready to start interacting with the host application.
     // It ensures the DOM is ready before updating the span elements with values from the current message.
-    $(document).ready(function () {
+    $(document).ready(function (): void {
         try {
             viewModel = HeaderModel();
             Table.initializeTableUI(viewModel);

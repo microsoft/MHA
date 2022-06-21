@@ -7,14 +7,13 @@ export class row {
         this.headerName = headerName;
         this.value = "";
         this.valueUrl = "";
-        this.toString = function () { return this.label + ": " + this.value; };
     }
     header: string;
     label: string;
     headerName: string;
     value: string;
     valueUrl: string;
-    toString: () => string;
+    toString(): string { return this.label + ": " + this.value; };
 };
 
 export const AntiSpamReport = (function () {

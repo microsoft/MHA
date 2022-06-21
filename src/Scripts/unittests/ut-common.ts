@@ -1,11 +1,10 @@
 ﻿import * as QUnit from "qunit";
 
 QUnit.assert.receivedEqual = function (actual, expected, message) {
-    // Remove date fields which are computed from dateNum anyway and will differ depending on timezone
-    delete actual["date"];
-    delete expected["date"];
     var field;
     for (field in expected) {
+        if (field = "date") continue;
+        if (field = "_value") continue;
         if (expected[field] === actual[field]) continue;
         if (actual[field] && expected[field] === actual[field].value) continue;
         this.pushResult({
@@ -17,6 +16,8 @@ QUnit.assert.receivedEqual = function (actual, expected, message) {
     }
 
     for (field in actual) {
+        if (field = "date") continue;
+        if (field = "_value") continue;
         // If a field in value is non-null/empty there must also be a field in expected
         if (actual[field].toString() && expected[field] === undefined) {
             this.pushResult({

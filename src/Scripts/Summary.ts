@@ -2,22 +2,33 @@ import { mhaStrings } from "./Strings";
 import { mhaDates, date } from "./dates";
 
 export const Summary = (function () {
-    const SummaryRow = function (header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {
-        let value = "";
-
-        return {
-            header: header,
-            label: label,
-            url: mhaStrings.mapHeaderToURL(header, label),
-            set value(_value) { value = onSet ? onSet(_value) : _value; },
-            get value() { return onGet ? onGet(value) : value; },
-            get valueUrl() { return onGetUrl ? onGetUrl(value) : ""; },
-            toString: function () { return label + ": " + value; }
+    class SummaryRow {
+        constructor(header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {
+            this._value = "";
+            this.header = header;
+            this.label = label;
+            this.url = mhaStrings.mapHeaderToURL(header, label);
+            this.onSet = onSet;
+            this.onGet = onGet;
+            this.onGetUrl = onGetUrl;
         };
+
+        private _value: string;
+        header: string;
+        label: string;
+        url: string;
+        onSet?: Function;
+        onGet?: Function;
+        onGetUrl?: Function;
+
+        set value(value: string) { this._value = this.onSet ? this.onSet(value) : value; };
+        get value(): string { return this.onGet ? this.onGet(this._value) : this._value; };
+        get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this._value) : ""; };
+        toString(): string { return this.label + ": " + this.value; };
     };
 
     let totalTime = "";
-    function creationTime(date) {
+    function creationTime(date: string): string {
         if (!date && !totalTime) {
             return null;
         }
@@ -31,32 +42,32 @@ export const Summary = (function () {
         return time.join("");
     }
 
-    const dateRow = SummaryRow(
+    const dateRow = new SummaryRow(
         "Date",
         mhaStrings.mhaCreationTime,
-        function (value): date { return mhaDates.parseDate(value); },
-        function (value) { return creationTime(value); });
+        function (value: string): date { return mhaDates.parseDate(value); },
+        function (value: string): string { return creationTime(value); });
 
-    const archivedRow = SummaryRow(
+    const archivedRow = new SummaryRow(
         "Archived-At",
         mhaStrings.mhaArchivedAt,
         null,
         null,
-        function (value) { return mhaStrings.mapValueToURL(value); }
+        function (value: string): string { return mhaStrings.mapValueToURL(value); }
     );
 
-    const summaryRows = [
-        SummaryRow("Subject", mhaStrings.mhaSubject),
-        SummaryRow("Message-ID", mhaStrings.mhaMessageId),
+    const summaryRows: SummaryRow[] = [
+        new SummaryRow("Subject", mhaStrings.mhaSubject),
+        new SummaryRow("Message-ID", mhaStrings.mhaMessageId),
         archivedRow,
         dateRow,
-        SummaryRow("From", mhaStrings.mhaFrom),
-        SummaryRow("Reply-To", mhaStrings.mhaReplyTo),
-        SummaryRow("To", mhaStrings.mhaTo),
-        SummaryRow("CC", mhaStrings.mhaCc)
+        new SummaryRow("From", mhaStrings.mhaFrom),
+        new SummaryRow("Reply-To", mhaStrings.mhaReplyTo),
+        new SummaryRow("To", mhaStrings.mhaTo),
+        new SummaryRow("CC", mhaStrings.mhaCc)
     ];
 
-    function exists() {
+    function exists(): boolean {
         for (let i = 0; i < summaryRows.length; i++) {
             if (summaryRows[i].value) {
                 return true;
@@ -84,10 +95,10 @@ export const Summary = (function () {
     return {
         add: add,
         exists: exists,
-        get summaryRows() { return summaryRows; },
-        get totalTime() { return totalTime; },
-        set totalTime(value) { totalTime = value; },
-        toString: function () {
+        get summaryRows(): SummaryRow[] { return summaryRows; },
+        get totalTime(): string { return totalTime; },
+        set totalTime(value: string) { totalTime = value; },
+        toString: function (): string {
             if (!exists()) return "";
             const ret = ["Summary"];
             summaryRows.forEach(function (row) {
