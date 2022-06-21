@@ -22,7 +22,11 @@ import jwt_decode, { JwtPayload } from 'jwt-decode'
 export const GetHeadersRest = (function () {
     "use strict";
 
-    function getItemRestId() {
+    const minRestSet: string = "1.5";
+
+    function canUseRest(): boolean { return GetHeaders.canUseAPI("Rest", minRestSet); }
+
+    function getItemRestId(): string {
         // Currently the only Outlook Mobile version that supports add-ins
         // is Outlook for iOS.
         if (Office.context.mailbox.diagnostics.hostName === "OutlookIOS") {
@@ -37,7 +41,7 @@ export const GetHeadersRest = (function () {
         }
     }
 
-    function getBaseUrl(url) {
+    function getBaseUrl(url): string {
         const parts = url.split("/");
 
         return parts[0] + "//" + parts[2];
@@ -135,6 +139,11 @@ export const GetHeadersRest = (function () {
             return;
         }
 
+        if (!canUseRest()) {
+            GetHeadersEWS.send(headersLoadedCallback);
+            return;
+        }
+
         ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
 
         Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
@@ -155,6 +164,7 @@ export const GetHeadersRest = (function () {
     }
 
     return {
+        canUseRest: canUseRest,
         send: send
     };
 })();
