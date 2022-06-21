@@ -6,5 +6,24 @@
     "module": "es6",
     "target": "es5",
     "sourceMap": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "alwaysStrict": true, // can remove manual use strict here
+    //"exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    //"noImplicitAny": true,
+    "noImplicitOverride": true,
+    //"noImplicitReturns": true,
+    //"noImplicitThis": true,
+    //"noPropertyAccessFromIndexSignature": true,
+    //"noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    //"noUnusedParameters": true,
+    //"strict": true, // maybe not until we do more other switches
+    //"strictBindCallApply": true,
+    //"strictFunctionTypes": true,
+    //"strictNullChecks": true,
+    //"strictPropertyInitialization": true,
+    //"useUnknownInCatchVariables": true
   }
 }
