@@ -20,7 +20,7 @@ export const GetHeadersAPI = (function () {
 
     function canUseAPI(): boolean { return GetHeaders.canUseAPI("API", minAPISet); }
 
-    function send(headersLoadedCallback) {
+    function send(headersLoadedCallback: Function): void {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (API)", true);
             return;

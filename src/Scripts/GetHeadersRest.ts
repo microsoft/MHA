@@ -39,13 +39,13 @@ export const GetHeadersRest = (function () {
         }
     }
 
-    function getBaseUrl(url): string {
+    function getBaseUrl(url: string): string {
         const parts = url.split("/");
 
         return parts[0] + "//" + parts[2];
     }
 
-    function getRestUrl(accessToken) {
+    function getRestUrl(accessToken: string): string {
         // Shim function to workaround
         // mailbox.restUrl == null case
         if (Office.context.mailbox.restUrl) {
@@ -61,7 +61,7 @@ export const GetHeadersRest = (function () {
 
         // Format 1: It's just the URL
         if (aud.match(/https:\/\/([^@]*)/)) {
-            return jwt.aud;
+            return aud;
         }
 
         // Format 2: GUID/hostname@GUID
@@ -75,7 +75,7 @@ export const GetHeadersRest = (function () {
         return "https://outlook.office.com";
     }
 
-    function getHeaders(accessToken, headersLoadedCallback) {
+    function getHeaders(accessToken: string, headersLoadedCallback: Function): void {
         if (!accessToken) {
             Errors.log(null, "No access token?");
         }
@@ -131,7 +131,7 @@ export const GetHeadersRest = (function () {
         });
     }
 
-    function send(headersLoadedCallback) {
+    function send(headersLoadedCallback: Function) {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (REST)", true);
             return;
@@ -147,7 +147,7 @@ export const GetHeadersRest = (function () {
         Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
             try {
                 if (result.status === Office.AsyncResultStatus.Succeeded) {
-                    const accessToken = result.value;
+                    const accessToken: string = result.value;
                     getHeaders(accessToken, headersLoadedCallback);
                 } else {
                     Diagnostics.set("callbackTokenFailure", JSON.stringify(result));

@@ -9,7 +9,7 @@ import { Diagnostics } from "./diag"
  */
 
 export const GetHeaders = (function () {
-    function permissionLevel() {
+    function permissionLevel(): number {
         if (typeof (Office) === "undefined") return 0;
         if (!Office) return 0;
         if (!Office.context) return 0;
@@ -21,7 +21,7 @@ export const GetHeaders = (function () {
         return 0;
     }
 
-    function sufficientPermission(strict): boolean {
+    function sufficientPermission(strict: boolean): boolean {
         if (typeof (Office) === "undefined") return false;
         if (!Office) return false;
         if (!Office.context) return false;
@@ -47,7 +47,7 @@ export const GetHeaders = (function () {
         return true;
     }
 
-    function validItem() {
+    function validItem(): boolean {
         if (typeof (Office) === "undefined") return false;
         if (!Office) return false;
         if (!Office.context) return false;
@@ -57,7 +57,7 @@ export const GetHeaders = (function () {
         return true;
     }
 
-    function send(headersLoadedCallback) {
+    function send(headersLoadedCallback: Function) {
         if (!validItem()) {
             ParentFrame.showError(null, "No item selected", true);
             return;

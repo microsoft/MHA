@@ -15,19 +15,22 @@ import { GetHeaders } from "./GetHeaders";
  */
 
 export const GetHeadersEWS = (function () {
-    let logResponse;
-
     interface HeaderProp {
         prop: string;
         responseCode: string;
     }
 
-    function extractHeadersFromXml(xml) {
+    function extractHeadersFromXml(xml: string): HeaderProp {
         // This filters nodes for the one that matches the given name.
-        function filterNode(xmlResponse: JQuery<XMLDocument>, node: string) {
-            return xmlResponse.find("*").filter(function () {
+        function filterNode(xmlResponse: JQuery<XMLDocument>, node: string): string {
+            const response: JQuery<HTMLElement> = xmlResponse.find("*").filter(function (): boolean {
                 return this.nodeName === node;
             });
+            if (response.length > 0) {
+                return response[0].textContent.replace(/\r|\n|\r\n/g, '\n');
+            }
+
+            return "";
         }
 
         const ret = {} as HeaderProp;
@@ -41,16 +44,12 @@ export const GetHeadersEWS = (function () {
                 // We can do this because we know there's only the one property.
                 const extendedProperty = filterNode(responseDom, "t:ExtendedProperty");
                 if (extendedProperty.length > 0) {
-                    ret.prop = extendedProperty[0].textContent.replace(/\r|\n|\r\n/g, '\n');
+                    ret.prop = filterNode(responseDom, "t:ExtendedProperty");
                 }
             }
 
             if (!ret.prop) {
-                // TODO: Get and return more
-                const responseCode = filterNode(responseDom, "m:ResponseCode");
-                if (responseCode.length > 0) {
-                    ret.responseCode = responseCode[0].textContent.replace(/\r|\n|\r\n/g, '\n');
-                }
+                ret.responseCode = filterNode(responseDom, "m:ResponseCode");
             }
         } catch (e) {
             // Exceptions thrown from parseXML are super chatty and we do not want to log them.
@@ -60,7 +59,7 @@ export const GetHeadersEWS = (function () {
         return ret;
     }
 
-    function stripHeaderFromXml(xml) {
+    function stripHeaderFromXml(xml: string) {
         if (!xml) return null;
         return xml
             .replace(/<t:Value>[\s\S]*<\/t:Value>/g, "<t:Value>redacted</t:Value>")
@@ -68,7 +67,7 @@ export const GetHeadersEWS = (function () {
     }
 
     // Function called when the EWS request is complete.
-    function callbackEws(asyncResult, headersLoadedCallback) {
+    function callbackEws(asyncResult: Office.AsyncResult<string>, headersLoadedCallback: Function): void {
         try {
             // Process the returned response here.
             let header = null;
@@ -77,7 +76,7 @@ export const GetHeadersEWS = (function () {
 
                 // We might not have a prop and also no error. This is OK if the prop is just missing.
                 if (!header.prop) {
-                    if (header.responseCode && header.responseCode.length > 0 && header.responseCode[0].firstChild && header.responseCode[0].firstChild.data === "NoError") {
+                    if (header.responseCode === "NoError") {
                         headersLoadedCallback(null, "EWS");
                         ParentFrame.showError(null, mhaStrings.mhaHeadersMissing, true);
                         return;
@@ -97,16 +96,12 @@ export const GetHeadersEWS = (function () {
                 Errors.log(asyncResult.error, "Async Response\n" + stripHeaderFromXml(JSON.stringify(asyncResult, null, 2)));
             }
 
-            if (logResponse) {
-                Errors.log(null, "Original Response\n" + stripHeaderFromXml(JSON.stringify(logResponse, null, 2)));
-            }
-
             headersLoadedCallback(null, "EWS");
             ParentFrame.showError(e, "EWS callback failed");
         }
     }
 
-    function getSoapEnvelope(request) {
+    function getSoapEnvelope(request: string): string {
         // Wrap an Exchange Web Services request in a SOAP envelope.
         return "<?xml version='1.0' encoding='utf-8'?>" +
             "<soap:Envelope xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'" +
@@ -120,7 +115,7 @@ export const GetHeadersEWS = (function () {
             "</soap:Envelope>";
     }
 
-    function getHeadersRequest(id) {
+    function getHeadersRequest(id: string): string {
         // Return a GetItem EWS operation request for the headers of the specified item.
         return "<GetItem xmlns='http://schemas.microsoft.com/exchange/services/2006/messages'>" +
             "  <ItemShape>" +
@@ -135,7 +130,7 @@ export const GetHeadersEWS = (function () {
             "</GetItem>";
     }
 
-    function send(headersLoadedCallback) {
+    function send(headersLoadedCallback: Function): void {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (EWS)", true);
             return;
