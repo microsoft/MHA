@@ -375,8 +375,8 @@ QUnit.test("parseHeader Tests", function (assert) {
     var goodCaseHeaderModel = new HeaderModel(goodCaseHeaders);
     assert.arrayEqual(goodCaseHeaderModel.summary.summaryRows, summaryRows, "summaryRows-good-casing");
     assert.arrayEqual(goodCaseHeaderModel.receivedHeaders.receivedRows, receivedRows, "receivedRows-good-casing");
-    assert.arrayEqual(goodCaseHeaderModel.antiSpamReport.antiSpamRows, antiSpamRows, "antiSpamRows-good-casing");
-    assert.arrayEqual(goodCaseHeaderModel.forefrontAntiSpamReport.forefrontAntiSpamRows, forefrontAntiSpamRows, "forefrontAntiSpamRows-good-casing");
+    assert.arrayEqual(goodCaseHeaderModel.antiSpamReport.rows, antiSpamRows, "antiSpamRows-good-casing");
+    assert.arrayEqual(goodCaseHeaderModel.forefrontAntiSpamReport.rows, forefrontAntiSpamRows, "forefrontAntiSpamRows-good-casing");
 
     var badCaseHeaders = "received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
         " (2603:10b6:408:c0::39) by BN8PR19MB2915.namprd19.prod.outlook.com with HTTPS\n" +
@@ -507,6 +507,6 @@ QUnit.test("parseHeader Tests", function (assert) {
     var badCaseHeaderModel = new HeaderModel(badCaseHeaders);
     assert.arrayEqual(badCaseHeaderModel.summary.summaryRows, summaryRows, "summaryRows-bad-casing");
     assert.arrayEqual(badCaseHeaderModel.receivedHeaders.receivedRows, receivedRows, "receivedRows-bad-casing");
-    assert.arrayEqual(badCaseHeaderModel.antiSpamReport.antiSpamRows, antiSpamRows, "antiSpamRows-bad-casing");
-    assert.arrayEqual(badCaseHeaderModel.forefrontAntiSpamReport.forefrontAntiSpamRows, forefrontAntiSpamRows, "forefrontAntiSpamRows-bad-casing");
+    assert.arrayEqual(badCaseHeaderModel.antiSpamReport.rows, antiSpamRows, "antiSpamRows-bad-casing");
+    assert.arrayEqual(badCaseHeaderModel.forefrontAntiSpamReport.rows, forefrontAntiSpamRows, "forefrontAntiSpamRows-bad-casing");
 });

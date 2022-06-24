@@ -299,7 +299,7 @@ import { poster } from "./poster";
         let ul;
 
         // Forefront
-        if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length > 0) {
+        if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
             $("<div/>")
                 .addClass("content-block-title")
                 .text("Forefront Antispam Report")
@@ -313,13 +313,13 @@ import { poster } from "./poster";
             ul = $("<ul/>")
                 .appendTo(list);
 
-            for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
-                addSpamReportRow(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i], ul);
+            for (i = 0; i < viewModel.forefrontAntiSpamReport.rows.length; i++) {
+                addSpamReportRow(viewModel.forefrontAntiSpamReport.rows[i], ul);
             }
         }
 
         // Microsoft
-        if (viewModel.antiSpamReport.antiSpamRows.length > 0) {
+        if (viewModel.antiSpamReport.rows.length > 0) {
             $("<div/>")
                 .addClass("content-block-title")
                 .text("Microsoft Antispam Report")
@@ -333,8 +333,8 @@ import { poster } from "./poster";
             ul = $("<ul/>")
                 .appendTo(list);
 
-            for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
-                addSpamReportRow(viewModel.antiSpamReport.antiSpamRows[i], ul);
+            for (i = 0; i < viewModel.antiSpamReport.rows.length; i++) {
+                addSpamReportRow(viewModel.antiSpamReport.rows[i], ul);
             }
         }
 

@@ -237,7 +237,7 @@ import { poster } from "./poster";
         let tbody;
         let table;
         let row;
-        if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length > 0) {
+        if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
             $("<div/>")
                 .addClass("ms-font-m")
                 .text("Forefront Antispam Report")
@@ -251,21 +251,21 @@ import { poster } from "./poster";
                 .appendTo(antispamList);
             tbody = $("<tbody/>")
                 .appendTo(table);
-            for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
-                if (viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].value) {
+            for (i = 0; i < viewModel.forefrontAntiSpamReport.rows.length; i++) {
+                if (viewModel.forefrontAntiSpamReport.rows[i].value) {
                     row = $("<tr/>").appendTo(tbody);
                     $("<td/>")
-                        .text(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].label)
+                        .text(viewModel.forefrontAntiSpamReport.rows[i].label)
                         .appendTo(row);
                     $("<td/>")
-                        .html(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i].valueUrl)
+                        .html(viewModel.forefrontAntiSpamReport.rows[i].valueUrl)
                         .appendTo(row);
                 }
             }
         }
 
         // Microsoft
-        if (viewModel.antiSpamReport.antiSpamRows.length > 0) {
+        if (viewModel.antiSpamReport.rows.length > 0) {
             $("<div/>")
                 .addClass("ms-font-m")
                 .text("Microsoft Antispam Report")
@@ -279,14 +279,14 @@ import { poster } from "./poster";
                 .appendTo(antispamList);
             tbody = $("<tbody/>")
                 .appendTo(table);
-            for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
-                if (viewModel.antiSpamReport.antiSpamRows[i].value) {
+            for (i = 0; i < viewModel.antiSpamReport.rows.length; i++) {
+                if (viewModel.antiSpamReport.rows[i].value) {
                     row = $("<tr/>").appendTo(tbody);
                     $("<td/>")
-                        .text(viewModel.antiSpamReport.antiSpamRows[i].label)
+                        .text(viewModel.antiSpamReport.rows[i].label)
                         .appendTo(row);
                     $("<td/>")
-                        .html(viewModel.antiSpamReport.antiSpamRows[i].valueUrl)
+                        .html(viewModel.antiSpamReport.rows[i].valueUrl)
                         .appendTo(row);
                 }
             }

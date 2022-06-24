@@ -19,7 +19,7 @@ export class row {
 export class AntiSpamReport {
     private _source: string = "";
     private _unparsed: string = "";
-    private _antiSpamRows: row[] = [
+    private antiSpamRows: row[] = [
         new row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
         new row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
         new row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
@@ -84,16 +84,16 @@ export class AntiSpamReport {
         this.setRowValue(rows, "unparsed", this._unparsed);
     }
 
-    public add(report: string): void { this.parse(report, this._antiSpamRows); }
-    public exists(): boolean { return this.existsInternal(this._antiSpamRows); }
+    public add(report: string): void { this.parse(report, this.rows); }
+    public exists(): boolean { return this.existsInternal(this.rows); }
 
     public get source(): string { return this._source; };
     public get unparsed(): string { return this._unparsed; };
-    public get antiSpamRows(): row[] { return this._antiSpamRows; };
+    public get rows(): row[] { return this.antiSpamRows; };
     public toString(): string {
         if (!this.exists()) return "";
         const ret = ["AntiSpamReport"];
-        this._antiSpamRows.forEach(function (row) {
+        this.rows.forEach(function (row) {
             if (row.value) { ret.push(row.toString()); }
         });
         return ret.join("\n");
