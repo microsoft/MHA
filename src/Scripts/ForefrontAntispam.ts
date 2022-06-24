@@ -1,10 +1,10 @@
 import { mhaStrings } from "./Strings";
 import { AntiSpamReport, row } from "./Antispam";
 
-export const ForefrontAntiSpamReport = (function () {
+export class ForefrontAntiSpamReport {
     // cheap inheritance
-    const antiSpamReport = AntiSpamReport();
-    const forefrontAntiSpamRows: row[] = [
+    private antiSpamReport = new AntiSpamReport();
+    private _forefrontAntiSpamRows: row[] = [
         new row("ARC", mhaStrings.mhaArc, "X-Forefront-Antispam-Report"),
         new row("CTRY", mhaStrings.mhaCountryRegion, "X-Forefront-Antispam-Report"),
         new row("LANG", mhaStrings.mhaLang, "X-Forefront-Antispam-Report"),
@@ -24,22 +24,18 @@ export const ForefrontAntiSpamReport = (function () {
         new row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
     ];
 
-    function add(report: string): void { antiSpamReport.parse(report, forefrontAntiSpamRows); }
-    function exists(): boolean { return antiSpamReport.existsInternal(forefrontAntiSpamRows); }
+    public add(report: string): void { this.antiSpamReport.parse(report, this._forefrontAntiSpamRows); }
+    public exists(): boolean { return this.antiSpamReport.existsInternal(this._forefrontAntiSpamRows); }
 
-    return {
-        add: add,
-        exists: exists,
-        get source(): string { return antiSpamReport.source; },
-        get unparsed(): string { return antiSpamReport.unparsed; },
-        get forefrontAntiSpamRows(): row[] { return forefrontAntiSpamRows; },
-        toString: function (): string {
-            if (!exists()) return "";
-            const ret = ["ForefrontAntiSpamReport"];
-            forefrontAntiSpamRows.forEach(function (row) {
-                if (row.value) { ret.push(row.toString()); }
-            });
-            return ret.join("\n");
-        }
-    };
-});
+    public get source(): string { return this.antiSpamReport.source; };
+    public get unparsed(): string { return this.antiSpamReport.unparsed; };
+    public get forefrontAntiSpamRows(): row[] { return this._forefrontAntiSpamRows; };
+    public toString(): string {
+        if (!this.exists()) return "";
+        const ret = ["ForefrontAntiSpamReport"];
+        this._forefrontAntiSpamRows.forEach(function (row) {
+            if (row.value) { ret.push(row.toString()); }
+        });
+        return ret.join("\n");
+    }
+}

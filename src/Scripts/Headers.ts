@@ -19,8 +19,8 @@ export class HeaderModel {
     public originalHeaders;
     public summary;
     public receivedHeaders;
-    public forefrontAntiSpamReport;
-    public antiSpamReport;
+    public forefrontAntiSpamReport: ForefrontAntiSpamReport;
+    public antiSpamReport: AntiSpamReport;
     public otherHeaders;
     private _hasData: boolean;
     private _status: string;
@@ -31,8 +31,8 @@ export class HeaderModel {
     constructor(headers?: string) {
         this.summary = Summary();
         this.receivedHeaders = Received();
-        this.forefrontAntiSpamReport = ForefrontAntiSpamReport();
-        this.antiSpamReport = AntiSpamReport();
+        this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
+        this.antiSpamReport = new AntiSpamReport();
         this.otherHeaders = Other();
         this.originalHeaders = "";
         this._status = "";

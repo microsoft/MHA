@@ -16,17 +16,17 @@ export class row {
     toString(): string { return this.label + ": " + this.value; };
 };
 
-export const AntiSpamReport = (function () {
-    let source: string = "";
-    let unparsed: string = "";
-    const antiSpamRows: row[] = [
+export class AntiSpamReport {
+    private _source: string = "";
+    private _unparsed: string = "";
+    private _antiSpamRows: row[] = [
         new row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
         new row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
         new row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
         new row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
     ];
 
-    function existsInternal(rows: row[]): boolean {
+    public existsInternal(rows: row[]): boolean {
         for (let i = 0; i < rows.length; i++) {
             if (rows[i].value) {
                 return true;
@@ -36,7 +36,7 @@ export const AntiSpamReport = (function () {
         return false;
     }
 
-    function setRowValue(rows: row[], key: string, value: string): boolean {
+    private setRowValue(rows: row[], key: string, value: string): boolean {
         for (let i = 0; i < rows.length; i++) {
             if (rows[i].header.toUpperCase() === key.toUpperCase()) {
                 rows[i].value = value;
@@ -49,8 +49,8 @@ export const AntiSpamReport = (function () {
     }
 
     // https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers
-    function parse(report: string, rows: row[]): void {
-        source = report;
+    public parse(report: string, rows: row[]): void {
+        this._source = report;
         if (!report) {
             return;
         }
@@ -68,40 +68,34 @@ export const AntiSpamReport = (function () {
         report = report.replace(/;+/g, ";");
 
         const lines = report.match(/(.*?):(.*?);/g);
-        unparsed = "";
+        this._unparsed = "";
         if (lines) {
             for (let iLine = 0; iLine < lines.length; iLine++) {
                 const line = lines[iLine].match(/(.*?):(.*?);/m);
                 if (line && line[1]) {
-                    if (!setRowValue(rows, line[1], line[2])) {
-                        unparsed += line[1] + ':' + line[2] + ';';
+                    if (!this.setRowValue(rows, line[1], line[2])) {
+                        this._unparsed += line[1] + ':' + line[2] + ';';
                     }
                 }
             }
         }
 
-        setRowValue(rows, "source", source);
-        setRowValue(rows, "unparsed", unparsed);
+        this.setRowValue(rows, "source", this._source);
+        this.setRowValue(rows, "unparsed", this._unparsed);
     }
 
-    function add(report: string): void { parse(report, antiSpamRows); }
-    function exists(): boolean { return existsInternal(antiSpamRows); }
+    public add(report: string): void { this.parse(report, this._antiSpamRows); }
+    public exists(): boolean { return this.existsInternal(this._antiSpamRows); }
 
-    return {
-        add: add,
-        exists: exists,
-        existsInternal: existsInternal,
-        parse: parse,
-        get source(): string { return source; },
-        get unparsed(): string { return unparsed; },
-        get antiSpamRows(): row[] { return antiSpamRows; },
-        toString: function (): string {
-            if (!exists()) return "";
-            const ret = ["AntiSpamReport"];
-            antiSpamRows.forEach(function (row) {
-                if (row.value) { ret.push(row.toString()); }
-            });
-            return ret.join("\n");
-        }
-    };
-});
+    public get source(): string { return this._source; };
+    public get unparsed(): string { return this._unparsed; };
+    public get antiSpamRows(): row[] { return this._antiSpamRows; };
+    public toString(): string {
+        if (!this.exists()) return "";
+        const ret = ["AntiSpamReport"];
+        this._antiSpamRows.forEach(function (row) {
+            if (row.value) { ret.push(row.toString()); }
+        });
+        return ret.join("\n");
+    }
+}
