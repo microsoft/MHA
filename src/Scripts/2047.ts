@@ -1,16 +1,16 @@
 ﻿import cptable from "codepage"
 
-export const Decoder = (function () {
+interface block {
+    charset: string;
+    type: string;
+    text: string;
+};
+
+export class Decoder {
     // http://tools.ietf.org/html/rfc2047
     // http://tools.ietf.org/html/rfc2231
 
-    interface block {
-        charset: string;
-        type: string;
-        text: string;
-    };
-
-    function getBlock(token: string): block {
+    private static getBlock(token: string): block {
         const matches = token.match(/=\?(.*?)\?(.)\?(.*?)\?=/m);
         if (matches) {
             return <block>{ charset: matches[1], type: matches[2].toUpperCase(), text: matches[3] };
@@ -19,7 +19,7 @@ export const Decoder = (function () {
         return <block>{ text: token, };
     }
 
-    function splitToBlocks(buffer: string): block[] {
+    private static splitToBlocks(buffer: string): block[] {
         const unparsedblocks: block[] = [];
         //split string into blocks
         while (buffer.length) {
@@ -30,7 +30,7 @@ export const Decoder = (function () {
                         unparsedblocks.push(<block>{ text: matches[1] });
                     }
 
-                    unparsedblocks.push(getBlock(matches[2]));
+                    unparsedblocks.push(Decoder.getBlock(matches[2]));
                     buffer = matches[3];
                 } else if (buffer) {
                     // Once we're out of matches, we've parsed the whole string.
@@ -50,14 +50,14 @@ export const Decoder = (function () {
         return unparsedblocks;
     }
 
-    function fixCharSet(charSet: string): string {
+    private static fixCharSet(charSet: string): string {
         switch (charSet.toUpperCase()) {
             case "UTF 8": return "UTF-8";
             default: return charSet;
         }
     }
 
-    function getCodePage(charSet: string): number {
+    private static getCodePage(charSet: string): number {
         // https://msdn.microsoft.com/en-us/library/windows/desktop/dd317756(v=vs.85).aspx
         switch (charSet.toUpperCase()) {
             case "UTF-8": return 65001;
@@ -71,20 +71,20 @@ export const Decoder = (function () {
         }
     }
 
-    function decodeHexCodepage(charSet: string, hexArray: number[]): string {
+    public static decodeHexCodepage(charSet: string, hexArray: number[]): string {
         if (window.TextDecoder) {
-            return (new TextDecoder(fixCharSet(charSet))).decode(new Uint8Array(hexArray).buffer);
+            return (new TextDecoder(Decoder.fixCharSet(charSet))).decode(new Uint8Array(hexArray).buffer);
         }
         else if (cptable) {
-            return cptable.utils.decode(getCodePage(charSet), hexArray);
+            return cptable.utils.decode(Decoder.getCodePage(charSet), hexArray);
         }
 
         throw new Error("decodeHexCodepage: no decoder found");
     }
 
     // Javascript auto converted from C# implementation + improvements.
-    const $F = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    function decodeBase64(charSet: string, input: string): string {
+    private static _F: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    public static decodeBase64(charSet: string, input: string): string {
         if (!input) {
             return input;
         }
@@ -95,10 +95,10 @@ export const Decoder = (function () {
             let $v$1, $v$2, $v$3, $v$4, $v$5, $v$6, $v$7;
             let $v$8 = 0;
             while ($v$8 < input.length) {
-                $v$4 = $F.indexOf(input.charAt($v$8++));
-                $v$5 = $F.indexOf(input.charAt($v$8++));
-                $v$6 = $F.indexOf(input.charAt($v$8++));
-                $v$7 = $F.indexOf(input.charAt($v$8++));
+                $v$4 = Decoder._F.indexOf(input.charAt($v$8++));
+                $v$5 = Decoder._F.indexOf(input.charAt($v$8++));
+                $v$6 = Decoder._F.indexOf(input.charAt($v$8++));
+                $v$7 = Decoder._F.indexOf(input.charAt($v$8++));
                 $v$1 = $v$4 << 2 | $v$5 >> 4;
                 $v$2 = ($v$5 & 15) << 4 | $v$6 >> 2;
                 $v$3 = ($v$6 & 3) << 6 | $v$7;
@@ -113,7 +113,7 @@ export const Decoder = (function () {
             }
 
             try {
-                return decodeHexCodepage(charSet, $v$0);
+                return Decoder.decodeHexCodepage(charSet, $v$0);
             }
             catch (e) { /**/ }
         }
@@ -122,7 +122,7 @@ export const Decoder = (function () {
         return "=?" + charSet + "?B?" + input + "?=";
     }
 
-    function decodeHex(charSet: string, buffer: string): string {
+    public static decodeHex(charSet: string, buffer: string): string {
         const result: string[] = [];
 
         while (buffer.length) {
@@ -137,7 +137,7 @@ export const Decoder = (function () {
                     hexArray.push(parseInt("0x" + hexes[iHex], 16));
                 }
 
-                result.push(matches[1], decodeHexCodepage(charSet, hexArray));
+                result.push(matches[1], Decoder.decodeHexCodepage(charSet, hexArray));
                 buffer = matches[3];
             } else {
                 // Once we're out of matches, we've decoded the whole string.
@@ -150,7 +150,7 @@ export const Decoder = (function () {
         return result.join("");
     }
 
-    function decodeQuoted(charSet: string, buffer: string): string {
+    public static decodeQuoted(charSet: string, buffer: string): string {
         if (!buffer) {
             return buffer;
         }
@@ -158,7 +158,7 @@ export const Decoder = (function () {
         try {
             // 2047 quoted allows _ as a replacement for space. Fix that first.
             const uriBuffer = buffer.replace(/_/g, " ");
-            return decodeHex(charSet, uriBuffer);
+            return Decoder.decodeHex(charSet, uriBuffer);
         } catch (e) {
             // Since we failed to decode, put it all back
             return "=?" + charSet + "?Q?" + buffer + "?=";
@@ -175,13 +175,13 @@ export const Decoder = (function () {
     ////    (=?iso-8859-8?b?7eXs+SDv4SDp7Oj08A==?=)
     ////From: =?US-ASCII*EN?Q?Keith_Moore?= <moore@cs.utk.edu>
 
-    function clean2047Encoding(buffer: string): string {
+    public static clean2047Encoding(buffer: string): string {
         // We're decoding =?...?= tokens here.
         // Per RFC, white space between tokens is to be ignored.
         // Remove that white space.
         buffer = buffer.replace(/\?=\s*=\?/g, "?==?");
 
-        const unparsedblocks = splitToBlocks(buffer);
+        const unparsedblocks = Decoder.splitToBlocks(buffer);
 
         const collapsedBlocks: block[] = [];
         for (let i = 0; i < unparsedblocks.length; i++) {
@@ -201,10 +201,10 @@ export const Decoder = (function () {
         const result: string[] = [];
         collapsedBlocks.forEach(function (block) {
             if (block.type === "B") {
-                result.push(decodeBase64(block.charset, block.text));
+                result.push(Decoder.decodeBase64(block.charset, block.text));
             }
             else if (block.type === "Q") {
-                result.push(decodeQuoted(block.charset, block.text));
+                result.push(Decoder.decodeQuoted(block.charset, block.text));
             }
             else {
                 result.push(block.text);
@@ -213,12 +213,4 @@ export const Decoder = (function () {
 
         return result.join("");
     }
-
-    return {
-        clean2047Encoding: clean2047Encoding,
-        decodeBase64: decodeBase64,
-        decodeHex: decodeHex,
-        decodeHexCodepage: decodeHexCodepage,
-        decodeQuoted: decodeQuoted
-    };
-})();
+}
