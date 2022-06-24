@@ -97,19 +97,19 @@ import { poster } from "./poster";
         let headerVal;
         let pre;
         let i;
-        for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
-            if (viewModel.summary.summaryRows[i].value) {
+        for (i = 0; i < viewModel.summary.rows.length; i++) {
+            if (viewModel.summary.rows[i].value) {
                 $("<div/>")
                     .addClass("ms-font-s")
                     .addClass("ms-fontWeight-semibold")
-                    .text(viewModel.summary.summaryRows[i].label)
+                    .text(viewModel.summary.rows[i].label)
                     .appendTo(summaryList);
                 headerVal = $("<div/>")
                     .addClass("code-box")
                     .appendTo(summaryList);
                 pre = $("<pre/>").appendTo(headerVal);
                 $("<code/>")
-                    .text(viewModel.summary.summaryRows[i].value)
+                    .text(viewModel.summary.rows[i].value)
                     .appendTo(pre);
             }
         }

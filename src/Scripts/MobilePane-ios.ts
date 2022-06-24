@@ -95,11 +95,11 @@ import { poster } from "./poster";
         let pre;
         let i;
 
-        for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
-            if (viewModel.summary.summaryRows[i].value) {
+        for (i = 0; i < viewModel.summary.rows.length; i++) {
+            if (viewModel.summary.rows[i].value) {
                 $("<div/>")
                     .addClass("content-block-title")
-                    .text(viewModel.summary.summaryRows[i].label)
+                    .text(viewModel.summary.rows[i].label)
                     .appendTo(summaryContent);
 
                 contentBlock = $("<div/>")
@@ -113,7 +113,7 @@ import { poster } from "./poster";
                 pre = $("<pre/>").appendTo(headerVal);
 
                 $("<code/>")
-                    .text(viewModel.summary.summaryRows[i].value)
+                    .text(viewModel.summary.rows[i].value)
                     .appendTo(pre);
             }
         }

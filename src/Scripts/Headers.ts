@@ -17,7 +17,7 @@ class header {
 
 export class HeaderModel {
     public originalHeaders;
-    public summary;
+    public summary: Summary;
     public receivedHeaders;
     public forefrontAntiSpamReport: ForefrontAntiSpamReport;
     public antiSpamReport: AntiSpamReport;
@@ -29,7 +29,7 @@ export class HeaderModel {
     public set status(value) { this._status = value; };
 
     constructor(headers?: string) {
-        this.summary = Summary();
+        this.summary = new Summary();
         this.receivedHeaders = Received();
         this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
         this.antiSpamReport = new AntiSpamReport();

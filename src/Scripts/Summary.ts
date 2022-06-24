@@ -1,54 +1,59 @@
 import { mhaStrings } from "./Strings";
 import { mhaDates, date } from "./dates";
 
-export const Summary = (function () {
-    class SummaryRow {
-        constructor(header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {
-            this._value = "";
-            this.header = header;
-            this.label = label;
-            this.url = mhaStrings.mapHeaderToURL(header, label);
-            this.onSet = onSet;
-            this.onGet = onGet;
-            this.onGetUrl = onGetUrl;
-        };
-
-        private _value: string;
-        header: string;
-        label: string;
-        url: string;
-        onSet?: Function;
-        onGet?: Function;
-        onGetUrl?: Function;
-
-        set value(value: string) { this._value = this.onSet ? this.onSet(value) : value; };
-        get value(): string { return this.onGet ? this.onGet(this._value) : this._value; };
-        get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this._value) : ""; };
-        toString(): string { return this.label + ": " + this.value; };
+class SummaryRow {
+    constructor(summary: Summary, header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {
+        this._value = "";
+        this.summary = summary;
+        this.header = header;
+        this.label = label;
+        this.url = mhaStrings.mapHeaderToURL(header, label);
+        this.onSet = onSet;
+        this.onGet = onGet;
+        this.onGetUrl = onGetUrl;
     };
 
-    let totalTime = "";
-    function creationTime(date: string): string {
-        if (!date && !totalTime) {
+    private _value: string;
+    summary: Summary;
+    header: string;
+    label: string;
+    url: string;
+    onSet?: Function;
+    onGet?: Function;
+    onGetUrl?: Function;
+
+    set value(value: string) { this._value = this.onSet ? this.onSet(value) : value; };
+    get value(): string { return this.onGet ? this.onGet(this.summary, this._value) : this._value; };
+    get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this._value) : ""; };
+    toString(): string { return this.label + ": " + this.value; };
+};
+
+export class Summary {
+    private _totalTime: string = "";
+
+    public creationTime(date: string): string {
+        if (!date && !this.totalTime) {
             return null;
         }
 
         const time = [date || ""];
 
-        if (totalTime) {
-            time.push(" ", mhaStrings.mhaDeliveredStart, " ", totalTime, mhaStrings.mhaDeliveredEnd);
+        if (this.totalTime) {
+            time.push(" ", mhaStrings.mhaDeliveredStart, " ", this.totalTime, mhaStrings.mhaDeliveredEnd);
         }
 
         return time.join("");
     }
 
-    const dateRow = new SummaryRow(
+    private dateRow = new SummaryRow(
+        this,
         "Date",
         mhaStrings.mhaCreationTime,
         function (value: string): date { return mhaDates.parseDate(value); },
-        function (value: string): string { return creationTime(value); });
+        function (summary: Summary, value: string): string { return summary.creationTime(value); });
 
-    const archivedRow = new SummaryRow(
+    private archivedRow = new SummaryRow(
+        this,
         "Archived-At",
         mhaStrings.mhaArchivedAt,
         null,
@@ -56,20 +61,20 @@ export const Summary = (function () {
         function (value: string): string { return mhaStrings.mapValueToURL(value); }
     );
 
-    const summaryRows: SummaryRow[] = [
-        new SummaryRow("Subject", mhaStrings.mhaSubject),
-        new SummaryRow("Message-ID", mhaStrings.mhaMessageId),
-        archivedRow,
-        dateRow,
-        new SummaryRow("From", mhaStrings.mhaFrom),
-        new SummaryRow("Reply-To", mhaStrings.mhaReplyTo),
-        new SummaryRow("To", mhaStrings.mhaTo),
-        new SummaryRow("CC", mhaStrings.mhaCc)
+    private summaryRows: SummaryRow[] = [
+        new SummaryRow(this, "Subject", mhaStrings.mhaSubject),
+        new SummaryRow(this, "Message-ID", mhaStrings.mhaMessageId),
+        this.archivedRow,
+        this.dateRow,
+        new SummaryRow(this, "From", mhaStrings.mhaFrom),
+        new SummaryRow(this, "Reply-To", mhaStrings.mhaReplyTo),
+        new SummaryRow(this, "To", mhaStrings.mhaTo),
+        new SummaryRow(this, "CC", mhaStrings.mhaCc)
     ];
 
-    function exists(): boolean {
-        for (let i = 0; i < summaryRows.length; i++) {
-            if (summaryRows[i].value) {
+    public exists(): boolean {
+        for (let i = 0; i < this.rows.length; i++) {
+            if (this.rows[i].value) {
                 return true;
             }
         }
@@ -77,14 +82,14 @@ export const Summary = (function () {
         return false;
     }
 
-    function add(header) {
+    public add(header) {
         if (!header) {
             return false;
         }
 
-        for (let i = 0; i < summaryRows.length; i++) {
-            if (summaryRows[i].header.toUpperCase() === header.header.toUpperCase()) {
-                summaryRows[i].value = header.value;
+        for (let i = 0; i < this.rows.length; i++) {
+            if (this.rows[i].header.toUpperCase() === header.header.toUpperCase()) {
+                this.rows[i].value = header.value;
                 return true;
             }
         }
@@ -92,19 +97,15 @@ export const Summary = (function () {
         return false;
     }
 
-    return {
-        add: add,
-        exists: exists,
-        get summaryRows(): SummaryRow[] { return summaryRows; },
-        get totalTime(): string { return totalTime; },
-        set totalTime(value: string) { totalTime = value; },
-        toString: function (): string {
-            if (!exists()) return "";
-            const ret = ["Summary"];
-            summaryRows.forEach(function (row) {
-                if (row.value) { ret.push(row.toString()); }
-            });
-            return ret.join("\n");
-        }
-    };
-});
+    public get rows(): SummaryRow[] { return this.summaryRows; };
+    public get totalTime(): string { return this._totalTime; };
+    public set totalTime(value: string) { this._totalTime = value; };
+    public toString(): string {
+        if (!this.exists()) return "";
+        const ret = ["Summary"];
+        this.rows.forEach(function (row) {
+            if (row.value) { ret.push(row.toString()); }
+        });
+        return ret.join("\n");
+    }
+}

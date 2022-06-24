@@ -373,7 +373,7 @@ QUnit.test("parseHeader Tests", function (assert) {
         " =?us-ascii?Q?yRknnr9cw9mFk72T6z2Ul2LZYL/Ebw=3D=3D?=\n";
 
     var goodCaseHeaderModel = new HeaderModel(goodCaseHeaders);
-    assert.arrayEqual(goodCaseHeaderModel.summary.summaryRows, summaryRows, "summaryRows-good-casing");
+    assert.arrayEqual(goodCaseHeaderModel.summary.rows, summaryRows, "summaryRows-good-casing");
     assert.arrayEqual(goodCaseHeaderModel.receivedHeaders.receivedRows, receivedRows, "receivedRows-good-casing");
     assert.arrayEqual(goodCaseHeaderModel.antiSpamReport.rows, antiSpamRows, "antiSpamRows-good-casing");
     assert.arrayEqual(goodCaseHeaderModel.forefrontAntiSpamReport.rows, forefrontAntiSpamRows, "forefrontAntiSpamRows-good-casing");
@@ -505,7 +505,7 @@ QUnit.test("parseHeader Tests", function (assert) {
         " =?us-ascii?Q?yRknnr9cw9mFk72T6z2Ul2LZYL/Ebw=3D=3D?=\n";
 
     var badCaseHeaderModel = new HeaderModel(badCaseHeaders);
-    assert.arrayEqual(badCaseHeaderModel.summary.summaryRows, summaryRows, "summaryRows-bad-casing");
+    assert.arrayEqual(badCaseHeaderModel.summary.rows, summaryRows, "summaryRows-bad-casing");
     assert.arrayEqual(badCaseHeaderModel.receivedHeaders.receivedRows, receivedRows, "receivedRows-bad-casing");
     assert.arrayEqual(badCaseHeaderModel.antiSpamReport.rows, antiSpamRows, "antiSpamRows-bad-casing");
     assert.arrayEqual(badCaseHeaderModel.forefrontAntiSpamReport.rows, forefrontAntiSpamRows, "forefrontAntiSpamRows-bad-casing");
