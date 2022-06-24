@@ -1,25 +1,14 @@
 ﻿import * as QUnit from "qunit";
 
 QUnit.assert.receivedEqual = function (actual, expected, message) {
-    var field;
-    for (field in expected) {
-        if (field = "date") continue;
-        if (field = "_value") continue;
-        if (expected[field] === actual[field]) continue;
-        if (actual[field] && expected[field] === actual[field].value) continue;
-        this.pushResult({
-            result: false,
-            actual: field + " = " + actual[field],
-            expected: field + " = " + expected[field],
-            message: message
-        });
-    }
-
-    for (field in actual) {
-        if (field = "date") continue;
-        if (field = "_value") continue;
-        // If a field in value is non-null/empty there must also be a field in expected
-        if (actual[field].toString() && expected[field] === undefined) {
+    try {
+        var field;
+        for (field in expected) {
+            if (field === "date") continue;
+            if (field === "_value") continue;
+            if (expected[field] === actual[field]) continue;
+            if (actual[field] && expected[field] === actual[field].value) continue;
+            if (actual[field] && expected[field] === actual[field].toString()) continue;
             this.pushResult({
                 result: false,
                 actual: field + " = " + actual[field],
@@ -27,6 +16,25 @@ QUnit.assert.receivedEqual = function (actual, expected, message) {
                 message: message
             });
         }
+
+        for (field in actual) {
+            if (field === "date") continue;
+            if (field === "onSet") continue;
+            if (field === "onGetUrl") continue;
+            if (field === "_value") continue;
+            // If a field in value is non-null/empty there must also be a field in expected
+            if (actual[field] && actual[field].toString() && expected[field] === undefined) {
+                this.pushResult({
+                    result: false,
+                    actual: field + " = " + actual[field],
+                    expected: field + " = " + expected[field],
+                    message: message
+                });
+            }
+        }
+    }
+    catch (e: any) {
+        console.log(e);
     }
 
     this.pushResult({

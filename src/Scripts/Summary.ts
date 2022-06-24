@@ -2,28 +2,24 @@ import { mhaStrings } from "./Strings";
 import { mhaDates, date } from "./dates";
 
 class SummaryRow {
-    constructor(summary: Summary, header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {
+    constructor(header: string, label: string, onSet?: Function, onGetUrl?: Function) {
         this._value = "";
-        this.summary = summary; // TODO: eliminate this
         this.header = header;
         this.label = label;
         this.url = mhaStrings.mapHeaderToURL(header, label);
         this.onSet = onSet;
-        this.onGet = onGet;
         this.onGetUrl = onGetUrl;
     };
 
     private _value: string;
-    summary: Summary;
     header: string;
     label: string;
     url: string;
     onSet?: Function;
-    onGet?: Function;
     onGetUrl?: Function;
 
     set value(value: string) { this._value = this.onSet ? this.onSet(value) : value; };
-    get value(): string { return this.onGet ? this.onGet(this.summary, this._value) : this._value; };
+    get value(): string { return this._value; };
     get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this._value) : ""; };
     toString(): string { return this.label + ": " + this.value; };
 };
@@ -46,30 +42,27 @@ export class Summary {
     }
 
     private dateRow = new SummaryRow(
-        this,
         "Date",
         mhaStrings.mhaCreationTime,
-        function (value: string): date { return mhaDates.parseDate(value); },
-        function (summary: Summary, value: string): string { return summary.creationTime(value); });
+        function (value: string): date { return mhaDates.parseDate(value); }
+    );
 
     private archivedRow = new SummaryRow(
-        this,
         "Archived-At",
         mhaStrings.mhaArchivedAt,
-        null,
         null,
         function (value: string): string { return mhaStrings.mapValueToURL(value); }
     );
 
     private summaryRows: SummaryRow[] = [
-        new SummaryRow(this, "Subject", mhaStrings.mhaSubject),
-        new SummaryRow(this, "Message-ID", mhaStrings.mhaMessageId),
+        new SummaryRow("Subject", mhaStrings.mhaSubject),
+        new SummaryRow("Message-ID", mhaStrings.mhaMessageId),
         this.archivedRow,
         this.dateRow,
-        new SummaryRow(this, "From", mhaStrings.mhaFrom),
-        new SummaryRow(this, "Reply-To", mhaStrings.mhaReplyTo),
-        new SummaryRow(this, "To", mhaStrings.mhaTo),
-        new SummaryRow(this, "CC", mhaStrings.mhaCc)
+        new SummaryRow("From", mhaStrings.mhaFrom),
+        new SummaryRow("Reply-To", mhaStrings.mhaReplyTo),
+        new SummaryRow("To", mhaStrings.mhaTo),
+        new SummaryRow("CC", mhaStrings.mhaCc)
     ];
 
     public exists(): boolean {
@@ -99,7 +92,12 @@ export class Summary {
 
     public get rows(): SummaryRow[] { return this.summaryRows; };
     public get totalTime(): string { return this._totalTime; };
-    public set totalTime(value: string) { this._totalTime = value; };
+    public set totalTime(value: string) {
+        // TODO: If this is called more than once, that would be bad
+        this._totalTime = value;
+        this.dateRow.value = this.creationTime(this.dateRow.value);
+    };
+
     public toString(): string {
         if (!this.exists()) return "";
         const ret = ["Summary"];
