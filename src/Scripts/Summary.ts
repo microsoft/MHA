@@ -4,7 +4,7 @@ import { mhaDates, date } from "./dates";
 class SummaryRow {
     constructor(summary: Summary, header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {
         this._value = "";
-        this.summary = summary;
+        this.summary = summary; // TODO: eliminate this
         this.header = header;
         this.label = label;
         this.url = mhaStrings.mapHeaderToURL(header, label);

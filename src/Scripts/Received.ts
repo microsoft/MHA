@@ -1,6 +1,17 @@
 ﻿import { mhaStrings } from "./Strings";
 import { mhaDates, date } from "./dates";
 
+
+class ReceivedField {
+    constructor(label: string, value?: any) {
+        this.label = label;
+        this.value = value !== undefined ? value : "";
+    }
+    label: string;
+    value: string;
+    toString(): string { return this.value; }
+};
+
 export class Received {
     private _receivedRows: any[] = [];
     private _sortColumn: string = "hop";
@@ -11,29 +22,21 @@ export class Received {
     // This algorithm should work regardless of the order of the headers, given:
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
-    public parseHeader = function (receivedHeader) {
-        const ReceivedField = function (_label: string, _value?) {
-            return {
-                label: _label,
-                value: _value !== undefined ? _value : "",
-                toString: function () { return this.value; }
-            };
-        };
-
-        const receivedFields = {};
-        receivedFields["sourceHeader"] = ReceivedField("", receivedHeader);
-        receivedFields["hop"] = ReceivedField(mhaStrings.mhaReceivedHop);
-        receivedFields["from"] = ReceivedField(mhaStrings.mhaReceivedFrom);
-        receivedFields["by"] = ReceivedField(mhaStrings.mhaReceivedBy);
-        receivedFields["with"] = ReceivedField(mhaStrings.mhaReceivedWith);
-        receivedFields["id"] = ReceivedField(mhaStrings.mhaReceivedId);
-        receivedFields["for"] = ReceivedField(mhaStrings.mhaReceivedFor);
-        receivedFields["via"] = ReceivedField(mhaStrings.mhaReceivedVia);
-        receivedFields["date"] = ReceivedField(mhaStrings.mhaReceivedDate);
-        receivedFields["delay"] = ReceivedField(mhaStrings.mhaReceivedDelay);
-        receivedFields["percent"] = ReceivedField(mhaStrings.mhaReceivedPercent, 0);
-        receivedFields["delaySort"] = ReceivedField("", -1);
-        receivedFields["dateNum"] = ReceivedField("");
+    public parseHeader(receivedHeader: string): ReceivedField[] {
+        var receivedFields: any[] = [];
+        receivedFields["sourceHeader"] = new ReceivedField("", receivedHeader);
+        receivedFields["hop"] = new ReceivedField(mhaStrings.mhaReceivedHop);
+        receivedFields["from"] = new ReceivedField(mhaStrings.mhaReceivedFrom);
+        receivedFields["by"] = new ReceivedField(mhaStrings.mhaReceivedBy);
+        receivedFields["with"] = new ReceivedField(mhaStrings.mhaReceivedWith);
+        receivedFields["id"] = new ReceivedField(mhaStrings.mhaReceivedId);
+        receivedFields["for"] = new ReceivedField(mhaStrings.mhaReceivedFor);
+        receivedFields["via"] = new ReceivedField(mhaStrings.mhaReceivedVia);
+        receivedFields["date"] = new ReceivedField(mhaStrings.mhaReceivedDate);
+        receivedFields["delay"] = new ReceivedField(mhaStrings.mhaReceivedDelay);
+        receivedFields["percent"] = new ReceivedField(mhaStrings.mhaReceivedPercent, 0);
+        receivedFields["delaySort"] = new ReceivedField("", -1);
+        receivedFields["dateNum"] = new ReceivedField("");
         receivedFields.toString = function () {
             const str = [];
             for (const fieldName in receivedFields) {
