@@ -7,11 +7,13 @@ export class date {
     toString: () => string;
 };
 
-export const mhaDates = (function () {
-    dayjs.extend(localizedFormat);
+export class mhaDates {
+    static {
+        dayjs.extend(localizedFormat);
+    }
 
     // parse date using dayjs, with fallback to browser based parsing
-    function parseDate(date: string): date {
+    public static parseDate(date: string): date {
         // Cross browser dates - ugh!
         // http://dygraphs.com/date-formats.html
 
@@ -65,8 +67,4 @@ export const mhaDates = (function () {
             };
         }
     }
-
-    return {
-        parseDate: parseDate
-    };
-})();
+}
