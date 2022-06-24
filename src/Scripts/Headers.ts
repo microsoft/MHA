@@ -7,31 +7,33 @@ import { Summary } from "./Summary"
 import { poster } from "./poster"
 
 export const HeaderModel = (function (headers?: string) {
+    class header {
+        constructor(header: string, value: string) {
+            this.header = header;
+            this.value = value;
+        }
+        header: string;
+        value: string;
+    };
+
     const summary = Summary();
     const receivedHeaders = Received();
     const forefrontAntiSpamReport = ForefrontAntiSpamReport();
     const antiSpamReport = AntiSpamReport();
     const otherHeaders = Other();
-    let originalHeaders = "";
-    let status = "";
-    let hasData = false;
+    let originalHeaders: string = "";
+    let status: string = "";
+    let hasData: boolean = false;
 
-    const Header = function (_header, _value) {
-        return {
-            header: _header,
-            value: _value
-        };
-    };
-
-    function GetHeaderList(headers) {
+    function GetHeaderList(headers: string): header[] {
         // First, break up out input by lines.
-        const lines = headers.split(/[\n\r]+/);
+        const lines: string[] = headers.split(/[\n\r]+/);
 
-        const headerList = [];
-        let iNextHeader = 0;
+        const headerList: header[] = [];
+        let iNextHeader: number = 0;
         // Unfold lines
-        for (let iLine = 0; iLine < lines.length; iLine++) {
-            let line = lines[iLine];
+        for (let iLine: number = 0; iLine < lines.length; iLine++) {
+            let line: string = lines[iLine];
             // Skip empty lines
             if (line === "") continue;
 
@@ -42,7 +44,7 @@ export const HeaderModel = (function (headers?: string) {
             // This expression will give us:
             // match[1] - everything before the first colon, assuming no spaces (header).
             // match[2] - everything after the first colon (value).
-            const match = line.match(/(^[\w-.]*?): ?(.*)/);
+            const match: RegExpMatchArray = line.match(/(^[\w-.]*?): ?(.*)/);
 
             // There's one false positive we might get: if the time in a Received header has been
             // folded to the next line, the line might start with something like "16:20:05 -0400".
@@ -50,7 +52,7 @@ export const HeaderModel = (function (headers?: string) {
             // never seen one in practice, so we check for and exclude 'headers' that
             // consist only of 1 or 2 digits.
             if (match && match[1] && !match[1].match(/^\d{1,2}$/)) {
-                headerList[iNextHeader] = Header(match[1], match[2]);
+                headerList[iNextHeader] = new header(match[1], match[2]);
                 iNextHeader++;
             } else {
                 if (iNextHeader > 0) {
@@ -58,12 +60,12 @@ export const HeaderModel = (function (headers?: string) {
                     // All folding whitespace should collapse to a single space
                     line = line.replace(/^[\s]+/, "");
                     if (!line) continue;
-                    const separator = headerList[iNextHeader - 1].value ? " " : "";
+                    const separator: string = headerList[iNextHeader - 1].value ? " " : "";
                     headerList[iNextHeader - 1].value += separator + line;
                 } else {
                     // If we didn't have a previous line, go ahead and use this line
                     if (line.match(/\S/g)) {
-                        headerList[iNextHeader] = Header("", line);
+                        headerList[iNextHeader] = new header("", line);
                         iNextHeader++;
                     }
                 }
@@ -71,28 +73,28 @@ export const HeaderModel = (function (headers?: string) {
         }
 
         // 2047 decode our headers now
-        for (let iHeader = 0; iHeader < headerList.length; iHeader++) {
+        for (let iHeader: number = 0; iHeader < headerList.length; iHeader++) {
             // Clean 2047 encoding
             // Strip nulls
             // Strip trailing carriage returns
-            const headerValue = Decoder.clean2047Encoding(headerList[iHeader].value).replace(/\0/g, "").replace(/[\n\r]+$/, "");
+            const headerValue: string = Decoder.clean2047Encoding(headerList[iHeader].value).replace(/\0/g, "").replace(/[\n\r]+$/, "");
             headerList[iHeader].value = headerValue;
         }
 
         return headerList;
     }
 
-    function parseHeaders(headers) {
+    function parseHeaders(headers: string): void {
         // Initialize originalHeaders in case we have parsing problems
         // Flatten CRLF to LF to avoid extra blank lines
         originalHeaders = headers.replace(/(?:\r\n|\r|\n)/g, '\n');
-        const headerList = GetHeaderList(headers);
+        const headerList: header[] = GetHeaderList(headers);
 
         if (headerList.length > 0) {
             hasData = true;
         }
 
-        for (let i = 0; i < headerList.length; i++) {
+        for (let i: number = 0; i < headerList.length; i++) {
             // Grab values for our summary pane
             if (summary.add(headerList[i])) continue;
 
@@ -116,13 +118,13 @@ export const HeaderModel = (function (headers?: string) {
         summary.totalTime = receivedHeaders.computeDeltas();
     }
 
-    function toString() {
-        const ret = [];
-        if (summary.exists()) ret.push(summary);
-        if (receivedHeaders.exists()) ret.push(receivedHeaders);
-        if (forefrontAntiSpamReport.exists()) ret.push(forefrontAntiSpamReport);
-        if (antiSpamReport.exists()) ret.push(antiSpamReport);
-        if (otherHeaders.exists()) ret.push(otherHeaders);
+    function toString(): string {
+        const ret: string[] = [];
+        if (summary.exists()) ret.push(summary.toString());
+        if (receivedHeaders.exists()) ret.push(receivedHeaders.toString());
+        if (forefrontAntiSpamReport.exists()) ret.push(forefrontAntiSpamReport.toString());
+        if (antiSpamReport.exists()) ret.push(antiSpamReport.toString());
+        if (otherHeaders.exists()) ret.push(otherHeaders.toString());
         return ret.join("\n\n");
     }
 
@@ -138,7 +140,7 @@ export const HeaderModel = (function (headers?: string) {
         forefrontAntiSpamReport: forefrontAntiSpamReport,
         antiSpamReport: antiSpamReport,
         otherHeaders: otherHeaders,
-        get hasData() { return hasData || status; },
+        get hasData(): boolean { return hasData || !!status; },
         GetHeaderList: GetHeaderList,
         get status() { return status; },
         set status(value) { status = value; },
