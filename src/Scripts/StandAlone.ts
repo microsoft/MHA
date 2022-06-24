@@ -36,7 +36,7 @@ import { Table } from "./Table"
         // Can't do anything without jQuery
         if (!$) return;
         Diagnostics.trackEvent({ name: "analyzeHeaders" });
-        viewModel = HeaderModel($("#inputHeaders").val() as string);
+        viewModel = new HeaderModel($("#inputHeaders").val() as string);
         Table.resetArrows();
 
         enableSpinner();
@@ -51,7 +51,7 @@ import { Table } from "./Table"
     function clear() {
         $("#inputHeaders").val("");
 
-        viewModel = HeaderModel();
+        viewModel = new HeaderModel();
         Table.resetArrows();
         Table.rebuildSections(viewModel);
     }
@@ -63,7 +63,7 @@ import { Table } from "./Table"
     if ($) {
         $(document).ready(function () {
             Diagnostics.set("API used", "standalone");
-            viewModel = HeaderModel();
+            viewModel = new HeaderModel();
             Table.initializeTableUI(viewModel);
             Table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, null);
 

@@ -6,26 +6,44 @@ import { Received } from "./Received"
 import { Summary } from "./Summary"
 import { poster } from "./poster"
 
-export const HeaderModel = (function (headers?: string) {
-    class header {
-        constructor(header: string, value: string) {
-            this.header = header;
-            this.value = value;
+class header {
+    constructor(header: string, value: string) {
+        this.header = header;
+        this.value = value;
+    }
+    header: string;
+    value: string;
+};
+
+export class HeaderModel {
+    public originalHeaders;
+    public summary;
+    public receivedHeaders;
+    public forefrontAntiSpamReport;
+    public antiSpamReport;
+    public otherHeaders;
+    private _hasData: boolean;
+    private _status: string;
+    public get hasData(): boolean { return this._hasData || !!this._status; };
+    public get status() { return this._status; };
+    public set status(value) { this._status = value; };
+
+    constructor(headers?: string) {
+        this.summary = Summary();
+        this.receivedHeaders = Received();
+        this.forefrontAntiSpamReport = ForefrontAntiSpamReport();
+        this.antiSpamReport = AntiSpamReport();
+        this.otherHeaders = Other();
+        this.originalHeaders = "";
+        this._status = "";
+        this._hasData = false;
+        if (headers) {
+            this.parseHeaders(headers);
+            poster.postMessageToParent("modelToString", toString());
         }
-        header: string;
-        value: string;
-    };
+    }
 
-    const summary = Summary();
-    const receivedHeaders = Received();
-    const forefrontAntiSpamReport = ForefrontAntiSpamReport();
-    const antiSpamReport = AntiSpamReport();
-    const otherHeaders = Other();
-    let originalHeaders: string = "";
-    let status: string = "";
-    let hasData: boolean = false;
-
-    function GetHeaderList(headers: string): header[] {
+    public GetHeaderList(headers: string): header[] {
         // First, break up out input by lines.
         const lines: string[] = headers.split(/[\n\r]+/);
 
@@ -84,66 +102,47 @@ export const HeaderModel = (function (headers?: string) {
         return headerList;
     }
 
-    function parseHeaders(headers: string): void {
+    public parseHeaders(headers: string): void {
         // Initialize originalHeaders in case we have parsing problems
         // Flatten CRLF to LF to avoid extra blank lines
-        originalHeaders = headers.replace(/(?:\r\n|\r|\n)/g, '\n');
-        const headerList: header[] = GetHeaderList(headers);
+        this.originalHeaders = headers.replace(/(?:\r\n|\r|\n)/g, '\n');
+        const headerList: header[] = this.GetHeaderList(headers);
 
         if (headerList.length > 0) {
-            hasData = true;
+            this._hasData = true;
         }
 
         for (let i: number = 0; i < headerList.length; i++) {
             // Grab values for our summary pane
-            if (summary.add(headerList[i])) continue;
+            if (this.summary.add(headerList[i])) continue;
 
             // Properties with special parsing
             switch (headerList[i].header.toUpperCase()) {
                 case "X-Forefront-Antispam-Report".toUpperCase():
-                    forefrontAntiSpamReport.add(headerList[i].value);
+                    this.forefrontAntiSpamReport.add(headerList[i].value);
                     continue;
                 case "X-Microsoft-Antispam".toUpperCase():
-                    antiSpamReport.add(headerList[i].value);
+                    this.antiSpamReport.add(headerList[i].value);
                     continue;
             }
 
             if (headerList[i].header.toUpperCase() === "Received".toUpperCase()) {
-                receivedHeaders.add(headerList[i].value);
+                this.receivedHeaders.add(headerList[i].value);
             } else if (headerList[i].header || headerList[i].value) {
-                otherHeaders.add(headerList[i]);
+                this.otherHeaders.add(headerList[i]);
             }
         }
 
-        summary.totalTime = receivedHeaders.computeDeltas();
+        this.summary.totalTime = this.receivedHeaders.computeDeltas();
     }
 
-    function toString(): string {
+    public toString(): string {
         const ret: string[] = [];
-        if (summary.exists()) ret.push(summary.toString());
-        if (receivedHeaders.exists()) ret.push(receivedHeaders.toString());
-        if (forefrontAntiSpamReport.exists()) ret.push(forefrontAntiSpamReport.toString());
-        if (antiSpamReport.exists()) ret.push(antiSpamReport.toString());
-        if (otherHeaders.exists()) ret.push(otherHeaders.toString());
+        if (this.summary.exists()) ret.push(this.summary.toString());
+        if (this.receivedHeaders.exists()) ret.push(this.receivedHeaders.toString());
+        if (this.forefrontAntiSpamReport.exists()) ret.push(this.forefrontAntiSpamReport.toString());
+        if (this.antiSpamReport.exists()) ret.push(this.antiSpamReport.toString());
+        if (this.otherHeaders.exists()) ret.push(this.otherHeaders.toString());
         return ret.join("\n\n");
     }
-
-    if (headers) {
-        parseHeaders(headers);
-        poster.postMessageToParent("modelToString", toString());
-    }
-
-    return {
-        originalHeaders: originalHeaders,
-        summary: summary,
-        receivedHeaders: receivedHeaders,
-        forefrontAntiSpamReport: forefrontAntiSpamReport,
-        antiSpamReport: antiSpamReport,
-        otherHeaders: otherHeaders,
-        get hasData(): boolean { return hasData || !!status; },
-        GetHeaderList: GetHeaderList,
-        get status() { return status; },
-        set status(value) { status = value; },
-        toString: toString
-    };
-});
+}

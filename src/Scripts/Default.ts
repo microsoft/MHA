@@ -38,7 +38,7 @@ import { poster } from "./poster";
     function renderItem(headers) {
         updateStatus(mhaStrings.mhaFoundHeaders);
         $("#originalHeaders").text(headers);
-        viewModel = HeaderModel(headers);
+        viewModel = new HeaderModel(headers);
         Table.rebuildTables(viewModel);
         updateStatus("");
         disableSpinner();
@@ -74,7 +74,7 @@ import { poster } from "./poster";
     // It ensures the DOM is ready before updating the span elements with values from the current message.
     $(document).ready(function (): void {
         try {
-            viewModel = HeaderModel();
+            viewModel = new HeaderModel();
             Table.initializeTableUI(viewModel);
             updateStatus(mhaStrings.mhaLoading);
             window.addEventListener("message", eventListener, false);

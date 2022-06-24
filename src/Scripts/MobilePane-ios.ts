@@ -86,7 +86,7 @@ import { poster } from "./poster";
     }
 
     function buildViews(headers) {
-        const viewModel = HeaderModel(headers);
+        const viewModel = new HeaderModel(headers);
 
         // Build summary view
         const summaryContent = $("#summary-content");
