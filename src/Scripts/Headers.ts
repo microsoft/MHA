@@ -18,7 +18,7 @@ class header {
 export class HeaderModel {
     public originalHeaders;
     public summary: Summary;
-    public receivedHeaders;
+    public receivedHeaders: Received;
     public forefrontAntiSpamReport: ForefrontAntiSpamReport;
     public antiSpamReport: AntiSpamReport;
     public otherHeaders;
@@ -30,7 +30,7 @@ export class HeaderModel {
 
     constructor(headers?: string) {
         this.summary = new Summary();
-        this.receivedHeaders = Received();
+        this.receivedHeaders = new Received();
         this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
         this.antiSpamReport = new AntiSpamReport();
         this.otherHeaders = Other();

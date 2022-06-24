@@ -1,16 +1,17 @@
 ﻿import { mhaStrings } from "./Strings";
 import { mhaDates, date } from "./dates";
 
-export const Received = (function () {
-    const receivedRows = [];
-    let sortColumn = "hop";
-    let sortOrder = 1;
+export class Received {
+    private _receivedRows: any[] = [];
+    private _sortColumn: string = "hop";
+    private _sortOrder: number = 1;
+    public tableName: string = "receivedHeaders";
 
     // Builds array of values for each header in receivedHeaderNames.
     // This algorithm should work regardless of the order of the headers, given:
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
-    const parseHeader = function (receivedHeader) {
+    public parseHeader = function (receivedHeader) {
         const ReceivedField = function (_label: string, _value?) {
             return {
                 label: _label,
@@ -146,30 +147,30 @@ export const Received = (function () {
         return receivedFields;
     };
 
-    function exists() { return receivedRows.length > 0; }
+    public exists() { return this.receivedRows.length > 0; }
 
-    function doSort(col) {
-        if (sortColumn === col) {
-            sortOrder *= -1;
+    public doSort(col) {
+        if (this.sortColumn === col) {
+            this._sortOrder *= -1;
         } else {
-            sortColumn = col;
-            sortOrder = 1;
+            this._sortColumn = col;
+            this._sortOrder = 1;
         }
 
-        if (sortColumn + "Sort" in receivedRows[0]) {
+        if (this.sortColumn + "Sort" in this.receivedRows[0]) {
             col = col + "Sort";
         }
 
-        receivedRows.sort((a, b) => {
+        this.receivedRows.sort((a, b) => {
             return this.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 
-    function add(receivedHeader) { receivedRows.push(parseHeader(receivedHeader)); }
+    public add(receivedHeader) { this.receivedRows.push(this.parseHeader(receivedHeader)); }
 
     // Computes min/sec from the diff of current and last.
     // Returns nothing if last or current is NaN.
-    function computeTime(current, last) {
+    public static computeTime(current, last) {
         const time = [];
 
         if (isNaN(current) || isNaN(last)) { return ""; }
@@ -216,9 +217,9 @@ export const Received = (function () {
         return time.join("");
     }
 
-    function computeDeltas() {
+    public computeDeltas() {
         // Process received headers in reverse order
-        receivedRows.reverse();
+        this.receivedRows.reverse();
 
         // Parse rows and compute values needed for the "Delay" column
         let iStartTime = 0;
@@ -226,7 +227,7 @@ export const Received = (function () {
         let iLastTime = NaN;
         let iDelta = 0; // This will be the sum of our positive deltas
 
-        receivedRows.forEach(function (row) {
+        this.receivedRows.forEach(function (row) {
             if (!isNaN(row.dateNum)) {
                 if (!isNaN(iLastTime) && iLastTime < row.dateNum) {
                     iDelta += row.dateNum - iLastTime;
@@ -240,9 +241,9 @@ export const Received = (function () {
 
         iLastTime = NaN;
 
-        receivedRows.forEach(function (row, index) {
+        this.receivedRows.forEach(function (row, index) {
             row.hop.value = index + 1;
-            row.delay.value = computeTime(row.dateNum, iLastTime);
+            row.delay.value = Received.computeTime(row.dateNum, iLastTime);
 
             if (!isNaN(row.dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
                 row.delaySort.value = row.dateNum.value - iLastTime;
@@ -259,29 +260,20 @@ export const Received = (function () {
         });
 
         // Total time is still last minus first, even if negative.
-        return iEndTime !== iStartTime ? computeTime(iEndTime, iStartTime) : "";
+        return iEndTime !== iStartTime ? Received.computeTime(iEndTime, iStartTime) : "";
     }
 
-    return {
-        tableName: "receivedHeaders",
-        add: add,
-        exists: exists,
-        doSort: doSort,
-        computeDeltas: computeDeltas,
-        get receivedRows() { return receivedRows; },
-        get sortColumn() { return sortColumn; },
-        get sortOrder() { return sortOrder; },
-        parseHeader: parseHeader, // For testing only
-        computeTime: computeTime, // For testing only
-        toString: function () {
-            if (!exists()) return "";
-            const ret = ["Received"];
-            const rows = [];
-            receivedRows.forEach(function (row) {
-                rows.push(row);
-            });
-            if (rows.length) ret.push(rows.join("\n\n"));
-            return ret.join("\n");
-        }
-    };
-});
+    public get receivedRows() { return this._receivedRows; };
+    public get sortColumn() { return this._sortColumn; };
+    public get sortOrder() { return this._sortOrder; };
+    public toString(): string {
+        if (!this.exists()) return "";
+        const ret = ["Received"];
+        const rows = [];
+        this.receivedRows.forEach(function (row) {
+            rows.push(row);
+        });
+        if (rows.length) ret.push(rows.join("\n\n"));
+        return ret.join("\n");
+    }
+}
