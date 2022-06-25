@@ -297,7 +297,7 @@ export class Received {
         if (!this.exists()) return "";
         const ret: string[] = ["Received"];
         const rows: ReceivedRow[] = [];
-        this.receivedRows.forEach(function (row) {
+        this.receivedRows.forEach(function (row: ReceivedRow): void {
             rows.push(row);
         });
         if (rows.length) ret.push(rows.join("\n\n"));
