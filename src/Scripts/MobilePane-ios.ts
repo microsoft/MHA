@@ -6,7 +6,7 @@ import * as $ from "jquery";
 import { Framework7 } from "./framework7";
 import * as dayjs from "dayjs";
 import * as utc from "dayjs/plugin/utc";
-import { mhaStrings } from "./Strings";
+import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./Headers"
 import { poster } from "./poster";
 

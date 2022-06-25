@@ -1,4 +1,5 @@
-import { mhaStrings } from "./Strings";
+import { mhaStrings } from "./mhaStrings";
+import { strings } from "./Strings";
 
 export class row {
     constructor(header: string, label: string, headerName: string) {
@@ -40,7 +41,7 @@ export class AntiSpamReport {
         for (let i = 0; i < rows.length; i++) {
             if (rows[i].header.toUpperCase() === key.toUpperCase()) {
                 rows[i].value = value;
-                rows[i].valueUrl = mhaStrings.mapHeaderToURL(rows[i].headerName, value);
+                rows[i].valueUrl = strings.mapHeaderToURL(rows[i].headerName, value);
                 return true;
             }
         }

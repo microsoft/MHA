@@ -1,4 +1,4 @@
-﻿import { mhaStrings } from "./Strings";
+﻿import { mhaStrings } from "./mhaStrings";
 import { mhaDates, date } from "./dates";
 
 class ReceivedField {

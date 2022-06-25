@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import { mhaStrings } from "./Strings";
+import { mhaStrings } from "./mhaStrings";
 
 export const Table = (function () {
     let viewModel = null;

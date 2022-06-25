@@ -1,4 +1,5 @@
-import { mhaStrings } from "./Strings";
+import { mhaStrings } from "./mhaStrings";
+import { strings } from "./Strings";
 import { mhaDates, date } from "./dates";
 
 class SummaryRow {
@@ -6,7 +7,7 @@ class SummaryRow {
         this._value = "";
         this.header = header;
         this.label = label;
-        this.url = mhaStrings.mapHeaderToURL(header, label);
+        this.url = strings.mapHeaderToURL(header, label);
         this.onSet = onSet;
         this.onGetUrl = onGetUrl;
     };
@@ -51,7 +52,7 @@ export class Summary {
         "Archived-At",
         mhaStrings.mhaArchivedAt,
         null,
-        function (value: string): string { return mhaStrings.mapValueToURL(value); }
+        function (value: string): string { return strings.mapValueToURL(value); }
     );
 
     private summaryRows: SummaryRow[] = [

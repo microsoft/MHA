@@ -4,7 +4,7 @@ import { Diagnostics } from "./diag"
 import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";
 import { poster } from "./poster"
-import { mhaStrings } from "./Strings";
+import { strings } from "./Strings";
 
 export const ParentFrame = (function () {
     class Choice {
@@ -325,7 +325,7 @@ export const ParentFrame = (function () {
 
         const copyButton = header.querySelector(".copy-button") as HTMLButtonElement;
         copyButton.onclick = function () {
-            mhaStrings.copyToClipboard(modelToString);
+            strings.copyToClipboard(modelToString);
         };
     }
 

@@ -1,7 +1,7 @@
 ﻿import "../Content/Office.css";
 import "../Content/App.css";
 import * as $ from "jquery";
-import { mhaStrings } from "./Strings";
+import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./Headers"
 import { Table } from "./Table";
 import { poster } from "./poster";

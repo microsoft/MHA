@@ -3,7 +3,8 @@ import "office-ui-fabric-js/dist/css/fabric.components.min.css"
 import "../Content/Office.css";
 import "../Content/App.css";
 import * as $ from "jquery";
-import { mhaStrings } from "./Strings";
+import { mhaStrings } from "./mhaStrings";
+import { strings } from "./Strings";
 import { HeaderModel } from "./Headers"
 import { Diagnostics } from "./diag"
 import { Table } from "./Table"
@@ -57,7 +58,7 @@ import { Table } from "./Table"
     }
 
     function copy() {
-        mhaStrings.copyToClipboard(viewModel.toString());
+        strings.copyToClipboard(viewModel.toString());
     }
 
     if ($) {

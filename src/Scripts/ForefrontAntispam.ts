@@ -1,4 +1,4 @@
-import { mhaStrings } from "./Strings";
+import { mhaStrings } from "./mhaStrings";
 import { AntiSpamReport, row } from "./Antispam";
 
 export class ForefrontAntiSpamReport extends AntiSpamReport {

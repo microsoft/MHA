@@ -1,4 +1,4 @@
-﻿import { mhaStrings } from "./Strings";
+﻿import { strings } from "./Strings";
 import { header } from "./Headers";
 
 class row {
@@ -12,7 +12,7 @@ class row {
     number: number;
     header: string;
     value: any;
-    public get url(): string { return mhaStrings.mapHeaderToURL(this.header, null); };
+    public get url(): string { return strings.mapHeaderToURL(this.header, null); };
     toString() { return this.header + ": " + this.value; }
 }
 
