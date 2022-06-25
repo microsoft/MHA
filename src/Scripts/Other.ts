@@ -1,21 +1,25 @@
 ﻿import { mhaStrings } from "./Strings";
 
-export const Other = (function () {
-    const row = function (number, header, value) {
-        return {
-            number: number,
-            header: header,
-            url: mhaStrings.mapHeaderToURL(header, null),
-            value: value,
-            toString: function () { return header + ": " + value; }
-        }
-    };
+class row {
+    constructor(number: number, header: string, value: any) {
+        this.number = number;
+        this.header = header;
+        this.value = value;
+    }
 
-    const otherRows = [];
+    number: number;
+    header: string;
+    value: any;
+    public get url(): string { return mhaStrings.mapHeaderToURL(this.header, null); };
+    toString() { return this.header + ": " + this.value; }
+}
+
+export const Other = (function () {
+    const otherRows: row[] = [];
     let sortColumn = "number";
     let sortOrder = 1;
 
-    function doSort(col) {
+    function doSort(col: string): void {
         if (sortColumn === col) {
             sortOrder *= -1;
         } else {
@@ -27,13 +31,13 @@ export const Other = (function () {
             col = col + "Sort";
         }
 
-        otherRows.sort((a, b) => {
+        otherRows.sort((a: row, b: row) => {
             return this.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 
-    function add(otherHeader) {
-        otherRows.push(row(
+    function add(otherHeader): void {
+        otherRows.push(new row(
             otherRows.length + 1,
             otherHeader.header,
             otherHeader.value));
@@ -51,9 +55,9 @@ export const Other = (function () {
         get sortOrder() { return sortOrder; },
         toString: function () {
             if (!exists()) return "";
-            const ret = ["Other"];
+            const ret: string[] = ["Other"];
             otherRows.forEach(function (row) {
-                if (row.value) { ret.push(row); }
+                if (row.value) { ret.push(row.value); }
             });
             return ret.join("\n");
         }
