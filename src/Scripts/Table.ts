@@ -32,7 +32,7 @@ export class Table {
         $("#response").css("top", responseTop + 15);
     }
 
-    private toggleCollapse(object): void {
+    private toggleCollapse(object: HTMLElement): void {
         $(".collapsibleElement", $(object).parents(".collapsibleWrapper")).toggle();
         this.positionResponse();
     }
@@ -92,7 +92,7 @@ export class Table {
         }
     }
 
-    private makeSummaryTable(summaryName: string, rows, tag): void {
+    private makeSummaryTable(summaryName: string, rows, tag: string): void {
         const summaryList = $(summaryName);
         if (summaryList) {
             summaryList.addClass("summaryList");
@@ -124,7 +124,7 @@ export class Table {
         }
     }
 
-    private setArrows(table, colName, sortOrder): void {
+    private setArrows(table: string, colName: string, sortOrder: number): void {
         $("#" + table + " .tableHeader .downArrow").addClass("hiddenElement");
         $("#" + table + " .tableHeader .upArrow").addClass("hiddenElement");
 
@@ -135,7 +135,7 @@ export class Table {
         }
     }
 
-    private setRowValue(row, type): void {
+    private setRowValue(row, type: string): void {
         const headerVal = $("#" + row.header + type + "Val");
         if (headerVal) {
             if (row.value) {
@@ -153,7 +153,7 @@ export class Table {
         }
     }
 
-    private appendCell(row, text: string, html, cellClass): void {
+    private appendCell(row, text: string, html: string, cellClass: string): void {
         const cell = $(row.insertCell(-1));
         if (text) { cell.text(text); }
         if (html) { cell.html(html); }
@@ -176,7 +176,7 @@ export class Table {
         this.positionResponse();
     }
 
-    private hideEmptyColumns(id): void {
+    private hideEmptyColumns(id: string): void {
         $("#" + id + " th").each(function (i) {
             let keep = 0;
 
@@ -302,7 +302,7 @@ export class Table {
         header.append(upSpan);
     }
 
-    private addColumns(tableName, columns): void {
+    private addColumns(tableName: string, columns: column[]): void {
         const tableHeader = $(document.createElement("thead"));
         if (tableHeader !== null) {
             $("#" + tableName).append(tableHeader);
@@ -331,7 +331,7 @@ export class Table {
     }
 
     // Wraps a table into a collapsible table with a title
-    private makeResizableTable(id, title, visibility): void {
+    private makeResizableTable(id: string, title: string, visibility: (table: Table) => boolean): void {
         const pane = $("#" + id);
         if (pane.hasClass("collapsibleElement")) { return; }
 
@@ -475,7 +475,7 @@ export class Table {
         this.makeSummaryTable("#antiSpamReport", this.viewModel.antiSpamReport.rows, "AS");
 
         // Other
-        this.makeResizableTable("otherHeaders", mhaStrings.mhaOtherHeaders, function (table: Table) { return table.viewModel.otherHeaders.otherRows.length; });
+        this.makeResizableTable("otherHeaders", mhaStrings.mhaOtherHeaders, function (table: Table) { return table.viewModel.otherHeaders.otherRows.length > 0; });
 
         const otherColumns = [
             new column("number", mhaStrings.mhaNumber, null),
