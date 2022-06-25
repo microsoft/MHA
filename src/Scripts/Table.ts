@@ -2,10 +2,20 @@ import * as $ from "jquery";
 import { HeaderModel } from "./Headers";
 import { mhaStrings } from "./mhaStrings";
 
+class column {
+    constructor(id: string, label: string, columnClass: string) {
+        this.id = id;
+        this.label = label;
+        this.class = columnClass;
+    }
+    id: string;
+    label: string;
+    class: string;
+}
+
 export const Table = (function () {
     let viewModel: HeaderModel = null;
-    let showExtra = false;
-    const column = function (id, label, columnClass) { return { id: id, label: label, class: columnClass }; };
+    let showExtra: boolean = false;
 
     const visibilityBindings = [
         { name: "#lineBreak", visible: function () { return viewModel.hasData; } },
@@ -17,18 +27,18 @@ export const Table = (function () {
     ];
 
     // Adjusts response under our lineBreak
-    function positionResponse() {
+    function positionResponse(): void {
         const responseTop = $("#lineBreak")[0].offsetTop + $("#lineBreak").height();
         $("#response").css("top", responseTop + 15);
     }
 
-    function toggleCollapse(object) {
+    function toggleCollapse(object): void {
         $(".collapsibleElement", $(object).parents(".collapsibleWrapper")).toggle();
         positionResponse();
     }
 
     // Wraps an element into a collapsible pane with a title
-    function makeResizablePane(id: string, title: string, visibility: () => boolean) {
+    function makeResizablePane(id: string, title: string, visibility: () => boolean): void {
         const pane = $("#" + id);
         if (pane.hasClass("collapsibleElement")) {
             return;
@@ -69,7 +79,7 @@ export const Table = (function () {
         }
     }
 
-    function makeVisible(id: string, visible: boolean) {
+    function makeVisible(id: string, visible: boolean): void {
         if (visible) {
             $(id).removeClass("hiddenElement");
         } else {
@@ -77,7 +87,7 @@ export const Table = (function () {
         }
     }
 
-    function makeSummaryTable(summaryName: string, rows, tag) {
+    function makeSummaryTable(summaryName: string, rows, tag): void {
         const summaryList = $(summaryName);
         if (summaryList) {
             summaryList.addClass("summaryList");
@@ -109,7 +119,7 @@ export const Table = (function () {
         }
     }
 
-    function setArrows(table, colName, sortOrder) {
+    function setArrows(table, colName, sortOrder): void {
         $("#" + table + " .tableHeader .downArrow").addClass("hiddenElement");
         $("#" + table + " .tableHeader .upArrow").addClass("hiddenElement");
 
@@ -120,7 +130,7 @@ export const Table = (function () {
         }
     }
 
-    function setRowValue(row, type) {
+    function setRowValue(row, type): void {
         const headerVal = $("#" + row.header + type + "Val");
         if (headerVal) {
             if (row.value) {
@@ -138,7 +148,7 @@ export const Table = (function () {
         }
     }
 
-    function appendCell(row, text: string, html, cellClass) {
+    function appendCell(row, text: string, html, cellClass): void {
         const cell = $(row.insertCell(-1));
         if (text) { cell.text(text); }
         if (html) { cell.html(html); }
@@ -146,13 +156,13 @@ export const Table = (function () {
     }
 
     // Restores table to empty state so we can repopulate it
-    function emptyTableUI(id: string) {
+    function emptyTableUI(id: string): void {
         $("#" + id + " tbody tr").remove(); // Remove the rows
         $("#" + id + " th").removeClass("emptyColumn"); // Restore header visibility
         $("#" + id + " th").removeClass("hiddenElement"); // Restore header visibility
     }
 
-    function recalculateVisibility() {
+    function recalculateVisibility(): void {
         for (let i = 0; i < visibilityBindings.length; i++) {
             makeVisible(visibilityBindings[i].name, visibilityBindings[i].visible());
         }
@@ -160,7 +170,7 @@ export const Table = (function () {
         positionResponse();
     }
 
-    function hideEmptyColumns(id) {
+    function hideEmptyColumns(id): void {
         $("#" + id + " th").each(function (i) {
             let keep = 0;
 
@@ -183,7 +193,7 @@ export const Table = (function () {
     }
 
     // Rebuilds content and recalculates what sections should be displayed
-    function rebuildSections(_viewModel: HeaderModel) {
+    function rebuildSections(_viewModel: HeaderModel): void {
         viewModel = _viewModel;
 
         let i;
@@ -257,7 +267,7 @@ export const Table = (function () {
         recalculateVisibility();
     }
 
-    function makeSortableColumn(table, id: string) {
+    function makeSortableColumn(table, id: string): void {
         const header = $("#" + id);
 
         header.bind("click", function () {
@@ -282,7 +292,7 @@ export const Table = (function () {
         header.append(upSpan);
     }
 
-    function addColumns(tableName, columns) {
+    function addColumns(tableName, columns): void {
         const tableHeader = $(document.createElement("thead"));
         if (tableHeader !== null) {
             $("#" + tableName).append(tableHeader);
@@ -311,7 +321,7 @@ export const Table = (function () {
     }
 
     // Wraps a table into a collapsible table with a title
-    function makeResizableTable(id, title, visibility) {
+    function makeResizableTable(id, title, visibility): void {
         const pane = $("#" + id);
         if (pane.hasClass("collapsibleElement")) { return; }
 
@@ -355,19 +365,19 @@ export const Table = (function () {
         header.hide();
     }
 
-    function hideExtraColumns() {
+    function hideExtraColumns(): void {
         showExtra = false;
         $("#leftArrow").addClass("hiddenElement");
         $("#rightArrow").removeClass("hiddenElement");
     }
 
-    function showExtraColumns() {
+    function showExtraColumns(): void {
         showExtra = true;
         $("#rightArrow").addClass("hiddenElement");
         $("#leftArrow").removeClass("hiddenElement");
     }
 
-    function toggleExtraColumns() {
+    function toggleExtraColumns(): void {
         if (showExtra) {
             hideExtraColumns();
         } else {
@@ -377,13 +387,13 @@ export const Table = (function () {
         recalculateVisibility();
     }
 
-    function resetArrows() {
+    function resetArrows(): void {
         setArrows("receivedHeaders", "hop", 1);
         setArrows("otherHeaders", "number", 1);
     }
 
     // Initializes the UI with a viewModel
-    function initializeTableUI(_viewModel: HeaderModel) {
+    function initializeTableUI(_viewModel: HeaderModel): void {
         viewModel = _viewModel;
 
         // Headers
@@ -398,15 +408,15 @@ export const Table = (function () {
         makeResizableTable("receivedHeaders", mhaStrings.mhaReceivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
 
         const receivedColumns = [
-            column("hop", mhaStrings.mhaReceivedHop, null),
-            column("from", mhaStrings.mhaReceivedSubmittingHost, null),
-            column("by", mhaStrings.mhaReceivedReceivingHost, null),
-            column("date", mhaStrings.mhaReceivedTime, null),
-            column("delay", mhaStrings.mhaReceivedDelay, null),
-            column("with", mhaStrings.mhaReceivedType, null),
-            column("id", mhaStrings.mhaReceivedId, "extraCol"),
-            column("for", mhaStrings.mhaReceivedFor, "extraCol"),
-            column("via", mhaStrings.mhaReceivedVia, "extraCol")
+            new column("hop", mhaStrings.mhaReceivedHop, null),
+            new column("from", mhaStrings.mhaReceivedSubmittingHost, null),
+            new column("by", mhaStrings.mhaReceivedReceivingHost, null),
+            new column("date", mhaStrings.mhaReceivedTime, null),
+            new column("delay", mhaStrings.mhaReceivedDelay, null),
+            new column("with", mhaStrings.mhaReceivedType, null),
+            new column("id", mhaStrings.mhaReceivedId, "extraCol"),
+            new column("for", mhaStrings.mhaReceivedFor, "extraCol"),
+            new column("via", mhaStrings.mhaReceivedVia, "extraCol")
         ];
 
         addColumns(viewModel.receivedHeaders.tableName, receivedColumns);
@@ -445,9 +455,9 @@ export const Table = (function () {
         makeResizableTable("otherHeaders", mhaStrings.mhaOtherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
 
         const otherColumns = [
-            column("number", mhaStrings.mhaNumber, null),
-            column("header", mhaStrings.mhaHeader, null),
-            column("value", mhaStrings.mhaValue, null)
+            new column("number", mhaStrings.mhaNumber, null),
+            new column("header", mhaStrings.mhaHeader, null),
+            new column("value", mhaStrings.mhaValue, null)
         ];
 
         addColumns(viewModel.otherHeaders.tableName, otherColumns);
@@ -457,7 +467,7 @@ export const Table = (function () {
     }
 
     // Rebuilds the UI with a new viewModel
-    function rebuildTables(_viewModel: HeaderModel) {
+    function rebuildTables(_viewModel: HeaderModel): void {
         viewModel = _viewModel;
         rebuildSections(viewModel);
         hideExtraColumns();
