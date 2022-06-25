@@ -172,7 +172,7 @@ import { poster } from "./poster";
                         .addClass("ms-ProgressIndicator-progressTrack")
                         .appendTo(bar);
 
-                    const width = 1.8 * viewModel.receivedHeaders.receivedRows[i].percent;
+                    const width = 1.8 * viewModel.receivedHeaders.receivedRows[i].percent.value;
 
                     $("<div/>")
                         .addClass("ms-ProgressIndicator-progressBar")
@@ -181,7 +181,7 @@ import { poster } from "./poster";
 
                     $("<div/>")
                         .addClass("ms-ProgressIndicator-itemDescription")
-                        .text(viewModel.receivedHeaders.receivedRows[i].delay)
+                        .text(viewModel.receivedHeaders.receivedRows[i].delay.value)
                         .appendTo(delay);
 
                     $("<span/>")

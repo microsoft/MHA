@@ -139,7 +139,7 @@ import { poster } from "./poster";
 
             for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
                 if (i === 0) {
-                    currentTime = dayjs(viewModel.receivedHeaders.receivedRows[i].dateNum).local();
+                    currentTime = dayjs(viewModel.receivedHeaders.receivedRows[i].dateNum.value).local();
 
                     timelineItem = $("<div/>")
                         .addClass("timeline-item")
@@ -184,7 +184,7 @@ import { poster } from "./poster";
                         .appendTo(timelineInner);
                 } else {
                     // Determine if new timeline item is needed
-                    const entryTime = dayjs(viewModel.receivedHeaders.receivedRows[i].dateNum).local();
+                    const entryTime = dayjs(viewModel.receivedHeaders.receivedRows[i].dateNum.value).local();
 
                     if (entryTime.minute() > currentTime.minute()) {
                         // Into a new minute, create a new timeline item
@@ -233,7 +233,7 @@ import { poster } from "./poster";
                         .appendTo(timelineInner);
 
                     $("<p/>")
-                        .text(viewModel.receivedHeaders.receivedRows[i].delay)
+                        .text(viewModel.receivedHeaders.receivedRows[i].delay.value)
                         .appendTo(progress);
 
                     $("<p/>")

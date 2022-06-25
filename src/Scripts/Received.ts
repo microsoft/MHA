@@ -1,19 +1,77 @@
 ﻿import { mhaStrings } from "./Strings";
 import { mhaDates, date } from "./dates";
 
-
 class ReceivedField {
     constructor(label: string, value?: any) {
         this.label = label;
         this.value = value !== undefined ? value : "";
     }
     label: string;
-    value: string;
+    value: any;
     toString(): string { return this.value; }
 };
 
+class ReceivedRow {
+    constructor(receivedHeader: string) {
+        this.sourceHeader = new ReceivedField("", receivedHeader);
+        this.hop = new ReceivedField(mhaStrings.mhaReceivedHop);
+        this.from = new ReceivedField(mhaStrings.mhaReceivedFrom);
+        this.by = new ReceivedField(mhaStrings.mhaReceivedBy);
+        this.with = new ReceivedField(mhaStrings.mhaReceivedWith);
+        this.id = new ReceivedField(mhaStrings.mhaReceivedId);
+        this.for = new ReceivedField(mhaStrings.mhaReceivedFor);
+        this.via = new ReceivedField(mhaStrings.mhaReceivedVia);
+        this.date = new ReceivedField(mhaStrings.mhaReceivedDate);
+        this.delay = new ReceivedField(mhaStrings.mhaReceivedDelay);
+        this.percent = new ReceivedField(mhaStrings.mhaReceivedPercent, 0);
+        this.delaySort = new ReceivedField("", -1);
+        this.dateNum = new ReceivedField("");
+    }
+    sourceHeader: ReceivedField;
+    hop: ReceivedField;
+    from: ReceivedField;
+    by: ReceivedField;
+    with: ReceivedField;
+    id: ReceivedField;
+    for: ReceivedField;
+    via: ReceivedField;
+    date: ReceivedField;
+    delay: ReceivedField;
+    percent: ReceivedField;
+    delaySort: ReceivedField;
+    dateNum: ReceivedField;
+
+    setField(fieldName: string, fieldValue: string) {
+        if (!fieldName || !fieldValue) {
+            return false;
+        }
+
+        let key: keyof typeof this = fieldName.toLowerCase();
+        var field = this[key] as unknown as ReceivedField;
+        if (!field) return false;
+
+        if (field.value) { field.value += "; " + fieldValue; }
+        else { field.value = fieldValue; }
+
+        return false;
+    }
+
+    toString(): string {
+        const str: string[] = [];
+        let key: keyof typeof this;
+        for (key in this) {
+            var field = this[key] as unknown as ReceivedField;
+            if (field && field.label && field.toString()) {
+                str.push(field.label + ": " + field.toString());
+            }
+        }
+
+        return str.join("\n");
+    }
+}
+
 export class Received {
-    private _receivedRows: any[] = [];
+    private _receivedRows: ReceivedRow[] = [];
     private _sortColumn: string = "hop";
     private _sortOrder: number = 1;
     public tableName: string = "receivedHeaders";
@@ -22,49 +80,12 @@ export class Received {
     // This algorithm should work regardless of the order of the headers, given:
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
-    public parseHeader(receivedHeader: string): ReceivedField[] {
-        var receivedFields: any[] = [];
-        receivedFields["sourceHeader"] = new ReceivedField("", receivedHeader);
-        receivedFields["hop"] = new ReceivedField(mhaStrings.mhaReceivedHop);
-        receivedFields["from"] = new ReceivedField(mhaStrings.mhaReceivedFrom);
-        receivedFields["by"] = new ReceivedField(mhaStrings.mhaReceivedBy);
-        receivedFields["with"] = new ReceivedField(mhaStrings.mhaReceivedWith);
-        receivedFields["id"] = new ReceivedField(mhaStrings.mhaReceivedId);
-        receivedFields["for"] = new ReceivedField(mhaStrings.mhaReceivedFor);
-        receivedFields["via"] = new ReceivedField(mhaStrings.mhaReceivedVia);
-        receivedFields["date"] = new ReceivedField(mhaStrings.mhaReceivedDate);
-        receivedFields["delay"] = new ReceivedField(mhaStrings.mhaReceivedDelay);
-        receivedFields["percent"] = new ReceivedField(mhaStrings.mhaReceivedPercent, 0);
-        receivedFields["delaySort"] = new ReceivedField("", -1);
-        receivedFields["dateNum"] = new ReceivedField("");
-        receivedFields.toString = function () {
-            const str = [];
-            for (const fieldName in receivedFields) {
-                if (receivedFields[fieldName].label && receivedFields[fieldName].toString()) {
-                    str.push(receivedFields[fieldName].label + ": " + receivedFields[fieldName].toString());
-                }
-            }
-
-            return str.join("\n");
-        }
-
-        const setField = function (fieldName, fieldValue) {
-            if (!fieldName || !fieldValue || !receivedFields[fieldName.toLowerCase()]) {
-                return false;
-            }
-
-            if (receivedFields[fieldName.toLowerCase()].value) { receivedFields[fieldName.toLowerCase()].value += "; " + fieldValue; }
-            else { receivedFields[fieldName.toLowerCase()].value = fieldValue; }
-
-            return false;
-        }
+    public parseHeader(receivedHeader: string): ReceivedRow {
+        var receivedFields: ReceivedRow = new ReceivedRow(receivedHeader);
 
         if (receivedHeader) {
             // Strip linefeeds first
             receivedHeader = receivedHeader.replace(/\r|\n|\r\n/g, ' ')
-
-            // Build array of header locations
-            const headerMatches = [];
 
             // Some bad dates don't wrap UTC in paren - fix that first
             receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/gi, "(UTC)");
@@ -102,7 +123,7 @@ export class Received {
             //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
             const postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/mi);
             if (postFix) {
-                setField("by", postFix[2]);
+                receivedFields.setField("by", postFix[2]);
                 receivedHeader = postFix[1] + postFix[3];
             }
 
@@ -110,18 +131,22 @@ export class Received {
             // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
             const qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/mi);
             if (qmail) {
-                setField("by", qmail[2]);
+                receivedFields.setField("by", qmail[2]);
                 receivedHeader = qmail[1] + qmail[3];
             }
 
             // Split up the string now so we can look for our headers
             const tokens = receivedHeader.split(/\s+/);
 
-            let fieldName;
+            // Build array of header locations
+            class match { fieldName: string; iToken: number; }
+            const headerMatches: match[] = [];
+
+            let fieldName: string;
             for (fieldName in receivedFields) {
                 tokens.some(function (token, iToken) {
                     if (fieldName.toLowerCase() === token.toLowerCase()) {
-                        headerMatches.push({ fieldName: fieldName, iToken: iToken });
+                        headerMatches.push(<match>{ fieldName: fieldName, iToken: iToken });
                         // We don't return true so we can match any duplicate headers
                         // In doing this, we risk failing to parse a string where a header
                         // keyword appears as the value for another header
@@ -143,16 +168,16 @@ export class Received {
                     iNextTokenHeader = tokens.length;
                 }
 
-                setField(headerMatch.fieldName, tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim())
+                receivedFields.setField(headerMatch.fieldName, tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim())
             });
         }
 
         return receivedFields;
     };
 
-    public exists() { return this.receivedRows.length > 0; }
+    public exists(): boolean { return this.receivedRows.length > 0; }
 
-    public doSort(col) {
+    public doSort(col: string): void {
         if (this.sortColumn === col) {
             this._sortOrder *= -1;
         } else {
@@ -164,17 +189,17 @@ export class Received {
             col = col + "Sort";
         }
 
-        this.receivedRows.sort((a, b) => {
+        this.receivedRows.sort((a: ReceivedRow, b: ReceivedRow) => {
             return this.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 
-    public add(receivedHeader) { this.receivedRows.push(this.parseHeader(receivedHeader)); }
+    public add(receivedHeader: string): void { this.receivedRows.push(this.parseHeader(receivedHeader)); }
 
     // Computes min/sec from the diff of current and last.
     // Returns nothing if last or current is NaN.
-    public static computeTime(current, last) {
-        const time = [];
+    public static computeTime(current: number, last: number): string {
+        const time: string[] = [];
 
         if (isNaN(current) || isNaN(last)) { return ""; }
         let diff = current - last;
@@ -192,7 +217,7 @@ export class Received {
 
         if (diff >= 1000 * 60) {
             iDelay = Math.floor(diff / 1000 / 60);
-            time.push(iDelay, " ");
+            time.push(iDelay.toString(), " ");
             if (iDelay === 1) {
                 time.push(mhaStrings.mhaMinute);
             } else {
@@ -209,7 +234,7 @@ export class Received {
 
         if (!printedMinutes || diff) {
             iDelay = Math.floor(diff / 1000);
-            time.push(iDelay, " ");
+            time.push(iDelay.toString(), " ");
             if (iDelay === 1) {
                 time.push(mhaStrings.mhaSecond);
             } else {
@@ -225,30 +250,30 @@ export class Received {
         this.receivedRows.reverse();
 
         // Parse rows and compute values needed for the "Delay" column
-        let iStartTime = 0;
-        let iEndTime = 0;
-        let iLastTime = NaN;
-        let iDelta = 0; // This will be the sum of our positive deltas
+        let iStartTime: number = 0;
+        let iEndTime: number = 0;
+        let iLastTime: number = NaN;
+        let iDelta: number = 0; // This will be the sum of our positive deltas
 
-        this.receivedRows.forEach(function (row) {
-            if (!isNaN(row.dateNum)) {
-                if (!isNaN(iLastTime) && iLastTime < row.dateNum) {
-                    iDelta += row.dateNum - iLastTime;
+        this.receivedRows.forEach(function (row: ReceivedRow) {
+            if (!isNaN(row.dateNum.value)) {
+                if (!isNaN(iLastTime) && iLastTime < row.dateNum.value) {
+                    iDelta += row.dateNum.value - iLastTime;
                 }
 
-                iStartTime = iStartTime || row.dateNum;
-                iEndTime = row.dateNum;
-                iLastTime = row.dateNum;
+                iStartTime = iStartTime || row.dateNum.value;
+                iEndTime = row.dateNum.value;
+                iLastTime = row.dateNum.value;
             }
         });
 
         iLastTime = NaN;
 
-        this.receivedRows.forEach(function (row, index) {
+        this.receivedRows.forEach(function (row: ReceivedRow, index: number) {
             row.hop.value = index + 1;
-            row.delay.value = Received.computeTime(row.dateNum, iLastTime);
+            row.delay.value = Received.computeTime(row.dateNum.value, iLastTime);
 
-            if (!isNaN(row.dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
+            if (!isNaN(row.dateNum.value) && !isNaN(iLastTime) && iDelta !== 0) {
                 row.delaySort.value = row.dateNum.value - iLastTime;
 
                 // Only positive delays will get percentage bars. Negative delays will be color coded at render time.
@@ -257,7 +282,7 @@ export class Received {
                 }
             }
 
-            if (!isNaN(row.dateNum)) {
+            if (!isNaN(row.dateNum.value)) {
                 iLastTime = row.dateNum.value;
             }
         });
@@ -266,13 +291,13 @@ export class Received {
         return iEndTime !== iStartTime ? Received.computeTime(iEndTime, iStartTime) : "";
     }
 
-    public get receivedRows() { return this._receivedRows; };
-    public get sortColumn() { return this._sortColumn; };
-    public get sortOrder() { return this._sortOrder; };
+    public get receivedRows(): ReceivedRow[] { return this._receivedRows; };
+    public get sortColumn(): string { return this._sortColumn; };
+    public get sortOrder(): number { return this._sortOrder; };
     public toString(): string {
         if (!this.exists()) return "";
-        const ret = ["Received"];
-        const rows = [];
+        const ret: string[] = ["Received"];
+        const rows: ReceivedRow[] = [];
         this.receivedRows.forEach(function (row) {
             rows.push(row);
         });

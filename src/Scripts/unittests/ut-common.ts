@@ -21,6 +21,7 @@ QUnit.assert.receivedEqual = function (actual, expected, message) {
             if (field === "date") continue;
             if (field === "onSet") continue;
             if (field === "onGetUrl") continue;
+            if (field === "setField") continue;
             if (field === "_value") continue;
             // If a field in value is non-null/empty there must also be a field in expected
             if (actual[field] && actual[field].toString() && expected[field] === undefined) {
