@@ -1,4 +1,5 @@
 ﻿import { mhaStrings } from "./Strings";
+import { header } from "./Headers";
 
 class row {
     constructor(number: number, header: string, value: any) {
@@ -7,6 +8,7 @@ class row {
         this.value = value;
     }
 
+    [index: string]: any;
     number: number;
     header: string;
     value: any;
@@ -14,52 +16,47 @@ class row {
     toString() { return this.header + ": " + this.value; }
 }
 
-export const Other = (function () {
-    const otherRows: row[] = [];
-    let sortColumn = "number";
-    let sortOrder = 1;
+export class Other {
+    private _otherRows: row[] = [];
+    private _sortColumn: string = "number";
+    private _sortOrder: number = 1;
+    public readonly tableName: string = "otherHeaders";
 
-    function doSort(col: string): void {
-        if (sortColumn === col) {
-            sortOrder *= -1;
+    public doSort(col: string): void {
+        if (this.sortColumn === col) {
+            this._sortOrder *= -1;
         } else {
-            sortColumn = col;
-            sortOrder = 1;
+            this._sortColumn = col;
+            this._sortOrder = 1;
         }
 
-        if (sortColumn + "Sort" in otherRows[0]) {
+        if (this.sortColumn + "Sort" in this.otherRows[0]) {
             col = col + "Sort";
         }
 
-        otherRows.sort((a: row, b: row) => {
+        this.otherRows.sort((a: row, b: row) => {
             return this.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 
-    function add(otherHeader): void {
-        otherRows.push(new row(
-            otherRows.length + 1,
+    public add(otherHeader: header): void {
+        this.otherRows.push(new row(
+            this.otherRows.length + 1,
             otherHeader.header,
             otherHeader.value));
     }
 
-    function exists() { return otherRows.length > 0; }
+    public exists() { return this.otherRows.length > 0; }
 
-    return {
-        tableName: "otherHeaders",
-        add: add,
-        exists: exists,
-        get otherRows() { return otherRows; },
-        doSort: doSort,
-        get sortColumn() { return sortColumn; },
-        get sortOrder() { return sortOrder; },
-        toString: function () {
-            if (!exists()) return "";
-            const ret: string[] = ["Other"];
-            otherRows.forEach(function (row) {
-                if (row.value) { ret.push(row.value); }
-            });
-            return ret.join("\n");
-        }
+    public get otherRows(): row[] { return this._otherRows; };
+    public get sortColumn(): string { return this._sortColumn; };
+    public get sortOrder(): number { return this._sortOrder; };
+    public toString() {
+        if (!this.exists()) return "";
+        const ret: string[] = ["Other"];
+        this.otherRows.forEach(function (row) {
+            if (row.value) { ret.push(row.value); }
+        });
+        return ret.join("\n");
     }
-});
+}

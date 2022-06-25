@@ -6,7 +6,7 @@ import { Received } from "./Received"
 import { Summary } from "./Summary"
 import { poster } from "./poster"
 
-class header {
+export class header {
     constructor(header: string, value: string) {
         this.header = header;
         this.value = value;
@@ -21,7 +21,7 @@ export class HeaderModel {
     public receivedHeaders: Received;
     public forefrontAntiSpamReport: ForefrontAntiSpamReport;
     public antiSpamReport: AntiSpamReport;
-    public otherHeaders;
+    public otherHeaders: Other;
     private _hasData: boolean;
     private _status: string;
     public get hasData(): boolean { return this._hasData || !!this._status; };
@@ -33,7 +33,7 @@ export class HeaderModel {
         this.receivedHeaders = new Received();
         this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
         this.antiSpamReport = new AntiSpamReport();
-        this.otherHeaders = Other();
+        this.otherHeaders = new Other();
         this.originalHeaders = "";
         this._status = "";
         this._hasData = false;
