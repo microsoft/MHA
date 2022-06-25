@@ -27,6 +27,7 @@ class ReceivedRow {
         this.delaySort = new ReceivedField("", -1);
         this.dateNum = new ReceivedField("");
     }
+    [index: string]: ReceivedField | Function;
     sourceHeader: ReceivedField;
     hop: ReceivedField;
     from: ReceivedField;
@@ -41,13 +42,12 @@ class ReceivedRow {
     delaySort: ReceivedField;
     dateNum: ReceivedField;
 
-    setField(fieldName: string, fieldValue: string) {
+    setField(fieldName: string, fieldValue: string): void {
         if (!fieldName || !fieldValue) {
             return false;
         }
 
-        let key: keyof typeof this = fieldName.toLowerCase();
-        var field = this[key] as unknown as ReceivedField;
+        var field = this[fieldName.toLowerCase()] as unknown as ReceivedField;
         if (!field) return false;
 
         if (field.value) { field.value += "; " + fieldValue; }
@@ -58,9 +58,8 @@ class ReceivedRow {
 
     toString(): string {
         const str: string[] = [];
-        let key: keyof typeof this;
-        for (key in this) {
-            var field = this[key] as unknown as ReceivedField;
+        for (const key in this) {
+            var field = this[key] as ReceivedField;
             if (field && field.label && field.toString()) {
                 str.push(field.label + ": " + field.toString());
             }
@@ -74,7 +73,7 @@ export class Received {
     private _receivedRows: ReceivedRow[] = [];
     private _sortColumn: string = "hop";
     private _sortOrder: number = 1;
-    public tableName: string = "receivedHeaders";
+    public readonly tableName: string = "receivedHeaders";
 
     // Builds array of values for each header in receivedHeaderNames.
     // This algorithm should work regardless of the order of the headers, given:
@@ -245,7 +244,7 @@ export class Received {
         return time.join("");
     }
 
-    public computeDeltas() {
+    public computeDeltas(): string {
         // Process received headers in reverse order
         this.receivedRows.reverse();
 
