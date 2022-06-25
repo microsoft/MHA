@@ -9,7 +9,8 @@ import { poster } from "./poster";
 // This is the "classic" UI rendered in classicDesktopFrame.html
 
 (function () {
-    let viewModel = null;
+    let viewModel: HeaderModel = null;
+    let table: Table = null; 
 
     function postError(error, message: string): void {
         poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
@@ -32,14 +33,14 @@ import { poster } from "./poster";
             viewModel.status = statusText;
         }
 
-        Table.recalculateVisibility();
+        table.recalculateVisibility();
     }
 
     function renderItem(headers) {
         updateStatus(mhaStrings.mhaFoundHeaders);
         $("#originalHeaders").text(headers);
         viewModel = new HeaderModel(headers);
-        Table.rebuildTables(viewModel);
+        table.rebuildTables(viewModel);
         updateStatus("");
         disableSpinner();
     }
@@ -49,7 +50,7 @@ import { poster } from "./poster";
     function showError(error, message: string) {
         updateStatus(message);
         disableSpinner();
-        Table.rebuildSections(viewModel);
+        table.rebuildSections(viewModel);
     }
 
     function eventListener(event): void {
@@ -75,7 +76,8 @@ import { poster } from "./poster";
     $(document).ready(function (): void {
         try {
             viewModel = new HeaderModel();
-            Table.initializeTableUI(viewModel);
+            table = new Table();
+            table.initializeTableUI(viewModel);
             updateStatus(mhaStrings.mhaLoading);
             window.addEventListener("message", eventListener, false);
             poster.postMessageToParent("frameActive");

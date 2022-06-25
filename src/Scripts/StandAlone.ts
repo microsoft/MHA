@@ -10,7 +10,8 @@ import { Diagnostics } from "./diag"
 import { Table } from "./Table"
 
 (function () {
-    let viewModel = null;
+    let viewModel: HeaderModel = null;
+    let table: Table = null;
 
     function enableSpinner() {
         $("#response").css("background-image", "url(../Resources/loader.gif)");
@@ -28,7 +29,7 @@ import { Table } from "./Table"
             viewModel.status = statusText;
         }
 
-        Table.recalculateVisibility();
+        table.recalculateVisibility();
     }
 
     // Do our best at recognizing RFC 2822 headers:
@@ -38,12 +39,12 @@ import { Table } from "./Table"
         if (!$) return;
         Diagnostics.trackEvent({ name: "analyzeHeaders" });
         viewModel = new HeaderModel($("#inputHeaders").val() as string);
-        Table.resetArrows();
+        table.resetArrows();
 
         enableSpinner();
         updateStatus(mhaStrings.mhaLoading);
 
-        Table.rebuildTables(viewModel);
+        table.rebuildTables(viewModel);
         updateStatus("");
 
         disableSpinner();
@@ -53,8 +54,8 @@ import { Table } from "./Table"
         $("#inputHeaders").val("");
 
         viewModel = new HeaderModel();
-        Table.resetArrows();
-        Table.rebuildSections(viewModel);
+        table.resetArrows();
+        table.rebuildSections(viewModel);
     }
 
     function copy() {
@@ -65,8 +66,9 @@ import { Table } from "./Table"
         $(document).ready(function () {
             Diagnostics.set("API used", "standalone");
             viewModel = new HeaderModel();
-            Table.initializeTableUI(viewModel);
-            Table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, null);
+            table = new Table();
+            table.initializeTableUI(viewModel);
+            table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, null);
 
             (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;
             (document.querySelector("#clearButton") as HTMLButtonElement).onclick = clear;
