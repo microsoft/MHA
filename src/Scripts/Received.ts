@@ -42,7 +42,7 @@ class ReceivedRow {
     delaySort: ReceivedField;
     dateNum: ReceivedField;
 
-    setField(fieldName: string, fieldValue: string): void {
+    setField(fieldName: string, fieldValue: string): boolean {
         if (!fieldName || !fieldValue) {
             return false;
         }
