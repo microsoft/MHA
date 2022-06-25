@@ -1,15 +1,16 @@
 import * as $ from "jquery";
+import { HeaderModel } from "./Headers";
 import { mhaStrings } from "./mhaStrings";
 
 export const Table = (function () {
-    let viewModel = null;
+    let viewModel: HeaderModel = null;
     let showExtra = false;
     const column = function (id, label, columnClass) { return { id: id, label: label, class: columnClass }; };
 
     const visibilityBindings = [
         { name: "#lineBreak", visible: function () { return viewModel.hasData; } },
         { name: "#response", visible: function () { return viewModel.hasData; } },
-        { name: "#status", visible: function () { return viewModel.status; } },
+        { name: "#status", visible: function () { return !!viewModel.status; } },
         { name: ".extraCol", visible: function () { return showExtra; } },
         { name: "#clearButton", visible: function () { return viewModel.hasData; } },
         { name: "#copyButton", visible: function () { return viewModel.hasData; } }
@@ -27,7 +28,7 @@ export const Table = (function () {
     }
 
     // Wraps an element into a collapsible pane with a title
-    function makeResizablePane(id, title, visibility) {
+    function makeResizablePane(id: string, title: string, visibility: () => boolean) {
         const pane = $("#" + id);
         if (pane.hasClass("collapsibleElement")) {
             return;
@@ -76,7 +77,7 @@ export const Table = (function () {
         }
     }
 
-    function makeSummaryTable(summaryName, rows, tag) {
+    function makeSummaryTable(summaryName: string, rows, tag) {
         const summaryList = $(summaryName);
         if (summaryList) {
             summaryList.addClass("summaryList");
@@ -137,7 +138,7 @@ export const Table = (function () {
         }
     }
 
-    function appendCell(row, text, html, cellClass) {
+    function appendCell(row, text: string, html, cellClass) {
         const cell = $(row.insertCell(-1));
         if (text) { cell.text(text); }
         if (html) { cell.html(html); }
@@ -145,7 +146,7 @@ export const Table = (function () {
     }
 
     // Restores table to empty state so we can repopulate it
-    function emptyTableUI(id) {
+    function emptyTableUI(id: string) {
         $("#" + id + " tbody tr").remove(); // Remove the rows
         $("#" + id + " th").removeClass("emptyColumn"); // Restore header visibility
         $("#" + id + " th").removeClass("hiddenElement"); // Restore header visibility
@@ -182,15 +183,15 @@ export const Table = (function () {
     }
 
     // Rebuilds content and recalculates what sections should be displayed
-    function rebuildSections(_viewModel) {
+    function rebuildSections(_viewModel: HeaderModel) {
         viewModel = _viewModel;
 
         let i;
         let row;
 
         // Summary
-        for (i = 0; i < viewModel.summary.summaryRows.length; i++) {
-            setRowValue(viewModel.summary.summaryRows[i], "SUM");
+        for (i = 0; i < viewModel.summary.rows.length; i++) {
+            setRowValue(viewModel.summary.rows[i], "SUM");
         }
 
         // Received
@@ -198,12 +199,12 @@ export const Table = (function () {
         for (i = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
             row = document.createElement("tr");
             $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].hop, null, null);
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].from, null, null);
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].by, null, null);
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].date, null, null);
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].hop.value, null, null);
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].from.value, null, null);
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].by.value, null, null);
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].date.value, null, null);
             let labelClass = "hotBarLabel";
-            if (viewModel.receivedHeaders.receivedRows[i].delaySort < 0) {
+            if (viewModel.receivedHeaders.receivedRows[i].delaySort.value < 0) {
                 labelClass += " negativeCell";
             }
 
@@ -213,10 +214,10 @@ export const Table = (function () {
                 "   <div class='hotBarBar' style='width:" + viewModel.receivedHeaders.receivedRows[i].percent + "%'></div>" +
                 "</div>";
             appendCell(row, null, hotBar, "hotBarCell");
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].with, null, null);
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].id, null, "extraCol");
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].for, null, "extraCol");
-            appendCell(row, viewModel.receivedHeaders.receivedRows[i].via, null, "extraCol");
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].with.value, null, null);
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].id.value, null, "extraCol");
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].for.value, null, "extraCol");
+            appendCell(row, viewModel.receivedHeaders.receivedRows[i].via.value, null, "extraCol");
         }
 
         // Calculate heights for the hotbar cells (progress bars in Delay column)
@@ -229,13 +230,13 @@ export const Table = (function () {
         hideEmptyColumns("receivedHeaders");
 
         // Forefront AntiSpam Report
-        for (i = 0; i < viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows.length; i++) {
-            setRowValue(viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows[i], "FFAS");
+        for (i = 0; i < viewModel.forefrontAntiSpamReport.rows.length; i++) {
+            setRowValue(viewModel.forefrontAntiSpamReport.rows[i], "FFAS");
         }
 
         // AntiSpam Report
-        for (i = 0; i < viewModel.antiSpamReport.antiSpamRows.length; i++) {
-            setRowValue(viewModel.antiSpamReport.antiSpamRows[i], "AS");
+        for (i = 0; i < viewModel.antiSpamReport.rows.length; i++) {
+            setRowValue(viewModel.antiSpamReport.rows[i], "AS");
         }
 
         // Other
@@ -243,7 +244,7 @@ export const Table = (function () {
         for (i = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
             row = document.createElement("tr");
             $("#otherHeaders").append(row); // Must happen before we append cells to appease IE7
-            appendCell(row, viewModel.otherHeaders.otherRows[i].number, null, null);
+            appendCell(row, viewModel.otherHeaders.otherRows[i].number.toString(), null, null);
             appendCell(row, viewModel.otherHeaders.otherRows[i].header, viewModel.otherHeaders.otherRows[i].url, null);
             appendCell(row, viewModel.otherHeaders.otherRows[i].value, null, "allowBreak");
         }
@@ -256,7 +257,7 @@ export const Table = (function () {
         recalculateVisibility();
     }
 
-    function makeSortableColumn(table, id) {
+    function makeSortableColumn(table, id: string) {
         const header = $("#" + id);
 
         header.bind("click", function () {
@@ -382,16 +383,16 @@ export const Table = (function () {
     }
 
     // Initializes the UI with a viewModel
-    function initializeTableUI(_viewModel) {
+    function initializeTableUI(_viewModel: HeaderModel) {
         viewModel = _viewModel;
 
         // Headers
-        makeResizablePane("originalHeaders", mhaStrings.mhaOriginalHeaders, function () { return viewModel.originalHeaders.length; });
+        makeResizablePane("originalHeaders", mhaStrings.mhaOriginalHeaders, () => { return viewModel.originalHeaders.length > 0; });
         $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
 
         // Summary
         makeResizablePane("summary", mhaStrings.mhaSummary, function () { return viewModel.summary.exists(); });
-        makeSummaryTable("#summary", viewModel.summary.summaryRows, "SUM");
+        makeSummaryTable("#summary", viewModel.summary.rows, "SUM");
 
         // Received
         makeResizableTable("receivedHeaders", mhaStrings.mhaReceivedHeaders, function () { return viewModel.receivedHeaders.exists(); });
@@ -434,11 +435,11 @@ export const Table = (function () {
 
         // FFAS
         makeResizablePane("forefrontAntiSpamReport", mhaStrings.mhaForefrontAntiSpamReport, function () { return viewModel.forefrontAntiSpamReport.exists(); });
-        makeSummaryTable("#forefrontAntiSpamReport", viewModel.forefrontAntiSpamReport.forefrontAntiSpamRows, "FFAS");
+        makeSummaryTable("#forefrontAntiSpamReport", viewModel.forefrontAntiSpamReport.rows, "FFAS");
 
         // AntiSpam
-        makeResizablePane("antiSpamReport", mhaStrings.mhaAntiSpamReport, function () { return viewModel.antiSpamReport.exists(); });
-        makeSummaryTable("#antiSpamReport", viewModel.antiSpamReport.antiSpamRows, "AS");
+        makeResizablePane("antiSpamReport", mhaStrings.mhaAntiSpamReport, () => { return viewModel.antiSpamReport.exists(); });
+        makeSummaryTable("#antiSpamReport", viewModel.antiSpamReport.rows, "AS");
 
         // Other
         makeResizableTable("otherHeaders", mhaStrings.mhaOtherHeaders, function () { return viewModel.otherHeaders.otherRows.length; });
@@ -456,7 +457,7 @@ export const Table = (function () {
     }
 
     // Rebuilds the UI with a new viewModel
-    function rebuildTables(_viewModel) {
+    function rebuildTables(_viewModel: HeaderModel) {
         viewModel = _viewModel;
         rebuildSections(viewModel);
         hideExtraColumns();
