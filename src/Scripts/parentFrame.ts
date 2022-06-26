@@ -52,7 +52,7 @@ export const ParentFrame = (function () {
         }
     }
 
-    function postMessageToFrame(eventName, data) {
+    function postMessageToFrame(eventName:string, data) {
         poster.postMessageToFrame(iFrame, eventName, data);
     }
 
