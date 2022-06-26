@@ -6,7 +6,7 @@ import * as $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
 import { HeaderModel } from "./Headers"
-import { Diagnostics } from "./diag"
+import Diagnostics from "./diag"
 import { Table } from "./Table"
 
 (function () {
