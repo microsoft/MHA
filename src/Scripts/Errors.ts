@@ -9,7 +9,7 @@ export class Errors {
 
     public static get() { return errorArray; }
 
-    public static add(eventName, stack, suppressTracking: boolean): void {
+    public static add(eventName: any, stack: any, suppressTracking: boolean): void {
         if (eventName || stack) {
             const stackString = strings.joinArray(stack, "\n");
             errorArray.push(strings.joinArray([eventName, stackString], "\n"));
@@ -46,13 +46,16 @@ export class Errors {
     // error - an exception object
     // message - a string describing the error
     // suppressTracking - boolean indicating if we should suppress tracking
-    public static log(error: Error | number | string, message: string, suppressTracking?: boolean): void {
+    public static log(error: any, message: string, suppressTracking?: boolean): void {
         if (error && !suppressTracking) {
             const props = {
                 Message: message,
                 Error: JSON.stringify(error, null, 2),
                 Source: "",
                 Stack: "",
+                Description: "",
+                Error_message: ""
+
             };
 
             if (Errors.isError(error) && error.exception) {
@@ -61,8 +64,8 @@ export class Errors {
             }
             else {
                 props.Source = "Error.log Event";
-                if (error.description) props["Error description"] = error.description;
-                if (error.message) props["Error message"] = error.message;
+                if (error.description) props.Description = error.description;
+                if (error.message) props.Error_message = error.message;
                 if (error.stack) props.Stack = error.stack;
 
                 Diagnostics.trackEvent(error.description || error.message || props.Message || "Unknown error object", props);
@@ -77,7 +80,7 @@ export class Errors {
     // exception - an exception object
     // message - a string describing the error
     // handler - function to call with parsed error
-    public static parse(exception, message: string, handler: (eventName: string, stack: string[]) => void): void {
+    public static parse(exception: any, message: string, handler: (eventName: string, stack: string[]) => void): void {
         let stack;
         const exceptionMessage = Errors.getErrorMessage(exception);
 
