@@ -322,7 +322,7 @@ export class ParentFrame {
             const currentSelected: JQuery<HTMLLabelElement> = $("#uiChoice label[value=" + ParentFrame.currentChoice.label + "]");
             currentSelected.addClass("is-checked");
             currentSelected.attr("aria-checked", "true");
-            const input: JQuery<HTMLInputElement> = currentSelected.prevAll("input:first");
+            const input: JQuery<HTMLLabelElement> = currentSelected.prevAll("input:first");
             input.prop("checked", "true");
             dialogSettingsComponent.open();
         };
