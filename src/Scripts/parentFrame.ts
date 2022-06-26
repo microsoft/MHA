@@ -22,8 +22,8 @@ export class ParentFrame {
     private static currentChoice = {} as Choice;
     private static deferredErrors: DeferredError[] = [];
     private static deferredStatus: string[] = [];
-    private static headers = "";
-    private static modelToString = "";
+    private static headers: string = "";
+    private static modelToString: string = "";
 
     private static choices: Array<Choice> = [
         { label: "classic", url: "classicDesktopFrame.html", checked: false },
@@ -32,8 +32,8 @@ export class ParentFrame {
     ];
 
     private static getQueryVariable(variable: string): string {
-        const vars = window.location.search.substring(1).split("&");
-        for (let i = 0; i < vars.length; i++) {
+        const vars: string[] = window.location.search.substring(1).split("&");
+        for (let i: number = 0; i < vars.length; i++) {
             const pair = vars[i].split("=");
             if (pair[0] === variable) {
                 return pair[1];
@@ -43,12 +43,12 @@ export class ParentFrame {
     }
 
     private static setDefault(): void {
-        let uiDefault = ParentFrame.getQueryVariable("default");
+        let uiDefault: string = ParentFrame.getQueryVariable("default");
         if (uiDefault === null) {
             uiDefault = "new";
         }
 
-        for (let iChoice = 0; iChoice < ParentFrame.choices.length; iChoice++) {
+        for (let iChoice: number = 0; iChoice < ParentFrame.choices.length; iChoice++) {
             if (uiDefault === ParentFrame.choices[iChoice].label) {
                 ParentFrame.choices[iChoice].checked = true;
             } else {
@@ -71,7 +71,7 @@ export class ParentFrame {
 
         if (ParentFrame.iFrame) {
             // If we have any deferred status, signal them
-            for (let iStatus = 0; iStatus < ParentFrame.deferredStatus.length; iStatus++) {
+            for (let iStatus: number = 0; iStatus < ParentFrame.deferredStatus.length; iStatus++) {
                 ParentFrame.postMessageToFrame("updateStatus", ParentFrame.deferredStatus[iStatus]);
             }
 
@@ -79,7 +79,7 @@ export class ParentFrame {
             ParentFrame.deferredStatus = [];
 
             // If we have any deferred errors, signal them
-            for (let iError = 0; iError < ParentFrame.deferredErrors.length; iError++) {
+            for (let iError: number = 0; iError < ParentFrame.deferredErrors.length; iError++) {
                 ParentFrame.postMessageToFrame("showError",
                     {
                         error: JSON.stringify(ParentFrame.deferredErrors[iError].error),
@@ -94,7 +94,7 @@ export class ParentFrame {
         }
     }
 
-    private static eventListener(event: MessageEvent) {
+    private static eventListener(event: MessageEvent): void {
         if (!event || event.origin !== poster.site()) return;
 
         if (event.data) {
@@ -112,7 +112,7 @@ export class ParentFrame {
         }
     }
 
-    private static loadNewItem() {
+    private static loadNewItem(): void {
         if (Office.context.mailbox.item) {
             GetHeaders.send(function (_headers: string, apiUsed: string) {
                 ParentFrame.headers = _headers;
@@ -122,7 +122,7 @@ export class ParentFrame {
         }
     }
 
-    private static registerItemChangedEvent() {
+    private static registerItemChangedEvent(): void {
         try {
             if (Office.context.mailbox.addHandlerAsync !== undefined) {
                 Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged,
@@ -138,7 +138,7 @@ export class ParentFrame {
     }
 
     // Tells the UI to show an error.
-    public static showError(error: Error, message: string, suppressTracking?: boolean) {
+    public static showError(error: Error, message: string, suppressTracking?: boolean): void {
         Errors.log(error, message, suppressTracking);
 
         if (ParentFrame.iFrame) {
@@ -150,7 +150,7 @@ export class ParentFrame {
     }
 
     // Tells the UI to show an error.
-    public static updateStatus(statusText: string) {
+    public static updateStatus(statusText: string): void {
         if (ParentFrame.iFrame) {
             ParentFrame.postMessageToFrame("updateStatus", statusText);
         } else {
@@ -159,7 +159,7 @@ export class ParentFrame {
         }
     }
 
-    private static getSettingsKey() {
+    private static getSettingsKey(): string {
         try {
             return "frame" + Office.context.mailbox.diagnostics.hostName;
         } catch (e) {
@@ -168,7 +168,7 @@ export class ParentFrame {
     }
 
     // Display primary UI
-    private static go(choice: Choice) {
+    private static go(choice: Choice): void {
         ParentFrame.iFrame = null;
         ParentFrame.currentChoice = choice;
         (document.getElementById("uiFrame") as HTMLIFrameElement).src = choice.url;
@@ -178,8 +178,8 @@ export class ParentFrame {
         }
     }
 
-    private static goDefaultChoice() {
-        for (let iChoice = 0; iChoice < ParentFrame.choices.length; iChoice++) {
+    private static goDefaultChoice(): void {
+        for (let iChoice: number = 0; iChoice < ParentFrame.choices.length; iChoice++) {
             const choice = ParentFrame.choices[iChoice];
             if (choice.checked) {
                 ParentFrame.go(choice);
@@ -188,8 +188,8 @@ export class ParentFrame {
         }
     }
 
-    private static create(parentElement: JQuery<HTMLElement>, newType: string, newClass: string): JQuery<HTMLElement> {
-        const newElement: JQuery<HTMLElement> = $(document.createElement(newType));
+    private static create<T extends HTMLElement>(parentElement: JQuery<HTMLElement>, newType: string, newClass: string): JQuery<T> {
+        const newElement: JQuery<T> = $(document.createElement(newType)) as JQuery<T>;
         if (newClass) {
             newElement.addClass(newClass);
         }
@@ -203,31 +203,31 @@ export class ParentFrame {
 
     // Create list of choices to display for the UI types
     private static addChoices(): void {
-        const list = $("#uiChoice-list");
+        const list: JQuery<HTMLUListElement> = $("#uiChoice-list");
         list.empty();
 
         for (let iChoice: number = 0; iChoice < ParentFrame.choices.length; iChoice++) {
             const choice = ParentFrame.choices[iChoice];
 
             // Create html: <li class="ms-RadioButton">
-            const listItem: JQuery<HTMLElement> = ParentFrame.create(list, "li", "ms-RadioButton");
+            const listItem: JQuery<HTMLLIElement> = ParentFrame.create(list, "li", "ms-RadioButton");
 
             // Create html: <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
-            const input: JQuery<HTMLElement> = ParentFrame.create(listItem, "input", "ms-RadioButton-input");
+            const input: JQuery<HTMLInputElement> = ParentFrame.create(listItem, "input", "ms-RadioButton-input");
 
             input.attr("tabindex", "-1");
             input.attr("type", "radio");
             input.attr("value", iChoice);
 
             //  Create html: <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
-            const label: JQuery<HTMLElement> = ParentFrame.create(listItem, "label", "ms-RadioButton-field");
+            const label: JQuery<HTMLLabelElement> = ParentFrame.create(listItem, "label", "ms-RadioButton-field");
             label.attr("role", "radio");
             label.attr("tabindex", "0");
             label.attr("name", "uiChoice");
             label.attr("value", choice.label);
 
             // Create html: <span class="ms-Label">classic</span>
-            const inputSpan: JQuery<HTMLElement> = ParentFrame.create(label, "span", "ms-Label");
+            const inputSpan: JQuery<HTMLSpanElement> = ParentFrame.create(label, "span", "ms-Label");
             inputSpan.text(choice.label);
         }
     }
@@ -334,7 +334,7 @@ export class ParentFrame {
         };
     }
 
-    public static initUI() {
+    public static initUI(): void {
         ParentFrame.setDefault();
         ParentFrame.addChoices();
         ParentFrame.initFabric();
