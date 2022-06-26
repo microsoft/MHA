@@ -1,21 +1,6 @@
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
-
-export class row {
-    constructor(header: string, label: string, headerName: string) {
-        this.header = header;
-        this.label = label;
-        this.headerName = headerName;
-        this.value = "";
-        this.valueUrl = "";
-    }
-    header: string;
-    label: string;
-    headerName: string;
-    value: string;
-    valueUrl: string;
-    toString(): string { return this.label + ": " + this.value; };
-};
+import { row } from "./Summary";
 
 export class AntiSpamReport {
     private _source: string = "";
@@ -41,7 +26,7 @@ export class AntiSpamReport {
         for (let i = 0; i < rows.length; i++) {
             if (rows[i].header.toUpperCase() === key.toUpperCase()) {
                 rows[i].value = value;
-                rows[i].valueUrl = strings.mapHeaderToURL(rows[i].headerName, value);
+                rows[i].onGetUrl = (headerName: string, value:string) => { return strings.mapHeaderToURL(headerName, value); }
                 return true;
             }
         }

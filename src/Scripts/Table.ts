@@ -1,6 +1,7 @@
 import * as $ from "jquery";
 import { HeaderModel } from "./Headers";
 import { mhaStrings } from "./mhaStrings";
+import { row } from "./Summary";
 
 class column {
     constructor(id: string, label: string, columnClass: string) {
@@ -92,7 +93,7 @@ export class Table {
         }
     }
 
-    private makeSummaryTable(summaryName: string, rows, tag: string): void {
+    private makeSummaryTable(summaryName: string, rows: row[], tag: string): void {
         const summaryList = $(summaryName);
         if (summaryList) {
             summaryList.addClass("summaryList");
@@ -135,7 +136,7 @@ export class Table {
         }
     }
 
-    private setRowValue(row, type: string): void {
+    private setRowValue(row: row, type: string): void {
         const headerVal = $("#" + row.header + type + "Val");
         if (headerVal) {
             if (row.value) {
@@ -153,7 +154,7 @@ export class Table {
         }
     }
 
-    private appendCell(row, text: string, html: string, cellClass: string): void {
+    private appendCell(row: HTMLTableRowElement, text: string, html: string, cellClass: string): void {
         const cell = $(row.insertCell(-1));
         if (text) { cell.text(text); }
         if (html) { cell.html(html); }
@@ -204,7 +205,6 @@ export class Table {
         this.viewModel = _viewModel;
 
         let i;
-        let row;
 
         // Summary
         for (i = 0; i < this.viewModel.summary.rows.length; i++) {
@@ -214,7 +214,7 @@ export class Table {
         // Received
         this.emptyTableUI("receivedHeaders");
         for (i = 0; i < this.viewModel.receivedHeaders.receivedRows.length; i++) {
-            row = document.createElement("tr");
+            let row: HTMLTableRowElement = document.createElement("tr");
             $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
             this.appendCell(row, this.viewModel.receivedHeaders.receivedRows[i].hop.value, null, null);
             this.appendCell(row, this.viewModel.receivedHeaders.receivedRows[i].from.value, null, null);
@@ -259,7 +259,7 @@ export class Table {
         // Other
         this.emptyTableUI("otherHeaders");
         for (i = 0; i < this.viewModel.otherHeaders.otherRows.length; i++) {
-            row = document.createElement("tr");
+            let row: HTMLTableRowElement = document.createElement("tr");
             $("#otherHeaders").append(row); // Must happen before we append cells to appease IE7
             this.appendCell(row, this.viewModel.otherHeaders.otherRows[i].number.toString(), null, null);
             this.appendCell(row, this.viewModel.otherHeaders.otherRows[i].header, this.viewModel.otherHeaders.otherRows[i].url, null);

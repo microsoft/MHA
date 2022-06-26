@@ -1,28 +1,39 @@
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
 import { mhaDates, date } from "./dates";
+import { header} from "./Headers";
 
-class SummaryRow {
-    constructor(header: string, label: string, onSet?: Function, onGetUrl?: Function) {
-        this._value = "";
+export class row {
+    constructor(header: string, label: string, headerName: string) {
         this.header = header;
         this.label = label;
-        this.url = strings.mapHeaderToURL(header, label);
-        this.onSet = onSet;
-        this.onGetUrl = onGetUrl;
-    };
+        this.headerName = headerName;
+        this._value = "";
+    }
 
     private _value: string;
     header: string;
     label: string;
+    headerName: string;
+
     url: string;
     onSet?: Function;
     onGetUrl?: Function;
 
     set value(value: string) { this._value = this.onSet ? this.onSet(value) : value; };
     get value(): string { return this._value; };
-    get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this._value) : ""; };
+    get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this.headerName, this._value) : ""; };
+
     toString(): string { return this.label + ": " + this.value; };
+};
+
+class SummaryRow extends row {
+    constructor(header: string, label: string, onSet?: Function, onGetUrl?: Function) {
+        super(header, label, null);
+        this.url = strings.mapHeaderToURL(header, label);
+        this.onSet = onSet;
+        this.onGetUrl = onGetUrl;
+    };
 };
 
 export class Summary {
@@ -52,7 +63,7 @@ export class Summary {
         "Archived-At",
         mhaStrings.mhaArchivedAt,
         null,
-        function (value: string): string { return strings.mapValueToURL(value); }
+        function (_header:string, value: string): string { return strings.mapValueToURL(value); }
     );
 
     private summaryRows: SummaryRow[] = [
@@ -76,7 +87,7 @@ export class Summary {
         return false;
     }
 
-    public add(header) {
+    public add(header: header) {
         if (!header) {
             return false;
         }
