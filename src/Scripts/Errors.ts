@@ -1,4 +1,5 @@
 import { Diagnostics } from "./diag";
+import { strings } from "./Strings";
 import * as StackTrace from "stacktrace-js";
 
 class _Errors {
@@ -7,16 +8,10 @@ class _Errors {
 
     public get() { return this.errorArray; }
 
-    // Join an array with char, dropping empty/missing entries
-    public joinArray(array: (string | number)[], char: string): string {
-        if (!array) return null;
-        return (array.filter(function (item) { return item; })).join(char);
-    }
-
     public add(eventName, stack, suppressTracking: boolean): void {
         if (eventName || stack) {
-            const stackString = this.joinArray(stack, "\n");
-            this.errorArray.push(this.joinArray([eventName, stackString], "\n"));
+            const stackString = strings.joinArray(stack, "\n");
+            this.errorArray.push(strings.joinArray([eventName, stackString], "\n"));
 
             if (!suppressTracking) {
                 Diagnostics.trackEvent(eventName,
@@ -73,7 +68,7 @@ class _Errors {
             }
         }
 
-        this.parse(error, message, function (eventName, stack) {
+        this.parse(error, message, function (eventName: string, stack: string[]): void {
             this.add(eventName, stack, suppressTracking);
         });
     }
@@ -81,11 +76,11 @@ class _Errors {
     // exception - an exception object
     // message - a string describing the error
     // handler - function to call with parsed error
-    public parse(exception, message: string, handler): void {
+    public parse(exception, message: string, handler: (eventName: string, stack: string[]) => void): void {
         let stack;
         const exceptionMessage = this.getErrorMessage(exception);
 
-        let eventName = this.joinArray([message, exceptionMessage], ' : ');
+        let eventName = strings.joinArray([message, exceptionMessage], ' : ');
         if (!eventName) {
             eventName = "Unknown exception";
         }

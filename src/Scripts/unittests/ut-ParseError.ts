@@ -1,5 +1,6 @@
 ﻿import * as QUnit from "qunit";
 import { Errors } from "../Errors";
+import { strings } from "../Strings";
 
 // Strip stack of rows with unittests.html.
 // Used to normalize cross browser differences strictly for testing purposes
@@ -237,13 +238,13 @@ QUnit.test("getError* Tests", function (assert) {
 });
 
 QUnit.test("joinArray Tests", function (assert) {
-    assert.equal(Errors.joinArray(null, " : "), null);
-    assert.equal(Errors.joinArray(["1"], " : "), "1");
-    assert.equal(Errors.joinArray(["1", "2"], " : "), "1 : 2");
-    assert.equal(Errors.joinArray([null, "2"], " : "), "2");
-    assert.equal(Errors.joinArray(["1", null], " : "), "1");
-    assert.equal(Errors.joinArray(["1", null, "3"], " : "), "1 : 3");
-    assert.equal(Errors.joinArray([1, 2], " : "), "1 : 2");
+    assert.equal(strings.joinArray(null, " : "), null);
+    assert.equal(strings.joinArray(["1"], " : "), "1");
+    assert.equal(strings.joinArray(["1", "2"], " : "), "1 : 2");
+    assert.equal(strings.joinArray([null, "2"], " : "), "2");
+    assert.equal(strings.joinArray(["1", null], " : "), "1");
+    assert.equal(strings.joinArray(["1", null, "3"], " : "), "1 : 3");
+    assert.equal(strings.joinArray([1, 2], " : "), "1 : 2");
 });
 
 QUnit.test("isError Tests", function (assert) {

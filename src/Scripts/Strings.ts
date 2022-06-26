@@ -113,4 +113,10 @@ export class strings {
             return text;
         }
     }
+
+    // Join an array with char, dropping empty/missing entries
+    public static joinArray(array: (string | number)[], char: string): string {
+        if (!array) return null;
+        return (array.filter(function (item) { return item; })).join(char);
+    }
 }
