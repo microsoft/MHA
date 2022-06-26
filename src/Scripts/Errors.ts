@@ -1,22 +1,22 @@
 import Diagnostics from "./diag"
 import * as StackTrace from "stacktrace-js";
 
-export const Errors = (function () {
-    let errorArray = [];
-    function clear() { errorArray = []; }
+class _Errors {
+    private errorArray = [];
+    public clear(): void { this.errorArray = []; }
 
-    function get() { return errorArray; }
+    public get() { return this.errorArray; }
 
     // Join an array with char, dropping empty/missing entries
-    function joinArray(array: (string | number)[], char: string): string {
+    public joinArray(array: (string | number)[], char: string): string {
         if (!array) return null;
         return (array.filter(function (item) { return item; })).join(char);
     }
 
-    function add(eventName, stack, suppressTracking: boolean) {
+    public add(eventName, stack, suppressTracking: boolean): void {
         if (eventName || stack) {
-            const stackString = Errors.joinArray(stack, "\n");
-            errorArray.push(Errors.joinArray([eventName, stackString], "\n"));
+            const stackString = this.joinArray(stack, "\n");
+            this.errorArray.push(this.joinArray([eventName, stackString], "\n"));
 
             if (!suppressTracking) {
                 Diagnostics.trackEvent(eventName,
@@ -28,7 +28,7 @@ export const Errors = (function () {
         }
     }
 
-    function isError(error: Error | number | string) {
+    public isError(error: Error | number | string): boolean {
         if (!error) return false;
 
         // We can't afford to throw while checking if we're processing an error
@@ -48,7 +48,7 @@ export const Errors = (function () {
     // error - an exception object
     // message - a string describing the error
     // suppressTracking - boolean indicating if we should suppress tracking
-    function log(error: Error | number | string, message: string, suppressTracking?: boolean) {
+    public log(error: Error | number | string, message: string, suppressTracking?: boolean): void {
         if (error && !suppressTracking) {
             const props = {
                 Message: message,
@@ -57,7 +57,7 @@ export const Errors = (function () {
                 Stack: "",
             };
 
-            if (Errors.isError(error) && error.exception) {
+            if (this.isError(error) && error.exception) {
                 props.Source = "Error.log Exception";
                 Diagnostics.trackException(error, props);
             }
@@ -71,39 +71,39 @@ export const Errors = (function () {
             }
         }
 
-        Errors.parse(error, message, function (eventName, stack) {
-            Errors.add(eventName, stack, suppressTracking);
-        });
-    }
-
-    // While trying to get our error tracking under control, let's not filter our stacks
-    function filterStack(stack: StackTrace.StackFrame[]) {
-        return stack.filter(function (item: StackTrace.StackFrame) {
-            if (!item.fileName) return true;
-            if (item.fileName.indexOf("stacktrace") !== -1) return false; // remove stacktrace.js frames
-            //if (item.functionName === "ShowError") return false;
-            //if (item.functionName === "showError") return false;
-            //if (item.functionName === "Errors.log") return false; // Logs with Errors.log in them usually have location where it was called from - keep those
-            //if (item.functionName === "GetStack") return false;
-            if (item.functionName === "Errors.parse") return false; // Only ever called from Errors.log
-            if (item.functionName === "Errors.isError") return false; // Not called from anywhere interesting
-            return true;
+        this.parse(error, message, function (eventName, stack) {
+            this.add(eventName, stack, suppressTracking);
         });
     }
 
     // exception - an exception object
     // message - a string describing the error
     // handler - function to call with parsed error
-    function parse(exception, message: string, handler) {
+    public parse(exception, message: string, handler): void {
         let stack;
-        const exceptionMessage = Errors.getErrorMessage(exception);
+        const exceptionMessage = this.getErrorMessage(exception);
 
-        let eventName = Errors.joinArray([message, exceptionMessage], ' : ');
+        let eventName = this.joinArray([message, exceptionMessage], ' : ');
         if (!eventName) {
             eventName = "Unknown exception";
         }
 
-        function callback(stackframes) {
+        // While trying to get our error tracking under control, let's not filter our stacks
+        function filterStack(stack: StackTrace.StackFrame[]) {
+            return stack.filter(function (item: StackTrace.StackFrame) {
+                if (!item.fileName) return true;
+                if (item.fileName.indexOf("stacktrace") !== -1) return false; // remove stacktrace.js frames
+                //if (item.functionName === "ShowError") return false;
+                //if (item.functionName === "showError") return false;
+                //if (item.functionName === "Errors.log") return false; // Logs with Errors.log in them usually have location where it was called from - keep those
+                //if (item.functionName === "GetStack") return false;
+                if (item.functionName === "Errors.parse") return false; // Only ever called from Errors.log
+                if (item.functionName === "this.isError") return false; // Not called from anywhere interesting
+                return true;
+            });
+        }
+
+        function callback(stackframes: StackTrace.StackFrame[]) {
             stack = filterStack(stackframes).map(function (sf) {
                 return sf.toString();
             });
@@ -117,14 +117,14 @@ export const Errors = (function () {
         }
 
         // TODO: Move filter from callbacks into gets
-        if (!Errors.isError(exception)) {
+        if (!this.isError(exception)) {
             StackTrace.get().then(callback).catch(errback);
         } else {
             StackTrace.fromError(exception).then(callback).catch(errback);
         }
     }
 
-    function getErrorMessage(error: Error | number | string): string {
+    public getErrorMessage(error: Error | number | string): string {
         if (!error) return '';
         if (typeof (error) === "string") return error;
         if (typeof (error) === "number") return error.toString();
@@ -133,23 +133,14 @@ export const Errors = (function () {
         return JSON.stringify(error, null, 2);
     }
 
-    function getErrorStack(error: Error | number | string): string {
+    public getErrorStack(error: Error | number | string): string {
         if (!error) return '';
         if (typeof (error) === "string") return "string thrown as error";
-        if (!Errors.isError(error)) return '';
+        if (!this.isError(error)) return '';
         if ("stack" in error) return error.stack;
         return '';
     }
+}
 
-    return {
-        clear: clear,
-        get: get,
-        joinArray: joinArray,
-        add: add,
-        isError: isError,
-        log: log,
-        parse: parse,
-        getErrorMessage: getErrorMessage,
-        getErrorStack: getErrorStack
-    };
-})();
+let Errors = new _Errors();
+export default Errors;
