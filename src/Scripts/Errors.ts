@@ -8,12 +8,12 @@ export const Errors = (function () {
     function get() { return errorArray; }
 
     // Join an array with char, dropping empty/missing entries
-    function joinArray(array, char) {
+    function joinArray(array: (string | number)[], char: string): string {
         if (!array) return null;
         return (array.filter(function (item) { return item; })).join(char);
     }
 
-    function add(eventName, stack, suppressTracking) {
+    function add(eventName, stack, suppressTracking: boolean) {
         if (eventName || stack) {
             const stackString = Errors.joinArray(stack, "\n");
             errorArray.push(Errors.joinArray([eventName, stackString], "\n"));
@@ -28,7 +28,7 @@ export const Errors = (function () {
         }
     }
 
-    function isError(error) {
+    function isError(error: Error | number | string) {
         if (!error) return false;
 
         // We can't afford to throw while checking if we're processing an error
@@ -48,7 +48,7 @@ export const Errors = (function () {
     // error - an exception object
     // message - a string describing the error
     // suppressTracking - boolean indicating if we should suppress tracking
-    function log(error, message: string, suppressTracking?: boolean) {
+    function log(error: Error | number | string, message: string, suppressTracking?: boolean) {
         if (error && !suppressTracking) {
             const props = {
                 Message: message,
@@ -77,8 +77,8 @@ export const Errors = (function () {
     }
 
     // While trying to get our error tracking under control, let's not filter our stacks
-    function filterStack(stack) {
-        return stack.filter(function (item) {
+    function filterStack(stack: StackTrace.StackFrame[]) {
+        return stack.filter(function (item: StackTrace.StackFrame) {
             if (!item.fileName) return true;
             if (item.fileName.indexOf("stacktrace") !== -1) return false; // remove stacktrace.js frames
             //if (item.functionName === "ShowError") return false;
@@ -94,7 +94,7 @@ export const Errors = (function () {
     // exception - an exception object
     // message - a string describing the error
     // handler - function to call with parsed error
-    function parse(exception, message, handler) {
+    function parse(exception, message: string, handler) {
         let stack;
         const exceptionMessage = Errors.getErrorMessage(exception);
 
@@ -124,18 +124,18 @@ export const Errors = (function () {
         }
     }
 
-    function getErrorMessage(error) {
+    function getErrorMessage(error: Error | number | string): string {
         if (!error) return '';
-        if (Object.prototype.toString.call(error) === "[object String]") return error;
-        if (Object.prototype.toString.call(error) === "[object Number]") return error.toString();
+        if (typeof (error) === "string") return error;
+        if (typeof (error) === "number") return error.toString();
         if ("message" in error) return error.message;
         if ("description" in error) return error.description;
         return JSON.stringify(error, null, 2);
     }
 
-    function getErrorStack(error) {
+    function getErrorStack(error: Error | number | string): string {
         if (!error) return '';
-        if (Object.prototype.toString.call(error) === "[object String]") return "string thrown as error";
+        if (typeof (error) === "string") return "string thrown as error";
         if (!Errors.isError(error)) return '';
         if ("stack" in error) return error.stack;
         return '';
