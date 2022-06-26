@@ -2,16 +2,17 @@ import { Diagnostics } from "./diag";
 import { strings } from "./Strings";
 import * as StackTrace from "stacktrace-js";
 
-class _Errors {
-    private errorArray = [];
-    public clear(): void { this.errorArray = []; }
+let errorArray: string[] = [];
 
-    public get() { return this.errorArray; }
+export class Errors {
+    public static clear(): void { errorArray = []; }
 
-    public add(eventName, stack, suppressTracking: boolean): void {
+    public static get() { return errorArray; }
+
+    public static add(eventName, stack, suppressTracking: boolean): void {
         if (eventName || stack) {
             const stackString = strings.joinArray(stack, "\n");
-            this.errorArray.push(strings.joinArray([eventName, stackString], "\n"));
+            errorArray.push(strings.joinArray([eventName, stackString], "\n"));
 
             if (!suppressTracking) {
                 Diagnostics.trackEvent(eventName,
@@ -23,7 +24,7 @@ class _Errors {
         }
     }
 
-    public isError(error: Error | number | string): boolean {
+    public static isError(error: Error | number | string): boolean {
         if (!error) return false;
 
         // We can't afford to throw while checking if we're processing an error
@@ -45,7 +46,7 @@ class _Errors {
     // error - an exception object
     // message - a string describing the error
     // suppressTracking - boolean indicating if we should suppress tracking
-    public log(error: Error | number | string, message: string, suppressTracking?: boolean): void {
+    public static log(error: Error | number | string, message: string, suppressTracking?: boolean): void {
         if (error && !suppressTracking) {
             const props = {
                 Message: message,
@@ -54,7 +55,7 @@ class _Errors {
                 Stack: "",
             };
 
-            if (this.isError(error) && error.exception) {
+            if (Errors.isError(error) && error.exception) {
                 props.Source = "Error.log Exception";
                 Diagnostics.trackException(error, props);
             }
@@ -68,17 +69,17 @@ class _Errors {
             }
         }
 
-        this.parse(error, message, function (eventName: string, stack: string[]): void {
-            this.add(eventName, stack, suppressTracking);
+        Errors.parse(error, message, function (eventName: string, stack: string[]): void {
+            Errors.add(eventName, stack, suppressTracking);
         });
     }
 
     // exception - an exception object
     // message - a string describing the error
     // handler - function to call with parsed error
-    public parse(exception, message: string, handler: (eventName: string, stack: string[]) => void): void {
+    public static parse(exception, message: string, handler: (eventName: string, stack: string[]) => void): void {
         let stack;
-        const exceptionMessage = this.getErrorMessage(exception);
+        const exceptionMessage = Errors.getErrorMessage(exception);
 
         let eventName = strings.joinArray([message, exceptionMessage], ' : ');
         if (!eventName) {
@@ -95,7 +96,7 @@ class _Errors {
                 //if (item.functionName === "Errors.log") return false; // Logs with Errors.log in them usually have location where it was called from - keep those
                 //if (item.functionName === "GetStack") return false;
                 if (item.functionName === "Errors.parse") return false; // Only ever called from Errors.log
-                if (item.functionName === "this.isError") return false; // Not called from anywhere interesting
+                if (item.functionName === "Errors.isError") return false; // Not called from anywhere interesting
                 return true;
             });
         }
@@ -114,14 +115,14 @@ class _Errors {
         }
 
         // TODO: Move filter from callbacks into gets
-        if (!this.isError(exception)) {
+        if (!Errors.isError(exception)) {
             StackTrace.get().then(callback).catch(errback);
         } else {
             StackTrace.fromError(exception).then(callback).catch(errback);
         }
     }
 
-    public getErrorMessage(error: Error | number | string): string {
+    public static getErrorMessage(error: Error | number | string): string {
         if (!error) return '';
         if (typeof (error) === "string") return error;
         if (typeof (error) === "number") return error.toString();
@@ -129,14 +130,12 @@ class _Errors {
         return JSON.stringify(error, null, 2);
     }
 
-    public getErrorStack(error: Error | number | string): string {
+    public static getErrorStack(error: Error | number | string): string {
         if (!error) return '';
         if (typeof (error) === "string") return "string thrown as error";
         if (typeof (error) === "number") return "number thrown as error";
-        if (!this.isError(error)) return '';
+        if (!Errors.isError(error)) return '';
         if ("stack" in error) return error.stack;
         return '';
     }
 }
-
-export let Errors: _Errors = new _Errors();

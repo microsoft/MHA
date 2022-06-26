@@ -16,9 +16,10 @@ import { Diagnostics } from "./diag";
  */
 
 export const GetHeadersAPI = (function () {
-    const minAPISet: string = "1.9";
+    //const minAPISet: string = "1.9";
 
-    function canUseAPI(): boolean { return GetHeaders.canUseAPI("API", minAPISet); }
+    //function canUseAPI(): boolean { return GetHeaders.canUseAPI("API", minAPISet); }
+    function canUseAPI(): boolean { return false; }
 
     function send(headersLoadedCallback: Function): void {
         if (!GetHeaders.validItem()) {
