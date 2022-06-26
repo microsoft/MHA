@@ -129,13 +129,13 @@ class _Errors {
         if (typeof (error) === "string") return error;
         if (typeof (error) === "number") return error.toString();
         if ("message" in error) return error.message;
-        if ("description" in error) return error.description;
         return JSON.stringify(error, null, 2);
     }
 
     public getErrorStack(error: Error | number | string): string {
         if (!error) return '';
         if (typeof (error) === "string") return "string thrown as error";
+        if (typeof (error) === "number") return "number thrown as error";
         if (!this.isError(error)) return '';
         if ("stack" in error) return error.stack;
         return '';

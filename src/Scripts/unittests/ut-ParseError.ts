@@ -211,7 +211,7 @@ QUnit.test("getError* Tests", function (assert) {
     }
     catch (error) {
         assert.equal(Errors.getErrorMessage(error), "42");
-        assert.ok(Errors.getErrorStack(error).length === 0);
+        assert.equal(Errors.getErrorStack(error), "number thrown as error");
     }
 
     try {
@@ -233,7 +233,7 @@ QUnit.test("getError* Tests", function (assert) {
     assert.equal(Errors.getErrorStack("stringError"), "string thrown as error");
 
     assert.equal(Errors.getErrorMessage(42), "42");
-    assert.equal(Errors.getErrorStack(42), "");
+    assert.equal(Errors.getErrorStack(42), "number thrown as error");
 });
 
 QUnit.test("joinArray Tests", function (assert) {
