@@ -4,7 +4,7 @@ import { Errors } from "./Errors";
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersEWS } from "./GetHeadersEWS";
-import Diagnostics from "./diag"
+import { Diagnostics } from "./diag";
 import jwt_decode, { JwtPayload } from 'jwt-decode'
 
 /*

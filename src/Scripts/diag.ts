@@ -297,5 +297,4 @@ class diag {
     public clear(): void { this.itemDiagnostics = null; }
 }
 
-let Diagnostics = new diag();
-export default Diagnostics;
+export let Diagnostics: diag = new diag();

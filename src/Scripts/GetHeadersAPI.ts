@@ -3,7 +3,7 @@ import { Errors } from "./Errors";
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersRest } from "./GetHeadersRest";
-import Diagnostics from "./diag"
+import { Diagnostics } from "./diag";
 
 /*
  * GetHeadersAPI.js

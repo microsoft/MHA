@@ -1,4 +1,4 @@
-import Diagnostics from "./diag"
+import { Diagnostics } from "./diag";
 import * as StackTrace from "stacktrace-js";
 
 class _Errors {
