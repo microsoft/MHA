@@ -15,18 +15,18 @@ import { Diagnostics } from "./diag";
  * getAllInternetHeadersAsync requires 1.9 and ReadItem
  */
 
-export const GetHeadersAPI = (function () {
-    const minAPISet: string = "1.9";
+export class GetHeadersAPI {
+    private static minAPISet: string = "1.9";
 
-    function canUseAPI(): boolean { return GetHeaders.canUseAPI("API", minAPISet); }
+    public static canUseAPI(): boolean { return GetHeaders.canUseAPI("API", GetHeadersAPI.minAPISet); }
 
-    function send(headersLoadedCallback: Function): void {
+    public static send(headersLoadedCallback: Function): void {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (API)", true);
             return;
         }
 
-        if (!canUseAPI()) {
+        if (!GetHeadersAPI.canUseAPI()) {
             GetHeadersRest.send(headersLoadedCallback);
             return;
         }
@@ -48,9 +48,4 @@ export const GetHeadersAPI = (function () {
             ParentFrame.showError(e, "Failed in getAllInternetHeadersAsync");
         }
     }
-
-    return {
-        send: send,
-        canUseAPI: canUseAPI
-    };
-})();
+}
