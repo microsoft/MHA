@@ -1,5 +1,5 @@
 import { mhaStrings } from "./mhaStrings";
-import Errors from "./Errors";
+import { Errors } from "./Errors";
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersRest } from "./GetHeadersRest";

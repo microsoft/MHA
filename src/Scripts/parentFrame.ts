@@ -1,7 +1,7 @@
 ﻿import * as $ from "jquery";
 import { fabric } from "./fabric"
 import Diagnostics from "./diag"
-import Errors from "./Errors";
+import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";
 import { poster } from "./poster"
 import { strings } from "./Strings";

@@ -142,5 +142,4 @@ class _Errors {
     }
 }
 
-let Errors = new _Errors();
-export default Errors;
+export let Errors: _Errors = new _Errors();
