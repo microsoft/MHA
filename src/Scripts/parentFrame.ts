@@ -34,7 +34,7 @@ export class ParentFrame {
     private static getQueryVariable(variable: string): string {
         const vars: string[] = window.location.search.substring(1).split("&");
         for (let i: number = 0; i < vars.length; i++) {
-            const pair = vars[i].split("=");
+            const pair: string[] = vars[i].split("=");
             if (pair[0] === variable) {
                 return pair[1];
             }
@@ -114,7 +114,7 @@ export class ParentFrame {
 
     private static loadNewItem(): void {
         if (Office.context.mailbox.item) {
-            GetHeaders.send(function (_headers: string, apiUsed: string) {
+            GetHeaders.send(function (_headers: string, apiUsed: string): void {
                 ParentFrame.headers = _headers;
                 Diagnostics.set("API used", apiUsed);
                 ParentFrame.render();
@@ -126,7 +126,7 @@ export class ParentFrame {
         try {
             if (Office.context.mailbox.addHandlerAsync !== undefined) {
                 Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged,
-                    function () {
+                    function (): void {
                         Errors.clear();
                         Diagnostics.clear();
                         ParentFrame.loadNewItem();
@@ -207,7 +207,7 @@ export class ParentFrame {
         list.empty();
 
         for (let iChoice: number = 0; iChoice < ParentFrame.choices.length; iChoice++) {
-            const choice = ParentFrame.choices[iChoice];
+            const choice: Choice = ParentFrame.choices[iChoice];
 
             // Create html: <li class="ms-RadioButton">
             const listItem: JQuery<HTMLLIElement> = ParentFrame.create(list, "li", "ms-RadioButton");
@@ -234,7 +234,6 @@ export class ParentFrame {
 
     // Hook the UI together for display
     private static initFabric(): void {
-        let i;
         const header: Element = document.querySelector(".header-row");
 
         const dialogSettings: Element = header.querySelector("#dialog-Settings");
@@ -245,17 +244,17 @@ export class ParentFrame {
         // Wire up the dialog
         const dialogDiagnosticsComponent = new fabric["Dialog"](dialogDiagnostics);
 
-        const actionButtonElements = header.querySelectorAll(".ms-Dialog-action");
+        const actionButtonElements: NodeListOf<Element> = header.querySelectorAll(".ms-Dialog-action");
 
         const telemetryCheckbox: Element = document.querySelector("#dialog-enableTelemetry");
         const telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
         Diagnostics.canSendTelemetry() ? telemetryCheckboxComponent.check() : telemetryCheckboxComponent.unCheck();
 
-        function actionHandler() {
+        function actionHandler(): void {
             const action = this.id;
 
-            function getDiagnostics() {
-                let diagnostics = "";
+            function getDiagnostics(): string {
+                let diagnostics: string = "";
                 try {
                     const diagnosticMap = Diagnostics.get();
                     for (const diag in diagnosticMap) {
@@ -267,8 +266,8 @@ export class ParentFrame {
                     diagnostics += "ERROR: Failed to get diagnostics\n";
                 }
 
-                const errors = Errors.get();
-                for (let iError = 0; iError < errors.length; iError++) {
+                const errors: string[] = Errors.get();
+                for (let iError: number = 0; iError < errors.length; iError++) {
                     if (errors[iError]) {
                         diagnostics += "ERROR: " + errors[iError] + "\n";
                     }
@@ -282,7 +281,7 @@ export class ParentFrame {
             switch (action) {
                 case "actionsSettings-OK": {
                     // How did the user say to display it (UI to display)
-                    const iChoice = ($("#uiChoice input:checked")[0] as HTMLInputElement).value;
+                    const iChoice: string = ($("#uiChoice input:checked")[0] as HTMLInputElement).value;
                     const choice: Choice = ParentFrame.choices[+iChoice];
                     if (choice.label !== ParentFrame.currentChoice.label) {
                         ParentFrame.go(choice);
@@ -291,7 +290,7 @@ export class ParentFrame {
                     break;
                 }
                 case "actionsSettings-diag": {
-                    const diagnostics = getDiagnostics();
+                    const diagnostics: string = getDiagnostics();
                     $("#diagnostics").text(diagnostics);
                     dialogDiagnosticsComponent.open();
                     break;
@@ -300,36 +299,36 @@ export class ParentFrame {
         }
 
         // Wire up the buttons
-        for (i = 0; i < actionButtonElements.length; i++) {
+        for (let i: number = 0; i < actionButtonElements.length; i++) {
             new fabric["Button"](actionButtonElements[i], actionHandler);
         }
 
-        const choiceGroup = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
+        const choiceGroup: NodeListOf<Element> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
         new fabric["ChoiceFieldGroup"](choiceGroup[0]);
 
-        const choiceFieldGroupElements = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
-        for (i = 0; i < choiceFieldGroupElements.length; i++) {
+        const choiceFieldGroupElements: NodeListOf<Element> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
+        for (let i: number = 0; i < choiceFieldGroupElements.length; i++) {
             new fabric["ChoiceFieldGroup"](choiceFieldGroupElements[i]);
         }
 
-        const settingsButton = header.querySelector(".gear-button") as HTMLButtonElement;
+        const settingsButton: HTMLButtonElement = header.querySelector(".gear-button") as HTMLButtonElement;
         // When clicking the button, open the dialog
-        settingsButton.onclick = function () {
+        settingsButton.onclick = function (): void {
             // Set the current choice in the UI.
             $("#uiChoice input").attr("checked", "false");
-            const labels = $("#uiChoice label");
+            const labels: JQuery<HTMLElement> = $("#uiChoice label");
             labels.removeClass("is-checked");
             labels.attr("aria-checked", "false");
-            const currentSelected = $("#uiChoice label[value=" + ParentFrame.currentChoice.label + "]");
+            const currentSelected: JQuery<HTMLLabelElement> = $("#uiChoice label[value=" + ParentFrame.currentChoice.label + "]");
             currentSelected.addClass("is-checked");
             currentSelected.attr("aria-checked", "true");
-            const input = currentSelected.prevAll("input:first");
+            const input: JQuery<HTMLInputElement> = currentSelected.prevAll("input:first");
             input.prop("checked", "true");
             dialogSettingsComponent.open();
         };
 
-        const copyButton = header.querySelector(".copy-button") as HTMLButtonElement;
-        copyButton.onclick = function () {
+        const copyButton: HTMLButtonElement = header.querySelector(".copy-button") as HTMLButtonElement;
+        copyButton.onclick = function (): void {
             strings.copyToClipboard(ParentFrame.modelToString);
         };
     }
@@ -343,7 +342,7 @@ export class ParentFrame {
             const choice: Choice = Office.context.roamingSettings.get(ParentFrame.getSettingsKey());
             Diagnostics.setSendTelemetry(Office.context.roamingSettings.get("sendTelemetry"));
 
-            const input = $("#uiToggle" + choice.label);
+            const input: JQuery<HTMLElement> = $("#uiToggle" + choice.label);
             input.prop("checked", "true");
             ParentFrame.go(choice);
         } catch (e) {

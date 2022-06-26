@@ -30,18 +30,18 @@ import { poster } from "./poster";
         spinner = new fabric["Spinner"](spinnerElement);
         spinner.stop();
 
-        const commandBarElements = document.querySelectorAll(".ms-CommandBar");
+        const commandBarElements: NodeListOf<Element> = document.querySelectorAll(".ms-CommandBar");
         let i;
         for (i = 0; i < commandBarElements.length; i++) {
             new fabric["CommandBar"](commandBarElements[i]);
         }
 
-        const commandButtonElements = document.querySelectorAll(".ms-CommandButton");
+        const commandButtonElements: NodeListOf<Element> = document.querySelectorAll(".ms-CommandButton");
         for (i = 0; i < commandButtonElements.length; i++) {
             new fabric["CommandButton"](commandButtonElements[i]);
         }
 
-        const buttonElement = document.querySelector("#orig-header-btn");
+        const buttonElement: NodeListOf<Element> = document.querySelector("#orig-header-btn");
         new fabric["Button"](buttonElement, function () {
             const btnIcon = $(this).find(".ms-Icon");
             if (btnIcon.hasClass("ms-Icon--Add")) {
