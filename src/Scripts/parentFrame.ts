@@ -100,7 +100,7 @@ export class ParentFrame {
         if (event.data) {
             switch (event.data.eventName) {
                 case "frameActive":
-                    ParentFrame.setFrame(event.source);
+                    ParentFrame.setFrame(event.source as Window);
                     break;
                 case "LogError":
                     Errors.log(JSON.parse(event.data.data.error), event.data.data.message);
@@ -283,7 +283,7 @@ export class ParentFrame {
                 case "actionsSettings-OK": {
                     // How did the user say to display it (UI to display)
                     const iChoice = ($("#uiChoice input:checked")[0] as HTMLInputElement).value;
-                    const choice: Choice = ParentFrame.choices[iChoice];
+                    const choice: Choice = ParentFrame.choices[+iChoice];
                     if (choice.label !== ParentFrame.currentChoice.label) {
                         ParentFrame.go(choice);
                     }
