@@ -13,7 +13,7 @@ class Choice {
 }
 
 export class ParentFrame {
-    private static iFrame = null;
+    private static iFrame: Window = null;
     private static currentChoice = {} as Choice;
     private static deferredErrors = [];
     private static deferredStatus = [];
@@ -26,7 +26,7 @@ export class ParentFrame {
         { label: "new-mobile", url: "newMobilePaneIosFrame.html", checked: false }
     ];
 
-    private static getQueryVariable(variable) {
+    private static getQueryVariable(variable: string): string {
         const vars = window.location.search.substring(1).split("&");
         for (let i = 0; i < vars.length; i++) {
             const pair = vars[i].split("=");
@@ -37,7 +37,7 @@ export class ParentFrame {
         return null;
     }
 
-    private static setDefault() {
+    private static setDefault(): void {
         let uiDefault = ParentFrame.getQueryVariable("default");
         if (uiDefault === null) {
             uiDefault = "new";
@@ -52,16 +52,16 @@ export class ParentFrame {
         }
     }
 
-    private static postMessageToFrame(eventName: string, data) {
+    private static postMessageToFrame(eventName: string, data: string | { error: string, message: any }): void {
         poster.postMessageToFrame(ParentFrame.iFrame, eventName, data);
     }
 
-    private static render() {
+    private static render(): void {
         if (ParentFrame.headers) Diagnostics.trackEvent({ name: "analyzeHeaders" });
         ParentFrame.postMessageToFrame("renderItem", ParentFrame.headers);
     }
 
-    private static setFrame(frame) {
+    private static setFrame(frame: Window): void {
         ParentFrame.iFrame = frame;
 
         if (ParentFrame.iFrame) {
@@ -89,7 +89,7 @@ export class ParentFrame {
         }
     }
 
-    private static eventListener(event) {
+    private static eventListener(event: MessageEvent) {
         if (!event || event.origin !== poster.site()) return;
 
         if (event.data) {
@@ -109,7 +109,7 @@ export class ParentFrame {
 
     private static loadNewItem() {
         if (Office.context.mailbox.item) {
-            GetHeaders.send(function (_headers, apiUsed) {
+            GetHeaders.send(function (_headers: string, apiUsed: string) {
                 ParentFrame.headers = _headers;
                 Diagnostics.set("API used", apiUsed);
                 ParentFrame.render();
@@ -133,7 +133,7 @@ export class ParentFrame {
     }
 
     // Tells the UI to show an error.
-    public static showError(error, message: string, suppressTracking?: boolean) {
+    public static showError(error: Error, message: string, suppressTracking?: boolean) {
         Errors.log(error, message, suppressTracking);
 
         if (ParentFrame.iFrame) {
@@ -145,7 +145,7 @@ export class ParentFrame {
     }
 
     // Tells the UI to show an error.
-    public static updateStatus(statusText) {
+    public static updateStatus(statusText: string) {
         if (ParentFrame.iFrame) {
             ParentFrame.postMessageToFrame("updateStatus", statusText);
         } else {
@@ -183,8 +183,8 @@ export class ParentFrame {
         }
     }
 
-    private static create(parentElement, newType, newClass) {
-        const newElement = $(document.createElement(newType));
+    private static create(parentElement: JQuery<HTMLElement>, newType: string, newClass: string): JQuery<HTMLElement> {
+        const newElement: JQuery<HTMLElement> = $(document.createElement(newType));
         if (newClass) {
             newElement.addClass(newClass);
         }
@@ -197,52 +197,52 @@ export class ParentFrame {
     }
 
     // Create list of choices to display for the UI types
-    private static addChoices() {
+    private static addChoices(): void {
         const list = $("#uiChoice-list");
         list.empty();
 
-        for (let iChoice = 0; iChoice < ParentFrame.choices.length; iChoice++) {
+        for (let iChoice: number = 0; iChoice < ParentFrame.choices.length; iChoice++) {
             const choice = ParentFrame.choices[iChoice];
 
             // Create html: <li class="ms-RadioButton">
-            const listItem = ParentFrame.create(list, "li", "ms-RadioButton");
+            const listItem: JQuery<HTMLElement> = ParentFrame.create(list, "li", "ms-RadioButton");
 
             // Create html: <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
-            const input = ParentFrame.create(listItem, "input", "ms-RadioButton-input");
+            const input: JQuery<HTMLElement> = ParentFrame.create(listItem, "input", "ms-RadioButton-input");
 
             input.attr("tabindex", "-1");
             input.attr("type", "radio");
             input.attr("value", iChoice);
 
             //  Create html: <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
-            const label = ParentFrame.create(listItem, "label", "ms-RadioButton-field");
+            const label: JQuery<HTMLElement> = ParentFrame.create(listItem, "label", "ms-RadioButton-field");
             label.attr("role", "radio");
             label.attr("tabindex", "0");
             label.attr("name", "uiChoice");
             label.attr("value", choice.label);
 
             // Create html: <span class="ms-Label">classic</span>
-            const inputSpan = ParentFrame.create(label, "span", "ms-Label");
+            const inputSpan: JQuery<HTMLElement> = ParentFrame.create(label, "span", "ms-Label");
             inputSpan.text(choice.label);
         }
     }
 
     // Hook the UI together for display
-    private static initFabric() {
+    private static initFabric(): void {
         let i;
-        const header = document.querySelector(".header-row");
+        const header: Element = document.querySelector(".header-row");
 
-        const dialogSettings = header.querySelector("#dialog-Settings");
+        const dialogSettings: Element = header.querySelector("#dialog-Settings");
         // Wire up the dialog
         const dialogSettingsComponent = new fabric["Dialog"](dialogSettings);
 
-        const dialogDiagnostics = header.querySelector("#dialog-Diagnostics");
+        const dialogDiagnostics: Element = header.querySelector("#dialog-Diagnostics");
         // Wire up the dialog
         const dialogDiagnosticsComponent = new fabric["Dialog"](dialogDiagnostics);
 
         const actionButtonElements = header.querySelectorAll(".ms-Dialog-action");
 
-        const telemetryCheckbox = document.querySelector("#dialog-enableTelemetry");
+        const telemetryCheckbox: Element = document.querySelector("#dialog-enableTelemetry");
         const telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
         Diagnostics.canSendTelemetry() ? telemetryCheckboxComponent.check() : telemetryCheckboxComponent.unCheck();
 
