@@ -112,7 +112,7 @@ class _Errors {
             handler(eventName, stack);
         }
 
-        function errback(err) {
+        function errback(err: Error) {
             Diagnostics.trackEvent({ name: "Errors.parse errback" });
             stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
             handler(eventName, stack);
