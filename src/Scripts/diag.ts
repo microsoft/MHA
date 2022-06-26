@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import { ApplicationInsights, IEventTelemetry, ICustomProperties } from '@microsoft/applicationinsights-web'
+import { ApplicationInsights, IEventTelemetry, ICustomProperties, ITelemetryItem } from '@microsoft/applicationinsights-web'
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersAPI } from "./GetHeadersAPI";
@@ -11,8 +11,8 @@ import { buildTime } from "./buildTime";
 // diagnostics module
 
 class diag {
-    private appDiagnostics: { [k: string]: any } = {};
-    private itemDiagnostics: { [k: string]: any } = {};
+    private appDiagnostics: { [k: string]: any } = null;
+    private itemDiagnostics: { [k: string]: any } = null;
     private inGet: boolean = false;
     private sendTelemetry: boolean = true;
     private appInsights = new ApplicationInsights({
@@ -23,7 +23,7 @@ class diag {
     });
 
     constructor() {
-        this.appInsights.addTelemetryInitializer(function (envelope) {
+        this.appInsights.addTelemetryInitializer(function (envelope: ITelemetryItem) {
             envelope.data[`baseType`] = envelope.baseType;
             envelope.data[`baseType`] = envelope.baseData;
             // This will get called for any appInsights tracking - we can augment or suppress logging from here
@@ -218,6 +218,8 @@ class diag {
             if (!("Office" in window)) return "none";
             if (!window.Office.context) return "no context";
             if (window.Office.context.requirements && window.Office.context.requirements.isSetSupported) {
+                if (window.Office.context.requirements.isSetSupported("Mailbox", "1.11")) return "1.11";
+                if (window.Office.context.requirements.isSetSupported("Mailbox", "1.10")) return "1.10";
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.9)) return "1.9";
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.8)) return "1.8";
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.7)) return "1.7";
