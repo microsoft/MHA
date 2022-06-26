@@ -97,7 +97,7 @@ export const GetHeadersRest = (function () {
             url: getMessageUrl,
             dataType: "json",
             headers: {
-                "Authorization": "Bearer la" + accessToken,
+                "Authorization": "Bearer" + accessToken,
                 "Accept": "application/json; odata.metadata=none"
             }
         }).done(function (item) {
