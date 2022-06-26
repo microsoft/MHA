@@ -12,11 +12,16 @@ class Choice {
     checked: boolean;
 }
 
+class DeferredError {
+    error: Error;
+    message: string;
+}
+
 export class ParentFrame {
     private static iFrame: Window = null;
     private static currentChoice = {} as Choice;
-    private static deferredErrors = [];
-    private static deferredStatus = [];
+    private static deferredErrors: DeferredError[] = [];
+    private static deferredStatus: string[] = [];
     private static headers = "";
     private static modelToString = "";
 
@@ -77,8 +82,8 @@ export class ParentFrame {
             for (let iError = 0; iError < ParentFrame.deferredErrors.length; iError++) {
                 ParentFrame.postMessageToFrame("showError",
                     {
-                        error: JSON.stringify(ParentFrame.deferredErrors[iError][0]),
-                        message: ParentFrame.deferredErrors[iError][1]
+                        error: JSON.stringify(ParentFrame.deferredErrors[iError].error),
+                        message: ParentFrame.deferredErrors[iError].message
                     });
             }
 
@@ -140,7 +145,7 @@ export class ParentFrame {
             ParentFrame.postMessageToFrame("showError", { error: JSON.stringify(error), message: message });
         } else {
             // We don't have an iFrame, so defer the message
-            ParentFrame.deferredErrors.push([error, message]);
+            ParentFrame.deferredErrors.push(<DeferredError>{ error: error, message: message });
         }
     }
 
