@@ -2,6 +2,15 @@
 import { ReceivedRow } from "../Received"
 import { row } from "../Summary";
 
+declare global {
+    interface Assert {
+        receivedEqual(actual: row, expected: object, message: string): void;
+        arrayEqual(actual: row[], expected: object[], message: string): void;
+        datesEqual(actual: ReceivedRow, expected: object, message: string): void;
+        errorsEqual(actual: string, expectedValues: string[], message: string): void;
+    }
+}
+
 QUnit.assert.receivedEqual = function (actual: row, expected: object, message: string): void {
     try {
         var field;
