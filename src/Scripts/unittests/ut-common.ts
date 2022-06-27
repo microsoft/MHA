@@ -5,16 +5,16 @@ import { row } from "../Summary";
 QUnit.assert.receivedEqual = function (actual: row, expected: object, message: string): void {
     try {
         var field;
-        for (field in expected) {
+        for (const [field, value] of Object.entries(expected)) {
             if (field === "date") continue;
             if (field === "_value") continue;
-            if (expected[field] === actual[field]) continue;
-            if (actual[field] && expected[field] === actual[field].value) continue;
-            if (actual[field] && expected[field] === actual[field].toString()) continue;
+            if (value === actual[field]) continue;
+            if (actual[field] && value === actual[field].value) continue;
+            if (actual[field] && value === actual[field].toString()) continue;
             this.pushResult({
                 result: false,
                 actual: field + " = " + actual[field],
-                expected: field + " = " + expected[field],
+                expected: field + " = " + value,
                 message: message
             });
         }

@@ -11,6 +11,7 @@ export class row {
         this._value = "";
     }
 
+    [index: string]: any;
     private _value: string;
     header: string;
     label: string;
