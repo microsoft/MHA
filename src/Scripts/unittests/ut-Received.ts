@@ -1,7 +1,7 @@
 ﻿import * as QUnit from "qunit";
 import { Received } from "../Received"
 
-QUnit.test("Received Tests", function (assert) {
+QUnit.test("Received Tests", function (assert: Assert) {
     var received = new Received();
     var header1 =
         "Received: from BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com\n" +
@@ -82,7 +82,7 @@ QUnit.test("Received Tests", function (assert) {
         }, "header1");
 });
 
-QUnit.test("Received Tests github headers", function (assert) {
+QUnit.test("Received Tests github headers", function (assert: Assert) {
     var received = new Received();
     var githubHeader1 =
         "Received: from CO1NAM03HT217.eop-NAM03.prod.protection.outlook.com\n" +
@@ -182,7 +182,7 @@ QUnit.test("Received Tests github headers", function (assert) {
         }, "githubHeader1");
 });
 
-QUnit.test("Received Tests parseHeader", function (assert) {
+QUnit.test("Received Tests parseHeader", function (assert: Assert) {
     var received = new Received();
     var sendGrid = "Received: by filter0383p1iad2.sendgrid.net with SMTP id filter0383p1iad2-15318-5AB8F728-C\n" +
         " 2018-03-26 13:35:36.270951634 +0000 UTC";

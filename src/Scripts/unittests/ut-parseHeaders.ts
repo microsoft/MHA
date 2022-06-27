@@ -1,7 +1,7 @@
 ﻿import * as QUnit from "qunit";
 import { HeaderModel } from "../Headers"
 
-QUnit.test("parseHeader Tests", function (assert) {
+QUnit.test("parseHeader Tests", function (assert: Assert) {
     var summaryRows = [
         {
             "header": "Subject",

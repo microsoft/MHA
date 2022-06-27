@@ -5,9 +5,9 @@ import { strings } from "../Strings";
 // Strip stack of rows with unittests.html.
 // Used to normalize cross browser differences strictly for testing purposes
 // Real stacks sent up will contain cross browser quirks
-function cleanStack(stack) {
+function cleanStack(stack: string[]) {
     if (!stack) return null;
-    return stack.map(function (item) {
+    return stack.map(function (item: string): string {
         return item
             .replace(/.*localhost.*/, "") // test stacks don't have files from the site
             .replace(/.*azurewebsites.*/, "") // test stacks don't have files from the site
@@ -20,16 +20,16 @@ function cleanStack(stack) {
             .replace(/^Object\.parse.*unittests\.js.*/, "") // Remove Object.parse lines
             .replace(/^Object\.<anonymous>.*unittests\.js.*/, "") // Remove Object.anonymous lines
             .replace(/(js):\d+:\d*/, "$1"); // remove column and line # since they may vary by browser
-    }).filter(function (item) {
+    }).filter(function (item: string): boolean {
         return !!item;
     });
 }
 
-function compareStacks(assert, stack1, stack2, name: string) {
+function compareStacks(assert: Assert, stack1: string[], stack2: string[], name: string) {
     assert.deepEqual(cleanStack(stack1), cleanStack(stack2), name);
 }
 
-QUnit.test("Errors.parse Tests", function (assert) {
+QUnit.test("Errors.parse Tests", function (assert: Assert) {
     assert.expect(20); // Count of assert calls in the tests below
     var done = assert.async(10); // Count of asynchronous calls below
 
@@ -188,7 +188,7 @@ QUnit.test("Errors.parse Tests", function (assert) {
     });
 });
 
-QUnit.test("getError* Tests", function (assert) {
+QUnit.test("getError* Tests", function (assert: Assert) {
     try {
         // @ts-ignore Intentional error to test error handling
         document.notAFunction();
@@ -237,7 +237,7 @@ QUnit.test("getError* Tests", function (assert) {
     assert.equal(Errors.getErrorStack(42), "number thrown as error");
 });
 
-QUnit.test("joinArray Tests", function (assert) {
+QUnit.test("joinArray Tests", function (assert: Assert) {
     assert.equal(strings.joinArray(null, " : "), null);
     assert.equal(strings.joinArray(["1"], " : "), "1");
     assert.equal(strings.joinArray(["1", "2"], " : "), "1 : 2");

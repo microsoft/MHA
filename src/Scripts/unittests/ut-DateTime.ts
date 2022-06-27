@@ -1,7 +1,7 @@
 ﻿import * as QUnit from "qunit";
 import { Received } from "../Received"
 
-QUnit.test("DateTime Tests", function (assert) {
+QUnit.test("DateTime Tests", function (assert: Assert) {
     var received = new Received();
 
     var h1 = "Received: test; Sat, 21 Apr 2018 03:01:01 +0000";

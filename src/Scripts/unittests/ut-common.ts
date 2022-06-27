@@ -1,6 +1,8 @@
 ﻿import * as QUnit from "qunit";
+import { ReceivedRow } from "../Received"
+import { row } from "../Summary";
 
-QUnit.assert.receivedEqual = function (actual, expected, message) {
+QUnit.assert.receivedEqual = function (actual: row, expected: object, message: string): void {
     try {
         var field;
         for (field in expected) {
@@ -46,7 +48,7 @@ QUnit.assert.receivedEqual = function (actual, expected, message) {
     });
 };
 
-QUnit.assert.arrayEqual = function (actual, expected, message) {
+QUnit.assert.arrayEqual = function (actual: row[], expected: object[], message: string): void {
     if (actual.length !== expected.length) {
         this.pushResult({
             result: false,
@@ -68,11 +70,11 @@ QUnit.assert.arrayEqual = function (actual, expected, message) {
     });
 };
 
-QUnit.assert.datesEqual = function (actual, expected, message) {
-    return this.propEqual({ date: (new Date(actual.date)).toLocaleString("en-US", { timeZone: "America/New_York" }), dateNum: actual.dateNum.toString() }, expected, message);
+QUnit.assert.datesEqual = function (actual: ReceivedRow, expected: object, message: string): void {
+    return this.propEqual({ date: (new Date(actual.date.value)).toLocaleString("en-US", { timeZone: "America/New_York" }), dateNum: actual.dateNum.toString() }, expected, message);
 };
 
-QUnit.assert.errorsEqual = function (actual, expectedValues, message) {
+QUnit.assert.errorsEqual = function (actual: string, expectedValues: string[], message: string): void {
     var found = expectedValues.some(function (expected): boolean {
         if (actual === expected) {
             this.pushResult({

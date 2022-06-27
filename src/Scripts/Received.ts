@@ -11,7 +11,7 @@ class ReceivedField {
     toString(): string { return this.value; }
 };
 
-class ReceivedRow {
+export class ReceivedRow {
     constructor(receivedHeader: string) {
         this.sourceHeader = new ReceivedField("", receivedHeader);
         this.hop = new ReceivedField(mhaStrings.mhaReceivedHop);
