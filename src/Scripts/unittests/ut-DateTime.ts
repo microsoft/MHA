@@ -33,7 +33,7 @@ QUnit.test("DateTime Tests", function (assert: Assert) {
     var h11 = "Received: test; Mon, 26 Mar 2018 13:35:11.102 +0000 UTC";
     assert.datesEqual(received.parseHeader(h11), { "date": "3/26/2018, 9:35:11 AM", "dateNum": 1522071311102 }, h11);
 
-    assert.equal(Received.computeTime(9000, 8000), "1 seconds", "50");
+    assert.equal(Received.computeTime(9000, 8000), "1 second", "50");
     assert.equal(Received.computeTime(99000, 8000), "1 minute 31 seconds", "51");
     assert.equal(Received.computeTime(999000, 8000), "16 minutes 31 seconds", "52");
     assert.equal(Received.computeTime(9999000, 8000), "166 minutes 31 seconds", "53");
