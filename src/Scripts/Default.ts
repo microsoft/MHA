@@ -47,13 +47,13 @@ import { poster } from "./poster";
 
     // Handles rendering of an error.
     // Does not log the error - caller is responsible for calling PostError
-    function showError(error, message: string) {
+    function showError(_error:Error, message: string) {
         updateStatus(message);
         disableSpinner();
         table.rebuildSections(viewModel);
     }
 
-    function eventListener(event): void {
+    function eventListener(event: MessageEvent): void {
         if (!event || event.origin !== poster.site()) return;
 
         if (event.data) {

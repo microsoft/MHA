@@ -18,11 +18,11 @@ import { poster } from "./poster";
 
     dayjs.extend(utc);
 
-    function postError(error, message) {
+    function postError(error: Error, message: string): void {
         poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
     }
 
-    function initializeFramework7() {
+    function initializeFramework7(): void {
         myApp = new Framework7();
 
         myApp.addView("#summary-view");
@@ -31,14 +31,14 @@ import { poster } from "./poster";
         myApp.addView("#other-view");
     }
 
-    function updateStatus(message) {
+    function updateStatus(message: string): void {
         if (myApp) {
             myApp.hidePreloader();
             myApp.showPreloader(message);
         }
     }
 
-    function addCalloutEntry(name, value, parent) {
+    function addCalloutEntry(name: string, value: string, parent: JQuery<HTMLElement>) {
         if (value) {
             $("<p/>")
                 .addClass("wrap-line")
@@ -389,14 +389,14 @@ import { poster } from "./poster";
 
     // Handles rendering of an error.
     // Does not log the error - caller is responsible for calling PostError
-    function showError(error, message) {
+    function showError(_error: Error, message: string) {
         if (myApp) {
             myApp.hidePreloader();
             myApp.alert(message, "An Error Occurred");
         }
     }
 
-    function eventListener(event) {
+    function eventListener(event: MessageEvent) {
         if (!event || event.origin !== poster.site()) return;
 
         if (event.data) {
