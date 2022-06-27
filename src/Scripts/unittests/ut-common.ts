@@ -1,17 +1,16 @@
 ﻿import * as QUnit from "qunit";
 import { ReceivedRow } from "../Received"
-import { row } from "../Summary";
 
 declare global {
     interface Assert {
-        receivedEqual(actual: row, expected: object, message: string): void;
-        arrayEqual(actual: row[], expected: object[], message: string): void;
+        receivedEqual(actual: object, expected: object, message: string): void;
+        arrayEqual(actual: object[], expected: object[], message: string): void;
         datesEqual(actual: ReceivedRow, expected: object, message: string): void;
         errorsEqual(actual: string, expectedValues: string[], message: string): void;
     }
 }
 
-QUnit.assert.receivedEqual = function (actual: row, expected: object, message: string): void {
+QUnit.assert.receivedEqual = function (actual: object, expected: object, message: string): void {
     try {
         var field;
         for (const [field, value] of Object.entries(expected)) {
@@ -57,7 +56,7 @@ QUnit.assert.receivedEqual = function (actual: row, expected: object, message: s
     });
 };
 
-QUnit.assert.arrayEqual = function (actual: row[], expected: object[], message: string): void {
+QUnit.assert.arrayEqual = function (actual: object[], expected: object[], message: string): void {
     if (actual.length !== expected.length) {
         this.pushResult({
             result: false,

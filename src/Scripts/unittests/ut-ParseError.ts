@@ -195,7 +195,7 @@ QUnit.test("getError* Tests", function (assert: Assert) {
     }
     catch (error) {
         assert.errorsEqual(Errors.getErrorMessage(error), ["Object doesn't support property or method 'notAFunction'",
-            "document.notAFunction is not a function"]);
+            "document.notAFunction is not a function"], "notAFunction error");
         assert.ok(Errors.getErrorStack(error).length > 0);
     }
 
