@@ -40,8 +40,8 @@ function initializeFabric(): void {
     }
 
     const buttonElement: Element = document.querySelector("#orig-header-btn");
-    new fabric["Button"](buttonElement, function () {
-        const btnIcon = $(this).find(".ms-Icon");
+    new fabric["Button"](buttonElement, function (event: PointerEvent) {
+        const btnIcon = $(event.currentTarget).find(".ms-Icon");
         if (btnIcon.hasClass("ms-Icon--Add")) {
             $("#original-headers").show();
             btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
