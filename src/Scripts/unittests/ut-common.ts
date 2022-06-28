@@ -10,7 +10,7 @@ declare global {
     }
 }
 
-QUnit.assert.receivedEqual = function (actual: object, expected: object, message: string): void {
+QUnit.assert.receivedEqual = function (actual: { [index: string]: any }, expected: { [index: string]: any }, message: string): void {
     try {
         var field;
         for (const [field, value] of Object.entries(expected)) {
