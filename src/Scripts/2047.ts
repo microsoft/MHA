@@ -12,7 +12,7 @@ export class Decoder {
 
     private static getBlock(token: string): block {
         const matches = token.match(/=\?(.*?)\?(.)\?(.*?)\?=/m);
-        if (matches) {
+        if (matches && matches[1] && matches[2] && matches[3]) {
             return <block>{ charset: matches[1], type: matches[2].toUpperCase(), text: matches[3] };
         }
 
@@ -30,8 +30,11 @@ export class Decoder {
                         unparsedblocks.push(<block>{ text: matches[1] });
                     }
 
-                    unparsedblocks.push(Decoder.getBlock(matches[2]));
-                    buffer = matches[3];
+                    if (matches[2]) {
+                        unparsedblocks.push(Decoder.getBlock(matches[2]));
+                    }
+
+                    buffer = matches[3] ?? "";
                 } else if (buffer) {
                     // Once we're out of matches, we've parsed the whole string.
                     // Append the rest of the buffer to the result.
@@ -131,14 +134,17 @@ export class Decoder {
                 ////var left = matches[1];
                 ////var hex = matches[2];
                 ////var right = matches[3];
-                const hexes = matches[2].split("=").filter(function (i) { return i; });
-                const hexArray = [];
-                for (let iHex = 0; iHex < hexes.length; iHex++) {
-                    hexArray.push(parseInt("0x" + hexes[iHex], 16));
+                if (matches[2]) {
+                    const hexes = matches[2].split("=").filter(function (i) { return i; });
+                    const hexArray = [];
+                    for (let iHex = 0; iHex < hexes.length; iHex++) {
+                        hexArray.push(parseInt("0x" + hexes[iHex], 16));
+                    }
+
+                    result.push(matches[1] ?? "", Decoder.decodeHexCodepage(charSet, hexArray));
                 }
 
-                result.push(matches[1], Decoder.decodeHexCodepage(charSet, hexArray));
-                buffer = matches[3];
+                buffer = matches[3] ?? "";
             } else {
                 // Once we're out of matches, we've decoded the whole string.
                 // Append the rest of the buffer to the result.
@@ -184,19 +190,21 @@ export class Decoder {
         const unparsedblocks = Decoder.splitToBlocks(buffer);
 
         const collapsedBlocks: block[] = [];
-        for (let i = 0; i < unparsedblocks.length; i++) {
-            collapsedBlocks.push(unparsedblocks[i]);
-
+        let previousBlock: block;
+        unparsedblocks.forEach((unparsedblock: block, index: number) => {
+            collapsedBlocks.push(unparsedblock);
             // Combine a block with the previous block if the charset matches
-            if (i >= 1 &&
-                collapsedBlocks[i].type === "Q" &&
-                collapsedBlocks[i].type === collapsedBlocks[i - 1].type &&
-                collapsedBlocks[i].charset === collapsedBlocks[i - 1].charset) {
-                collapsedBlocks[i].text = collapsedBlocks[i - 1].text + collapsedBlocks[i].text;
+            if (index >= 1 &&
+                unparsedblock.type === "Q" &&
+                unparsedblock.type === previousBlock.type &&
+                unparsedblock.charset === previousBlock.charset) {
+                unparsedblock.text = previousBlock.text + unparsedblock.text;
                 // Clear the previous block so we don't process it later
-                collapsedBlocks[i - 1] = <block>{};
+                collapsedBlocks[index - 1] = <block>{};
             }
-        }
+
+            previousBlock = unparsedblock;
+        });
 
         const result: string[] = [];
         collapsedBlocks.forEach(function (block) {
