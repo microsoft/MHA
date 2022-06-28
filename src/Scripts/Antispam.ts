@@ -13,8 +13,8 @@ export class AntiSpamReport {
     ];
 
     public existsInternal(rows: row[]): boolean {
-        for (let i = 0; i < rows.length; i++) {
-            if (rows[i].value) {
+        for (let row of rows) {
+            if (row.value) {
                 return true;
             }
         }
@@ -23,10 +23,10 @@ export class AntiSpamReport {
     }
 
     private setRowValue(rows: row[], key: string, value: string): boolean {
-        for (let i = 0; i < rows.length; i++) {
-            if (rows[i].header.toUpperCase() === key.toUpperCase()) {
-                rows[i].value = value;
-                rows[i].onGetUrl = (headerName: string, value:string) => { return strings.mapHeaderToURL(headerName, value); }
+        for (let row of rows) {
+            if (row.header.toUpperCase() === key.toUpperCase()) {
+                row.value = value;
+                row.onGetUrl = (headerName: string, value: string) => { return strings.mapHeaderToURL(headerName, value); }
                 return true;
             }
         }
@@ -56,10 +56,10 @@ export class AntiSpamReport {
         const lines = report.match(/(.*?):(.*?);/g);
         this._unparsed = "";
         if (lines) {
-            for (let iLine = 0; iLine < lines.length; iLine++) {
-                const line = lines[iLine].match(/(.*?):(.*?);/m);
+            for (let iLine: number = 0; iLine < lines.length; iLine++) {
+                const line = lines[iLine]?.match(/(.*?):(.*?);/m);
                 if (line && line[1]) {
-                    if (!this.setRowValue(rows, line[1], line[2])) {
+                    if (!this.setRowValue(rows, line[1], line[2] ?? "")) {
                         this._unparsed += line[1] + ':' + line[2] + ';';
                     }
                 }

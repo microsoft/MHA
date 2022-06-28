@@ -12,8 +12,8 @@ export class Decoder {
 
     private static getBlock(token: string): block {
         const matches = token.match(/=\?(.*?)\?(.)\?(.*?)\?=/m);
-        if (matches && matches[1] && matches[2] && matches[3]) {
-            return <block>{ charset: matches[1], type: matches[2].toUpperCase(), text: matches[3] };
+        if (matches) {
+            return <block>{ charset: matches[1], type: matches[2]?.toUpperCase(), text: matches[3] };
         }
 
         return <block>{ text: token, };
@@ -207,7 +207,7 @@ export class Decoder {
         });
 
         const result: string[] = [];
-        collapsedBlocks.forEach(function (block) {
+        collapsedBlocks.forEach(function (block: block): void {
             if (block.type === "B") {
                 result.push(Decoder.decodeBase64(block.charset, block.text));
             }
