@@ -15,7 +15,7 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noPropertyAccessFromIndexSignature": true,
-    //"noUncheckedIndexedAccess": true,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     //"noUnusedParameters": true,
     //"strict": true, // maybe not until we do more other switches
