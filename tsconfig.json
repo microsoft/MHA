@@ -19,7 +19,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     //"strict": true, // maybe not until we do more other switches
-    //"strictBindCallApply": true,
+    "strictBindCallApply": true,
     "strictFunctionTypes": true
     //"strictNullChecks": true,
     //"strictPropertyInitialization": true,
