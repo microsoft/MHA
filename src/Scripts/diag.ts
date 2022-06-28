@@ -11,8 +11,8 @@ import { buildTime } from "./buildTime";
 // diagnostics module
 
 class diag {
-    private appDiagnostics: { [k: string]: any } = null;
-    private itemDiagnostics: { [k: string]: any } = null;
+    private appDiagnostics: { [k: string]: any };
+    private itemDiagnostics: { [k: string]: any };
     private inGet: boolean = false;
     private sendTelemetry: boolean = true;
     private appInsights = new ApplicationInsights({
