@@ -2,6 +2,7 @@ import * as $ from "jquery";
 import { HeaderModel } from "./Headers";
 import { mhaStrings } from "./mhaStrings";
 import { row } from "./Summary";
+import { iTable } from "./itable";
 
 class column {
     constructor(id: string, label: string, columnClass: string) {
@@ -280,10 +281,13 @@ export class Table {
         header.bind("click", this, function (eventObject) {
             var table: Table = eventObject.data as Table;
             if (table) {
-                table.viewModel[tableName].doSort(id);
-                table.setArrows(table.viewModel[tableName].tableName, table.viewModel[tableName].sortColumn,
-                    table.viewModel[tableName].sortOrder);
-                table.rebuildSections(table.viewModel);
+                if (table.viewModel[tableName] instanceof iTable) {
+                    let itable = table.viewModel[tableName] as iTable;
+                    itable.doSort(id);
+                    table.setArrows(itable.tableName, itable.sortColumn,
+                        itable.sortOrder);
+                    table.rebuildSections(table.viewModel);
+                }
             }
         });
 

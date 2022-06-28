@@ -27,6 +27,7 @@ export class HeaderModel {
     public get hasData(): boolean { return this._hasData || !!this._status; };
     public get status() { return this._status; };
     public set status(value) { this._status = value; };
+    [index: string]: any;
 
     constructor(headers?: string) {
         this.summary = new Summary();

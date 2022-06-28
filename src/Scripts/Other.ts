@@ -1,4 +1,5 @@
-﻿import { strings } from "./Strings";
+﻿import { iTable } from "./itable";
+import { strings } from "./Strings";
 import { header } from "./Headers";
 
 class row {
@@ -16,10 +17,10 @@ class row {
     toString() { return this.header + ": " + this.value; }
 }
 
-export class Other {
+export class Other extends iTable {
     private _otherRows: row[] = [];
-    private _sortColumn: string = "number";
-    private _sortOrder: number = 1;
+    protected _sortColumn: string = "number";
+    protected _sortOrder: number = 1;
     public readonly tableName: string = "otherHeaders";
 
     public doSort(col: string): void {
@@ -49,8 +50,6 @@ export class Other {
     public exists() { return this.otherRows.length > 0; }
 
     public get otherRows(): row[] { return this._otherRows; };
-    public get sortColumn(): string { return this._sortColumn; };
-    public get sortOrder(): number { return this._sortOrder; };
     public toString() {
         if (!this.exists()) return "";
         const ret: string[] = ["Other"];

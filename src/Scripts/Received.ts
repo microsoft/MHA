@@ -1,4 +1,5 @@
-﻿import { mhaStrings } from "./mhaStrings";
+﻿import { iTable } from "./itable";
+import { mhaStrings } from "./mhaStrings";
 import { mhaDates, date } from "./dates";
 
 class ReceivedField {
@@ -69,10 +70,10 @@ export class ReceivedRow {
     }
 }
 
-export class Received {
+export class Received extends iTable {
     private _receivedRows: ReceivedRow[] = [];
-    private _sortColumn: string = "hop";
-    private _sortOrder: number = 1;
+    protected _sortColumn: string = "hop";
+    protected _sortOrder: number = 1;
     public readonly tableName: string = "receivedHeaders";
 
     // Builds array of values for each header in receivedHeaderNames.
@@ -291,8 +292,6 @@ export class Received {
     }
 
     public get receivedRows(): ReceivedRow[] { return this._receivedRows; };
-    public get sortColumn(): string { return this._sortColumn; };
-    public get sortOrder(): number { return this._sortOrder; };
     public toString(): string {
         if (!this.exists()) return "";
         const ret: string[] = ["Received"];
