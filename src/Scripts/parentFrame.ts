@@ -250,8 +250,8 @@ export class ParentFrame {
         const telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
         Diagnostics.canSendTelemetry() ? telemetryCheckboxComponent.check() : telemetryCheckboxComponent.unCheck();
 
-        function actionHandler(): void {
-            const action = this.id; // this is HTMLButtonElement
+        function actionHandler(event: PointerEvent): void {
+            const action = (event.currentTarget as HTMLButtonElement).id;
 
             function getDiagnostics(): string {
                 let diagnostics: string = "";
