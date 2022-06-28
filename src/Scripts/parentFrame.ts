@@ -251,7 +251,7 @@ export class ParentFrame {
         Diagnostics.canSendTelemetry() ? telemetryCheckboxComponent.check() : telemetryCheckboxComponent.unCheck();
 
         function actionHandler(): void {
-            const action = this.id;
+            const action = this.id; // this is HTMLButtonElement
 
             function getDiagnostics(): string {
                 let diagnostics: string = "";
