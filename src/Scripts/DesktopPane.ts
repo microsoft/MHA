@@ -318,13 +318,13 @@ function buildViews(headers: string) {
     }
 
     const listItemElements = document.querySelectorAll(".ms-ListItem");
-    for (let i: number = 0; i < listItemElements.length; i++) {
-        new fabric["ListItem"](listItemElements[i]);
+    listItemElements.forEach((listItem: Element) => {
+        new fabric["ListItem"](listItem);
 
         // Init corresponding callout
-        const calloutElement: Element = listItemElements[i].querySelector(".ms-Callout");
-        new fabric["Callout"](calloutElement, listItemElements[i], "right");
-    }
+        const calloutElement: Element | null = listItem.querySelector(".ms-Callout");
+        new fabric["Callout"](calloutElement, listItem, "right");
+    });
 }
 
 function hideStatus(): void {
