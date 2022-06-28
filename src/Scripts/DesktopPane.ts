@@ -6,6 +6,9 @@ import { fabric } from "./fabric"
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./Headers"
 import { poster } from "./poster";
+import { row, SummaryRow } from "./Summary";
+import { ReceivedRow } from "./Received";
+import { otherRow } from "./Other";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -17,15 +20,17 @@ function postError(error: Error, message: string): void {
 }
 
 function initializeFabric(): void {
-    const overlayComponent: Element = document.querySelector(".ms-Overlay");
-    // Override click so user can't dismiss overlay
-    overlayComponent.addEventListener("click", function (e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-    });
-    overlay = new fabric["Overlay"](overlayComponent);
+    const overlayComponent: Element | null = document.querySelector(".ms-Overlay");
+    if (overlayComponent) {
+        // Override click so user can't dismiss overlay
+        overlayComponent.addEventListener("click", function (e: Event): void {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        });
+        overlay = new fabric["Overlay"](overlayComponent);
+    }
 
-    const spinnerElement: Element = document.querySelector(".ms-Spinner");
+    const spinnerElement: Element | null = document.querySelector(".ms-Spinner");
     spinner = new fabric["Spinner"](spinnerElement);
     spinner.stop();
 
@@ -39,15 +44,17 @@ function initializeFabric(): void {
         new fabric["CommandButton"](commandButtonElements[i]);
     }
 
-    const buttonElement: Element = document.querySelector("#orig-header-btn");
-    new fabric["Button"](buttonElement, function (event: PointerEvent) {
-        const btnIcon = $(event.currentTarget).find(".ms-Icon");
-        if (btnIcon.hasClass("ms-Icon--Add")) {
-            $("#original-headers").show();
-            btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
-        } else {
-            $("#original-headers").hide();
-            btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
+    const buttonElement: Element | null = document.querySelector("#orig-header-btn");
+    new fabric["Button"](buttonElement, function (event: PointerEvent): void {
+        if (event.currentTarget) {
+            const btnIcon: JQuery<HTMLElement> = $(event.currentTarget).find(".ms-Icon");
+            if (btnIcon.hasClass("ms-Icon--Add")) {
+                $("#original-headers").show();
+                btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
+            } else {
+                $("#original-headers").hide();
+                btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
+            }
         }
     });
 
@@ -55,14 +62,14 @@ function initializeFabric(): void {
     $(".header-view[data-content='summary-view']").show();
 
     // Wire up click events for nav buttons
-    $("#nav-bar .ms-CommandButton").click(function () {
+    $("#nav-bar .ms-CommandButton").click(function (): void {
         // Remove active from current active
         $("#nav-bar .is-active").removeClass("is-active");
         // Add active class to clicked button
         $(this).addClass("is-active");
 
         // Get content marker
-        const content: string = $(this).attr("data-content");
+        const content: string | undefined = $(this).attr("data-content");
         // Hide sub-views
         $(".header-view").hide();
         $(".header-view[data-content='" + content + "']").show();
@@ -92,22 +99,22 @@ function buildViews(headers: string) {
     const viewModel: HeaderModel = new HeaderModel(headers);
     // Build summary view
     const summaryList = $(".summary-list");
-    for (let i: number = 0; i < viewModel.summary.rows.length; i++) {
-        if (viewModel.summary.rows[i].value) {
+    viewModel.summary.rows.forEach((row: SummaryRow) => {
+        if (row.value) {
             $("<div/>")
                 .addClass("ms-font-s")
                 .addClass("ms-fontWeight-semibold")
-                .text(viewModel.summary.rows[i].label)
+                .text(row.label)
                 .appendTo(summaryList);
             let headerVal = $("<div/>")
                 .addClass("code-box")
                 .appendTo(summaryList);
             let pre = $("<pre/>").appendTo(headerVal);
             $("<code/>")
-                .text(viewModel.summary.rows[i].value)
+                .text(row.value)
                 .appendTo(pre);
         }
-    }
+    });
 
     // Save original headers and show ui
     $("#original-headers code").text(viewModel.originalHeaders);
@@ -123,23 +130,24 @@ function buildViews(headers: string) {
             .addClass("ms-List")
             .appendTo(receivedList);
 
-        for (let i: number = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
-
+        let firstRow: boolean = true;
+        viewModel.receivedHeaders.receivedRows.forEach((row: ReceivedRow) => {
             const listItem = $("<li/>")
                 .addClass("ms-ListItem")
                 .addClass("ms-ListItem--document")
                 .appendTo(list);
 
-            if (i === 0) {
+            if (firstRow) {
                 $("<span/>")
                     .addClass("ms-ListItem-primaryText")
-                    .html(makeBold("From: ") + viewModel.receivedHeaders.receivedRows[i].from)
+                    .html(makeBold("From: ") + row.from)
                     .appendTo(listItem);
 
                 $("<span/>")
                     .addClass("ms-ListItem-secondaryText")
-                    .html(makeBold("To: ") + viewModel.receivedHeaders.receivedRows[i].by)
+                    .html(makeBold("To: ") + row.by)
                     .appendTo(listItem);
+                firstRow = false;
             } else {
                 const wrap = $("<div/>")
                     .addClass("progress-icon")
@@ -167,7 +175,7 @@ function buildViews(headers: string) {
                     .addClass("ms-ProgressIndicator-progressTrack")
                     .appendTo(bar);
 
-                const width: number = 1.8 * viewModel.receivedHeaders.receivedRows[i].percent.value;
+                const width: number = 1.8 * row.percent.value;
 
                 $("<div/>")
                     .addClass("ms-ProgressIndicator-progressBar")
@@ -176,12 +184,12 @@ function buildViews(headers: string) {
 
                 $("<div/>")
                     .addClass("ms-ProgressIndicator-itemDescription")
-                    .text(viewModel.receivedHeaders.receivedRows[i].delay.value)
+                    .text(row.delay.value)
                     .appendTo(delay);
 
                 $("<span/>")
                     .addClass("ms-ListItem-secondaryText")
-                    .html(makeBold("To: ") + viewModel.receivedHeaders.receivedRows[i].by)
+                    .html(makeBold("To: ") + row.by)
                     .appendTo(listItem);
             }
 
@@ -215,97 +223,93 @@ function buildViews(headers: string) {
                 .addClass("ms-Callout-content")
                 .appendTo(calloutInner);
 
-            addCalloutEntry("From", viewModel.receivedHeaders.receivedRows[i].from.value, calloutContent);
-            addCalloutEntry("To", viewModel.receivedHeaders.receivedRows[i].by.value, calloutContent);
-            addCalloutEntry("Time", viewModel.receivedHeaders.receivedRows[i].date.value, calloutContent);
-            addCalloutEntry("Type", viewModel.receivedHeaders.receivedRows[i].with.value, calloutContent);
-            addCalloutEntry("ID", viewModel.receivedHeaders.receivedRows[i].id.value, calloutContent);
-            addCalloutEntry("For", viewModel.receivedHeaders.receivedRows[i].for.value, calloutContent);
-            addCalloutEntry("Via", viewModel.receivedHeaders.receivedRows[i].via.value, calloutContent);
-        }
-    }
+            addCalloutEntry("From", row.from.value, calloutContent);
+            addCalloutEntry("To", row.by.value, calloutContent);
+            addCalloutEntry("Time", row.date.value, calloutContent);
+            addCalloutEntry("Type", row.with.value, calloutContent);
+            addCalloutEntry("ID", row.id.value, calloutContent);
+            addCalloutEntry("For", row.for.value, calloutContent);
+            addCalloutEntry("Via", row.via.value, calloutContent);
+        });
 
-    // Build antispam view
-    const antispamList = $(".antispam-list");
+        // Build antispam view
+        const antispamList = $(".antispam-list");
 
-    // Forefront
-    if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
-        $("<div/>")
-            .addClass("ms-font-m")
-            .text("Forefront Antispam Report")
-            .appendTo(antispamList);
+        // Forefront
+        if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
+            $("<div/>")
+                .addClass("ms-font-m")
+                .text("Forefront Antispam Report")
+                .appendTo(antispamList);
 
-        $("<hr/>").appendTo(antispamList);
-        let table = $("<table/>")
-            .addClass("ms-Table")
-            .addClass("ms-Table--fixed")
-            .addClass("spam-report")
-            .appendTo(antispamList);
-        let tbody = $("<tbody/>")
-            .appendTo(table);
-        for (let i: number = 0; i < viewModel.forefrontAntiSpamReport.rows.length; i++) {
-            if (viewModel.forefrontAntiSpamReport.rows[i].value) {
+            $("<hr/>").appendTo(antispamList);
+            let table = $("<table/>")
+                .addClass("ms-Table")
+                .addClass("ms-Table--fixed")
+                .addClass("spam-report")
+                .appendTo(antispamList);
+            let tbody = $("<tbody/>")
+                .appendTo(table);
+            viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: row) => {
                 let row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
-                    .text(viewModel.forefrontAntiSpamReport.rows[i].label)
+                    .text(antispamrow.label)
                     .appendTo(row);
                 $("<td/>")
-                    .html(viewModel.forefrontAntiSpamReport.rows[i].valueUrl)
+                    .html(antispamrow.valueUrl)
                     .appendTo(row);
-            }
+            });
         }
-    }
 
-    // Microsoft
-    if (viewModel.antiSpamReport.rows.length > 0) {
-        $("<div/>")
-            .addClass("ms-font-m")
-            .text("Microsoft Antispam Report")
-            .appendTo(antispamList);
+        // Microsoft
+        if (viewModel.antiSpamReport.rows.length > 0) {
+            $("<div/>")
+                .addClass("ms-font-m")
+                .text("Microsoft Antispam Report")
+                .appendTo(antispamList);
 
-        $("<hr/>").appendTo(antispamList);
-        let table = $("<table/>")
-            .addClass("ms-Table")
-            .addClass("ms-Table--fixed")
-            .addClass("spam-report")
-            .appendTo(antispamList);
-        let tbody = $("<tbody/>")
-            .appendTo(table);
-        for (let i: number = 0; i < viewModel.antiSpamReport.rows.length; i++) {
-            if (viewModel.antiSpamReport.rows[i].value) {
+            $("<hr/>").appendTo(antispamList);
+            let table = $("<table/>")
+                .addClass("ms-Table")
+                .addClass("ms-Table--fixed")
+                .addClass("spam-report")
+                .appendTo(antispamList);
+            let tbody = $("<tbody/>")
+                .appendTo(table);
+            viewModel.antiSpamReport.rows.forEach((antispamrow: row) => {
                 let row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
-                    .text(viewModel.antiSpamReport.rows[i].label)
+                    .text(antispamrow.label)
                     .appendTo(row);
                 $("<td/>")
-                    .html(viewModel.antiSpamReport.rows[i].valueUrl)
+                    .html(antispamrow.valueUrl)
                     .appendTo(row);
-            }
+            });
         }
     }
 
     // Build other view
     const otherList = $(".other-list");
 
-    for (let i: number = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
-        if (viewModel.otherHeaders.otherRows[i].value) {
+    viewModel.otherHeaders.rows.forEach((otherHeader: otherRow) => {
+        if (otherHeader.value) {
             const headerName = $("<div/>")
                 .addClass("ms-font-s")
                 .addClass("ms-fontWeight-semibold")
-                .text(viewModel.otherHeaders.otherRows[i].header)
+                .text(otherHeader.header)
                 .appendTo(otherList);
-            if (viewModel.otherHeaders.otherRows[i].url) {
-                headerName.html(viewModel.otherHeaders.otherRows[i].url);
+            if (otherHeader.url) {
+                headerName.html(otherHeader.url);
             }
             let headerVal = $("<div/>")
                 .addClass("code-box")
                 .appendTo(otherList);
             let pre = $("<pre/>").appendTo(headerVal);
             $("<code/>")
-                .text(viewModel.otherHeaders.otherRows[i].value)
+                .text(otherHeader.value)
                 .appendTo(pre);
         }
-    }
+    });
 
     // Initialize any fabric lists added
     const listElements = document.querySelectorAll(".ms-List");

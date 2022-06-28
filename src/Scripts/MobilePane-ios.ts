@@ -156,7 +156,7 @@ function buildViews(headers: string): void {
                     .addClass("timeline-item-content")
                     .appendTo(timelineItem);
 
-                // Add initial otherRows
+                // Add initial other rows
                 timelineInner = $("<div/>")
                     .addClass("timeline-item-inner")
                     .addClass("link")
@@ -335,17 +335,17 @@ function buildViews(headers: string): void {
     // Build other view
     const otherContent = $("#other-content");
 
-    for (let i: number = 0; i < viewModel.otherHeaders.otherRows.length; i++) {
-        if (viewModel.otherHeaders.otherRows[i].value) {
+    for (let i: number = 0; i < viewModel.otherHeaders.rows.length; i++) {
+        if (viewModel.otherHeaders.rows[i].value) {
             const headerName = $("<div/>")
                 .addClass("content-block-title")
-                .text(viewModel.otherHeaders.otherRows[i].header)
+                .text(viewModel.otherHeaders.rows[i].header)
                 .appendTo(otherContent);
 
-            if (viewModel.otherHeaders.otherRows[i].url) {
+            if (viewModel.otherHeaders.rows[i].url) {
                 headerName.empty();
 
-                $($.parseHTML(viewModel.otherHeaders.otherRows[i].url))
+                $($.parseHTML(viewModel.otherHeaders.rows[i].url))
                     .addClass("external")
                     .appendTo(headerName);
             }
@@ -361,7 +361,7 @@ function buildViews(headers: string): void {
             let pre = $("<pre/>").appendTo(headerVal);
 
             $("<code/>")
-                .text(viewModel.otherHeaders.otherRows[i].value)
+                .text(viewModel.otherHeaders.rows[i].value)
                 .appendTo(pre);
         }
     }

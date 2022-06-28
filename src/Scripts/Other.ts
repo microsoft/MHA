@@ -2,7 +2,7 @@
 import { strings } from "./Strings";
 import { header } from "./Headers";
 
-class row {
+export class otherRow {
     constructor(number: number, header: string, value: any) {
         this.number = number;
         this.header = header;
@@ -18,7 +18,7 @@ class row {
 }
 
 export class Other extends iTable {
-    private _otherRows: row[] = [];
+    private _otherRows: otherRow[] = [];
     protected _sortColumn: string = "number";
     protected _sortOrder: number = 1;
     public readonly tableName: string = "otherHeaders";
@@ -31,29 +31,29 @@ export class Other extends iTable {
             this._sortOrder = 1;
         }
 
-        if (this.sortColumn + "Sort" in this.otherRows[0]) {
+        if (this.sortColumn + "Sort" in this.rows[0]) {
             col = col + "Sort";
         }
 
-        this.otherRows.sort((a: row, b: row) => {
+        this.rows.sort((a: otherRow, b: otherRow) => {
             return this.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 
     public add(otherHeader: header): void {
-        this.otherRows.push(new row(
-            this.otherRows.length + 1,
+        this.rows.push(new otherRow(
+            this.rows.length + 1,
             otherHeader.header,
             otherHeader.value));
     }
 
-    public exists() { return this.otherRows.length > 0; }
+    public exists() { return this.rows.length > 0; }
 
-    public get otherRows(): row[] { return this._otherRows; };
+    public get rows(): otherRow[] { return this._otherRows; };
     public toString() {
         if (!this.exists()) return "";
         const ret: string[] = ["Other"];
-        this.otherRows.forEach(function (row) {
+        this.rows.forEach(function (row) {
             if (row.value) { ret.push(row.value); }
         });
         return ret.join("\n");

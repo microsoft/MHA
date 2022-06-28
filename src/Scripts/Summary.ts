@@ -28,7 +28,7 @@ export class row {
     toString(): string { return this.label + ": " + this.value; };
 };
 
-class SummaryRow extends row {
+export class SummaryRow extends row {
     constructor(header: string, label: string, onSet?: Function, onGetUrl?: Function) {
         super(header, label, null);
         this.url = strings.mapHeaderToURL(header, label);

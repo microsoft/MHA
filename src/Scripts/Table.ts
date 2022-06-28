@@ -259,12 +259,12 @@ export class Table {
 
         // Other
         this.emptyTableUI("otherHeaders");
-        for (i = 0; i < this.viewModel.otherHeaders.otherRows.length; i++) {
+        for (i = 0; i < this.viewModel.otherHeaders.rows.length; i++) {
             let row: HTMLTableRowElement = document.createElement("tr");
             $("#otherHeaders").append(row); // Must happen before we append cells to appease IE7
-            this.appendCell(row, this.viewModel.otherHeaders.otherRows[i].number.toString(), null, null);
-            this.appendCell(row, this.viewModel.otherHeaders.otherRows[i].header, this.viewModel.otherHeaders.otherRows[i].url, null);
-            this.appendCell(row, this.viewModel.otherHeaders.otherRows[i].value, null, "allowBreak");
+            this.appendCell(row, this.viewModel.otherHeaders.rows[i].number.toString(), null, null);
+            this.appendCell(row, this.viewModel.otherHeaders.rows[i].header, this.viewModel.otherHeaders.rows[i].url, null);
+            this.appendCell(row, this.viewModel.otherHeaders.rows[i].value, null, "allowBreak");
         }
 
         $("#otherHeaders tbody tr:odd").addClass("oddRow");
@@ -479,7 +479,7 @@ export class Table {
         this.makeSummaryTable("#antiSpamReport", this.viewModel.antiSpamReport.rows, "AS");
 
         // Other
-        this.makeResizableTable("otherHeaders", mhaStrings.mhaOtherHeaders, function (table: Table) { return table.viewModel.otherHeaders.otherRows.length > 0; });
+        this.makeResizableTable("otherHeaders", mhaStrings.mhaOtherHeaders, function (table: Table) { return table.viewModel.otherHeaders.rows.length > 0; });
 
         const otherColumns = [
             new column("number", mhaStrings.mhaNumber, null),
