@@ -23,7 +23,7 @@ class diag {
     });
 
     constructor() {
-        this.appInsights.addTelemetryInitializer(function (envelope: ITelemetryItem) {
+        this.appInsights.addTelemetryInitializer((envelope: ITelemetryItem): boolean => {
             envelope.data[`baseType`] = envelope.baseType;
             envelope.data[`baseType`] = envelope.baseData;
             // This will get called for any appInsights tracking - we can augment or suppress logging from here
@@ -43,7 +43,7 @@ class diag {
                 $.extend(envelope.baseData[`properties`], this.get());
                 // Log an extra event with parsed stack frame
                 if (envelope.baseData[`exceptions`].length) {
-                    StackTrace.fromError(envelope.baseData[`exceptions`][0]).then(function (stackframes) {
+                    StackTrace.fromError(envelope.baseData[`exceptions`][0]).then((stackframes): void => {
                         this.appInsights.trackEvent({
                             name: "Exception Details", properties: {
                                 stack: stackframes,
