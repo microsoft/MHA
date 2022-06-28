@@ -17,7 +17,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
-    //"noUnusedParameters": true,
+    "noUnusedParameters": true,
     //"strict": true, // maybe not until we do more other switches
     //"strictBindCallApply": true,
     "strictFunctionTypes": true
