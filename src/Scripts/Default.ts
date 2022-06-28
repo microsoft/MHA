@@ -8,8 +8,8 @@ import { poster } from "./poster";
 
 // This is the "classic" UI rendered in classicDesktopFrame.html
 
-let viewModel: HeaderModel = null;
-let table: Table = null;
+let viewModel: HeaderModel;
+let table: Table;
 
 function postError(error: Error, message: string): void {
     poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
