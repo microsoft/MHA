@@ -24,6 +24,7 @@ class diag {
 
     constructor() {
         this.appInsights.addTelemetryInitializer((envelope: ITelemetryItem): boolean => {
+            if (!envelope || !envelope.data) return false;
             envelope.data[`baseType`] = envelope.baseType;
             envelope.data[`baseType`] = envelope.baseData;
             // This will get called for any appInsights tracking - we can augment or suppress logging from here
@@ -37,7 +38,7 @@ class diag {
             if (envelope.baseType === "PageviewPerformanceData") return doLog;
 
             // If we're not one of the above types, tag in our diagnostics data
-            if (envelope.baseType === "ExceptionData") {
+            if (envelope.baseType === "ExceptionData" && envelope.baseData) {
                 // custom data for the ExceptionData type lives in a different place
                 envelope.baseData[`properties`] = envelope.baseData[`properties`] || {};
                 $.extend(envelope.baseData[`properties`], this.get());
@@ -47,7 +48,7 @@ class diag {
                         this.appInsights.trackEvent({
                             name: "Exception Details", properties: {
                                 stack: stackframes,
-                                error: envelope.baseData[`exceptions`][0]
+                                error: (envelope && envelope.baseData) ? envelope.baseData[`exceptions`][0] : ""
                             }
                         });
                     });
