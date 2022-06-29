@@ -73,7 +73,7 @@ export class Errors {
         }
 
         Errors.parse(error, message, function (eventName: string, stack: string[]): void {
-            Errors.add(eventName, stack, suppressTracking);
+            Errors.add(eventName, stack, suppressTracking??false);
         });
     }
 
@@ -138,7 +138,7 @@ export class Errors {
         if (typeof (error) === "string") return "string thrown as error";
         if (typeof (error) === "number") return "number thrown as error";
         if (!Errors.isError(error)) return '';
-        if ("stack" in error) return error.stack;
+        if ("stack" in error) return error.stack??'';
         return '';
     }
 }
