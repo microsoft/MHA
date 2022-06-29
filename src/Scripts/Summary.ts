@@ -1,7 +1,7 @@
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
 import { mhaDates, date } from "./dates";
-import { header} from "./Headers";
+import { header } from "./Headers";
 
 export class row {
     constructor(header: string, label: string, headerName: string) {
@@ -30,7 +30,7 @@ export class row {
 
 export class SummaryRow extends row {
     constructor(header: string, label: string, onSet?: Function, onGetUrl?: Function) {
-        super(header, label, null);
+        super(header, label, "");
         this.url = strings.mapHeaderToURL(header, label);
         this.onSet = onSet;
         this.onGetUrl = onGetUrl;
@@ -42,7 +42,7 @@ export class Summary {
 
     public creationTime(date: string): string {
         if (!date && !this.totalTime) {
-            return null;
+            return "";
         }
 
         const time = [date || ""];
@@ -63,8 +63,8 @@ export class Summary {
     private archivedRow = new SummaryRow(
         "Archived-At",
         mhaStrings.mhaArchivedAt,
-        null,
-        function (_header:string, value: string): string { return strings.mapValueToURL(value); }
+        undefined,
+        function (_header: string, value: string): string { return strings.mapValueToURL(value); }
     );
 
     private summaryRows: SummaryRow[] = [
@@ -79,13 +79,7 @@ export class Summary {
     ];
 
     public exists(): boolean {
-        for (let i = 0; i < this.rows.length; i++) {
-            if (this.rows[i].value) {
-                return true;
-            }
-        }
-
-        return false;
+        return this.rows.find((row: row) => { return row.value; }) !== undefined;
     }
 
     public add(header: header) {
@@ -93,11 +87,10 @@ export class Summary {
             return false;
         }
 
-        for (let i = 0; i < this.rows.length; i++) {
-            if (this.rows[i].header.toUpperCase() === header.header.toUpperCase()) {
-                this.rows[i].value = header.value;
-                return true;
-            }
+        let row: SummaryRow | undefined = this.rows.find((row: row) => { return row.header.toUpperCase() === header.header.toUpperCase(); })
+        if (row) {
+            row.value = header.value;
+            return true;
         }
 
         return false;
