@@ -51,10 +51,9 @@ export class HeaderModel {
         const headerList: header[] = [];
         let iNextHeader: number = 0;
         // Unfold lines
-        for (let iLine: number = 0; iLine < lines.length; iLine++) {
-            let line: string = lines[iLine];
+        lines.forEach((line: string) => {
             // Skip empty lines
-            if (line === "") continue;
+            if (line === "") return;
 
             // Recognizing a header:
             // - First colon comes before first white space.
@@ -63,7 +62,7 @@ export class HeaderModel {
             // This expression will give us:
             // match[1] - everything before the first colon, assuming no spaces (header).
             // match[2] - everything after the first colon (value).
-            const match: RegExpMatchArray = line.match(/(^[\w-.]*?): ?(.*)/);
+            const match: RegExpMatchArray | null = line.match(/(^[\w-.]*?): ?(.*)/);
 
             // There's one false positive we might get: if the time in a Received header has been
             // folded to the next line, the line might start with something like "16:20:05 -0400".
@@ -78,7 +77,7 @@ export class HeaderModel {
                     // Tack this line to the previous line
                     // All folding whitespace should collapse to a single space
                     line = line.replace(/^[\s]+/, "");
-                    if (!line) continue;
+                    if (!line) return;
                     const separator: string = headerList[iNextHeader - 1].value ? " " : "";
                     headerList[iNextHeader - 1].value += separator + line;
                 } else {
@@ -89,7 +88,7 @@ export class HeaderModel {
                     }
                 }
             }
-        }
+        });
 
         // 2047 decode our headers now
         for (let iHeader: number = 0; iHeader < headerList.length; iHeader++) {
@@ -113,26 +112,26 @@ export class HeaderModel {
             this._hasData = true;
         }
 
-        for (let i: number = 0; i < headerList.length; i++) {
+        headerList.forEach((header: header) => {
             // Grab values for our summary pane
-            if (this.summary.add(headerList[i])) continue;
+            if (this.summary.add(header)) return;
 
             // Properties with special parsing
-            switch (headerList[i].header.toUpperCase()) {
+            switch (header.header.toUpperCase()) {
                 case "X-Forefront-Antispam-Report".toUpperCase():
-                    this.forefrontAntiSpamReport.add(headerList[i].value);
-                    continue;
+                    this.forefrontAntiSpamReport.add(header.value);
+                    return;
                 case "X-Microsoft-Antispam".toUpperCase():
-                    this.antiSpamReport.add(headerList[i].value);
-                    continue;
+                    this.antiSpamReport.add(header.value);
+                    return;
             }
 
-            if (headerList[i].header.toUpperCase() === "Received".toUpperCase()) {
-                this.receivedHeaders.add(headerList[i].value);
-            } else if (headerList[i].header || headerList[i].value) {
-                this.otherHeaders.add(headerList[i]);
+            if (header.header.toUpperCase() === "Received".toUpperCase()) {
+                this.receivedHeaders.add(header.value);
+            } else if (header.header || header.value) {
+                this.otherHeaders.add(header);
             }
-        }
+        });
 
         this.summary.totalTime = this.receivedHeaders.computeDeltas();
     }
