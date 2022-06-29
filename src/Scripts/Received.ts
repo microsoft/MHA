@@ -123,16 +123,16 @@ export class Received extends iTable {
             //   id 1234ABCD; Thu, 21 Aug 2014 12:12:48 +0200 (CEST)
             const postFix = receivedHeader.match(/(.*)by (.*? \(Postfix, from userid .*?\))(.*)/mi);
             if (postFix) {
-                receivedFields.setField("by", postFix[2]);
-                receivedHeader = postFix[1] + postFix[3];
+                receivedFields.setField("by", postFix[2] ?? "");
+                receivedHeader = `${postFix[1] ?? ""}${postFix[3] ?? ""}`;
             }
 
             // Scan for malformed qmail headers
             // Received: (qmail 10876 invoked from network); 24 Aug 2014 16:13:38 -0000
             const qmail = receivedHeader.match(/(.*)\((qmail .*? invoked from .*?)\)(.*)/mi);
             if (qmail) {
-                receivedFields.setField("by", qmail[2]);
-                receivedHeader = qmail[1] + qmail[3];
+                receivedFields.setField("by", qmail[2] ?? "");
+                receivedHeader = `${qmail[1] ?? ""}${qmail[3] ?? ""}`;
             }
 
             // Split up the string now so we can look for our headers
@@ -163,7 +163,7 @@ export class Received extends iTable {
             headerMatches.forEach(function (headerMatch, iMatch) {
                 let iNextTokenHeader;
                 if (iMatch + 1 < headerMatches.length) {
-                    iNextTokenHeader = headerMatches[iMatch + 1].iToken;
+                    iNextTokenHeader = headerMatches[iMatch + 1]?.iToken;
                 } else {
                     iNextTokenHeader = tokens.length;
                 }
@@ -185,7 +185,7 @@ export class Received extends iTable {
             this._sortOrder = 1;
         }
 
-        if (this.sortColumn + "Sort" in this.receivedRows[0]) {
+        if (this.receivedRows[0] && this.sortColumn + "Sort" in this.receivedRows[0]) {
             col = col + "Sort";
         }
 
