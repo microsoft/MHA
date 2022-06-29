@@ -96,14 +96,16 @@ export class strings {
 
     public static htmlEncode(value: string): string { return value ? $('<div />').text(value).html() : ''; }
 
-    public static mapHeaderToURL(headerName: string, text: string): string {
-        for (let i: number = 0; i < strings.headerToURLMap.length; i++) {
-            if (headerName.toLowerCase() === strings.headerToURLMap[i][0].toLowerCase()) {
-                return ["<a href = '", strings.headerToURLMap[i][1], "' target = '_blank'>", this.htmlEncode(text || headerName), "</a>"].join("");
-            }
+    public static mapHeaderToURL(headerName: string, text?: string): string {
+        let headerMap: string[] | undefined = strings.headerToURLMap.find((headerMap: string[]) => {
+            return headerName.toLowerCase() === headerMap[0]?.toLowerCase();
+        });
+
+        if (headerMap) {
+            return ["<a href = '", headerMap[1], "' target = '_blank'>", this.htmlEncode(text || headerName), "</a>"].join("");
         }
 
-        return null;
+        return "";
     }
 
     public static mapValueToURL(text: string): string {

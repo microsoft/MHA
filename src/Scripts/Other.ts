@@ -13,7 +13,7 @@ export class otherRow {
     number: number;
     header: string;
     value: any;
-    public get url(): string { return strings.mapHeaderToURL(this.header, null); };
+    public get url(): string { return strings.mapHeaderToURL(this.header); };
     toString() { return this.header + ": " + this.value; }
 }
 
