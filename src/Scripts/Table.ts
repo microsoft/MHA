@@ -321,20 +321,20 @@ export class Table {
                 headerRow.addClass("tableHeader");
                 tableHeader.append(headerRow); // Must happen before we append cells to appease IE7
 
-                for (let i = 0; i < columns.length; i++) {
+                columns.forEach((column: column) => {
                     const headerCell = $(document.createElement("th"));
                     if (headerCell !== null) {
-                        headerCell.attr("id", columns[i].id);
-                        headerCell.text(columns[i].label);
-                        if (columns[i].class !== null) {
-                            headerCell.addClass(columns[i].class);
+                        headerCell.attr("id", column.id);
+                        headerCell.text(column.label);
+                        if (column.class !== null) {
+                            headerCell.addClass(column.class);
                         }
 
                         headerRow.append(headerCell);
                     }
 
-                    this.makeSortableColumn(tableName, columns[i].id);
-                }
+                    this.makeSortableColumn(tableName, column.id);
+                });
             }
         }
     }
@@ -437,12 +437,12 @@ export class Table {
         this.makeResizableTable("receivedHeaders", mhaStrings.mhaReceivedHeaders, function (table: Table) { return table.viewModel.receivedHeaders.exists(); });
 
         const receivedColumns = [
-            new column("hop", mhaStrings.mhaReceivedHop, null),
-            new column("from", mhaStrings.mhaReceivedSubmittingHost, null),
-            new column("by", mhaStrings.mhaReceivedReceivingHost, null),
-            new column("date", mhaStrings.mhaReceivedTime, null),
-            new column("delay", mhaStrings.mhaReceivedDelay, null),
-            new column("with", mhaStrings.mhaReceivedType, null),
+            new column("hop", mhaStrings.mhaReceivedHop, ""),
+            new column("from", mhaStrings.mhaReceivedSubmittingHost, ""),
+            new column("by", mhaStrings.mhaReceivedReceivingHost, ""),
+            new column("date", mhaStrings.mhaReceivedTime, ""),
+            new column("delay", mhaStrings.mhaReceivedDelay, ""),
+            new column("with", mhaStrings.mhaReceivedType, ""),
             new column("id", mhaStrings.mhaReceivedId, "extraCol"),
             new column("for", mhaStrings.mhaReceivedFor, "extraCol"),
             new column("via", mhaStrings.mhaReceivedVia, "extraCol")
@@ -487,9 +487,9 @@ export class Table {
         this.makeResizableTable("otherHeaders", mhaStrings.mhaOtherHeaders, function (table: Table) { return table.viewModel.otherHeaders.rows.length > 0; });
 
         const otherColumns = [
-            new column("number", mhaStrings.mhaNumber, null),
-            new column("header", mhaStrings.mhaHeader, null),
-            new column("value", mhaStrings.mhaValue, null)
+            new column("number", mhaStrings.mhaNumber, ""),
+            new column("header", mhaStrings.mhaHeader, ""),
+            new column("value", mhaStrings.mhaValue, "")
         ];
 
         this.addColumns(this.viewModel.otherHeaders.tableName, otherColumns);
