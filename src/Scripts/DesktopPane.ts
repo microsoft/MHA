@@ -8,7 +8,7 @@ import { HeaderModel } from "./Headers"
 import { poster } from "./poster";
 import { row, SummaryRow } from "./Summary";
 import { ReceivedRow } from "./Received";
-import { otherRow } from "./Other";
+import { OtherRow } from "./Other";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -291,22 +291,22 @@ function buildViews(headers: string) {
     // Build other view
     const otherList = $(".other-list");
 
-    viewModel.otherHeaders.rows.forEach((otherHeader: otherRow) => {
-        if (otherHeader.value) {
+    viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
+        if (otherRow.value) {
             const headerName = $("<div/>")
                 .addClass("ms-font-s")
                 .addClass("ms-fontWeight-semibold")
-                .text(otherHeader.header)
+                .text(otherRow.header)
                 .appendTo(otherList);
-            if (otherHeader.url) {
-                headerName.html(otherHeader.url);
+            if (otherRow.url) {
+                headerName.html(otherRow.url);
             }
             let headerVal = $("<div/>")
                 .addClass("code-box")
                 .appendTo(otherList);
             let pre = $("<pre/>").appendTo(headerVal);
             $("<code/>")
-                .text(otherHeader.value)
+                .text(otherRow.value)
                 .appendTo(pre);
         }
     });

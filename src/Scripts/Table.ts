@@ -3,6 +3,8 @@ import { HeaderModel } from "./Headers";
 import { mhaStrings } from "./mhaStrings";
 import { row } from "./Summary";
 import { iTable } from "./itable";
+import { ReceivedRow } from "./Received";
+import { OtherRow } from "./Other";
 
 class column {
     constructor(id: string, label: string, columnClass: string) {
@@ -15,11 +17,16 @@ class column {
     class: string;
 }
 
+type Binding = {
+    name: string;
+    visible: (table: Table) => boolean;
+}
+
 export class Table {
-    private viewModel: HeaderModel = null;
+    private viewModel: HeaderModel;
     private showExtra: boolean = false;
 
-    private visibilityBindings = [
+    private visibilityBindings: Binding[] = [
         { name: "#lineBreak", visible: function (table: Table) { return table.viewModel.hasData; } },
         { name: "#response", visible: function (table: Table) { return table.viewModel.hasData; } },
         { name: "#status", visible: function (table: Table) { return !!table.viewModel.status; } },
@@ -99,18 +106,18 @@ export class Table {
         if (summaryList) {
             summaryList.addClass("summaryList");
 
-            for (let i = 0; i < rows.length; i++) {
-                const id = rows[i].header + tag;
+            rows.forEach((summaryRow: row) => {
+                const id = summaryRow.header + tag;
                 const row = document.createElement("tr");
                 if (row !== null) {
                     row.id = id;
                     summaryList.append(row); // Must happen before we append cells to appease IE7
                     const headerCell = $(row.insertCell(-1));
                     if (headerCell) {
-                        if (rows[i].url) {
-                            headerCell.html(rows[i].url);
+                        if (summaryRow.url) {
+                            headerCell.html(summaryRow.url);
                         } else {
-                            headerCell.text(rows[i].label);
+                            headerCell.text(summaryRow.label);
                         }
                         headerCell.addClass("summaryHeader");
                     }
@@ -122,7 +129,7 @@ export class Table {
 
                     this.makeVisible("#" + id, false);
                 }
-            }
+            });
         }
     }
 
@@ -149,7 +156,7 @@ export class Table {
 
                 this.makeVisible("#" + row.header + type, true);
             } else {
-                headerVal.text(null);
+                headerVal.text("");
                 this.makeVisible("#" + row.header + type, false);
             }
         }
@@ -171,9 +178,9 @@ export class Table {
 
     // Recompute visibility with the current viewModel. Does not repopulate.
     public recalculateVisibility(): void {
-        for (let i = 0; i < this.visibilityBindings.length; i++) {
-            this.makeVisible(this.visibilityBindings[i].name, this.visibilityBindings[i].visible(this));
-        }
+        this.visibilityBindings.forEach((binding: Binding) => {
+            this.makeVisible(binding.name, binding.visible(this));
+        });
 
         this.positionResponse();
     }
@@ -205,38 +212,36 @@ export class Table {
     public rebuildSections(_viewModel: HeaderModel): void {
         this.viewModel = _viewModel;
 
-        let i;
-
         // Summary
-        for (i = 0; i < this.viewModel.summary.rows.length; i++) {
-            this.setRowValue(this.viewModel.summary.rows[i], "SUM");
-        }
+        this.viewModel.summary.rows.forEach((row: row) => {
+            this.setRowValue(row, "SUM");
+        });
 
         // Received
         this.emptyTableUI("receivedHeaders");
-        for (i = 0; i < this.viewModel.receivedHeaders.receivedRows.length; i++) {
+        this.viewModel.receivedHeaders.receivedRows.forEach((receivedRow: ReceivedRow) => {
             let row: HTMLTableRowElement = document.createElement("tr");
             $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
-            this.appendCell(row, this.viewModel.receivedHeaders.receivedRows[i].hop.value, null, null);
-            this.appendCell(row, this.viewModel.receivedHeaders.receivedRows[i].from.value, null, null);
-            this.appendCell(row, this.viewModel.receivedHeaders.receivedRows[i].by.value, null, null);
-            this.appendCell(row, this.viewModel.receivedHeaders.receivedRows[i].date.value, null, null);
+            this.appendCell(row, receivedRow.hop.value, "", "");
+            this.appendCell(row, receivedRow.from.value, "", "");
+            this.appendCell(row, receivedRow.by.value, "", "");
+            this.appendCell(row, receivedRow.date.value, "", "");
             let labelClass = "hotBarLabel";
-            if (this.viewModel.receivedHeaders.receivedRows[i].delaySort.value < 0) {
+            if (receivedRow.delaySort.value < 0) {
                 labelClass += " negativeCell";
             }
 
             const hotBar =
                 "<div class='hotBarContainer'>" +
-                "   <div class='" + labelClass + "'>" + this.viewModel.receivedHeaders.receivedRows[i].delay + "</div>" +
-                "   <div class='hotBarBar' style='width:" + this.viewModel.receivedHeaders.receivedRows[i].percent + "%'></div>" +
+                "   <div class='" + labelClass + "'>" + receivedRow.delay + "</div>" +
+                "   <div class='hotBarBar' style='width:" + receivedRow.percent + "%'></div>" +
                 "</div>";
-            this.appendCell(row, null, hotBar, "hotBarCell");
-            this.appendCell(row, this.viewModel.receivedHeaders.receivedRows[i].with.value, null, null);
-            this.appendCell(row, this.viewModel.receivedHeaders.receivedRows[i].id.value, null, "extraCol");
-            this.appendCell(row, this.viewModel.receivedHeaders.receivedRows[i].for.value, null, "extraCol");
-            this.appendCell(row, this.viewModel.receivedHeaders.receivedRows[i].via.value, null, "extraCol");
-        }
+            this.appendCell(row, "", hotBar, "hotBarCell");
+            this.appendCell(row, receivedRow.with.value, "", "");
+            this.appendCell(row, receivedRow.id.value, "", "extraCol");
+            this.appendCell(row, receivedRow.for.value, "", "extraCol");
+            this.appendCell(row, receivedRow.via.value, "", "extraCol");
+        });
 
         // Calculate heights for the hotbar cells (progress bars in Delay column)
         // Not clear why we need to do this
@@ -248,24 +253,24 @@ export class Table {
         this.hideEmptyColumns("receivedHeaders");
 
         // Forefront AntiSpam Report
-        for (i = 0; i < this.viewModel.forefrontAntiSpamReport.rows.length; i++) {
-            this.setRowValue(this.viewModel.forefrontAntiSpamReport.rows[i], "FFAS");
-        }
+        this.viewModel.forefrontAntiSpamReport.rows.forEach((row: row) => {
+            this.setRowValue(row, "FFAS");
+        });
 
         // AntiSpam Report
-        for (i = 0; i < this.viewModel.antiSpamReport.rows.length; i++) {
-            this.setRowValue(this.viewModel.antiSpamReport.rows[i], "AS");
-        }
+        this.viewModel.antiSpamReport.rows.forEach((row: row) => {
+            this.setRowValue(row, "AS");
+        });
 
         // Other
         this.emptyTableUI("otherHeaders");
-        for (i = 0; i < this.viewModel.otherHeaders.rows.length; i++) {
+        this.viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
             let row: HTMLTableRowElement = document.createElement("tr");
             $("#otherHeaders").append(row); // Must happen before we append cells to appease IE7
-            this.appendCell(row, this.viewModel.otherHeaders.rows[i].number.toString(), null, null);
-            this.appendCell(row, this.viewModel.otherHeaders.rows[i].header, this.viewModel.otherHeaders.rows[i].url, null);
-            this.appendCell(row, this.viewModel.otherHeaders.rows[i].value, null, "allowBreak");
-        }
+            this.appendCell(row, otherRow.number.toString(), "", "");
+            this.appendCell(row, otherRow.header, otherRow.url, "");
+            this.appendCell(row, otherRow.value, "", "allowBreak");
+        });
 
         $("#otherHeaders tbody tr:odd").addClass("oddRow");
 

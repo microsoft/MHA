@@ -2,7 +2,7 @@
 import { strings } from "./Strings";
 import { header } from "./Headers";
 
-export class otherRow {
+export class OtherRow {
     constructor(number: number, header: string, value: any) {
         this.number = number;
         this.header = header;
@@ -18,7 +18,7 @@ export class otherRow {
 }
 
 export class Other extends iTable {
-    private _otherRows: otherRow[] = [];
+    private _otherRows: OtherRow[] = [];
     protected _sortColumn: string = "number";
     protected _sortOrder: number = 1;
     public readonly tableName: string = "otherHeaders";
@@ -35,13 +35,13 @@ export class Other extends iTable {
             col = col + "Sort";
         }
 
-        this.rows.sort((a: otherRow, b: otherRow) => {
+        this.rows.sort((a: OtherRow, b: OtherRow) => {
             return this.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 
     public add(otherHeader: header): void {
-        this.rows.push(new otherRow(
+        this.rows.push(new OtherRow(
             this.rows.length + 1,
             otherHeader.header,
             otherHeader.value));
@@ -49,7 +49,7 @@ export class Other extends iTable {
 
     public exists() { return this.rows.length > 0; }
 
-    public get rows(): otherRow[] { return this._otherRows; };
+    public get rows(): OtherRow[] { return this._otherRows; };
     public toString() {
         if (!this.exists()) return "";
         const ret: string[] = ["Other"];
