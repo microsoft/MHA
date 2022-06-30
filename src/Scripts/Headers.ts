@@ -91,13 +91,12 @@ export class HeaderModel {
         });
 
         // 2047 decode our headers now
-        for (let iHeader: number = 0; iHeader < headerList.length; iHeader++) {
+        headerList.forEach((header: header) => {
             // Clean 2047 encoding
             // Strip nulls
             // Strip trailing carriage returns
-            const headerValue: string = Decoder.clean2047Encoding(headerList[iHeader].value).replace(/\0/g, "").replace(/[\n\r]+$/, "");
-            headerList[iHeader].value = headerValue;
-        }
+            header.value = Decoder.clean2047Encoding(header.value).replace(/\0/g, "").replace(/[\n\r]+$/, "");
+        });
 
         return headerList;
     }
