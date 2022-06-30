@@ -9,7 +9,8 @@ import * as utc from "dayjs/plugin/utc";
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./Headers"
 import { poster } from "./poster";
-import { row } from "./Summary";
+import { row, SummaryRow } from "./Summary";
+import { ReceivedRow } from "./Received";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
@@ -91,11 +92,11 @@ function buildViews(headers: string): void {
     // Build summary view
     const summaryContent = $("#summary-content");
 
-    for (let i: number = 0; i < viewModel.summary.rows.length; i++) {
-        if (viewModel.summary.rows[i].value) {
+    viewModel.summary.rows.forEach((row: SummaryRow) => {
+        if (row.value) {
             $("<div/>")
                 .addClass("content-block-title")
-                .text(viewModel.summary.rows[i].label)
+                .text(row.label)
                 .appendTo(summaryContent);
 
             let contentBlock = $("<div/>")
@@ -109,10 +110,10 @@ function buildViews(headers: string): void {
             let pre = $("<pre/>").appendTo(headerVal);
 
             $("<code/>")
-                .text(viewModel.summary.rows[i].value)
+                .text(row.value)
                 .appendTo(pre);
         }
-    }
+    });
 
     if (viewModel.originalHeaders) {
         $("#original-headers").text(viewModel.originalHeaders);
@@ -127,21 +128,18 @@ function buildViews(headers: string): void {
             .addClass("timeline")
             .appendTo(receivedContent);
 
-        let currentTime = null;
-        let currentTimeEntry = null;
-        let timelineItem;
-        let timelineDate;
-        let timelineInner;
+        let currentTime: dayjs.Dayjs;
+        let currentTimeEntry: JQuery<HTMLElement>;
 
-        for (let i: number = 0; i < viewModel.receivedHeaders.receivedRows.length; i++) {
+        viewModel.receivedHeaders.receivedRows.forEach((row: ReceivedRow, i: number) => {
             if (i === 0) {
-                currentTime = dayjs(viewModel.receivedHeaders.receivedRows[i].dateNum.value).local();
+                currentTime = dayjs(row.dateNum.value).local();
 
-                timelineItem = $("<div/>")
+                let timelineItem: JQuery<HTMLElement> = $("<div/>")
                     .addClass("timeline-item")
                     .appendTo(timeline);
 
-                timelineDate = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
+                let timelineDate: string = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
 
                 $("<div/>")
                     .addClass("timeline-item-date")
@@ -157,7 +155,7 @@ function buildViews(headers: string): void {
                     .appendTo(timelineItem);
 
                 // Add initial other rows
-                timelineInner = $("<div/>")
+                let timelineInner: JQuery<HTMLElement> = $("<div/>")
                     .addClass("timeline-item-inner")
                     .addClass("link")
                     .addClass("open-popover")
@@ -171,26 +169,26 @@ function buildViews(headers: string): void {
 
                 $("<div/>")
                     .addClass("timeline-item-subtitle")
-                    .html("<strong>From: </strong>" + viewModel.receivedHeaders.receivedRows[i].from)
+                    .html("<strong>From: </strong>" + row.from)
                     .appendTo(timelineInner);
 
                 $("<div/>")
                     .addClass("timeline-item-text")
-                    .html("<strong>To: </strong>" + viewModel.receivedHeaders.receivedRows[i].by)
+                    .html("<strong>To: </strong>" + row.by)
                     .appendTo(timelineInner);
             } else {
                 // Determine if new timeline item is needed
-                const entryTime = dayjs(viewModel.receivedHeaders.receivedRows[i].dateNum.value).local();
+                const entryTime = dayjs(row.dateNum.value).local();
 
                 if (entryTime.minute() > currentTime.minute()) {
                     // Into a new minute, create a new timeline item
                     currentTime = entryTime;
 
-                    timelineItem = $("<div/>")
+                    let timelineItem: JQuery<HTMLElement> = $("<div/>")
                         .addClass("timeline-item")
                         .appendTo(timeline);
 
-                    timelineDate = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
+                    let timelineDate: string = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
                     $("<div/>")
                         .addClass("timeline-item-date")
                         .html(timelineDate)
@@ -207,7 +205,7 @@ function buildViews(headers: string): void {
                 }
 
                 // Add additional rows
-                timelineInner = $("<div/>")
+                let timelineInner: JQuery<HTMLElement> = $("<div/>")
                     .addClass("timeline-item-inner")
                     .addClass("link")
                     .addClass("open-popover")
@@ -221,7 +219,7 @@ function buildViews(headers: string): void {
 
                 $("<div/>")
                     .addClass("timeline-item-subtitle")
-                    .html("<strong>To: </strong>" + viewModel.receivedHeaders.receivedRows[i].by)
+                    .html("<strong>To: </strong>" + row.by)
                     .appendTo(timelineInner);
 
                 const progress = $("<div/>")
@@ -229,7 +227,7 @@ function buildViews(headers: string): void {
                     .appendTo(timelineInner);
 
                 $("<p/>")
-                    .text(viewModel.receivedHeaders.receivedRows[i].delay.value)
+                    .text(row.delay.value)
                     .appendTo(progress);
 
                 $("<p/>")
@@ -237,7 +235,7 @@ function buildViews(headers: string): void {
                     .appendTo(progress);
 
                 try {
-                    myApp.showProgressbar(".progress-wrap-" + i, viewModel.receivedHeaders.receivedRows[i].percent);
+                    myApp.showProgressbar(".progress-wrap-" + i, row.percent);
                 } catch (e) {
                     $("#original-headers").text(JSON.stringify(e));
                     return;
@@ -262,14 +260,15 @@ function buildViews(headers: string): void {
                 .addClass("content-block")
                 .appendTo(popoverInner);
 
-            addCalloutEntry("From", viewModel.receivedHeaders.receivedRows[i].from.value, popoverContent);
-            addCalloutEntry("To", viewModel.receivedHeaders.receivedRows[i].by.value.value, popoverContent);
-            addCalloutEntry("Time", viewModel.receivedHeaders.receivedRows[i].date.value, popoverContent);
-            addCalloutEntry("Type", viewModel.receivedHeaders.receivedRows[i].with.value, popoverContent);
-            addCalloutEntry("ID", viewModel.receivedHeaders.receivedRows[i].id.value, popoverContent);
-            addCalloutEntry("For", viewModel.receivedHeaders.receivedRows[i].for.value, popoverContent);
-            addCalloutEntry("Via", viewModel.receivedHeaders.receivedRows[i].via.value, popoverContent);
-        }
+            addCalloutEntry("From", row.from.value, popoverContent);
+            addCalloutEntry("To", row.by.value.value, popoverContent);
+            addCalloutEntry("Time", row.date.value, popoverContent);
+            addCalloutEntry("Type", row.with.value, popoverContent);
+            addCalloutEntry("ID", row.id.value, popoverContent);
+            addCalloutEntry("For", row.for.value, popoverContent);
+            addCalloutEntry("Via", row.via.value, popoverContent);
+
+        });
 
         // Add a final empty timeline item to extend
         // timeline
