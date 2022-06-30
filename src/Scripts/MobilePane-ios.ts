@@ -11,6 +11,7 @@ import { HeaderModel } from "./Headers"
 import { poster } from "./poster";
 import { row, SummaryRow } from "./Summary";
 import { ReceivedRow } from "./Received";
+import { OtherRow } from "./Other";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
@@ -128,13 +129,11 @@ function buildViews(headers: string): void {
             .addClass("timeline")
             .appendTo(receivedContent);
 
-        let currentTime: dayjs.Dayjs;
+        let currentTime: dayjs.Dayjs = dayjs(viewModel.receivedHeaders.receivedRows[0]?.dateNum.value).local()
         let currentTimeEntry: JQuery<HTMLElement>;
 
         viewModel.receivedHeaders.receivedRows.forEach((row: ReceivedRow, i: number) => {
             if (i === 0) {
-                currentTime = dayjs(row.dateNum.value).local();
-
                 let timelineItem: JQuery<HTMLElement> = $("<div/>")
                     .addClass("timeline-item")
                     .appendTo(timeline);
@@ -306,9 +305,9 @@ function buildViews(headers: string): void {
         let ul: JQuery<HTMLElement> = $("<ul/>")
             .appendTo(list);
 
-        for (let i: number = 0; i < viewModel.forefrontAntiSpamReport.rows.length; i++) {
-            addSpamReportRow(viewModel.forefrontAntiSpamReport.rows[i], ul);
-        }
+        viewModel.forefrontAntiSpamReport.rows.forEach((row: row) => {
+            addSpamReportRow(row, ul);
+        });
     }
 
     // Microsoft
@@ -326,25 +325,25 @@ function buildViews(headers: string): void {
         let ul: JQuery<HTMLElement> = $("<ul/>")
             .appendTo(list);
 
-        for (let i: number = 0; i < viewModel.antiSpamReport.rows.length; i++) {
-            addSpamReportRow(viewModel.antiSpamReport.rows[i], ul);
-        }
+        viewModel.antiSpamReport.rows.forEach((row: row) => {
+            addSpamReportRow(row, ul);
+        });
     }
 
     // Build other view
     const otherContent = $("#other-content");
 
-    for (let i: number = 0; i < viewModel.otherHeaders.rows.length; i++) {
-        if (viewModel.otherHeaders.rows[i].value) {
+    viewModel.otherHeaders.rows.forEach((row: OtherRow) => {
+        if (row.value) {
             const headerName = $("<div/>")
                 .addClass("content-block-title")
-                .text(viewModel.otherHeaders.rows[i].header)
+                .text(row.header)
                 .appendTo(otherContent);
 
-            if (viewModel.otherHeaders.rows[i].url) {
+            if (row.url) {
                 headerName.empty();
 
-                $($.parseHTML(viewModel.otherHeaders.rows[i].url))
+                $($.parseHTML(row.url))
                     .addClass("external")
                     .appendTo(headerName);
             }
@@ -360,10 +359,10 @@ function buildViews(headers: string): void {
             let pre = $("<pre/>").appendTo(headerVal);
 
             $("<code/>")
-                .text(viewModel.otherHeaders.rows[i].value)
+                .text(row.value)
                 .appendTo(pre);
         }
-    }
+    });
 }
 
 function renderItem(headers: string): void {
