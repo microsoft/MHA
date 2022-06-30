@@ -59,7 +59,7 @@ export class GetHeadersEWS {
     }
 
     private static stripHeaderFromXml(xml: string): string {
-        if (!xml) return null;
+        if (!xml) return "";
         return xml
             .replace(/<t:Value>[\s\S]*<\/t:Value>/g, "<t:Value>redacted</t:Value>")
             .replace(/<t:ItemId.*?\/>/g, "<t:ItemId ID=\"redacted\"/>");
