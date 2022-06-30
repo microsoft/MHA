@@ -238,7 +238,7 @@ QUnit.test("getError* Tests", function (assert: Assert) {
 });
 
 QUnit.test("joinArray Tests", function (assert: Assert) {
-    assert.equal(strings.joinArray(null, " : "), null);
+    assert.equal(strings.joinArray(null, " : "), "");
     assert.equal(strings.joinArray(["1"], " : "), "1");
     assert.equal(strings.joinArray(["1", "2"], " : "), "1 : 2");
     assert.equal(strings.joinArray([null, "2"], " : "), "2");
