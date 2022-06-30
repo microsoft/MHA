@@ -9,8 +9,8 @@ import { HeaderModel } from "./Headers"
 import { Diagnostics } from "./diag";
 import { Table } from "./Table"
 
-let viewModel: HeaderModel = null;
-let table: Table = null;
+let viewModel: HeaderModel;
+let table: Table;
 
 function enableSpinner() {
     $("#response").css("background-image", "url(../Resources/loader.gif)");
@@ -67,7 +67,7 @@ if ($) {
         viewModel = new HeaderModel();
         table = new Table();
         table.initializeTableUI(viewModel);
-        table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, null);
+        table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, () => true);
 
         (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;
         (document.querySelector("#clearButton") as HTMLButtonElement).onclick = clear;

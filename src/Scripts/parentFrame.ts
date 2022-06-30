@@ -18,7 +18,7 @@ class DeferredError {
 }
 
 export class ParentFrame {
-    private static iFrame: Window = null;
+    private static iFrame: Window;
     private static currentChoice = {} as Choice;
     private static deferredErrors: DeferredError[] = [];
     private static deferredStatus: string[] = [];
@@ -33,13 +33,14 @@ export class ParentFrame {
 
     private static getQueryVariable(variable: string): string {
         const vars: string[] = window.location.search.substring(1).split("&");
+
         for (let i: number = 0; i < vars.length; i++) {
             const pair: string[] = vars[i].split("=");
             if (pair[0] === variable) {
                 return pair[1];
             }
         }
-        return null;
+        return "";
     }
 
     private static setDefault(): void {
@@ -48,13 +49,13 @@ export class ParentFrame {
             uiDefault = "new";
         }
 
-        for (let iChoice: number = 0; iChoice < ParentFrame.choices.length; iChoice++) {
-            if (uiDefault === ParentFrame.choices[iChoice].label) {
-                ParentFrame.choices[iChoice].checked = true;
+        ParentFrame.choices.forEach((choice: Choice) => {
+            if (uiDefault === choice.label) {
+                choice.checked = true;
             } else {
-                ParentFrame.choices[iChoice].checked = false;
+                choice.checked = false;
             }
-        }
+        });
     }
 
     private static postMessageToFrame(eventName: string, data: string | { error: string, message: any }): void {
@@ -71,21 +72,21 @@ export class ParentFrame {
 
         if (ParentFrame.iFrame) {
             // If we have any deferred status, signal them
-            for (let iStatus: number = 0; iStatus < ParentFrame.deferredStatus.length; iStatus++) {
-                ParentFrame.postMessageToFrame("updateStatus", ParentFrame.deferredStatus[iStatus]);
-            }
+            ParentFrame.deferredStatus.forEach((status: string) => {
+                ParentFrame.postMessageToFrame("updateStatus", status);
+            });
 
             // Clear out the now displayed status
             ParentFrame.deferredStatus = [];
 
             // If we have any deferred errors, signal them
-            for (let iError: number = 0; iError < ParentFrame.deferredErrors.length; iError++) {
+            ParentFrame.deferredErrors.forEach((deferredError: DeferredError) => {
                 ParentFrame.postMessageToFrame("showError",
                     {
-                        error: JSON.stringify(ParentFrame.deferredErrors[iError].error),
-                        message: ParentFrame.deferredErrors[iError].message
+                        error: JSON.stringify(deferredError.error),
+                        message: deferredError.message
                     });
-            }
+            });
 
             // Clear out the now displayed errors
             ParentFrame.deferredErrors = [];
@@ -179,12 +180,9 @@ export class ParentFrame {
     }
 
     private static goDefaultChoice(): void {
-        for (let iChoice: number = 0; iChoice < ParentFrame.choices.length; iChoice++) {
-            const choice = ParentFrame.choices[iChoice];
-            if (choice.checked) {
-                ParentFrame.go(choice);
-                return;
-            }
+        const choice = ParentFrame.choices.find((choice: Choice) => { return choice.checked; });
+        if (choice) {
+            ParentFrame.go(choice);
         }
     }
 
@@ -206,9 +204,7 @@ export class ParentFrame {
         const list: JQuery<HTMLUListElement> = $("#uiChoice-list");
         list.empty();
 
-        for (let iChoice: number = 0; iChoice < ParentFrame.choices.length; iChoice++) {
-            const choice: Choice = ParentFrame.choices[iChoice];
-
+        ParentFrame.choices.forEach((choice: Choice, iChoice: number) => {
             // Create html: <li class="ms-RadioButton">
             const listItem: JQuery<HTMLLIElement> = ParentFrame.create(list, "li", "ms-RadioButton");
 
@@ -229,7 +225,7 @@ export class ParentFrame {
             // Create html: <span class="ms-Label">classic</span>
             const inputSpan: JQuery<HTMLSpanElement> = ParentFrame.create(label, "span", "ms-Label");
             inputSpan.text(choice.label);
-        }
+        });
     }
 
     // Hook the UI together for display
@@ -282,8 +278,8 @@ export class ParentFrame {
                 case "actionsSettings-OK": {
                     // How did the user say to display it (UI to display)
                     const iChoice: string = ($("#uiChoice input:checked")[0] as HTMLInputElement).value;
-                    const choice: Choice = ParentFrame.choices[+iChoice];
-                    if (choice.label !== ParentFrame.currentChoice.label) {
+                    const choice: Choice | undefined = ParentFrame.choices[+iChoice];
+                    if (choice && choice.label !== ParentFrame.currentChoice.label) {
                         ParentFrame.go(choice);
                     }
 
