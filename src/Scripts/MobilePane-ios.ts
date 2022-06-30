@@ -124,15 +124,15 @@ function buildViews(headers: string): void {
     // Build received view
     const receivedContent = $("#received-content");
 
-    if (viewModel.receivedHeaders.receivedRows.length > 0) {
+    if (viewModel.receivedHeaders.rows.length > 0) {
         const timeline = $("<div/>")
             .addClass("timeline")
             .appendTo(receivedContent);
 
-        let currentTime: dayjs.Dayjs = dayjs(viewModel.receivedHeaders.receivedRows[0]?.dateNum.value).local()
+        let currentTime: dayjs.Dayjs = dayjs(viewModel.receivedHeaders.rows[0]?.dateNum.value).local()
         let currentTimeEntry: JQuery<HTMLElement>;
 
-        viewModel.receivedHeaders.receivedRows.forEach((row: ReceivedRow, i: number) => {
+        viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, i: number) => {
             if (i === 0) {
                 let timelineItem: JQuery<HTMLElement> = $("<div/>")
                     .addClass("timeline-item")

@@ -125,13 +125,13 @@ function buildViews(headers: string) {
     // Build received view
     const receivedList = $(".received-list");
 
-    if (viewModel.receivedHeaders.receivedRows.length > 0) {
+    if (viewModel.receivedHeaders.rows.length > 0) {
         const list = $("<ul/>")
             .addClass("ms-List")
             .appendTo(receivedList);
 
         let firstRow: boolean = true;
-        viewModel.receivedHeaders.receivedRows.forEach((row: ReceivedRow) => {
+        viewModel.receivedHeaders.rows.forEach((row: ReceivedRow) => {
             const listItem = $("<li/>")
                 .addClass("ms-ListItem")
                 .addClass("ms-ListItem--document")

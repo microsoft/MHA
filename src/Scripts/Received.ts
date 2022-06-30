@@ -176,7 +176,7 @@ export class Received extends iTable {
         return receivedFields;
     };
 
-    public exists(): boolean { return this.receivedRows.length > 0; }
+    public exists(): boolean { return this.rows.length > 0; }
 
     public doSort(col: string): void {
         if (this.sortColumn === col) {
@@ -186,19 +186,19 @@ export class Received extends iTable {
             this._sortOrder = 1;
         }
 
-        if (this.receivedRows[0] && this.sortColumn + "Sort" in this.receivedRows[0]) {
+        if (this.rows[0] && this.sortColumn + "Sort" in this.rows[0]) {
             col = col + "Sort";
         }
 
-        this.receivedRows.sort((a: ReceivedRow, b: ReceivedRow) => {
+        this.rows.sort((a: ReceivedRow, b: ReceivedRow) => {
             return this.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 
-    public addInternal(receivedHeader: string): void { this.receivedRows.push(this.parseHeader(receivedHeader)); }
+    public addInternal(receivedHeader: string): void { this.rows.push(this.parseHeader(receivedHeader)); }
     public add(header: header): boolean {
         if (header.header.toUpperCase() === "Received".toUpperCase()) {
-            this.receivedRows.push(this.parseHeader(header.value));
+            this.rows.push(this.parseHeader(header.value));
             return true;
         }
 
@@ -256,7 +256,7 @@ export class Received extends iTable {
 
     public computeDeltas(): string {
         // Process received headers in reverse order
-        this.receivedRows.reverse();
+        this.rows.reverse();
 
         // Parse rows and compute values needed for the "Delay" column
         let iStartTime: number = 0;
@@ -264,7 +264,7 @@ export class Received extends iTable {
         let iLastTime: number = NaN;
         let iDelta: number = 0; // This will be the sum of our positive deltas
 
-        this.receivedRows.forEach(function (row: ReceivedRow) {
+        this.rows.forEach(function (row: ReceivedRow) {
             if (!isNaN(row.dateNum.value)) {
                 if (!isNaN(iLastTime) && iLastTime < row.dateNum.value) {
                     iDelta += row.dateNum.value - iLastTime;
@@ -278,7 +278,7 @@ export class Received extends iTable {
 
         iLastTime = NaN;
 
-        this.receivedRows.forEach(function (row: ReceivedRow, index: number) {
+        this.rows.forEach(function (row: ReceivedRow, index: number) {
             row.hop.value = index + 1;
             row.delay.value = Received.computeTime(row.dateNum.value, iLastTime);
 
@@ -300,12 +300,12 @@ export class Received extends iTable {
         return iEndTime !== iStartTime ? Received.computeTime(iEndTime, iStartTime) : "";
     }
 
-    public get receivedRows(): ReceivedRow[] { return this._receivedRows; };
+    public get rows(): ReceivedRow[] { return this._receivedRows; };
     public toString(): string {
         if (!this.exists()) return "";
         const ret: string[] = ["Received"];
         const rows: ReceivedRow[] = [];
-        this.receivedRows.forEach(function (row: ReceivedRow): void {
+        this.rows.forEach(function (row: ReceivedRow): void {
             rows.push(row);
         });
         if (rows.length) ret.push(rows.join("\n\n"));

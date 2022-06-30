@@ -219,7 +219,7 @@ export class Table {
 
         // Received
         this.emptyTableUI("receivedHeaders");
-        this.viewModel.receivedHeaders.receivedRows.forEach((receivedRow: ReceivedRow) => {
+        this.viewModel.receivedHeaders.rows.forEach((receivedRow: ReceivedRow) => {
             let row: HTMLTableRowElement = document.createElement("tr");
             $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
             this.appendCell(row, receivedRow.hop.value, "", "");

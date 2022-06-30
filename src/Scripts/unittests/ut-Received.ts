@@ -28,7 +28,7 @@ QUnit.test("Received Tests", function (assert: Assert) {
 
     assert.equal(received.computeDeltas(), "310 minutes 14 seconds", "Deltas");
     assert.equal(received.exists(), true, "Exists");
-    assert.receivedEqual(received.receivedRows[0],
+    assert.receivedEqual(received.rows[0],
         {
             "by": "vmta6.response.nfcu.org (PowerMTA(TM) v3.5r17)",
             "dateNum": 1524261079000,
@@ -40,7 +40,7 @@ QUnit.test("Received Tests", function (assert: Assert) {
             "percent": 0,
             "sourceHeader": header4
         }, "header4");
-    assert.receivedEqual(received.receivedRows[1],
+    assert.receivedEqual(received.rows[1],
         {
             "by": "BN3NAM04FT003.mail.protection.outlook.com (10.152.92.112)",
             "dateNum": 1524279692000,
@@ -54,7 +54,7 @@ QUnit.test("Received Tests", function (assert: Assert) {
             "via": "Frontend Transport",
             "with": "Microsoft SMTP Server"
         }, "header3");
-    assert.receivedEqual(received.receivedRows[2],
+    assert.receivedEqual(received.rows[2],
         {
             "by": "BN3NAM04HT205.eop-NAM04.prod.protection.outlook.com (10.152.93.134)",
             "dateNum": 1524279692000,
@@ -67,7 +67,7 @@ QUnit.test("Received Tests", function (assert: Assert) {
             "sourceHeader": header2,
             "with": "Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384)"
         }, "header2");
-    assert.receivedEqual(received.receivedRows[3],
+    assert.receivedEqual(received.rows[3],
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
             "dateNum": 1524279693000,
@@ -115,7 +115,7 @@ QUnit.test("Received Tests github headers", function (assert: Assert) {
 
     assert.equal(received.computeDeltas(), "2 seconds", "github Deltas");
     assert.equal(received.exists(), true, "github exists");
-    assert.receivedEqual(received.receivedRows[0],
+    assert.receivedEqual(received.rows[0],
         {
             "by": "ismtpd0021p1iad2.sendgrid.net (SG)",
             "dateNum": 1524365656987,
@@ -128,7 +128,7 @@ QUnit.test("Received Tests github headers", function (assert: Assert) {
             "sourceHeader": githubHeader5,
             "with": "ESMTP"
         }, "githubHeader5");
-    assert.receivedEqual(received.receivedRows[1],
+    assert.receivedEqual(received.rows[1],
         {
             "by": "filter0652p1las1.sendgrid.net",
             "dateNum": 1524365657028,
@@ -140,7 +140,7 @@ QUnit.test("Received Tests github headers", function (assert: Assert) {
             "sourceHeader": githubHeader4,
             "with": "SMTP"
         }, "githubHeader4");
-    assert.receivedEqual(received.receivedRows[2],
+    assert.receivedEqual(received.rows[2],
         {
             "by": "CO1NAM03FT028.mail.protection.outlook.com (10.152.80.189)",
             "dateNum": 1524365657000,
@@ -154,7 +154,7 @@ QUnit.test("Received Tests github headers", function (assert: Assert) {
             "via": "Frontend Transport",
             "with": "Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384)"
         }, "githubHeader3");
-    assert.receivedEqual(received.receivedRows[3],
+    assert.receivedEqual(received.rows[3],
         {
             "by": "CO1NAM03HT217.eop-NAM03.prod.protection.outlook.com (10.152.81.113)",
             "dateNum": 1524365658000,
@@ -167,7 +167,7 @@ QUnit.test("Received Tests github headers", function (assert: Assert) {
             "sourceHeader": githubHeader2,
             "with": "Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384)"
         }, "githubHeader2");
-    assert.receivedEqual(received.receivedRows[4],
+    assert.receivedEqual(received.rows[4],
         {
             "by": "SN1PR16MB0494.namprd16.prod.outlook.com",
             "dateNum": 1524365659000,
