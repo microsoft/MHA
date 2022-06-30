@@ -73,14 +73,14 @@ export class Errors {
         }
 
         Errors.parse(error, message, function (eventName: string, stack: string[]): void {
-            Errors.add(eventName, stack, suppressTracking??false);
+            Errors.add(eventName, stack, suppressTracking ?? false);
         });
     }
 
     // exception - an exception object
     // message - a string describing the error
     // handler - function to call with parsed error
-    public static parse(exception: any, message: string, handler: (eventName: string, stack: string[]) => void): void {
+    public static parse(exception: any, message: string | null, handler: (eventName: string, stack: string[]) => void): void {
         let stack;
         const exceptionMessage = Errors.getErrorMessage(exception);
 
@@ -138,7 +138,7 @@ export class Errors {
         if (typeof (error) === "string") return "string thrown as error";
         if (typeof (error) === "number") return "number thrown as error";
         if (!Errors.isError(error)) return '';
-        if ("stack" in error) return error.stack??'';
+        if ("stack" in error) return error.stack ?? '';
         return '';
     }
 }
