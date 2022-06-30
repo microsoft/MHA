@@ -34,13 +34,18 @@ export class ParentFrame {
     private static getQueryVariable(variable: string): string {
         const vars: string[] = window.location.search.substring(1).split("&");
 
-        for (let i: number = 0; i < vars.length; i++) {
-            const pair: string[] = vars[i].split("=");
+        let found: string = "";
+        vars.find((v: string) => {
+            const pair: string[] = v.split("=");
             if (pair[0] === variable) {
-                return pair[1];
+                found = pair[1] ?? "";
+                return true;
             }
-        }
-        return "";
+
+            return false;
+        });
+
+        return found;
     }
 
     private static setDefault(): void {
