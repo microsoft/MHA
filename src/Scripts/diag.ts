@@ -233,10 +233,16 @@ class diag {
                 if (window.Office.context.requirements.isSetSupported("Mailbox", 1.0)) return "1.0";
             }
 
+            // This check is for severly broken office.js implementations that still crop up
+            // @ts-ignore: TS2774 false positive
             if (window.Office.context.mailbox && window.Office.context.mailbox.addHandlerAsync) return "1.5?";
+            // @ts-ignore: TS2774 false positive
             if (window.Office.context.ui && window.Office.context.ui.displayDialogAsync) return "1.4?";
+            // @ts-ignore: TS2774 false positive
             if (window.Office.context.mailbox && window.Office.context.mailbox.item.saveAsync) return "1.3?";
+            // @ts-ignore: TS2774 false positive
             if (window.Office.context.mailbox && window.Office.context.mailbox.item.setSelectedDataAsync) return "1.2?";
+            // @ts-ignore: TS2774 false positive
             if (window.Office.context.mailbox && window.Office.context.mailbox.item.removeAttachmentAsync) return "1.1?";
             return "1.0?";
         }
