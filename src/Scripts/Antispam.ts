@@ -1,6 +1,7 @@
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
 import { row } from "./Summary";
+import { header } from "./Headers";
 
 export class AntiSpamReport {
     private _source: string = "";
@@ -70,7 +71,16 @@ export class AntiSpamReport {
         this.setRowValue(rows, "unparsed", this._unparsed);
     }
 
-    public add(report: string): void { this.parse(report, this.rows); }
+    public addInternal(report: string): void { this.parse(report, this.rows); }
+    public add(header: header): boolean {
+        if (header.header.toUpperCase() === "X-Microsoft-Antispam".toUpperCase()) {
+            this.parse(header.value, this.rows);
+            return true;
+        }
+
+        return false;
+    }
+
     public exists(): boolean { return this.existsInternal(this.rows); }
 
     public get source(): string { return this._source; };

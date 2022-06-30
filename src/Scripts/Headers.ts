@@ -16,7 +16,7 @@ export class header {
 };
 
 export class HeaderModel {
-    public originalHeaders;
+    public originalHeaders: string;
     public summary: Summary;
     public receivedHeaders: Received;
     public forefrontAntiSpamReport: ForefrontAntiSpamReport;
@@ -25,7 +25,7 @@ export class HeaderModel {
     private _hasData: boolean;
     private _status: string;
     public get hasData(): boolean { return this._hasData || !!this._status; };
-    public get status() { return this._status; };
+    public get status(): string { return this._status; };
     public set status(value) { this._status = value; };
     [index: string]: any;
 
@@ -116,20 +116,10 @@ export class HeaderModel {
             if (this.summary.add(header)) return;
 
             // Properties with special parsing
-            switch (header.header.toUpperCase()) {
-                case "X-Forefront-Antispam-Report".toUpperCase():
-                    this.forefrontAntiSpamReport.add(header.value);
-                    return;
-                case "X-Microsoft-Antispam".toUpperCase():
-                    this.antiSpamReport.add(header.value);
-                    return;
-            }
-
-            if (header.header.toUpperCase() === "Received".toUpperCase()) {
-                this.receivedHeaders.add(header.value);
-            } else if (header.header || header.value) {
-                this.otherHeaders.add(header);
-            }
+            if (this.forefrontAntiSpamReport.add(header)) return;
+            if (this.antiSpamReport.add(header)) return;
+            if (this.receivedHeaders.add(header)) return;
+            this.otherHeaders.add(header);
         });
 
         this.summary.totalTime = this.receivedHeaders.computeDeltas();

@@ -40,11 +40,16 @@ export class Other extends iTable {
         });
     }
 
-    public add(otherHeader: header): void {
-        this.rows.push(new OtherRow(
-            this.rows.length + 1,
-            otherHeader.header,
-            otherHeader.value));
+    public add(header: header): boolean {
+        if (header.header || header.value) {
+            this.rows.push(new OtherRow(
+                this.rows.length + 1,
+                header.header,
+                header.value));
+            return true;
+        }
+
+        return false;
     }
 
     public exists() { return this.rows.length > 0; }

@@ -1,6 +1,7 @@
 import { mhaStrings } from "./mhaStrings";
 import { AntiSpamReport } from "./Antispam";
 import { row } from "./Summary";
+import { header } from "./Headers";
 
 export class ForefrontAntiSpamReport extends AntiSpamReport {
     private forefrontAntiSpamRows: row[] = [
@@ -22,6 +23,15 @@ export class ForefrontAntiSpamReport extends AntiSpamReport {
         new row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
         new row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
     ];
+
+    public override add(header: header): boolean {
+        if (header.header.toUpperCase() === "X-Forefront-Antispam-Report".toUpperCase()) {
+            this.parse(header.value, this.rows);
+            return true;
+        }
+
+        return false;
+    }
 
     public override get rows(): row[] { return this.forefrontAntiSpamRows; };
     public override toString(): string {

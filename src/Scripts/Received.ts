@@ -1,6 +1,7 @@
 ﻿import { iTable } from "./itable";
 import { mhaStrings } from "./mhaStrings";
 import { mhaDates, date } from "./dates";
+import { header } from "./Headers";
 
 class ReceivedField {
     constructor(label: string, value?: any) {
@@ -194,7 +195,15 @@ export class Received extends iTable {
         });
     }
 
-    public add(receivedHeader: string): void { this.receivedRows.push(this.parseHeader(receivedHeader)); }
+    public addInternal(receivedHeader: string): void { this.receivedRows.push(this.parseHeader(receivedHeader)); }
+    public add(header: header): boolean {
+        if (header.header.toUpperCase() === "Received".toUpperCase()) {
+            this.receivedRows.push(this.parseHeader(header.value));
+            return true;
+        }
+
+        return false;
+    }
 
     // Computes min/sec from the diff of current and last.
     // Returns nothing if last or current is NaN.

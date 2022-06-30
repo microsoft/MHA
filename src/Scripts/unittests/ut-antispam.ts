@@ -37,7 +37,7 @@ QUnit.test("antiSpam Tests", function (assert: Assert) {
     ];
 
     var antiSpamReport = new AntiSpamReport();
-    antiSpamReport.add(header);
+    antiSpamReport.addInternal(header);
     assert.arrayEqual(antiSpamReport.rows, antiSpamRows, "antiSpamRows");
     assert.propEqual(antiSpamReport.source, header, "antiSpamRows-sourceHeader");
     assert.propEqual(antiSpamReport.unparsed, unparsed, "antiSpamRows-unparsed");
@@ -170,7 +170,7 @@ QUnit.test("forefront antiSpam Tests", function (assert: Assert) {
     ];
 
     var forefrontAntiSpamReport = new ForefrontAntiSpamReport();
-    forefrontAntiSpamReport.add(header);
+    forefrontAntiSpamReport.addInternal(header);
     assert.arrayEqual(forefrontAntiSpamReport.rows, forefrontAntiSpamRows, "forefrontAntiSpamRows");
     assert.propEqual(forefrontAntiSpamReport.source, header, "forefrontAntiSpamRows-sourceHeader");
     assert.propEqual(forefrontAntiSpamReport.unparsed, unparsed, "forefrontAntiSpamReport-unparsed");
@@ -211,7 +211,7 @@ QUnit.test("antiSpam nulls", function (assert: Assert) {
     ];
 
     var antiSpamReport = new AntiSpamReport();
-    antiSpamReport.add(header);
+    antiSpamReport.addInternal(header);
     assert.arrayEqual(antiSpamReport.rows, antiSpamRows, "antiSpamRows nulls");
     assert.propEqual(antiSpamReport.source, header, "antiSpamRows-sourceHeader nulls");
     assert.propEqual(antiSpamReport.unparsed, unparsed, "antiSpamRows-unparsed nulls");
@@ -343,7 +343,7 @@ QUnit.test("forefront antiSpam spam", function (assert: Assert) {
     ];
 
     var forefrontAntiSpamReport = new ForefrontAntiSpamReport();
-    forefrontAntiSpamReport.add(header);
+    forefrontAntiSpamReport.addInternal(header);
     assert.arrayEqual(forefrontAntiSpamReport.rows, forefrontAntiSpamRows, "antiSpamRows spam");
     assert.propEqual(forefrontAntiSpamReport.source, header, "antiSpamRows-sourceHeader spam");
     assert.propEqual(forefrontAntiSpamReport.unparsed, unparsed, "antiSpamRows-unparsed spam");
