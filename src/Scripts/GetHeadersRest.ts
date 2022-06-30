@@ -59,15 +59,17 @@ export class GetHeadersRest {
         // different formats.
         const aud = Array.isArray(jwt.aud) ? jwt.aud[0] : jwt.aud;
 
-        // Format 1: It's just the URL
-        if (aud.match(/https:\/\/([^@]*)/)) {
-            return aud;
-        }
+        if (aud) {
+            // Format 1: It's just the URL
+            if (aud.match(/https:\/\/([^@]*)/)) {
+                return aud;
+            }
 
-        // Format 2: GUID/hostname@GUID
-        const match = aud.match(/\/([^@]*)@/);
-        if (match && match[1]) {
-            return "https://" + match[1];
+            // Format 2: GUID/hostname@GUID
+            const match = aud.match(/\/([^@]*)@/);
+            if (match && match[1]) {
+                return "https://" + match[1];
+            }
         }
 
         // Couldn't find what we expected, default to
