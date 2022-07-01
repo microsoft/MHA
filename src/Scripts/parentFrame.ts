@@ -236,8 +236,11 @@ export class ParentFrame {
     // Hook the UI together for display
     private static initFabric(): void {
         const header: Element | null = document.querySelector(".header-row");
+        if (!header) return;
 
         const dialogSettings: Element | null = header.querySelector("#dialog-Settings");
+        if (!dialogSettings) return;
+
         // Wire up the dialog
         const dialogSettingsComponent = new fabric["Dialog"](dialogSettings);
 
