@@ -7,9 +7,9 @@ import { Summary } from "./Summary"
 import { poster } from "./poster"
 
 export class Header {
-    constructor(header: string, value: string | null) {
+    constructor(header: string, value: string) {
         this.header = header;
-        this.value = value ?? "";
+        this.value = value;
     }
     header: string;
     value: string;
