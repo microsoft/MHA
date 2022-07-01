@@ -32,8 +32,8 @@ export class SummaryRow extends Row {
     constructor(header: string, label: string, onSet?: Function, onGetUrl?: Function) {
         super(header, label, "");
         this.url = strings.mapHeaderToURL(header, label);
-        this.onSet = onSet;
-        this.onGetUrl = onGetUrl;
+        if (onSet) this.onSet = onSet;
+        if (onGetUrl) this.onGetUrl = onGetUrl;
     };
 };
 
