@@ -246,7 +246,10 @@ export class Table {
         // Calculate heights for the hotbar cells (progress bars in Delay column)
         // Not clear why we need to do this
         $(".hotBarCell").each(function () {
-            $(this).find(".hotBarContainer").height($(this).height());
+            const height: number | undefined = $(this).height();
+            if (height) {
+                $(this).find(".hotBarContainer").height(height);
+            }
         });
 
         $("#receivedHeaders tbody tr:odd").addClass("oddRow");
