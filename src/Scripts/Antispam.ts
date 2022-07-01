@@ -1,19 +1,19 @@
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
-import { row } from "./Summary";
+import { Row } from "./Summary";
 import { Header } from "./Headers";
 
 export class AntiSpamReport {
     private _source: string = "";
     private _unparsed: string = "";
-    private antiSpamRows: row[] = [
-        new row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
-        new row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
-        new row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
-        new row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
+    private antiSpamRows: Row[] = [
+        new Row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
+        new Row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
+        new Row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
+        new Row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
     ];
 
-    public existsInternal(rows: row[]): boolean {
+    public existsInternal(rows: Row[]): boolean {
         for (let row of rows) {
             if (row.value) {
                 return true;
@@ -23,7 +23,7 @@ export class AntiSpamReport {
         return false;
     }
 
-    private setRowValue(rows: row[], key: string, value: string): boolean {
+    private setRowValue(rows: Row[], key: string, value: string): boolean {
         for (let row of rows) {
             if (row.header.toUpperCase() === key.toUpperCase()) {
                 row.value = value;
@@ -85,7 +85,7 @@ export class AntiSpamReport {
 
     public get source(): string { return this._source; };
     public get unparsed(): string { return this._unparsed; };
-    public get rows(): row[] { return this.antiSpamRows; };
+    public get rows(): Row[] { return this.antiSpamRows; };
     public toString(): string {
         if (!this.exists()) return "";
         const ret = ["AntiSpamReport"];

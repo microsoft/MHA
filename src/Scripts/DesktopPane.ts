@@ -6,7 +6,7 @@ import { fabric } from "./fabric"
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./Headers"
 import { poster } from "./poster";
-import { row, SummaryRow } from "./Summary";
+import { Row, SummaryRow } from "./Summary";
 import { ReceivedRow } from "./Received";
 import { OtherRow } from "./Other";
 
@@ -250,7 +250,7 @@ function buildViews(headers: string) {
                 .appendTo(antispamList);
             let tbody = $("<tbody/>")
                 .appendTo(table);
-            viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: row) => {
+            viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
                 let row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
                     .text(antispamrow.label)
@@ -276,7 +276,7 @@ function buildViews(headers: string) {
                 .appendTo(antispamList);
             let tbody = $("<tbody/>")
                 .appendTo(table);
-            viewModel.antiSpamReport.rows.forEach((antispamrow: row) => {
+            viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
                 let row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
                     .text(antispamrow.label)
