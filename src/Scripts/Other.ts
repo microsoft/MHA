@@ -30,7 +30,7 @@ export class Other extends iTable {
             this._sortOrder = 1;
         }
 
-        if (this.sortColumn + "Sort" in this.rows[0]) {
+        if (this.rows[0] && this.sortColumn + "Sort" in this.rows[0]) {
             col = col + "Sort";
         }
 
