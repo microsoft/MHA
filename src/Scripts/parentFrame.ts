@@ -235,19 +235,19 @@ export class ParentFrame {
 
     // Hook the UI together for display
     private static initFabric(): void {
-        const header: Element = document.querySelector(".header-row");
+        const header: Element | null = document.querySelector(".header-row");
 
-        const dialogSettings: Element = header.querySelector("#dialog-Settings");
+        const dialogSettings: Element | null = header.querySelector("#dialog-Settings");
         // Wire up the dialog
         const dialogSettingsComponent = new fabric["Dialog"](dialogSettings);
 
-        const dialogDiagnostics: Element = header.querySelector("#dialog-Diagnostics");
+        const dialogDiagnostics: Element | null = header.querySelector("#dialog-Diagnostics");
         // Wire up the dialog
         const dialogDiagnosticsComponent = new fabric["Dialog"](dialogDiagnostics);
 
         const actionButtonElements: NodeListOf<Element> = header.querySelectorAll(".ms-Dialog-action");
 
-        const telemetryCheckbox: Element = document.querySelector("#dialog-enableTelemetry");
+        const telemetryCheckbox: Element | null = document.querySelector("#dialog-enableTelemetry");
         const telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
         Diagnostics.canSendTelemetry() ? telemetryCheckboxComponent.check() : telemetryCheckboxComponent.unCheck();
 
