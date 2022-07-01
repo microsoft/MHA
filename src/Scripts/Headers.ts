@@ -6,7 +6,7 @@ import { Received } from "./Received"
 import { Summary } from "./Summary"
 import { poster } from "./poster"
 
-export class header {
+export class Header {
     constructor(header: string, value: string) {
         this.header = header;
         this.value = value;
@@ -44,11 +44,11 @@ export class HeaderModel {
         }
     }
 
-    public GetHeaderList(headers: string): header[] {
+    public GetHeaderList(headers: string): Header[] {
         // First, break up out input by lines.
         const lines: string[] = headers.split(/[\n\r]+/);
 
-        const headerList: header[] = [];
+        const headerList: Header[] = [];
         let iNextHeader: number = 0;
         // Unfold lines
         lines.forEach((line: string) => {
@@ -70,7 +70,7 @@ export class HeaderModel {
             // never seen one in practice, so we check for and exclude 'headers' that
             // consist only of 1 or 2 digits.
             if (match && match[1] && !match[1].match(/^\d{1,2}$/)) {
-                headerList[iNextHeader] = new header(match[1], match[2]);
+                headerList[iNextHeader] = new Header(match[1], match[2]);
                 iNextHeader++;
             } else {
                 if (iNextHeader > 0) {
@@ -83,7 +83,7 @@ export class HeaderModel {
                 } else {
                     // If we didn't have a previous line, go ahead and use this line
                     if (line.match(/\S/g)) {
-                        headerList[iNextHeader] = new header("", line);
+                        headerList[iNextHeader] = new Header("", line);
                         iNextHeader++;
                     }
                 }
@@ -91,7 +91,7 @@ export class HeaderModel {
         });
 
         // 2047 decode our headers now
-        headerList.forEach((header: header) => {
+        headerList.forEach((header: Header) => {
             // Clean 2047 encoding
             // Strip nulls
             // Strip trailing carriage returns
@@ -105,13 +105,13 @@ export class HeaderModel {
         // Initialize originalHeaders in case we have parsing problems
         // Flatten CRLF to LF to avoid extra blank lines
         this.originalHeaders = headers.replace(/(?:\r\n|\r|\n)/g, '\n');
-        const headerList: header[] = this.GetHeaderList(headers);
+        const headerList: Header[] = this.GetHeaderList(headers);
 
         if (headerList.length > 0) {
             this._hasData = true;
         }
 
-        headerList.forEach((header: header) => {
+        headerList.forEach((header: Header) => {
             // Grab values for our summary pane
             if (this.summary.add(header)) return;
 

@@ -1,7 +1,7 @@
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
 import { row } from "./Summary";
-import { header } from "./Headers";
+import { Header } from "./Headers";
 
 export class AntiSpamReport {
     private _source: string = "";
@@ -72,7 +72,7 @@ export class AntiSpamReport {
     }
 
     public addInternal(report: string): void { this.parse(report); }
-    public add(header: header): boolean {
+    public add(header: Header): boolean {
         if (header.header.toUpperCase() === "X-Microsoft-Antispam".toUpperCase()) {
             this.parse(header.value);
             return true;

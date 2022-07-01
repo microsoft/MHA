@@ -1,6 +1,6 @@
 ﻿import { iTable } from "./itable";
 import { strings } from "./Strings";
-import { header } from "./Headers";
+import { Header } from "./Headers";
 
 export class OtherRow {
     constructor(number: number, header: string, value: any) {
@@ -40,7 +40,7 @@ export class Other extends iTable {
         });
     }
 
-    public add(header: header): boolean {
+    public add(header: Header): boolean {
         if (header.header || header.value) {
             this.rows.push(new OtherRow(
                 this.rows.length + 1,

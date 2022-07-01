@@ -1,7 +1,7 @@
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
 import { mhaDates, date } from "./dates";
-import { header } from "./Headers";
+import { Header } from "./Headers";
 
 export class row {
     constructor(header: string, label: string, headerName: string) {
@@ -82,7 +82,7 @@ export class Summary {
         return this.rows.find((row: row) => { return row.value; }) !== undefined;
     }
 
-    public add(header: header) {
+    public add(header: Header) {
         if (!header) {
             return false;
         }

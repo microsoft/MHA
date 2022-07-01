@@ -1,7 +1,7 @@
 import { mhaStrings } from "./mhaStrings";
 import { AntiSpamReport } from "./Antispam";
 import { row } from "./Summary";
-import { header } from "./Headers";
+import { Header } from "./Headers";
 
 export class ForefrontAntiSpamReport extends AntiSpamReport {
     private forefrontAntiSpamRows: row[] = [
@@ -24,7 +24,7 @@ export class ForefrontAntiSpamReport extends AntiSpamReport {
         new row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
     ];
 
-    public override add(header: header): boolean {
+    public override add(header: Header): boolean {
         if (header.header.toUpperCase() === "X-Forefront-Antispam-Report".toUpperCase()) {
             this.parse(header.value);
             return true;
