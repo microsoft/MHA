@@ -67,7 +67,7 @@ QUnit.assert.arrayEqual = function (actual: object[], expected: object[], messag
     }
 
     for (var i = 0; i < actual.length; i++) {
-        this.objectEqual(actual[i], expected[i], message + "[" + i + "]");
+        this.receivedEqual(actual[i], expected[i], message + "[" + i + "]");
     }
 
     this.pushResult({
