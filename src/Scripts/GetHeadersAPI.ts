@@ -21,7 +21,7 @@ export class GetHeadersAPI {
     public static canUseAPI(): boolean { return GetHeaders.canUseAPI("API", GetHeadersAPI.minAPISet); }
 
     public static send(headersLoadedCallback: Function): void {
-        if (!GetHeaders.validItem()) {
+        if (!GetHeaders.validItem() || !Office.context.mailbox.item) {
             Errors.log(null, "No item selected (API)", true);
             return;
         }
