@@ -25,7 +25,7 @@ export class GetHeadersEWS {
             const response: JQuery<HTMLElement> = xmlResponse.find("*").filter(function (): boolean {
                 return this.nodeName === node;
             });
-            if (response.length > 0) {
+            if (response[0] && response[0].textContent) {
                 return response[0].textContent.replace(/\r|\n|\r\n/g, '\n');
             }
 
