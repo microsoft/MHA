@@ -1,20 +1,19 @@
 ﻿import { iTable } from "./itable";
 import { strings } from "./Strings";
 import { Header } from "./Headers";
+import { Row } from "./Summary";
 
-export class OtherRow {
+export class OtherRow extends Row {
     constructor(number: number, header: string, value: any) {
+        super(header, "", "");
         this.number = number;
-        this.header = header;
         this.value = value;
+        this.onGetUrl = () => { return strings.mapHeaderToURL(this.header); };
     }
 
     [index: string]: any;
     number: number;
-    header: string;
-    value: any;
-    public get url(): string { return strings.mapHeaderToURL(this.header); };
-    toString() { return this.header + ": " + this.value; }
+    override toString() { return this.header + ": " + this.value; }
 }
 
 export class Other extends iTable {
