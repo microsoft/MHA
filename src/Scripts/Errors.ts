@@ -24,7 +24,7 @@ export class Errors {
         }
     }
 
-    public static isError(error: Error | number | string): boolean {
+    public static isError(error: Error | number | string | null): boolean {
         if (!error) return false;
 
         // We can't afford to throw while checking if we're processing an error
@@ -125,7 +125,7 @@ export class Errors {
         }
     }
 
-    public static getErrorMessage(error: Error | number | string): string {
+    public static getErrorMessage(error: Error | number | string | null): string {
         if (!error) return '';
         if (typeof (error) === "string") return error;
         if (typeof (error) === "number") return error.toString();
@@ -133,7 +133,7 @@ export class Errors {
         return JSON.stringify(error, null, 2);
     }
 
-    public static getErrorStack(error: Error | number | string): string {
+    public static getErrorStack(error: Error | number | string | null): string {
         if (!error) return '';
         if (typeof (error) === "string") return "string thrown as error";
         if (typeof (error) === "number") return "number thrown as error";

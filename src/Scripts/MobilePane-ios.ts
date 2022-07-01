@@ -9,7 +9,7 @@ import * as utc from "dayjs/plugin/utc";
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./Headers"
 import { poster } from "./poster";
-import { row, SummaryRow } from "./Summary";
+import { Row, SummaryRow } from "./Summary";
 import { ReceivedRow } from "./Received";
 import { OtherRow } from "./Other";
 
@@ -49,7 +49,7 @@ function addCalloutEntry(name: string, value: string, parent: JQuery<HTMLElement
     }
 }
 
-function addSpamReportRow(spamRow: row, parent: JQuery<HTMLElement>) {
+function addSpamReportRow(spamRow: Row, parent: JQuery<HTMLElement>) {
     if (spamRow.value) {
         const item = $("<li/>")
             .addClass("accordion-item")
@@ -305,7 +305,7 @@ function buildViews(headers: string): void {
         let ul: JQuery<HTMLElement> = $("<ul/>")
             .appendTo(list);
 
-        viewModel.forefrontAntiSpamReport.rows.forEach((row: row) => {
+        viewModel.forefrontAntiSpamReport.rows.forEach((row: Row) => {
             addSpamReportRow(row, ul);
         });
     }
@@ -325,7 +325,7 @@ function buildViews(headers: string): void {
         let ul: JQuery<HTMLElement> = $("<ul/>")
             .appendTo(list);
 
-        viewModel.antiSpamReport.rows.forEach((row: row) => {
+        viewModel.antiSpamReport.rows.forEach((row: Row) => {
             addSpamReportRow(row, ul);
         });
     }

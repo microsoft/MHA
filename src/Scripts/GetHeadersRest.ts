@@ -25,6 +25,7 @@ export class GetHeadersRest {
     public static canUseRest(): boolean { return GetHeaders.canUseAPI("Rest", GetHeadersRest.minRestSet); }
 
     private static getItemRestId(): string {
+        if (!Office.context.mailbox.item) return "";
         // Currently the only Outlook Mobile version that supports add-ins
         // is Outlook for iOS.
         if (Office.context.mailbox.diagnostics.hostName === "OutlookIOS") {
@@ -80,10 +81,17 @@ export class GetHeadersRest {
     private static getHeaders(accessToken: string, headersLoadedCallback: Function): void {
         if (!accessToken) {
             Errors.log(null, "No access token?");
+            return;
+        }
+
+        if (!Office.context.mailbox.item) {
+            Errors.log(null, "No item");
+            return;
         }
 
         if (!Office.context.mailbox.item.itemId) {
-            Errors.log(null, "No itemId?");
+            Errors.log(null, "No itemId");
+            return;
         }
 
         // Get the item's REST ID

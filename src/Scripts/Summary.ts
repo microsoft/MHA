@@ -1,9 +1,9 @@
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
 import { mhaDates, date } from "./dates";
-import { header } from "./Headers";
+import { Header } from "./Headers";
 
-export class row {
+export class Row {
     constructor(header: string, label: string, headerName: string) {
         this.header = header;
         this.label = label;
@@ -28,7 +28,7 @@ export class row {
     toString(): string { return this.label + ": " + this.value; };
 };
 
-export class SummaryRow extends row {
+export class SummaryRow extends Row {
     constructor(header: string, label: string, onSet?: Function, onGetUrl?: Function) {
         super(header, label, "");
         this.url = strings.mapHeaderToURL(header, label);
@@ -79,15 +79,15 @@ export class Summary {
     ];
 
     public exists(): boolean {
-        return this.rows.find((row: row) => { return row.value; }) !== undefined;
+        return this.rows.find((row: Row) => { return row.value; }) !== undefined;
     }
 
-    public add(header: header) {
+    public add(header: Header) {
         if (!header) {
             return false;
         }
 
-        let row: SummaryRow | undefined = this.rows.find((row: row) => { return row.header.toUpperCase() === header.header.toUpperCase(); })
+        let row: SummaryRow | undefined = this.rows.find((row: Row) => { return row.header.toUpperCase() === header.header.toUpperCase(); })
         if (row) {
             row.value = header.value;
             return true;

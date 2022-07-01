@@ -1,19 +1,19 @@
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
-import { row } from "./Summary";
-import { header } from "./Headers";
+import { Row } from "./Summary";
+import { Header } from "./Headers";
 
 export class AntiSpamReport {
     private _source: string = "";
     private _unparsed: string = "";
-    private antiSpamRows: row[] = [
-        new row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
-        new row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
-        new row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
-        new row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
+    private antiSpamRows: Row[] = [
+        new Row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
+        new Row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
+        new Row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
+        new Row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
     ];
 
-    public existsInternal(rows: row[]): boolean {
+    public existsInternal(rows: Row[]): boolean {
         for (let row of rows) {
             if (row.value) {
                 return true;
@@ -23,7 +23,7 @@ export class AntiSpamReport {
         return false;
     }
 
-    private setRowValue(rows: row[], key: string, value: string): boolean {
+    private setRowValue(rows: Row[], key: string, value: string): boolean {
         for (let row of rows) {
             if (row.header.toUpperCase() === key.toUpperCase()) {
                 row.value = value;
@@ -36,7 +36,7 @@ export class AntiSpamReport {
     }
 
     // https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers
-    public parse(report: string, rows: row[]): void {
+    public parse(report: string): void {
         this._source = report;
         if (!report) {
             return;
@@ -60,21 +60,21 @@ export class AntiSpamReport {
             for (let iLine: number = 0; iLine < lines.length; iLine++) {
                 const line = lines[iLine]?.match(/(.*?):(.*?);/m);
                 if (line && line[1]) {
-                    if (!this.setRowValue(rows, line[1], line[2] ?? "")) {
+                    if (!this.setRowValue(this.rows, line[1], line[2] ?? "")) {
                         this._unparsed += line[1] + ':' + line[2] + ';';
                     }
                 }
             }
         }
 
-        this.setRowValue(rows, "source", this._source);
-        this.setRowValue(rows, "unparsed", this._unparsed);
+        this.setRowValue(this.rows, "source", this._source);
+        this.setRowValue(this.rows, "unparsed", this._unparsed);
     }
 
-    public addInternal(report: string): void { this.parse(report, this.rows); }
-    public add(header: header): boolean {
+    public addInternal(report: string): void { this.parse(report); }
+    public add(header: Header): boolean {
         if (header.header.toUpperCase() === "X-Microsoft-Antispam".toUpperCase()) {
-            this.parse(header.value, this.rows);
+            this.parse(header.value);
             return true;
         }
 
@@ -85,7 +85,7 @@ export class AntiSpamReport {
 
     public get source(): string { return this._source; };
     public get unparsed(): string { return this._unparsed; };
-    public get rows(): row[] { return this.antiSpamRows; };
+    public get rows(): Row[] { return this.antiSpamRows; };
     public toString(): string {
         if (!this.exists()) return "";
         const ret = ["AntiSpamReport"];

@@ -1,7 +1,7 @@
 import * as $ from "jquery";
 import { HeaderModel } from "./Headers";
 import { mhaStrings } from "./mhaStrings";
-import { row } from "./Summary";
+import { Row } from "./Summary";
 import { iTable } from "./itable";
 import { ReceivedRow } from "./Received";
 import { OtherRow } from "./Other";
@@ -101,12 +101,12 @@ export class Table {
         }
     }
 
-    private makeSummaryTable(summaryName: string, rows: row[], tag: string): void {
+    private makeSummaryTable(summaryName: string, rows: Row[], tag: string): void {
         const summaryList = $(summaryName);
         if (summaryList) {
             summaryList.addClass("summaryList");
 
-            rows.forEach((summaryRow: row) => {
+            rows.forEach((summaryRow: Row) => {
                 const id = summaryRow.header + tag;
                 const row = document.createElement("tr");
                 if (row !== null) {
@@ -144,7 +144,7 @@ export class Table {
         }
     }
 
-    private setRowValue(row: row, type: string): void {
+    private setRowValue(row: Row, type: string): void {
         const headerVal = $("#" + row.header + type + "Val");
         if (headerVal) {
             if (row.value) {
@@ -213,7 +213,7 @@ export class Table {
         this.viewModel = _viewModel;
 
         // Summary
-        this.viewModel.summary.rows.forEach((row: row) => {
+        this.viewModel.summary.rows.forEach((row: Row) => {
             this.setRowValue(row, "SUM");
         });
 
@@ -246,19 +246,22 @@ export class Table {
         // Calculate heights for the hotbar cells (progress bars in Delay column)
         // Not clear why we need to do this
         $(".hotBarCell").each(function () {
-            $(this).find(".hotBarContainer").height($(this).height());
+            const height: number | undefined = $(this).height();
+            if (height) {
+                $(this).find(".hotBarContainer").height(height);
+            }
         });
 
         $("#receivedHeaders tbody tr:odd").addClass("oddRow");
         this.hideEmptyColumns("receivedHeaders");
 
         // Forefront AntiSpam Report
-        this.viewModel.forefrontAntiSpamReport.rows.forEach((row: row) => {
+        this.viewModel.forefrontAntiSpamReport.rows.forEach((row: Row) => {
             this.setRowValue(row, "FFAS");
         });
 
         // AntiSpam Report
-        this.viewModel.antiSpamReport.rows.forEach((row: row) => {
+        this.viewModel.antiSpamReport.rows.forEach((row: Row) => {
             this.setRowValue(row, "AS");
         });
 

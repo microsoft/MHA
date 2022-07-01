@@ -1,20 +1,19 @@
 ﻿import { iTable } from "./itable";
 import { strings } from "./Strings";
-import { header } from "./Headers";
+import { Header } from "./Headers";
+import { Row } from "./Summary";
 
-export class OtherRow {
+export class OtherRow extends Row {
     constructor(number: number, header: string, value: any) {
+        super(header, "", "");
         this.number = number;
-        this.header = header;
         this.value = value;
+        this.onGetUrl = () => { return strings.mapHeaderToURL(this.header); };
     }
 
     [index: string]: any;
     number: number;
-    header: string;
-    value: any;
-    public get url(): string { return strings.mapHeaderToURL(this.header); };
-    toString() { return this.header + ": " + this.value; }
+    override toString() { return this.header + ": " + this.value; }
 }
 
 export class Other extends iTable {
@@ -31,7 +30,7 @@ export class Other extends iTable {
             this._sortOrder = 1;
         }
 
-        if (this.sortColumn + "Sort" in this.rows[0]) {
+        if (this.rows[0] && this.sortColumn + "Sort" in this.rows[0]) {
             col = col + "Sort";
         }
 
@@ -40,7 +39,7 @@ export class Other extends iTable {
         });
     }
 
-    public add(header: header): boolean {
+    public add(header: Header): boolean {
         if (header.header || header.value) {
             this.rows.push(new OtherRow(
                 this.rows.length + 1,

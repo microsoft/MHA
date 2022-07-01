@@ -12,7 +12,7 @@ import { buildTime } from "./buildTime";
 
 class diag {
     private appDiagnostics: { [k: string]: any };
-    private itemDiagnostics: { [k: string]: any };
+    private itemDiagnostics: { [k: string]: any } | null;
     private inGet: boolean = false;
     private sendTelemetry: boolean = true;
     private appInsights = new ApplicationInsights({
@@ -296,12 +296,14 @@ class diag {
     public set(field: string, value: string): void {
         try {
             this.ensureItemDiagnostics();
-            this.itemDiagnostics[field] = value;
+            if (this.itemDiagnostics) this.itemDiagnostics[field] = value;
         }
         catch (e) { this.trackError("diagError", "Diagnostics.set", e); }
     }
 
-    public clear(): void { this.itemDiagnostics = null; }
+    public clear(): void {
+        this.itemDiagnostics = null;
+    }
 }
 
 export let Diagnostics: diag = new diag();

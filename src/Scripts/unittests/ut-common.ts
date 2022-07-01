@@ -3,16 +3,21 @@ import { ReceivedRow } from "../Received"
 
 declare global {
     interface Assert {
-        receivedEqual(actual: object, expected: object, message: string): void;
+        receivedEqual(actual: { [index: string]: any } | undefined, expected: { [index: string]: any } | undefined, message: string): void;
         arrayEqual(actual: object[], expected: object[], message: string): void;
         datesEqual(actual: ReceivedRow, expected: object, message: string): void;
         errorsEqual(actual: string, expectedValues: string[], message: string): void;
     }
 }
 
-QUnit.assert.receivedEqual = function (actual: { [index: string]: any }, expected: { [index: string]: any }, message: string): void {
+QUnit.assert.receivedEqual = function (actual: { [index: string]: any } | undefined, expected: { [index: string]: any } | undefined, message: string): void {
     try {
-        var field;
+        if (!actual && !expected) return;
+        if (!expected || !actual) {
+            this.pushResult({ result: false, actual: actual, expected: expected, message: message });
+            return;
+        }
+
         for (const [field, value] of Object.entries(expected)) {
             if (field === "date") continue;
             if (field === "_value") continue;
@@ -27,7 +32,7 @@ QUnit.assert.receivedEqual = function (actual: { [index: string]: any }, expecte
             });
         }
 
-        for (field in actual) {
+        for (let field in actual) {
             if (field === "date") continue;
             if (field === "onSet") continue;
             if (field === "onGetUrl") continue;

@@ -25,7 +25,7 @@ export class GetHeadersEWS {
             const response: JQuery<HTMLElement> = xmlResponse.find("*").filter(function (): boolean {
                 return this.nodeName === node;
             });
-            if (response.length > 0) {
+            if (response[0] && response[0].textContent) {
                 return response[0].textContent.replace(/\r|\n|\r\n/g, '\n');
             }
 
@@ -138,11 +138,13 @@ export class GetHeadersEWS {
         try {
             ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
             const mailbox = Office.context.mailbox;
-            const request = GetHeadersEWS.getHeadersRequest(mailbox.item.itemId);
-            const envelope = GetHeadersEWS.getSoapEnvelope(request);
-            mailbox.makeEwsRequestAsync(envelope, function (asyncResult) {
-                GetHeadersEWS.callbackEws(asyncResult, headersLoadedCallback);
-            });
+            if (mailbox && mailbox.item) {
+                const request = GetHeadersEWS.getHeadersRequest(mailbox.item.itemId);
+                const envelope = GetHeadersEWS.getSoapEnvelope(request);
+                mailbox.makeEwsRequestAsync(envelope, function (asyncResult) {
+                    GetHeadersEWS.callbackEws(asyncResult, headersLoadedCallback);
+                });
+            }
         } catch (e2) {
             ParentFrame.showError(e2, mhaStrings.mhaRequestFailed);
         }
