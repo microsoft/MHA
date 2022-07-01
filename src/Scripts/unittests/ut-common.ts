@@ -3,7 +3,7 @@ import { ReceivedRow } from "../Received"
 
 declare global {
     interface Assert {
-        receivedEqual(actual: object, expected: object, message: string): void;
+        receivedEqual(actual: { [index: string]: any }, expected: { [index: string]: any }, message: string): void;
         arrayEqual(actual: object[], expected: object[], message: string): void;
         datesEqual(actual: ReceivedRow, expected: object, message: string): void;
         errorsEqual(actual: string, expectedValues: string[], message: string): void;
@@ -67,7 +67,7 @@ QUnit.assert.arrayEqual = function (actual: object[], expected: object[], messag
     }
 
     for (var i = 0; i < actual.length; i++) {
-        this.receivedEqual(actual[i], expected[i], message + "[" + i + "]");
+        this.objectEqual(actual[i], expected[i], message + "[" + i + "]");
     }
 
     this.pushResult({
