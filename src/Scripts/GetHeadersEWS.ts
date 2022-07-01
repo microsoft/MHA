@@ -138,11 +138,13 @@ export class GetHeadersEWS {
         try {
             ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
             const mailbox = Office.context.mailbox;
-            const request = GetHeadersEWS.getHeadersRequest(mailbox.item.itemId);
-            const envelope = GetHeadersEWS.getSoapEnvelope(request);
-            mailbox.makeEwsRequestAsync(envelope, function (asyncResult) {
-                GetHeadersEWS.callbackEws(asyncResult, headersLoadedCallback);
-            });
+            if (mailbox && mailbox.item) {
+                const request = GetHeadersEWS.getHeadersRequest(mailbox.item.itemId);
+                const envelope = GetHeadersEWS.getSoapEnvelope(request);
+                mailbox.makeEwsRequestAsync(envelope, function (asyncResult) {
+                    GetHeadersEWS.callbackEws(asyncResult, headersLoadedCallback);
+                });
+            }
         } catch (e2) {
             ParentFrame.showError(e2, mhaStrings.mhaRequestFailed);
         }
