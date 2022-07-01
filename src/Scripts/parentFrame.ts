@@ -18,7 +18,7 @@ class DeferredError {
 }
 
 export class ParentFrame {
-    private static iFrame: Window;
+    private static iFrame: Window | null;;
     private static currentChoice = {} as Choice;
     private static deferredErrors: DeferredError[] = [];
     private static deferredStatus: string[] = [];
@@ -64,7 +64,9 @@ export class ParentFrame {
     }
 
     private static postMessageToFrame(eventName: string, data: string | { error: string, message: any }): void {
-        poster.postMessageToFrame(ParentFrame.iFrame, eventName, data);
+        if (ParentFrame.iFrame) {
+            poster.postMessageToFrame(ParentFrame.iFrame, eventName, data);
+        }
     }
 
     private static render(): void {
