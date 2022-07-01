@@ -26,7 +26,7 @@ export class ForefrontAntiSpamReport extends AntiSpamReport {
 
     public override add(header: header): boolean {
         if (header.header.toUpperCase() === "X-Forefront-Antispam-Report".toUpperCase()) {
-            this.parse(header.value, this.rows);
+            this.parse(header.value);
             return true;
         }
 
