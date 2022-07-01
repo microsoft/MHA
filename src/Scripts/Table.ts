@@ -37,8 +37,11 @@ export class Table {
 
     // Adjusts response under our lineBreak
     private positionResponse(): void {
-        const responseTop = $("#lineBreak")[0].offsetTop + $("#lineBreak").height();
-        $("#response").css("top", responseTop + 15);
+        const lineBreak = $("#lineBreak");
+        if (lineBreak && lineBreak[0]) {
+            const responseTop: number = lineBreak[0]?.offsetTop + (lineBreak.height() ?? 0);
+            $("#response").css("top", responseTop + 15);
+        }
     }
 
     private toggleCollapse(object: HTMLElement): void {
