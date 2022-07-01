@@ -36,7 +36,7 @@ export class AntiSpamReport {
     }
 
     // https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers
-    public parse(report: string, rows: row[]): void {
+    public parse(report: string): void {
         this._source = report;
         if (!report) {
             return;
@@ -60,21 +60,21 @@ export class AntiSpamReport {
             for (let iLine: number = 0; iLine < lines.length; iLine++) {
                 const line = lines[iLine]?.match(/(.*?):(.*?);/m);
                 if (line && line[1]) {
-                    if (!this.setRowValue(rows, line[1], line[2] ?? "")) {
+                    if (!this.setRowValue(this.rows, line[1], line[2] ?? "")) {
                         this._unparsed += line[1] + ':' + line[2] + ';';
                     }
                 }
             }
         }
 
-        this.setRowValue(rows, "source", this._source);
-        this.setRowValue(rows, "unparsed", this._unparsed);
+        this.setRowValue(this.rows, "source", this._source);
+        this.setRowValue(this.rows, "unparsed", this._unparsed);
     }
 
-    public addInternal(report: string): void { this.parse(report, this.rows); }
+    public addInternal(report: string): void { this.parse(report); }
     public add(header: header): boolean {
         if (header.header.toUpperCase() === "X-Microsoft-Antispam".toUpperCase()) {
-            this.parse(header.value, this.rows);
+            this.parse(header.value);
             return true;
         }
 
