@@ -14,7 +14,7 @@ class ReceivedField {
 };
 
 export class ReceivedRow {
-    constructor(receivedHeader: string) {
+    constructor(receivedHeader: string | null) {
         this.sourceHeader = new ReceivedField("", receivedHeader);
         this.hop = new ReceivedField(mhaStrings.mhaReceivedHop);
         this.from = new ReceivedField(mhaStrings.mhaReceivedFrom);
@@ -81,7 +81,7 @@ export class Received extends iTable {
     // This algorithm should work regardless of the order of the headers, given:
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
-    public parseHeader(receivedHeader: string): ReceivedRow {
+    public parseHeader(receivedHeader: string | null): ReceivedRow {
         var receivedFields: ReceivedRow = new ReceivedRow(receivedHeader);
 
         if (receivedHeader) {
