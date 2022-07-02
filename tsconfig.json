@@ -20,8 +20,8 @@
     "noUnusedParameters": true,
     //"strict": true, // maybe not until we do more other switches
     "strictBindCallApply": true,
-    "strictFunctionTypes": true
-    //"strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true
     //"strictPropertyInitialization": true,
     //"useUnknownInCatchVariables": true
   }
