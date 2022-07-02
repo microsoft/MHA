@@ -2,9 +2,15 @@ import * as dayjs from "dayjs";
 import * as localizedFormat from "dayjs/plugin/localizedFormat";
 
 export class DateWithNum {
+    constructor(dateNum: number, date: string, rawDate: string) {
+        this.dateNum = dateNum;
+        this.date = date;
+        this.rawDate = rawDate;
+    }
     dateNum: number;
     date: string;
-    toString: () => string;
+    rawDate: string;
+    public toString = (): string => { return this.rawDate; }
 };
 
 export class mhaDates {
@@ -48,11 +54,10 @@ export class mhaDates {
                 time = time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), 'ms');
             }
 
-            return <DateWithNum>{
-                dateNum: time.valueOf(),
-                date: time.format("l LTS"),
-                toString: function () { return date; }
-            };
+            return new DateWithNum(
+                time.valueOf(),
+                time.format("l LTS"),
+                date);
         }
         else {
             let dateNum = Date.parse(date);
@@ -60,11 +65,10 @@ export class mhaDates {
                 dateNum = dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
             }
 
-            return <DateWithNum>{
-                dateNum: dateNum,
-                date: new Date(dateNum).toLocaleString().replace(/\u200E|,/g, ""),
-                toString: function () { return date; }
-            };
+            return new DateWithNum(
+                dateNum,
+                new Date(dateNum).toLocaleString().replace(/\u200E|,/g, ""),
+                date);
         }
     }
 }
