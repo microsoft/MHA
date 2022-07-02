@@ -28,7 +28,7 @@ QUnit.assert.receivedEqual = function (actual: { [index: string]: any } | undefi
                 result: false,
                 actual: field + " = " + actual[field],
                 expected: field + " = " + value,
-                message: message
+                message: message + "" + field;
             });
         }
 
@@ -44,7 +44,7 @@ QUnit.assert.receivedEqual = function (actual: { [index: string]: any } | undefi
                     result: false,
                     actual: field + " = " + actual[field],
                     expected: field + " = " + expected[field],
-                    message: message
+                    message: message + "" + field;
                 });
             }
         }

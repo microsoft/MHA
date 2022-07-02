@@ -40,7 +40,7 @@ export class SummaryRow extends Row {
 export class Summary {
     private _totalTime: string = "";
 
-    public creationTime(date: string): string {
+    private creationTime(date: string): string {
         if (!date && !this.totalTime) {
             return "";
         }
