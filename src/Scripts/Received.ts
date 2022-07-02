@@ -191,7 +191,11 @@ export class Received extends iTable {
         }
 
         this.rows.sort((a: ReceivedRow, b: ReceivedRow) => {
-            return this.sortOrder * (a[col] < b[col] ? -1 : 1);
+            const acol = a[col];
+            if (!acol) return 1;
+            const bcol = b[col];
+            if (!bcol) return -1;
+            return this.sortOrder * (acol < bcol ? -1 : 1);
         });
     }
 
