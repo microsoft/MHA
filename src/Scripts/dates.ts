@@ -1,7 +1,7 @@
 import * as dayjs from "dayjs";
 import * as localizedFormat from "dayjs/plugin/localizedFormat";
 
-export class date {
+export class DateWithNum {
     dateNum: number;
     date: string;
     toString: () => string;
@@ -13,7 +13,7 @@ export class mhaDates {
     }
 
     // parse date using dayjs, with fallback to browser based parsing
-    public static parseDate(date: string): date {
+    public static parseDate(date: string): DateWithNum {
         // Cross browser dates - ugh!
         // http://dygraphs.com/date-formats.html
 
@@ -48,7 +48,7 @@ export class mhaDates {
                 time = time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), 'ms');
             }
 
-            return <date>{
+            return <DateWithNum>{
                 dateNum: time.valueOf(),
                 date: time.format("l LTS"),
                 toString: function () { return date; }
@@ -60,7 +60,7 @@ export class mhaDates {
                 dateNum = dateNum + Math.floor(parseFloat("0." + milliseconds[1]) * 1000);
             }
 
-            return <date>{
+            return <DateWithNum>{
                 dateNum: dateNum,
                 date: new Date(dateNum).toLocaleString().replace(/\u200E|,/g, ""),
                 toString: function () { return date; }

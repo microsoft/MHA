@@ -1,6 +1,6 @@
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
-import { mhaDates, date } from "./dates";
+import { mhaDates, DateWithNum } from "./dates";
 import { Header } from "./Headers";
 
 export class Row {
@@ -57,7 +57,7 @@ export class Summary {
     private dateRow = new SummaryRow(
         "Date",
         mhaStrings.mhaCreationTime,
-        function (value: string): date { return mhaDates.parseDate(value); }
+        function (value: string): DateWithNum { return mhaDates.parseDate(value); }
     );
 
     private archivedRow = new SummaryRow(

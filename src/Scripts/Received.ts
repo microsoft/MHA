@@ -1,6 +1,6 @@
 ﻿import { iTable } from "./itable";
 import { mhaStrings } from "./mhaStrings";
-import { mhaDates, date } from "./dates";
+import { mhaDates, DateWithNum } from "./dates";
 import { Header } from "./Headers";
 
 class ReceivedField {
@@ -111,7 +111,7 @@ export class Received extends iTable {
             if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
                 const dateField = receivedHeader.substring(iDate + 1);
                 receivedHeader = receivedHeader.substring(0, iDate);
-                const parsedDate: date = mhaDates.parseDate(dateField);
+                const parsedDate: DateWithNum = mhaDates.parseDate(dateField);
 
                 if (parsedDate) {
                     receivedFields["date"].value = parsedDate.date;
