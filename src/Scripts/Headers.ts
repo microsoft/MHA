@@ -71,7 +71,7 @@ export class HeaderModel {
             // never seen one in practice, so we check for and exclude 'headers' that
             // consist only of 1 or 2 digits.
             if (match && match[1] && !match[1].match(/^\d{1,2}$/)) {
-                headerList[iNextHeader] = new Header(match[1], match[2]);
+                headerList[iNextHeader] = new Header(match[1], match[2] ?? "");
                 prevHeader = headerList[iNextHeader];
                 iNextHeader++;
             } else {
