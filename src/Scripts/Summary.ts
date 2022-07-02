@@ -1,6 +1,6 @@
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
-import { mhaDates, DateWithNum } from "./dates";
+import { mhaDates } from "./dates";
 import { Header } from "./Headers";
 
 export class Row {
@@ -18,7 +18,7 @@ export class Row {
     headerName: string;
 
     url: string;
-    onSet?: Function;
+    onSet?: (_: string) => string;
     onGetUrl?: Function;
 
     set value(value: string) { this._value = this.onSet ? this.onSet(value) : value; };
@@ -29,7 +29,7 @@ export class Row {
 };
 
 export class SummaryRow extends Row {
-    constructor(header: string, label: string, onSet?: Function, onGetUrl?: Function) {
+    constructor(header: string, label: string, onSet?: (_: string) => string, onGetUrl?: Function) {
         super(header, label, "");
         this.url = strings.mapHeaderToURL(header, label);
         if (onSet) this.onSet = onSet;
@@ -57,7 +57,7 @@ export class Summary {
     private dateRow = new SummaryRow(
         "Date",
         mhaStrings.mhaCreationTime,
-        function (value: string): DateWithNum { return mhaDates.parseDate(value); }
+        function (value: string): string { return mhaDates.parseDate(value).toString(); }
     );
 
     private archivedRow = new SummaryRow(
