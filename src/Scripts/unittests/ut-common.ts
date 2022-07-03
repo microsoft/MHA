@@ -20,6 +20,7 @@ QUnit.assert.receivedEqual = function (actual: { [index: string]: any } | undefi
 
         for (const [field, value] of Object.entries(expected)) {
             if (field === "date") continue;
+            if (field === "postFix") continue;
             if (field === "_value") continue;
             if (value === actual[field]) continue;
             if (actual[field] && value === actual[field].value) continue;
@@ -37,6 +38,7 @@ QUnit.assert.receivedEqual = function (actual: { [index: string]: any } | undefi
             if (field === "onSet") continue;
             if (field === "onGetUrl") continue;
             if (field === "setField") continue;
+            if (field === "postFix") continue;
             if (field === "_value") continue;
             // If a field in value is non-null/empty there must also be a field in expected
             if (actual[field] && actual[field].toString() && expected[field] === undefined) {

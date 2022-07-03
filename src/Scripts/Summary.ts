@@ -1,6 +1,5 @@
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
-import { mhaDates } from "./dates";
 import { Header } from "./Headers";
 
 export class Row {
@@ -12,7 +11,7 @@ export class Row {
     }
 
     [index: string]: any;
-    private _value: string;
+    protected _value: string;
     header: string;
     label: string;
     headerName: string;
@@ -21,7 +20,7 @@ export class Row {
     onSet?: (_: string) => string;
     onGetUrl?: Function;
 
-    set value(value: string) { this._value = this.onSet ? this.onSet(value) : value; };
+    public set value(value: string) { this._value = this.onSet ? this.onSet(value) : value; };
     get value(): string { return this._value; };
     get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this.headerName, this._value) : ""; };
 
@@ -37,27 +36,34 @@ export class SummaryRow extends Row {
     };
 };
 
+export class CreationRow extends SummaryRow {
+    constructor(header: string, label: string) {
+        super(header, label);
+        this.url = strings.mapHeaderToURL(header, label);
+    };
+    postFix: string;
+    override get value(): string { return this._value + this.postFix; };
+    override set value(value: string) { this._value = value; };
+};
+
 export class Summary {
     private _totalTime: string = "";
 
-    private creationTime(date: string): string {
-        if (!date && !this.totalTime) {
+    private creationPostFix(totalTime: string): string {
+        if (!totalTime) {
             return "";
         }
 
-        const time = [date || ""];
+        const time = [""];
 
-        if (this.totalTime) {
-            time.push(" ", mhaStrings.mhaDeliveredStart, " ", this.totalTime, mhaStrings.mhaDeliveredEnd);
-        }
+        time.push(" ", mhaStrings.mhaDeliveredStart, " ", totalTime, mhaStrings.mhaDeliveredEnd);
 
         return time.join("");
     }
 
-    private dateRow = new SummaryRow(
+    private dateRow = new CreationRow(
         "Date",
-        mhaStrings.mhaCreationTime,
-        function (value: string): string { return mhaDates.parseDate(value).toString(); }
+        mhaStrings.mhaCreationTime
     );
 
     private archivedRow = new SummaryRow(
@@ -99,9 +105,8 @@ export class Summary {
     public get rows(): SummaryRow[] { return this.summaryRows; };
     public get totalTime(): string { return this._totalTime; };
     public set totalTime(value: string) {
-        // TODO: If this is called more than once, that would be bad
         this._totalTime = value;
-        this.dateRow.value = this.creationTime(this.dateRow.value);
+        this.dateRow.postFix = this.creationPostFix(value);
     };
 
     public toString(): string {

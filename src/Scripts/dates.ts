@@ -2,15 +2,13 @@ import * as dayjs from "dayjs";
 import * as localizedFormat from "dayjs/plugin/localizedFormat";
 
 export class DateWithNum {
-    constructor(dateNum: number, date: string, rawDate: string) {
+    constructor(dateNum: number, date: string) {
         this.dateNum = dateNum;
         this.date = date;
-        this.rawDate = rawDate;
     }
     dateNum: number;
     date: string;
-    rawDate: string;
-    public toString = (): string => { return this.rawDate; }
+    public toString = (): string => { return this.date; }
 };
 
 export class mhaDates {
@@ -56,8 +54,7 @@ export class mhaDates {
 
             return new DateWithNum(
                 time.valueOf(),
-                time.format("l LTS"),
-                date);
+                time.format("l LTS"));
         }
         else {
             let dateNum = Date.parse(date);
@@ -67,8 +64,7 @@ export class mhaDates {
 
             return new DateWithNum(
                 dateNum,
-                new Date(dateNum).toLocaleString().replace(/\u200E|,/g, ""),
-                date);
+                new Date(dateNum).toLocaleString().replace(/\u200E|,/g, ""));
         }
     }
 }
