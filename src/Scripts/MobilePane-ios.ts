@@ -20,7 +20,7 @@ let myApp: typeof Framework7 = null;
 
 dayjs.extend(utc);
 
-function postError(error: Error, message: string): void {
+function postError(error: any, message: string): void {
     poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
@@ -381,7 +381,8 @@ function renderItem(headers: string): void {
 
 // Handles rendering of an error.
 // Does not log the error - caller is responsible for calling PostError
-function showError(_error: Error, message: string): void {
+function showError(_error: any, message: string): void {
+    // TODO: Do something with the error
     if (myApp) {
         myApp.hidePreloader();
         myApp.alert(message, "An Error Occurred");

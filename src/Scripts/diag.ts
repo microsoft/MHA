@@ -95,13 +95,13 @@ class diag {
         }
     }
 
-    public trackError(eventType: string, source: string, e: Error): void {
+    public trackError(eventType: string, source: string, e: any): void {
         if (this.sendTelemetry) {
-            this.appInsights.trackEvent({ name: eventType, properties: { source: source, exception: e.toString(), message: e.message, stack: e.stack } });
+            this.appInsights.trackEvent({ name: eventType, properties: { source: source, exception: JSON.stringify(e), message: e.message, stack: e.stack } });
         }
         else {
             var msg_base = `Error ${eventType} from ${source}: ${e.message}`;
-            console.log(msg_base + " exception: " + e.toString());
+            console.log(msg_base + " exception: " + JSON.stringify(e));
         }
     }
 

@@ -24,7 +24,7 @@ export class Errors {
         }
     }
 
-    public static isError(error: Error | number | string | null): boolean {
+    public static isError(error: any): boolean {
         if (!error) return false;
 
         // We can't afford to throw while checking if we're processing an error
@@ -36,8 +36,7 @@ export class Errors {
                 if ("stack" in error) return true;
             }
         } catch (e) {
-            Diagnostics.trackEvent({ name: "isError exception" });
-            Diagnostics.trackEvent({ name: "isError exception with error", properties: e });
+            Diagnostics.trackEvent({ name: "isError exception with error", properties: { error: JSON.stringify(e) } });
         }
 
         return false;
@@ -55,7 +54,6 @@ export class Errors {
                 Stack: "",
                 Description: "",
                 Error_message: ""
-
             };
 
             if (Errors.isError(error) && error.exception) {
@@ -125,7 +123,7 @@ export class Errors {
         }
     }
 
-    public static getErrorMessage(error: Error | number | string | null): string {
+    public static getErrorMessage(error: any): string {
         if (!error) return '';
         if (typeof (error) === "string") return error;
         if (typeof (error) === "number") return error.toString();
@@ -133,7 +131,7 @@ export class Errors {
         return JSON.stringify(error, null, 2);
     }
 
-    public static getErrorStack(error: Error | number | string | null): string {
+    public static getErrorStack(error: any): string {
         if (!error) return '';
         if (typeof (error) === "string") return "string thrown as error";
         if (typeof (error) === "number") return "number thrown as error";
