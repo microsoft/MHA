@@ -7,6 +7,7 @@ export class Row {
         this.header = header;
         this.label = label;
         this.headerName = headerName;
+        this.url = "";
         this._value = "";
     }
 
@@ -36,6 +37,7 @@ export class CreationRow extends SummaryRow {
     constructor(header: string, label: string) {
         super(header, label);
         this.url = strings.mapHeaderToURL(header, label);
+        this.postFix = "";
     };
     postFix: string;
     override get value(): string { return this._value + this.postFix; };
