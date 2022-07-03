@@ -23,7 +23,7 @@ type Binding = {
 }
 
 export class Table {
-    private viewModel: HeaderModel;
+    private viewModel: HeaderModel = <HeaderModel>{};
     private showExtra: boolean = false;
 
     private visibilityBindings: Binding[] = [
