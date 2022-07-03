@@ -7,9 +7,9 @@ import { poster } from "./poster";
 import { strings } from "./Strings";
 
 class Choice {
-    label: string;
-    url: string;
-    checked: boolean;
+    label: string = "";
+    url: string = "";
+    checked: boolean = false;
 }
 
 class DeferredError {
@@ -287,7 +287,7 @@ export class ParentFrame {
             switch (action) {
                 case "actionsSettings-OK": {
                     // How did the user say to display it (UI to display)
-                    const iChoice: string = ($("#uiChoice input:checked")[0] as HTMLInputElement).value;
+                    const iChoice: string = ($("#uiChoice .is-checked").prev()[0] as HTMLInputElement).value;
                     const choice: Choice | undefined = ParentFrame.choices[+iChoice];
                     if (choice && choice.label !== ParentFrame.currentChoice.label) {
                         ParentFrame.go(choice);
