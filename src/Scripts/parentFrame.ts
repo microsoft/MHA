@@ -13,8 +13,8 @@ class Choice {
 }
 
 class DeferredError {
-    error: Error;
-    message: string;
+    error: Error = <Error>{};
+    message: string = "";
 }
 
 export class ParentFrame {
