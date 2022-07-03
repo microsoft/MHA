@@ -35,7 +35,6 @@ QUnit.assert.receivedEqual = function (actual: { [index: string]: any } | undefi
 
         for (let field in actual) {
             if (field === "date") continue;
-            if (field === "onSet") continue;
             if (field === "onGetUrl") continue;
             if (field === "setField") continue;
             if (field === "postFix") continue;

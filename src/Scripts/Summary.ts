@@ -15,12 +15,10 @@ export class Row {
     header: string;
     label: string;
     headerName: string;
-
     url: string;
-    onSet?: (_: string) => string;
     onGetUrl?: Function;
 
-    public set value(value: string) { this._value = this.onSet ? this.onSet(value) : value; };
+    public set value(value: string) { this._value = value; };
     get value(): string { return this._value; };
     get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this.headerName, this._value) : ""; };
 
@@ -28,10 +26,9 @@ export class Row {
 };
 
 export class SummaryRow extends Row {
-    constructor(header: string, label: string, onSet?: (_: string) => string, onGetUrl?: Function) {
+    constructor(header: string, label: string, onGetUrl?: Function) {
         super(header, label, "");
         this.url = strings.mapHeaderToURL(header, label);
-        if (onSet) this.onSet = onSet;
         if (onGetUrl) this.onGetUrl = onGetUrl;
     };
 };
@@ -46,6 +43,14 @@ export class CreationRow extends SummaryRow {
     override set value(value: string) { this._value = value; };
 };
 
+export class ArchivedRow extends SummaryRow {
+    constructor(header: string, label: string) {
+        super(header, label);
+        this.url = strings.mapHeaderToURL(header, label);
+    };
+    override get valueUrl(): string { return strings.mapValueToURL(this._value); };
+};
+
 export class Summary {
     private _totalTime: string = "";
 
@@ -54,24 +59,12 @@ export class Summary {
             return "";
         }
 
-        const time = [""];
-
-        time.push(" ", mhaStrings.mhaDeliveredStart, " ", totalTime, mhaStrings.mhaDeliveredEnd);
-
-        return time.join("");
+        return ` ${mhaStrings.mhaDeliveredStart} ${totalTime}${mhaStrings.mhaDeliveredEnd}`;
     }
 
-    private dateRow = new CreationRow(
-        "Date",
-        mhaStrings.mhaCreationTime
-    );
+    private dateRow = new CreationRow("Date", mhaStrings.mhaCreationTime);
 
-    private archivedRow = new SummaryRow(
-        "Archived-At",
-        mhaStrings.mhaArchivedAt,
-        undefined,
-        function (_header: string, value: string): string { return strings.mapValueToURL(value); }
-    );
+    private archivedRow = new ArchivedRow("Archived-At", mhaStrings.mhaArchivedAt,);
 
     private summaryRows: SummaryRow[] = [
         new SummaryRow("Subject", mhaStrings.mhaSubject),
