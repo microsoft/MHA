@@ -140,7 +140,7 @@ export class Received extends iTable {
             const tokens = receivedHeader.split(/\s+/);
 
             // Build array of header locations
-            class match { fieldName: string; iToken: number; }
+            class match { fieldName: string = ""; iToken: number = 0; }
             const headerMatches: match[] = [];
 
             let fieldName: string;
