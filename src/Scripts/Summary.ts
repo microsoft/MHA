@@ -26,10 +26,9 @@ export class Row {
 };
 
 export class SummaryRow extends Row {
-    constructor(header: string, label: string, onGetUrl?: Function) {
+    constructor(header: string, label: string) {
         super(header, label, "");
         this.url = strings.mapHeaderToURL(header, label);
-        if (onGetUrl) this.onGetUrl = onGetUrl;
     };
 };
 
