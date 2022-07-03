@@ -11,8 +11,8 @@ import { buildTime } from "./buildTime";
 // diagnostics module
 
 class diag {
-    private appDiagnostics: { [k: string]: any };
-    private itemDiagnostics: { [k: string]: any } | null;
+    private appDiagnostics: { [k: string]: any } | null = null;
+    private itemDiagnostics: { [k: string]: any } | null = null;
     private inGet: boolean = false;
     private sendTelemetry: boolean = true;
     private appInsights = new ApplicationInsights({
@@ -141,6 +141,8 @@ class diag {
     }
 
     private ensureOfficeDiagnostics(): void {
+        if (!this.appDiagnostics) return;
+
         try {
             if (ParentFrame) {
                 const choice = ParentFrame.choice;
