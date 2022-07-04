@@ -67,14 +67,14 @@ class diag {
 
     public initSendTelemetry(sendTelemetry: boolean): void {
         this.sendTelemetry = sendTelemetry;
-        ParentFrame.setSendTelemetryUI();
+        ParentFrame.setSendTelemetryUI(sendTelemetry);
     }
 
     public setSendTelemetry(sendTelemetry: boolean): void {
         const changed = this.sendTelemetry != sendTelemetry;
 
         if (changed) {
-            ParentFrame.setSendTelemetryUI();
+            ParentFrame.setSendTelemetryUI(sendTelemetry);
             this.sendTelemetry = sendTelemetry;
             if (typeof (Office) !== "undefined" && Office.context) {
                 Office.context.roamingSettings.set("sendTelemetry", this.sendTelemetry);

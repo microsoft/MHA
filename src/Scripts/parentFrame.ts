@@ -259,7 +259,7 @@ export class ParentFrame {
         const telemetryCheckbox: HTMLElement | null = document.querySelector("#dialog-enableTelemetry");
         if (!telemetryCheckbox) return;
         this.telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
-        ParentFrame.setSendTelemetryUI();
+        ParentFrame.setSendTelemetryUI(Diagnostics.canSendTelemetry());
 
         function actionHandler(event: PointerEvent): void {
             const action = (event.currentTarget as HTMLButtonElement).id;
@@ -347,8 +347,8 @@ export class ParentFrame {
         };
     }
 
-    public static setSendTelemetryUI() {
-        Diagnostics.canSendTelemetry() ? this.telemetryCheckboxComponent.check() : this.telemetryCheckboxComponent.unCheck();
+    public static setSendTelemetryUI(sendTelemetry: boolean) {
+        sendTelemetry ? this.telemetryCheckboxComponent.check() : this.telemetryCheckboxComponent.unCheck();
     }
 
     public static initUI(): void {
