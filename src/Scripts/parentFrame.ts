@@ -1,5 +1,5 @@
 ﻿import * as $ from "jquery";
-import { fabric } from "./fabric";
+import { fabric } from "office-ui-fabric-js/dist/js/fabric";
 import { Diagnostics } from "./diag";
 import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";
@@ -24,9 +24,7 @@ export class ParentFrame {
     private static deferredStatus: string[] = [];
     private static headers: string = "";
     private static modelToString: string = "";
-    // TODO: Sort out proper typing
-    // using "./node_modules/office-ui-fabric-js/dist/js/fabric.d.ts"
-    protected static telemetryCheckboxComponent: any;
+    protected static telemetryCheckboxComponent: fabric.CheckBox;
 
     private static choices: Array<Choice> = [
         { label: "classic", url: "classicDesktopFrame.html", checked: false },
@@ -244,19 +242,22 @@ export class ParentFrame {
         const header: Element | null = document.querySelector(".header-row");
         if (!header) return;
 
-        const dialogSettings: Element | null = header.querySelector("#dialog-Settings");
+        const dialogSettings: HTMLElement | null = header.querySelector("#dialog-Settings");
         if (!dialogSettings) return;
 
         // Wire up the dialog
         const dialogSettingsComponent = new fabric["Dialog"](dialogSettings);
 
-        const dialogDiagnostics: Element | null = header.querySelector("#dialog-Diagnostics");
+        const dialogDiagnostics: HTMLElement | null = header.querySelector("#dialog-Diagnostics");
+        if (!dialogDiagnostics) return;
         // Wire up the dialog
         const dialogDiagnosticsComponent = new fabric["Dialog"](dialogDiagnostics);
 
         const actionButtonElements: NodeListOf<Element> = header.querySelectorAll(".ms-Dialog-action");
+        if (!actionButtonElements) return;
 
-        const telemetryCheckbox: Element | null = document.querySelector("#dialog-enableTelemetry");
+        const telemetryCheckbox: HTMLElement | null = document.querySelector("#dialog-enableTelemetry");
+        if (!telemetryCheckbox) return;
         this.telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
         ParentFrame.setSendTelemetryUI();
 
@@ -310,13 +311,15 @@ export class ParentFrame {
 
         // Wire up the buttons
         for (let i: number = 0; i < actionButtonElements.length; i++) {
-            new fabric["Button"](actionButtonElements[i], actionHandler);
+            const button = actionButtonElements[i];
+            if (!button) continue;
+            new fabric["Button"](button, actionHandler);
         }
 
-        const choiceGroup: NodeListOf<Element> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
+        const choiceGroup: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
         new fabric["ChoiceFieldGroup"](choiceGroup[0]);
 
-        const choiceFieldGroupElements: NodeListOf<Element> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
+        const choiceFieldGroupElements: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
         for (let i: number = 0; i < choiceFieldGroupElements.length; i++) {
             new fabric["ChoiceFieldGroup"](choiceFieldGroupElements[i]);
         }

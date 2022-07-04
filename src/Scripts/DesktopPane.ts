@@ -2,7 +2,7 @@ import "office-ui-fabric-js/dist/css/fabric.min.css"
 import "office-ui-fabric-js/dist/css/fabric.components.min.css"
 import "../Content/DesktopPane.css";
 import * as $ from "jquery";
-import { fabric } from "./fabric"
+import { fabric } from "office-ui-fabric-js/dist/js/fabric";
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./Headers"
 import { poster } from "./poster";
