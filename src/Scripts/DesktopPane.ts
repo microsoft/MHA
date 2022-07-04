@@ -48,7 +48,7 @@ function initializeFabric(): void {
 
     const buttonElement: HTMLElement | null = document.querySelector("#orig-header-btn");
     if (!buttonElement) return;
-    new fabric["Button"](buttonElement, function (event: PointerEvent): void {
+    new fabric["Button"](buttonElement, function (event: Event): void {
         if (event.currentTarget) {
             const btnIcon: JQuery<HTMLElement> = $(event.currentTarget).find(".ms-Icon");
             if (btnIcon.hasClass("ms-Icon--Add")) {

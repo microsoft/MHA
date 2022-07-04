@@ -261,7 +261,7 @@ export class ParentFrame {
         this.telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
         ParentFrame.setSendTelemetryUI(Diagnostics.canSendTelemetry());
 
-        function actionHandler(event: PointerEvent): void {
+        function actionHandler(event: Event): void {
             const action = (event.currentTarget as HTMLButtonElement).id;
 
             function getDiagnostics(): string {
