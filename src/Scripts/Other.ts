@@ -8,7 +8,10 @@ export class OtherRow extends Row {
         super(header, "", "");
         this.number = number;
         this.value = value;
-        this.onGetUrl = () => { return strings.mapHeaderToURL(this.header); };
+        this.url = strings.mapHeaderToURL(header);
+        this.onGetUrl = () => {
+            return strings.mapHeaderToURL(this.header);
+        };
     }
 
     [index: string]: any;
