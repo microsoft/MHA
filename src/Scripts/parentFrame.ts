@@ -278,11 +278,9 @@ export class ParentFrame {
                 }
 
                 const errors: string[] = Errors.get();
-                for (let iError: number = 0; iError < errors.length; iError++) {
-                    if (errors[iError]) {
-                        diagnostics += "ERROR: " + errors[iError] + "\n";
-                    }
-                }
+                errors.forEach((error: string) => {
+                    diagnostics += "ERROR: " + error + "\n";
+                });
 
                 return diagnostics;
             }
@@ -310,20 +308,18 @@ export class ParentFrame {
         }
 
         // Wire up the buttons
-        for (let i: number = 0; i < actionButtonElements.length; i++) {
-            const button = actionButtonElements[i];
-            if (!button) continue;
+        actionButtonElements.forEach((button: Element) => {
             new fabric["Button"](button, actionHandler);
-        }
+        });
 
         const choiceGroup: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
         if (!choiceGroup || !choiceGroup[0]) return;
         new fabric["ChoiceFieldGroup"](choiceGroup[0]);
 
         const choiceFieldGroupElements: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
-        for (let i: number = 0; i < choiceFieldGroupElements.length; i++) {
-            new fabric["ChoiceFieldGroup"](choiceFieldGroupElements[i]);
-        }
+        choiceFieldGroupElements.forEach((choiceFieldGroupElement: HTMLElement) => {
+            new fabric["ChoiceFieldGroup"](choiceFieldGroupElement);
+        });
 
         const settingsButton: HTMLButtonElement = header.querySelector(".gear-button") as HTMLButtonElement;
         // When clicking the button, open the dialog

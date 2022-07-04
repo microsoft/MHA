@@ -37,14 +37,14 @@ function initializeFabric(): void {
     spinner.stop();
 
     const commandBarElements: NodeListOf<Element> = document.querySelectorAll(".ms-CommandBar");
-    for (let i: number = 0; i < commandBarElements.length; i++) {
-        new fabric["CommandBar"](commandBarElements[i]);
-    }
+    commandBarElements.forEach((commandBarElement: Element) => {
+        new fabric["CommandBar"](commandBarElement);
+    });
 
     const commandButtonElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-CommandButton");
-    for (let i: number = 0; i < commandButtonElements.length; i++) {
-        new fabric["CommandButton"](commandButtonElements[i]);
-    }
+    commandButtonElements.forEach((commandButtonElement: HTMLElement) => {
+        new fabric["CommandButton"](commandButtonElement);
+    });
 
     const buttonElement: HTMLElement | null = document.querySelector("#orig-header-btn");
     if (!buttonElement) return;
@@ -316,9 +316,9 @@ function buildViews(headers: string) {
 
     // Initialize any fabric lists added
     const listElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-List");
-    for (let i: number = 0; i < listElements.length; i++) {
-        new fabric["List"](listElements[i]);
-    }
+    listElements.forEach((listElement: HTMLElement) => {
+        new fabric["List"](listElement);
+    });
 
     const listItemElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-ListItem");
     listItemElements.forEach((listItem: HTMLElement) => {
