@@ -24,6 +24,9 @@ export class ParentFrame {
     private static deferredStatus: string[] = [];
     private static headers: string = "";
     private static modelToString: string = "";
+    // TODO: Sort out proper typing
+    // using "./node_modules/office-ui-fabric-js/dist/js/fabric.d.ts"
+    protected static telemetryCheckboxComponent: any;
 
     private static choices: Array<Choice> = [
         { label: "classic", url: "classicDesktopFrame.html", checked: false },
@@ -254,8 +257,8 @@ export class ParentFrame {
         const actionButtonElements: NodeListOf<Element> = header.querySelectorAll(".ms-Dialog-action");
 
         const telemetryCheckbox: Element | null = document.querySelector("#dialog-enableTelemetry");
-        const telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
-        Diagnostics.canSendTelemetry() ? telemetryCheckboxComponent.check() : telemetryCheckboxComponent.unCheck();
+        this.telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
+        ParentFrame.setSendTelemetryUI();
 
         function actionHandler(event: PointerEvent): void {
             const action = (event.currentTarget as HTMLButtonElement).id;
@@ -283,7 +286,7 @@ export class ParentFrame {
                 return diagnostics;
             }
 
-            Diagnostics.setSendTelemetry(telemetryCheckboxComponent.getValue());
+            Diagnostics.setSendTelemetry(ParentFrame.telemetryCheckboxComponent.getValue());
 
             switch (action) {
                 case "actionsSettings-OK": {
@@ -340,6 +343,10 @@ export class ParentFrame {
         };
     }
 
+    public static setSendTelemetryUI() {
+        Diagnostics.canSendTelemetry() ? this.telemetryCheckboxComponent.check() : this.telemetryCheckboxComponent.unCheck();
+    }
+
     public static initUI(): void {
         ParentFrame.setDefault();
         ParentFrame.addChoices();
@@ -347,7 +354,8 @@ export class ParentFrame {
 
         try {
             const choice: Choice = Office.context.roamingSettings.get(ParentFrame.getSettingsKey());
-            Diagnostics.setSendTelemetry(Office.context.roamingSettings.get("sendTelemetry"));
+            const sendTelemetry: boolean = Office.context.roamingSettings.get("sendTelemetry");
+            Diagnostics.initSendTelemetry(sendTelemetry);
 
             const input: JQuery<HTMLElement> = $("#uiToggle" + choice.label);
             input.prop("checked", "true");

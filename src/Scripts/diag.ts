@@ -65,15 +65,31 @@ class diag {
         this.appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pageview
     }
 
-    public setSendTelemetry(_sendTelemetry: boolean): void {
-        this.sendTelemetry = _sendTelemetry;
-        if (typeof (Office) !== "undefined" && Office.context) {
-            Office.context.roamingSettings.set("sendTelemetry", this.sendTelemetry);
-            Office.context.roamingSettings.saveAsync();
+    public initSendTelemetry(sendTelemetry: boolean): void {
+        this.sendTelemetry = sendTelemetry;
+        ParentFrame.setSendTelemetryUI();
+    }
+
+    public setSendTelemetry(sendTelemetry: boolean): void {
+        const changed = this.sendTelemetry != sendTelemetry;
+
+        if (changed) {
+            ParentFrame.setSendTelemetryUI();
+            this.sendTelemetry = sendTelemetry;
+            if (typeof (Office) !== "undefined" && Office.context) {
+                Office.context.roamingSettings.set("sendTelemetry", this.sendTelemetry);
+                Office.context.roamingSettings.saveAsync((result: Office.AsyncResult<void>) => {
+                    if (result && result.status !== Office.AsyncResultStatus.Succeeded) {
+                        console.log(`setSendTelemetry = ${JSON.stringify(result)}`);
+                    }
+                });
+            }
         }
     }
 
-    public canSendTelemetry(): boolean { return this.sendTelemetry; }
+    public canSendTelemetry(): boolean {
+        return this.sendTelemetry;
+    }
 
     public trackEvent(event: IEventTelemetry, customProperties?: ICustomProperties): void {
         if (this.sendTelemetry) {
