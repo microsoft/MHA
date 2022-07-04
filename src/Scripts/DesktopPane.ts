@@ -12,25 +12,27 @@ import { OtherRow } from "./Other";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
-let overlay: typeof fabric.Overlay = null;
-let spinner: typeof fabric.Spinner = null;
+let overlay: fabric.Overlay;
+let spinner: fabric.Spinner;
 
 function postError(error: any, message: string): void {
     poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
 function initializeFabric(): void {
-    const overlayComponent: Element | null = document.querySelector(".ms-Overlay");
-    if (overlayComponent) {
-        // Override click so user can't dismiss overlay
-        overlayComponent.addEventListener("click", function (e: Event): void {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-        });
-        overlay = new fabric["Overlay"](overlayComponent);
-    }
+    const overlayComponent: HTMLElement | null = document.querySelector(".ms-Overlay");
+    if (!overlayComponent) return;
 
-    const spinnerElement: Element | null = document.querySelector(".ms-Spinner");
+    // Override click so user can't dismiss overlay
+    overlayComponent.addEventListener("click", function (e: Event): void {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+    });
+    overlay = new fabric["Overlay"](overlayComponent);
+
+    const spinnerElement: HTMLElement | null = document.querySelector(".ms-Spinner");
+    if (!spinnerElement) return;
+
     spinner = new fabric["Spinner"](spinnerElement);
     spinner.stop();
 
@@ -39,12 +41,13 @@ function initializeFabric(): void {
         new fabric["CommandBar"](commandBarElements[i]);
     }
 
-    const commandButtonElements: NodeListOf<Element> = document.querySelectorAll(".ms-CommandButton");
+    const commandButtonElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-CommandButton");
     for (let i: number = 0; i < commandButtonElements.length; i++) {
         new fabric["CommandButton"](commandButtonElements[i]);
     }
 
-    const buttonElement: Element | null = document.querySelector("#orig-header-btn");
+    const buttonElement: HTMLElement | null = document.querySelector("#orig-header-btn");
+    if (!buttonElement) return;
     new fabric["Button"](buttonElement, function (event: PointerEvent): void {
         if (event.currentTarget) {
             const btnIcon: JQuery<HTMLElement> = $(event.currentTarget).find(".ms-Icon");
@@ -312,17 +315,18 @@ function buildViews(headers: string) {
     });
 
     // Initialize any fabric lists added
-    const listElements = document.querySelectorAll(".ms-List");
+    const listElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-List");
     for (let i: number = 0; i < listElements.length; i++) {
         new fabric["List"](listElements[i]);
     }
 
-    const listItemElements = document.querySelectorAll(".ms-ListItem");
-    listItemElements.forEach((listItem: Element) => {
+    const listItemElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-ListItem");
+    listItemElements.forEach((listItem: HTMLElement) => {
         new fabric["ListItem"](listItem);
 
         // Init corresponding callout
-        const calloutElement: Element | null = listItem.querySelector(".ms-Callout");
+        const calloutElement: HTMLElement | null = listItem.querySelector(".ms-Callout");
+        if (!calloutElement) return;
         new fabric["Callout"](calloutElement, listItem, "right");
     });
 }

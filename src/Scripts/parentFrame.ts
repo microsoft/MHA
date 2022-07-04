@@ -317,6 +317,7 @@ export class ParentFrame {
         }
 
         const choiceGroup: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
+        if (!choiceGroup || !choiceGroup[0]) return;
         new fabric["ChoiceFieldGroup"](choiceGroup[0]);
 
         const choiceFieldGroupElements: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
