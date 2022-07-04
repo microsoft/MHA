@@ -1,23 +1,21 @@
 import * as $ from "jquery";
-import { Diagnostics } from "./diag"
+import { Diagnostics } from "./diag";
 
-export const mhaStrings = (function () {
-    "use strict";
-
-    function copyToClipboard(str) {
-        const textArea = document.createElement('textarea');
+export class strings {
+    public static copyToClipboard(str: string): void {
+        const textArea: HTMLTextAreaElement = document.createElement('textarea');
         textArea.style.position = 'absolute';
         textArea.style.opacity = '0';
         textArea.value = str;
         document.body.appendChild(textArea);
         textArea.select();
-        const succeeded = document.execCommand('copy');
+        const succeeded: boolean = document.execCommand('copy');
         document.body.removeChild(textArea);
         Diagnostics.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "textarea" } });
 
         if (!succeeded) {
             try {
-                navigator.clipboard.writeText(str).then(function () {
+                navigator.clipboard.writeText(str).then(function (): void {
                     Diagnostics.trackEvent({ name: "copy", properties: { succeeded: "true", style: "navigator" } });
                 }, function () {
                     Diagnostics.trackEvent({ name: "copy", properties: { succeeded: "false", style: "navigator" } });
@@ -28,14 +26,14 @@ export const mhaStrings = (function () {
 
         try {
             const queryOpts: PermissionDescriptor = { name: "clipboard-write" as PermissionName };
-            navigator.permissions.query(queryOpts).then(function (result) {
+            navigator.permissions.query(queryOpts).then(function (result: PermissionStatus) {
                 Diagnostics.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "permissions", clipboardWrite: result.state } });
             });
         }
         catch (e) { /**/ }
     }
 
-    const headerToURLMap = [
+    private static headerToURLMap = [
         ["Accept-Language", "https://tools.ietf.org/html/rfc3282"],
         ["Archived-At", "https://tools.ietf.org/html/rfc5064"],
         ["ARC-Authentication-Results", "https://tools.ietf.org/html/rfc8617#section-4.1.1"],
@@ -96,108 +94,31 @@ export const mhaStrings = (function () {
         ["SFS", "https://docs.microsoft.com/en-us/exchange/monitoring/trace-an-email-message/run-a-message-trace-and-view-results"]
     ];
 
-    function htmlEncode(value) { return value ? $('<div />').text(value).html() : ''; }
+    public static htmlEncode(value: string): string { return value ? $('<div />').text(value).html() : ''; }
 
-    function mapHeaderToURL(headerName, text) {
-        for (let i = 0; i < headerToURLMap.length; i++) {
-            if (headerName.toLowerCase() === headerToURLMap[i][0].toLowerCase()) {
-                return ["<a href = '", headerToURLMap[i][1], "' target = '_blank'>", htmlEncode(text || headerName), "</a>"].join("");
-            }
+    public static mapHeaderToURL(headerName: string, text?: string): string {
+        let headerMap: string[] | undefined = strings.headerToURLMap.find((headerMap: string[]) => {
+            return headerName.toLowerCase() === headerMap[0]?.toLowerCase();
+        });
+
+        if (headerMap) {
+            return ["<a href = '", headerMap[1], "' target = '_blank'>", this.htmlEncode(text || headerName), "</a>"].join("");
         }
 
-        return null;
+        return "";
     }
 
-    function mapValueToURL(text) {
+    public static mapValueToURL(text: string): string {
         try {
-            return ["<a href='", text, "' target='_blank'>", htmlEncode(text), "</a>"].join("");
+            return ["<a href='", text, "' target='_blank'>", this.htmlEncode(text), "</a>"].join("");
         } catch (e) {
             return text;
         }
     }
 
-    return {
-        copyToClipboard: copyToClipboard,
-        mapHeaderToURL: mapHeaderToURL,
-        mapValueToURL: mapValueToURL,
-        // REST
-        mhaLoading: "Loading...",
-        mhaRequestSent: "Retrieving headers from server.",
-        mhaFoundHeaders: "Found headers",
-        mhaProcessingHeader: "Processing header",
-        mhaHeadersMissing: "Message was missing transport headers. If this is a sent item this may be expected.",
-        mhaMessageMissing: "Message not located.",
-        mhaRequestFailed: "Failed to retrieve headers.",
-
-        // Headers
-        mhaNegative: "-",
-        mhaMinute: "minute",
-        mhaMinutes: "minutes",
-        mhaSecond: "second",
-        mhaSeconds: "seconds",
-        mhaSummary: "Summary",
-        mhaPrompt: "Insert the message header you would like to analyze",
-        mhaReceivedHeaders: "Received headers",
-        mhaForefrontAntiSpamReport: "Forefront Antispam Report Header",
-        mhaAntiSpamReport: "Microsoft Antispam Header",
-        mhaOtherHeaders: "Other headers",
-        mhaOriginalHeaders: "Original headers",
-        mhaDeliveredStart: "(Delivered after",
-        mhaDeliveredEnd: ")",
-        mhaParsingHeaders: "Parsing headers to tables",
-        mhaProcessingReceivedHeader: "Processing received header ",
-
-        // Summary
-        mhaSubject: "Subject",
-        mhaMessageId: "Message Id",
-        mhaCreationTime: "Creation time",
-        mhaFrom: "From",
-        mhaReplyTo: "Reply to",
-        mhaTo: "To",
-        mhaCc: "Cc",
-        mhaArchivedAt: "Archived at",
-
-        // Received
-        mhaReceivedHop: "Hop",
-        mhaReceivedSubmittingHost: "Submitting host",
-        mhaReceivedReceivingHost: "Receiving host",
-        mhaReceivedTime: "Time",
-        mhaReceivedDelay: "Delay",
-        mhaReceivedType: "Type",
-        mhaReceivedFrom: "From",
-        mhaReceivedBy: "By",
-        mhaReceivedWith: "With",
-        mhaReceivedId: "Id",
-        mhaReceivedFor: "For",
-        mhaReceivedVia: "Via",
-        mhaReceivedDate: "Date",
-        mhaReceivedPercent: "Percent",
-
-        // Other
-        mhaNumber: "#",
-        mhaHeader: "Header",
-        mhaValue: "Value",
-
-        // ForefrontAntiSpamReport
-        mhaSource: "Source header",
-        mhaUnparsed: "Unknown fields",
-        mhaArc: "ARC protocol",
-        mhaCountryRegion: "Country/Region",
-        mhaLang: "Language",
-        mhaScl: "Spam Confidence Level",
-        mhaSfv: "Spam Filtering Verdict",
-        mhaPcl: "Phishing Confidence Level",
-        mhaIpv: "IP Filter Verdict",
-        mhaHelo: "HELO/EHLO String",
-        mhaPtr: "PTR Record",
-        mhaCip: "Connecting IP Address",
-        mhaCat: "Protection Policy Category",
-        mhaSfty: "Phishing message",
-        mhaSrv: "Bulk email status",
-        mhaCustomSpam: "Advanced Spam Filtering",
-        mhaSfs: "Spam rules",
-
-        // AntiSpamReport
-        mhaBcl: "Bulk Complaint Level"
-    };
-})();
+    // Join an array with char, dropping empty/missing entries
+    public static joinArray(array: (string | number | null)[] | null, char: string): string {
+        if (!array) return "";
+        return (array.filter(function (item) { return item; })).join(char);
+    }
+}

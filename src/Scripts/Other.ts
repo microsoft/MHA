@@ -1,63 +1,65 @@
-﻿import { mhaStrings } from "./Strings";
+﻿import { iTable } from "./itable";
+import { strings } from "./Strings";
+import { Header } from "./Headers";
+import { Row } from "./Summary";
 
-export const Other = (function () {
-    "use strict";
+export class OtherRow extends Row {
+    constructor(number: number, header: string, value: any) {
+        super(header, "", "");
+        this.number = number;
+        this.value = value;
+        this.onGetUrl = () => { return strings.mapHeaderToURL(this.header); };
+    }
 
-    const row = function (number, header, value) {
-        return {
-            number: number,
-            header: header,
-            url: mhaStrings.mapHeaderToURL(header, null),
-            value: value,
-            toString: function () { return header + ": " + value; }
-        }
-    };
+    [index: string]: any;
+    number: number;
+    override toString() { return this.header + ": " + this.value; }
+}
 
-    const otherRows = [];
-    let sortColumn = "number";
-    let sortOrder = 1;
+export class Other extends iTable {
+    private _otherRows: OtherRow[] = [];
+    protected _sortColumn: string = "number";
+    protected _sortOrder: number = 1;
+    public readonly tableName: string = "otherHeaders";
 
-    function doSort(col) {
-        if (sortColumn === col) {
-            sortOrder *= -1;
+    public doSort(col: string): void {
+        if (this.sortColumn === col) {
+            this._sortOrder *= -1;
         } else {
-            sortColumn = col;
-            sortOrder = 1;
+            this._sortColumn = col;
+            this._sortOrder = 1;
         }
 
-        if (sortColumn + "Sort" in otherRows[0]) {
+        if (this.rows[0] && this.sortColumn + "Sort" in this.rows[0]) {
             col = col + "Sort";
         }
 
-        otherRows.sort((a, b) => {
+        this.rows.sort((a: OtherRow, b: OtherRow) => {
             return this.sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 
-    function add(otherHeader) {
-        otherRows.push(row(
-            otherRows.length + 1,
-            otherHeader.header,
-            otherHeader.value));
-    }
-
-    function exists() { return otherRows.length > 0; }
-
-    return {
-        tableName: "otherHeaders",
-        add: add,
-        exists: exists,
-        get otherRows() { return otherRows; },
-        doSort: doSort,
-        get sortColumn() { return sortColumn; },
-        get sortOrder() { return sortOrder; },
-        toString: function () {
-            if (!exists()) return "";
-            const ret = ["Other"];
-            otherRows.forEach(function (row) {
-                if (row.value) { ret.push(row); }
-            });
-            return ret.join("\n");
+    public add(header: Header): boolean {
+        if (header.header || header.value) {
+            this.rows.push(new OtherRow(
+                this.rows.length + 1,
+                header.header,
+                header.value));
+            return true;
         }
+
+        return false;
     }
-});
+
+    public exists() { return this.rows.length > 0; }
+
+    public get rows(): OtherRow[] { return this._otherRows; };
+    public toString() {
+        if (!this.exists()) return "";
+        const ret: string[] = ["Other"];
+        this.rows.forEach(function (row) {
+            if (row.value) { ret.push(row.value); }
+        });
+        return ret.join("\n");
+    }
+}

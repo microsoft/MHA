@@ -1,101 +1,114 @@
-import { mhaStrings } from "./Strings";
-import { mhaDates } from "./dates";
+import { mhaStrings } from "./mhaStrings";
+import { strings } from "./Strings";
+import { Header } from "./Headers";
 
-export const Summary = (function () {
-    "use strict";
-
-    const SummaryRow = function (header: string, label: string, onSet?: Function, onGet?: Function, onGetUrl?: Function) {
-        let value = "";
-
-        return {
-            header: header,
-            label: label,
-            url: mhaStrings.mapHeaderToURL(header, label),
-            set value(_value) { value = onSet ? onSet(_value) : _value; },
-            get value() { return onGet ? onGet(value) : value; },
-            get valueUrl() { return onGetUrl ? onGetUrl(value) : ""; },
-            toString: function () { return label + ": " + value; }
-        };
-    };
-
-    let totalTime = "";
-    function creationTime(date) {
-        if (!date && !totalTime) {
-            return null;
-        }
-
-        const time = [date || ""];
-
-        if (totalTime) {
-            time.push(" ", mhaStrings.mhaDeliveredStart, " ", totalTime, mhaStrings.mhaDeliveredEnd);
-        }
-
-        return time.join("");
+export class Row {
+    constructor(header: string, label: string, headerName: string) {
+        this.header = header;
+        this.label = label;
+        this.headerName = headerName;
+        this.url = "";
+        this._value = "";
     }
 
-    const dateRow = SummaryRow(
-        "Date",
-        mhaStrings.mhaCreationTime,
-        function (value) { return mhaDates.parseDate(value); },
-        function (value) { return creationTime(value); });
+    [index: string]: any;
+    protected _value: string;
+    header: string;
+    label: string;
+    headerName: string;
+    url: string;
+    onGetUrl?: Function;
 
-    const archivedRow = SummaryRow(
-        "Archived-At",
-        mhaStrings.mhaArchivedAt,
-        null,
-        null,
-        function (value) { return mhaStrings.mapValueToURL(value); }
-    );
+    public set value(value: string) { this._value = value; };
+    get value(): string { return this._value; };
+    get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this.headerName, this._value) : ""; };
 
-    const summaryRows = [
-        SummaryRow("Subject", mhaStrings.mhaSubject),
-        SummaryRow("Message-ID", mhaStrings.mhaMessageId),
-        archivedRow,
-        dateRow,
-        SummaryRow("From", mhaStrings.mhaFrom),
-        SummaryRow("Reply-To", mhaStrings.mhaReplyTo),
-        SummaryRow("To", mhaStrings.mhaTo),
-        SummaryRow("CC", mhaStrings.mhaCc)
+    toString(): string { return this.label + ": " + this.value; };
+};
+
+export class SummaryRow extends Row {
+    constructor(header: string, label: string) {
+        super(header, label, "");
+        this.url = strings.mapHeaderToURL(header, label);
+    };
+};
+
+export class CreationRow extends SummaryRow {
+    constructor(header: string, label: string) {
+        super(header, label);
+        this.url = strings.mapHeaderToURL(header, label);
+        this.postFix = "";
+    };
+    postFix: string;
+    override get value(): string { return this._value + this.postFix; };
+    override set value(value: string) { this._value = value; };
+};
+
+export class ArchivedRow extends SummaryRow {
+    constructor(header: string, label: string) {
+        super(header, label);
+        this.url = strings.mapHeaderToURL(header, label);
+    };
+    override get valueUrl(): string { return strings.mapValueToURL(this._value); };
+};
+
+export class Summary {
+    private _totalTime: string = "";
+
+    private creationPostFix(totalTime: string): string {
+        if (!totalTime) {
+            return "";
+        }
+
+        return ` ${mhaStrings.mhaDeliveredStart} ${totalTime}${mhaStrings.mhaDeliveredEnd}`;
+    }
+
+    private dateRow = new CreationRow("Date", mhaStrings.mhaCreationTime);
+
+    private archivedRow = new ArchivedRow("Archived-At", mhaStrings.mhaArchivedAt,);
+
+    private summaryRows: SummaryRow[] = [
+        new SummaryRow("Subject", mhaStrings.mhaSubject),
+        new SummaryRow("Message-ID", mhaStrings.mhaMessageId),
+        this.archivedRow,
+        this.dateRow,
+        new SummaryRow("From", mhaStrings.mhaFrom),
+        new SummaryRow("Reply-To", mhaStrings.mhaReplyTo),
+        new SummaryRow("To", mhaStrings.mhaTo),
+        new SummaryRow("CC", mhaStrings.mhaCc)
     ];
 
-    function exists() {
-        for (let i = 0; i < summaryRows.length; i++) {
-            if (summaryRows[i].value) {
-                return true;
-            }
-        }
-
-        return false;
+    public exists(): boolean {
+        return this.rows.find((row: Row) => { return row.value; }) !== undefined;
     }
 
-    function add(header) {
+    public add(header: Header) {
         if (!header) {
             return false;
         }
 
-        for (let i = 0; i < summaryRows.length; i++) {
-            if (summaryRows[i].header.toUpperCase() === header.header.toUpperCase()) {
-                summaryRows[i].value = header.value;
-                return true;
-            }
+        let row: SummaryRow | undefined = this.rows.find((row: Row) => { return row.header.toUpperCase() === header.header.toUpperCase(); })
+        if (row) {
+            row.value = header.value;
+            return true;
         }
 
         return false;
     }
 
-    return {
-        add: add,
-        exists: exists,
-        get summaryRows() { return summaryRows; },
-        get totalTime() { return totalTime; },
-        set totalTime(value) { totalTime = value; },
-        toString: function () {
-            if (!exists()) return "";
-            const ret = ["Summary"];
-            summaryRows.forEach(function (row) {
-                if (row.value) { ret.push(row.toString()); }
-            });
-            return ret.join("\n");
-        }
+    public get rows(): SummaryRow[] { return this.summaryRows; };
+    public get totalTime(): string { return this._totalTime; };
+    public set totalTime(value: string) {
+        this._totalTime = value;
+        this.dateRow.postFix = this.creationPostFix(value);
     };
-});
+
+    public toString(): string {
+        if (!this.exists()) return "";
+        const ret = ["Summary"];
+        this.rows.forEach(function (row) {
+            if (row.value) { ret.push(row.toString()); }
+        });
+        return ret.join("\n");
+    }
+}

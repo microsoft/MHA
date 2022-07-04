@@ -1,8 +1,8 @@
 ﻿import * as QUnit from "qunit";
 import { HeaderModel } from "../Headers"
 
-QUnit.test("GetHeaderList Tests", function (assert) {
-    var headers = HeaderModel();
+QUnit.test("GetHeaderList Tests", function (assert: Assert) {
+    var headers = new HeaderModel();
     var headerList = headers.GetHeaderList(
         "Subject: =?UTF-8?B?8J+PiCAgMjAxOSdzIE5vLjEgUmVjcnVpdCwgVGhlIFdvcmxkJ3Mg?=\n" +
         " =?UTF 8?B?VGFsbGVzdCBUZWVuYWdlciwgVG9wIFBsYXlzIG9mIHRoZSBXZWVrICYgbW9y?=\n" +

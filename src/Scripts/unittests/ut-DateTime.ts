@@ -1,8 +1,8 @@
 ﻿import * as QUnit from "qunit";
 import { Received } from "../Received"
 
-QUnit.test("DateTime Tests", function (assert) {
-    var received = Received();
+QUnit.test("DateTime Tests", function (assert: Assert) {
+    var received = new Received();
 
     var h1 = "Received: test; Sat, 21 Apr 2018 03:01:01 +0000";
     assert.datesEqual(received.parseHeader(h1), { "date": "4/20/2018, 11:01:01 PM", "dateNum": 1524279661000 }, h1);
@@ -33,14 +33,14 @@ QUnit.test("DateTime Tests", function (assert) {
     var h11 = "Received: test; Mon, 26 Mar 2018 13:35:11.102 +0000 UTC";
     assert.datesEqual(received.parseHeader(h11), { "date": "3/26/2018, 9:35:11 AM", "dateNum": 1522071311102 }, h11);
 
-    assert.equal(received.computeTime(9000, 8000), "1 second", 50);
-    assert.equal(received.computeTime(99000, 8000), "1 minute 31 seconds", 51);
-    assert.equal(received.computeTime(999000, 8000), "16 minutes 31 seconds", 52);
-    assert.equal(received.computeTime(9999000, 8000), "166 minutes 31 seconds", 53);
-    assert.equal(received.computeTime(8000, 9000), "-1 second", 54);
-    assert.equal(received.computeTime(8000, 99000), "-1 minute 31 seconds", 55);
-    assert.equal(received.computeTime(8000, 999000), "-16 minutes 31 seconds", 56);
-    assert.equal(received.computeTime(8000, 9999000), "-166 minutes 31 seconds", 57);
-    assert.equal(received.computeTime(9000, 8500), "0 seconds", 58);
-    assert.equal(received.computeTime(8500, 9000), "0 seconds", 59);
+    assert.equal(Received.computeTime(9000, 8000), "1 second", "50");
+    assert.equal(Received.computeTime(99000, 8000), "1 minute 31 seconds", "51");
+    assert.equal(Received.computeTime(999000, 8000), "16 minutes 31 seconds", "52");
+    assert.equal(Received.computeTime(9999000, 8000), "166 minutes 31 seconds", "53");
+    assert.equal(Received.computeTime(8000, 9000), "-1 second", "54");
+    assert.equal(Received.computeTime(8000, 99000), "-1 minute 31 seconds", "55");
+    assert.equal(Received.computeTime(8000, 999000), "-16 minutes 31 seconds", "56");
+    assert.equal(Received.computeTime(8000, 9999000), "-166 minutes 31 seconds", "57");
+    assert.equal(Received.computeTime(9000, 8500), "0 seconds", "58");
+    assert.equal(Received.computeTime(8500, 9000), "0 seconds", "59");
 });

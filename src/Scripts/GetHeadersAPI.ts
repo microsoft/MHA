@@ -1,9 +1,9 @@
-import { mhaStrings } from "./Strings";
+import { mhaStrings } from "./mhaStrings";
 import { Errors } from "./Errors";
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersRest } from "./GetHeadersRest";
-import { Diagnostics } from "./diag"
+import { Diagnostics } from "./diag";
 
 /*
  * GetHeadersAPI.js
@@ -15,20 +15,18 @@ import { Diagnostics } from "./diag"
  * getAllInternetHeadersAsync requires 1.9 and ReadItem
  */
 
-export const GetHeadersAPI = (function () {
-    "use strict";
+export class GetHeadersAPI {
+    private static minAPISet: string = "1.9";
 
-    const minAPISet: string = "1.9";
+    public static canUseAPI(): boolean { return GetHeaders.canUseAPI("API", GetHeadersAPI.minAPISet); }
 
-    function canUseAPI(): boolean { return GetHeaders.canUseAPI("API", minAPISet); }
-
-    function send(headersLoadedCallback) {
-        if (!GetHeaders.validItem()) {
+    public static send(headersLoadedCallback: Function): void {
+        if (!GetHeaders.validItem() || !Office.context.mailbox.item) {
             Errors.log(null, "No item selected (API)", true);
             return;
         }
 
-        if (!canUseAPI()) {
+        if (!GetHeadersAPI.canUseAPI()) {
             GetHeadersRest.send(headersLoadedCallback);
             return;
         }
@@ -50,9 +48,4 @@ export const GetHeadersAPI = (function () {
             ParentFrame.showError(e, "Failed in getAllInternetHeadersAsync");
         }
     }
-
-    return {
-        send: send,
-        canUseAPI: canUseAPI
-    };
-})();
+}

@@ -1,132 +1,144 @@
 ﻿import * as $ from "jquery";
-import { fabric } from "./fabric"
-import { Diagnostics } from "./diag"
+import { fabric } from "office-ui-fabric-js/dist/js/fabric";
+import { Diagnostics } from "./diag";
 import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";
-import { poster } from "./poster"
-import { mhaStrings } from "./Strings";
+import { poster } from "./poster";
+import { strings } from "./Strings";
 
-export const ParentFrame = (function () {
-    "use strict";
+class Choice {
+    label: string = "";
+    url: string = "";
+    checked: boolean = false;
+}
 
-    class Choice {
-        label: string;
-        url: string;
-        checked: boolean;
-    }
+class DeferredError {
+    error: Error = <Error>{};
+    message: string = "";
+}
 
-    let iFrame = null;
-    let currentChoice = {} as Choice;
-    let deferredErrors = [];
-    let deferredStatus = [];
-    let headers = "";
-    let modelToString = "";
+export class ParentFrame {
+    private static iFrame: Window | null;;
+    private static currentChoice = {} as Choice;
+    private static deferredErrors: DeferredError[] = [];
+    private static deferredStatus: string[] = [];
+    private static headers: string = "";
+    private static modelToString: string = "";
+    protected static telemetryCheckboxComponent: fabric.CheckBox;
 
-    const choices: Array<Choice> = [
+    private static choices: Array<Choice> = [
         { label: "classic", url: "classicDesktopFrame.html", checked: false },
         { label: "new", url: "newDesktopFrame.html", checked: true },
         { label: "new-mobile", url: "newMobilePaneIosFrame.html", checked: false }
     ];
 
-    function getQueryVariable(variable) {
-        const vars = window.location.search.substring(1).split("&");
-        for (let i = 0; i < vars.length; i++) {
-            const pair = vars[i].split("=");
+    private static getQueryVariable(variable: string): string {
+        const vars: string[] = window.location.search.substring(1).split("&");
+
+        let found: string = "";
+        vars.find((v: string) => {
+            const pair: string[] = v.split("=");
             if (pair[0] === variable) {
-                return pair[1];
+                found = pair[1] ?? "";
+                return true;
             }
-        }
-        return null;
+
+            return false;
+        });
+
+        return found;
     }
 
-    function setDefault() {
-        let uiDefault = getQueryVariable("default");
+    private static setDefault(): void {
+        let uiDefault: string = ParentFrame.getQueryVariable("default");
         if (uiDefault === null) {
             uiDefault = "new";
         }
 
-        for (let iChoice = 0; iChoice < choices.length; iChoice++) {
-            if (uiDefault === choices[iChoice].label) {
-                choices[iChoice].checked = true;
+        ParentFrame.choices.forEach((choice: Choice) => {
+            if (uiDefault === choice.label) {
+                choice.checked = true;
             } else {
-                choices[iChoice].checked = false;
+                choice.checked = false;
             }
+        });
+    }
+
+    private static postMessageToFrame(eventName: string, data: string | { error: string, message: any }): void {
+        if (ParentFrame.iFrame) {
+            poster.postMessageToFrame(ParentFrame.iFrame, eventName, data);
         }
     }
 
-    function postMessageToFrame(eventName, data) {
-        poster.postMessageToFrame(iFrame, eventName, data);
+    private static render(): void {
+        if (ParentFrame.headers) Diagnostics.trackEvent({ name: "analyzeHeaders" });
+        ParentFrame.postMessageToFrame("renderItem", ParentFrame.headers);
     }
 
-    function render() {
-        if (headers) Diagnostics.trackEvent({ name: "analyzeHeaders" });
-        postMessageToFrame("renderItem", headers);
-    }
+    private static setFrame(frame: Window): void {
+        ParentFrame.iFrame = frame;
 
-    function setFrame(frame) {
-        iFrame = frame;
-
-        if (iFrame) {
+        if (ParentFrame.iFrame) {
             // If we have any deferred status, signal them
-            for (let iStatus = 0; iStatus < deferredStatus.length; iStatus++) {
-                postMessageToFrame("updateStatus", deferredStatus[iStatus]);
-            }
+            ParentFrame.deferredStatus.forEach((status: string) => {
+                ParentFrame.postMessageToFrame("updateStatus", status);
+            });
 
             // Clear out the now displayed status
-            deferredStatus = [];
+            ParentFrame.deferredStatus = [];
 
             // If we have any deferred errors, signal them
-            for (let iError = 0; iError < deferredErrors.length; iError++) {
-                postMessageToFrame("showError",
+            ParentFrame.deferredErrors.forEach((deferredError: DeferredError) => {
+                ParentFrame.postMessageToFrame("showError",
                     {
-                        error: JSON.stringify(deferredErrors[iError][0]),
-                        message: deferredErrors[iError][1]
+                        error: JSON.stringify(deferredError.error),
+                        message: deferredError.message
                     });
-            }
+            });
 
             // Clear out the now displayed errors
-            deferredErrors = [];
+            ParentFrame.deferredErrors = [];
 
-            render();
+            ParentFrame.render();
         }
     }
 
-    function eventListener(event) {
+    private static eventListener(event: MessageEvent): void {
         if (!event || event.origin !== poster.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {
                 case "frameActive":
-                    setFrame(event.source);
+                    ParentFrame.setFrame(event.source as Window);
                     break;
                 case "LogError":
                     Errors.log(JSON.parse(event.data.data.error), event.data.data.message);
                     break;
                 case "modelToString":
-                    modelToString = event.data.data;
+                    ParentFrame.modelToString = event.data.data;
                     break;
             }
         }
     }
 
-    function loadNewItem() {
+    private static loadNewItem(): void {
         if (Office.context.mailbox.item) {
-            GetHeaders.send(function (_headers, apiUsed) {
-                headers = _headers;
+            GetHeaders.send(function (_headers: string, apiUsed: string): void {
+                ParentFrame.headers = _headers;
                 Diagnostics.set("API used", apiUsed);
-                render();
+                ParentFrame.render();
             });
         }
     }
 
-    function registerItemChangedEvent() {
+    private static registerItemChangedEvent(): void {
         try {
             if (Office.context.mailbox.addHandlerAsync !== undefined) {
                 Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged,
-                    function () {
+                    function (): void {
                         Errors.clear();
                         Diagnostics.clear();
-                        loadNewItem();
+                        ParentFrame.loadNewItem();
                     });
             }
         } catch (e) {
@@ -135,28 +147,29 @@ export const ParentFrame = (function () {
     }
 
     // Tells the UI to show an error.
-    function showError(error, message: string, suppressTracking?: boolean) {
+    public static showError(error: any, message: string, suppressTracking?: boolean): void {
+        // TODO: Do something with the error
         Errors.log(error, message, suppressTracking);
 
-        if (iFrame) {
-            postMessageToFrame("showError", { error: JSON.stringify(error), message: message });
+        if (ParentFrame.iFrame) {
+            ParentFrame.postMessageToFrame("showError", { error: JSON.stringify(error), message: message });
         } else {
             // We don't have an iFrame, so defer the message
-            deferredErrors.push([error, message]);
+            ParentFrame.deferredErrors.push(<DeferredError>{ error: error, message: message });
         }
     }
 
     // Tells the UI to show an error.
-    function updateStatus(statusText) {
-        if (iFrame) {
-            postMessageToFrame("updateStatus", statusText);
+    public static updateStatus(statusText: string): void {
+        if (ParentFrame.iFrame) {
+            ParentFrame.postMessageToFrame("updateStatus", statusText);
         } else {
             // We don't have an iFrame, so defer the status
-            deferredStatus.push(statusText);
+            ParentFrame.deferredStatus.push(statusText);
         }
     }
 
-    function getSettingsKey() {
+    private static getSettingsKey(): string {
         try {
             return "frame" + Office.context.mailbox.diagnostics.hostName;
         } catch (e) {
@@ -165,28 +178,25 @@ export const ParentFrame = (function () {
     }
 
     // Display primary UI
-    function go(choice: Choice) {
-        iFrame = null;
-        currentChoice = choice;
+    private static go(choice: Choice): void {
+        ParentFrame.iFrame = null;
+        ParentFrame.currentChoice = choice;
         (document.getElementById("uiFrame") as HTMLIFrameElement).src = choice.url;
         if (Office.context) {
-            Office.context.roamingSettings.set(getSettingsKey(), choice);
+            Office.context.roamingSettings.set(ParentFrame.getSettingsKey(), choice);
             Office.context.roamingSettings.saveAsync();
         }
     }
 
-    function goDefaultChoice() {
-        for (let iChoice = 0; iChoice < choices.length; iChoice++) {
-            const choice = choices[iChoice];
-            if (choice.checked) {
-                go(choice);
-                return;
-            }
+    private static goDefaultChoice(): void {
+        const choice = ParentFrame.choices.find((choice: Choice) => { return choice.checked; });
+        if (choice) {
+            ParentFrame.go(choice);
         }
     }
 
-    function create(parentElement, newType, newClass) {
-        const newElement = $(document.createElement(newType));
+    private static create<T extends HTMLElement>(parentElement: JQuery<HTMLElement>, newType: string, newClass: string): JQuery<T> {
+        const newElement: JQuery<T> = $(document.createElement(newType)) as JQuery<T>;
         if (newClass) {
             newElement.addClass(newClass);
         }
@@ -199,60 +209,63 @@ export const ParentFrame = (function () {
     }
 
     // Create list of choices to display for the UI types
-    function addChoices() {
-        const list = $("#uiChoice-list");
+    private static addChoices(): void {
+        const list: JQuery<HTMLUListElement> = $("#uiChoice-list");
         list.empty();
 
-        for (let iChoice = 0; iChoice < choices.length; iChoice++) {
-            const choice = choices[iChoice];
-
+        ParentFrame.choices.forEach((choice: Choice, iChoice: number) => {
             // Create html: <li class="ms-RadioButton">
-            const listItem = create(list, "li", "ms-RadioButton");
+            const listItem: JQuery<HTMLLIElement> = ParentFrame.create(list, "li", "ms-RadioButton");
 
             // Create html: <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
-            const input = create(listItem, "input", "ms-RadioButton-input");
+            const input: JQuery<HTMLInputElement> = ParentFrame.create(listItem, "input", "ms-RadioButton-input");
 
             input.attr("tabindex", "-1");
             input.attr("type", "radio");
             input.attr("value", iChoice);
 
             //  Create html: <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
-            const label = create(listItem, "label", "ms-RadioButton-field");
+            const label: JQuery<HTMLLabelElement> = ParentFrame.create(listItem, "label", "ms-RadioButton-field");
             label.attr("role", "radio");
             label.attr("tabindex", "0");
             label.attr("name", "uiChoice");
             label.attr("value", choice.label);
 
             // Create html: <span class="ms-Label">classic</span>
-            const inputSpan = create(label, "span", "ms-Label");
+            const inputSpan: JQuery<HTMLSpanElement> = ParentFrame.create(label, "span", "ms-Label");
             inputSpan.text(choice.label);
-        }
+        });
     }
 
     // Hook the UI together for display
-    function initFabric() {
-        let i;
-        const header = document.querySelector(".header-row");
+    private static initFabric(): void {
+        const header: Element | null = document.querySelector(".header-row");
+        if (!header) return;
 
-        const dialogSettings = header.querySelector("#dialog-Settings");
+        const dialogSettings: HTMLElement | null = header.querySelector("#dialog-Settings");
+        if (!dialogSettings) return;
+
         // Wire up the dialog
         const dialogSettingsComponent = new fabric["Dialog"](dialogSettings);
 
-        const dialogDiagnostics = header.querySelector("#dialog-Diagnostics");
+        const dialogDiagnostics: HTMLElement | null = header.querySelector("#dialog-Diagnostics");
+        if (!dialogDiagnostics) return;
         // Wire up the dialog
         const dialogDiagnosticsComponent = new fabric["Dialog"](dialogDiagnostics);
 
-        const actionButtonElements = header.querySelectorAll(".ms-Dialog-action");
+        const actionButtonElements: NodeListOf<Element> = header.querySelectorAll(".ms-Dialog-action");
+        if (!actionButtonElements) return;
 
-        const telemetryCheckbox = document.querySelector("#dialog-enableTelemetry");
-        const telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
-        Diagnostics.canSendTelemetry() ? telemetryCheckboxComponent.check() : telemetryCheckboxComponent.unCheck();
+        const telemetryCheckbox: HTMLElement | null = document.querySelector("#dialog-enableTelemetry");
+        if (!telemetryCheckbox) return;
+        this.telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
+        ParentFrame.setSendTelemetryUI(Diagnostics.canSendTelemetry());
 
-        function actionHandler() {
-            const action = this.id;
+        function actionHandler(event: Event): void {
+            const action = (event.currentTarget as HTMLButtonElement).id;
 
-            function getDiagnostics() {
-                let diagnostics = "";
+            function getDiagnostics(): string {
+                let diagnostics: string = "";
                 try {
                     const diagnosticMap = Diagnostics.get();
                     for (const diag in diagnosticMap) {
@@ -264,31 +277,29 @@ export const ParentFrame = (function () {
                     diagnostics += "ERROR: Failed to get diagnostics\n";
                 }
 
-                const errors = Errors.get();
-                for (let iError = 0; iError < errors.length; iError++) {
-                    if (errors[iError]) {
-                        diagnostics += "ERROR: " + errors[iError] + "\n";
-                    }
-                }
+                const errors: string[] = Errors.get();
+                errors.forEach((error: string) => {
+                    diagnostics += "ERROR: " + error + "\n";
+                });
 
                 return diagnostics;
             }
 
-            Diagnostics.setSendTelemetry(telemetryCheckboxComponent.getValue());
+            Diagnostics.setSendTelemetry(ParentFrame.telemetryCheckboxComponent.getValue());
 
             switch (action) {
                 case "actionsSettings-OK": {
                     // How did the user say to display it (UI to display)
-                    const iChoice = ($("#uiChoice input:checked")[0] as HTMLInputElement).value;
-                    const choice: Choice = choices[iChoice];
-                    if (choice.label !== currentChoice.label) {
-                        go(choice);
+                    const iChoice: string = ($("#uiChoice .is-checked").prev()[0] as HTMLInputElement).value;
+                    const choice: Choice | undefined = ParentFrame.choices[+iChoice];
+                    if (choice && choice.label !== ParentFrame.currentChoice.label) {
+                        ParentFrame.go(choice);
                     }
 
                     break;
                 }
                 case "actionsSettings-diag": {
-                    const diagnostics = getDiagnostics();
+                    const diagnostics: string = getDiagnostics();
                     $("#diagnostics").text(diagnostics);
                     dialogDiagnosticsComponent.open();
                     break;
@@ -297,66 +308,67 @@ export const ParentFrame = (function () {
         }
 
         // Wire up the buttons
-        for (i = 0; i < actionButtonElements.length; i++) {
-            new fabric["Button"](actionButtonElements[i], actionHandler);
-        }
+        actionButtonElements.forEach((button: Element) => {
+            new fabric["Button"](button, actionHandler);
+        });
 
-        const choiceGroup = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
+        const choiceGroup: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
+        if (!choiceGroup || !choiceGroup[0]) return;
         new fabric["ChoiceFieldGroup"](choiceGroup[0]);
 
-        const choiceFieldGroupElements = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
-        for (i = 0; i < choiceFieldGroupElements.length; i++) {
-            new fabric["ChoiceFieldGroup"](choiceFieldGroupElements[i]);
-        }
+        const choiceFieldGroupElements: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
+        choiceFieldGroupElements.forEach((choiceFieldGroupElement: HTMLElement) => {
+            new fabric["ChoiceFieldGroup"](choiceFieldGroupElement);
+        });
 
-        const settingsButton = header.querySelector(".gear-button") as HTMLButtonElement;
+        const settingsButton: HTMLButtonElement = header.querySelector(".gear-button") as HTMLButtonElement;
         // When clicking the button, open the dialog
-        settingsButton.onclick = function () {
+        settingsButton.onclick = function (): void {
             // Set the current choice in the UI.
             $("#uiChoice input").attr("checked", "false");
-            const labels = $("#uiChoice label");
+            const labels: JQuery<HTMLElement> = $("#uiChoice label");
             labels.removeClass("is-checked");
             labels.attr("aria-checked", "false");
-            const currentSelected = $("#uiChoice label[value=" + currentChoice.label + "]");
+            const currentSelected: JQuery<HTMLLabelElement> = $("#uiChoice label[value=" + ParentFrame.currentChoice.label + "]");
             currentSelected.addClass("is-checked");
             currentSelected.attr("aria-checked", "true");
-            const input = currentSelected.prevAll("input:first");
+            const input: JQuery<HTMLLabelElement> = currentSelected.prevAll("input:first");
             input.prop("checked", "true");
             dialogSettingsComponent.open();
         };
 
-        const copyButton = header.querySelector(".copy-button") as HTMLButtonElement;
-        copyButton.onclick = function () {
-            mhaStrings.copyToClipboard(modelToString);
+        const copyButton: HTMLButtonElement = header.querySelector(".copy-button") as HTMLButtonElement;
+        copyButton.onclick = function (): void {
+            strings.copyToClipboard(ParentFrame.modelToString);
         };
     }
 
-    function initUI() {
-        setDefault();
-        addChoices();
-        initFabric();
-
-        try {
-            const choice: Choice = Office.context.roamingSettings.get(getSettingsKey());
-            Diagnostics.setSendTelemetry(Office.context.roamingSettings.get("sendTelemetry"));
-
-            const input = $("#uiToggle" + choice.label);
-            input.prop("checked", "true");
-            go(choice);
-        } catch (e) {
-            goDefaultChoice();
-        }
-
-        registerItemChangedEvent();
-
-        window.addEventListener("message", eventListener, false);
-        loadNewItem();
+    public static setSendTelemetryUI(sendTelemetry: boolean) {
+        sendTelemetry ? this.telemetryCheckboxComponent.check() : this.telemetryCheckboxComponent.unCheck();
     }
 
-    return {
-        initUI: initUI,
-        updateStatus: updateStatus,
-        showError: showError,
-        get choice(): Choice { return currentChoice; }
-    };
-})();
+    public static initUI(): void {
+        ParentFrame.setDefault();
+        ParentFrame.addChoices();
+        ParentFrame.initFabric();
+
+        try {
+            const choice: Choice = Office.context.roamingSettings.get(ParentFrame.getSettingsKey());
+            const sendTelemetry: boolean = Office.context.roamingSettings.get("sendTelemetry");
+            Diagnostics.initSendTelemetry(sendTelemetry);
+
+            const input: JQuery<HTMLElement> = $("#uiToggle" + choice.label);
+            input.prop("checked", "true");
+            ParentFrame.go(choice);
+        } catch (e) {
+            ParentFrame.goDefaultChoice();
+        }
+
+        ParentFrame.registerItemChangedEvent();
+
+        window.addEventListener("message", ParentFrame.eventListener, false);
+        ParentFrame.loadNewItem();
+    }
+
+    public static get choice(): Choice { return ParentFrame.currentChoice; }
+}

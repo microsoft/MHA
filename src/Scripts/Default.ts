@@ -1,90 +1,89 @@
 ﻿import "../Content/Office.css";
 import "../Content/App.css";
 import * as $ from "jquery";
-import { mhaStrings } from "./Strings";
+import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./Headers"
 import { Table } from "./Table";
 import { poster } from "./poster";
 
 // This is the "classic" UI rendered in classicDesktopFrame.html
 
-(function () {
-    "use strict";
+let viewModel: HeaderModel;
+let table: Table;
 
-    let viewModel = null;
+function postError(error: any, message: string): void {
+    poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+}
 
-    function postError(error, message) {
-        poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+function enableSpinner(): void {
+    $("#response").css("background-image", "url(../Resources/loader.gif)");
+    $("#response").css("background-repeat", "no-repeat");
+    $("#response").css("background-position", "center");
+}
+
+function disableSpinner(): void {
+    $("#response").css("background", "none");
+}
+
+function updateStatus(statusText: string): void {
+    enableSpinner();
+    $("#status").text(statusText);
+    if (viewModel !== null) {
+        viewModel.status = statusText;
     }
 
-    function enableSpinner() {
-        $("#response").css("background-image", "url(../Resources/loader.gif)");
-        $("#response").css("background-repeat", "no-repeat");
-        $("#response").css("background-position", "center");
-    }
+    table.recalculateVisibility();
+}
 
-    function disableSpinner() {
-        $("#response").css("background", "none");
-    }
+function renderItem(headers: string) {
+    updateStatus(mhaStrings.mhaFoundHeaders);
+    $("#originalHeaders").text(headers);
+    viewModel = new HeaderModel(headers);
+    table.rebuildTables(viewModel);
+    updateStatus("");
+    disableSpinner();
+}
 
-    function updateStatus(statusText) {
-        enableSpinner();
-        $("#status").text(statusText);
-        if (viewModel !== null) {
-            viewModel.status = statusText;
-        }
+// Handles rendering of an error.
+// Does not log the error - caller is responsible for calling PostError
+function showError(_error: any, message: string) {
+    // TODO: Do something with the error
+    updateStatus(message);
+    disableSpinner();
+    table.rebuildSections(viewModel);
+}
 
-        Table.recalculateVisibility();
-    }
+function eventListener(event: MessageEvent): void {
+    if (!event || event.origin !== poster.site()) return;
 
-    function renderItem(headers) {
-        updateStatus(mhaStrings.mhaFoundHeaders);
-        $("#originalHeaders").text(headers);
-        viewModel = HeaderModel(headers);
-        Table.rebuildTables(viewModel);
-        updateStatus("");
-        disableSpinner();
-    }
-
-    // Handles rendering of an error.
-    // Does not log the error - caller is responsible for calling PostError
-    function showError(error, message) {
-        updateStatus(message);
-        disableSpinner();
-        Table.rebuildSections(viewModel);
-    }
-
-    function eventListener(event) {
-        if (!event || event.origin !== poster.site()) return;
-
-        if (event.data) {
-            switch (event.data.eventName) {
-                case "showError":
-                    showError(JSON.parse(event.data.data.error), event.data.data.message);
-                    break;
-                case "updateStatus":
-                    updateStatus(event.data.data);
-                    break;
-                case "renderItem":
-                    renderItem(event.data.data);
-                    break;
-            }
+    if (event.data) {
+        switch (event.data.eventName) {
+            case "showError":
+                showError(JSON.parse(event.data.data.error), event.data.data.message);
+                break;
+            case "updateStatus":
+                updateStatus(event.data.data);
+                break;
+            case "renderItem":
+                renderItem(event.data.data);
+                break;
         }
     }
+}
 
-    // This function is run when the app is ready to start interacting with the host application.
-    // It ensures the DOM is ready before updating the span elements with values from the current message.
-    $(document).ready(function () {
-        try {
-            viewModel = HeaderModel();
-            Table.initializeTableUI(viewModel);
-            updateStatus(mhaStrings.mhaLoading);
-            window.addEventListener("message", eventListener, false);
-            poster.postMessageToParent("frameActive");
-        }
-        catch (e) {
-            postError(e, "Failed initializing frame");
-            showError(e, "Failed initializing frame");
-        }
-    });
-})();
+// This function is run when the app is ready to start interacting with the host application.
+// It ensures the DOM is ready before updating the span elements with values from the current message.
+$(document).ready(function (): void {
+    try {
+        viewModel = new HeaderModel();
+        table = new Table();
+        table.initializeTableUI(viewModel);
+        updateStatus(mhaStrings.mhaLoading);
+        window.addEventListener("message", eventListener, false);
+        poster.postMessageToParent("frameActive");
+    }
+    catch (e) {
+        postError(e, "Failed initializing frame");
+        showError(e, "Failed initializing frame");
+    }
+});

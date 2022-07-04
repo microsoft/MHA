@@ -3,77 +3,74 @@ import "office-ui-fabric-js/dist/css/fabric.components.min.css"
 import "../Content/Office.css";
 import "../Content/App.css";
 import * as $ from "jquery";
-import { mhaStrings } from "./Strings";
+import { mhaStrings } from "./mhaStrings";
+import { strings } from "./Strings";
 import { HeaderModel } from "./Headers"
-import { Diagnostics } from "./diag"
+import { Diagnostics } from "./diag";
 import { Table } from "./Table"
 
-(function () {
-    "use strict";
+let viewModel: HeaderModel;
+let table: Table;
 
-    let viewModel = null;
+function enableSpinner() {
+    $("#response").css("background-image", "url(../Resources/loader.gif)");
+    $("#response").css("background-repeat", "no-repeat");
+    $("#response").css("background-position", "center");
+}
 
-    function enableSpinner() {
-        $("#response").css("background-image", "url(../Resources/loader.gif)");
-        $("#response").css("background-repeat", "no-repeat");
-        $("#response").css("background-position", "center");
+function disableSpinner() {
+    $("#response").css("background", "none");
+}
+
+function updateStatus(statusText: string) {
+    $("#status").text(statusText);
+    if (viewModel !== null) {
+        viewModel.status = statusText;
     }
 
-    function disableSpinner() {
-        $("#response").css("background", "none");
-    }
+    table.recalculateVisibility();
+}
 
-    function updateStatus(statusText) {
-        $("#status").text(statusText);
-        if (viewModel !== null) {
-            viewModel.status = statusText;
-        }
+// Do our best at recognizing RFC 2822 headers:
+// http://tools.ietf.org/html/rfc2822
+function analyze() {
+    // Can't do anything without jQuery
+    if (!$) return;
+    Diagnostics.trackEvent({ name: "analyzeHeaders" });
+    viewModel = new HeaderModel($("#inputHeaders").val() as string);
+    table.resetArrows();
 
-        Table.recalculateVisibility();
-    }
+    enableSpinner();
+    updateStatus(mhaStrings.mhaLoading);
 
-    // Do our best at recognizing RFC 2822 headers:
-    // http://tools.ietf.org/html/rfc2822
-    function analyze() {
-        // Can't do anything without jQuery
-        if (!$) return;
-        Diagnostics.trackEvent({ name: "analyzeHeaders" });
-        viewModel = HeaderModel($("#inputHeaders").val() as string);
-        Table.resetArrows();
+    table.rebuildTables(viewModel);
+    updateStatus("");
 
-        enableSpinner();
-        updateStatus(mhaStrings.mhaLoading);
+    disableSpinner();
+}
 
-        Table.rebuildTables(viewModel);
-        updateStatus("");
+function clear() {
+    $("#inputHeaders").val("");
 
-        disableSpinner();
-    }
+    viewModel = new HeaderModel();
+    table.resetArrows();
+    table.rebuildSections(viewModel);
+}
 
-    function clear() {
-        $("#inputHeaders").val("");
+function copy() {
+    strings.copyToClipboard(viewModel.toString());
+}
 
-        viewModel = HeaderModel();
-        Table.resetArrows();
-        Table.rebuildSections(viewModel);
-    }
+if ($) {
+    $(document).ready(function () {
+        Diagnostics.set("API used", "standalone");
+        viewModel = new HeaderModel();
+        table = new Table();
+        table.initializeTableUI(viewModel);
+        table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, () => true);
 
-    function copy() {
-        mhaStrings.copyToClipboard(viewModel.toString());
-    }
-
-    if ($) {
-        $(document).ready(function () {
-            Diagnostics.set("API used", "standalone");
-            viewModel = HeaderModel();
-            Table.initializeTableUI(viewModel);
-            Table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, null);
-
-            (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;
-            (document.querySelector("#clearButton") as HTMLButtonElement).onclick = clear;
-            (document.querySelector("#copyButton") as HTMLButtonElement).onclick = copy;
-        });
-    }
-
-    return;
-})();
+        (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;
+        (document.querySelector("#clearButton") as HTMLButtonElement).onclick = clear;
+        (document.querySelector("#copyButton") as HTMLButtonElement).onclick = copy;
+    });
+}

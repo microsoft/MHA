@@ -1,31 +1,57 @@
 ﻿import * as QUnit from "qunit";
+import { ReceivedRow } from "../Received"
 
-QUnit.assert.receivedEqual = function (actual, expected, message) {
-    // Remove date fields which are computed from dateNum anyway and will differ depending on timezone
-    delete actual["date"];
-    delete expected["date"];
-    var field;
-    for (field in expected) {
-        if (expected[field] === actual[field]) continue;
-        if (actual[field] && expected[field] === actual[field].value) continue;
-        this.pushResult({
-            result: false,
-            actual: field + " = " + actual[field],
-            expected: field + " = " + expected[field],
-            message: message
-        });
+declare global {
+    interface Assert {
+        receivedEqual(actual: { [index: string]: any } | undefined, expected: { [index: string]: any } | undefined, message: string): void;
+        arrayEqual(actual: object[], expected: object[], message: string): void;
+        datesEqual(actual: ReceivedRow, expected: object, message: string): void;
+        errorsEqual(actual: string, expectedValues: string[], message: string): void;
     }
+}
 
-    for (field in actual) {
-        // If a field in value is non-null/empty there must also be a field in expected
-        if (actual[field].toString() && expected[field] === undefined) {
+QUnit.assert.receivedEqual = function (actual: { [index: string]: any } | undefined, expected: { [index: string]: any } | undefined, message: string): void {
+    try {
+        if (!actual && !expected) return;
+        if (!expected || !actual) {
+            this.pushResult({ result: false, actual: actual, expected: expected, message: message });
+            return;
+        }
+
+        for (const [field, value] of Object.entries(expected)) {
+            if (field === "date") continue;
+            if (field === "postFix") continue;
+            if (field === "_value") continue;
+            if (value === actual[field]) continue;
+            if (actual[field] && value === actual[field].value) continue;
+            if (actual[field] && value === actual[field].toString()) continue;
             this.pushResult({
                 result: false,
                 actual: field + " = " + actual[field],
-                expected: field + " = " + expected[field],
-                message: message
+                expected: field + " = " + value,
+                message: message + "" + field
             });
         }
+
+        for (let field in actual) {
+            if (field === "date") continue;
+            if (field === "onGetUrl") continue;
+            if (field === "setField") continue;
+            if (field === "postFix") continue;
+            if (field === "_value") continue;
+            // If a field in value is non-null/empty there must also be a field in expected
+            if (actual[field] && actual[field].toString() && expected[field] === undefined) {
+                this.pushResult({
+                    result: false,
+                    actual: field + " = " + actual[field],
+                    expected: field + " = " + expected[field],
+                    message: message + "" + field
+                });
+            }
+        }
+    }
+    catch (e: any) {
+        console.log(e);
     }
 
     this.pushResult({
@@ -36,7 +62,7 @@ QUnit.assert.receivedEqual = function (actual, expected, message) {
     });
 };
 
-QUnit.assert.arrayEqual = function (actual, expected, message) {
+QUnit.assert.arrayEqual = function (actual: object[], expected: object[], message: string): void {
     if (actual.length !== expected.length) {
         this.pushResult({
             result: false,
@@ -58,12 +84,12 @@ QUnit.assert.arrayEqual = function (actual, expected, message) {
     });
 };
 
-QUnit.assert.datesEqual = function (actual, expected, message) {
-    return this.propEqual({ date: (new Date(actual.date)).toLocaleString("en-US", { timeZone: "America/New_York" }), dateNum: actual.dateNum.toString() }, expected, message);
+QUnit.assert.datesEqual = function (actual: ReceivedRow, expected: object, message: string): void {
+    return this.propEqual({ date: (new Date(actual.date.value)).toLocaleString("en-US", { timeZone: "America/New_York" }), dateNum: actual.dateNum.toString() }, expected, message);
 };
 
-QUnit.assert.errorsEqual = function (actual, expectedValues, message) {
-    var found = expectedValues.some(function (expected) {
+QUnit.assert.errorsEqual = function (actual: string, expectedValues: string[], message: string): void {
+    var found = expectedValues.some((expected: string): boolean => {
         if (actual === expected) {
             this.pushResult({
                 result: true,
@@ -74,6 +100,8 @@ QUnit.assert.errorsEqual = function (actual, expectedValues, message) {
 
             return true;
         }
+
+        return false;
     }, this);
 
     if (!found) {

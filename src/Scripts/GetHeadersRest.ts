@@ -1,10 +1,10 @@
 import * as $ from "jquery";
-import { mhaStrings } from "./Strings";
+import { mhaStrings } from "./mhaStrings";
 import { Errors } from "./Errors";
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersEWS } from "./GetHeadersEWS";
-import { Diagnostics } from "./diag"
+import { Diagnostics } from "./diag";
 import jwt_decode, { JwtPayload } from 'jwt-decode'
 
 /*
@@ -19,14 +19,13 @@ import jwt_decode, { JwtPayload } from 'jwt-decode'
  * restUrl requires 1.5 and ReadItem
  */
 
-export const GetHeadersRest = (function () {
-    "use strict";
+export class GetHeadersRest {
+    private static minRestSet: string = "1.5";
 
-    const minRestSet: string = "1.5";
+    public static canUseRest(): boolean { return GetHeaders.canUseAPI("Rest", GetHeadersRest.minRestSet); }
 
-    function canUseRest(): boolean { return GetHeaders.canUseAPI("Rest", minRestSet); }
-
-    function getItemRestId(): string {
+    private static getItemRestId(): string {
+        if (!Office.context.mailbox.item) return "";
         // Currently the only Outlook Mobile version that supports add-ins
         // is Outlook for iOS.
         if (Office.context.mailbox.diagnostics.hostName === "OutlookIOS") {
@@ -41,17 +40,17 @@ export const GetHeadersRest = (function () {
         }
     }
 
-    function getBaseUrl(url): string {
+    private static getBaseUrl(url: string): string {
         const parts = url.split("/");
 
         return parts[0] + "//" + parts[2];
     }
 
-    function getRestUrl(accessToken) {
+    private static getRestUrl(accessToken: string): string {
         // Shim function to workaround
         // mailbox.restUrl == null case
         if (Office.context.mailbox.restUrl) {
-            return getBaseUrl(Office.context.mailbox.restUrl);
+            return GetHeadersRest.getBaseUrl(Office.context.mailbox.restUrl);
         }
 
         // parse the token
@@ -61,15 +60,17 @@ export const GetHeadersRest = (function () {
         // different formats.
         const aud = Array.isArray(jwt.aud) ? jwt.aud[0] : jwt.aud;
 
-        // Format 1: It's just the URL
-        if (aud.match(/https:\/\/([^@]*)/)) {
-            return jwt.aud;
-        }
+        if (aud) {
+            // Format 1: It's just the URL
+            if (aud.match(/https:\/\/([^@]*)/)) {
+                return aud;
+            }
 
-        // Format 2: GUID/hostname@GUID
-        const match = aud.match(/\/([^@]*)@/);
-        if (match && match[1]) {
-            return "https://" + match[1];
+            // Format 2: GUID/hostname@GUID
+            const match = aud.match(/\/([^@]*)@/);
+            if (match && match[1]) {
+                return "https://" + match[1];
+            }
         }
 
         // Couldn't find what we expected, default to
@@ -77,19 +78,26 @@ export const GetHeadersRest = (function () {
         return "https://outlook.office.com";
     }
 
-    function getHeaders(accessToken, headersLoadedCallback) {
+    private static getHeaders(accessToken: string, headersLoadedCallback: Function): void {
         if (!accessToken) {
             Errors.log(null, "No access token?");
+            return;
+        }
+
+        if (!Office.context.mailbox.item) {
+            Errors.log(null, "No item");
+            return;
         }
 
         if (!Office.context.mailbox.item.itemId) {
-            Errors.log(null, "No itemId?");
+            Errors.log(null, "No itemId");
+            return;
         }
 
         // Get the item's REST ID
-        const itemId = getItemRestId();
+        const itemId = GetHeadersRest.getItemRestId();
 
-        const getMessageUrl = getRestUrl(accessToken) +
+        const getMessageUrl = GetHeadersRest.getRestUrl(accessToken) +
             "/api/v2.0/me/messages/" +
             itemId +
             // PR_TRANSPORT_MESSAGE_HEADERS
@@ -99,7 +107,7 @@ export const GetHeadersRest = (function () {
             url: getMessageUrl,
             dataType: "json",
             headers: {
-                "Authorization": "Bearer " + accessToken,
+                "Authorization": "Bearer" + accessToken,
                 "Accept": "application/json; odata.metadata=none"
             }
         }).done(function (item) {
@@ -133,13 +141,13 @@ export const GetHeadersRest = (function () {
         });
     }
 
-    function send(headersLoadedCallback) {
+    public static send(headersLoadedCallback: Function) {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (REST)", true);
             return;
         }
 
-        if (!canUseRest()) {
+        if (!GetHeadersRest.canUseRest()) {
             GetHeadersEWS.send(headersLoadedCallback);
             return;
         }
@@ -149,8 +157,8 @@ export const GetHeadersRest = (function () {
         Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
             try {
                 if (result.status === Office.AsyncResultStatus.Succeeded) {
-                    const accessToken = result.value;
-                    getHeaders(accessToken, headersLoadedCallback);
+                    const accessToken: string = result.value;
+                    GetHeadersRest.getHeaders(accessToken, headersLoadedCallback);
                 } else {
                     Diagnostics.set("callbackTokenFailure", JSON.stringify(result));
                     Errors.log(result.error, 'Unable to obtain callback token.\nFallback to EWS.\n' + JSON.stringify(result, null, 2), true);
@@ -162,9 +170,4 @@ export const GetHeadersRest = (function () {
             }
         });
     }
-
-    return {
-        canUseRest: canUseRest,
-        send: send
-    };
-})();
+}

@@ -1,21 +1,13 @@
-export const poster = (function () {
-    "use strict";
+export class poster {
+    public static site() { return window.location.protocol + "//" + window.location.host; }
 
-    function site() { return window.location.protocol + "//" + window.location.host; }
-
-    function postMessageToFrame(frame, eventName: string, data?: object) {
+    public static postMessageToFrame(frame: Window, eventName: string, data?: any): void {
         if (frame) {
-            frame.postMessage({ eventName: eventName, data: data }, site());
+            frame.postMessage({ eventName: eventName, data: data }, poster.site());
         }
     }
 
-    function postMessageToParent(eventName: string, data?: any) {
-        window.parent.postMessage({ eventName: eventName, data: data }, site());
+    public static postMessageToParent(eventName: string, data?: any): void {
+        window.parent.postMessage({ eventName: eventName, data: data }, poster.site());
     }
-
-    return {
-        postMessageToParent: postMessageToParent,
-        postMessageToFrame: postMessageToFrame,
-        site: site
-    };
-})();
+};

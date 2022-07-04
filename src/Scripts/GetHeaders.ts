@@ -1,6 +1,6 @@
 import { GetHeadersAPI } from "./GetHeadersAPI";
 import { ParentFrame } from "./parentFrame";
-import { Diagnostics } from "./diag"
+import { Diagnostics } from "./diag";
 
 /*
  * GetHeaders.js
@@ -8,10 +8,8 @@ import { Diagnostics } from "./diag"
  * Selector for switching between EWS and Rest logic
  */
 
-export const GetHeaders = (function () {
-    "use strict";
-
-    function permissionLevel() {
+export class GetHeaders {
+    public static permissionLevel(): number {
         if (typeof (Office) === "undefined") return 0;
         if (!Office) return 0;
         if (!Office.context) return 0;
@@ -23,7 +21,7 @@ export const GetHeaders = (function () {
         return 0;
     }
 
-    function sufficientPermission(strict): boolean {
+    public static sufficientPermission(strict: boolean): boolean {
         if (typeof (Office) === "undefined") return false;
         if (!Office) return false;
         if (!Office.context) return false;
@@ -33,11 +31,11 @@ export const GetHeaders = (function () {
         // Some down level clients (such as we would use EWS on) don't have _initialData$p$0 or initialData at all.
         // @ts-ignore initialData is missing from the type file
         if (!Office.context.mailbox._initialData$p$0 && !Office.context.mailbox.initialData) return !strict;
-        if (permissionLevel() < 1) return false;
+        if (GetHeaders.permissionLevel() < 1) return false;
         return true;
     }
 
-    function canUseAPI(apiType: string, minset: string): boolean {
+    public static canUseAPI(apiType: string, minset: string): boolean {
         if (typeof (Office) === "undefined") { Diagnostics.set(`no${apiType}reason`, "Office undefined"); return false; }
         if (!Office) { Diagnostics.set(`no${apiType}reason`, "Office false"); return false; }
         if (!Office.context) { Diagnostics.set("noUseRestReason", "context false"); return false; }
@@ -49,7 +47,7 @@ export const GetHeaders = (function () {
         return true;
     }
 
-    function validItem() {
+    public static validItem(): boolean {
         if (typeof (Office) === "undefined") return false;
         if (!Office) return false;
         if (!Office.context) return false;
@@ -59,13 +57,13 @@ export const GetHeaders = (function () {
         return true;
     }
 
-    function send(headersLoadedCallback) {
-        if (!validItem()) {
+    public static send(headersLoadedCallback: Function) {
+        if (!GetHeaders.validItem()) {
             ParentFrame.showError(null, "No item selected", true);
             return;
         }
 
-        if (!sufficientPermission(false)) {
+        if (!GetHeaders.sufficientPermission(false)) {
             ParentFrame.showError(null, "Insufficient permissions to request headers", false);
             return;
         }
@@ -76,12 +74,4 @@ export const GetHeaders = (function () {
             ParentFrame.showError(e, "Could not send header request");
         }
     }
-
-    return {
-        send: send,
-        validItem: validItem,
-        permissionLevel: permissionLevel,
-        canUseAPI: canUseAPI,
-        sufficientPermission: sufficientPermission,
-    }
-})();
+}
