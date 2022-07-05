@@ -8,7 +8,7 @@ export class OtherRow extends Row {
         super(header, "", "");
         this.number = number;
         this.value = value;
-        this.onGetUrl = () => { return strings.mapHeaderToURL(this.header); };
+        this.url = strings.mapHeaderToURL(header);
     }
 
     [index: string]: any;
@@ -23,19 +23,19 @@ export class Other extends iTable {
     public readonly tableName: string = "otherHeaders";
 
     public doSort(col: string): void {
-        if (this.sortColumn === col) {
+        if (this._sortColumn === col) {
             this._sortOrder *= -1;
         } else {
             this._sortColumn = col;
             this._sortOrder = 1;
         }
 
-        if (this.rows[0] && this.sortColumn + "Sort" in this.rows[0]) {
+        if (this.rows[0] && this._sortColumn + "Sort" in this.rows[0]) {
             col = col + "Sort";
         }
 
         this.rows.sort((a: OtherRow, b: OtherRow) => {
-            return this.sortOrder * (a[col] < b[col] ? -1 : 1);
+            return this._sortOrder * (a[col] < b[col] ? -1 : 1);
         });
     }
 
