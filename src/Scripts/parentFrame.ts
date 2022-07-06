@@ -36,14 +36,14 @@ export class ParentFrame {
         const vars: string[] = window.location.search.substring(1).split("&");
 
         let found: string = "";
-        vars.find((v: string) => {
-            const pair: string[] = v.split("=");
-            if (pair[0] === variable) {
-                found = pair[1] ?? "";
-                return true;
+        // Find seems appropriate here but still fails in IE. Use forEach instead.
+        vars.forEach((v: string) => {
+            if (found === "") {
+                const pair: string[] = v.split("=");
+                if (pair[0] === variable) {
+                    found = pair[1] ?? "";
+                }
             }
-
-            return false;
         });
 
         return found;
