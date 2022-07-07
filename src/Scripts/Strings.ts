@@ -33,7 +33,7 @@ export class strings {
         catch (e) { /**/ }
     }
 
-    private static headerToURLMap = [
+    private static headerToURLMap: string[][] = [
         ["Accept-Language", "https://tools.ietf.org/html/rfc3282"],
         ["Archived-At", "https://tools.ietf.org/html/rfc5064"],
         ["ARC-Authentication-Results", "https://tools.ietf.org/html/rfc8617#section-4.1.1"],
@@ -97,12 +97,15 @@ export class strings {
     public static htmlEncode(value: string): string { return value ? $('<div />').text(value).html() : ''; }
 
     public static mapHeaderToURL(headerName: string, text?: string): string {
-        let headerMap: string[] | undefined = strings.headerToURLMap.find((headerMap: string[]) => {
-            return headerName.toLowerCase() === headerMap[0]?.toLowerCase();
+        let url: string = "";
+        strings.headerToURLMap.forEach((h: string[]) => {
+            if (url === "" && headerName.toLowerCase() === h[0]?.toLowerCase()) {
+                url = h[1] ?? "";
+            }
         });
 
-        if (headerMap) {
-            return ["<a href = '", headerMap[1], "' target = '_blank'>", this.htmlEncode(text || headerName), "</a>"].join("");
+        if (url !== "") {
+            return ["<a href = '", url, "' target = '_blank'>", this.htmlEncode(text || headerName), "</a>"].join("");
         }
 
         return "";
