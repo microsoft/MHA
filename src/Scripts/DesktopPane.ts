@@ -37,12 +37,12 @@ function initializeFabric(): void {
     spinner.stop();
 
     const commandBarElements: NodeListOf<Element> = document.querySelectorAll(".ms-CommandBar");
-    commandBarElements.forEach((commandBarElement: Element) => {
+    Array.prototype.forEach.call(commandBarElements, (commandBarElement: Element) => {
         new fabric["CommandBar"](commandBarElement);
     });
 
     const commandButtonElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-CommandButton");
-    commandButtonElements.forEach((commandButtonElement: HTMLElement) => {
+    Array.prototype.forEach.call(commandButtonElements, (commandButtonElement: HTMLElement) => {
         new fabric["CommandButton"](commandButtonElement);
     });
 
@@ -316,12 +316,12 @@ function buildViews(headers: string) {
 
     // Initialize any fabric lists added
     const listElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-List");
-    listElements.forEach((listElement: HTMLElement) => {
+    Array.prototype.forEach.call(listElements, (listElement: HTMLElement) => {
         new fabric["List"](listElement);
     });
 
     const listItemElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-ListItem");
-    listItemElements.forEach((listItem: HTMLElement) => {
+    Array.prototype.forEach.call(listItemElements, (listItem: HTMLElement) => {
         new fabric["ListItem"](listItem);
 
         // Init corresponding callout

@@ -308,7 +308,7 @@ export class ParentFrame {
         }
 
         // Wire up the buttons
-        actionButtonElements.forEach((button: Element) => {
+        Array.prototype.forEach.call(actionButtonElements, (button: Element) => {
             new fabric["Button"](button, actionHandler);
         });
 
@@ -317,7 +317,7 @@ export class ParentFrame {
         new fabric["ChoiceFieldGroup"](choiceGroup[0]);
 
         const choiceFieldGroupElements: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
-        choiceFieldGroupElements.forEach((choiceFieldGroupElement: HTMLElement) => {
+        Array.prototype.forEach.call(choiceFieldGroupElements, (choiceFieldGroupElement: HTMLElement) => {
             new fabric["ChoiceFieldGroup"](choiceFieldGroupElement);
         });
 
