@@ -79,7 +79,9 @@ export class Summary {
     ];
 
     public exists(): boolean {
-        return this.rows.find((row: Row) => { return row.value; }) !== undefined;
+        let row: Row | undefined;
+        this.rows.forEach((r: Row) => { if (!row && r.value) row = r; });
+        return row !== undefined;
     }
 
     public add(header: Header) {
@@ -87,7 +89,8 @@ export class Summary {
             return false;
         }
 
-        let row: SummaryRow | undefined = this.rows.find((row: Row) => { return row.header.toUpperCase() === header.header.toUpperCase(); })
+        let row: SummaryRow | undefined;
+        this.rows.forEach((r: Row) => { if (!row && r.header.toUpperCase() === header.header.toUpperCase()) row = r; });
         if (row) {
             row.value = header.value;
             return true;
