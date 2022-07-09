@@ -98,6 +98,7 @@ export class Errors {
                 //if (item.functionName === "GetStack") return false;
                 if (item.functionName === "Errors.parse") return false; // Only ever called from Errors.log
                 if (item.functionName === "Errors.isError") return false; // Not called from anywhere interesting
+                if (item.functionName?.indexOf("Promise._immediateFn") !== -1) return false; // only shows in IE stacks
                 return true;
             });
         }

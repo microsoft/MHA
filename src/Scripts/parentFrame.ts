@@ -189,7 +189,8 @@ export class ParentFrame {
     }
 
     private static goDefaultChoice(): void {
-        const choice = ParentFrame.choices.find((choice: Choice) => { return choice.checked; });
+        let choice: Choice | undefined;
+        ParentFrame.choices.forEach((c: Choice) => { if (!choice && c.checked) choice = c; });
         if (choice) {
             ParentFrame.go(choice);
         }
