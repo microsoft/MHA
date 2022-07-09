@@ -7,6 +7,7 @@ import { GetHeadersRest } from "./GetHeadersRest";
 import { aikey } from "./aikey";
 import { mhaVersion } from "./version";
 import { buildTime } from "./buildTime";
+import 'promise-polyfill/src/polyfill';
 
 // diagnostics module
 
