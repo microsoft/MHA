@@ -7,6 +7,7 @@ import { GetHeadersRest } from "./GetHeadersRest";
 import { aikey } from "./aikey";
 import { mhaVersion } from "./version";
 import { buildTime } from "./buildTime";
+import * as StackTrace from "stacktrace-js";
 import 'promise-polyfill/src/polyfill';
 
 // diagnostics module
@@ -38,25 +39,25 @@ class diag {
             if (envelope.baseType === "PageviewData") return doLog;
             if (envelope.baseType === "PageviewPerformanceData") return doLog;
 
+            envelope.baseData = envelope.baseData || {};
+            envelope.baseData[`properties`] = envelope.baseData[`properties`] || {};
+            $.extend(envelope.baseData[`properties`], this.get());
+
             // If we're not one of the above types, tag in our diagnostics data
             if (envelope.baseType === "ExceptionData" && envelope.baseData) {
                 // custom data for the ExceptionData type lives in a different place
-                envelope.baseData[`properties`] = envelope.baseData[`properties`] || {};
-                $.extend(envelope.baseData[`properties`], this.get());
                 // Log an extra event with parsed stack frame
-                if (envelope.baseData[`exceptions`].length) {
-                    StackTrace.fromError(envelope.baseData[`exceptions`][0]).then((stackframes): void => {
-                        this.appInsights.trackEvent({
-                            name: "Exception Details", properties: {
-                                stack: stackframes,
-                                error: (envelope && envelope.baseData) ? envelope.baseData[`exceptions`][0] : ""
-                            }
+                if (envelope.baseData[`exceptions`].length > 0) {
+                    StackTrace.fromError(envelope.baseData[`exceptions`][0])
+                        .then((stackframes: StackTrace.StackFrame[]): void => {
+                            this.appInsights.trackEvent({
+                                name: "Exception Details", properties: {
+                                    stack: stackframes,
+                                    error: (envelope && envelope.baseData) ? envelope.baseData[`exceptions`][0] : ""
+                                }
+                            });
                         });
-                    });
                 }
-            }
-            else {
-                $.extend(envelope.data, this.get());
             }
 
             return doLog;
