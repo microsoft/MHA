@@ -51,7 +51,7 @@
     "mini-css-extract-plugin": "^2.6.0",
     "office-addin-debugging": "^4.4.0",
     "office-addin-dev-certs": "^1.7.10",
-    "office-addin-dev-settings": "^1.11.4",
+    "office-addin-dev-settings": "^1.15.0",
     "office-addin-manifest": "^1.8.1",
     "source-map-loader": "^4.0.0",
     "style-loader": "^3.3.1",
