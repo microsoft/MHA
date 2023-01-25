@@ -37,7 +37,7 @@
   "homepage": "https://github.com/stephenegriffin/mha#readme",
   "devDependencies": {
     "@types/jquery": "^3.5.14",
-    "@types/office-js": "^1.0.269",
+    "@types/office-js": "^1.0.313",
     "@types/qunit": "^2.19.2",
     "css-loader": "^6.7.1",
     "exports-loader": "^4.0.0",
