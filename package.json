@@ -51,7 +51,7 @@
     "mini-css-extract-plugin": "^2.6.0",
     "office-addin-debugging": "^5.0.5",
     "office-addin-dev-certs": "^1.7.10",
-    "office-addin-dev-settings": "^1.11.4",
+    "office-addin-dev-settings": "^2.0.3",
     "office-addin-manifest": "^1.8.1",
     "source-map-loader": "^4.0.0",
     "style-loader": "^3.3.1",
@@ -62,7 +62,7 @@
     "webpack-dev-server": "^4.15.0"
   },
   "dependencies": {
-    "@microsoft/applicationinsights-web": "^2.8.6",
+    "@microsoft/applicationinsights-web": "^3.0.1",
     "@microsoft/office-js": "^1.1.86",
     "codepage": "^1.15.0",
     "dayjs": "^1.11.7",
