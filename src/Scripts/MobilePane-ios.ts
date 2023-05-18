@@ -407,7 +407,7 @@ function eventListener(event: MessageEvent): void {
     }
 }
 
-$(document).ready(function () {
+$(function() {
     try {
         initializeFramework7();
         updateStatus(mhaStrings.mhaLoading);
