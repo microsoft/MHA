@@ -34,6 +34,56 @@ https://mha.azurewebsites.net/pages/unittests.html
 For both IOS and Android click open an email, then press the three dots under the date. There you should see the MHA icon. See [outlook-mobile-addins](https://docs.microsoft.com/en-us/office/dev/add-ins/outlook/outlook-mobile-addins) page for more details.
 
 ## Development & Custom Deployment
-- Clone the repo to your local drive
-- npm install
-- npm start
+### Install and prereqs
+1. Ensure [node.js (LTS)](https://nodejs.org/en) is installed
+1. Clone the repo to your local drive
+1. Run the following to install packages:
+```
+npm install
+npm run build
+```
+1. For continuous build on changes, you can use watch:
+```
+npm run watch
+```
+### Manual build
+1. The commands below for unit/site/add-in testing will also build before starting the server, but you can also build on demand.
+1. Manual build:
+```
+npm run build
+```
+1. For continuous build on changes, you can use watch:
+```
+npm run watch
+```
+### Unit Testing
+- Start the dev server: 
+```
+npm run dev-server
+```
+- Run unit tests from command line: 
+```
+npm run test
+```
+- Run unit tests locally in browser: https://localhost:44336/Pages/unittests.html
+- Changes made to source should live compile and reload page. Ctrl+R/refresh as needed.
+### Live site testing:
+- Start the dev server: 
+```
+npm run dev-server
+```
+- Run website locally: https://localhost:44336/Pages/mha.html
+- Changes made to source should live compile and reload page. Ctrl+R/refresh as needed.
+### Add-in testing:
+- Close Outlook
+- Start the dev server: 
+```
+npm start
+```
+- Outlook should start with add-in added as "View Headers Debug Local"
+- Changes made to source should live compile and reload in Outlook. Ctrl+R/refresh as needed.
+### Clean
+- Clean build artifacts: 
+```
+npm clean
+```
