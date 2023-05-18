@@ -49,7 +49,7 @@
     "grunt-contrib-qunit": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.0",
-    "office-addin-debugging": "^4.6.7",
+    "office-addin-debugging": "^5.0.5",
     "office-addin-dev-certs": "^1.7.10",
     "office-addin-dev-settings": "^1.11.4",
     "office-addin-manifest": "^1.8.1",
@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "@microsoft/applicationinsights-web": "^2.8.6",
-    "@microsoft/office-js": "^1.1.78",
+    "@microsoft/office-js": "^1.1.86",
     "codepage": "^1.15.0",
     "dayjs": "^1.11.7",
     "framework7": "^1.7.1",
