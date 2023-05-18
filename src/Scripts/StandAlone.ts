@@ -62,7 +62,7 @@ function copy() {
 }
 
 if ($) {
-    $(document).ready(function () {
+    $(function() {
         Diagnostics.set("API used", "standalone");
         viewModel = new HeaderModel();
         table = new Table();

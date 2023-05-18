@@ -379,7 +379,7 @@ function eventListener(event: MessageEvent): void {
     }
 }
 
-$(document).ready(function (): void {
+$(function() {
     try {
         initializeFabric();
         updateStatus(mhaStrings.mhaLoading);

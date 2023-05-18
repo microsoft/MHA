@@ -8,7 +8,7 @@ import { ParentFrame } from "./parentFrame";
 // and which UI to use.
 if (typeof (Office) !== "undefined") {
     Office.initialize = function () {
-        $(document).ready(function () {
+        $(function() {
             ParentFrame.initUI();
         });
     };
