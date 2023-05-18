@@ -40,19 +40,14 @@ For both IOS and Android click open an email, then press the three dots under th
 1. Run the following to install packages:
 ```
 npm install
-npm run build
-```
-1. For continuous build on changes, you can use watch:
-```
-npm run watch
 ```
 ### Manual build
-1. The commands below for unit/site/add-in testing will also build before starting the server, but you can also build on demand.
-1. Manual build:
+- The commands below for unit/site/add-in testing will also build before starting the server, but you can also build on demand.
+- Manual build:
 ```
 npm run build
 ```
-1. For continuous build on changes, you can use watch:
+- For continuous build on changes, you can use watch:
 ```
 npm run watch
 ```
