@@ -67,12 +67,16 @@ Live site testing
 - Run website locally: https://localhost:44336/Pages/mha.html
 - Changes made to source should live compile and reload page. Ctrl+R/refresh as needed.
 
-Add-in testing
+Add-in testing (Command line)
 -----
 - Close Outlook
 - Start the dev server: `npm start`
 - Outlook should start with add-in added as "View Headers Debug Local"
 - Changes made to source should live compile and reload in Outlook. Ctrl+R/refresh as needed.
+
+Add-in testing (VSCode)
+-----
+- Follow the steps given [here](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/debug-desktop-using-edge-chromium#use-the-visual-studio-code-debugger).
 
 Clean
 ------

@@ -40,7 +40,7 @@ export class HeaderModel {
         this._hasData = false;
         if (headers) {
             this.parseHeaders(headers);
-            poster.postMessageToParent("modelToString", toString());
+            poster.postMessageToParent("modelToString", this.toString());
         }
     }
 
