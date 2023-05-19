@@ -270,7 +270,7 @@ export class ParentFrame {
                 try {
                     const diagnosticMap = Diagnostics.get();
                     for (const diag in diagnosticMap) {
-                        if (diagnosticMap.hasOwnProperty(diag)) {
+                        if (Object.prototype.hasOwnProperty.call(diagnosticMap, diag)) {
                             diagnostics += diag + " = " + diagnosticMap[diag] + "\n";
                         }
                     }
