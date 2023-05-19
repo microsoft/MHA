@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const devCerts = require("office-addin-dev-certs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
