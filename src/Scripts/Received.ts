@@ -29,7 +29,7 @@ export class ReceivedRow {
         this.delaySort = new ReceivedField("", -1);
         this.dateNum = new ReceivedField("");
     }
-    [index: string]: ReceivedField | Function;
+    [index: string]: ReceivedField | ((fieldName: string, fieldValue: string) => boolean) | (() => string);
     sourceHeader: ReceivedField;
     hop: ReceivedField;
     from: ReceivedField;
