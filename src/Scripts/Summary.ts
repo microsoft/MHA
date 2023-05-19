@@ -17,7 +17,7 @@ export class Row {
     label: string;
     headerName: string;
     url: string;
-    onGetUrl?: Function;
+    onGetUrl?: (headerName: string, value: string) => string;
 
     public set value(value: string) { this._value = value; }
     get value(): string { return this._value; }
