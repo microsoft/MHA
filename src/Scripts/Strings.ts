@@ -3,13 +3,13 @@ import { Diagnostics } from "./diag";
 
 export class strings {
     public static copyToClipboard(str: string): void {
-        const textArea: HTMLTextAreaElement = document.createElement('textarea');
-        textArea.style.position = 'absolute';
-        textArea.style.opacity = '0';
+        const textArea: HTMLTextAreaElement = document.createElement("textarea");
+        textArea.style.position = "absolute";
+        textArea.style.opacity = "0";
         textArea.value = str;
         document.body.appendChild(textArea);
         textArea.select();
-        const succeeded: boolean = document.execCommand('copy');
+        const succeeded: boolean = document.execCommand("copy");
         document.body.removeChild(textArea);
         Diagnostics.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "textarea" } });
 
@@ -94,7 +94,7 @@ export class strings {
         ["SFS", "https://docs.microsoft.com/en-us/exchange/monitoring/trace-an-email-message/run-a-message-trace-and-view-results"]
     ];
 
-    public static htmlEncode(value: string): string { return value ? $('<div />').text(value).html() : ''; }
+    public static htmlEncode(value: string): string { return value ? $("<div />").text(value).html() : ""; }
 
     public static mapHeaderToURL(headerName: string, text?: string): string {
         let url: string = "";

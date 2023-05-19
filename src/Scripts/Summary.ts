@@ -17,40 +17,40 @@ export class Row {
     label: string;
     headerName: string;
     url: string;
-    onGetUrl?: Function;
+    onGetUrl?: (headerName: string, value: string) => string;
 
-    public set value(value: string) { this._value = value; };
-    get value(): string { return this._value; };
-    get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this.headerName, this._value) : ""; };
+    public set value(value: string) { this._value = value; }
+    get value(): string { return this._value; }
+    get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this.headerName, this._value) : ""; }
 
-    toString(): string { return this.label + ": " + this.value; };
-};
+    toString(): string { return this.label + ": " + this.value; }
+}
 
 export class SummaryRow extends Row {
     constructor(header: string, label: string) {
         super(header, label, "");
         this.url = strings.mapHeaderToURL(header, label);
-    };
-};
+    }
+}
 
 export class CreationRow extends SummaryRow {
     constructor(header: string, label: string) {
         super(header, label);
         this.url = strings.mapHeaderToURL(header, label);
         this.postFix = "";
-    };
+    }
     postFix: string;
-    override get value(): string { return this._value + this.postFix; };
-    override set value(value: string) { this._value = value; };
-};
+    override get value(): string { return this._value + this.postFix; }
+    override set value(value: string) { this._value = value; }
+}
 
 export class ArchivedRow extends SummaryRow {
     constructor(header: string, label: string) {
         super(header, label);
         this.url = strings.mapHeaderToURL(header, label);
-    };
-    override get valueUrl(): string { return strings.mapValueToURL(this._value); };
-};
+    }
+    override get valueUrl(): string { return strings.mapValueToURL(this._value); }
+}
 
 export class Summary {
     private _totalTime: string = "";
@@ -99,12 +99,12 @@ export class Summary {
         return false;
     }
 
-    public get rows(): SummaryRow[] { return this.summaryRows; };
-    public get totalTime(): string { return this._totalTime; };
+    public get rows(): SummaryRow[] { return this.summaryRows; }
+    public get totalTime(): string { return this._totalTime; }
     public set totalTime(value: string) {
         this._totalTime = value;
         this.dateRow.postFix = this.creationPostFix(value);
-    };
+    }
 
     public toString(): string {
         if (!this.exists()) return "";

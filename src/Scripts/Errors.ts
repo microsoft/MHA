@@ -82,7 +82,7 @@ export class Errors {
         let stack;
         const exceptionMessage = Errors.getErrorMessage(exception);
 
-        let eventName = strings.joinArray([message, exceptionMessage], ' : ');
+        let eventName = strings.joinArray([message, exceptionMessage], " : ");
         if (!eventName) {
             eventName = "Unknown exception";
         }
@@ -125,7 +125,7 @@ export class Errors {
     }
 
     public static getErrorMessage(error: any): string {
-        if (!error) return '';
+        if (!error) return "";
         if (typeof (error) === "string") return error;
         if (typeof (error) === "number") return error.toString();
         if ("message" in error) return error.message;
@@ -133,11 +133,11 @@ export class Errors {
     }
 
     public static getErrorStack(error: any): string {
-        if (!error) return '';
+        if (!error) return "";
         if (typeof (error) === "string") return "string thrown as error";
         if (typeof (error) === "number") return "number thrown as error";
-        if (!Errors.isError(error)) return '';
-        if ("stack" in error) return error.stack ?? '';
-        return '';
+        if (!Errors.isError(error)) return "";
+        if ("stack" in error) return error.stack ?? "";
+        return "";
     }
 }

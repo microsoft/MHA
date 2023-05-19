@@ -14,7 +14,7 @@ export class AntiSpamReport {
     ];
 
     public existsInternal(rows: Row[]): boolean {
-        for (let row of rows) {
+        for (const row of rows) {
             if (row.value) {
                 return true;
             }
@@ -24,10 +24,10 @@ export class AntiSpamReport {
     }
 
     private setRowValue(rows: Row[], key: string, value: string): boolean {
-        for (let row of rows) {
+        for (const row of rows) {
             if (row.header.toUpperCase() === key.toUpperCase()) {
                 row.value = value;
-                row.onGetUrl = (headerName: string, value: string) => { return strings.mapHeaderToURL(headerName, value); }
+                row.onGetUrl = (headerName: string, value: string) => { return strings.mapHeaderToURL(headerName, value); };
                 return true;
             }
         }
@@ -61,7 +61,7 @@ export class AntiSpamReport {
                 const line = lines[iLine]?.match(/(.*?):(.*?);/m);
                 if (line && line[1]) {
                     if (!this.setRowValue(this.rows, line[1], line[2] ?? "")) {
-                        this._unparsed += line[1] + ':' + line[2] + ';';
+                        this._unparsed += line[1] + ":" + line[2] + ";";
                     }
                 }
             }
@@ -83,9 +83,9 @@ export class AntiSpamReport {
 
     public exists(): boolean { return this.existsInternal(this.rows); }
 
-    public get source(): string { return this._source; };
-    public get unparsed(): string { return this._unparsed; };
-    public get rows(): Row[] { return this.antiSpamRows; };
+    public get source(): string { return this._source; }
+    public get unparsed(): string { return this._unparsed; }
+    public get rows(): Row[] { return this.antiSpamRows; }
     public toString(): string {
         if (!this.exists()) return "";
         const ret = ["AntiSpamReport"];

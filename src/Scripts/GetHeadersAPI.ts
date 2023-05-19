@@ -20,7 +20,7 @@ export class GetHeadersAPI {
 
     public static canUseAPI(): boolean { return GetHeaders.canUseAPI("API", GetHeadersAPI.minAPISet); }
 
-    public static send(headersLoadedCallback: Function): void {
+    public static send(headersLoadedCallback: (_headers: string, apiUsed: string) => void): void {
         if (!GetHeaders.validItem() || !Office.context.mailbox.item) {
             Errors.log(null, "No item selected (API)", true);
             return;
@@ -39,7 +39,7 @@ export class GetHeadersAPI {
                     headersLoadedCallback(asyncResult.value, "API");
                 } else {
                     Diagnostics.set("getAllInternetHeadersAsyncFailure", JSON.stringify(asyncResult));
-                    Errors.log(asyncResult.error, 'Unable to obtain callback token.\nFallback to Rest.\n' + JSON.stringify(asyncResult, null, 2), true);
+                    Errors.log(asyncResult.error, "Unable to obtain callback token.\nFallback to Rest.\n" + JSON.stringify(asyncResult, null, 2), true);
                     GetHeadersRest.send(headersLoadedCallback);
                 }
             });

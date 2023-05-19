@@ -2,7 +2,7 @@
 import "../Content/App.css";
 import * as $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
-import { HeaderModel } from "./Headers"
+import { HeaderModel } from "./Headers";
 import { Table } from "./Table";
 import { poster } from "./poster";
 

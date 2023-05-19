@@ -5,7 +5,7 @@ import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersEWS } from "./GetHeadersEWS";
 import { Diagnostics } from "./diag";
-import jwt_decode, { JwtPayload } from 'jwt-decode'
+import jwt_decode, { JwtPayload } from "jwt-decode";
 
 /*
  * GetHeadersRest.js
@@ -78,7 +78,7 @@ export class GetHeadersRest {
         return "https://outlook.office.com";
     }
 
-    private static getHeaders(accessToken: string, headersLoadedCallback: Function): void {
+    private static getHeaders(accessToken: string, headersLoadedCallback: (_headers: string, apiUsed: string) => void): void {
         if (!accessToken) {
             Errors.log(null, "No access token?");
             return;
@@ -115,7 +115,7 @@ export class GetHeadersRest {
                 if (item.SingleValueExtendedProperties !== undefined) {
                     headersLoadedCallback(item.SingleValueExtendedProperties[0].Value, "REST");
                 } else {
-                    headersLoadedCallback(null, "REST");
+                    headersLoadedCallback("", "REST");
                     ParentFrame.showError(null, mhaStrings.mhaHeadersMissing, true);
                 }
             }
@@ -132,7 +132,7 @@ export class GetHeadersRest {
                 } else if (textStatus === "error" && jqXHR.status === 404) {
                     ParentFrame.showError(null, mhaStrings.mhaMessageMissing, true);
                 } else {
-                    ParentFrame.showError(null, "textStatus: " + textStatus + '\nerrorThrown: ' + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
+                    ParentFrame.showError(null, "textStatus: " + textStatus + "\nerrorThrown: " + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
                 }
             }
             catch (e) {
@@ -141,7 +141,7 @@ export class GetHeadersRest {
         });
     }
 
-    public static send(headersLoadedCallback: Function) {
+    public static send(headersLoadedCallback: (_headers: string, apiUsed: string) => void) {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (REST)", true);
             return;
@@ -161,7 +161,7 @@ export class GetHeadersRest {
                     GetHeadersRest.getHeaders(accessToken, headersLoadedCallback);
                 } else {
                     Diagnostics.set("callbackTokenFailure", JSON.stringify(result));
-                    Errors.log(result.error, 'Unable to obtain callback token.\nFallback to EWS.\n' + JSON.stringify(result, null, 2), true);
+                    Errors.log(result.error, "Unable to obtain callback token.\nFallback to EWS.\n" + JSON.stringify(result, null, 2), true);
                     GetHeadersEWS.send(headersLoadedCallback);
                 }
             }

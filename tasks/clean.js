@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require("fs");
 const path = require("path");
 
 const rmdir = function (filepath) {
     if (fs.existsSync(filepath)) {
-        fs.readdirSync(filepath).forEach((file, index) => {
+        fs.readdirSync(filepath).forEach((file) => {
             const subpath = path.join(filepath, file);
             if (fs.lstatSync(subpath).isDirectory()) {
                 rmdir(subpath);

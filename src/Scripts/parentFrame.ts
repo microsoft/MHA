@@ -18,7 +18,7 @@ class DeferredError {
 }
 
 export class ParentFrame {
-    private static iFrame: Window | null;;
+    private static iFrame: Window | null;
     private static currentChoice = {} as Choice;
     private static deferredErrors: DeferredError[] = [];
     private static deferredStatus: string[] = [];
@@ -270,7 +270,7 @@ export class ParentFrame {
                 try {
                     const diagnosticMap = Diagnostics.get();
                     for (const diag in diagnosticMap) {
-                        if (diagnosticMap.hasOwnProperty(diag)) {
+                        if (Object.prototype.hasOwnProperty.call(diagnosticMap, diag)) {
                             diagnostics += diag + " = " + diagnosticMap[diag] + "\n";
                         }
                     }

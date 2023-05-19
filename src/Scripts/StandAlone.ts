@@ -1,13 +1,13 @@
-import "office-ui-fabric-js/dist/css/fabric.min.css"
-import "office-ui-fabric-js/dist/css/fabric.components.min.css"
+import "office-ui-fabric-js/dist/css/fabric.min.css";
+import "office-ui-fabric-js/dist/css/fabric.components.min.css";
 import "../Content/Office.css";
 import "../Content/App.css";
 import * as $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
-import { HeaderModel } from "./Headers"
+import { HeaderModel } from "./Headers";
 import { Diagnostics } from "./diag";
-import { Table } from "./Table"
+import { Table } from "./Table";
 
 let viewModel: HeaderModel;
 let table: Table;

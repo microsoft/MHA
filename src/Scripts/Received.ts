@@ -11,7 +11,7 @@ class ReceivedField {
     label: string;
     value: any;
     toString(): string { return this.value; }
-};
+}
 
 export class ReceivedRow {
     constructor(receivedHeader: string | null) {
@@ -29,7 +29,7 @@ export class ReceivedRow {
         this.delaySort = new ReceivedField("", -1);
         this.dateNum = new ReceivedField("");
     }
-    [index: string]: ReceivedField | Function;
+    [index: string]: ReceivedField | ((fieldName: string, fieldValue: string) => boolean) | (() => string);
     sourceHeader: ReceivedField;
     hop: ReceivedField;
     from: ReceivedField;
@@ -49,7 +49,7 @@ export class ReceivedRow {
             return false;
         }
 
-        var field = this[fieldName.toLowerCase()] as unknown as ReceivedField;
+        const field = this[fieldName.toLowerCase()] as unknown as ReceivedField;
         if (!field) return false;
 
         if (field.value) { field.value += "; " + fieldValue; }
@@ -61,7 +61,7 @@ export class ReceivedRow {
     toString(): string {
         const str: string[] = [];
         for (const key in this) {
-            var field = this[key] as ReceivedField;
+            const field = this[key] as ReceivedField;
             if (field && field.label && field.toString()) {
                 str.push(field.label + ": " + field.toString());
             }
@@ -82,11 +82,11 @@ export class Received extends iTable {
     //  - The date, if present, is always at the end, separated by a ";".
     // Values not attached to a header will not be reflected in output.
     public parseHeader(receivedHeader: string | null): ReceivedRow {
-        var receivedFields: ReceivedRow = new ReceivedRow(receivedHeader);
+        const receivedFields: ReceivedRow = new ReceivedRow(receivedHeader);
 
         if (receivedHeader) {
             // Strip linefeeds first
-            receivedHeader = receivedHeader.replace(/\r|\n|\r\n/g, ' ')
+            receivedHeader = receivedHeader.replace(/\r|\n|\r\n/g, " ");
 
             // Some bad dates don't wrap UTC in paren - fix that first
             receivedHeader = receivedHeader.replace(/UTC|\(UTC\)/gi, "(UTC)");
@@ -169,12 +169,12 @@ export class Received extends iTable {
                     iNextTokenHeader = tokens.length;
                 }
 
-                receivedFields.setField(headerMatch.fieldName, tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim())
+                receivedFields.setField(headerMatch.fieldName, tokens.slice(headerMatch.iToken + 1, iNextTokenHeader).join(" ").trim());
             });
         }
 
         return receivedFields;
-    };
+    }
 
     public exists(): boolean { return this.rows.length > 0; }
 
@@ -304,7 +304,7 @@ export class Received extends iTable {
         return iEndTime !== iStartTime ? Received.computeTime(iEndTime, iStartTime) : "";
     }
 
-    public get rows(): ReceivedRow[] { return this._receivedRows; };
+    public get rows(): ReceivedRow[] { return this._receivedRows; }
     public toString(): string {
         if (!this.exists()) return "";
         const ret: string[] = ["Received"];

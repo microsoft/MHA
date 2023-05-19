@@ -1,10 +1,10 @@
 import { AntiSpamReport } from "./Antispam";
 import { ForefrontAntiSpamReport } from "./ForefrontAntispam";
-import { Decoder } from "./2047"
-import { Other } from "./Other"
-import { Received } from "./Received"
-import { Summary } from "./Summary"
-import { poster } from "./poster"
+import { Decoder } from "./2047";
+import { Other } from "./Other";
+import { Received } from "./Received";
+import { Summary } from "./Summary";
+import { poster } from "./poster";
 
 export class Header {
     constructor(header: string, value: string) {
@@ -13,7 +13,7 @@ export class Header {
     }
     header: string;
     value: string;
-};
+}
 
 export class HeaderModel {
     public originalHeaders: string;
@@ -24,9 +24,9 @@ export class HeaderModel {
     public otherHeaders: Other;
     private _hasData: boolean;
     private _status: string;
-    public get hasData(): boolean { return this._hasData || !!this._status; };
-    public get status(): string { return this._status; };
-    public set status(value) { this._status = value; };
+    public get hasData(): boolean { return this._hasData || !!this._status; }
+    public get status(): string { return this._status; }
+    public set status(value) { this._status = value; }
     [index: string]: any;
 
     constructor(headers?: string) {
@@ -109,7 +109,7 @@ export class HeaderModel {
     public parseHeaders(headers: string): void {
         // Initialize originalHeaders in case we have parsing problems
         // Flatten CRLF to LF to avoid extra blank lines
-        this.originalHeaders = headers.replace(/(?:\r\n|\r|\n)/g, '\n');
+        this.originalHeaders = headers.replace(/(?:\r\n|\r|\n)/g, "\n");
         const headerList: Header[] = this.GetHeaderList(headers);
 
         if (headerList.length > 0) {

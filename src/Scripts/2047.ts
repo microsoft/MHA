@@ -1,10 +1,10 @@
-﻿import cptable from "codepage"
+﻿import cptable from "codepage";
 
 interface block {
     charset: string;
     type: string;
     text: string;
-};
+}
 
 export class Decoder {
     // http://tools.ietf.org/html/rfc2047

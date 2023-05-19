@@ -1,10 +1,11 @@
-const path = require('path');
+/* eslint-disable @typescript-eslint/no-var-requires */
+const path = require("path");
 const devCerts = require("office-addin-dev-certs");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FileManagerPlugin = require('filemanager-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const FileManagerPlugin = require("filemanager-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const webpack = require('webpack');
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const webpack = require("webpack");
 
 async function getHttpsOptions() {
     const httpsOptions = await devCerts.getHttpsServerOptions();
@@ -64,7 +65,7 @@ function generateHtmlWebpackPlugins() {
             template: `./src/Pages/${page.name}.html`,
             filename: `${page.name}.html`,
             chunks: [page.script]
-        })
+        });
     });
 }
 
@@ -73,7 +74,7 @@ module.exports = async (env, options) => {
         entry: generateEntry(),
         plugins: [
             new MiniCssExtractPlugin({
-                filename: version + '/[name].css'
+                filename: version + "/[name].css"
             }),
             new webpack.DefinePlugin({
                 __VERSION__: JSON.stringify(version),
@@ -84,25 +85,25 @@ module.exports = async (env, options) => {
                 events: {
                     onEnd: {
                         copy: [
-                            { source: './src/Resources/*.gif', destination: './Resources/' },
-                            { source: './src/Resources/*.jpg', destination: './Resources/' }
+                            { source: "./src/Resources/*.gif", destination: "./Resources/" },
+                            { source: "./src/Resources/*.jpg", destination: "./Resources/" }
                         ]
                     }
                 }
             }),
             new ForkTsCheckerWebpackPlugin(),
         ].concat(generateHtmlWebpackPlugins()),
-        mode: 'development',
-        devtool: 'source-map',
-        target: ['web', 'es5'],
+        mode: "development",
+        devtool: "source-map",
+        target: ["web", "es5"],
         module: {
             rules: [
-                { test: /fabric(\.min)?\.js$/, use: 'exports-loader?exports=fabric' },
+                { test: /fabric(\.min)?\.js$/, use: "exports-loader?exports=fabric" },
                 {
                     test: /\.tsx?$/,
                     use: [
                         {
-                            loader: 'ts-loader',
+                            loader: "ts-loader",
                             options: {
                                 logLevel: "info"
                             }
@@ -112,7 +113,7 @@ module.exports = async (env, options) => {
                 },
                 {
                     test: /\.css$/i,
-                    use: [MiniCssExtractPlugin.loader, 'css-loader'],
+                    use: [MiniCssExtractPlugin.loader, "css-loader"],
                 },
                 {
                     test: /\.js$/,
@@ -122,20 +123,20 @@ module.exports = async (env, options) => {
             ],
         },
         optimization: {
-            runtimeChunk: 'single',
+            runtimeChunk: "single",
             splitChunks: {
-                chunks: 'all',
+                chunks: "all",
                 maxInitialRequests: Infinity,
                 minSize: 0,
             },
         },
         resolve: {
-            extensions: ['.tsx', '.ts', '.js'],
+            extensions: [".tsx", ".ts", ".js"],
         },
         output: {
-            filename: version + '/[name].js',
-            path: path.resolve(__dirname, 'Pages'),
-            publicPath: '/Pages/',
+            filename: version + "/[name].js",
+            path: path.resolve(__dirname, "Pages"),
+            publicPath: "/Pages/",
             clean: true,
         },
         devServer: {
@@ -144,7 +145,7 @@ module.exports = async (env, options) => {
             },
             static: __dirname,
             server: {
-                type: 'https',
+                type: "https",
                 options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
             },
             port: process.env.npm_package_config_dev_server_port || 44336,

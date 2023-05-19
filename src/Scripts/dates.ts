@@ -8,8 +8,8 @@ export class DateWithNum {
     }
     dateNum: number;
     date: string;
-    public toString = (): string => { return this.date; }
-};
+    public toString = (): string => { return this.date; };
+}
 
 export class mhaDates {
     static {
@@ -49,7 +49,7 @@ export class mhaDates {
             // If adding offset didn't work, try adding time and offset
             if (!time.isValid() && offsetAdded) { time = dayjs(originalDate + " 12:00:00 AM +0000"); }
             if (milliseconds && milliseconds.length >= 2) {
-                time = time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), 'ms');
+                time = time.add(Math.floor(parseFloat("0." + milliseconds[1]) * 1000), "ms");
             }
 
             return new DateWithNum(

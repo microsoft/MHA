@@ -78,4 +78,4 @@ export const mhaStrings = {
 
     // AntiSpamReport
     mhaBcl: "Bulk Complaint Level"
-}
+};

@@ -1,5 +1,5 @@
 import * as $ from "jquery";
-import { ApplicationInsights, IEventTelemetry, ICustomProperties, ITelemetryItem } from '@microsoft/applicationinsights-web'
+import { ApplicationInsights, IEventTelemetry, ICustomProperties, ITelemetryItem } from "@microsoft/applicationinsights-web";
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersAPI } from "./GetHeadersAPI";
@@ -8,7 +8,7 @@ import { aikey } from "./aikey";
 import { mhaVersion } from "./version";
 import { buildTime } from "./buildTime";
 import * as StackTrace from "stacktrace-js";
-import 'promise-polyfill/src/polyfill';
+import "promise-polyfill/src/polyfill";
 
 // diagnostics module
 
@@ -27,8 +27,8 @@ class diag {
     constructor() {
         this.appInsights.addTelemetryInitializer((envelope: ITelemetryItem): boolean => {
             if (!envelope || !envelope.data) return false;
-            envelope.data[`baseType`] = envelope.baseType;
-            envelope.data[`baseType`] = envelope.baseData;
+            envelope.data["baseType"] = envelope.baseType;
+            envelope.data["baseType"] = envelope.baseData;
             // This will get called for any appInsights tracking - we can augment or suppress logging from here
             // No appInsights logging for localhost/dev
             if (!this.sendTelemetry) {
@@ -40,20 +40,20 @@ class diag {
             if (envelope.baseType === "PageviewPerformanceData") return doLog;
 
             envelope.baseData = envelope.baseData || {};
-            envelope.baseData[`properties`] = envelope.baseData[`properties`] || {};
-            $.extend(envelope.baseData[`properties`], this.get());
+            envelope.baseData["properties"] = envelope.baseData["properties"] || {};
+            $.extend(envelope.baseData["properties"], this.get());
 
             // If we're not one of the above types, tag in our diagnostics data
             if (envelope.baseType === "ExceptionData" && envelope.baseData) {
                 // custom data for the ExceptionData type lives in a different place
                 // Log an extra event with parsed stack frame
-                if (envelope.baseData[`exceptions`].length > 0) {
-                    StackTrace.fromError(envelope.baseData[`exceptions`][0])
+                if (envelope.baseData["exceptions"].length > 0) {
+                    StackTrace.fromError(envelope.baseData["exceptions"][0])
                         .then((stackframes: StackTrace.StackFrame[]): void => {
                             this.appInsights.trackEvent({
                                 name: "Exception Details", properties: {
                                     stack: stackframes,
-                                    error: (envelope && envelope.baseData) ? envelope.baseData[`exceptions`][0] : ""
+                                    error: (envelope && envelope.baseData) ? envelope.baseData["exceptions"][0] : ""
                                 }
                             });
                         });
@@ -98,7 +98,7 @@ class diag {
             this.appInsights.trackEvent(event, customProperties);
         }
         else {
-            var msg_base = `Event ${JSON.stringify(event)}: ${JSON.stringify(customProperties)}`;
+            const msg_base = `Event ${JSON.stringify(event)}: ${JSON.stringify(customProperties)}`;
             console.log(msg_base);
         }
     }
@@ -108,7 +108,7 @@ class diag {
             this.appInsights.trackException(event, customProperties);
         }
         else {
-            var msg_base = `Exception ${JSON.stringify(event)}: ${JSON.stringify(customProperties)}`;
+            const msg_base = `Exception ${JSON.stringify(event)}: ${JSON.stringify(customProperties)}`;
             console.log(msg_base);
         }
     }
@@ -118,7 +118,7 @@ class diag {
             this.appInsights.trackEvent({ name: eventType, properties: { source: source, exception: JSON.stringify(e), message: e.message, stack: e.stack } });
         }
         else {
-            var msg_base = `Error ${eventType} from ${source}: ${e.message}`;
+            const msg_base = `Error ${eventType} from ${source}: ${e.message}`;
             console.log(msg_base + " exception: " + JSON.stringify(e));
         }
     }
@@ -165,11 +165,11 @@ class diag {
             if (ParentFrame) {
                 const choice = ParentFrame.choice;
                 if (choice) {
-                    this.appDiagnostics['ui'] = choice.label;
+                    this.appDiagnostics["ui"] = choice.label;
                 }
             }
             else {
-                this.appDiagnostics['ui'] = "standalone";
+                this.appDiagnostics["ui"] = "standalone";
             }
 
             this.appDiagnostics["Last Update"] = buildTime();
@@ -326,4 +326,4 @@ class diag {
     }
 }
 
-export let Diagnostics: diag = new diag();
+export const Diagnostics: diag = new diag();

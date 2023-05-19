@@ -7,7 +7,7 @@ import { Framework7 } from "./framework7";
 import * as dayjs from "dayjs";
 import * as utc from "dayjs/plugin/utc";
 import { mhaStrings } from "./mhaStrings";
-import { HeaderModel } from "./Headers"
+import { HeaderModel } from "./Headers";
 import { poster } from "./poster";
 import { Row, SummaryRow } from "./Summary";
 import { ReceivedRow } from "./Received";
@@ -100,15 +100,15 @@ function buildViews(headers: string): void {
                 .text(row.label)
                 .appendTo(summaryContent);
 
-            let contentBlock = $("<div/>")
+            const contentBlock = $("<div/>")
                 .addClass("content-block")
                 .appendTo(summaryContent);
 
-            let headerVal = $("<div/>")
+            const headerVal = $("<div/>")
                 .addClass("code-box")
                 .appendTo(contentBlock);
 
-            let pre = $("<pre/>").appendTo(headerVal);
+            const pre = $("<pre/>").appendTo(headerVal);
 
             $("<code/>")
                 .text(row.value)
@@ -129,16 +129,16 @@ function buildViews(headers: string): void {
             .addClass("timeline")
             .appendTo(receivedContent);
 
-        let currentTime: dayjs.Dayjs = dayjs(viewModel.receivedHeaders.rows[0]?.dateNum.value).local()
+        let currentTime: dayjs.Dayjs = dayjs(viewModel.receivedHeaders.rows[0]?.dateNum.value).local();
         let currentTimeEntry: JQuery<HTMLElement>;
 
         viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, i: number) => {
             if (i === 0) {
-                let timelineItem: JQuery<HTMLElement> = $("<div/>")
+                const timelineItem: JQuery<HTMLElement> = $("<div/>")
                     .addClass("timeline-item")
                     .appendTo(timeline);
 
-                let timelineDate: string = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
+                const timelineDate: string = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
 
                 $("<div/>")
                     .addClass("timeline-item-date")
@@ -154,7 +154,7 @@ function buildViews(headers: string): void {
                     .appendTo(timelineItem);
 
                 // Add initial other rows
-                let timelineInner: JQuery<HTMLElement> = $("<div/>")
+                const timelineInner: JQuery<HTMLElement> = $("<div/>")
                     .addClass("timeline-item-inner")
                     .addClass("link")
                     .addClass("open-popover")
@@ -183,11 +183,11 @@ function buildViews(headers: string): void {
                     // Into a new minute, create a new timeline item
                     currentTime = entryTime;
 
-                    let timelineItem: JQuery<HTMLElement> = $("<div/>")
+                    const timelineItem: JQuery<HTMLElement> = $("<div/>")
                         .addClass("timeline-item")
                         .appendTo(timeline);
 
-                    let timelineDate: string = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
+                    const timelineDate: string = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
                     $("<div/>")
                         .addClass("timeline-item-date")
                         .html(timelineDate)
@@ -204,7 +204,7 @@ function buildViews(headers: string): void {
                 }
 
                 // Add additional rows
-                let timelineInner: JQuery<HTMLElement> = $("<div/>")
+                const timelineInner: JQuery<HTMLElement> = $("<div/>")
                     .addClass("timeline-item-inner")
                     .addClass("link")
                     .addClass("open-popover")
@@ -297,12 +297,12 @@ function buildViews(headers: string): void {
             .text("Forefront Antispam Report")
             .appendTo(antispamContent);
 
-        let list: JQuery<HTMLElement> = $("<div/>")
+        const list: JQuery<HTMLElement> = $("<div/>")
             .addClass("list-block")
             .addClass("accordion-list")
             .appendTo(antispamContent);
 
-        let ul: JQuery<HTMLElement> = $("<ul/>")
+        const ul: JQuery<HTMLElement> = $("<ul/>")
             .appendTo(list);
 
         viewModel.forefrontAntiSpamReport.rows.forEach((row: Row) => {
@@ -317,12 +317,12 @@ function buildViews(headers: string): void {
             .text("Microsoft Antispam Report")
             .appendTo(antispamContent);
 
-        let list: JQuery<HTMLElement> = $("<div/>")
+        const list: JQuery<HTMLElement> = $("<div/>")
             .addClass("list-block")
             .addClass("accordion-list")
             .appendTo(antispamContent);
 
-        let ul: JQuery<HTMLElement> = $("<ul/>")
+        const ul: JQuery<HTMLElement> = $("<ul/>")
             .appendTo(list);
 
         viewModel.antiSpamReport.rows.forEach((row: Row) => {
@@ -348,15 +348,15 @@ function buildViews(headers: string): void {
                     .appendTo(headerName);
             }
 
-            let contentBlock = $("<div/>")
+            const contentBlock = $("<div/>")
                 .addClass("content-block")
                 .appendTo(otherContent);
 
-            let headerVal = $("<div/>")
+            const headerVal = $("<div/>")
                 .addClass("code-box")
                 .appendTo(contentBlock);
 
-            let pre = $("<pre/>").appendTo(headerVal);
+            const pre = $("<pre/>").appendTo(headerVal);
 
             $("<code/>")
                 .text(row.value)

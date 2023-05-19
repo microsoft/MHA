@@ -1,5 +1,5 @@
 ﻿import * as QUnit from "qunit";
-import { ReceivedRow } from "../Received"
+import { ReceivedRow } from "../Received";
 
 declare global {
     interface Assert {
@@ -33,7 +33,7 @@ QUnit.assert.receivedEqual = function (actual: { [index: string]: any } | undefi
             });
         }
 
-        for (let field in actual) {
+        for (const field in actual) {
             if (field === "date") continue;
             if (field === "onGetUrl") continue;
             if (field === "setField") continue;
@@ -72,7 +72,7 @@ QUnit.assert.arrayEqual = function (actual: object[], expected: object[], messag
         });
     }
 
-    for (var i = 0; i < actual.length; i++) {
+    for (let i = 0; i < actual.length; i++) {
         this.receivedEqual(actual[i], expected[i], message + "[" + i + "]");
     }
 
@@ -89,7 +89,7 @@ QUnit.assert.datesEqual = function (actual: ReceivedRow, expected: object, messa
 };
 
 QUnit.assert.errorsEqual = function (actual: string, expectedValues: string[], message: string): void {
-    var found = expectedValues.some((expected: string): boolean => {
+    const found = expectedValues.some((expected: string): boolean => {
         if (actual === expected) {
             this.pushResult({
                 result: true,
