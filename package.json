@@ -38,7 +38,7 @@
   "devDependencies": {
     "@types/jquery": "^3.5.14",
     "@types/office-js": "^1.0.324",
-    "@types/qunit": "^2.19.2",
+    "@types/qunit": "^2.19.5",
     "css-loader": "^6.7.1",
     "exports-loader": "^4.0.0",
     "file-loader": "^6.2.0",
@@ -47,7 +47,7 @@
     "grunt": "^1.6.1",
     "grunt-contrib-connect": "^3.0.0",
     "grunt-contrib-qunit": "^6.2.0",
-    "html-webpack-plugin": "^5.5.0",
+    "html-webpack-plugin": "^5.5.1",
     "mini-css-extract-plugin": "^2.6.0",
     "office-addin-debugging": "^5.0.5",
     "office-addin-dev-certs": "^1.7.10",
@@ -72,7 +72,7 @@
     "jwt-decode": "^3.1.2",
     "office-ui-fabric-js": "^1.5.0",
     "promise-polyfill": "8.2.3",
-    "qunit": "^2.19.1",
+    "qunit": "^2.19.4",
     "stacktrace-js": "^2.0.2"
   },
   "-vs-binding": {
