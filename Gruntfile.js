@@ -4,7 +4,7 @@ module.exports = function (grunt) {
             server: {
                 options: {
                     port: 44337,
-                    base: '.',
+                    base: ".",
                 }
             }
         },
@@ -12,15 +12,15 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     urls: [
-                        'http://localhost:44337/Pages/unittests.html'
+                        "http://localhost:44337/Pages/unittests.html"
                     ]
                 }
             }
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
+    grunt.loadNpmTasks("grunt-contrib-connect");
+    grunt.loadNpmTasks("grunt-contrib-qunit");
 
-    grunt.registerTask('test', ['connect', 'qunit']);
+    grunt.registerTask("test", ["connect", "qunit"]);
 };
