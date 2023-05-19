@@ -26,7 +26,7 @@ export class GetHeadersEWS {
                 return this.nodeName === node;
             });
             if (response[0] && response[0].textContent) {
-                return response[0].textContent.replace(/\r|\n|\r\n/g, '\n');
+                return response[0].textContent.replace(/\r|\n|\r\n/g, "\n");
             }
 
             return "";

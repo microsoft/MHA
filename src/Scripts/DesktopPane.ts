@@ -1,10 +1,10 @@
-import "office-ui-fabric-js/dist/css/fabric.min.css"
-import "office-ui-fabric-js/dist/css/fabric.components.min.css"
+import "office-ui-fabric-js/dist/css/fabric.min.css";
+import "office-ui-fabric-js/dist/css/fabric.components.min.css";
 import "../Content/DesktopPane.css";
 import * as $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
 import { mhaStrings } from "./mhaStrings";
-import { HeaderModel } from "./Headers"
+import { HeaderModel } from "./Headers";
 import { poster } from "./poster";
 import { Row, SummaryRow } from "./Summary";
 import { ReceivedRow } from "./Received";
@@ -86,7 +86,7 @@ function updateStatus(message: string) {
 }
 
 function makeBold(text: string) {
-    return '<span class="ms-fontWeight-semibold">' + text + "</span>";
+    return "<span class=\"ms-fontWeight-semibold\">" + text + "</span>";
 }
 
 function addCalloutEntry(name: string, value: string, parent: JQuery<HTMLElement>) {
@@ -109,10 +109,10 @@ function buildViews(headers: string) {
                 .addClass("ms-fontWeight-semibold")
                 .text(row.label)
                 .appendTo(summaryList);
-            let headerVal = $("<div/>")
+            const headerVal = $("<div/>")
                 .addClass("code-box")
                 .appendTo(summaryList);
-            let pre = $("<pre/>").appendTo(headerVal);
+            const pre = $("<pre/>").appendTo(headerVal);
             $("<code/>")
                 .text(row.value)
                 .appendTo(pre);
@@ -246,15 +246,15 @@ function buildViews(headers: string) {
                 .appendTo(antispamList);
 
             $("<hr/>").appendTo(antispamList);
-            let table = $("<table/>")
+            const table = $("<table/>")
                 .addClass("ms-Table")
                 .addClass("ms-Table--fixed")
                 .addClass("spam-report")
                 .appendTo(antispamList);
-            let tbody = $("<tbody/>")
+            const tbody = $("<tbody/>")
                 .appendTo(table);
             viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
-                let row = $("<tr/>").appendTo(tbody);
+                const row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
                     .text(antispamrow.label)
                     .appendTo(row);
@@ -272,15 +272,15 @@ function buildViews(headers: string) {
                 .appendTo(antispamList);
 
             $("<hr/>").appendTo(antispamList);
-            let table = $("<table/>")
+            const table = $("<table/>")
                 .addClass("ms-Table")
                 .addClass("ms-Table--fixed")
                 .addClass("spam-report")
                 .appendTo(antispamList);
-            let tbody = $("<tbody/>")
+            const tbody = $("<tbody/>")
                 .appendTo(table);
             viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
-                let row = $("<tr/>").appendTo(tbody);
+                const row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
                     .text(antispamrow.label)
                     .appendTo(row);
@@ -304,10 +304,10 @@ function buildViews(headers: string) {
             if (otherRow.url) {
                 headerName.html(otherRow.url);
             }
-            let headerVal = $("<div/>")
+            const headerVal = $("<div/>")
                 .addClass("code-box")
                 .appendTo(otherList);
-            let pre = $("<pre/>").appendTo(headerVal);
+            const pre = $("<pre/>").appendTo(headerVal);
             $("<code/>")
                 .text(otherRow.value)
                 .appendTo(pre);

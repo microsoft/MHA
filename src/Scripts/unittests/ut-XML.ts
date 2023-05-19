@@ -1,5 +1,5 @@
 ﻿import * as QUnit from "qunit";
-import { GetHeadersEWS } from "../GetHeadersEWS"
+import { GetHeadersEWS } from "../GetHeadersEWS";
 
 QUnit.test("XML Tests", function (assert: Assert) {
     const xml1 =

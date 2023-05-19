@@ -53,7 +53,7 @@ export class Other extends iTable {
 
     public exists() { return this.rows.length > 0; }
 
-    public get rows(): OtherRow[] { return this._otherRows; };
+    public get rows(): OtherRow[] { return this._otherRows; }
     public toString() {
         if (!this.exists()) return "";
         const ret: string[] = ["Other"];

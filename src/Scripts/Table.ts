@@ -67,7 +67,7 @@ export class Table {
         const header = $(document.createElement("div"));
         header.addClass("sectionHeader");
         header.bind("click", this, function (eventObject) {
-            var table: Table = eventObject.data as Table;
+            const table: Table = eventObject.data as Table;
             if (table) {
                 table.toggleCollapse(eventObject.currentTarget);
             }
@@ -223,7 +223,7 @@ export class Table {
         // Received
         this.emptyTableUI("receivedHeaders");
         this.viewModel.receivedHeaders.rows.forEach((receivedRow: ReceivedRow) => {
-            let row: HTMLTableRowElement = document.createElement("tr");
+            const row: HTMLTableRowElement = document.createElement("tr");
             $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
             this.appendCell(row, receivedRow.hop.value, "", "");
             this.appendCell(row, receivedRow.from.value, "", "");
@@ -271,7 +271,7 @@ export class Table {
         // Other
         this.emptyTableUI("otherHeaders");
         this.viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
-            let row: HTMLTableRowElement = document.createElement("tr");
+            const row: HTMLTableRowElement = document.createElement("tr");
             $("#otherHeaders").append(row); // Must happen before we append cells to appease IE7
             this.appendCell(row, otherRow.number.toString(), "", "");
             this.appendCell(row, otherRow.header, otherRow.url, "");
@@ -290,10 +290,10 @@ export class Table {
         const header = $("#" + id);
 
         header.bind("click", this, function (eventObject) {
-            var table: Table = eventObject.data as Table;
+            const table: Table = eventObject.data as Table;
             if (table) {
                 if (table.viewModel[tableName] instanceof iTable) {
-                    let itable = table.viewModel[tableName] as iTable;
+                    const itable = table.viewModel[tableName] as iTable;
                     itable.doSort(id);
                     table.setArrows(itable.tableName, itable.sortColumn,
                         itable.sortOrder);
@@ -361,7 +361,7 @@ export class Table {
         const header = $(document.createElement("div"));
         header.addClass("tableCaption");
         header.bind("click", this, function (eventObject) {
-            var table: Table = eventObject.data as Table;
+            const table: Table = eventObject.data as Table;
             if (table) {
                 table.toggleCollapse(eventObject.currentTarget);
             }
@@ -377,7 +377,7 @@ export class Table {
         const captionDiv = $(document.createElement("div"));
         captionDiv.addClass("tableCaption");
         captionDiv.bind("click", this, function (eventObject) {
-            var table: Table = eventObject.data as Table;
+            const table: Table = eventObject.data as Table;
             if (table) {
                 table.toggleCollapse(eventObject.currentTarget);
             }
@@ -474,7 +474,7 @@ export class Table {
         }
 
         $("#receivedHeaders .collapsibleArrow").bind("click", this, function (eventObject) {
-            var table: Table = eventObject.data as Table;
+            const table: Table = eventObject.data as Table;
             if (table) {
                 table.toggleExtraColumns();
                 eventObject.stopPropagation();

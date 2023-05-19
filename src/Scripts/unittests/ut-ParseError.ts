@@ -31,7 +31,7 @@ function compareStacks(assert: Assert, stack1: string[], stack2: string[], name:
 
 QUnit.test("Errors.parse Tests", function (assert: Assert) {
     assert.expect(20); // Count of assert calls in the tests below
-    var done = assert.async(10); // Count of asynchronous calls below
+    const done = assert.async(10); // Count of asynchronous calls below
 
     Errors.parse("stringError", "message", function (eventName, stack) {
         assert.equal(eventName, "message : stringError", "Errors.parse 1 error");
@@ -162,7 +162,7 @@ QUnit.test("Errors.parse Tests", function (assert: Assert) {
         done();
     });
 
-    var brokenError = new Error();
+    const brokenError = new Error();
     Errors.parse(brokenError, "message", function (eventName, stack) {
         assert.equal(eventName, "message", "brokenError event");
         compareStacks(assert, stack, [

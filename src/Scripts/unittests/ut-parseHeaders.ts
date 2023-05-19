@@ -1,8 +1,8 @@
 ﻿import * as QUnit from "qunit";
-import { HeaderModel } from "../Headers"
+import { HeaderModel } from "../Headers";
 
 QUnit.test("parseHeader Tests", function (assert: Assert) {
-    var summaryRows = [
+    const summaryRows = [
         {
             "header": "Subject",
             "label": "Subject",
@@ -52,7 +52,7 @@ QUnit.test("parseHeader Tests", function (assert: Assert) {
             "url": "<a href = 'https://tools.ietf.org/html/rfc5322#section-3.6.3' target = '_blank'>Cc</a>"
         }];
 
-    var receivedRows = [
+    const receivedRows = [
         {
             "by": "10.249.244.10 (envelope-from <AqeHmUtTNRpaUZj9CNd6Rxg==_1115276745036_oCND0ALXEeiiWdSuUo6yew==@in.constantcontact.com>) (ecelerity 4.3.1.69340 r(Core:4.3.1.0))",
             "date": "7/14/2020 2:41:20 PM",
@@ -106,7 +106,7 @@ QUnit.test("parseHeader Tests", function (assert: Assert) {
             "with": "HTTPS"
         }];
 
-    var antiSpamRows = [
+    const antiSpamRows = [
         {
             "header": "BCL",
             "headerName": "X-Microsoft-Antispam",
@@ -134,7 +134,7 @@ QUnit.test("parseHeader Tests", function (assert: Assert) {
         }
     ];
 
-    var forefrontAntiSpamRows = [
+    const forefrontAntiSpamRows = [
         {
             "header": "ARC",
             "headerName": "X-Forefront-Antispam-Report",
@@ -246,7 +246,7 @@ QUnit.test("parseHeader Tests", function (assert: Assert) {
             "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>DIR:INB;SFP:;</a>"
         }];
 
-    var goodCaseHeaders = "Received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
+    const goodCaseHeaders = "Received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
         " (2603:10b6:408:c0::39) by BN8PR19MB2915.namprd19.prod.outlook.com with HTTPS\n" +
         " via BN8PR15CA0026.NAMPRD15.PROD.OUTLOOK.COM; Tue, 14 Jul 2020 18:41:23 +0000\n" +
         "Received: from HE1EUR04FT039.eop-eur04.prod.protection.outlook.com\n" +
@@ -372,13 +372,13 @@ QUnit.test("parseHeader Tests", function (assert: Assert) {
         " =?us-ascii?Q?jZapUUeFMu1JPjY1H7SI7qZYxkRMXi73xtnONRaRjJP7QhOZ+z2RmaOzf4eh?=\n" +
         " =?us-ascii?Q?yRknnr9cw9mFk72T6z2Ul2LZYL/Ebw=3D=3D?=\n";
 
-    var goodCaseHeaderModel = new HeaderModel(goodCaseHeaders);
+    const goodCaseHeaderModel = new HeaderModel(goodCaseHeaders);
     assert.arrayEqual(goodCaseHeaderModel.summary.rows, summaryRows, "summaryRows-good-casing");
     assert.arrayEqual(goodCaseHeaderModel.receivedHeaders.rows, receivedRows, "receivedRows-good-casing");
     assert.arrayEqual(goodCaseHeaderModel.antiSpamReport.rows, antiSpamRows, "antiSpamRows-good-casing");
     assert.arrayEqual(goodCaseHeaderModel.forefrontAntiSpamReport.rows, forefrontAntiSpamRows, "forefrontAntiSpamRows-good-casing");
 
-    var badCaseHeaders = "received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
+    const badCaseHeaders = "received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
         " (2603:10b6:408:c0::39) by BN8PR19MB2915.namprd19.prod.outlook.com with HTTPS\n" +
         " via BN8PR15CA0026.NAMPRD15.PROD.OUTLOOK.COM; Tue, 14 Jul 2020 18:41:23 +0000\n" +
         "received: from HE1EUR04FT039.eop-eur04.prod.protection.outlook.com\n" +
@@ -504,7 +504,7 @@ QUnit.test("parseHeader Tests", function (assert: Assert) {
         " =?us-ascii?Q?jZapUUeFMu1JPjY1H7SI7qZYxkRMXi73xtnONRaRjJP7QhOZ+z2RmaOzf4eh?=\n" +
         " =?us-ascii?Q?yRknnr9cw9mFk72T6z2Ul2LZYL/Ebw=3D=3D?=\n";
 
-    var badCaseHeaderModel = new HeaderModel(badCaseHeaders);
+    const badCaseHeaderModel = new HeaderModel(badCaseHeaders);
     assert.arrayEqual(badCaseHeaderModel.summary.rows, summaryRows, "summaryRows-bad-casing");
     assert.arrayEqual(badCaseHeaderModel.receivedHeaders.rows, receivedRows, "receivedRows-bad-casing");
     assert.arrayEqual(badCaseHeaderModel.antiSpamReport.rows, antiSpamRows, "antiSpamRows-bad-casing");

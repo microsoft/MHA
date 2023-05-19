@@ -18,7 +18,7 @@ class DeferredError {
 }
 
 export class ParentFrame {
-    private static iFrame: Window | null;;
+    private static iFrame: Window | null;
     private static currentChoice = {} as Choice;
     private static deferredErrors: DeferredError[] = [];
     private static deferredStatus: string[] = [];

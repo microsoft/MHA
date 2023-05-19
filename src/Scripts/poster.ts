@@ -10,4 +10,4 @@ export class poster {
     public static postMessageToParent(eventName: string, data?: any): void {
         window.parent.postMessage({ eventName: eventName, data: data }, poster.site());
     }
-};
+}

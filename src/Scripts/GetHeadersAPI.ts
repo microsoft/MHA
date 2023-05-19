@@ -39,7 +39,7 @@ export class GetHeadersAPI {
                     headersLoadedCallback(asyncResult.value, "API");
                 } else {
                     Diagnostics.set("getAllInternetHeadersAsyncFailure", JSON.stringify(asyncResult));
-                    Errors.log(asyncResult.error, 'Unable to obtain callback token.\nFallback to Rest.\n' + JSON.stringify(asyncResult, null, 2), true);
+                    Errors.log(asyncResult.error, "Unable to obtain callback token.\nFallback to Rest.\n" + JSON.stringify(asyncResult, null, 2), true);
                     GetHeadersRest.send(headersLoadedCallback);
                 }
             });

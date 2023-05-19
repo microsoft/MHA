@@ -33,7 +33,7 @@ export class ForefrontAntiSpamReport extends AntiSpamReport {
         return false;
     }
 
-    public override get rows(): Row[] { return this.forefrontAntiSpamRows; };
+    public override get rows(): Row[] { return this.forefrontAntiSpamRows; }
     public override toString(): string {
         if (!this.exists()) return "";
         const ret = ["ForefrontAntiSpamReport"];
