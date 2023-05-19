@@ -57,7 +57,7 @@ export class GetHeaders {
         return true;
     }
 
-    public static send(headersLoadedCallback: Function) {
+    public static send(headersLoadedCallback: (_headers: string, apiUsed: string) => void) {
         if (!GetHeaders.validItem()) {
             ParentFrame.showError(null, "No item selected", true);
             return;

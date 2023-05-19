@@ -78,7 +78,7 @@ export class GetHeadersRest {
         return "https://outlook.office.com";
     }
 
-    private static getHeaders(accessToken: string, headersLoadedCallback: Function): void {
+    private static getHeaders(accessToken: string, headersLoadedCallback: (_headers: string, apiUsed: string) => void): void {
         if (!accessToken) {
             Errors.log(null, "No access token?");
             return;
@@ -115,7 +115,7 @@ export class GetHeadersRest {
                 if (item.SingleValueExtendedProperties !== undefined) {
                     headersLoadedCallback(item.SingleValueExtendedProperties[0].Value, "REST");
                 } else {
-                    headersLoadedCallback(null, "REST");
+                    headersLoadedCallback("", "REST");
                     ParentFrame.showError(null, mhaStrings.mhaHeadersMissing, true);
                 }
             }
@@ -141,7 +141,7 @@ export class GetHeadersRest {
         });
     }
 
-    public static send(headersLoadedCallback: Function) {
+    public static send(headersLoadedCallback: (_headers: string, apiUsed: string) => void) {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (REST)", true);
             return;

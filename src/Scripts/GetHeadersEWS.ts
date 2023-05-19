@@ -66,7 +66,7 @@ export class GetHeadersEWS {
     }
 
     // Function called when the EWS request is complete.
-    private static callbackEws(asyncResult: Office.AsyncResult<string>, headersLoadedCallback: Function): void {
+    private static callbackEws(asyncResult: Office.AsyncResult<string>, headersLoadedCallback: (_headers: string, apiUsed: string) => void): void {
         try {
             // Process the returned response here.
             let header = null;
@@ -76,7 +76,7 @@ export class GetHeadersEWS {
                 // We might not have a prop and also no error. This is OK if the prop is just missing.
                 if (!header.prop) {
                     if (header.responseCode === "NoError") {
-                        headersLoadedCallback(null, "EWS");
+                        headersLoadedCallback("", "EWS");
                         ParentFrame.showError(null, mhaStrings.mhaHeadersMissing, true);
                         return;
                     }
@@ -95,7 +95,7 @@ export class GetHeadersEWS {
                 Errors.log(asyncResult.error, "Async Response\n" + GetHeadersEWS.stripHeaderFromXml(JSON.stringify(asyncResult, null, 2)));
             }
 
-            headersLoadedCallback(null, "EWS");
+            headersLoadedCallback("", "EWS");
             ParentFrame.showError(e, "EWS callback failed");
         }
     }
@@ -129,7 +129,7 @@ export class GetHeadersEWS {
             "</GetItem>";
     }
 
-    public static send(headersLoadedCallback: Function): void {
+    public static send(headersLoadedCallback: (_headers: string, apiUsed: string) => void): void {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (EWS)", true);
             return;
