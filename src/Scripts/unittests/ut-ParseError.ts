@@ -104,7 +104,8 @@ QUnit.test("Errors.parse Tests", function (assert: Assert) {
     }
     catch (error) {
         Errors.parse(error, null, function (eventName, stack) {
-            assert.equal(eventName, "{\n" +
+            assert.equal(eventName,
+                "{\n" +
                 "  \"one\": 1,\n" +
                 "  \"two\": 2,\n" +
                 "  \"three\": \"three\"\n" +
