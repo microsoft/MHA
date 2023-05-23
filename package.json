@@ -53,7 +53,7 @@
     "grunt-contrib-qunit": "^6.2.0",
     "html-webpack-plugin": "^5.5.1",
     "mini-css-extract-plugin": "^2.7.6",
-    "office-addin-debugging": "^5.0.5",
+    "office-addin-debugging": "^5.0.9",
     "office-addin-dev-certs": "^1.7.10",
     "office-addin-dev-settings": "^2.0.3",
     "office-addin-manifest": "^1.8.1",
