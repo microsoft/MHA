@@ -11,11 +11,11 @@ git checkout dependabot-merge
 git fetch
 
 # Retrieve the list of branches starting with 'origin/dependabot'
-$dependabotBranches = git branch -r --list 'origin/dependabot/*' | ForEach-Object { $_ -replace '^.*origin/', '' }
+$dependabotBranches = git branch -r --list 'origin/dependabot/*'
 
 # Merge the Dependabot branches one by one
 foreach ($branch in $dependabotBranches) {
-    git merge --no-ff "origin/$branch" -m "Merge origin/$branch into u/sgriffin/dependabot-merge"
+    git merge --no-ff "$branch" -m "Merge $branch into u/sgriffin/dependabot-merge"
 }
 
 # Push the merged branch to the remote repository
