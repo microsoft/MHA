@@ -4,7 +4,8 @@ git checkout main
 git pull
 
 # Checkout a new branch to merge the Dependabot branches into
-git checkout -b u/sgriffin/dependabot-merge
+git checkout -b dependabot-merge
+git checkout dependabot-merge
 
 # Fetch the latest branch information from the remote repository
 git fetch
@@ -18,4 +19,4 @@ foreach ($branch in $dependabotBranches) {
 }
 
 # Push the merged branch to the remote repository
-git push origin u/sgriffin/dependabot-merge
+git push origin dependabot-merge
