@@ -4,8 +4,8 @@ git checkout main
 git pull
 
 # Checkout a new branch to merge the Dependabot branches into
+git branch -D dependabot-merge
 git checkout -b dependabot-merge
-git checkout dependabot-merge
 
 # Fetch the latest branch information from the remote repository
 git fetch
