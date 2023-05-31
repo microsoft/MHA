@@ -5,10 +5,11 @@ git pull
 
 # Checkout a new branch to merge the Dependabot branches into
 git branch -D dependabot-merge
+git push origin --delete dependabot-merge
 git checkout -b dependabot-merge
 
 # Fetch the latest branch information from the remote repository
-git fetch
+git fetch -p
 
 # Retrieve the list of branches starting with 'origin/dependabot'
 $dependabotBranches = git branch -r --list 'origin/dependabot/*'
