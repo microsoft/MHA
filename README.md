@@ -1,5 +1,6 @@
 MHA
 =====
+[![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7511/badge)](https://bestpractices.coreinfrastructure.org/projects/7511)
 
 Message Header Analyzer mail app.
 
