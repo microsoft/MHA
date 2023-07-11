@@ -40,7 +40,7 @@
     "@types/office-js": "^1.0.335",
     "@types/qunit": "^2.19.6",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
-    "@typescript-eslint/parser": "^5.61.0",
+    "@typescript-eslint/parser": "^5.62.0",
     "css-loader": "^6.8.1",
     "eslint": "^8.44.0",
     "eslint-plugin-node": "^11.1.0",
