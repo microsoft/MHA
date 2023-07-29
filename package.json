@@ -54,7 +54,7 @@
     "html-webpack-plugin": "^5.5.3",
     "mini-css-extract-plugin": "^2.7.6",
     "office-addin-debugging": "^5.0.11",
-    "office-addin-dev-certs": "^1.11.5",
+    "office-addin-dev-certs": "^1.11.6",
     "office-addin-dev-settings": "^2.0.7",
     "office-addin-manifest": "^1.12.7",
     "source-map-loader": "^4.0.1",
