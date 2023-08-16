@@ -39,7 +39,7 @@
     "@types/jquery": "^3.5.16",
     "@types/office-js": "^1.0.338",
     "@types/qunit": "^2.19.6",
-    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
     "@typescript-eslint/parser": "^6.4.0",
     "css-loader": "^6.8.1",
     "eslint": "^8.47.0",
