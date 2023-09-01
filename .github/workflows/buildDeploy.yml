@@ -71,7 +71,7 @@ jobs:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@fb8292eb575db1bb18a90627e8959cd51dbb355c # v2.2.10
+        uses: azure/webapps-deploy@4bca689e4c7129e55923ea9c45401b22dc6aa96f # v2.2.11
         with:
           app-name: 'mha'
           slot-name: 'Production'
