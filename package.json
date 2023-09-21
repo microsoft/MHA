@@ -69,7 +69,7 @@
     "@microsoft/applicationinsights-web": "^3.0.2",
     "@microsoft/office-js": "^1.1.88",
     "codepage": "^1.15.0",
-    "dayjs": "^1.11.9",
+    "dayjs": "^1.11.10",
     "framework7": "^1.7.1",
     "framework7-icons": "^5.0.5",
     "jquery": "^3.7.1",
