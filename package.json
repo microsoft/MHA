@@ -37,7 +37,7 @@
   "homepage": "https://github.com/stephenegriffin/mha#readme",
   "devDependencies": {
     "@types/jquery": "^3.5.19",
-    "@types/office-js": "^1.0.343",
+    "@types/office-js": "^1.0.344",
     "@types/qunit": "^2.19.6",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.7.2",
