@@ -38,7 +38,7 @@
   "devDependencies": {
     "@types/jquery": "^3.5.24",
     "@types/office-js": "^1.0.352",
-    "@types/qunit": "^2.19.6",
+    "@types/qunit": "^2.19.7",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
     "css-loader": "^6.8.1",
