@@ -47,7 +47,7 @@
     "exports-loader": "^4.0.0",
     "file-loader": "^6.2.0",
     "filemanager-webpack-plugin": "^8.0.0",
-    "fork-ts-checker-webpack-plugin": "^9.0.0",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
     "grunt": "^1.6.1",
     "grunt-contrib-connect": "^4.0.0",
     "grunt-contrib-qunit": "^8.0.1",
