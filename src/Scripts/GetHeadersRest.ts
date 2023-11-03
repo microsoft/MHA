@@ -5,7 +5,7 @@ import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersEWS } from "./GetHeadersEWS";
 import { Diagnostics } from "./diag";
-import jwt_decode, { JwtPayload } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 /*
  * GetHeadersRest.js
@@ -54,7 +54,7 @@ export class GetHeadersRest {
         }
 
         // parse the token
-        const jwt = jwt_decode<JwtPayload>(accessToken);
+        const jwt = jwtDecode(accessToken);
 
         // 'aud' parameter from token can be in a couple of
         // different formats.
