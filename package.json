@@ -73,7 +73,7 @@
     "framework7": "^1.7.1",
     "framework7-icons": "^5.0.5",
     "jquery": "^3.7.1",
-    "jwt-decode": "^3.1.2",
+    "jwt-decode": "^4.0.0",
     "office-ui-fabric-js": "^1.5.0",
     "promise-polyfill": "8.3.0",
     "qunit": "^2.20.0",
