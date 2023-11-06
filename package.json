@@ -56,7 +56,7 @@
     "office-addin-debugging": "^5.0.12",
     "office-addin-dev-certs": "^1.12.0",
     "office-addin-dev-settings": "^2.0.7",
-    "office-addin-manifest": "^1.12.7",
+    "office-addin-manifest": "^1.12.8",
     "source-map-loader": "^4.0.1",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.5.0",
