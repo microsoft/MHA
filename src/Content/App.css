@@ -225,3 +225,8 @@ td {
 .ms-Button-icon {
     display: inline-block;
 }
+
+.ms-Button.ms-Button--primary {
+    background-color: #0072cc;
+    border-color: #0072cc;
+}

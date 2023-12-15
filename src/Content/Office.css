@@ -19,8 +19,8 @@ blockquote { font-style: italic; margin-left: 1em; }
 
 /* Links
 ***************************************************************/
-a { color: #898989; text-decoration: underline; }
-a:visited { color: #898989; }
+a { color: #747474; text-decoration: underline; }
+a:visited { color: #747474; }
 a:hover { color: #444; text-decoration: none; }
 a:focus { outline: 1; }
 a:hover, a:active { outline: 0; }
