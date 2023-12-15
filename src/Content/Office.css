@@ -22,7 +22,7 @@ blockquote { font-style: italic; margin-left: 1em; }
 a { color: #898989; text-decoration: underline; }
 a:visited { color: #898989; }
 a:hover { color: #444; text-decoration: none; }
-a:focus { outline: 0; }
+a:focus { outline: 1; }
 a:hover, a:active { outline: 0; }
 h1 a { text-decoration: none; }
 
@@ -47,7 +47,7 @@ input[type="submit"], input[type="button"] { height: 24px; padding-left: 1em; pa
    
 /* Tables
 ***************************************************************/
-th, td { text-align: left; vertical-align: top; padding: .4em 1.2em 1em 0; line-height: 1.2em; }
+th, td { text-align: left; vertical-align: top; padding: .4em 1.2em 1em 0; line-height: 1.3em; }
 
 /* Tiles
 ***************************************************************/
