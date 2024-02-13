@@ -39,8 +39,8 @@
     "@types/jquery": "^3.5.29",
     "@types/office-js": "^1.0.373",
     "@types/qunit": "^2.19.10",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
     "css-loader": "^6.10.0",
     "eslint": "^8.56.0",
     "eslint-plugin-node": "^11.1.0",
@@ -63,7 +63,7 @@
     "typescript": "^5.3.3",
     "webpack": "^5.90.1",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
+    "webpack-dev-server": "^5.0.0"
   },
   "dependencies": {
     "@microsoft/applicationinsights-web": "^3.0.8",
