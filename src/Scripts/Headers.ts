@@ -53,55 +53,57 @@ export class HeaderModel {
         let iNextHeader: number = 0;
         let prevHeader: Header | undefined;
         let body: boolean = false;
-        // Unfold lines
-        lines.forEach((line: string) => {
-            // Handling empty lines. The body is separated from the header section by an empty line (RFC 5322, 2.1).
-            // To avoid processing the body as headers we should stop there, as someone might paste an entire message.
-            // Empty lines at the beginning can be omitted, because that could be a common copy-paste error.
-            if (body) return;
-            if (line === "") {
-                if (headerList.length > 0) body = true;
-                return;
-            }
+        header_section: while(!body) {
+            unfold_lines: for (let line of lines) {
+                // Handling empty lines. The body is separated from the header section by an empty line (RFC 5322, 2.1).
+                // To avoid processing the body as headers we should stop there, as someone might paste an entire message.
+                // Empty lines at the beginning can be omitted, because that could be a common copy-paste error.
+                if (body) break header_section;
+                if (line === "") {
+                    if (headerList.length > 0) body = true;
+                    continue unfold_lines;
+                }
 
-            // Recognizing a header:
-            // - First colon comes before first white space.
-            // - We're not strictly honoring white space folding because initial white space
-            // - is commonly lost. Instead, we heuristically assume that space before a colon must have been folded.
-            // This expression will give us:
-            // match[1] - everything before the first colon, assuming no spaces (header).
-            // match[2] - everything after the first colon (value).
-            const match: RegExpMatchArray | null = line.match(/(^[\w-.]*?): ?(.*)/);
+                // Recognizing a header:
+                // - First colon comes before first white space.
+                // - We're not strictly honoring white space folding because initial white space
+                // - is commonly lost. Instead, we heuristically assume that space before a colon must have been folded.
+                // This expression will give us:
+                // match[1] - everything before the first colon, assuming no spaces (header).
+                // match[2] - everything after the first colon (value).
+                const match: RegExpMatchArray | null = line.match(/(^[\w-.]*?): ?(.*)/);
 
-            // There's one false positive we might get: if the time in a Received header has been
-            // folded to the next line, the line might start with something like "16:20:05 -0400".
-            // This matches our regular expression. The RFC does not preclude such a header, but I've
-            // never seen one in practice, so we check for and exclude 'headers' that
-            // consist only of 1 or 2 digits.
-            if (match && match[1] && !match[1].match(/^\d{1,2}$/)) {
-                headerList[iNextHeader] = new Header(match[1], match[2] ?? "");
-                prevHeader = headerList[iNextHeader];
-                iNextHeader++;
-            } else {
-                if (iNextHeader > 0) {
-                    // Tack this line to the previous line
-                    // All folding whitespace should collapse to a single space
-                    line = line.replace(/^[\s]+/, "");
-                    if (!line) return;
-                    if (prevHeader) {
-                        const separator: string = prevHeader.value ? " " : "";
-                        prevHeader.value += separator + line;
-                    }
+                // There's one false positive we might get: if the time in a Received header has been
+                // folded to the next line, the line might start with something like "16:20:05 -0400".
+                // This matches our regular expression. The RFC does not preclude such a header, but I've
+                // never seen one in practice, so we check for and exclude 'headers' that
+                // consist only of 1 or 2 digits.
+                if (match && match[1] && !match[1].match(/^\d{1,2}$/)) {
+                    headerList[iNextHeader] = new Header(match[1], match[2] ?? "");
+                    prevHeader = headerList[iNextHeader];
+                    iNextHeader++;
                 } else {
-                    // If we didn't have a previous line, go ahead and use this line
-                    if (line.match(/\S/g)) {
-                        headerList[iNextHeader] = new Header("", line);
-                        prevHeader = headerList[iNextHeader];
-                        iNextHeader++;
+                    if (iNextHeader > 0) {
+                        // Tack this line to the previous line
+                        // All folding whitespace should collapse to a single space
+                        line = line.replace(/^[\s]+/, "");
+                        if (!line) continue unfold_lines;
+                        if (prevHeader) {
+                            const separator: string = prevHeader.value ? " " : "";
+                            prevHeader.value += separator + line;
+                        }
+                    } else {
+                        // If we didn't have a previous line, go ahead and use this line
+                        if (line.match(/\S/g)) {
+                            headerList[iNextHeader] = new Header("", line);
+                            prevHeader = headerList[iNextHeader];
+                            iNextHeader++;
+                        }
                     }
                 }
             }
-        });
+            break header_section;
+        }
 
         // 2047 decode our headers now
         headerList.forEach((header: Header) => {
