@@ -45,16 +45,24 @@ export class HeaderModel {
     }
 
     public GetHeaderList(headers: string): Header[] {
-        // First, break up out input by lines.
-        const lines: string[] = headers.split(/[\n\r]+/);
+        // First, break up out input by lines. 
+        // Keep empty lines for recognizing the boundary between the header section & the body.
+        const lines: string[] = headers.split(/\n|\r|\r\n/);
 
         const headerList: Header[] = [];
         let iNextHeader: number = 0;
         let prevHeader: Header | undefined;
+        let body: boolean = false;
         // Unfold lines
         lines.forEach((line: string) => {
-            // Skip empty lines
-            if (line === "") return;
+            // Handling empty lines. The body is separated from the header section by an empty line (RFC 5322, 2.1).
+            // To avoid processing the body as headers we should stop there, as someone might paste an entire message.
+            // Empty lines at the beginning can be omitted, because that could be a common copy-paste error.
+            if (body) return;
+            if (line === "") {
+                if (headerList.length > 0) body = true;
+                return;
+            }
 
             // Recognizing a header:
             // - First colon comes before first white space.
