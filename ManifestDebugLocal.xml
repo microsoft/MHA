@@ -14,7 +14,7 @@
   <Description DefaultValue="Microsoft Message Header Analyzer Debug Local" />
   <IconUrl DefaultValue="https://localhost:44336/Resources/mhaLogo64.jpg" />
   <HighResolutionIconUrl DefaultValue="https://localhost:44336/Resources/mhaLogo128.jpg" />
-  <SupportUrl DefaultValue="https://github.com/stephenegriffin/MHA/issues" />
+  <SupportUrl DefaultValue="https://github.com/microsoft/MHA/issues" />
   <Hosts>
     <Host Name="Mailbox" />
   </Hosts>
