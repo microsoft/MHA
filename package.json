@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Message Header Analyzer",
   "engines": {
-    "node": ">=12.13.0",
-    "npm": ">=6.0.0"
+    "node": ">=18.12.0",
+    "npm": ">=8.19.2"
   },
   "private": true,
   "scripts": {
@@ -22,7 +22,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/stephenegriffin/mha.git"
+    "url": "https://github.com/microsoft/MHA.git"
   },
   "author": "Stephen Griffin",
   "license": "MIT",
@@ -32,9 +32,9 @@
     "dev_server_port": 44336
   },
   "bugs": {
-    "url": "https://github.com/stephenegriffin/mha/issues"
+    "url": "https://github.com/microsoft/MHA/issues"
   },
-  "homepage": "https://github.com/stephenegriffin/mha#readme",
+  "homepage": "https://github.com/microsoft/MHA#readme",
   "devDependencies": {
     "@types/jquery": "^3.5.29",
     "@types/office-js": "^1.0.377",
