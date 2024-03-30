@@ -1,0 +1,47 @@
+X-Ms-Exchange-Crosstenant-Originalarrivaltime: 30 Mar 2024 01:35:24.8478 (UTC)
+X-Originatororg: sct-15-20-4755-11-msonline-outlook-e7757.templateTenant
+X-Ms-Exchange-Transport-Crosstenantheadersstamped: SJ0PR19MB5489
+X-Ms-Exchange-Slblob-Mailprops: 3Ax7K/kvddHHOHcaDZ24kXskGyIpqokkM16HgmmNgu7y9ORWjDjwZ48qSh+pLmJcrxZLB4YqOZoyIcfE2qG9bV/2gvd/PX8IQKQ0ue/V/rfIbzBkVCywwUrbIiulBCU/E5ovSnEi7yczYigFipcqMww2oBho4S6eS6/8zgG8g/EDFwTG5EttJsIFVmbIDz4snuY7ZrUOTuO8l+Ra9hIgX4UOo3zoHxrO10CSj4YoeQeino7B9jlEQD97+QSpWy/7O8bXB9DEeEHBZ0s4lfUszzkzQnQ/j+70eu/ROWKoH2zIZNH8FMn+gM5ql7SaNnZu4gKnbEPWdMe8DKqW7f661/8Gvb6tOWFC5uPNat6AAErAeJ4ySTW4Vy1wisQ7vFpom1WcoUwGLfstu4jMsX5l94mQRPrv36278Q0GtGZ0waYuDsbQv0A8aCjpk3Sbbs4YCLtacNwnPhz76C0+oYqD82WWM0TJ2sKrIC83g977RzAm0iRmnFfWb+URwp5iL5NSTesW23/stsw9973ec2BRypuwPhCquP6ONNzcZK2EFAc=
+Authentication-Results: mx.google.com; dkim=temperror (no key for signature) header.i=@msn.com header.s=selector1 header.b=g3yQKpdi; arc=pass (i=1); spf=pass (google.com: domain of jpc6161@msn.com designates 2a01:111:f403:2805::800 as permitted sender) smtp.mailfrom=jpc6161@msn.com; dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=msn.com
+X-Ms-Exchange-Crosstenant-Authsource: SN7PR19MB7353.namprd19.prod.outlook.com
+X-Received: by 2002:a05:6a00:a82:b0:6ea:d10d:c96d with SMTP id b2-20020a056a000a8200b006ead10dc96dmr4234418pfl.19.1711762526444; Fri, 29 Mar 2024 18:35:26 -0700 (PDT)
+X-Ms-Exchange-Crosstenant-Rms-Persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-Ms-Exchange-Crosstenant-Rms-Persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+Return-Path: <jpc6161@msn.com>
+X-Ms-Exchange-Crosstenant-Fromentityheader: Hosted
+X-Ms-Tnef-Correlator: 
+X-Ms-Exchange-Crosstenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-Ms-Exchange-Antispam-Messagedata-Chunkcount: 1
+X-Ms-Publictraffictype: Email
+X-Google-Smtp-Source: AGHT+IFirOpNUAII+5fBGXaWE643plC59b/dWplJMki4qzk46NANbMPZUN5+6GdvUUvOD/U0BXQZ
+X-Ms-Exchange-Crosstenant-Authas: Internal
+Arc-Seal: i=2; a=rsa-sha256; t=1711762526; cv=pass; d=google.com; s=arc-20160816; b=jUDOMgPrTSYTbsYT3Zzp0P+uMmF96gxBjd9sUetAzZlnaHjAeU3lqLs2lVy5Y7xJ1u C2w1Q6MbUFrJpWU487eXljxjeeOTx5TazmwO45/LRJyEWiBD/KHoMlduDyXVzOXXmwtD qkqxdibouGkrLoKWR3cmaKZgJDS4BwJz/wOBhSzfbqUBHGiCWia90fudVXonVOcyL51R IWfRaTvjmSClVWnTEKNzIY1fQSyj+WdpS9POKMIWHN+tfoPunnsJaw7xlLUwmal0qya0 q1UqBJiXVp7QkMA5/9nM0OpKEmH5F8dDtsCZDPdYJTb+bpvvh0iJSu9UlFp7WYqIRgqN eNOQ==
+Arc-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none; b=AzeXGGJYwZFEunLgqKfMvGzM9Sh2/E17f/0vQUjJ3CW+fYKQ+oZpxY3hzrNm26kE+wMxSm6jgm8Zk5dBxWRVaQ/MN3YPwUa+Om6JEe7o51II7qOgoYDpB1hjyTKSDifU8lfJPrdkDv4g0ww/QANJnYjWaHKw330Kr3P5JxLYSfObND3Nvv3OAe9uf9ygoX7SoXerzXx2y3oPdL7ne7+KukuuKRNQkrlbCRmPWssewFiC3zgR+NLhQy5Ft9ssUTHdK3Jk5JHlnpnoq/9ByAvJ/ET1spHFIe1lSDqCDtil9hzpyFpjCjXgv2X7az5tGAu/6icptIuJVvYx7ZwDg/7oHw==
+X-Microsoft-Antispam: BCL:0;
+Thread-Index: AQHagkKJsjjn6HsRvk2MG8L3xFYapA==
+Accept-Language: en-US
+X-Ms-Exchange-Antispam-Messagedata-0: Nl+iKsjql1ym1fClUrZQf4f1rHrXLz2r7hyrAB2tbzxnG3yP4rFp7d28X13WsQ9UJku8odycFsXs3mMfqyUA5w5lJ+nMH8WE2MWSJD0UWDtwqHJn/QzMl18B/AEh5LMo32jLwuvj80iDMtIIhI3o6nPzhEsSY0xcT5RO9Wu/QU/C4K8EI80fd012zG23EKnHaGUauoUHouN6JHSla3jx46cZf+rF/73Cj5IAeOX/+5VrV4/tTm2BIfU+yYqFEaqc5ugG12uyd2mqamzsNru8Eg30jyaeshTqKW7lz5R03FbSQ8WAEyPdPdIW2jB/tusXn8jVRTKOjvofItxQB1/rqlc7WEVBMNim6QSGtixyJEgS2Uha4bb41QN4tCPx+kMpwHNZmXBqfzgfJVGJrqJ0F6ZguzyrBfkwovqcBwGEW/U0dgKqeIe9Q3mUKHNp8/+pirAp5MZyG60OrmGaXIxTBMcCRejUhXz36z8pHBBYUHYgY5rsqmozz3DL3ykQlAMrpw4wHBNa3Iv/fpas2yQLWt6lfVP6w1KuPCD1WZod94ozg6e/jhOlTt5b4tTnZqbXTNNHqlorEKB76GJrQC4F2Qm/IAM6aAJAj1L+6tYsdz0aq4q6BKW2X344d0TcwVBgQM4XR+61LvXlTLfQ4nf+cI4Vr+cnsufjkG++HAMQ59rwKGAgCvQZsHBG6/+4FJWRgQT6/q+BM+64tDwx/guXIXiMIKtunIxsJDnkjW4Puc9x7MXOXtVWGuAJHvirJth3ffIiNrejrc9pb7MfdjbQoLXDzQIhcEixaly+IYxLJMaJIzp4+kcg40WPLKH5A6GbcwfnvlnUssGxtxDBi8B0qSAcFFZZ+cDtuFZlYmPOWJIeKuzsLmNwdh0y4ikMDz2q5X2eI6joZIzDtf+Tq7UcCOtC9vxdvq7xfX0KUsJwADzmu1kwXZxg0ItFiQwDsHtfZLCXUMV5NWUVk+gpydP4MjrPoK6c4+JBs3ubBajyZ89ZryidYdYUhnUQ/sIzHJB6/IoDsyhwqhfMfTo91QgN6glngTTQ+D7YTCKRoH+LdYZk+weT1h32blZ+Ve7k2Mx8lUAphZ5Rod1vq8lSH569wAqcr9em0OLj34AJaATcjAq3xxK9rzCbww5lDh2IX5wyUrHFTlKuYE+WpUTd4Njn2fH4SyBrvMB16Ccu9YRulPcT4XpqRHhW1WRUJQWcjFEtVFVgG9SBOjj6VMk/2p0Elw==
+<SN7PR19MB7353938CA6A605B2E4D4BDEEBC392@SN7PR19MB7353.namprd19.prod.outlook.com>
+X-Microsoft-Antispam-Message-Info: X/jHzPiXDAed87tI5IRWNrVI4m1EZ31YaWV2E8byN7hh2m1oLI7VL0OoijfVBVZDbhdCFmkxOA2XZFsmcuqAYMr4zcxdh230UmcHPwpKGHv82roMrs52CZBvzai9srrcmNb/Ys0MpEpjifE7bhZdjrf9lm1HMdCuadPD4293rdrxksU7RiVa1G3hRxm1BTqPHSglL4NKV7BKBgNZYZDzgMWGUDYfFaTZHklwVk3fgtZteDH4aQJGeqR6rWMasQDVm1EbkGNbcHpEYf1KQhgLjIHzDJbLH+h8gptVQzVNaRSg57HPO2AIvwjF+eUe8Jvaj8RcNM5Bls78Fi2hpvQ7VLyopZJGpmEgg1xVzl2MxG4hQpJ0uPCq60wPPo+8jY4otsQ9wKU3sy1UF0obI9QLXB8vfTT8KzKAzkfm2ECHYgY2PunBUxINuSfn5z+kKTqkEGNVQ3TU9Kfajz+bLR7+Pl253/LfKucGBn/rgvs/raWLw9Z19u86YSuH+EmW2m9gG7Ear3etgnRBblWmfGCnK0ytScPQysGUQQGhCD2eZBfHDqSOZA/zhUraBvCepacd
+Content-Language: en-US
+Arc-Authentication-Results: i=2; mx.google.com; dkim=temperror (no key for signature) header.i=@msn.com header.s=selector1 header.b=g3yQKpdi; arc=pass (i=1); spf=pass (google.com: domain of jpc6161@msn.com designates 2a01:111:f403:2805::800 as permitted sender) smtp.mailfrom=jpc6161@msn.com; dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=msn.com
+Arc-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none; dkim=none; arc=none
+Mime-Version: 1.0
+X-Ms-Office365-Filtering-Correlation-Id: bed4ec96-e1c8-4570-0a7c-08dc5059ac13
+Content-Transfer-Encoding: base64
+Received: by 2002:a25:2648:0:b0:dd6:8251:535f with SMTP id m69csp1149427ybm; Fri, 29 Mar 2024 18:35:26 -0700 (PDT)
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12olkn20800.outbound.protection.outlook.com. [2a01:111:f403:2805::800]) by mx.google.com with ESMTPS id g9-20020aa79dc9000000b006ea90f89a9asi4600059pfq.303.2024.03.29.18.35.26 for <jenunder73@gmail.com> (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128); Fri, 29 Mar 2024 18:35:26 -0700 (PDT)
+Received: from SN7PR19MB7353.namprd19.prod.outlook.com (2603:10b6:806:345::8) by SJ0PR19MB5489.namprd19.prod.outlook.com (2603:10b6:a03:421::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.32; Sat, 30 Mar 2024 01:35:25 +0000
+Received: from SN7PR19MB7353.namprd19.prod.outlook.com ([fe80::a628:c5d0:6780:738d]) by SN7PR19MB7353.namprd19.prod.outlook.com ([fe80::a628:c5d0:6780:738d%6]) with mapi id 15.20.7409.031; Sat, 30 Mar 2024 01:35:25 +0000
+Content-Type: text/plain; charset="utf-8"
+X-Ms-Has-Attach: 
+X-Ms-Exchange-Messagesentrepresentingtype: 1
+X-Ms-Traffictypediagnostic: SN7PR19MB7353:EE_|SJ0PR19MB5489:EE_
+<7778292766AB384F8D57648CDDE3A214@sct-15-20-4755-11-msonline-outlook-e7757.templateTenant>
+Received-Spf: pass (google.com: domain of jpc6161@msn.com designates 2a01:111:f403:2805::800 as permitted sender) client-ip=2a01:111:f403:2805::800;
+X-Tmn: [pRiC27BlS1ZEJCA06rGJug7ruGUxDSPH]
+Delivered-To: jenunder73@gmail.com
+X-Ms-Exchange-Crosstenant-Network-Message-Id: bed4ec96-e1c8-4570-0a7c-08dc5059ac13
+Arc-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816; h=mime-version:content-transfer-encoding:content-id:content-language :accept-language:message-id:date:thread-index:subject:to:from :dkim-signature; bh=BB6ENquVzR8jqz1pwX1eRnZaRB+1qetUlX0aOS5zxE8=; fh=hqSdaoO8hQJgI0Dc4TZHr1g1GuepFmK/7R2wGPm49TU=; b=bQWfILyrC4L8Tr1m570oJAswIdNyMb1HSpzUrc4IOofRiJ8L/XcFoefSaaddjywKkp MOyF4qNpVDSLbVitxMKA6eg39SzujY3dP0v8lgiT8Z3z8r1/XuLnx9EqusmjNqYycfhC eErWh72l7SOpcog/UG2jSoHuFvXeTxN/3UZQlGwI/6q15V9of+g0KEe3+eMMZEW0i9jf SsLdStEAHXNl/DkJ9YCba1Mqe6LbIO/n7OYvcMoLStWl2drfYrl+Tioxwn8qghs9P/4L ICQZ5w7dDL61Gejz60lgjMRtT0TKM/wFwQYXD+WYnO55c0mTGFZcajQDE1njCkOi2dbI JcXA==; dara=google.com
+Arc-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com; s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1; bh=BB6ENquVzR8jqz1pwX1eRnZaRB+1qetUlX0aOS5zxE8=; b=gCnD4vWgj5LmMh9+zQrzKKy+pwcNqjJ6gbewSyoeUpW+tycDyPTWgIZsM5E2qw9B0MMpfpdBBNZVZjqLovPXH4Y6GHU547WxU1RZMR9EM/drtNX9KyHJP131YWegHamYQTMmLvis4rLgOXqPLOwYxj6ix8f7hNXJBqfeuwucNtJgGcbSe/dFmSBHcCW26I40q44LjGkmNju1D3fMUpeBzRWetOvJOVR2L9IEHlUvSOLc2kGVckQUP+SeyrFRySbBTUahB1pqw7nbmGLzmyyiO6K6uG7IXesstojl7aRilQoGzNZret8zMLws9uZDkOQdxWWvanGXMzQKyKD7jJKg6A==
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=msn.com; s=selector1; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck; bh=BB6ENquVzR8jqz1pwX1eRnZaRB+1qetUlX0aOS5zxE8=; b=g3yQKpdiummpPU5AHjhoC13+fLUWvfAWtYf79mJZ2uOcrExWUDGY3oIzY+v1BfRgulWBnrEXY6yAUKy4dEKWS2sOC7ZRIiHQXbt/cYTL4gy8viGX5Yo/wDsiAwv/0Up18zpilyTQXFiAo9KVImTq9uywlZ2jsAvToPpeZ689T6lygRcKRjZiw2/eK4Ox80Z+4YjUpUxmCdsFM+5VBE2jHfRPOXW34rtX2X19EHPK+sWx5X8OUTfn0GgSqY/BPEPT5kRWyoa9P8bhLXBAQEpV3CVOxXaUEpZUh6jJB2JiGbH/4+yBKiOP1S+0312+D4exftAbrUxWZgJZbFeX5Nclaw==
