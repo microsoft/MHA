@@ -47,7 +47,7 @@ export class HeaderModel {
     public GetHeaderList(headers: string): Header[] {
         // First, break up out input by lines. 
         // Keep empty lines for recognizing the boundary between the header section & the body.
-        const lines: string[] = headers.split(/\n|\r|\r\n/);
+        const lines: string[] = headers.split(/\r\n|\r|\n/);
 
         const headerList: Header[] = [];
         let iNextHeader: number = 0;
