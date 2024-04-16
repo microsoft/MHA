@@ -37,10 +37,10 @@
   "homepage": "https://github.com/microsoft/MHA#readme",
   "devDependencies": {
     "@types/jquery": "^3.5.29",
-    "@types/office-js": "^1.0.382",
+    "@types/office-js": "^1.0.383",
     "@types/qunit": "^2.19.10",
-    "@typescript-eslint/eslint-plugin": "^7.6.0",
-    "@typescript-eslint/parser": "^7.6.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
     "css-loader": "^7.1.1",
     "eslint": "^8.57.0",
     "eslint-plugin-node": "^11.1.0",
