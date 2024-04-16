@@ -509,4 +509,47 @@ QUnit.test("parseHeader Tests", function (assert: Assert) {
     assert.arrayEqual(badCaseHeaderModel.receivedHeaders.rows, receivedRows, "receivedRows-bad-casing");
     assert.arrayEqual(badCaseHeaderModel.antiSpamReport.rows, antiSpamRows, "antiSpamRows-bad-casing");
     assert.arrayEqual(badCaseHeaderModel.forefrontAntiSpamReport.rows, forefrontAntiSpamRows, "forefrontAntiSpamRows-bad-casing");
+
+    const lfHeaders = "Received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
+    " (2603:10b6:408:c0::39) by BN8PR19MB2915.namprd19.prod.outlook.com with HTTPS\n" +
+    " via BN8PR15CA0026.NAMPRD15.PROD.OUTLOOK.COM; Tue, 14 Jul 2020 18:41:23 +0000\n" +
+    "\n" +
+    "Received: from HE1EUR04FT039.eop-eur04.prod.protection.outlook.com\n" +
+    " (2a01:111:e400:7e0d::4f) by\n" +
+    " HE1EUR04HT207.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0d::405)\n" +
+    " with Microsoft SMTP Server (version=TLS1_2,\n" +
+    " cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Tue, 14 Jul\n" +
+    " 2020 18:41:22 +0000";
+
+    const lfHeaderModel = new HeaderModel(lfHeaders);
+    assert.equal(lfHeaderModel.receivedHeaders.rows.length, 1, "summaryRows-lf");
+
+    const crlfHeaders = "Received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\r\n" +
+    " (2603:10b6:408:c0::39) by BN8PR19MB2915.namprd19.prod.outlook.com with HTTPS\r\n" +
+    " via BN8PR15CA0026.NAMPRD15.PROD.OUTLOOK.COM; Tue, 14 Jul 2020 18:41:23 +0000\r\n" +
+    "\r\n" +
+    "Received: from HE1EUR04FT039.eop-eur04.prod.protection.outlook.com\r\n" +
+    " (2a01:111:e400:7e0d::4f) by\r\n" +
+    " HE1EUR04HT207.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0d::405)\r\n" +
+    " with Microsoft SMTP Server (version=TLS1_2,\r\n" +
+    " cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Tue, 14 Jul\r\n" +
+    " 2020 18:41:22 +0000";
+
+    const crlfHeaderModel = new HeaderModel(crlfHeaders);
+    assert.equal(crlfHeaderModel.receivedHeaders.rows.length, 1, "summaryRows-crlf");
+
+    const mixedHeaders = "Received: from HE1EUR04HT207.eop-eur04.prod.protection.outlook.com\n" +
+    " (2603:10b6:408:c0::39) by BN8PR19MB2915.namprd19.prod.outlook.com with HTTPS\r\n" +
+    " via BN8PR15CA0026.NAMPRD15.PROD.OUTLOOK.COM; Tue, 14 Jul 2020 18:41:23 +0000\r\n" +
+    "Received: from HE1EUR04FT039.eop-eur04.prod.protection.outlook.com\n" +
+    " (2a01:111:e400:7e0d::4f) by\r" +
+    " HE1EUR04HT207.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0d::405)\n" +
+    " with Microsoft SMTP Server (version=TLS1_2,\n" +
+    " cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Tue, 14 Jul\r\n" +
+    " 2020 18:41:22 +0000\n";
+    "\r\n" +
+    "Received: garbage";
+
+    const mixedHeaderModel = new HeaderModel(mixedHeaders);
+    assert.equal(mixedHeaderModel.receivedHeaders.rows.length, 2, "summaryRows-mixed");
 });
