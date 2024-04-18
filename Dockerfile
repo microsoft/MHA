@@ -1,6 +1,6 @@
-FROM node:latest@sha256:814a6dc5bfd4ecc5ef24652f6b4f2790e9f3552b52ee38a7b51fc4d4c0d6d7fd
+FROM node:latest@sha256:162d92c5f1467ad877bf6d8a098d9b04d7303879017a2f3644bfb1de1fc88ff0
 
 WORKDIR /app
 
-RUN git clone https://github.com/stephenegriffin/MHA.git
+RUN git clone https://github.com/microsoft/MHA.git
 RUN cd /app/MHA && npm i && npm run build --if-present

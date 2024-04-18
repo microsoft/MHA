@@ -8,6 +8,7 @@ body {
 
 textarea {
     font-size: 1em;
+    resize: none;
 }
 
 input {

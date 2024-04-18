@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Message Header Analyzer",
   "engines": {
-    "node": ">=12.13.0",
-    "npm": ">=6.0.0"
+    "node": ">=18.12.0",
+    "npm": ">=8.19.2"
   },
   "private": true,
   "scripts": {
@@ -22,7 +22,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/stephenegriffin/mha.git"
+    "url": "https://github.com/microsoft/MHA.git"
   },
   "author": "Stephen Griffin",
   "license": "MIT",
@@ -32,19 +32,19 @@
     "dev_server_port": 44336
   },
   "bugs": {
-    "url": "https://github.com/stephenegriffin/mha/issues"
+    "url": "https://github.com/microsoft/MHA/issues"
   },
-  "homepage": "https://github.com/stephenegriffin/mha#readme",
+  "homepage": "https://github.com/microsoft/MHA#readme",
   "devDependencies": {
     "@types/jquery": "^3.5.29",
-    "@types/office-js": "^1.0.363",
-    "@types/qunit": "^2.19.9",
-    "@typescript-eslint/eslint-plugin": "^6.15.0",
-    "@typescript-eslint/parser": "^6.15.0",
-    "css-loader": "^6.8.1",
-    "eslint": "^8.56.0",
+    "@types/office-js": "^1.0.383",
+    "@types/qunit": "^2.19.10",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
+    "css-loader": "^7.1.1",
+    "eslint": "^8.57.0",
     "eslint-plugin-node": "^11.1.0",
-    "exports-loader": "^4.0.0",
+    "exports-loader": "^5.0.0",
     "file-loader": "^6.2.0",
     "filemanager-webpack-plugin": "^8.0.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
@@ -52,22 +52,22 @@
     "grunt-contrib-connect": "^4.0.0",
     "grunt-contrib-qunit": "^8.0.1",
     "html-webpack-plugin": "^5.6.0",
-    "mini-css-extract-plugin": "^2.7.6",
-    "office-addin-debugging": "^5.0.14",
+    "mini-css-extract-plugin": "^2.9.0",
+    "office-addin-debugging": "^5.1.0",
     "office-addin-dev-certs": "^1.12.0",
-    "office-addin-dev-settings": "^2.2.0",
+    "office-addin-dev-settings": "^2.2.1",
     "office-addin-manifest": "^1.12.7",
-    "source-map-loader": "^4.0.1",
-    "style-loader": "^3.3.3",
+    "source-map-loader": "^5.0.0",
+    "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.3.3",
-    "webpack": "^5.89.0",
+    "typescript": "^5.4.5",
+    "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
+    "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
-    "@microsoft/applicationinsights-web": "^3.0.7",
-    "@microsoft/office-js": "^1.1.89",
+    "@microsoft/applicationinsights-web": "^3.1.2",
+    "@microsoft/office-js": "^1.1.92",
     "codepage": "^1.15.0",
     "dayjs": "^1.11.10",
     "framework7": "^1.7.1",
@@ -76,7 +76,7 @@
     "jwt-decode": "^4.0.0",
     "office-ui-fabric-js": "^1.5.0",
     "promise-polyfill": "8.3.0",
-    "qunit": "^2.20.0",
+    "qunit": "^2.20.1",
     "stacktrace-js": "^2.0.2"
   },
   "-vs-binding": {
