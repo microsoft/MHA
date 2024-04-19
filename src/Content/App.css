@@ -227,7 +227,16 @@ td {
     display: inline-block;
 }
 
-.ms-Button.ms-Button--primary {
+.ms-Button {
+    background-color: #949494;
+    border-color: #0072cc;
+}
+
+.ms-Button-label {
+    color:#FFFFFF;
+}
+
+.ms-button.ms-button--primary {
     background-color: #0072cc;
     border-color: #0072cc;
 }
