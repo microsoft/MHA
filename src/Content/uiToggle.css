@@ -75,3 +75,21 @@ a:hover:not(:focus) {
     outline: #333 solid 1px;
     outline-offset: 2px;
 }
+
+.ms-Button-icon {
+    display: inline-block;
+}
+
+.ms-Button {
+    background-color: #949494;
+    border-color: #0072cc;
+}
+
+.ms-Button-label {
+    color:#FFFFFF;
+}
+
+.ms-button.ms-button--primary {
+    background-color: #0072cc;
+    border-color: #0072cc;
+}
