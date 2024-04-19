@@ -45,3 +45,33 @@ body, html {
     box-sizing: border-box;
     max-width: none;
 }
+
+.ms-RadioButton-field:focus {
+    outline: #0072cc solid 1px;
+    outline-offset: 2px;
+}
+
+.ms-RadioButton-field:hover:not(:focus) {
+    outline: #333 solid 1px;
+    outline-offset: 2px;
+}
+
+.ms-CheckBox-field:focus .ms-Label {
+    outline: #0072cc solid 1px;
+    outline-offset: 2px;
+}
+
+.ms-CheckBox-field:hover:not(:focus) .ms-Label {
+    outline: #333 solid 1px;
+    outline-offset: 2px;
+}
+
+a:focus {
+    outline: #0072cc solid 1px;
+    outline-offset: 2px;
+}
+
+a:hover:not(:focus) {
+    outline: #333 solid 1px;
+    outline-offset: 2px;
+}
