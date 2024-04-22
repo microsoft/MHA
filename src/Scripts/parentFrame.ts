@@ -313,10 +313,6 @@ export class ParentFrame {
             new fabric["Button"](button, actionHandler);
         });
 
-        const choiceGroup: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
-        if (!choiceGroup || !choiceGroup[0]) return;
-        new fabric["ChoiceFieldGroup"](choiceGroup[0]);
-
         const choiceFieldGroupElements: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
         Array.prototype.forEach.call(choiceFieldGroupElements, (choiceFieldGroupElement: HTMLElement) => {
             new fabric["ChoiceFieldGroup"](choiceFieldGroupElement);
