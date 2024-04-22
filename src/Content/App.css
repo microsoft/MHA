@@ -224,21 +224,3 @@ td {
     background-color: #f4f4f4;
     padding: 0;
 }
-
-.ms-Button-icon {
-    display: inline-block;
-}
-
-.ms-Button {
-    background-color: #949494;
-    border-color: #0072cc;
-}
-
-.ms-Button-label {
-    color:#FFFFFF;
-}
-
-.ms-button.ms-button--primary {
-    background-color: #0072cc;
-    border-color: #0072cc;
-}

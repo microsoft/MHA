@@ -1,0 +1,43 @@
+/* Fabric specific styling overrides */
+
+.ms-Button {
+    border-color: black;
+}
+
+.ms-Button:focus, .ms-Button:hover {
+    border-color: black;
+}
+
+.ms-Button-icon {
+    display: inline-block;
+}
+
+.ms-button.ms-button--primary {
+    background-color: #0072cc;
+    border-color: black;
+}
+
+.ms-RadioButton-field:focus {
+    outline: #0072cc solid 1px;
+    outline-offset: 2px;
+}
+
+.ms-RadioButton-field:hover:not(:focus) {
+    outline: #333 solid 1px;
+    outline-offset: 2px;
+}
+
+.ms-CheckBox-field:focus .ms-Label {
+    outline: #0072cc solid 1px;
+    outline-offset: 2px;
+}
+
+.ms-CheckBox-field:hover:not(:focus) .ms-Label {
+    outline: #333 solid 1px;
+    outline-offset: 2px;
+}
+
+a:focus {
+    outline: #0072cc solid 1px;
+    outline-offset: 2px;
+}
