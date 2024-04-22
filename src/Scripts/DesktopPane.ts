@@ -53,9 +53,11 @@ function initializeFabric(): void {
         if (event.currentTarget) {
             const btnIcon: JQuery<HTMLElement> = $(event.currentTarget).find(".ms-Icon");
             if (btnIcon.hasClass("ms-Icon--Add")) {
+                buttonElement.setAttribute("aria-expanded", "true");
                 $("#original-headers").show();
                 btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
             } else {
+                buttonElement.setAttribute("aria-expanded", "false");
                 $("#original-headers").hide();
                 btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
             }
