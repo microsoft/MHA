@@ -313,6 +313,8 @@ export class ParentFrame {
                     const diagnostics: string = getDiagnostics();
                     $("#diagnostics").text(diagnostics);
                     dialogDiagnosticsComponent.open();
+                    const okButton: HTMLElement = document.getElementById("actionsDiag-OK")!;
+                    okButton.focus();
                     break;
                 }
             }
