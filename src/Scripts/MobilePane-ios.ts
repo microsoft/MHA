@@ -347,6 +347,7 @@ function buildViews(headers: string): void {
                     .addClass("external")
                     .appendTo(headerName);
             }
+            else headerName.attr("tabindex", 0);
 
             const contentBlock = $("<div/>")
                 .addClass("content-block")

@@ -37,30 +37,28 @@
     word-wrap: break-word;
 }
 
-a {
-    color: #000000;
-    text-decoration: underline;
-}
-
+a,
 a:visited {
     color: #000000;
+    text-decoration: underline;
 }
 
 a:hover {
     color: #444;
 }
 
-a:focus {
+a:focus,
+div:focus {
     outline: #0072cc solid 2px;
     outline-offset: 2px;
 }
 
-a.item-content {
+a.item-content,
+a.tab-link {
+    outline-offset: -4px;
     text-decoration: none;
 }
 
-a.item-content:focus {
-    outline: #0072cc solid 2px;
-    outline-offset: -4px;
-    text-decoration: none;
+.content-block-title {
+    overflow: visible;
 }
