@@ -377,6 +377,30 @@ function renderItem(headers: string): void {
     updateStatus(mhaStrings.mhaLoading);
 
     buildViews(headers);
+
+    // To avoid tabbing to the hidden content, we're using a style to set hidden content to display: none
+    // .accordion-item:not(.accordion-item-expanded) .accordion-item-content { display: none; }
+    // This interferes with Framework7's accordion behavior, so we're using a MutationObserver to set the height to auto when the accordion is expanded
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === "class") {
+                const target = mutation.target as HTMLElement;
+                if (target.classList.contains("accordion-item-expanded")) {
+                    console.log("expanded");
+                    const content = target.querySelector(".accordion-item-content") as HTMLElement;
+                    if (content) {
+                        content.style.height = "auto";
+                    }
+                }
+            }
+        });
+    });
+
+    const accordions = document.querySelectorAll(".accordion-item");
+    accordions.forEach((accordion) => {
+        observer.observe(accordion, { attributes: true });
+    });
+
     if (myApp) myApp.hidePreloader();
 }
 

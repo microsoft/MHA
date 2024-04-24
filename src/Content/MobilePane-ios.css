@@ -62,3 +62,7 @@ a.tab-link {
 .content-block-title {
     overflow: visible;
 }
+
+.accordion-item:not(.accordion-item-expanded) .accordion-item-content {
+        display: none;
+}
