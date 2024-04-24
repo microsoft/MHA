@@ -385,6 +385,7 @@ export class Table {
             }
         });
         captionDiv.text(title);
+        captionDiv.attr("tabindex", 0);
 
         const lessSpan = $(document.createElement("span"));
         lessSpan.addClass("collapsibleSwitch");

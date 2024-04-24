@@ -1,4 +1,4 @@
-.code-box > pre {
+.code-box>pre {
     background-color: #eaeaea;
     border: 1px solid #ccc;
     padding: 5px 10px;
@@ -10,7 +10,8 @@
     display: none;
 }
 
-.timeline-item-subtitle, .timeline-item-text {
+.timeline-item-subtitle,
+.timeline-item-text {
     word-wrap: break-word;
 }
 
@@ -27,11 +28,39 @@
     background: #f4f4f4;
 }
 
-.content-block-title{
-    text-transform:none;
-    white-space:normal;
+.content-block-title {
+    text-transform: none;
+    white-space: normal;
 }
 
 .content-block {
     word-wrap: break-word;
+}
+
+a {
+    color: #000000;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #000000;
+}
+
+a:hover {
+    color: #444;
+}
+
+a:focus {
+    outline: #0072cc solid 2px;
+    outline-offset: 2px;
+}
+
+a.item-content {
+    text-decoration: none;
+}
+
+a.item-content:focus {
+    outline: #0072cc solid 2px;
+    outline-offset: -4px;
+    text-decoration: none;
 }
