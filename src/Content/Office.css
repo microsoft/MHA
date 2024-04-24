@@ -23,7 +23,7 @@ a { color: #000000; text-decoration: underline; }
 a:visited { color: #000000; }
 a:hover { color: #444; text-decoration: none; }
 a:focus {
-    outline: #0072cc solid 1px;
+    outline: #0072cc solid 2px;
     outline-offset: 2px;
 }
 a:hover, a:active { outline: 0; }
