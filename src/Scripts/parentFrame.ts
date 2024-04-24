@@ -354,22 +354,31 @@ export class ParentFrame {
             strings.copyToClipboard(ParentFrame.modelToString);
         };
 
-        // Tabbing into the radio buttons doesn't do what we want by default, so watch for tabbing in from these places and set the focus on the checked radio button:
-        // 1. Tabbing forward (no shift) from the settings button
-        // 2. Tabbing backward (shift) from the telemetry checkbox
-        // 3. Tabbing forward (no shift) from the body
+        // Tabbing into the radio buttons doesn't do what we want by default, so watch for tabbing and handle all the cases
         document.addEventListener("keydown", function (e) {
             if (e.key === "Tab") {
                 const shiftPressed = e.shiftKey;
                 const checked: HTMLLabelElement = document.querySelector(".ms-RadioButton-field.is-checked")!;
                 const focused: HTMLElement = document.activeElement as HTMLElement;
-                // ParentFrame.logElement("checked", checked);
-                // ParentFrame.logElement("focused", focused);
+                ParentFrame.logElement("checked", checked);
+                ParentFrame.logElement("focused", focused);
                 if (checked && focused) {
+                    // Tab forward from settings button, body, or OK should go to radio buttons
+                    // Tab backwards from telemetry checkbox should go to radio buttons
                     if ((!shiftPressed && focused.title === "Settings") ||
-                        (shiftPressed && focused.id === "telemetryLabel") ||
-                        (!shiftPressed && focused === this.body)) {
+                        (!shiftPressed && focused === this.body) ||
+                        (!shiftPressed && focused.id === "actionsSettings-OK") ||
+                        (shiftPressed && focused.id === "telemetryLabel")) {
+                        console.log("Tabbing into radio buttons");
                         checked.focus();
+                        e.preventDefault();
+                    }
+                    // shift tab from radio buttons or body should go to OK
+                    else if ((shiftPressed && focused.className === "ms-RadioButton-input") ||
+                        (shiftPressed && focused === this.body)) {
+                        console.log("Tabbing to OK");
+                        const okButton: HTMLElement = document.getElementById("actionsSettings-OK")!;
+                        okButton.focus();
                         e.preventDefault();
                     }
                 }
@@ -396,17 +405,17 @@ export class ParentFrame {
         });
     }
 
-    // private static logElement(title: string, element: HTMLElement): void {
-    //     let out = title + " element:" + element;
-    //     if (element.id) out += " id:" + element.id;
-    //     if (element.className) out += " class:" + element.className;
-    //     if (element.getAttribute("role")) out += " role:" + element.getAttribute("role");
-    //     if (element.title) out += " title:" + element.title;
-    //     if (element.getAttribute("aria-checked")) out += " aria-checked:" + element.getAttribute("aria-checked");
-    //     if (element.getAttribute("for")) out += " for:" + element.getAttribute("for");
-    //     if (element.getAttribute("name")) out += " name:" + element.getAttribute("name");
-    //     console.log(out);
-    // }
+    private static logElement(title: string, element: HTMLElement): void {
+        let out = title + " element:" + element;
+        if (element.id) out += " id:" + element.id;
+        if (element.className) out += " class:" + element.className;
+        if (element.getAttribute("role")) out += " role:" + element.getAttribute("role");
+        if (element.title) out += " title:" + element.title;
+        if (element.getAttribute("aria-checked")) out += " aria-checked:" + element.getAttribute("aria-checked");
+        if (element.getAttribute("for")) out += " for:" + element.getAttribute("for");
+        if (element.getAttribute("name")) out += " name:" + element.getAttribute("name");
+        console.log(out);
+    }
 
     public static setSendTelemetryUI(sendTelemetry: boolean) {
         sendTelemetry ? this.telemetryCheckboxComponent.check() : this.telemetryCheckboxComponent.unCheck();
