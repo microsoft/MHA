@@ -73,6 +73,7 @@ export class Table {
             }
         });
         header.text(title);
+        header.attr("tabindex", 0);
 
         const moreSpan = $(document.createElement("span"));
         moreSpan.addClass("collapsibleSwitch");
@@ -367,6 +368,7 @@ export class Table {
             }
         });
         header.text(title);
+        header.attr("tabindex", 0);
 
         const moreSpan = $(document.createElement("span"));
         moreSpan.addClass("collapsibleSwitch");

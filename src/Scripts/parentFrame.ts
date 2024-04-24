@@ -362,27 +362,26 @@ export class ParentFrame {
                 // ParentFrame.logElement("checked", checked);
                 // ParentFrame.logElement("focused", focused);
                 if (checked && focused) {
-                    // Tab forward from settings button, body, or OK should go to radio buttons
+                    // Tab forward from body, or OK should go to radio buttons
                     // Tab backwards from telemetry checkbox should go to radio buttons
-                    if ((!shiftPressed && focused.title === "Settings") ||
-                        (!shiftPressed && focused === this.body) ||
+                    if ((!shiftPressed && focused === this.body) ||
                         (!shiftPressed && focused.id === "actionsSettings-OK") ||
                         (shiftPressed && focused.id === "telemetryLabel")) {
-                        console.log("Tabbing into radio buttons");
+                        // console.log("Tabbing into radio buttons");
                         checked.focus();
                         e.preventDefault();
                     }
                     // Shift tab from radio buttons or body should go to OK
                     else if ((shiftPressed && focused.className === "ms-RadioButton-input") ||
                         (shiftPressed && focused === this.body)) {
-                        console.log("Tabbing to OK");
+                        // console.log("Tabbing to OK");
                         const okButton: HTMLElement = document.getElementById("actionsSettings-OK")!;
                         okButton.focus();
                         e.preventDefault();
                     }
                     // Tab or shift tab from diagnostics OK should go to code
                     else if (focused.id === "actionsDiag-OK") {
-                        console.log("Tabbing to diagnostics");
+                        // console.log("Tabbing to diagnostics");
                         const diagButton: HTMLElement = document.getElementById("diagpre")!;
                         diagButton.focus();
                         e.preventDefault();
