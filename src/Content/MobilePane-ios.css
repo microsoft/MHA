@@ -62,7 +62,7 @@ a.tab-link {
 .content-block-title {
     overflow: visible;
 }
-
+/* See MutationObserver in renderItem to see how we set the height back to auto after this */
 .accordion-item:not(.accordion-item-expanded) .accordion-item-content {
         display: none;
 }
