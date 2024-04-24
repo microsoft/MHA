@@ -228,7 +228,6 @@ export class ParentFrame {
 
             //  Create html: <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
             const label: JQuery<HTMLLabelElement> = ParentFrame.create(listItem, "label", "ms-RadioButton-field");
-            label.attr("role", "radio");
             label.attr("name", "uiChoice");
             label.attr("value", choice.label);
             label.attr("for", id);
