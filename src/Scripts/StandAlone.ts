@@ -56,10 +56,12 @@ function clear() {
     viewModel = new HeaderModel();
     table.resetArrows();
     table.rebuildSections(viewModel);
+    document.getElementById("inputHeaders")?.focus();
 }
 
 function copy() {
     strings.copyToClipboard(viewModel.toString());
+    document.getElementById("copyButton")?.focus();
 }
 
 if ($) {
