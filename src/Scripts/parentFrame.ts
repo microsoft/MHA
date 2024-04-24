@@ -313,8 +313,7 @@ export class ParentFrame {
                     const diagnostics: string = getDiagnostics();
                     $("#diagnostics").text(diagnostics);
                     dialogDiagnosticsComponent.open();
-                    const okButton: HTMLElement = document.getElementById("actionsDiag-OK")!;
-                    okButton.focus();
+                    document.getElementById("diagpre")!.focus();
                     break;
                 }
             }
@@ -360,8 +359,8 @@ export class ParentFrame {
                 const shiftPressed = e.shiftKey;
                 const checked: HTMLLabelElement = document.querySelector(".ms-RadioButton-field.is-checked")!;
                 const focused: HTMLElement = document.activeElement as HTMLElement;
-                ParentFrame.logElement("checked", checked);
-                ParentFrame.logElement("focused", focused);
+                // ParentFrame.logElement("checked", checked);
+                // ParentFrame.logElement("focused", focused);
                 if (checked && focused) {
                     // Tab forward from settings button, body, or OK should go to radio buttons
                     // Tab backwards from telemetry checkbox should go to radio buttons
@@ -373,12 +372,19 @@ export class ParentFrame {
                         checked.focus();
                         e.preventDefault();
                     }
-                    // shift tab from radio buttons or body should go to OK
+                    // Shift tab from radio buttons or body should go to OK
                     else if ((shiftPressed && focused.className === "ms-RadioButton-input") ||
                         (shiftPressed && focused === this.body)) {
                         console.log("Tabbing to OK");
                         const okButton: HTMLElement = document.getElementById("actionsSettings-OK")!;
                         okButton.focus();
+                        e.preventDefault();
+                    }
+                    // Tab or shift tab from diagnostics OK should go to code
+                    else if (focused.id === "actionsDiag-OK") {
+                        console.log("Tabbing to diagnostics");
+                        const diagButton: HTMLElement = document.getElementById("diagpre")!;
+                        diagButton.focus();
                         e.preventDefault();
                     }
                 }
@@ -405,17 +411,17 @@ export class ParentFrame {
         });
     }
 
-    private static logElement(title: string, element: HTMLElement): void {
-        let out = title + " element:" + element;
-        if (element.id) out += " id:" + element.id;
-        if (element.className) out += " class:" + element.className;
-        if (element.getAttribute("role")) out += " role:" + element.getAttribute("role");
-        if (element.title) out += " title:" + element.title;
-        if (element.getAttribute("aria-checked")) out += " aria-checked:" + element.getAttribute("aria-checked");
-        if (element.getAttribute("for")) out += " for:" + element.getAttribute("for");
-        if (element.getAttribute("name")) out += " name:" + element.getAttribute("name");
-        console.log(out);
-    }
+    // private static logElement(title: string, element: HTMLElement): void {
+    //     let out = title + " element:" + element;
+    //     if (element.id) out += " id:" + element.id;
+    //     if (element.className) out += " class:" + element.className;
+    //     if (element.getAttribute("role")) out += " role:" + element.getAttribute("role");
+    //     if (element.title) out += " title:" + element.title;
+    //     if (element.getAttribute("aria-checked")) out += " aria-checked:" + element.getAttribute("aria-checked");
+    //     if (element.getAttribute("for")) out += " for:" + element.getAttribute("for");
+    //     if (element.getAttribute("name")) out += " name:" + element.getAttribute("name");
+    //     console.log(out);
+    // }
 
     public static setSendTelemetryUI(sendTelemetry: boolean) {
         sendTelemetry ? this.telemetryCheckboxComponent.check() : this.telemetryCheckboxComponent.unCheck();
