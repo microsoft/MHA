@@ -220,21 +220,32 @@ export class ParentFrame {
 
             // Create html: <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
             const input: JQuery<HTMLInputElement> = ParentFrame.create(listItem, "input", "ms-RadioButton-input");
+            const id = choice.label;
 
-            input.attr("tabindex", "-1");
             input.attr("type", "radio");
             input.attr("value", iChoice);
+            input.attr("id", id);
 
             //  Create html: <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
             const label: JQuery<HTMLLabelElement> = ParentFrame.create(listItem, "label", "ms-RadioButton-field");
             label.attr("role", "radio");
-            label.attr("tabindex", "0");
             label.attr("name", "uiChoice");
             label.attr("value", choice.label);
+            label.attr("for", id);
 
             // Create html: <span class="ms-Label">classic</span>
             const inputSpan: JQuery<HTMLSpanElement> = ParentFrame.create(label, "span", "ms-Label");
             inputSpan.text(choice.label);
+
+            // Keyboard navigation of the radio buttons isn't setting them, so we watch for focus and set them
+            input.on("focus", function (): void {
+                const labels: JQuery<HTMLElement> = $("#uiChoice label");
+                labels.removeClass("is-checked");
+                labels.attr("aria-checked", "false");
+                label.addClass("is-checked");
+                label.attr("aria-checked", "true");
+                ParentFrame.logElement("focus", label[0] as HTMLElement);
+            });
         });
     }
 
@@ -332,12 +343,68 @@ export class ParentFrame {
             const input: JQuery<HTMLLabelElement> = currentSelected.prevAll("input:first");
             input.prop("checked", "true");
             dialogSettingsComponent.open();
+            // When dialog is opened, focus on the current selected radio button
+            const inputLabel: HTMLElement = document.querySelector("#uiChoice label[value=" + ParentFrame.currentChoice.label + "]")!;
+            inputLabel.focus();
         };
 
         const copyButton: HTMLButtonElement = header.querySelector(".copy-button") as HTMLButtonElement;
         copyButton.onclick = function (): void {
             strings.copyToClipboard(ParentFrame.modelToString);
         };
+
+        // Tabbing into the radio buttons doesn't do what we want by default, so watch for tabbing in from these places and set the focus on the checked radio button:
+        // 1. Tabbing forward (no shift) from the settings button
+        // 2. Tabbing backward (shift) from the telemetry checkbox
+        // 3. Tabbing forward (no shift) from the body
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Tab") {
+                const shiftPressed = e.shiftKey;
+                const checked: HTMLLabelElement = document.querySelector(".ms-RadioButton-field.is-checked")!;
+                const focused: HTMLElement = document.activeElement as HTMLElement;
+                ParentFrame.logElement("checked", checked);
+                ParentFrame.logElement("focused", focused);
+                if (checked && focused) {
+                    if ((!shiftPressed && focused.title === "Settings") ||
+                        (shiftPressed && focused.id === "telemetryLabel") ||
+                        (!shiftPressed && focused === this.body)) {
+                        checked.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        });
+
+        // Mouse selection of radio buttons sets the focus on the body instead of the radio button.
+        // Watch for "is checked" class changes and set the focus on the checked radio button
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === "class") {
+                    const target = mutation.target as HTMLElement;
+                    if (target.classList.contains("is-checked")) {
+                        ParentFrame.logElement("MutationObserver", target);
+                        target.focus();
+                    }
+                }
+            });
+        });
+
+        const labels = document.querySelectorAll(".ms-RadioButton-field");
+        labels.forEach((label) => {
+            observer.observe(label, { attributes: true });
+        });
+    }
+
+    private static logElement(title: string, element: HTMLElement): void {
+        let out = title + " element:" + element;
+        if (element.id) out += " id:" + element.id;
+        if (element.className) out += " class:" + element.className;
+        if (element.getAttribute("role")) out += " role:" + element.getAttribute("role");
+        if (element.title) out += " title:" + element.title;
+        if (element.getAttribute("aria-checked")) out += " aria-checked:" + element.getAttribute("aria-checked");
+        if (element.getAttribute("for")) out += " for:" + element.getAttribute("for");
+        if (element.getAttribute("name")) out += " name:" + element.getAttribute("name");
+        console.log(out);
     }
 
     public static setSendTelemetryUI(sendTelemetry: boolean) {

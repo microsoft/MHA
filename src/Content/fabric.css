@@ -4,7 +4,8 @@
     border-color: black;
 }
 
-.ms-Button:focus, .ms-Button:hover {
+.ms-Button:focus,
+.ms-Button:hover {
     border-color: black;
 }
 
@@ -38,6 +39,11 @@
 }
 
 a:focus {
+    outline: #0072cc solid 1px;
+    outline-offset: 2px;
+}
+
+input[type="radio"]:focus+label {
     outline: #0072cc solid 1px;
     outline-offset: 2px;
 }
