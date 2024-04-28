@@ -70,7 +70,7 @@ if ($) {
         viewModel = new HeaderModel();
         table = new Table();
         table.initializeTableUI(viewModel);
-        table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, () => true);
+        table.makeResizablePane("inputHeaders", "sectionHeader", mhaStrings.mhaPrompt, () => true);
 
         (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;
         (document.querySelector("#clearButton") as HTMLButtonElement).onclick = clear;

@@ -44,13 +44,18 @@ export class Table {
         }
     }
 
-    private toggleCollapse(object: HTMLElement): void {
-        $(".collapsibleElement", $(object).parents(".collapsibleWrapper")).toggle();
+    private isExpanded(id: string): boolean {
+        return $("#"+ id+"Wrapper .moreSwitch").hasClass("hiddenElement");
+    }
+
+    private toggleCollapse(id: string): void {
+        $("#"+ id).toggleClass("hiddenElement");
+        $("#"+ id+"Wrapper .collapsibleSwitch").toggleClass("hiddenElement");
         this.positionResponse();
     }
 
     // Wraps an element into a collapsible pane with a title
-    public makeResizablePane(id: string, title: string, visibility: (table: Table) => boolean): void {
+    public makeResizablePane(id: string, paneClass: string, title: string, visibility: (table: Table) => boolean): void {
         const pane = $("#" + id);
         if (pane.hasClass("collapsibleElement")) {
             return;
@@ -64,25 +69,28 @@ export class Table {
             wrap.attr("id", id + "Wrapper");
             this.visibilityBindings.push({ name: "#" + id + "Wrapper", visible: visibility });
         }
-        const header = $(document.createElement("div"));
-        header.addClass("sectionHeader");
-        header.bind("click", this, function (eventObject) {
+        const header = $(document.createElement("button"));
+        header.addClass(paneClass);
+        header.on("click", this, function (eventObject) {
             const table: Table = eventObject.data as Table;
             if (table) {
-                table.toggleCollapse(eventObject.currentTarget);
+                table.toggleCollapse(id);
+                header.attr("aria-expanded", table.isExpanded(id)? "true" : "false");
             }
         });
         header.text(title);
         header.attr("tabindex", 0);
+        header.attr("type", "button");
+        header.attr("aria-expanded", !hidden ? "true" : "false");
 
         const moreSpan = $(document.createElement("span"));
         moreSpan.addClass("collapsibleSwitch");
-        moreSpan.addClass("collapsibleElement");
+        moreSpan.addClass("moreSwitch");
         moreSpan.html("+&nbsp;");
 
         const lessSpan = $(document.createElement("span"));
         lessSpan.addClass("collapsibleSwitch");
-        lessSpan.addClass("collapsibleElement");
+        lessSpan.addClass("lessSwitch");
         lessSpan.html("&ndash;&nbsp;");
 
         // Now that everything is built, put it together
@@ -91,9 +99,9 @@ export class Table {
         header.append(moreSpan);
         header.append(lessSpan);
         if (hidden) {
-            lessSpan.hide();
+            lessSpan.addClass("hiddenElement");
         } else {
-            moreSpan.hide();
+            moreSpan.addClass("hiddenElement");
         }
     }
 
@@ -175,7 +183,7 @@ export class Table {
 
     // Restores table to empty state so we can repopulate it
     private emptyTableUI(id: string): void {
-        $("#" + id + " tbody tr").remove(); // Remove the rows
+        $("#" + id + " tr").remove(); // Remove the rows
         $("#" + id + " th").removeClass("emptyColumn"); // Restore header visibility
         $("#" + id + " th").removeClass("hiddenElement"); // Restore header visibility
     }
@@ -256,7 +264,7 @@ export class Table {
             }
         });
 
-        $("#receivedHeaders tbody tr:odd").addClass("oddRow");
+        $("#receivedHeaders tr:odd").addClass("oddRow");
         this.hideEmptyColumns("receivedHeaders");
 
         // Forefront AntiSpam Report
@@ -279,7 +287,7 @@ export class Table {
             this.appendCell(row, otherRow.value, "", "allowBreak");
         });
 
-        $("#otherHeaders tbody tr:odd").addClass("oddRow");
+        $("#otherHeaders tr:odd").addClass("oddRow");
 
         // Original headers
         $("#originalHeaders").text(this.viewModel.originalHeaders);
@@ -346,63 +354,6 @@ export class Table {
         }
     }
 
-    // Wraps a table into a collapsible table with a title
-    private makeResizableTable(id: string, title: string, visibility: (table: Table) => boolean): void {
-        const pane = $("#" + id);
-        if (pane.hasClass("collapsibleElement")) { return; }
-
-        pane.addClass("collapsibleElement");
-        const wrap = $(document.createElement("div"));
-        wrap.addClass("collapsibleWrapper");
-        if (visibility) {
-            wrap.attr("id", id + "Wrapper");
-            this.visibilityBindings.push({ name: "#" + id + "Wrapper", visible: visibility });
-        }
-
-        const header = $(document.createElement("div"));
-        header.addClass("tableCaption");
-        header.bind("click", this, function (eventObject) {
-            const table: Table = eventObject.data as Table;
-            if (table) {
-                table.toggleCollapse(eventObject.currentTarget);
-            }
-        });
-        header.text(title);
-        header.attr("tabindex", 0);
-
-        const moreSpan = $(document.createElement("span"));
-        moreSpan.addClass("collapsibleSwitch");
-        moreSpan.html("+&nbsp;");
-        header.append(moreSpan);
-        header.addClass("collapsibleElement");
-
-        const captionDiv = $(document.createElement("div"));
-        captionDiv.addClass("tableCaption");
-        captionDiv.bind("click", this, function (eventObject) {
-            const table: Table = eventObject.data as Table;
-            if (table) {
-                table.toggleCollapse(eventObject.currentTarget);
-            }
-        });
-        captionDiv.text(title);
-        captionDiv.attr("tabindex", 0);
-
-        const lessSpan = $(document.createElement("span"));
-        lessSpan.addClass("collapsibleSwitch");
-        lessSpan.html("&ndash;&nbsp;");
-        captionDiv.append(lessSpan);
-
-        const tbody = $(document.createElement("tbody"));
-
-        // Now that everything is built, put it together
-        pane.wrap(wrap);
-        pane.before(header);
-        pane.append(tbody);
-        const caption = $((pane[0] as HTMLTableElement).createCaption());
-        caption.prepend(captionDiv);
-        header.hide();
-    }
-
     private hideExtraColumns(): void {
         this.showExtra = false;
         $("#leftArrow").addClass("hiddenElement");
@@ -435,15 +386,15 @@ export class Table {
         this.viewModel = _viewModel;
 
         // Headers
-        this.makeResizablePane("originalHeaders", mhaStrings.mhaOriginalHeaders, (table: Table) => { return table.viewModel.originalHeaders.length > 0; });
-        $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
+        this.makeResizablePane("originalHeaders", "sectionHeader", mhaStrings.mhaOriginalHeaders, (table: Table) => { return table.viewModel.originalHeaders.length > 0; });
+        this.toggleCollapse("originalHeaders"); // start this section hidden
 
         // Summary
-        this.makeResizablePane("summary", mhaStrings.mhaSummary, function (table: Table) { return table.viewModel.summary.exists(); });
+        this.makeResizablePane("summary", "sectionHeader", mhaStrings.mhaSummary, function (table: Table) { return table.viewModel.summary.exists(); });
         this.makeSummaryTable("#summary", this.viewModel.summary.rows, "SUM");
 
         // Received
-        this.makeResizableTable("receivedHeaders", mhaStrings.mhaReceivedHeaders, function (table: Table) { return table.viewModel.receivedHeaders.exists(); });
+        this.makeResizablePane("receivedHeaders", "tableCaption", mhaStrings.mhaReceivedHeaders, function (table: Table) { return table.viewModel.receivedHeaders.exists(); });
 
         const receivedColumns = [
             new column("hop", mhaStrings.mhaReceivedHop, ""),
@@ -485,15 +436,15 @@ export class Table {
         });
 
         // FFAS
-        this.makeResizablePane("forefrontAntiSpamReport", mhaStrings.mhaForefrontAntiSpamReport, function (table: Table) { return table.viewModel.forefrontAntiSpamReport.exists(); });
+        this.makeResizablePane("forefrontAntiSpamReport", "sectionHeader", mhaStrings.mhaForefrontAntiSpamReport, function (table: Table) { return table.viewModel.forefrontAntiSpamReport.exists(); });
         this.makeSummaryTable("#forefrontAntiSpamReport", this.viewModel.forefrontAntiSpamReport.rows, "FFAS");
 
         // AntiSpam
-        this.makeResizablePane("antiSpamReport", mhaStrings.mhaAntiSpamReport, (table: Table) => { return table.viewModel.antiSpamReport.exists(); });
+        this.makeResizablePane("antiSpamReport", "sectionHeader", mhaStrings.mhaAntiSpamReport, (table: Table) => { return table.viewModel.antiSpamReport.exists(); });
         this.makeSummaryTable("#antiSpamReport", this.viewModel.antiSpamReport.rows, "AS");
 
         // Other
-        this.makeResizableTable("otherHeaders", mhaStrings.mhaOtherHeaders, function (table: Table) { return table.viewModel.otherHeaders.rows.length > 0; });
+        this.makeResizablePane("otherHeaders", "tableCaption", mhaStrings.mhaOtherHeaders, function (table: Table) { return table.viewModel.otherHeaders.rows.length > 0; });
 
         const otherColumns = [
             new column("number", mhaStrings.mhaNumber, ""),
