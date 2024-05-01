@@ -1,9 +1,13 @@
 /* Fabric specific styling overrides */
 
-.ms-Button,
+.ms-Button {
+    border: black solid 2px;
+}
+
+.ms-CommandButton-button:focus:before,
 .ms-Button:focus,
 .ms-Button:hover {
-    border-color: black;
+    border: #0072cc solid 2px;
 }
 
 .ms-Button-icon {
@@ -12,10 +16,9 @@
 
 .ms-button.ms-button--primary {
     background-color: #0072cc;
-    border-color: black;
+    border: black solid 2px;
 }
 
-.ms-RadioButton-field:focus,
 .ms-CheckBox-field:focus .ms-Label,
 a:focus,
 input[type="radio"]:focus+label {
@@ -23,8 +26,56 @@ input[type="radio"]:focus+label {
     outline-offset: 2px;
 }
 
-.ms-RadioButton-field:hover:not(:focus),
-.ms-CheckBox-field:hover:not(:focus) .ms-Label {
-    outline: #333 solid 12pxpx;
-    outline-offset: 2px;
+@media screen and (-ms-high-contrast: black-on-white) {
+    .ms-RadioButton-field.is-checked:after {
+        background-color: buttonborder;
+    }
+}
+
+@media screen and (-ms-high-contrast:active) {
+    .ms-Button-icon,
+    .ms-Icon,
+    .ms-RadioButton-field,
+    .ms-CheckBox-field,
+    .ms-CheckBox-field:after {
+       color: buttonborder;
+    }
+
+    .ms-Dialog {
+        outline: buttonborder solid 2px;
+    }
+
+    .ms-Button,
+    .ms-Button:focus,
+    .ms-Button:hover {
+        border: #0078d7 solid 2px;
+    }
+
+    .ms-CommandButton-button:focus,
+    .ms-CommandButton-button:hover {
+        outline: highlight solid 2px;
+        outline-offset: -2px;
+    }
+
+    .ms-CommandButton-button:focus:before {
+        border: none;
+    }
+    .ms-CommandButton-button,
+    .ms-CommandButton-splitIcon {
+        outline: none;
+    }
+
+    .ms-CheckBox-field:focus .ms-Label,
+    input[type="radio"]:focus+label {
+        outline-color: highlight;
+    }
+
+    .ms-ProgressIndicator-progressBar {
+        background-color: highlight;
+    }
+
+    .ms-CommandButton.ms-CommandButton--pivot.is-active:before,
+    .ms-CommandButton.ms-CommandButton--pivot:hover:before {
+        background-color: highlight;
+    }
 }

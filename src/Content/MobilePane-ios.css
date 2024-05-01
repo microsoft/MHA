@@ -1,3 +1,4 @@
+/* Framework7 specific overrides */
 .code-box>pre {
     background-color: #eaeaea;
     border: 1px solid #ccc;
@@ -65,4 +66,10 @@ a.tab-link {
 /* See MutationObserver in renderItem to see how we set the height back to auto after this */
 .accordion-item:not(.accordion-item-expanded) .accordion-item-content {
         display: none;
+}
+
+@media screen and (-ms-high-contrast:active) {
+    .progressbar span {
+        background: highlight;
+    }
 }

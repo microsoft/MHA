@@ -1,5 +1,6 @@
 body {
     padding: 0;
+    background-color: canvas;
 }
 
 .aspNetHidden {
@@ -129,9 +130,23 @@ td {
 }
 
 .sectionHeader:focus,
-.tableCaption:focus {
+.sectionHeader:hover {
     outline: black solid 2px;
     outline-offset: -2px;
+}
+
+.tableCaption:focus, 
+.tableCaption:hover {
+    outline: #0072cc solid 2px;
+    outline-offset: -2px;
+}
+@media screen and (-ms-high-contrast:active) {
+    .sectionHeader:focus,
+    .sectionHeader:hover,
+    .tableCaption:focus
+    .tableCaption:hover {
+        background-color: buttonface;
+    }
 }
 
 .collapsibleArrow {
@@ -183,6 +198,12 @@ td {
     border-radius: 3px;
 }
 
+@media screen and (-ms-high-contrast:active) {
+    .hotBarBar {
+        background-color: highlight;
+    }
+}
+
 .hotBarLabel {
     padding: 0.4em 1.2em 2px 0;
     white-space: nowrap;
@@ -190,6 +211,12 @@ td {
 
 .negativeCell {
     color: #E44D4D; /* A nice red */
+}
+
+@media screen and (-ms-high-contrast:active) {
+    .negativeCell {
+        color: highlight;
+    }
 }
 
 #hop {
