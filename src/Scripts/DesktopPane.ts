@@ -260,9 +260,11 @@ function buildViews(headers: string) {
                 const row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
                     .text(antispamrow.label)
+                    .attr("id", antispamrow.id)
                     .appendTo(row);
                 $("<td/>")
                     .html(antispamrow.valueUrl)
+                    .attr("aria-labelledby", antispamrow.id)
                     .appendTo(row);
             });
         }
@@ -286,9 +288,11 @@ function buildViews(headers: string) {
                 const row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
                     .text(antispamrow.label)
+                    .attr("id", antispamrow.id)
                     .appendTo(row);
                 $("<td/>")
                     .html(antispamrow.valueUrl)
+                    .attr("aria-labelledby", antispamrow.id)
                     .appendTo(row);
             });
         }
