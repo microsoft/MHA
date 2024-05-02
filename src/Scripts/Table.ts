@@ -185,7 +185,7 @@ export class Table {
 
     // Restores table to empty state so we can repopulate it
     private emptyTableUI(id: string): void {
-        $("#" + id + " tr").remove(); // Remove the rows
+        $("#" + id + " tr:not(.tableHeader)").remove(); // Remove the rows
         $("#" + id + " th").removeClass("emptyColumn"); // Restore header visibility
         $("#" + id + " th").removeClass("hiddenElement"); // Restore header visibility
     }
