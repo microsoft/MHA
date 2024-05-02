@@ -68,6 +68,7 @@ function addSpamReportRow(spamRow: Row, parent: JQuery<HTMLElement>) {
         $("<div/>")
             .addClass("item-title")
             .text(spamRow.label)
+            .attr("id", spamRow.id)
             .appendTo(innerItem);
 
         const itemContent = $("<div/>")
@@ -79,6 +80,7 @@ function addSpamReportRow(spamRow: Row, parent: JQuery<HTMLElement>) {
             .appendTo(itemContent);
 
         const linkWrap = $("<p/>")
+            .attr("aria-labelledby", spamRow.id)
             .appendTo(contentBlock);
 
         $($.parseHTML(spamRow.valueUrl))

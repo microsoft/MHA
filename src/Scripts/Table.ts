@@ -132,11 +132,13 @@ export class Table {
                             headerCell.text(summaryRow.label);
                         }
                         headerCell.addClass("summaryHeader");
+                        headerCell.attr("id", summaryRow.id);
                     }
 
                     const valCell = $(row.insertCell(-1));
                     if (valCell) {
                         valCell.attr("id", id + "Val");
+                        valCell.attr("aria-labelledby", summaryRow.id);
                     }
 
                     this.makeVisible("#" + id, false);
