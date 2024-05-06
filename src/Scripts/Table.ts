@@ -297,35 +297,50 @@ export class Table {
         this.recalculateVisibility();
     }
 
-    private makeSortableColumn(tableName: string, id: string): void {
-        const header = $("#" + id);
-
-        header.bind("click", this, function (eventObject) {
-            const table: Table = eventObject.data as Table;
-            if (table) {
-                if (table.viewModel[tableName] instanceof iTable) {
-                    const itable = table.viewModel[tableName] as iTable;
-                    itable.doSort(id);
-                    table.setArrows(itable.tableName, itable.sortColumn,
-                        itable.sortOrder);
-                    table.rebuildSections(table.viewModel);
+    private makeSortableColumn(tableName: string, column: column): JQuery<HTMLElement> {
+        const header = $(document.createElement("th"));
+        if (header !== null) {
+            const headerButton = $(document.createElement("button"));
+            if (headerButton !== null) {
+                headerButton.addClass("tableHeaderButton");
+                headerButton.attr("id", column.id);
+                headerButton.attr("type", "button");
+                headerButton.text(column.label);
+                if (column.class !== null) {
+                    headerButton.addClass(column.class);
                 }
+
+                headerButton.on("click", this, function (eventObject) {
+                    const table: Table = eventObject.data as Table;
+                    if (table) {
+                        if (table.viewModel[tableName] instanceof iTable) {
+                            const itable = table.viewModel[tableName] as iTable;
+                            itable.doSort(column.id);
+                            table.setArrows(itable.tableName, itable.sortColumn,
+                                itable.sortOrder);
+                            table.rebuildSections(table.viewModel);
+                        }
+                    }
+                });
+
+                const downSpan = $(document.createElement("span"));
+                downSpan.addClass("downArrow");
+                downSpan.addClass("hiddenElement");
+                downSpan.html("&darr;");
+    
+                const upSpan = $(document.createElement("span"));
+                upSpan.addClass("upArrow");
+                upSpan.addClass("hiddenElement");
+                upSpan.html("&uarr;");
+    
+                // Now that everything is built, put it together
+                headerButton.append(downSpan);
+                headerButton.append(upSpan);
+                header.append(headerButton);
             }
-        });
+        }
 
-        const downSpan = $(document.createElement("span"));
-        downSpan.addClass("downArrow");
-        downSpan.addClass("hiddenElement");
-        downSpan.html("&darr;");
-
-        const upSpan = $(document.createElement("span"));
-        upSpan.addClass("upArrow");
-        upSpan.addClass("hiddenElement");
-        upSpan.html("&uarr;");
-
-        // Now that everything is built, put it together
-        header.append(downSpan);
-        header.append(upSpan);
+        return header;
     }
 
     private addColumns(tableName: string, columns: column[]): void {
@@ -339,18 +354,7 @@ export class Table {
                 tableHeader.append(headerRow); // Must happen before we append cells to appease IE7
 
                 columns.forEach((column: column) => {
-                    const headerCell = $(document.createElement("th"));
-                    if (headerCell !== null) {
-                        headerCell.attr("id", column.id);
-                        headerCell.text(column.label);
-                        if (column.class !== null) {
-                            headerCell.addClass(column.class);
-                        }
-
-                        headerRow.append(headerCell);
-                    }
-
-                    this.makeSortableColumn(tableName, column.id);
+                    headerRow.append(this.makeSortableColumn(tableName, column));
                 });
             }
         }
@@ -429,7 +433,7 @@ export class Table {
             withColumn.append(rightSpan);
         }
 
-        $("#receivedHeaders .collapsibleArrow").bind("click", this, function (eventObject) {
+        $("#receivedHeaders .collapsibleArrow").on("click", this, function (eventObject) {
             const table: Table = eventObject.data as Table;
             if (table) {
                 table.toggleExtraColumns();
