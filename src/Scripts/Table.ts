@@ -148,14 +148,8 @@ export class Table {
     }
 
     private setArrows(table: string, colName: string, sortOrder: number): void {
-        $("#" + table + " .tableHeader .downArrow").addClass("hiddenElement");
-        $("#" + table + " .tableHeader .upArrow").addClass("hiddenElement");
-
-        if (sortOrder === 1) {
-            $("#" + table + " .tableHeader #" + colName + " .downArrow").removeClass("hiddenElement");
-        } else {
-            $("#" + table + " .tableHeader #" + colName + " .upArrow").removeClass("hiddenElement");
-        }
+        $("#" + table + " th button").attr("aria-sort", "none");
+        $("#" + table + " th #" + colName).attr("aria-sort", sortOrder === 1 ? "descending" : "ascending");
     }
 
     private setRowValue(row: Row, type: string): void {
@@ -305,6 +299,8 @@ export class Table {
                 headerButton.addClass("tableHeaderButton");
                 headerButton.attr("id", column.id);
                 headerButton.attr("type", "button");
+                headerButton.attr("role", "columnheader");
+                headerButton.attr("aria-sort", "none");
                 headerButton.text(column.label);
                 if (column.class !== null) {
                     headerButton.addClass(column.class);
@@ -323,19 +319,12 @@ export class Table {
                     }
                 });
 
-                const downSpan = $(document.createElement("span"));
-                downSpan.addClass("downArrow");
-                downSpan.addClass("hiddenElement");
-                downSpan.html("&darr;");
-    
-                const upSpan = $(document.createElement("span"));
-                upSpan.addClass("upArrow");
-                upSpan.addClass("hiddenElement");
-                upSpan.html("&uarr;");
-    
+                const arrowSpan = $(document.createElement("span"));
+                arrowSpan.attr("aria-hidden", "true");
+                arrowSpan.addClass("sortArrow");
+
                 // Now that everything is built, put it together
-                headerButton.append(downSpan);
-                headerButton.append(upSpan);
+                headerButton.append(arrowSpan);
                 header.append(headerButton);
             }
         }

@@ -105,6 +105,20 @@ td {
     padding: 1em 1.2em 1em 1.2em;
 }
 
+.tableHeaderButton[aria-sort="descending"] .sortArrow::after {
+    content: "\2193"; /* Down arrow */
+}
+
+.tableHeaderButton[aria-sort="ascending"] .sortArrow::after {
+    content: "\2191"; /* Up arrow */
+}
+
+@media screen and (-ms-high-contrast:active) {
+    .tableHeaderButton .sortArrow::after {
+        color: buttontext;
+    }
+}
+
 .tableHeader td + td,
 .tableHeader th + th { border-left: 1px solid white; }
 .tableHeader tr + tr { border-top: 1px solid black; }
