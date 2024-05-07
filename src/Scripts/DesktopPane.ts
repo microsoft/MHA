@@ -66,6 +66,7 @@ function initializeFabric(): void {
 
     // Show summary by default
     $(".header-view[data-content='summary-view']").show();
+    document.getElementById("summary-btn")!.focus();
 
     // Wire up click events for nav buttons
     $("#nav-bar .ms-CommandButton").click(function (): void {
