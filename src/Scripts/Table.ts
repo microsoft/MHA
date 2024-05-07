@@ -44,13 +44,8 @@ export class Table {
         }
     }
 
-    private isExpanded(id: string): boolean {
-        return $("#"+ id+"Wrapper .moreSwitch").hasClass("hiddenElement");
-    }
-
     private toggleCollapse(id: string): void {
         $("#"+ id).toggleClass("hiddenElement");
-        $("#"+ id+"Wrapper .collapsibleSwitch").toggleClass("hiddenElement");
         this.positionResponse();
     }
 
@@ -75,7 +70,7 @@ export class Table {
             const table: Table = eventObject.data as Table;
             if (table) {
                 table.toggleCollapse(id);
-                header.attr("aria-expanded", table.isExpanded(id)? "true" : "false");
+                header.attr("aria-expanded", header.attr("aria-expanded") === "true" ? "false" : "true");
             }
         });
         header.text(title);
@@ -83,26 +78,14 @@ export class Table {
         header.attr("type", "button");
         header.attr("aria-expanded", !hidden ? "true" : "false");
 
-        const moreSpan = $(document.createElement("span"));
-        moreSpan.addClass("collapsibleSwitch");
-        moreSpan.addClass("moreSwitch");
-        moreSpan.html("+&nbsp;");
-
-        const lessSpan = $(document.createElement("span"));
-        lessSpan.addClass("collapsibleSwitch");
-        lessSpan.addClass("lessSwitch");
-        lessSpan.html("&ndash;&nbsp;");
+        const switchSpan = $(document.createElement("span"));
+        switchSpan.attr("aria-hidden", "true");
+        switchSpan.addClass("collapsibleSwitch");
 
         // Now that everything is built, put it together
         pane.wrap(wrap);
         pane.before(header);
-        header.append(moreSpan);
-        header.append(lessSpan);
-        if (hidden) {
-            lessSpan.addClass("hiddenElement");
-        } else {
-            moreSpan.addClass("hiddenElement");
-        }
+        header.append(switchSpan);
     }
 
     private makeVisible(id: string, visible: boolean): void {

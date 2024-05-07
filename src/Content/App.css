@@ -113,12 +113,6 @@ td {
     content: "\2191"; /* Up arrow */
 }
 
-@media screen and (-ms-high-contrast:active) {
-    .tableHeaderButton .sortArrow::after {
-        color: buttontext;
-    }
-}
-
 .tableHeader td + td,
 .tableHeader th + th { border-left: 1px solid white; }
 .tableHeader tr + tr { border-top: 1px solid black; }
@@ -191,6 +185,14 @@ td {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+button[aria-expanded="true"] .collapsibleSwitch::after {
+    content: "\2013"; /* Minus (ndash) */
+}
+
+button[aria-expanded="false"] .collapsibleSwitch::after {
+    content: "+"; /* Plus */
 }
 
 .collapsibleWrapper {
@@ -274,4 +276,9 @@ td {
     height: 44px;
     background-color: #f4f4f4;
     padding: 0;
+}
+
+@media screen and (-ms-high-contrast:active) {
+    .tableHeaderButton .sortArrow::after { color: buttontext; }
+    button .collapsibleSwitch::after { color: buttontext; }
 }
