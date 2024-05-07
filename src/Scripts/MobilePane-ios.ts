@@ -31,6 +31,7 @@ function initializeFramework7(): void {
     myApp.addView("#received-view");
     myApp.addView("#antispam-view");
     myApp.addView("#other-view");
+    document.getElementById("summary-btn")!.focus();
 }
 
 function updateStatus(message: string): void {
