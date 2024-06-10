@@ -37,7 +37,7 @@
   "homepage": "https://github.com/microsoft/MHA#readme",
   "devDependencies": {
     "@types/jquery": "^3.5.30",
-    "@types/office-js": "^1.0.393",
+    "@types/office-js": "^1.0.394",
     "@types/qunit": "^2.19.10",
     "@typescript-eslint/eslint-plugin": "^7.12.0",
     "@typescript-eslint/parser": "^7.12.0",
@@ -50,7 +50,7 @@
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "grunt": "^1.6.1",
     "grunt-contrib-connect": "^4.0.0",
-    "grunt-contrib-qunit": "^8.0.1",
+    "grunt-contrib-qunit": "^9.0.0",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.0",
     "office-addin-debugging": "^5.1.2",
