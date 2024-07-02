@@ -66,7 +66,7 @@
     "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
-    "@microsoft/applicationinsights-web": "^3.2.2",
+    "@microsoft/applicationinsights-web": "^3.3.0",
     "@microsoft/office-js": "^1.1.93",
     "codepage": "^1.15.0",
     "dayjs": "^1.11.11",
