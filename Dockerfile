@@ -1,4 +1,4 @@
-FROM node:latest@sha256:b98ec1c96103fbe1a9e449b3854bbc0a0ed1c5936882ae0939d4c3a771265b4b
+FROM node:latest@sha256:c8a559f733bf1f9b3c1d05b97d9a9c7e5d3647c99abedaf5cdd3b54c9cbb8eff
 
 WORKDIR /app
 
