@@ -79,3 +79,19 @@ input[type="radio"]:focus+label {
         background-color: highlight;
     }
 }
+
+/* bug fix 1691683 */
+@media screen and (-ms-high-contrast: white-on-black) {
+    .ms-RadioButton-field.is-checked:after {
+        background-color: buttonborder;
+    }
+}
+
+/* bug fix 1697464 */
+.ms-RadioButton-field:before  {
+    border-color: #6C6B6B !important;
+ }
+
+ .ms-CheckBox-field:before {
+    border-color: #6C6B6B !important;
+ }

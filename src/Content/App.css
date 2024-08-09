@@ -282,3 +282,9 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     .tableHeaderButton .sortArrow::after { color: buttontext; }
     button .collapsibleSwitch::after { color: buttontext; }
 }
+
+/* bug fix 1691247 */
+.ms-Button.ms-Button--primary {
+    color: #FFFFFF;
+    background-color: #0677D3;
+}
