@@ -1,5 +1,6 @@
 import "office-ui-fabric-js/dist/css/fabric.min.css";
 import "office-ui-fabric-js/dist/css/fabric.components.min.css";
+import "../Content/fabric.css";
 import "../Content/Office.css";
 import "../Content/App.css";
 import * as $ from "jquery";
@@ -55,10 +56,12 @@ function clear() {
     viewModel = new HeaderModel();
     table.resetArrows();
     table.rebuildSections(viewModel);
+    document.getElementById("inputHeaders")?.focus();
 }
 
 function copy() {
     strings.copyToClipboard(viewModel.toString());
+    document.getElementById("copyButton")?.focus();
 }
 
 if ($) {
@@ -67,7 +70,7 @@ if ($) {
         viewModel = new HeaderModel();
         table = new Table();
         table.initializeTableUI(viewModel);
-        table.makeResizablePane("inputHeaders", mhaStrings.mhaPrompt, () => true);
+        table.makeResizablePane("inputHeaders", "sectionHeader", mhaStrings.mhaPrompt, () => true);
 
         (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;
         (document.querySelector("#clearButton") as HTMLButtonElement).onclick = clear;

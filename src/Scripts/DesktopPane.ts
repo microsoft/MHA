@@ -1,5 +1,6 @@
 import "office-ui-fabric-js/dist/css/fabric.min.css";
 import "office-ui-fabric-js/dist/css/fabric.components.min.css";
+import "../Content/fabric.css";
 import "../Content/DesktopPane.css";
 import * as $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
@@ -52,9 +53,11 @@ function initializeFabric(): void {
         if (event.currentTarget) {
             const btnIcon: JQuery<HTMLElement> = $(event.currentTarget).find(".ms-Icon");
             if (btnIcon.hasClass("ms-Icon--Add")) {
+                buttonElement.setAttribute("aria-expanded", "true");
                 $("#original-headers").show();
                 btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
             } else {
+                buttonElement.setAttribute("aria-expanded", "false");
                 $("#original-headers").hide();
                 btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
             }
@@ -63,6 +66,7 @@ function initializeFabric(): void {
 
     // Show summary by default
     $(".header-view[data-content='summary-view']").show();
+    document.getElementById("summary-btn")!.focus();
 
     // Wire up click events for nav buttons
     $("#nav-bar .ms-CommandButton").click(function (): void {
@@ -257,9 +261,11 @@ function buildViews(headers: string) {
                 const row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
                     .text(antispamrow.label)
+                    .attr("id", antispamrow.id)
                     .appendTo(row);
                 $("<td/>")
                     .html(antispamrow.valueUrl)
+                    .attr("aria-labelledby", antispamrow.id)
                     .appendTo(row);
             });
         }
@@ -283,9 +289,11 @@ function buildViews(headers: string) {
                 const row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
                     .text(antispamrow.label)
+                    .attr("id", antispamrow.id)
                     .appendTo(row);
                 $("<td/>")
                     .html(antispamrow.valueUrl)
+                    .attr("aria-labelledby", antispamrow.id)
                     .appendTo(row);
             });
         }
