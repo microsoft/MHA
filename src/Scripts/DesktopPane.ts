@@ -75,7 +75,7 @@ function initializeFabric(): void {
         // Remove active from current active
         $("#nav-bar .is-active").removeClass("is-active");
         // Add active class to clicked button
-        $(this).addClass("is-active"); 
+        $(this).addClass("is-active");
 
         // Get content marker
         const content: string | undefined = $(this).attr("data-content");
@@ -85,10 +85,8 @@ function initializeFabric(): void {
         const ariaLabel=$(this).find('.ms-CommandButton-label')!.text()+" Selected";
         $(this).find('.ms-CommandButton-label')!.attr('aria-label',ariaLabel);
         $(this).find('button.ms-CommandButton-button').attr('aria-label',ariaLabel);
-        
-
         $(".header-view").hide();
-        $(".header-view[data-content='" + content + "']").show();     
+        $(".header-view[data-content='" + content + "']").show();
     });
 }
 
@@ -211,6 +209,7 @@ function buildViews(headers: string) {
                     .html(makeBold("To: ") + row.by)
                     .appendTo(listItem);
             }
+            
             index=index+1;
             $("<div/>")
                 .addClass("ms-ListItem-selectionTarget")
