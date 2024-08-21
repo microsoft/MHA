@@ -10,25 +10,25 @@
             <div class="ms-CommandBar" id="nav-bar">
                 <div class="ms-CommandBar-mainArea">
                     <div class="ms-CommandButton ms-CommandButton--pivot is-active" data-content="summary-view">
-                        <button class="ms-CommandButton-button" id="summary-btn" title="Summary">
+                        <button class="ms-CommandButton-button" id="summary-btn" title="Summary" aria-label="Summary Selected"><!--Fix for Bug1691252 - Removed aria-label and added dynamically on button click-->
                             <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Info"></i></span>
                             <span class="ms-CommandButton-label">Summary</span>
                         </button>
                     </div>
                     <div class="ms-CommandButton ms-CommandButton--pivot" data-content="received-view">
-                        <button class="ms-CommandButton-button"  title="Received"> <!-- Bug fix 1696469 -->
+                        <button class="ms-CommandButton-button" title="Received" aria-label="Received"> <!-- Bug fix 1696469 -->
                             <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Timer"></i></span>
                             <span class="ms-CommandButton-label">Received</span>
                         </button>
                     </div>
                     <div class="ms-CommandButton ms-CommandButton--pivot" data-content="antispam-view">
-                        <button class="ms-CommandButton-button" title="Antispam">
+                        <button class="ms-CommandButton-button" title="Antispam" aria-label="Antispam">
                             <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--MailAlert"></i></span>
                             <span class="ms-CommandButton-label">Antispam</span>
                         </button>
                     </div>
                     <div class="ms-CommandButton ms-CommandButton--pivot" data-content="other-view">
-                        <button class="ms-CommandButton-button" title="Other">
+                        <button class="ms-CommandButton-button" title="Other" aria-label="Other">
                             <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Cake"></i></span>
                             <span class="ms-CommandButton-label">Other</span>
                         </button>

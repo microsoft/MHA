@@ -70,18 +70,27 @@ function initializeFabric(): void {
 
     // Wire up click events for nav buttons
     $("#nav-bar .ms-CommandButton").click(function (): void {
+        /* Fix for Bug1691252 - To set aria-label dynamically on click based on button name*/
+        $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label")!.length!==0?$("#nav-bar .is-active .ms-CommandButton-button").attr('aria-label', $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label").text()):"";
         // Remove active from current active
-        $("#nav-bar .is-active").removeClass("is-active");
+         $("#nav-bar .is-active").removeClass("is-active");
         // Add active class to clicked button
-        $(this).addClass("is-active");
+        $(this).addClass("is-active");        
 
         // Get content marker
         const content: string | undefined = $(this).attr("data-content");
         // Hide sub-views
+      
+        //Fix for Bug1691252 - To set aria-label as button after selection like "Summary Selected"
+        const ariaLabel=$(this).find('.ms-CommandButton-label')!.text()+" Selected";
+        $(this).find('.ms-CommandButton-label')!.attr('aria-label',ariaLabel);
+        $(this).find('button.ms-CommandButton-button').attr('aria-label',ariaLabel);
+        
+
         $(".header-view").hide();
-        $(".header-view[data-content='" + content + "']").show();
+        $(".header-view[data-content='" + content + "']").show();     
     });
-}
+   }
 
 function updateStatus(message: string) {
     $(".status-message").text(message);
@@ -138,9 +147,11 @@ function buildViews(headers: string) {
             .appendTo(receivedList);
 
         let firstRow: boolean = true;
-        viewModel.receivedHeaders.rows.forEach((row: ReceivedRow) => {
+        viewModel.receivedHeaders.rows.forEach((row: ReceivedRow,index) => {
             const listItem = $("<li/>")
                 .addClass("ms-ListItem")
+                .attr("tabindex",index)
+                .attr("id","received"+index)
                 .addClass("ms-ListItem--document")
                 .appendTo(list);
 
@@ -148,6 +159,7 @@ function buildViews(headers: string) {
                 $("<span/>")
                     .addClass("ms-ListItem-primaryText")
                     .html(makeBold("From: ") + row.from)
+                    .attr("tabindex",index)
                     .appendTo(listItem);
 
                 $("<span/>")
@@ -199,7 +211,7 @@ function buildViews(headers: string) {
                     .html(makeBold("To: ") + row.by)
                     .appendTo(listItem);
             }
-
+index=index+1;
             $("<div/>")
                 .addClass("ms-ListItem-selectionTarget")
                 .appendTo(listItem);
@@ -343,6 +355,8 @@ function hideStatus(): void {
     spinner.stop();
     overlay.hide();
 }
+
+ 
 
 function renderItem(headers: string): void {
     // Empty data
