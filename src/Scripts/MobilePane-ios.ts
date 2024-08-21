@@ -59,7 +59,7 @@ function addSpamReportRow(spamRow: Row, parent: JQuery<HTMLElement>) {
         const link = $("<a/>")
             .addClass("item-content")
             .addClass("item-link")
-            .attr("role","button") /*Fix for the Bug1691252- To announce link item as role button */
+            .attr("role", "button") // Fix for the Bug 1691252- To announce link item as role button
             .attr("href", "#")
             .appendTo(item);
 
