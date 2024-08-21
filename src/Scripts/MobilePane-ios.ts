@@ -303,7 +303,7 @@ function buildViews(headers: string): void {
 
         const list: JQuery<HTMLElement> = $("<div/>")
             .addClass("list-block")
-            .addClass("accordion-list")            
+            .addClass("accordion-list")
             .appendTo(antispamContent);
 
         const ul: JQuery<HTMLElement> = $("<ul/>")

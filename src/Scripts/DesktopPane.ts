@@ -73,9 +73,9 @@ function initializeFabric(): void {
         /* Fix for Bug1691252 - To set aria-label dynamically on click based on button name*/
         $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label")!.length!==0?$("#nav-bar .is-active .ms-CommandButton-button").attr('aria-label', $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label").text()):"";
         // Remove active from current active
-         $("#nav-bar .is-active").removeClass("is-active");
+        $("#nav-bar .is-active").removeClass("is-active");
         // Add active class to clicked button
-        $(this).addClass("is-active");        
+        $(this).addClass("is-active"); 
 
         // Get content marker
         const content: string | undefined = $(this).attr("data-content");
@@ -90,7 +90,7 @@ function initializeFabric(): void {
         $(".header-view").hide();
         $(".header-view[data-content='" + content + "']").show();     
     });
-   }
+}
 
 function updateStatus(message: string) {
     $(".status-message").text(message);
@@ -211,7 +211,7 @@ function buildViews(headers: string) {
                     .html(makeBold("To: ") + row.by)
                     .appendTo(listItem);
             }
-index=index+1;
+            index=index+1;
             $("<div/>")
                 .addClass("ms-ListItem-selectionTarget")
                 .appendTo(listItem);
@@ -355,8 +355,6 @@ function hideStatus(): void {
     spinner.stop();
     overlay.hide();
 }
-
- 
 
 function renderItem(headers: string): void {
     // Empty data
