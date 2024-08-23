@@ -37,7 +37,7 @@
   "homepage": "https://github.com/microsoft/MHA#readme",
   "devDependencies": {
     "@types/jquery": "^3.5.30",
-    "@types/office-js": "^1.0.413",
+    "@types/office-js": "^1.0.414",
     "@types/qunit": "^2.19.10",
     "@typescript-eslint/eslint-plugin": "^8.2.0",
     "@typescript-eslint/parser": "^8.2.0",
@@ -61,7 +61,7 @@
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.4",
-    "webpack": "^5.93.0",
+    "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.4"
   },
