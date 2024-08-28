@@ -87,6 +87,10 @@ function initializeFabric(): void {
         $(this).find('button.ms-CommandButton-button').attr('aria-label',ariaLabel);
         $(".header-view").hide();
         $(".header-view[data-content='" + content + "']").show();
+        /*Fix for the Bug1846002 - To set focus for the received list items */  
+        if($(this).attr('data-content')==="received-view"){
+            $("li#received0")!.focus()
+            } 
     });
 }
 
@@ -145,10 +149,10 @@ function buildViews(headers: string) {
             .appendTo(receivedList);
 
         let firstRow: boolean = true;
-        viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, index) => {
+        viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, index) => { /* Fix for the Bug1846002 - Added attr ID to set focus for the first element in the list */
             const listItem = $("<li/>")
                 .addClass("ms-ListItem")
-                .attr("tabindex", index)
+                .attr("tabindex", 0)
                 .attr("id", "received" + index)
                 .addClass("ms-ListItem--document")
                 .appendTo(list);
@@ -157,7 +161,6 @@ function buildViews(headers: string) {
                 $("<span/>")
                     .addClass("ms-ListItem-primaryText")
                     .html(makeBold("From: ") + row.from)
-                    .attr("tabindex", index)
                     .appendTo(listItem);
 
                 $("<span/>")
@@ -223,6 +226,10 @@ function buildViews(headers: string) {
             const calloutMain = $("<div/>")
                 .addClass("ms-Callout-main")
                 .appendTo(callout);
+                $("<div/>")
+                .addClass("ms-Callout-close")
+                .attr("style","display:none")
+                .appendTo(calloutMain);
 
             const calloutHeader = $("<div/>")
                 .addClass("ms-Callout-header")
