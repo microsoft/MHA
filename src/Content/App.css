@@ -187,6 +187,17 @@ td {
     box-sizing: border-box;
 }
 
+.header-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
 button[aria-expanded="true"] .collapsibleSwitch::after {
     content: "\2013"; /* Minus (ndash) */
 }

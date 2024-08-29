@@ -64,6 +64,13 @@ export class Table {
             wrap.attr("id", id + "Wrapper");
             this.visibilityBindings.push({ name: "#" + id + "Wrapper", visible: visibility });
         }
+
+        // Fix for Bug 1691235 - Create a hidden h2 element for a11y
+        const hiddenHeading = $(document.createElement("h2"));
+        hiddenHeading.attr("id", "button-heading");
+        hiddenHeading.addClass("header-hidden");
+        hiddenHeading.text(title);
+
         const header = $(document.createElement("button"));
         header.addClass(paneClass);
         header.on("click", this, function (eventObject) {
@@ -84,6 +91,7 @@ export class Table {
 
         // Now that everything is built, put it together
         pane.wrap(wrap);
+        pane.before(hiddenHeading)
         pane.before(header);
         header.append(switchSpan);
     }
