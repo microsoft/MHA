@@ -83,8 +83,8 @@ function initializeFabric(): void {
       
         // Fix for Bug 1691252 - To set aria-label as button after selection like "Summary Selected"
         const ariaLabel = $(this).find(".ms-CommandButton-label")!.text() + " Selected";
-        $(this).find('.ms-CommandButton-label')!.attr('aria-label',ariaLabel);
-        $(this).find('button.ms-CommandButton-button').attr('aria-label',ariaLabel);
+        $(this).find(".ms-CommandButton-label")!.attr("aria-label",ariaLabel);
+        $(this).find("button.ms-CommandButton-button").attr("aria-label",ariaLabel);
         $(".header-view").hide();
         $(".header-view[data-content='" + content + "']").show();
     });
