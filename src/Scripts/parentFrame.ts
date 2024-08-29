@@ -410,17 +410,22 @@ export class ParentFrame {
         });
     }
 
-    // private static logElement(title: string, element: HTMLElement): void {
-    //     let out = title + " element:" + element;
-    //     if (element.id) out += " id:" + element.id;
-    //     if (element.className) out += " class:" + element.className;
-    //     if (element.getAttribute("role")) out += " role:" + element.getAttribute("role");
-    //     if (element.title) out += " title:" + element.title;
-    //     if (element.getAttribute("aria-checked")) out += " aria-checked:" + element.getAttribute("aria-checked");
-    //     if (element.getAttribute("for")) out += " for:" + element.getAttribute("for");
-    //     if (element.getAttribute("name")) out += " name:" + element.getAttribute("name");
-    //     console.log(out);
-    // }
+    // @ts-ignore // Suppress TS6133 for logging function
+    private static logElement(title: string, element: HTMLElement): void {
+        let out = title + " element:" + element;
+        // make sure element isn't null
+        if (element) {
+            if (element.id) out += " id:" + element.id;
+            if (element.className) out += " class:" + element.className;
+            if (element.getAttribute("role")) out += " role:" + element.getAttribute("role");
+            if (element.title) out += " title:" + element.title;
+            if (element.getAttribute("aria-checked")) out += " aria-checked:" + element.getAttribute("aria-checked");
+            if (element.getAttribute("for")) out += " for:" + element.getAttribute("for");
+            if (element.getAttribute("name")) out += " name:" + element.getAttribute("name");
+        }
+
+        console.log(out);
+    }
 
     public static setSendTelemetryUI(sendTelemetry: boolean) {
         sendTelemetry ? this.telemetryCheckboxComponent.check() : this.telemetryCheckboxComponent.unCheck();
