@@ -1,5 +1,5 @@
 ﻿import "../Content/Office.css";
-import "../Content/App.css";
+import "../Content/classicDesktopFrame.css";
 import * as $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./Headers";

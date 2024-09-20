@@ -38,7 +38,7 @@ const pages =
         { "name": "mha", "script": "mha" },
         { "name": "uitoggle", "script": "uiToggle" },
         { "name": "newDesktopFrame", "script": "newDesktopFrame" },
-        { "name": "classicDesktopFrame", "script": "Default" },
+        { "name": "classicDesktopFrame", "script": "classicDesktopFrame" },
         { "name": "newMobilePaneIosFrame", "script": "MobilePane-ios" },
         { "name": "privacy", "script": "privacy" },
         // Redirection/static pages
