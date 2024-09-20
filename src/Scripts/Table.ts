@@ -44,13 +44,13 @@ export class Table {
         }
     }
 
-    private toggleCollapse(object: HTMLElement): void {
-        $(".collapsibleElement", $(object).parents(".collapsibleWrapper")).toggle();
+    private toggleCollapse(id: string): void {
+        $("#"+ id).toggleClass("hiddenElement");
         this.positionResponse();
     }
 
     // Wraps an element into a collapsible pane with a title
-    public makeResizablePane(id: string, title: string, visibility: (table: Table) => boolean): void {
+    public makeResizablePane(id: string, paneClass: string, title: string, visibility: (table: Table) => boolean): void {
         const pane = $("#" + id);
         if (pane.hasClass("collapsibleElement")) {
             return;
@@ -64,36 +64,36 @@ export class Table {
             wrap.attr("id", id + "Wrapper");
             this.visibilityBindings.push({ name: "#" + id + "Wrapper", visible: visibility });
         }
-        const header = $(document.createElement("div"));
-        header.addClass("sectionHeader");
-        header.bind("click", this, function (eventObject) {
+
+        // Fix for Bug 1691235 - Create a hidden h2 element for a11y
+        const hiddenHeading = $(document.createElement("h2"));
+        hiddenHeading.attr("id", "button-heading");
+        hiddenHeading.addClass("header-hidden");
+        hiddenHeading.text(title);
+
+        const header = $(document.createElement("button"));
+        header.addClass(paneClass);
+        header.on("click", this, function (eventObject) {
             const table: Table = eventObject.data as Table;
             if (table) {
-                table.toggleCollapse(eventObject.currentTarget);
+                table.toggleCollapse(id);
+                header.attr("aria-expanded", header.attr("aria-expanded") === "true" ? "false" : "true");
             }
         });
         header.text(title);
+        header.attr("tabindex", 0);
+        header.attr("type", "button");
+        header.attr("aria-expanded", !hidden ? "true" : "false");
 
-        const moreSpan = $(document.createElement("span"));
-        moreSpan.addClass("collapsibleSwitch");
-        moreSpan.addClass("collapsibleElement");
-        moreSpan.html("+&nbsp;");
-
-        const lessSpan = $(document.createElement("span"));
-        lessSpan.addClass("collapsibleSwitch");
-        lessSpan.addClass("collapsibleElement");
-        lessSpan.html("&ndash;&nbsp;");
+        const switchSpan = $(document.createElement("span"));
+        switchSpan.attr("aria-hidden", "true");
+        switchSpan.addClass("collapsibleSwitch");
 
         // Now that everything is built, put it together
         pane.wrap(wrap);
+        pane.before(hiddenHeading)
         pane.before(header);
-        header.append(moreSpan);
-        header.append(lessSpan);
-        if (hidden) {
-            lessSpan.hide();
-        } else {
-            moreSpan.hide();
-        }
+        header.append(switchSpan);
     }
 
     private makeVisible(id: string, visible: boolean): void {
@@ -123,11 +123,13 @@ export class Table {
                             headerCell.text(summaryRow.label);
                         }
                         headerCell.addClass("summaryHeader");
+                        headerCell.attr("id", summaryRow.id);
                     }
 
                     const valCell = $(row.insertCell(-1));
                     if (valCell) {
                         valCell.attr("id", id + "Val");
+                        valCell.attr("aria-labelledby", summaryRow.id);
                     }
 
                     this.makeVisible("#" + id, false);
@@ -137,14 +139,8 @@ export class Table {
     }
 
     private setArrows(table: string, colName: string, sortOrder: number): void {
-        $("#" + table + " .tableHeader .downArrow").addClass("hiddenElement");
-        $("#" + table + " .tableHeader .upArrow").addClass("hiddenElement");
-
-        if (sortOrder === 1) {
-            $("#" + table + " .tableHeader #" + colName + " .downArrow").removeClass("hiddenElement");
-        } else {
-            $("#" + table + " .tableHeader #" + colName + " .upArrow").removeClass("hiddenElement");
-        }
+        $("#" + table + " th button").attr("aria-sort", "none");
+        $("#" + table + " th #" + colName).attr("aria-sort", sortOrder === 1 ? "descending" : "ascending");
     }
 
     private setRowValue(row: Row, type: string): void {
@@ -174,7 +170,7 @@ export class Table {
 
     // Restores table to empty state so we can repopulate it
     private emptyTableUI(id: string): void {
-        $("#" + id + " tbody tr").remove(); // Remove the rows
+        $("#" + id + " tr:not(.tableHeader)").remove(); // Remove the rows
         $("#" + id + " th").removeClass("emptyColumn"); // Restore header visibility
         $("#" + id + " th").removeClass("hiddenElement"); // Restore header visibility
     }
@@ -255,7 +251,7 @@ export class Table {
             }
         });
 
-        $("#receivedHeaders tbody tr:odd").addClass("oddRow");
+        $("#receivedHeaders tr:odd").addClass("oddRow");
         this.hideEmptyColumns("receivedHeaders");
 
         // Forefront AntiSpam Report
@@ -278,7 +274,7 @@ export class Table {
             this.appendCell(row, otherRow.value, "", "allowBreak");
         });
 
-        $("#otherHeaders tbody tr:odd").addClass("oddRow");
+        $("#otherHeaders tr:odd").addClass("oddRow");
 
         // Original headers
         $("#originalHeaders").text(this.viewModel.originalHeaders);
@@ -286,35 +282,45 @@ export class Table {
         this.recalculateVisibility();
     }
 
-    private makeSortableColumn(tableName: string, id: string): void {
-        const header = $("#" + id);
-
-        header.bind("click", this, function (eventObject) {
-            const table: Table = eventObject.data as Table;
-            if (table) {
-                if (table.viewModel[tableName] instanceof iTable) {
-                    const itable = table.viewModel[tableName] as iTable;
-                    itable.doSort(id);
-                    table.setArrows(itable.tableName, itable.sortColumn,
-                        itable.sortOrder);
-                    table.rebuildSections(table.viewModel);
+    private makeSortableColumn(tableName: string, column: column): JQuery<HTMLElement> {
+        const header = $(document.createElement("th"));
+        if (header !== null) {
+            const headerButton = $(document.createElement("button"));
+            if (headerButton !== null) {
+                headerButton.addClass("tableHeaderButton");
+                headerButton.attr("id", column.id);
+                headerButton.attr("type", "button");
+                headerButton.attr("role", "columnheader");
+                headerButton.attr("aria-sort", "none");
+                headerButton.text(column.label);
+                if (column.class !== null) {
+                    headerButton.addClass(column.class);
                 }
+
+                headerButton.on("click", this, function (eventObject) {
+                    const table: Table = eventObject.data as Table;
+                    if (table) {
+                        if (table.viewModel[tableName] instanceof iTable) {
+                            const itable = table.viewModel[tableName] as iTable;
+                            itable.doSort(column.id);
+                            table.setArrows(itable.tableName, itable.sortColumn,
+                                itable.sortOrder);
+                            table.rebuildSections(table.viewModel);
+                        }
+                    }
+                });
+
+                const arrowSpan = $(document.createElement("span"));
+                arrowSpan.attr("aria-hidden", "true");
+                arrowSpan.addClass("sortArrow");
+
+                // Now that everything is built, put it together
+                headerButton.append(arrowSpan);
+                header.append(headerButton);
             }
-        });
+        }
 
-        const downSpan = $(document.createElement("span"));
-        downSpan.addClass("downArrow");
-        downSpan.addClass("hiddenElement");
-        downSpan.html("&darr;");
-
-        const upSpan = $(document.createElement("span"));
-        upSpan.addClass("upArrow");
-        upSpan.addClass("hiddenElement");
-        upSpan.html("&uarr;");
-
-        // Now that everything is built, put it together
-        header.append(downSpan);
-        header.append(upSpan);
+        return header;
     }
 
     private addColumns(tableName: string, columns: column[]): void {
@@ -328,76 +334,10 @@ export class Table {
                 tableHeader.append(headerRow); // Must happen before we append cells to appease IE7
 
                 columns.forEach((column: column) => {
-                    const headerCell = $(document.createElement("th"));
-                    if (headerCell !== null) {
-                        headerCell.attr("id", column.id);
-                        headerCell.text(column.label);
-                        if (column.class !== null) {
-                            headerCell.addClass(column.class);
-                        }
-
-                        headerRow.append(headerCell);
-                    }
-
-                    this.makeSortableColumn(tableName, column.id);
+                    headerRow.append(this.makeSortableColumn(tableName, column));
                 });
             }
         }
-    }
-
-    // Wraps a table into a collapsible table with a title
-    private makeResizableTable(id: string, title: string, visibility: (table: Table) => boolean): void {
-        const pane = $("#" + id);
-        if (pane.hasClass("collapsibleElement")) { return; }
-
-        pane.addClass("collapsibleElement");
-        const wrap = $(document.createElement("div"));
-        wrap.addClass("collapsibleWrapper");
-        if (visibility) {
-            wrap.attr("id", id + "Wrapper");
-            this.visibilityBindings.push({ name: "#" + id + "Wrapper", visible: visibility });
-        }
-
-        const header = $(document.createElement("div"));
-        header.addClass("tableCaption");
-        header.bind("click", this, function (eventObject) {
-            const table: Table = eventObject.data as Table;
-            if (table) {
-                table.toggleCollapse(eventObject.currentTarget);
-            }
-        });
-        header.text(title);
-
-        const moreSpan = $(document.createElement("span"));
-        moreSpan.addClass("collapsibleSwitch");
-        moreSpan.html("+&nbsp;");
-        header.append(moreSpan);
-        header.addClass("collapsibleElement");
-
-        const captionDiv = $(document.createElement("div"));
-        captionDiv.addClass("tableCaption");
-        captionDiv.bind("click", this, function (eventObject) {
-            const table: Table = eventObject.data as Table;
-            if (table) {
-                table.toggleCollapse(eventObject.currentTarget);
-            }
-        });
-        captionDiv.text(title);
-
-        const lessSpan = $(document.createElement("span"));
-        lessSpan.addClass("collapsibleSwitch");
-        lessSpan.html("&ndash;&nbsp;");
-        captionDiv.append(lessSpan);
-
-        const tbody = $(document.createElement("tbody"));
-
-        // Now that everything is built, put it together
-        pane.wrap(wrap);
-        pane.before(header);
-        pane.append(tbody);
-        const caption = $((pane[0] as HTMLTableElement).createCaption());
-        caption.prepend(captionDiv);
-        header.hide();
     }
 
     private hideExtraColumns(): void {
@@ -432,15 +372,15 @@ export class Table {
         this.viewModel = _viewModel;
 
         // Headers
-        this.makeResizablePane("originalHeaders", mhaStrings.mhaOriginalHeaders, (table: Table) => { return table.viewModel.originalHeaders.length > 0; });
-        $(".collapsibleElement", $("#originalHeaders").parents(".collapsibleWrapper")).toggle();
+        this.makeResizablePane("originalHeaders", "sectionHeader", mhaStrings.mhaOriginalHeaders, (table: Table) => { return table.viewModel.originalHeaders.length > 0; });
+        this.toggleCollapse("originalHeaders"); // start this section hidden
 
         // Summary
-        this.makeResizablePane("summary", mhaStrings.mhaSummary, function (table: Table) { return table.viewModel.summary.exists(); });
+        this.makeResizablePane("summary", "sectionHeader", mhaStrings.mhaSummary, function (table: Table) { return table.viewModel.summary.exists(); });
         this.makeSummaryTable("#summary", this.viewModel.summary.rows, "SUM");
 
         // Received
-        this.makeResizableTable("receivedHeaders", mhaStrings.mhaReceivedHeaders, function (table: Table) { return table.viewModel.receivedHeaders.exists(); });
+        this.makeResizablePane("receivedHeaders", "tableCaption", mhaStrings.mhaReceivedHeaders, function (table: Table) { return table.viewModel.receivedHeaders.exists(); });
 
         const receivedColumns = [
             new column("hop", mhaStrings.mhaReceivedHop, ""),
@@ -473,7 +413,7 @@ export class Table {
             withColumn.append(rightSpan);
         }
 
-        $("#receivedHeaders .collapsibleArrow").bind("click", this, function (eventObject) {
+        $("#receivedHeaders .collapsibleArrow").on("click", this, function (eventObject) {
             const table: Table = eventObject.data as Table;
             if (table) {
                 table.toggleExtraColumns();
@@ -482,15 +422,15 @@ export class Table {
         });
 
         // FFAS
-        this.makeResizablePane("forefrontAntiSpamReport", mhaStrings.mhaForefrontAntiSpamReport, function (table: Table) { return table.viewModel.forefrontAntiSpamReport.exists(); });
+        this.makeResizablePane("forefrontAntiSpamReport", "sectionHeader", mhaStrings.mhaForefrontAntiSpamReport, function (table: Table) { return table.viewModel.forefrontAntiSpamReport.exists(); });
         this.makeSummaryTable("#forefrontAntiSpamReport", this.viewModel.forefrontAntiSpamReport.rows, "FFAS");
 
         // AntiSpam
-        this.makeResizablePane("antiSpamReport", mhaStrings.mhaAntiSpamReport, (table: Table) => { return table.viewModel.antiSpamReport.exists(); });
+        this.makeResizablePane("antiSpamReport", "sectionHeader", mhaStrings.mhaAntiSpamReport, (table: Table) => { return table.viewModel.antiSpamReport.exists(); });
         this.makeSummaryTable("#antiSpamReport", this.viewModel.antiSpamReport.rows, "AS");
 
         // Other
-        this.makeResizableTable("otherHeaders", mhaStrings.mhaOtherHeaders, function (table: Table) { return table.viewModel.otherHeaders.rows.length > 0; });
+        this.makeResizablePane("otherHeaders", "tableCaption", mhaStrings.mhaOtherHeaders, function (table: Table) { return table.viewModel.otherHeaders.rows.length > 0; });
 
         const otherColumns = [
             new column("number", mhaStrings.mhaNumber, ""),

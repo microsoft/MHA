@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en-US">
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
@@ -12,12 +12,12 @@
             <div class="ms-CommandBar">
                 <div class="ms-CommandBar-mainArea">
                     <div class="ms-CommandButton">
-                        <button class="ms-CommandButton-button copy-button">
+                        <button class="ms-CommandButton-button copy-button" title="Copy" id="copyButton" tabindex="0">
                             <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Copy"></i></span>
                         </button>
                     </div>
                     <div class="ms-CommandButton">
-                        <button class="ms-CommandButton-button gear-button">
+                        <button class="ms-CommandButton-button gear-button" title="Settings" id="settingsButton" tabindex="0">
                             <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Settings"></i></span>
                         </button>
                     </div>
@@ -25,8 +25,7 @@
             </div>
 
             <!-- Settings Dialog-->
-            <div class="ms-Dialog ms-Dialog--lgHeader" id="dialog-Settings">
-                <button class="ms-Callout-close" style="display:none"></button>
+            <div class="ms-Dialog ms-Dialog--lgHeader" id="dialog-Settings" title="Settings" role="dialog">
                 <div class="ms-Dialog-title">Settings</div>
                 <div class="ms-Dialog-content">
                     <p class="ms-Dialog-subText">UI style</p>
@@ -35,8 +34,8 @@
                     </div>
                 </div>
                 <div class="ms-CheckBox" id="dialog-enableTelemetry">
-                    <input tabindex="-1" type="checkbox" class="ms-CheckBox-input">
-                    <label role="checkbox" class="ms-CheckBox-field" tabindex="0" aria-checked="false" name="checkboxa">
+                    <input tabindex="-1" type="checkbox" class="ms-CheckBox-input" id="telemetryInput">
+                    <label for="telemetryInput" role="checkbox" class="ms-CheckBox-field" tabindex="0" aria-checked="false" name="telemetryLabel" id="telemetryLabel">
                         <span class="ms-Label">Send telemetry</span>
                     </label>
                 </div>
@@ -58,11 +57,10 @@
             </div>
 
             <!-- Diagnostics dialog-->
-            <div class="ms-Dialog ms-Dialog--lgHeader" id="dialog-Diagnostics">
-                <button class="ms-Callout-close" style="display:none"></button>
+            <div class="ms-Dialog ms-Dialog--lgHeader" id="dialog-Diagnostics" title="Diagnostics" role="dialog">
                 <div class="ms-Dialog-title">Diagnostics</div>
                 <div class="ms-Dialog-content">
-                    <div class="code-box"><pre><code id="diagnostics"></code></pre></div>
+                    <div class="code-box"><pre tabindex="0" id="diagpre"><code id="diagnostics"></code></pre></div>
                 </div>
                 <div class="ms-Dialog-actions">
                     <button class="ms-Button ms-Button--primary ms-Dialog-action" id="actionsDiag-OK">
@@ -73,7 +71,7 @@
         </div>
 
         <div class="frame-row">
-            <iframe id="uiFrame" src="newDesktopFrame.html"></iframe>
+            <iframe id="uiFrame" src="newDesktopFrame.html" title="Message Header Analyzer"></iframe>
         </div>
     </div>
 </body>

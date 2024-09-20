@@ -5,6 +5,7 @@ import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";
 import { poster } from "./poster";
 import { strings } from "./Strings";
+import { findTabStops } from "./findTabStops";
 
 class Choice {
     label: string = "";
@@ -220,21 +221,31 @@ export class ParentFrame {
 
             // Create html: <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
             const input: JQuery<HTMLInputElement> = ParentFrame.create(listItem, "input", "ms-RadioButton-input");
+            const id = choice.label;
 
-            input.attr("tabindex", "-1");
             input.attr("type", "radio");
             input.attr("value", iChoice);
+            input.attr("id", id);
 
             //  Create html: <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
             const label: JQuery<HTMLLabelElement> = ParentFrame.create(listItem, "label", "ms-RadioButton-field");
-            label.attr("role", "radio");
-            label.attr("tabindex", "0");
             label.attr("name", "uiChoice");
             label.attr("value", choice.label);
+            label.attr("for", id);
 
             // Create html: <span class="ms-Label">classic</span>
             const inputSpan: JQuery<HTMLSpanElement> = ParentFrame.create(label, "span", "ms-Label");
             inputSpan.text(choice.label);
+
+            // Keyboard navigation of the radio buttons isn't setting them, so we watch for focus and set them
+            input.on("focus", function (): void {
+                const labels: JQuery<HTMLElement> = $("#uiChoice label");
+                labels.removeClass("is-checked");
+                labels.attr("aria-checked", "false");
+                label.addClass("is-checked");
+                label.attr("aria-checked", "true");
+                // ParentFrame.logElement("focus", label[0] as HTMLElement);
+            });
         });
     }
 
@@ -303,6 +314,7 @@ export class ParentFrame {
                     const diagnostics: string = getDiagnostics();
                     $("#diagnostics").text(diagnostics);
                     dialogDiagnosticsComponent.open();
+                    document.getElementById("diagpre")!.focus();
                     break;
                 }
             }
@@ -312,10 +324,6 @@ export class ParentFrame {
         Array.prototype.forEach.call(actionButtonElements, (button: Element) => {
             new fabric["Button"](button, actionHandler);
         });
-
-        const choiceGroup: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
-        if (!choiceGroup || !choiceGroup[0]) return;
-        new fabric["ChoiceFieldGroup"](choiceGroup[0]);
 
         const choiceFieldGroupElements: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
         Array.prototype.forEach.call(choiceFieldGroupElements, (choiceFieldGroupElement: HTMLElement) => {
@@ -336,12 +344,113 @@ export class ParentFrame {
             const input: JQuery<HTMLLabelElement> = currentSelected.prevAll("input:first");
             input.prop("checked", "true");
             dialogSettingsComponent.open();
+            // When dialog is opened, focus on the current selected radio button
+            const inputLabel: HTMLElement = document.querySelector("#uiChoice label[value=" + ParentFrame.currentChoice.label + "]")!;
+            inputLabel.focus();
         };
 
         const copyButton: HTMLButtonElement = header.querySelector(".copy-button") as HTMLButtonElement;
         copyButton.onclick = function (): void {
             strings.copyToClipboard(ParentFrame.modelToString);
         };
+
+        // Tabbing into the radio buttons doesn't do what we want by default, so watch for tabbing and handle all the cases
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Tab") {
+                const shiftPressed = e.shiftKey;
+                const checked: HTMLLabelElement = document.querySelector(".ms-RadioButton-field.is-checked")!;
+                const focused: HTMLElement = document.activeElement as HTMLElement;
+                ParentFrame.logElement("checked", checked);
+                ParentFrame.logElement("focused", focused);
+                console.log("Shift pressed = " + shiftPressed);
+                if (checked && focused) {
+                    // Tab forward from body, or OK should go to radio buttons
+                    // Tab backwards from telemetry checkbox should go to radio buttons
+                    if ((!shiftPressed && focused === this.body) ||
+                        (!shiftPressed && focused.id === "actionsSettings-OK") ||
+                        (shiftPressed && focused.id === "telemetryLabel")) {
+                        // console.log("Tabbing into radio buttons");
+                        checked.focus();
+                        e.preventDefault();
+                    }
+                    // Shift tab from radio buttons or body should go to OK
+                    else if ((shiftPressed && focused.className === "ms-RadioButton-input") ||
+                        (shiftPressed && focused === this.body)) {
+                        // console.log("Tabbing to OK");
+                        const okButton: HTMLElement = document.getElementById("actionsSettings-OK")!;
+                        okButton.focus();
+                        e.preventDefault();
+                    }
+                    // Tab or shift tab from diagnostics OK should go to code
+                    else if (focused.id === "actionsDiag-OK") {
+                        // console.log("Tabbing to diagnostics");
+                        const diagButton: HTMLElement = document.getElementById("diagpre")!;
+                        diagButton.focus();
+                        e.preventDefault();
+                    }
+                }
+
+                // Insert the settings and copy buttons into the tab order for the ribbon if we have one
+                // This handles tabbing out from these buttons.
+                // Tabbing into these buttons is over in DesktopPane.ts
+                if (!shiftPressed && focused.id === "settingsButton") {
+                    // Find first header-view which is visible
+                    const view = ParentFrame.iFrame?.document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
+                    if (view) {
+                        // set focus to first child in view which can get focus
+                        const tabStops = findTabStops(view);
+                        // Set focus on first element in the list if we can
+                        if (tabStops.length > 0){
+                            tabStops[0]?.focus();
+                            e.preventDefault();
+                        }
+                    }
+                }
+                else if (shiftPressed && focused.id === "copyButton") {
+                    const otherButton = ParentFrame.iFrame?.document.getElementById("other-btn");
+                    if (otherButton) {
+                        otherButton.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        });
+
+        // Mouse selection of radio buttons sets the focus on the body instead of the radio button.
+        // Watch for "is checked" class changes and set the focus on the checked radio button
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === "class") {
+                    const target = mutation.target as HTMLElement;
+                    if (target.classList.contains("is-checked")) {
+                        // ParentFrame.logElement("MutationObserver", target);
+                        target.focus();
+                    }
+                }
+            });
+        });
+
+        const labels = document.querySelectorAll(".ms-RadioButton-field");
+        labels.forEach((label) => {
+            observer.observe(label, { attributes: true });
+        });
+    }
+
+    // @ts-ignore // Suppress TS6133 for logging function
+    private static logElement(title: string, element: HTMLElement): void {
+        let out = title + " element:" + element;
+        // make sure element isn't null
+        if (element) {
+            if (element.id) out += " id:" + element.id;
+            if (element.className) out += " class:" + element.className;
+            if (element.getAttribute("role")) out += " role:" + element.getAttribute("role");
+            if (element.title) out += " title:" + element.title;
+            if (element.getAttribute("aria-checked")) out += " aria-checked:" + element.getAttribute("aria-checked");
+            if (element.getAttribute("for")) out += " for:" + element.getAttribute("for");
+            if (element.getAttribute("name")) out += " name:" + element.getAttribute("name");
+        }
+
+        console.log(out);
     }
 
     public static setSendTelemetryUI(sendTelemetry: boolean) {

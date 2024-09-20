@@ -1,5 +1,6 @@
 body {
     padding: 0;
+    background-color: canvas;
 }
 
 .aspNetHidden {
@@ -47,27 +48,18 @@ input {
     padding-bottom: 0;
 }
 
-    #response table {
-        color: #333333;
-        border-width: 1px;
-        border-color: #A8B2B2;
-        border-collapse: collapse;
-        margin-bottom: 0;
-    }
+table {
+    color: #333333;
+    border-collapse: collapse;
+    margin-bottom: 0;
+}
 
-    #response th {
-        border-width: 1px;
-        border-style: solid;
-        border-color: #A8B2B2;
-        padding: 8px;
-        text-align: center;
-        cursor: pointer;
-    }
+#response th {
+    padding: 0;
+}
 
 td {
-    border-width: 1px;
-    border-style: solid;
-    border-color: #A8B2B2;
+    border: 1px solid black;
     padding-left: 2px;
 }
 
@@ -82,10 +74,10 @@ td {
     table-layout: fixed;
 }
 
-    .summaryList td {
-        border-width: 0;
-        padding-bottom: 0;
-    }
+.summaryList td {
+    border-width: 0;
+    padding-bottom: 0;
+}
 
 .summaryHeader {
     text-align: right;
@@ -103,10 +95,27 @@ td {
     background-color: #CDE6F7; /* 2013 light background color */
 }
 
-.tableHeader {
+.tableHeaderButton {
     background-color: #0072C6; /*2013 hero color*/
     color: #FFFFFF;
+    border: 0;
+    font-weight: bold;
+    width: 100%;
+    cursor: pointer;
+    padding: 1em 1.2em 1em 1.2em;
 }
+
+.tableHeaderButton[aria-sort="descending"] .sortArrow::after {
+    content: "\2193"; /* Down arrow */
+}
+
+.tableHeaderButton[aria-sort="ascending"] .sortArrow::after {
+    content: "\2191"; /* Up arrow */
+}
+
+.tableHeader td + td,
+.tableHeader th + th { border-left: 1px solid white; }
+.tableHeader tr + tr { border-top: 1px solid black; }
 
 #inputHeaders {
     width: 100%;
@@ -121,7 +130,10 @@ td {
     padding-top: 8px;
     padding-bottom: 8px;
     font-weight: bold;
+    text-align: left;
     cursor: pointer;
+    width: 100%;
+    border: none;
 }
 
 .tableCaption {
@@ -130,14 +142,36 @@ td {
     padding-top: 8px;
     padding-bottom: 8px;
     font-weight: bold;
-    display: block;
     text-align: left;
     cursor: pointer;
+    width: 100%;
+    border: none;
+}
+
+.sectionHeader:focus,
+.sectionHeader:hover {
+    outline: black solid 2px;
+    outline-offset: -2px;
+}
+
+.tableCaption:focus, 
+.tableCaption:hover {
+    outline: #0072cc solid 2px;
+    outline-offset: -2px;
+}
+@media screen and (-ms-high-contrast:active) {
+    .sectionHeader:focus,
+    .sectionHeader:hover,
+    .tableCaption:focus
+    .tableCaption:hover {
+        background-color: buttonface;
+    }
 }
 
 .collapsibleArrow {
     float: right;
     cursor: pointer;
+    font-size: smaller;
 }
 
 .collapsibleSwitch {
@@ -153,6 +187,25 @@ td {
     box-sizing: border-box;
 }
 
+.header-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+button[aria-expanded="true"] .collapsibleSwitch::after {
+    content: "\2013"; /* Minus (ndash) */
+}
+
+button[aria-expanded="false"] .collapsibleSwitch::after {
+    content: "+"; /* Plus */
+}
+
 .collapsibleWrapper {
     padding-bottom: 0;
     margin-bottom: 1em;
@@ -163,6 +216,7 @@ td {
 
 .hiddenElement {
     display: none;
+    border:0;
 }
 
 .emptyColumn {
@@ -184,6 +238,12 @@ td {
     border-radius: 3px;
 }
 
+@media screen and (-ms-high-contrast:active) {
+    .hotBarBar {
+        background-color: highlight;
+    }
+}
+
 .hotBarLabel {
     padding: 0.4em 1.2em 2px 0;
     white-space: nowrap;
@@ -191,6 +251,12 @@ td {
 
 .negativeCell {
     color: #E44D4D; /* A nice red */
+}
+
+@media screen and (-ms-high-contrast:active) {
+    .negativeCell {
+        color: highlight;
+    }
 }
 
 #hop {
@@ -223,6 +289,13 @@ td {
     padding: 0;
 }
 
-.ms-Button-icon {
-    display: inline-block;
+@media screen and (-ms-high-contrast:active) {
+    .tableHeaderButton .sortArrow::after { color: buttontext; }
+    button .collapsibleSwitch::after { color: buttontext; }
+}
+
+/* bug fix 1691247 */
+.ms-Button.ms-Button--primary {
+    color: #FFFFFF;
+    background-color: #0677D3;
 }

@@ -1,5 +1,6 @@
 import "office-ui-fabric-js/dist/css/fabric.min.css";
 import "office-ui-fabric-js/dist/css/fabric.components.min.css";
+import "../Content/fabric.css";
 import "../Content/DesktopPane.css";
 import * as $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
@@ -9,6 +10,7 @@ import { poster } from "./poster";
 import { Row, SummaryRow } from "./Summary";
 import { ReceivedRow } from "./Received";
 import { OtherRow } from "./Other";
+import { findTabStops } from "./findTabStops";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -52,9 +54,11 @@ function initializeFabric(): void {
         if (event.currentTarget) {
             const btnIcon: JQuery<HTMLElement> = $(event.currentTarget).find(".ms-Icon");
             if (btnIcon.hasClass("ms-Icon--Add")) {
+                buttonElement.setAttribute("aria-expanded", "true");
                 $("#original-headers").show();
                 btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
             } else {
+                buttonElement.setAttribute("aria-expanded", "false");
                 $("#original-headers").hide();
                 btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
             }
@@ -63,9 +67,12 @@ function initializeFabric(): void {
 
     // Show summary by default
     $(".header-view[data-content='summary-view']").show();
+    document.getElementById("summary-btn")!.focus();
 
     // Wire up click events for nav buttons
     $("#nav-bar .ms-CommandButton").click(function (): void {
+        // Fix for Bug 1691252 - To set aria-label dynamically on click based on button name
+        $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label")!.length !== 0 ? $("#nav-bar .is-active .ms-CommandButton-button").attr("aria-label", $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label").text()) : "";
         // Remove active from current active
         $("#nav-bar .is-active").removeClass("is-active");
         // Add active class to clicked button
@@ -74,8 +81,62 @@ function initializeFabric(): void {
         // Get content marker
         const content: string | undefined = $(this).attr("data-content");
         // Hide sub-views
+      
+        // Fix for Bug 1691252 - To set aria-label as button after selection like "Summary Selected"
+        const ariaLabel = $(this).find(".ms-CommandButton-label")!.text() + " Selected";
+        $(this).find(".ms-CommandButton-label")!.attr("aria-label",ariaLabel);
+        $(this).find("button.ms-CommandButton-button").attr("aria-label",ariaLabel);
         $(".header-view").hide();
         $(".header-view[data-content='" + content + "']").show();
+    });
+
+    // Insert the settings and copy buttons into the tab order for the ribbon
+    // This handles tabbing into from these buttons.
+    // Tabbing out from these buttons is over in parentframe.ts
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Tab") {
+            const shiftPressed = e.shiftKey;
+            const focused: HTMLElement = document.activeElement as HTMLElement;
+            // console.log("Shift pressed = " + shiftPressed);
+            // console.log("Focused element:" + focused + " class:" + focused.className + " id:" + focused.id + " title:" + focused.title);
+
+            // Tab from Other goes to copy button
+            if (!shiftPressed && focused.id === "other-btn") {
+                window.parent.document.getElementById("copyButton")!.focus();
+                e.preventDefault();
+            }
+            // Tab back from Summary goes to end of view
+            else if (shiftPressed && focused.id === "summary-btn") {
+                const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
+                const tabStops = findTabStops(view);
+                // Set focus on last element in the list if we can
+                if (tabStops.length > 0){
+                    tabStops[tabStops.length - 1]?.focus();
+                    e.preventDefault();
+                }
+            }
+            // If we're tabbing off of the view, we want to tab to the appropriate ribbon button
+            else
+            {
+                const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
+                const tabStops = findTabStops(view);
+
+                if (shiftPressed){
+                    // If our current focus is the first element in the list, we want to move focus to the copy button
+                    if (tabStops.length > 0 && focused === tabStops[0]){
+                        window.parent.document.getElementById("settingsButton")!.focus();
+                        e.preventDefault();
+                    }
+                }
+                else{
+                    // If our current focus is the last element in the list, we want to move focus to the summary-btn
+                    if (tabStops.length > 0 && focused === tabStops[tabStops.length - 1]){
+                        document.getElementById("summary-btn")!.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        }
     });
 }
 
@@ -134,9 +195,12 @@ function buildViews(headers: string) {
             .appendTo(receivedList);
 
         let firstRow: boolean = true;
-        viewModel.receivedHeaders.rows.forEach((row: ReceivedRow) => {
+        viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, index) => {
+            // Fix for Bug 1846002 - Added attr ID to set focus for the first element in the list
             const listItem = $("<li/>")
                 .addClass("ms-ListItem")
+                .attr("tabindex", 0)
+                .attr("id", "received" + index)
                 .addClass("ms-ListItem--document")
                 .appendTo(list);
 
@@ -195,7 +259,8 @@ function buildViews(headers: string) {
                     .html(makeBold("To: ") + row.by)
                     .appendTo(listItem);
             }
-
+            
+            index=index+1;
             $("<div/>")
                 .addClass("ms-ListItem-selectionTarget")
                 .appendTo(listItem);
@@ -208,6 +273,11 @@ function buildViews(headers: string) {
             const calloutMain = $("<div/>")
                 .addClass("ms-Callout-main")
                 .appendTo(callout);
+
+            $("<div/>")
+                .addClass("ms-Callout-close")
+                .attr("style","display:none")
+                .appendTo(calloutMain);
 
             const calloutHeader = $("<div/>")
                 .addClass("ms-Callout-header")
@@ -257,9 +327,11 @@ function buildViews(headers: string) {
                 const row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
                     .text(antispamrow.label)
+                    .attr("id", antispamrow.id)
                     .appendTo(row);
                 $("<td/>")
                     .html(antispamrow.valueUrl)
+                    .attr("aria-labelledby", antispamrow.id)
                     .appendTo(row);
             });
         }
@@ -283,9 +355,11 @@ function buildViews(headers: string) {
                 const row = $("<tr/>").appendTo(tbody);
                 $("<td/>")
                     .text(antispamrow.label)
+                    .attr("id", antispamrow.id)
                     .appendTo(row);
                 $("<td/>")
                     .html(antispamrow.valueUrl)
+                    .attr("aria-labelledby", antispamrow.id)
                     .appendTo(row);
             });
         }
