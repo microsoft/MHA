@@ -5,6 +5,7 @@ import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";
 import { poster } from "./poster";
 import { strings } from "./Strings";
+import { findTabStops } from "./findTabStops";
 
 class Choice {
     label: string = "";
@@ -359,8 +360,9 @@ export class ParentFrame {
                 const shiftPressed = e.shiftKey;
                 const checked: HTMLLabelElement = document.querySelector(".ms-RadioButton-field.is-checked")!;
                 const focused: HTMLElement = document.activeElement as HTMLElement;
-                // ParentFrame.logElement("checked", checked);
-                // ParentFrame.logElement("focused", focused);
+                ParentFrame.logElement("checked", checked);
+                ParentFrame.logElement("focused", focused);
+                console.log("Shift pressed = " + shiftPressed);
                 if (checked && focused) {
                     // Tab forward from body, or OK should go to radio buttons
                     // Tab backwards from telemetry checkbox should go to radio buttons
@@ -384,6 +386,30 @@ export class ParentFrame {
                         // console.log("Tabbing to diagnostics");
                         const diagButton: HTMLElement = document.getElementById("diagpre")!;
                         diagButton.focus();
+                        e.preventDefault();
+                    }
+                }
+
+                // Insert the settings and copy buttons into the tab order for the ribbon if we have one
+                // This handles tabbing out from these buttons.
+                // Tabbing into these buttons is over in DesktopPane.ts
+                if (!shiftPressed && focused.id === "settingsButton") {
+                    // Find first header-view which is visible
+                    const view = ParentFrame.iFrame?.document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
+                    if (view) {
+                        // set focus to first child in view which can get focus
+                        const tabStops = findTabStops(view);
+                        // Set focus on first element in the list if we can
+                        if (tabStops.length > 0){
+                            tabStops[0]?.focus();
+                            e.preventDefault();
+                        }
+                    }
+                }
+                else if (shiftPressed && focused.id === "copyButton") {
+                    const otherButton = ParentFrame.iFrame?.document.getElementById("other-btn");
+                    if (otherButton) {
+                        otherButton.focus();
                         e.preventDefault();
                     }
                 }

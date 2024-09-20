@@ -14,5 +14,6 @@ import "./unittests/ut-Received";
 import "./unittests/ut-ParseError";
 import "./unittests/ut-parseHeaders";
 import "./unittests/ut-XML";
+import "./unittests/ut-findTabStops";
 
 QUnit.start();
