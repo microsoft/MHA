@@ -37,16 +37,16 @@ const pages =
         { "name": "unittests", "script": "unittests" },
         { "name": "mha", "script": "mha" },
         { "name": "uitoggle", "script": "uiToggle" },
-        { "name": "newDesktopFrame", "script": "DesktopPane" },
+        { "name": "newDesktopFrame", "script": "newDesktopFrame" },
         { "name": "classicDesktopFrame", "script": "Default" },
         { "name": "newMobilePaneIosFrame", "script": "MobilePane-ios" },
         { "name": "privacy", "script": "privacy" },
         // Redirection/static pages
-        { "name": "Default" },
-        { "name": "DefaultPhone" },
-        { "name": "DefaultTablet" },
-        { "name": "DesktopPane" },
-        { "name": "MobilePane" },
+        { "name": "Default" }, // uitoggle.html?default=classic
+        { "name": "DefaultPhone" }, // uitoggle.html?default=classic
+        { "name": "DefaultTablet" }, // uitoggle.html?default=classic
+        { "name": "DesktopPane" }, // uitoggle.html?default=new
+        { "name": "MobilePane" }, // uitoggle.html?default=new-mobile
         { "name": "Functions" },
     ];
 
