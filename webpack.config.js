@@ -36,7 +36,7 @@ const pages =
     [
         { "name": "unittests", "script": "unittests" },
         { "name": "mha", "script": "mha" },
-        { "name": "parentframe", "script": "uiToggle" },
+        { "name": "uitoggle", "script": "uiToggle" },
         { "name": "newDesktopFrame", "script": "DesktopPane" },
         { "name": "classicDesktopFrame", "script": "Default" },
         { "name": "newMobilePaneIosFrame", "script": "MobilePane-ios" },
