@@ -39,7 +39,7 @@ const pages =
         { "name": "uitoggle", "script": "uiToggle" },
         { "name": "newDesktopFrame", "script": "newDesktopFrame" },
         { "name": "classicDesktopFrame", "script": "classicDesktopFrame" },
-        { "name": "newMobilePaneIosFrame", "script": "MobilePane-ios" },
+        { "name": "newMobilePaneIosFrame", "script": "newMobilePaneIosFrame" },
         { "name": "privacy", "script": "privacy" },
         // Redirection/static pages
         { "name": "Default" }, // uitoggle.html?default=classic
