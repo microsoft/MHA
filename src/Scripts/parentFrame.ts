@@ -392,7 +392,7 @@ export class ParentFrame {
 
                 // Insert the settings and copy buttons into the tab order for the ribbon if we have one
                 // This handles tabbing out from these buttons.
-                // Tabbing into these buttons is over in DesktopPane.ts
+                // Tabbing into these buttons is over in newDesktopFrame.ts
                 if (!shiftPressed && focused.id === "settingsButton") {
                     // Find first header-view which is visible
                     const view = ParentFrame.iFrame?.document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;

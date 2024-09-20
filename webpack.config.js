@@ -35,18 +35,18 @@ console.log("buildTime: " + buildTime);
 const pages =
     [
         { "name": "unittests", "script": "unittests" },
-        { "name": "mha", "script": "StandAlone" },
-        { "name": "parentframe", "script": "uiToggle" },
-        { "name": "newDesktopFrame", "script": "DesktopPane" },
-        { "name": "classicDesktopFrame", "script": "Default" },
-        { "name": "newMobilePaneIosFrame", "script": "MobilePane-ios" },
+        { "name": "mha", "script": "mha" },
+        { "name": "uitoggle", "script": "uiToggle" },
+        { "name": "newDesktopFrame", "script": "newDesktopFrame" },
+        { "name": "classicDesktopFrame", "script": "classicDesktopFrame" },
+        { "name": "newMobilePaneIosFrame", "script": "newMobilePaneIosFrame" },
         { "name": "privacy", "script": "privacy" },
         // Redirection/static pages
-        { "name": "Default" },
-        { "name": "DefaultPhone" },
-        { "name": "DefaultTablet" },
-        { "name": "DesktopPane" },
-        { "name": "MobilePane" },
+        { "name": "Default" }, // uitoggle.html?default=classic
+        { "name": "DefaultPhone" }, // uitoggle.html?default=classic
+        { "name": "DefaultTablet" }, // uitoggle.html?default=classic
+        { "name": "DesktopPane" }, // uitoggle.html?default=new
+        { "name": "MobilePane" }, // uitoggle.html?default=new-mobile
         { "name": "Functions" },
     ];
 
