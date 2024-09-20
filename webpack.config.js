@@ -35,7 +35,7 @@ console.log("buildTime: " + buildTime);
 const pages =
     [
         { "name": "unittests", "script": "unittests" },
-        { "name": "mha", "script": "StandAlone" },
+        { "name": "mha", "script": "mha" },
         { "name": "parentframe", "script": "uiToggle" },
         { "name": "newDesktopFrame", "script": "DesktopPane" },
         { "name": "classicDesktopFrame", "script": "Default" },

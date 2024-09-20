@@ -91,7 +91,7 @@ export class Table {
 
         // Now that everything is built, put it together
         pane.wrap(wrap);
-        pane.before(hiddenHeading)
+        pane.before(hiddenHeading);
         pane.before(header);
         header.append(switchSpan);
     }
@@ -445,7 +445,7 @@ export class Table {
     }
 
     // Rebuilds the UI with a new viewModel
-    // Used by Standalone.ts and Default.ts to rebuild with new viewModel
+    // Used by mha.ts and Default.ts to rebuild with new viewModel
     public rebuildTables(_viewModel: HeaderModel): void {
         this.viewModel = _viewModel;
         this.rebuildSections(this.viewModel);
