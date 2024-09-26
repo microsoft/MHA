@@ -72,8 +72,15 @@ Unit Testing
 
 - Start the dev server: `npm run dev-server`
 - Run unit tests from command line: `npm run test`
-- Run unit tests locally in browser: <https://localhost:44336/Pages/unittests.html>
-- Changes made to source should live compile and reload page. Ctrl+R/refresh as needed.
+- View test results here: <https://localhost:44336/Pages/test/>
+- View code coverage here: <https://localhost:44336/Pages/coverage/lcov-report/>
+- After changing source you will need to `npm run test` again.
+- TODO List
+1. Migrate remaining tests to jest - <https://devhints.io/jest>
+1. Remove gruntfile
+1. Remove grunt dependencies
+1. Get lint running on build
+
 
 Live site testing
 -----

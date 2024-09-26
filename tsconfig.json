@@ -2,8 +2,10 @@
   "compilerOptions": {
     "outDir": "./dist/",
     "moduleResolution": "node",
-    "module": "es6",
-    "target": "es5",
+    "module": "ES2022",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    // "esModuleInterop": true, // This breaks quite a bit - consider testing it in isolation
     "sourceMap": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
