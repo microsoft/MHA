@@ -8,7 +8,7 @@ import { aikey } from "./aikey";
 import { mhaVersion } from "./version";
 import { buildTime } from "./buildTime";
 import * as StackTrace from "stacktrace-js";
-import "promise-polyfill/src/polyfill";
+import "promise-polyfill/dist/polyfill";
 
 // diagnostics module
 
@@ -64,7 +64,9 @@ class diag {
         });
 
         this.appInsights.loadAppInsights();
-        this.appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pageview
+        if (process.env["NODE_ENV"] !== "test") {
+            this.appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pageview        }
+        }
     }
 
     public initSendTelemetry(sendTelemetry: boolean): void {

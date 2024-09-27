@@ -5,6 +5,9 @@ module.exports = {
     transform: {
         "^.+.tsx?$": ["ts-jest",{ diagnostics: { ignoreCodes: ["TS151001"] } }],
     },
+    globals: {
+        "__AIKEY__": ""
+    },
     collectCoverage: false, // TODO: turn off after most tests migrated
     collectCoverageFrom: ["./src/**"],
     coverageDirectory: "./Pages/coverage",
