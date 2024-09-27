@@ -90,7 +90,7 @@ describe("isFocusableElement correctly identifies focusable elements", () => {
 
     test("Element without offsetParent is not focusable", () => {
         const element = document.createElement("button");
-        expect(element.offsetParent).toBe(null);
+        expect(element.offsetParent).toBeNull();
         expect(isFocusableElement(element)).toBeFalsy();
     });
 });
