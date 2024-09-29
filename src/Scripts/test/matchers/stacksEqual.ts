@@ -1,7 +1,7 @@
 import type { MatcherFunction } from "expect";
 import { expect } from "@jest/globals";
 
-// Strip stack of rows with unittests.html.
+// Strip stack of rows with jest.
 // Used to normalize cross browser differences strictly for testing purposes
 // Real stacks sent up will contain cross browser quirks
 function cleanStack(stack: string[]) {
@@ -18,8 +18,6 @@ function cleanStack(stack: string[]) {
         // .replace(/^.*?\.(.*) \(http/, "$1 (http") // Remove namespace scopes that only appear in some browsers
         // .replace(/^.*?\/< \((http.*)\)/, "$1") // Firefox has this odd /< notation - remove it
         // .replace(/^Anonymous function \((http.*)\)/, "$1") // IE still has Anonymous function - remove it
-        // .replace(/^Object\.parse.*unittests\.js.*/, "") // Remove Object.parse lines
-        // .replace(/^Object\.<anonymous>.*unittests\.js.*/, "") // Remove Object.anonymous lines
         // .replace(/(js):\d+:\d*/, "$1") // remove column and line # since they may vary by browser
         ;
     }).filter(function (item: string): boolean {

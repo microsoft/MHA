@@ -43,7 +43,7 @@ Here is a standalone Message Header Analyzer running the same backend code as th
 Unit Tests
 -----
 
-<https://mha.azurewebsites.net/pages/unittests.html>
+<https://mha.azurewebsites.net/Pages/test>
 
 Mobile
 -----
@@ -76,9 +76,6 @@ Unit Testing
 - View code coverage here: <https://localhost:44336/Pages/coverage/lcov-report/>
 - After changing source you will need to `npm run test` again.
 - TODO List
-1. Migrate remaining tests to jest - <https://devhints.io/jest>
-1. Remove gruntfile
-1. Remove grunt dependencies
 1. Get lint running on build
 
 
