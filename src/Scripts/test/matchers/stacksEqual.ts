@@ -9,6 +9,7 @@ function cleanStack(stack: string[]) {
     return stack.map(function (item: string): string {
         return item
             .replace(/[A-Z]:\\.*?\\MHA\\/, "") // Remove path prefix that start <drive letter>:\src\MHA
+            .replace(/Function\.get \[as parse\]/, "Function.parse") // normalize function name
             // .replace(/.*node_modules.*/, "") // remove node_modules
             // .replace(/.*localhost.*/, "") // test stacks don't have files from the site
             // .replace(/.*azurewebsites.*/, "") // test stacks don't have files from the site

@@ -8,7 +8,7 @@ module.exports = {
     globals: {
         "__AIKEY__": ""
     },
-    collectCoverage: false, // TODO: turn off after most tests migrated
+    collectCoverage: true,
     collectCoverageFrom: ["./src/**"],
     coverageDirectory: "./Pages/coverage",
     coverageReporters: ["json", "lcov", "text", "clover"],
