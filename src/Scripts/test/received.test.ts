@@ -1,5 +1,5 @@
 ﻿import { Received } from "../Received";
-import "./receivedEqual";
+import "./matchers/receivedEqual";
 import { expect } from "@jest/globals";
 
 describe("receivedEqual Sanity Tests", () => {

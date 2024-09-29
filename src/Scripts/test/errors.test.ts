@@ -1,5 +1,5 @@
 ﻿import { Errors } from "../Errors";
-import "./stacksEqual";
+import "./matchers/stacksEqual";
 import { expect } from "@jest/globals";
 
 function testParse(done: jest.DoneCallback, exception: any, message: string | null, expectedEventName: string, expectedStack: string[]) {

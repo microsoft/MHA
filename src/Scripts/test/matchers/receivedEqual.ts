@@ -1,5 +1,5 @@
 import type { MatcherFunction } from "expect";
-import { ReceivedRow } from "../Received";
+import { ReceivedRow } from "../../Received";
 import { expect } from "@jest/globals";
 
 export const receivedEqual: MatcherFunction<[expected: unknown]> =
