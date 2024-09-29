@@ -8,18 +8,20 @@ function cleanStack(stack: string[]) {
     if (!stack) return null;
     return stack.map(function (item: string): string {
         return item
-            .replace(/.*node_modules.*/, "") // remove node_modules
-            .replace(/.*localhost.*/, "") // test stacks don't have files from the site
-            .replace(/.*azurewebsites.*/, "") // test stacks don't have files from the site
-            //.replace(/.*qunit.*/, "") // test stacks don't mention QUnit
-            .replace(/.*\.\.\/Scripts\/.*/, "")
-            .replace(/\n+/, "\n") // collapse extra linefeeds
-            .replace(/^.*?\.(.*) \(http/, "$1 (http") // Remove namespace scopes that only appear in some browsers
-            .replace(/^.*?\/< \((http.*)\)/, "$1") // Firefox has this odd /< notation - remove it
-            .replace(/^Anonymous function \((http.*)\)/, "$1") // IE still has Anonymous function - remove it
-            .replace(/^Object\.parse.*unittests\.js.*/, "") // Remove Object.parse lines
-            .replace(/^Object\.<anonymous>.*unittests\.js.*/, "") // Remove Object.anonymous lines
-            .replace(/(js):\d+:\d*/, "$1"); // remove column and line # since they may vary by browser
+            .replace(/[A-Z]:\\.*?\\MHA\\/, "") // Remove path prefix that start <drive letter>:\src\MHA
+            // .replace(/.*node_modules.*/, "") // remove node_modules
+            // .replace(/.*localhost.*/, "") // test stacks don't have files from the site
+            // .replace(/.*azurewebsites.*/, "") // test stacks don't have files from the site
+            .replace(/.*jest.*/, "") // Don't care about jest internals
+        // .replace(/.*\.\.\/Scripts\/.*/, "")
+        // .replace(/\n+/, "\n") // collapse extra linefeeds
+        // .replace(/^.*?\.(.*) \(http/, "$1 (http") // Remove namespace scopes that only appear in some browsers
+        // .replace(/^.*?\/< \((http.*)\)/, "$1") // Firefox has this odd /< notation - remove it
+        // .replace(/^Anonymous function \((http.*)\)/, "$1") // IE still has Anonymous function - remove it
+        // .replace(/^Object\.parse.*unittests\.js.*/, "") // Remove Object.parse lines
+        // .replace(/^Object\.<anonymous>.*unittests\.js.*/, "") // Remove Object.anonymous lines
+        // .replace(/(js):\d+:\d*/, "$1") // remove column and line # since they may vary by browser
+        ;
     }).filter(function (item: string): boolean {
         return !!item;
     });
@@ -47,9 +49,9 @@ export const stacksEqual: MatcherFunction<[expected: unknown]> =
             if (!passed) {
                 messages.push("Stacks do not match");
                 messages.push("Actual stack:");
-                actualStack.forEach((actualItem) => { messages.push(actualItem); });
+                actualStack.forEach((actualItem) => { messages.push("\t" + actualItem); });
                 messages.push("Expected stack:");
-                expectedStack.forEach((expectedItem) => { messages.push(expectedItem); });
+                expectedStack.forEach((expectedItem) => { messages.push("\t" + expectedItem); });
             }
         }
 
