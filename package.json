@@ -8,9 +8,11 @@
   },
   "private": true,
   "scripts": {
-    "watch": "webpack --watch --mode development",
-    "build": "webpack --mode production",
-    "build:dev": "webpack --mode development",
+    "watch": "webpack --watch",
+    "build": "webpack --mode=production --node-env=production",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production --node-env=production",
+    "serve": "webpack serve",
     "dev-server": "webpack serve --mode development",
     "clean": "node tasks/clean.js",
     "start": "office-addin-debugging start ManifestDebugLocal.xml",
@@ -19,8 +21,8 @@
     "validate": "office-addin-manifest validate Manifest.xml",
     "test": "jest",
     "lint": "eslint --ext .ts src",
-    "pretest": "npm run lint",
-    "lintfix": "eslint --fix --ext .ts src"
+    "lint:fix": "eslint --fix --ext .ts src",
+    "pretest": "npm run lint"
   },
   "keywords": [],
   "repository": {
