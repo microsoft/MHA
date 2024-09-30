@@ -72,7 +72,10 @@ function initializeFabric(): void {
     // Wire up click events for nav buttons
     $("#nav-bar .ms-CommandButton").click(function (): void {
         // Fix for Bug 1691252 - To set aria-label dynamically on click based on button name
-        $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label")!.length !== 0 ? $("#nav-bar .is-active .ms-CommandButton-button").attr("aria-label", $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label").text()) : "";
+        if ($("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label")!.length !== 0) {
+            $("#nav-bar .is-active .ms-CommandButton-button").attr("aria-label", $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label").text());
+        }
+
         // Remove active from current active
         $("#nav-bar .is-active").removeClass("is-active");
         // Add active class to clicked button

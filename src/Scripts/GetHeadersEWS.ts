@@ -50,7 +50,7 @@ export class GetHeadersEWS {
             if (!ret.prop) {
                 ret.responseCode = filterNode(responseDom, "m:ResponseCode");
             }
-        } catch (e) {
+        } catch {
             // Exceptions thrown from parseXML are super chatty and we do not want to log them.
             // We throw this exception away and just return nothing.
         }

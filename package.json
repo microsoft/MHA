@@ -17,7 +17,9 @@
     "start:server": "office-addin-debugging start manifestDebugServer.xml",
     "stop": "office-addin-debugging stop ManifestDebugLocal.xml && office-addin-debugging stop manifestDebugServer.xml",
     "validate": "office-addin-manifest validate Manifest.xml",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint --ext .ts src",
+    "pretest": "npm run lint"
   },
   "keywords": [],
   "repository": {

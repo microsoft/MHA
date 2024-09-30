@@ -173,7 +173,7 @@ export class ParentFrame {
     private static getSettingsKey(): string {
         try {
             return "frame" + Office.context.mailbox.diagnostics.hostName;
-        } catch (e) {
+        } catch {
             return "frame";
         }
     }
@@ -285,7 +285,7 @@ export class ParentFrame {
                             diagnostics += diag + " = " + diagnosticMap[diag] + "\n";
                         }
                     }
-                } catch (e) {
+                } catch {
                     diagnostics += "ERROR: Failed to get diagnostics\n";
                 }
 
@@ -454,7 +454,11 @@ export class ParentFrame {
     }
 
     public static setSendTelemetryUI(sendTelemetry: boolean) {
-        sendTelemetry ? this.telemetryCheckboxComponent.check() : this.telemetryCheckboxComponent.unCheck();
+        if (sendTelemetry) {
+            this.telemetryCheckboxComponent.check();
+        } else {
+            this.telemetryCheckboxComponent.unCheck();
+        }
     }
 
     public static initUI(): void {
@@ -470,7 +474,7 @@ export class ParentFrame {
             const input: JQuery<HTMLElement> = $("#uiToggle" + choice.label);
             input.prop("checked", "true");
             ParentFrame.go(choice);
-        } catch (e) {
+        } catch {
             ParentFrame.goDefaultChoice();
         }
 

@@ -21,7 +21,7 @@ export class strings {
                     Diagnostics.trackEvent({ name: "copy", properties: { succeeded: "false", style: "navigator" } });
                 });
             }
-            catch (e) { /**/ }
+            catch { /**/ }
         }
 
         try {
@@ -30,7 +30,7 @@ export class strings {
                 Diagnostics.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "permissions", clipboardWrite: result.state } });
             });
         }
-        catch (e) { /**/ }
+        catch { /**/ }
     }
 
     private static headerToURLMap: string[][] = [
@@ -114,7 +114,7 @@ export class strings {
     public static mapValueToURL(text: string): string {
         try {
             return ["<a href='", text, "' target='_blank'>", this.htmlEncode(text), "</a>"].join("");
-        } catch (e) {
+        } catch {
             return text;
         }
     }
