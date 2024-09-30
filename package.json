@@ -8,21 +8,21 @@
   },
   "private": true,
   "scripts": {
+    "clean": "node tasks/clean.js",
     "watch": "webpack --watch",
     "build": "webpack --mode=production --node-env=production",
     "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production",
     "serve": "webpack serve",
-    "dev-server": "webpack serve --mode development",
-    "clean": "node tasks/clean.js",
+    "dev-server": "webpack serve --mode=development",
     "start": "office-addin-debugging start ManifestDebugLocal.xml",
-    "start:server": "office-addin-debugging start manifestDebugServer.xml",
+    "start:debug-server": "office-addin-debugging start manifestDebugServer.xml",
     "stop": "office-addin-debugging stop ManifestDebugLocal.xml && office-addin-debugging stop manifestDebugServer.xml",
     "validate": "office-addin-manifest validate Manifest.xml",
     "test": "jest",
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --fix --ext .ts src",
-    "pretest": "npm run lint"
+    "pretest": "npm run lint",
+    "prebuild": "npm run clean"
   },
   "keywords": [],
   "repository": {
