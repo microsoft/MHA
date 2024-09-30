@@ -1,6 +1,6 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} **/
+import type {Config} from "jest";
 // https://github.com/jest-community/awesome-jest
-module.exports = {
+const config: Config = {
     testEnvironment: "jsdom",
     transform: {
         "^.+.tsx?$": ["ts-jest",{ diagnostics: { ignoreCodes: ["TS151001"] } }],
@@ -26,5 +26,7 @@ module.exports = {
             "publicPath": "./Pages/test",
             "filename": "index.html"
         }]
-    ],
+    ]
 };
+
+export default config;
