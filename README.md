@@ -75,9 +75,6 @@ Unit Testing
 - View test results here: <https://localhost:44336/Pages/test/>
 - View code coverage here: <https://localhost:44336/Pages/coverage/lcov-report/>
 - After changing source you will need to `npm run test` again.
-- TODO List
-1. Get lint running on build
-
 
 Live site testing
 -----
