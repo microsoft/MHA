@@ -46,7 +46,7 @@ export class AntiSpamReport {
         // First pass: Remove the (null).
         report = report.replace(/\(null\)/g, "");
 
-        // Occasionally, we find the final ; is missing. 
+        // Occasionally, we find the final ; is missing.
         // Second pass: Add one. If it is extraneous, the next pass will remove it.
         report = report + ";";
 

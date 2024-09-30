@@ -118,7 +118,7 @@ export class Errors {
         }
 
         // TODO: Move filter from callbacks into gets
-        const options: StackTraceOptions = {offline: true}; 
+        const options: StackTraceOptions = {offline: true};
         if (!Errors.isError(exception)) {
             StackTrace.get(options).then(callback).catch(errback);
         } else {

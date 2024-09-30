@@ -84,7 +84,7 @@ function initializeFabric(): void {
         // Get content marker
         const content: string | undefined = $(this).attr("data-content");
         // Hide sub-views
-      
+
         // Fix for Bug 1691252 - To set aria-label as button after selection like "Summary Selected"
         const ariaLabel = $(this).find(".ms-CommandButton-label")!.text() + " Selected";
         $(this).find(".ms-CommandButton-label")!.attr("aria-label",ariaLabel);
@@ -262,7 +262,7 @@ function buildViews(headers: string) {
                     .html(makeBold("To: ") + row.by)
                     .appendTo(listItem);
             }
-            
+
             index=index+1;
             $("<div/>")
                 .addClass("ms-ListItem-selectionTarget")

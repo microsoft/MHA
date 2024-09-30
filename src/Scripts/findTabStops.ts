@@ -1,10 +1,10 @@
 /**
  * Finds all tab stops within a given HTML element.
- * 
+ *
  * This function searches for all focusable elements within the specified element
  * and returns an array of those elements that are not disabled, have a non-negative
  * tabIndex, and are visible (i.e., their offsetParent is not null).
- * 
+ *
  * @param element - The root HTML element within which to search for tab stops.
  * @returns An array of HTMLElements that are focusable and meet the criteria.
  */

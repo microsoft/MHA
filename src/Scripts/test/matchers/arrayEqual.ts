@@ -15,7 +15,7 @@ const arrayEqual: MatcherFunction<[expected: object[]]> =
             messages.push("length = " + actual.length);
             messages.push("length = " + expected.length);
         }
-    
+
         for (let i = 0; i < actual.length; i++) {
             const result: SyncExpectationResult = await receivedEqual.call(this, actual[i], expected[i]);
             if (!result.pass) {
@@ -24,7 +24,7 @@ const arrayEqual: MatcherFunction<[expected: object[]]> =
                 messages.push(result.message());
             }
         }
-    
+
         return {
             message: () => messages.join("\n"),
             pass: passed
