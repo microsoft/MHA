@@ -18,8 +18,8 @@ export class OtherRow extends Row {
 
 export class Other extends iTable {
     private _otherRows: OtherRow[] = [];
-    protected _sortColumn: string = "number";
-    protected _sortOrder: number = 1;
+    protected _sortColumn = "number";
+    protected _sortOrder = 1;
     public readonly tableName: string = "otherHeaders";
 
     public doSort(col: string): void {

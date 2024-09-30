@@ -86,7 +86,7 @@ export class Decoder {
     }
 
     // Javascript auto converted from C# implementation + improvements.
-    private static _F: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    private static _F = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     public static decodeBase64(charSet: string, input: string): string {
         if (!input) {
             return input;

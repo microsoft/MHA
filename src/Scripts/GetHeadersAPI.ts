@@ -16,7 +16,7 @@ import { Diagnostics } from "./diag";
  */
 
 export class GetHeadersAPI {
-    private static minAPISet: string = "1.9";
+    private static minAPISet = "1.9";
 
     public static canUseAPI(): boolean { return GetHeaders.canUseAPI("API", GetHeadersAPI.minAPISet); }
 

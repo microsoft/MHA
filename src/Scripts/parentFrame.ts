@@ -8,14 +8,14 @@ import { strings } from "./Strings";
 import { findTabStops } from "./findTabStops";
 
 class Choice {
-    label: string = "";
-    url: string = "";
-    checked: boolean = false;
+    label = "";
+    url = "";
+    checked = false;
 }
 
 class DeferredError {
     error: Error = <Error>{};
-    message: string = "";
+    message = "";
 }
 
 export class ParentFrame {
@@ -23,8 +23,8 @@ export class ParentFrame {
     private static currentChoice = {} as Choice;
     private static deferredErrors: DeferredError[] = [];
     private static deferredStatus: string[] = [];
-    private static headers: string = "";
-    private static modelToString: string = "";
+    private static headers = "";
+    private static modelToString = "";
     protected static telemetryCheckboxComponent: fabric.CheckBox;
 
     private static choices: Array<Choice> = [
@@ -36,7 +36,7 @@ export class ParentFrame {
     private static getQueryVariable(variable: string): string {
         const vars: string[] = window.location.search.substring(1).split("&");
 
-        let found: string = "";
+        let found = "";
         // Find seems appropriate here but still fails in IE. Use forEach instead.
         vars.forEach((v: string) => {
             if (found === "") {
@@ -277,7 +277,7 @@ export class ParentFrame {
             const action = (event.currentTarget as HTMLButtonElement).id;
 
             function getDiagnostics(): string {
-                let diagnostics: string = "";
+                let diagnostics = "";
                 try {
                     const diagnosticMap = Diagnostics.get();
                     for (const diag in diagnosticMap) {

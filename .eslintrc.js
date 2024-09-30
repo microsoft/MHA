@@ -28,6 +28,6 @@ module.exports = {
         "@stylistic/js/no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0, "maxBOF": 0 }],
         "@stylistic/js/no-trailing-spaces": "error",
         "@typescript-eslint/no-explicit-any": "off", // TODO: consider removing this
-        "@typescript-eslint/no-inferrable-types": "off", // TODO: consider removing this
+        "@typescript-eslint/no-inferrable-types": "error", // TODO: consider removing this
     }
 };

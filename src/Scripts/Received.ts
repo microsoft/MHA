@@ -73,8 +73,8 @@ export class ReceivedRow {
 
 export class Received extends iTable {
     private _receivedRows: ReceivedRow[] = [];
-    protected _sortColumn: string = "hop";
-    protected _sortOrder: number = 1;
+    protected _sortColumn = "hop";
+    protected _sortOrder = 1;
     public readonly tableName: string = "receivedHeaders";
 
     // Builds array of values for each header in receivedHeaderNames.
@@ -140,7 +140,7 @@ export class Received extends iTable {
             const tokens = receivedHeader.split(/\s+/);
 
             // Build array of header locations
-            class match { fieldName: string = ""; iToken: number = 0; }
+            class match { fieldName = ""; iToken = 0; }
             const headerMatches: match[] = [];
 
             let fieldName: string;
@@ -263,10 +263,10 @@ export class Received extends iTable {
         this.rows.reverse();
 
         // Parse rows and compute values needed for the "Delay" column
-        let iStartTime: number = 0;
-        let iEndTime: number = 0;
-        let iLastTime: number = NaN;
-        let iDelta: number = 0; // This will be the sum of our positive deltas
+        let iStartTime = 0;
+        let iEndTime = 0;
+        let iLastTime = NaN;
+        let iDelta = 0; // This will be the sum of our positive deltas
 
         this.rows.forEach(function (row: ReceivedRow) {
             if (!isNaN(row.dateNum.value)) {

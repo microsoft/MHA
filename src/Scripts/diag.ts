@@ -15,8 +15,8 @@ import "promise-polyfill/dist/polyfill";
 class diag {
     private appDiagnostics: { [k: string]: any } | null = null;
     private itemDiagnostics: { [k: string]: any } | null = null;
-    private inGet: boolean = false;
-    private sendTelemetry: boolean = true;
+    private inGet = false;
+    private sendTelemetry = true;
     private appInsights = new ApplicationInsights({
         config: {
             instrumentationKey: aikey(),

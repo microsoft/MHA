@@ -50,9 +50,9 @@ export class HeaderModel {
         const lines: string[] = headers.split(/\r\n|\r|\n/);
 
         const headerList: Header[] = [];
-        let iNextHeader: number = 0;
+        let iNextHeader = 0;
         let prevHeader: Header | undefined;
-        let body: boolean = false;
+        let body = false;
         header_section: while(!body) {
             unfold_lines: for (let line of lines) {
                 // Handling empty lines. The body is separated from the header section by an empty line (RFC 5322, 2.1).

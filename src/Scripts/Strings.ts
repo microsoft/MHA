@@ -97,7 +97,7 @@ export class strings {
     public static htmlEncode(value: string): string { return value ? $("<div />").text(value).html() : ""; }
 
     public static mapHeaderToURL(headerName: string, text?: string): string {
-        let url: string = "";
+        let url = "";
         strings.headerToURLMap.forEach((h: string[]) => {
             if (url === "" && headerName.toLowerCase() === h[0]?.toLowerCase()) {
                 url = h[1] ?? "";

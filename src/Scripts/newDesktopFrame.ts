@@ -197,7 +197,7 @@ function buildViews(headers: string) {
             .addClass("ms-List")
             .appendTo(receivedList);
 
-        let firstRow: boolean = true;
+        let firstRow = true;
         viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, index) => {
             // Fix for Bug 1846002 - Added attr ID to set focus for the first element in the list
             const listItem = $("<li/>")
