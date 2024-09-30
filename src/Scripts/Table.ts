@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+import $ from "jquery";
 import { HeaderModel } from "./Headers";
 import { mhaStrings } from "./mhaStrings";
 import { Row } from "./Summary";

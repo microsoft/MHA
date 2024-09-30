@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+import $ from "jquery";
 import { Diagnostics } from "./diag";
 
 export class strings {

@@ -1,4 +1,4 @@
-﻿import * as $ from "jquery";
+﻿import $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
 import { Diagnostics } from "./diag";
 import { Errors } from "./Errors";

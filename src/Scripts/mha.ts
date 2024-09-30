@@ -3,7 +3,7 @@ import "office-ui-fabric-js/dist/css/fabric.components.min.css";
 import "../Content/fabric.css";
 import "../Content/Office.css";
 import "../Content/classicDesktopFrame.css";
-import * as $ from "jquery";
+import $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
 import { HeaderModel } from "./Headers";

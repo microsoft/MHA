@@ -1,6 +1,6 @@
 ﻿import "../Content/Office.css";
 import "../Content/classicDesktopFrame.css";
-import * as $ from "jquery";
+import $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./Headers";
 import { Table } from "./Table";

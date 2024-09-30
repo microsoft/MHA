@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+import $ from "jquery";
 import { ApplicationInsights, IEventTelemetry, ICustomProperties, ITelemetryItem } from "@microsoft/applicationinsights-web";
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
@@ -7,7 +7,7 @@ import { GetHeadersRest } from "./GetHeadersRest";
 import { aikey } from "./aikey";
 import { mhaVersion } from "./version";
 import { buildTime } from "./buildTime";
-import * as StackTrace from "stacktrace-js";
+import StackTrace from "stacktrace-js";
 import "promise-polyfill/dist/polyfill";
 
 // diagnostics module

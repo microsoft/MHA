@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+import $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
 import { Errors } from "./Errors";
 import { ParentFrame } from "./parentFrame";
