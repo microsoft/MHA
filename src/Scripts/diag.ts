@@ -199,11 +199,11 @@ class diag {
                             this.appDiagnostics["Office.context.mailbox.diagnostics"] = "missing";
                         }
 
-                        // @ts-ignore early version of initialData
+                        // @ts-expect-error early version of initialData
                         if (window.Office.context.mailbox._initialData$p$0) {
                             delete this.appDiagnostics["Office.context.mailbox.initialData"];
                         }
-                        // @ts-ignore initialData is missing from the type file
+                        // @ts-expect-error initialData is missing from the type file
                         else if (window.Office.context.mailbox.initialData) {
                             delete this.appDiagnostics["Office.context.mailbox.initialData"];
                         }
@@ -256,15 +256,15 @@ class diag {
             }
 
             // This check is for severly broken office.js implementations that still crop up
-            // @ts-ignore: TS2774 false positive
+            // @ts-expect-error: TS2774 false positive
             if (window.Office.context.mailbox && window.Office.context.mailbox.addHandlerAsync) return "1.5?";
-            // @ts-ignore: TS2774 false positive
+            // @ts-expect-error: TS2774 false positive
             if (window.Office.context.ui && window.Office.context.ui.displayDialogAsync) return "1.4?";
-            // @ts-ignore: TS2774 false positive
+            // @ts-expect-error: TS2774 false positive
             if (window.Office.context.mailbox && window.Office.context.mailbox.item.saveAsync) return "1.3?";
-            // @ts-ignore: TS2774 false positive
+            // @ts-expect-error: TS2774 false positive
             if (window.Office.context.mailbox && window.Office.context.mailbox.item.setSelectedDataAsync) return "1.2?";
-            // @ts-ignore: TS2774 false positive
+            // @ts-expect-error: TS2774 false positive
             if (window.Office.context.mailbox && window.Office.context.mailbox.item.removeAttachmentAsync) return "1.1?";
             return "1.0?";
         }

@@ -19,7 +19,8 @@
     "validate": "office-addin-manifest validate Manifest.xml",
     "test": "jest",
     "lint": "eslint --ext .ts src",
-    "pretest": "npm run lint"
+    "pretest": "npm run lint",
+    "lintfix": "eslint --fix --ext .ts src"
   },
   "keywords": [],
   "repository": {

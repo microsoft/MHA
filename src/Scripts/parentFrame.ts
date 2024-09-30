@@ -436,7 +436,6 @@ export class ParentFrame {
         });
     }
 
-    // @ts-ignore // Suppress TS6133 for logging function
     private static logElement(title: string, element: HTMLElement): void {
         let out = title + " element:" + element;
         // make sure element isn't null

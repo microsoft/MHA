@@ -40,7 +40,7 @@ module.exports = {
             "always"
         ],
         "@typescript-eslint/no-explicit-any": "off", // TODO: consider removing this
-        "@typescript-eslint/ban-ts-comment": "off", // TODO: consider removing this  
+        // "@typescript-eslint/ban-ts-comment": "off", // TODO: consider removing this  
         "@typescript-eslint/no-inferrable-types": "off", // TODO: consider removing this
     }
 };

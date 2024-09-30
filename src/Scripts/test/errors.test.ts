@@ -26,7 +26,7 @@ describe("Errors.parse Tests", () => {
 
     test("notAFunction", done => {
         try {
-            // @ts-ignore Intentional error to test error handling
+            // @ts-expect-error Intentional error to test error handling
             document.notAFunction();
         }
         catch (error) {
@@ -127,7 +127,7 @@ describe("Errors.parse Tests", () => {
 describe("getError* Tests", () => {
     test("notAFunction error", () => {
         try {
-            // @ts-ignore Intentional error to test error handling
+            // @ts-expect-error Intentional error to test error handling
             document.notAFunction();
         }
         catch (error) {
@@ -181,7 +181,7 @@ describe("getError* Tests", () => {
 });
 
 describe("isError Tests", () => {
-    // @ts-ignore Intentional error to test error handling
+    // @ts-expect-error Intentional error to test error handling
     try { document.notAFunction(); } catch (error) { expect(Errors.isError(error)).toBeTruthy(); }
     try { throw null; } catch (error) { expect(Errors.isError(error)).toBeFalsy(); }
     try { throw "string"; } catch (error) { expect(Errors.isError(error)).toBeFalsy(); }
