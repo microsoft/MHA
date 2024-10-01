@@ -13,8 +13,8 @@ import "promise-polyfill/dist/polyfill";
 // diagnostics module
 
 class diag {
-    private appDiagnostics: { [k: string]: any } | null = null;
-    private itemDiagnostics: { [k: string]: any } | null = null;
+    private appDiagnostics: { [k: string]: string | number | boolean } | null = null;
+    private itemDiagnostics: { [k: string]: string | boolean } | null = null;
     private inGet = false;
     private sendTelemetry = true;
     private appInsights = new ApplicationInsights({
