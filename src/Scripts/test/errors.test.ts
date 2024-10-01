@@ -2,7 +2,7 @@
 import "./matchers/stacksEqual";
 import { expect } from "@jest/globals";
 
-function testParse(done: jest.DoneCallback, exception: any, message: string | null, expectedEventName: string, expectedStack: string[]) {
+function testParse(done: jest.DoneCallback, exception: unknown, message: string | null, expectedEventName: string, expectedStack: string[]) {
     Errors.parse(exception, message, function (eventName, stack) {
         try {
             expect(eventName).toBe(expectedEventName);
