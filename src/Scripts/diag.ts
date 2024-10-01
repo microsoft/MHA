@@ -116,11 +116,13 @@ class diag {
     }
 
     public trackError(eventType: string, source: string, e: unknown): void {
+        const message = (e as Error).message;
         if (this.sendTelemetry) {
-            this.appInsights.trackEvent({ name: eventType, properties: { source: source, exception: JSON.stringify(e), message: e.message, stack: e.stack } });
+            const stack = (e as Error).stack;
+            this.appInsights.trackEvent({ name: eventType, properties: { source: source, exception: JSON.stringify(e), message: message, stack: stack } });
         }
         else {
-            const msg_base = `Error ${eventType} from ${source}: ${e.message}`;
+            const msg_base = `Error ${eventType} from ${source}: ${message}`;
             console.log(msg_base + " exception: " + JSON.stringify(e));
         }
     }

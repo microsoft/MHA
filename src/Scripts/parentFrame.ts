@@ -65,7 +65,7 @@ export class ParentFrame {
         });
     }
 
-    private static postMessageToFrame(eventName: string, data: string | { error: string, message: any }): void {
+    private static postMessageToFrame(eventName: string, data: string | { error: string, message: string }): void {
         if (ParentFrame.iFrame) {
             poster.postMessageToFrame(ParentFrame.iFrame, eventName, data);
         }
