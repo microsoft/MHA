@@ -115,7 +115,7 @@ class diag {
         }
     }
 
-    public trackError(eventType: string, source: string, e: any): void {
+    public trackError(eventType: string, source: string, e: unknown): void {
         if (this.sendTelemetry) {
             this.appInsights.trackEvent({ name: eventType, properties: { source: source, exception: JSON.stringify(e), message: e.message, stack: e.stack } });
         }
@@ -297,7 +297,7 @@ class diag {
     }
 
     // Combines appDiagnostics and itemDiagnostics and returns a single object
-    public get(): { [k: string]: any } {
+    public get(): { [k: string]: string | number | boolean } {
         if (!this.inGet) {
             this.inGet = true;
             try {
