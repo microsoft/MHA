@@ -11,7 +11,7 @@ export class Row {
         this._value = "";
     }
 
-    [index: string]: any;
+    [index: string]: unknown;
     protected _value: string;
     header: string;
     label: string;
