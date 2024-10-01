@@ -11,7 +11,7 @@ import { poster } from "./poster";
 let viewModel: HeaderModel;
 let table: Table;
 
-function postError(error: any, message: string): void {
+function postError(error: unknown, message: string): void {
     poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
@@ -46,7 +46,7 @@ function renderItem(headers: string) {
 
 // Handles rendering of an error.
 // Does not log the error - caller is responsible for calling PostError
-function showError(_error: any, message: string) {
+function showError(_error: unknown, message: string) {
     // TODO: Do something with the error
     updateStatus(message);
     disableSpinner();
