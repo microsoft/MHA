@@ -17,7 +17,7 @@ import { findTabStops } from "./findTabStops";
 let overlay: fabric.Overlay;
 let spinner: fabric.Spinner;
 
-function postError(error: any, message: string): void {
+function postError(error: unknown, message: string): void {
     poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
@@ -432,7 +432,7 @@ function renderItem(headers: string): void {
 
 // Handles rendering of an error.
 // Does not log the error - caller is responsible for calling PostError
-function showError(_error: any, message: string): void {
+function showError(_error: unknown, message: string): void {
     // TODO: Do something with the error
     $("#error-display .ms-MessageBar-text").text(message);
     $("#error-display").show();

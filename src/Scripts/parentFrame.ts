@@ -148,8 +148,7 @@ export class ParentFrame {
     }
 
     // Tells the UI to show an error.
-    public static showError(error: any, message: string, suppressTracking?: boolean): void {
-        // TODO: Do something with the error
+    public static showError(error: unknown, message: string, suppressTracking?: boolean): void {
         Errors.log(error, message, suppressTracking);
 
         if (ParentFrame.iFrame) {
