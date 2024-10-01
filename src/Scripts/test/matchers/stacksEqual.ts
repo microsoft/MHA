@@ -57,6 +57,6 @@ expect.extend({ stacksEqual, });
 
 declare module "expect" {
     interface Matchers<R> {
-        stacksEqual(expected: { [index: string]: any }): R;
+        stacksEqual(expected: string[]): R;
     }
 }
