@@ -4,7 +4,7 @@ import { mhaDates, DateWithNum } from "./dates";
 import { Header } from "./Headers";
 
 class ReceivedField {
-    constructor(label: string, value?: any) {
+    constructor(label: string, value?: string | number | null) {
         this.label = label;
         this.value = value !== undefined ? value : "";
     }
