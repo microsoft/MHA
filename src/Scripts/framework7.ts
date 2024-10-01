@@ -4,5 +4,5 @@ import "framework7";
 // It instead adds Framework7 to window as a side effect
 // So we do a naked import and then export it from here so the rest of our code can treat
 // it as a regular module.
-// @ts-ignore
+// @ts-expect-error Framework doesn't exist, but it does - just do it
 export const Framework7 = window.Framework7;

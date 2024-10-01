@@ -1,8 +1,9 @@
-﻿import * as QUnit from "qunit";
-import { AntiSpamReport } from "../Antispam";
+﻿import { AntiSpamReport } from "../Antispam";
 import { ForefrontAntiSpamReport } from "../ForefrontAntispam";
+import "./matchers/arrayEqual";
+import { expect } from "@jest/globals";
 
-QUnit.test("antiSpam Tests", function (assert: Assert) {
+describe("antiSpam Tests", () => {
     const header = "BCL:1;";
     const unparsed = "";
     const antiSpamRows = [
@@ -38,12 +39,18 @@ QUnit.test("antiSpam Tests", function (assert: Assert) {
 
     const antiSpamReport = new AntiSpamReport();
     antiSpamReport.addInternal(header);
-    assert.arrayEqual(antiSpamReport.rows, antiSpamRows, "antiSpamRows");
-    assert.propEqual(antiSpamReport.source, header, "antiSpamRows-sourceHeader");
-    assert.propEqual(antiSpamReport.unparsed, unparsed, "antiSpamRows-unparsed");
+    test("antiSpamRows", ()=>{
+        expect(antiSpamReport.rows).arrayEqual(antiSpamRows);
+    });
+    test("antiSpamRows-sourceHeader", () => {
+        expect(antiSpamReport.source).toBe(header);
+    });
+    test("antiSpamRows-unparsed", () => {
+        expect(antiSpamReport.unparsed).toBe(unparsed);
+    });
 });
 
-QUnit.test("forefront antiSpam Tests", function (assert: Assert) {
+describe("forefront antiSpam Tests", () => {
     const header =
         "CIP:208.75.123.162;CTRY:US;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:ccm27.constantcontact.com;PTR:ccm27.constantcontact.com;CAT:NONE;SFTY:;SFS:;DIR:INB;SFP:;";
     const unparsed = "DIR:INB;SFP:;";
@@ -171,12 +178,18 @@ QUnit.test("forefront antiSpam Tests", function (assert: Assert) {
 
     const forefrontAntiSpamReport = new ForefrontAntiSpamReport();
     forefrontAntiSpamReport.addInternal(header);
-    assert.arrayEqual(forefrontAntiSpamReport.rows, forefrontAntiSpamRows, "forefrontAntiSpamRows");
-    assert.propEqual(forefrontAntiSpamReport.source, header, "forefrontAntiSpamRows-sourceHeader");
-    assert.propEqual(forefrontAntiSpamReport.unparsed, unparsed, "forefrontAntiSpamReport-unparsed");
+    test("forefrontAntiSpamRows", ()=>{
+        expect(forefrontAntiSpamReport.rows).arrayEqual(forefrontAntiSpamRows);
+    });
+    test("forefrontAntiSpamRows-sourceHeader", () => {
+        expect(forefrontAntiSpamReport.source).toBe(header);
+    });
+    test("forefrontAntiSpamReport-unparsed", () => {
+        expect(forefrontAntiSpamReport.unparsed).toBe(unparsed);
+    });
 });
 
-QUnit.test("antiSpam nulls", function (assert: Assert) {
+describe("antiSpam nulls", () => {
     const header = "UIP:(null);(null);(null)SFV:SKI";
     const unparsed = "UIP:;SFV:SKI;";
     const antiSpamRows = [
@@ -212,12 +225,18 @@ QUnit.test("antiSpam nulls", function (assert: Assert) {
 
     const antiSpamReport = new AntiSpamReport();
     antiSpamReport.addInternal(header);
-    assert.arrayEqual(antiSpamReport.rows, antiSpamRows, "antiSpamRows nulls");
-    assert.propEqual(antiSpamReport.source, header, "antiSpamRows-sourceHeader nulls");
-    assert.propEqual(antiSpamReport.unparsed, unparsed, "antiSpamRows-unparsed nulls");
+    test("antiSpamRows null", ()=>{
+        expect(antiSpamReport.rows).arrayEqual(antiSpamRows);
+    });
+    test("antiSpamRows-sourceHeader null", () => {
+        expect(antiSpamReport.source).toBe(header);
+    });
+    test("antiSpamRows-unparsed null", () => {
+        expect(antiSpamReport.unparsed).toBe(unparsed);
+    });
 });
 
-QUnit.test("forefront antiSpam spam", function (assert: Assert) {
+describe("forefront antiSpam spam", () => {
     const header = "CIP:40.107.68.131;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(2980300002)(199004)(189003)(53386004)(6916009)(21480400003)(6606003)(102836004)(6506007)(7116003)(14454004)(5660300001)(25786009)(567704001)(7636002)(7736002)(74316002)(26005)(6436002)(61614004)(606006)(8676002)(63106013)(5640700003)(8636004)(5000100001)(1096003)(246002)(33656002)(58800400003)(336012)(84326002)(7696005)(221733001)(356004)(66060400003)(2501003)(2351001)(106466001)(66066001)(3480700005)(106002)(16586007)(71190400001)(86362001)(568964002)(16003)(99286004)(236005)(3846002)(9686003)(6116002)(54896002)(6306002)(5024004)(2476003)(19627405001)(22186003)(99936001)(3672435006)(476003)(126002)(486006)(55016002)(28085005);DIR:INB;SFP:;SCL:1;SRVR:DM5PR1501MB1992;H:NAM04-BN3-obe.outbound.protection.outlook.com;FPR:;SPF:Pass;LANG:en;PTR:mail-eopbgr680131.outbound.protection.outlook.com;A:1;MX:1;";
     const unparsed = "EFV:NLI;DIR:INB;SFP:;SRVR:DM5PR1501MB1992;FPR:;SPF:Pass;A:1;MX:1;";
     const forefrontAntiSpamRows = [
@@ -344,7 +363,13 @@ QUnit.test("forefront antiSpam spam", function (assert: Assert) {
 
     const forefrontAntiSpamReport = new ForefrontAntiSpamReport();
     forefrontAntiSpamReport.addInternal(header);
-    assert.arrayEqual(forefrontAntiSpamReport.rows, forefrontAntiSpamRows, "antiSpamRows spam");
-    assert.propEqual(forefrontAntiSpamReport.source, header, "antiSpamRows-sourceHeader spam");
-    assert.propEqual(forefrontAntiSpamReport.unparsed, unparsed, "antiSpamRows-unparsed spam");
+    test("antiSpamRows spam", ()=>{
+        expect(forefrontAntiSpamReport.rows).arrayEqual(forefrontAntiSpamRows);
+    });
+    test("antiSpamRows-sourceHeader spam", () => {
+        expect(forefrontAntiSpamReport.source).toBe(header);
+    });
+    test("antiSpamRows-unparsed spam", () => {
+        expect(forefrontAntiSpamReport.unparsed).toBe(unparsed);
+    });
 });

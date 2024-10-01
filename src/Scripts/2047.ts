@@ -42,7 +42,7 @@ export class Decoder {
                     break;
                 }
             }
-            catch (e) {
+            catch {
                 // Firefox will throw when passed a large non-matching buffer
                 // Such a buffer isn't a match anyway, so we just push it as raw text
                 unparsedblocks.push(<block>{ text: buffer });
@@ -86,7 +86,7 @@ export class Decoder {
     }
 
     // Javascript auto converted from C# implementation + improvements.
-    private static _F: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    private static _F = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     public static decodeBase64(charSet: string, input: string): string {
         if (!input) {
             return input;
@@ -118,7 +118,7 @@ export class Decoder {
             try {
                 return Decoder.decodeHexCodepage(charSet, $v$0);
             }
-            catch (e) { /**/ }
+            catch { /**/ }
         }
 
         // Since we failed to decode, put it all back
@@ -165,7 +165,7 @@ export class Decoder {
             // 2047 quoted allows _ as a replacement for space. Fix that first.
             const uriBuffer = buffer.replace(/_/g, " ");
             return Decoder.decodeHex(charSet, uriBuffer);
-        } catch (e) {
+        } catch {
             // Since we failed to decode, put it all back
             return "=?" + charSet + "?Q?" + buffer + "?=";
         }

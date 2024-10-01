@@ -4,8 +4,8 @@ import { Row } from "./Summary";
 import { Header } from "./Headers";
 
 export class AntiSpamReport {
-    private _source: string = "";
-    private _unparsed: string = "";
+    private _source = "";
+    private _unparsed = "";
     private antiSpamRows: Row[] = [
         new Row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
         new Row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
@@ -46,7 +46,7 @@ export class AntiSpamReport {
         // First pass: Remove the (null).
         report = report.replace(/\(null\)/g, "");
 
-        // Occasionally, we find the final ; is missing. 
+        // Occasionally, we find the final ; is missing.
         // Second pass: Add one. If it is extraneous, the next pass will remove it.
         report = report + ";";
 
@@ -57,7 +57,7 @@ export class AntiSpamReport {
         const lines = report.match(/(.*?):(.*?);/g);
         this._unparsed = "";
         if (lines) {
-            for (let iLine: number = 0; iLine < lines.length; iLine++) {
+            for (let iLine = 0; iLine < lines.length; iLine++) {
                 const line = lines[iLine]?.match(/(.*?):(.*?);/m);
                 if (line && line[1]) {
                     if (!this.setRowValue(this.rows, line[1], line[2] ?? "")) {

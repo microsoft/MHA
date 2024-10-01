@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+import $ from "jquery";
 import { Diagnostics } from "./diag";
 
 export class strings {
@@ -21,7 +21,7 @@ export class strings {
                     Diagnostics.trackEvent({ name: "copy", properties: { succeeded: "false", style: "navigator" } });
                 });
             }
-            catch (e) { /**/ }
+            catch { /**/ }
         }
 
         try {
@@ -30,7 +30,7 @@ export class strings {
                 Diagnostics.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "permissions", clipboardWrite: result.state } });
             });
         }
-        catch (e) { /**/ }
+        catch { /**/ }
     }
 
     private static headerToURLMap: string[][] = [
@@ -97,7 +97,7 @@ export class strings {
     public static htmlEncode(value: string): string { return value ? $("<div />").text(value).html() : ""; }
 
     public static mapHeaderToURL(headerName: string, text?: string): string {
-        let url: string = "";
+        let url = "";
         strings.headerToURLMap.forEach((h: string[]) => {
             if (url === "" && headerName.toLowerCase() === h[0]?.toLowerCase()) {
                 url = h[1] ?? "";
@@ -114,7 +114,7 @@ export class strings {
     public static mapValueToURL(text: string): string {
         try {
             return ["<a href='", text, "' target='_blank'>", this.htmlEncode(text), "</a>"].join("");
-        } catch (e) {
+        } catch {
             return text;
         }
     }

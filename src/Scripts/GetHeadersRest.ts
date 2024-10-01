@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+import  $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
 import { Errors } from "./Errors";
 import { ParentFrame } from "./parentFrame";
@@ -20,7 +20,7 @@ import { jwtDecode } from "jwt-decode";
  */
 
 export class GetHeadersRest {
-    private static minRestSet: string = "1.5";
+    private static minRestSet = "1.5";
 
     public static canUseRest(): boolean { return GetHeaders.canUseAPI("Rest", GetHeadersRest.minRestSet); }
 

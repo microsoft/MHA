@@ -54,7 +54,7 @@ export class ArchivedRow extends SummaryRow {
 }
 
 export class Summary {
-    private _totalTime: string = "";
+    private _totalTime = "";
 
     private creationPostFix(totalTime: string): string {
         if (!totalTime) {

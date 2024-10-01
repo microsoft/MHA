@@ -43,7 +43,7 @@ Here is a standalone Message Header Analyzer running the same backend code as th
 Unit Tests
 -----
 
-<https://mha.azurewebsites.net/pages/unittests.html>
+<https://mha.azurewebsites.net/Pages/test>
 
 Mobile
 -----
@@ -72,8 +72,9 @@ Unit Testing
 
 - Start the dev server: `npm run dev-server`
 - Run unit tests from command line: `npm run test`
-- Run unit tests locally in browser: <https://localhost:44336/Pages/unittests.html>
-- Changes made to source should live compile and reload page. Ctrl+R/refresh as needed.
+- View test results here: <https://localhost:44336/Pages/test/>
+- View code coverage here: <https://localhost:44336/Pages/coverage/lcov-report/>
+- After changing source you will need to `npm run test` again.
 
 Live site testing
 -----

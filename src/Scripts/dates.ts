@@ -1,5 +1,5 @@
-import * as dayjs from "dayjs";
-import * as localizedFormat from "dayjs/plugin/localizedFormat";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 
 export class DateWithNum {
     constructor(dateNum: number, date: string) {
@@ -31,7 +31,7 @@ export class mhaDates {
         // This likely isn't the intended timezone, so we add a +0000 to get UTC
         const offset: RegExpMatchArray | null = date.match(/[+|-]\d{4}/);
         const originalDate: string = date;
-        let offsetAdded: boolean = false;
+        let offsetAdded = false;
         if (!offset || offset.length !== 1) {
             date += " +0000";
             offsetAdded = true;

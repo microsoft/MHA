@@ -2,7 +2,7 @@ import "office-ui-fabric-js/dist/css/fabric.min.css";
 import "office-ui-fabric-js/dist/css/fabric.components.min.css";
 import "../Content/fabric.css";
 import "../Content/newDesktopFrame.css";
-import * as $ from "jquery";
+import $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./Headers";
@@ -72,7 +72,10 @@ function initializeFabric(): void {
     // Wire up click events for nav buttons
     $("#nav-bar .ms-CommandButton").click(function (): void {
         // Fix for Bug 1691252 - To set aria-label dynamically on click based on button name
-        $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label")!.length !== 0 ? $("#nav-bar .is-active .ms-CommandButton-button").attr("aria-label", $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label").text()) : "";
+        if ($("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label")!.length !== 0) {
+            $("#nav-bar .is-active .ms-CommandButton-button").attr("aria-label", $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label").text());
+        }
+
         // Remove active from current active
         $("#nav-bar .is-active").removeClass("is-active");
         // Add active class to clicked button
@@ -81,7 +84,7 @@ function initializeFabric(): void {
         // Get content marker
         const content: string | undefined = $(this).attr("data-content");
         // Hide sub-views
-      
+
         // Fix for Bug 1691252 - To set aria-label as button after selection like "Summary Selected"
         const ariaLabel = $(this).find(".ms-CommandButton-label")!.text() + " Selected";
         $(this).find(".ms-CommandButton-label")!.attr("aria-label",ariaLabel);
@@ -194,7 +197,7 @@ function buildViews(headers: string) {
             .addClass("ms-List")
             .appendTo(receivedList);
 
-        let firstRow: boolean = true;
+        let firstRow = true;
         viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, index) => {
             // Fix for Bug 1846002 - Added attr ID to set focus for the first element in the list
             const listItem = $("<li/>")
@@ -259,7 +262,7 @@ function buildViews(headers: string) {
                     .html(makeBold("To: ") + row.by)
                     .appendTo(listItem);
             }
-            
+
             index=index+1;
             $("<div/>")
                 .addClass("ms-ListItem-selectionTarget")

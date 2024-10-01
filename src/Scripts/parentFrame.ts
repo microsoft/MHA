@@ -1,4 +1,4 @@
-﻿import * as $ from "jquery";
+﻿import $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
 import { Diagnostics } from "./diag";
 import { Errors } from "./Errors";
@@ -8,14 +8,14 @@ import { strings } from "./Strings";
 import { findTabStops } from "./findTabStops";
 
 class Choice {
-    label: string = "";
-    url: string = "";
-    checked: boolean = false;
+    label = "";
+    url = "";
+    checked = false;
 }
 
 class DeferredError {
     error: Error = <Error>{};
-    message: string = "";
+    message = "";
 }
 
 export class ParentFrame {
@@ -23,8 +23,8 @@ export class ParentFrame {
     private static currentChoice = {} as Choice;
     private static deferredErrors: DeferredError[] = [];
     private static deferredStatus: string[] = [];
-    private static headers: string = "";
-    private static modelToString: string = "";
+    private static headers = "";
+    private static modelToString = "";
     protected static telemetryCheckboxComponent: fabric.CheckBox;
 
     private static choices: Array<Choice> = [
@@ -36,7 +36,7 @@ export class ParentFrame {
     private static getQueryVariable(variable: string): string {
         const vars: string[] = window.location.search.substring(1).split("&");
 
-        let found: string = "";
+        let found = "";
         // Find seems appropriate here but still fails in IE. Use forEach instead.
         vars.forEach((v: string) => {
             if (found === "") {
@@ -173,7 +173,7 @@ export class ParentFrame {
     private static getSettingsKey(): string {
         try {
             return "frame" + Office.context.mailbox.diagnostics.hostName;
-        } catch (e) {
+        } catch {
             return "frame";
         }
     }
@@ -277,7 +277,7 @@ export class ParentFrame {
             const action = (event.currentTarget as HTMLButtonElement).id;
 
             function getDiagnostics(): string {
-                let diagnostics: string = "";
+                let diagnostics = "";
                 try {
                     const diagnosticMap = Diagnostics.get();
                     for (const diag in diagnosticMap) {
@@ -285,7 +285,7 @@ export class ParentFrame {
                             diagnostics += diag + " = " + diagnosticMap[diag] + "\n";
                         }
                     }
-                } catch (e) {
+                } catch {
                     diagnostics += "ERROR: Failed to get diagnostics\n";
                 }
 
@@ -436,7 +436,6 @@ export class ParentFrame {
         });
     }
 
-    // @ts-ignore // Suppress TS6133 for logging function
     private static logElement(title: string, element: HTMLElement): void {
         let out = title + " element:" + element;
         // make sure element isn't null
@@ -454,7 +453,11 @@ export class ParentFrame {
     }
 
     public static setSendTelemetryUI(sendTelemetry: boolean) {
-        sendTelemetry ? this.telemetryCheckboxComponent.check() : this.telemetryCheckboxComponent.unCheck();
+        if (sendTelemetry) {
+            this.telemetryCheckboxComponent.check();
+        } else {
+            this.telemetryCheckboxComponent.unCheck();
+        }
     }
 
     public static initUI(): void {
@@ -470,7 +473,7 @@ export class ParentFrame {
             const input: JQuery<HTMLElement> = $("#uiToggle" + choice.label);
             input.prop("checked", "true");
             ParentFrame.go(choice);
-        } catch (e) {
+        } catch {
             ParentFrame.goDefaultChoice();
         }
 

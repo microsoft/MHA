@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+import $ from "jquery";
 import { ApplicationInsights, IEventTelemetry, ICustomProperties, ITelemetryItem } from "@microsoft/applicationinsights-web";
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
@@ -7,16 +7,16 @@ import { GetHeadersRest } from "./GetHeadersRest";
 import { aikey } from "./aikey";
 import { mhaVersion } from "./version";
 import { buildTime } from "./buildTime";
-import * as StackTrace from "stacktrace-js";
-import "promise-polyfill/src/polyfill";
+import StackTrace from "stacktrace-js";
+import "promise-polyfill/dist/polyfill";
 
 // diagnostics module
 
 class diag {
     private appDiagnostics: { [k: string]: any } | null = null;
     private itemDiagnostics: { [k: string]: any } | null = null;
-    private inGet: boolean = false;
-    private sendTelemetry: boolean = true;
+    private inGet = false;
+    private sendTelemetry = true;
     private appInsights = new ApplicationInsights({
         config: {
             instrumentationKey: aikey(),
@@ -64,7 +64,9 @@ class diag {
         });
 
         this.appInsights.loadAppInsights();
-        this.appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pageview
+        if (process.env["NODE_ENV"] !== "test") {
+            this.appInsights.trackPageView(); // Manually call trackPageView to establish the current user/session/pageview        }
+        }
     }
 
     public initSendTelemetry(sendTelemetry: boolean): void {
@@ -197,11 +199,11 @@ class diag {
                             this.appDiagnostics["Office.context.mailbox.diagnostics"] = "missing";
                         }
 
-                        // @ts-ignore early version of initialData
+                        // @ts-expect-error early version of initialData
                         if (window.Office.context.mailbox._initialData$p$0) {
                             delete this.appDiagnostics["Office.context.mailbox.initialData"];
                         }
-                        // @ts-ignore initialData is missing from the type file
+                        // @ts-expect-error initialData is missing from the type file
                         else if (window.Office.context.mailbox.initialData) {
                             delete this.appDiagnostics["Office.context.mailbox.initialData"];
                         }
@@ -254,15 +256,15 @@ class diag {
             }
 
             // This check is for severly broken office.js implementations that still crop up
-            // @ts-ignore: TS2774 false positive
+            // @ts-expect-error: TS2774 false positive
             if (window.Office.context.mailbox && window.Office.context.mailbox.addHandlerAsync) return "1.5?";
-            // @ts-ignore: TS2774 false positive
+            // @ts-expect-error: TS2774 false positive
             if (window.Office.context.ui && window.Office.context.ui.displayDialogAsync) return "1.4?";
-            // @ts-ignore: TS2774 false positive
+            // @ts-expect-error: TS2774 false positive
             if (window.Office.context.mailbox && window.Office.context.mailbox.item.saveAsync) return "1.3?";
-            // @ts-ignore: TS2774 false positive
+            // @ts-expect-error: TS2774 false positive
             if (window.Office.context.mailbox && window.Office.context.mailbox.item.setSelectedDataAsync) return "1.2?";
-            // @ts-ignore: TS2774 false positive
+            // @ts-expect-error: TS2774 false positive
             if (window.Office.context.mailbox && window.Office.context.mailbox.item.removeAttachmentAsync) return "1.1?";
             return "1.0?";
         }

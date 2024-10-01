@@ -1,4 +1,4 @@
-import * as $ from "jquery";
+import $ from "jquery";
 import { HeaderModel } from "./Headers";
 import { mhaStrings } from "./mhaStrings";
 import { Row } from "./Summary";
@@ -24,7 +24,7 @@ type Binding = {
 
 export class Table {
     private viewModel: HeaderModel = <HeaderModel>{};
-    private showExtra: boolean = false;
+    private showExtra = false;
 
     private visibilityBindings: Binding[] = [
         { name: "#lineBreak", visible: function (table: Table) { return table.viewModel.hasData; } },

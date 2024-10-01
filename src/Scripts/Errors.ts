@@ -1,6 +1,7 @@
+import { StackFrame, StackTraceOptions } from "stacktrace-js";
 import { Diagnostics } from "./diag";
 import { strings } from "./Strings";
-import * as StackTrace from "stacktrace-js";
+import StackTrace from "stacktrace-js";
 
 let errorArray: string[] = [];
 
@@ -88,8 +89,8 @@ export class Errors {
         }
 
         // While trying to get our error tracking under control, let's not filter our stacks
-        function filterStack(stack: StackTrace.StackFrame[]) {
-            return stack.filter(function (item: StackTrace.StackFrame) {
+        function filterStack(stack: StackFrame[]) {
+            return stack.filter(function (item: StackFrame) {
                 if (!item.fileName) return true;
                 if (item.fileName.indexOf("stacktrace") !== -1) return false; // remove stacktrace.js frames
                 //if (item.functionName === "ShowError") return false;
@@ -103,7 +104,7 @@ export class Errors {
             });
         }
 
-        function callback(stackframes: StackTrace.StackFrame[]) {
+        function callback(stackframes: StackFrame[]) {
             stack = filterStack(stackframes).map(function (sf) {
                 return sf.toString();
             });
@@ -117,10 +118,11 @@ export class Errors {
         }
 
         // TODO: Move filter from callbacks into gets
+        const options: StackTraceOptions = {offline: true};
         if (!Errors.isError(exception)) {
-            StackTrace.get().then(callback).catch(errback);
+            StackTrace.get(options).then(callback).catch(errback);
         } else {
-            StackTrace.fromError(exception).then(callback).catch(errback);
+            StackTrace.fromError(exception, options).then(callback).catch(errback);
         }
     }
 
