@@ -2,25 +2,17 @@ import type { MatcherFunction } from "expect";
 import { expect } from "@jest/globals";
 
 // Strip stack of rows with jest.
-// Used to normalize cross browser differences strictly for testing purposes
+// Used to normalize cross environment differences strictly for testing purposes
 // Real stacks sent up will contain cross browser quirks
 function cleanStack(stack: string[]) {
     if (!stack) return null;
     return stack.map(function (item: string): string {
         return item
             .replace(/[A-Z]:\\.*?\\MHA\\/, "") // Remove path prefix that start <drive letter>:\src\MHA
-            .replace(/MHA\\src/, "src") // Remove path prefix that start <drive letter>:\src\MHA
+            .replace(/MHA\\src/, "src") // Remove path prefix that start MHA\\src
             .replace(/Function\.get \[as parse\]/, "Function.parse") // normalize function name
-            // .replace(/.*node_modules.*/, "") // remove node_modules
-            // .replace(/.*localhost.*/, "") // test stacks don't have files from the site
-            // .replace(/.*azurewebsites.*/, "") // test stacks don't have files from the site
             .replace(/.*jest.*/, "") // Don't care about jest internals
-        // .replace(/.*\.\.\/Scripts\/.*/, "")
-        // .replace(/\n+/, "\n") // collapse extra linefeeds
-        // .replace(/^.*?\.(.*) \(http/, "$1 (http") // Remove namespace scopes that only appear in some browsers
-        // .replace(/^.*?\/< \((http.*)\)/, "$1") // Firefox has this odd /< notation - remove it
-        // .replace(/^Anonymous function \((http.*)\)/, "$1") // IE still has Anonymous function - remove it
-        // .replace(/(js):\d+:\d*/, "$1") // remove column and line # since they may vary by browser
+            .replace(/:\d+:\d*\)/, ")") // remove column and line # since they may vary
         ;
     }).filter(function (item: string): boolean {
         return !!item;

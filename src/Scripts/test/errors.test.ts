@@ -17,10 +17,10 @@ function testParse(done: jest.DoneCallback, exception: any, message: string | nu
 describe("Errors.parse Tests", () => {
     test("stringError", done => {
         testParse(done, "stringError", "message", "message : stringError", [
-            "Function.parse (C:\\src\\MHA\\src\\Scripts\\Errors.ts:123:24)",
-            "testParse (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:6:12)",
-            "Object.<anonymous> (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:19:9)",
-            "processTicksAndRejections (node:internal/process/task_queues:95:5)"
+            "Function.parse (src\\Scripts\\Errors.ts)",
+            "testParse (src\\Scripts\\test\\errors.test.ts)",
+            "Object.<anonymous> (src\\Scripts\\test\\errors.test.ts)",
+            "processTicksAndRejections (node:internal/process/task_queues)"
         ]);
     });
 
@@ -32,8 +32,8 @@ describe("Errors.parse Tests", () => {
         catch (error) {
             testParse(done, error, null, "document.notAFunction is not a function",
                 [
-                    "Object.<anonymous> (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:30:22)",
-                    "processTicksAndRejections (node:internal/process/task_queues:95:5)"
+                    "Object.<anonymous> (src\\Scripts\\test\\errors.test.ts)",
+                    "processTicksAndRejections (node:internal/process/task_queues)"
                 ]);
         }
     });
@@ -45,10 +45,10 @@ describe("Errors.parse Tests", () => {
         catch (error) {
             testParse(done, error, "message", "message : 42",
                 [
-                    "Function.parse (C:\\src\\MHA\\src\\Scripts\\Errors.ts:123:24)",
-                    "testParse (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:6:12)",
-                    "Object.<anonymous> (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:46:13)",
-                    "processTicksAndRejections (node:internal/process/task_queues:95:5)"
+                    "Function.parse (src\\Scripts\\Errors.ts)",
+                    "testParse (src\\Scripts\\test\\errors.test.ts)",
+                    "Object.<anonymous> (src\\Scripts\\test\\errors.test.ts)",
+                    "processTicksAndRejections (node:internal/process/task_queues)"
                 ]);
         }
     });
@@ -65,10 +65,10 @@ describe("Errors.parse Tests", () => {
                 "  \"three\": \"three\"\n" +
                 "}",
                 [
-                    "Function.parse (C:\\src\\MHA\\src\\Scripts\\Errors.ts:123:24)",
-                    "testParse (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:6:12)",
-                    "Object.<anonymous> (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:61:13)",
-                    "processTicksAndRejections (node:internal/process/task_queues:95:5)"
+                    "Function.parse (src\\Scripts\\Errors.ts)",
+                    "testParse (src\\Scripts\\test\\errors.test.ts)",
+                    "Object.<anonymous> (src\\Scripts\\test\\errors.test.ts)",
+                    "processTicksAndRejections (node:internal/process/task_queues)"
                 ]);
         }
     });
@@ -80,46 +80,46 @@ describe("Errors.parse Tests", () => {
         catch (error) {
             testParse(done, error, null, "Unknown exception",
                 [
-                    "Function.parse (C:\\src\\MHA\\src\\Scripts\\Errors.ts:123:24)",
-                    "testParse (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:6:12)",
-                    "Object.<anonymous> (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:81:13)",
-                    "processTicksAndRejections (node:internal/process/task_queues:95:5)"
+                    "Function.parse (src\\Scripts\\Errors.ts)",
+                    "testParse (src\\Scripts\\test\\errors.test.ts)",
+                    "Object.<anonymous> (src\\Scripts\\test\\errors.test.ts)",
+                    "processTicksAndRejections (node:internal/process/task_queues)"
                 ]);
         }
     });
 
     test("null error and string message", done => {
         testParse(done, null, "message", "message", [
-            "Function.parse (C:\\src\\MHA\\src\\Scripts\\Errors.ts:123:24)",
-            "testParse (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:6:12)",
-            "Object.<anonymous> (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:92:9)",
-            "processTicksAndRejections (node:internal/process/task_queues:95:5)"
+            "Function.parse (src\\Scripts\\Errors.ts)",
+            "testParse (src\\Scripts\\test\\errors.test.ts)",
+            "Object.<anonymous> (src\\Scripts\\test\\errors.test.ts)",
+            "processTicksAndRejections (node:internal/process/task_queues)"
         ]);
     });
 
     test("null error and null message", done => {
         testParse(done, null, null, "Unknown exception", [
-            "Function.parse (C:\\src\\MHA\\src\\Scripts\\Errors.ts:123:24)",
-            "testParse (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:6:12)",
-            "Object.<anonymous> (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:101:9)",
-            "processTicksAndRejections (node:internal/process/task_queues:95:5)"
+            "Function.parse (src\\Scripts\\Errors.ts)",
+            "testParse (src\\Scripts\\test\\errors.test.ts)",
+            "Object.<anonymous> (src\\Scripts\\test\\errors.test.ts)",
+            "processTicksAndRejections (node:internal/process/task_queues)"
         ]);
     });
 
     test("new Error()", done => {
         const brokenError = new Error();
         testParse(done, brokenError, null, "Unknown exception", [
-            "Object.<anonymous> (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:110:29)",
-            "processTicksAndRejections (node:internal/process/task_queues:95:5)"
+            "Object.<anonymous> (src\\Scripts\\test\\errors.test.ts)",
+            "processTicksAndRejections (node:internal/process/task_queues)"
         ]);
     });
 
     test("integer error and string message", done => {
         testParse(done, 42, "message", "message : 42", [
-            "Function.parse (C:\\src\\MHA\\src\\Scripts\\Errors.ts:123:24)",
-            "testParse (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:6:12)",
-            "Object.<anonymous> (C:\\src\\MHA\\src\\Scripts\\test\\errors.test.ts:118:9)",
-            "processTicksAndRejections (node:internal/process/task_queues:95:5)"
+            "Function.parse (src\\Scripts\\Errors.ts)",
+            "testParse (src\\Scripts\\test\\errors.test.ts)",
+            "Object.<anonymous> (src\\Scripts\\test\\errors.test.ts)",
+            "processTicksAndRejections (node:internal/process/task_queues)"
         ]);
     });
 });
