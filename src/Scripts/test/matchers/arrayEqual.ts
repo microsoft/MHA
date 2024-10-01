@@ -4,9 +4,8 @@ import { expect } from "@jest/globals";
 import { receivedEqual } from "./receivedEqual";
 
 const arrayEqual: MatcherFunction<[expected: object[]]> =
-    async function (_actual: unknown, _expected: unknown) {
+    async function (_actual: unknown, expected: object[]) {
         const actual = _actual as ReceivedRow[];
-        const expected = _expected as { [index: string]: any }[];
         const messages: string[] = [];
         let passed = true;
 
@@ -35,6 +34,6 @@ expect.extend({ arrayEqual, });
 
 declare module "expect" {
     interface Matchers<R> {
-        arrayEqual(expected: { [index: string]: any }): R;
+        arrayEqual(expected: object[] ): R;
     }
 }
