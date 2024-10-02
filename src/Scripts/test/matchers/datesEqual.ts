@@ -1,11 +1,11 @@
 import type { MatcherFunction } from "expect";
 import { ReceivedRow } from "../../row/ReceivedRow";
 import { expect } from "@jest/globals";
+import { DateWithNum } from "../../DateWithNum";
 
-export const datesEqual: MatcherFunction<[expected: unknown]> =
-    function (_actual: unknown, _expected: unknown) {
+export const datesEqual: MatcherFunction<[expected: DateWithNum]> =
+    function (_actual: unknown, expected: DateWithNum) {
         const actual = _actual as ReceivedRow;
-        const expected = _expected as { [index: string]: any };
         let passed = true;
         const messages: string[] = [];
 
@@ -15,15 +15,15 @@ export const datesEqual: MatcherFunction<[expected: unknown]> =
         } else {
             const date = new Date(actual.date.value ?? "");
             const dateStr = date.toLocaleString("en-US", { timeZone: "America/New_York" });
-            if (dateStr !== expected["date"]) {
+            if (dateStr !== expected.date) {
                 passed = false;
-                messages.push(`date: ${dateStr} !== ${expected["date"]}`);
+                messages.push(`date: ${dateStr} !== ${expected.date}`);
             }
 
             const dateNum = actual.dateNum.toString();
-            if (dateNum !== expected["dateNum"].toString()) {
+            if (dateNum !== expected.dateNum.toString()) {
                 passed = false;
-                messages.push(`dateNum: ${dateNum} !== ${expected["dateNum"]}`);
+                messages.push(`dateNum: ${dateNum} !== ${expected.dateNum}`);
             }
         }
 
@@ -37,6 +37,6 @@ expect.extend({ datesEqual, });
 
 declare module "expect" {
     interface Matchers<R> {
-        datesEqual(expected: { [index: string]: any }): R;
+        datesEqual(expected: DateWithNum ): R;
     }
 }
