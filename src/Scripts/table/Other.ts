@@ -21,7 +21,7 @@ export class Other extends iTable {
         }
 
         this.rows.sort((a: OtherRow, b: OtherRow) => {
-            return this._sortOrder * (a[col] < b[col] ? -1 : 1);
+            return this._sortOrder * ((a[col] as string | number) < (b[col] as string | number) ? -1 : 1);
         });
     }
 
