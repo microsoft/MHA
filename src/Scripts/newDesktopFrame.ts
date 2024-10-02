@@ -153,7 +153,7 @@ function makeBold(text: string) {
     return "<span class=\"ms-fontWeight-semibold\">" + text + "</span>";
 }
 
-function addCalloutEntry(name: string, value: string, parent: JQuery<HTMLElement>) {
+function addCalloutEntry(name: string, value: string | number | null, parent: JQuery<HTMLElement>) {
     if (value) {
         $("<p/>")
             .addClass("ms-Callout-subText")
@@ -245,7 +245,7 @@ function buildViews(headers: string) {
                     .addClass("ms-ProgressIndicator-progressTrack")
                     .appendTo(bar);
 
-                const width: number = 1.8 * row.percent.value;
+                const width: number = 1.8 * (Number(row.percent.value) ?? 0);
 
                 $("<div/>")
                     .addClass("ms-ProgressIndicator-progressBar")
@@ -254,7 +254,7 @@ function buildViews(headers: string) {
 
                 $("<div/>")
                     .addClass("ms-ProgressIndicator-itemDescription")
-                    .text(row.delay.value)
+                    .text(row.delay.value !== null ? row.delay.value : "")
                     .appendTo(delay);
 
                 $("<span/>")

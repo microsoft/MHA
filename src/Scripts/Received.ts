@@ -9,8 +9,8 @@ class ReceivedField {
         this.value = value !== undefined ? value : "";
     }
     label: string;
-    value: any;
-    toString(): string { return this.value; }
+    value: string | number | null;
+    toString(): string { return this.value !== null ? this.value.toString() : "null"; }
 }
 
 export class ReceivedRow {
@@ -269,14 +269,15 @@ export class Received extends iTable {
         let iDelta = 0; // This will be the sum of our positive deltas
 
         this.rows.forEach(function (row: ReceivedRow) {
-            if (!isNaN(row.dateNum.value)) {
-                if (!isNaN(iLastTime) && iLastTime < row.dateNum.value) {
-                    iDelta += row.dateNum.value - iLastTime;
+            const dateNum: number = typeof row.dateNum.value === "number" ? row.dateNum.value : NaN;
+            if (!isNaN(dateNum)) {
+                if (!isNaN(iLastTime) && iLastTime < dateNum) {
+                    iDelta += dateNum - iLastTime;
                 }
 
-                iStartTime = iStartTime || row.dateNum.value;
-                iEndTime = row.dateNum.value;
-                iLastTime = row.dateNum.value;
+                iStartTime = iStartTime || dateNum;
+                iEndTime = dateNum;
+                iLastTime = dateNum;
             }
         });
 
@@ -284,10 +285,11 @@ export class Received extends iTable {
 
         this.rows.forEach(function (row: ReceivedRow, index: number) {
             row.hop.value = index + 1;
-            row.delay.value = Received.computeTime(row.dateNum.value, iLastTime);
+            const dateNum: number = typeof row.dateNum.value === "number" ? row.dateNum.value : NaN;
+            row.delay.value = Received.computeTime(dateNum, iLastTime);
 
-            if (!isNaN(row.dateNum.value) && !isNaN(iLastTime) && iDelta !== 0) {
-                row.delaySort.value = row.dateNum.value - iLastTime;
+            if (!isNaN(dateNum) && !isNaN(iLastTime) && iDelta !== 0) {
+                row.delaySort.value = dateNum - iLastTime;
 
                 // Only positive delays will get percentage bars. Negative delays will be color coded at render time.
                 if (row.delaySort.value > 0) {
@@ -295,8 +297,8 @@ export class Received extends iTable {
                 }
             }
 
-            if (!isNaN(row.dateNum.value)) {
-                iLastTime = row.dateNum.value;
+            if (!isNaN(dateNum)) {
+                iLastTime = dateNum;
             }
         });
 

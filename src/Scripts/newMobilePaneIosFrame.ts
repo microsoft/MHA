@@ -41,7 +41,7 @@ function updateStatus(message: string): void {
     }
 }
 
-function addCalloutEntry(name: string, value: string, parent: JQuery<HTMLElement>): void {
+function addCalloutEntry(name: string, value: string | number | null, parent: JQuery<HTMLElement>): void {
     if (value) {
         $("<p/>")
             .addClass("wrap-line")
@@ -230,7 +230,7 @@ function buildViews(headers: string): void {
                     .appendTo(timelineInner);
 
                 $("<p/>")
-                    .text(row.delay.value)
+                    .text(row.delay.value !== null ? row.delay.value : "")
                     .appendTo(progress);
 
                 $("<p/>")
@@ -264,7 +264,7 @@ function buildViews(headers: string): void {
                 .appendTo(popoverInner);
 
             addCalloutEntry("From", row.from.value, popoverContent);
-            addCalloutEntry("To", row.by.value.value, popoverContent);
+            addCalloutEntry("To", row.by.value, popoverContent);
             addCalloutEntry("Time", row.date.value, popoverContent);
             addCalloutEntry("Type", row.with.value, popoverContent);
             addCalloutEntry("ID", row.id.value, popoverContent);

@@ -161,7 +161,7 @@ export class Table {
         }
     }
 
-    private appendCell(row: HTMLTableRowElement, text: string, html: string, cellClass: string): void {
+    private appendCell(row: HTMLTableRowElement, text: string | number | null, html: string, cellClass: string): void {
         const cell = $(row.insertCell(-1));
         if (text) { cell.text(text); }
         if (html) { cell.html(html); }
@@ -226,7 +226,7 @@ export class Table {
             this.appendCell(row, receivedRow.by.value, "", "");
             this.appendCell(row, receivedRow.date.value, "", "");
             let labelClass = "hotBarLabel";
-            if (receivedRow.delaySort.value < 0) {
+            if (receivedRow.delaySort.value !== null && typeof receivedRow.delaySort.value === "number" && receivedRow.delaySort.value < 0) {
                 labelClass += " negativeCell";
             }
 

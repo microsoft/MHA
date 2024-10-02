@@ -30,7 +30,8 @@ export const receivedEqual: MatcherFunction<[expected: unknown]> =
                 if (field === "_value") continue;
                 if (value === actual[field]) continue;
                 // if (actual[field] && value === actual[field].value) continue;
-                if (actual[field] && value === actual[field].toString()) continue;
+                if (actual[field] && value?.toString() === actual[field].toString()) continue;
+                if (!value && actual[field]?.toString() === "null") continue;
                 messages.push("actual: " + field + " = " + actual[field]);
                 messages.push("expected: " + field + " = " + value);
                 passed = false;
