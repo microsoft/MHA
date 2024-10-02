@@ -2,10 +2,10 @@ import type { MatcherFunction } from "expect";
 import { ReceivedRow } from "../../row/ReceivedRow";
 import { expect } from "@jest/globals";
 
-export const receivedEqual: MatcherFunction<[expected: { [index: string]: any }]> =
+export const receivedEqual: MatcherFunction<[expected: { [index: string]: string | number | null }]> =
     function (_actual: unknown, _expected: unknown) {
         const actual = _actual as ReceivedRow;
-        const expected = _expected as { [index: string]: any };
+        const expected = _expected as { [index: string]: string | number | null };
         let passed = true;
         const messages: string[] = [];
 
@@ -28,10 +28,10 @@ export const receivedEqual: MatcherFunction<[expected: { [index: string]: any }]
                 if (field === "date") continue;
                 if (field === "postFix") continue;
                 if (field === "_value") continue;
-                if (value === actual[field]) continue;
-                // if (actual[field] && value === actual[field].value) continue;
-                if (actual[field] && value?.toString() === actual[field].toString()) continue;
-                if (!value && actual[field]?.toString() === "null") continue;
+                if (value === null && actual[field]?.toString() === "null") continue;
+                if (typeof value === "number" && value.toString() === actual[field]?.toString()) continue;
+                if (typeof value === "string" && value === actual[field]?.toString()) continue;
+
                 messages.push("actual: " + field + " = " + actual[field]);
                 messages.push("expected: " + field + " = " + value);
                 passed = false;
@@ -67,6 +67,6 @@ expect.extend({ receivedEqual, });
 
 declare module "expect" {
     interface Matchers<R> {
-        receivedEqual(expected: { [index: string]: any }): R;
+        receivedEqual(expected: { [index: string]: string | number | null }): R;
     }
 }
