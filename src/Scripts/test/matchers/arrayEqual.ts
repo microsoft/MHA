@@ -3,16 +3,16 @@ import { ReceivedRow } from "../../row/ReceivedRow";
 import { expect } from "@jest/globals";
 import { receivedEqual } from "./receivedEqual";
 
-const arrayEqual: MatcherFunction<[expected: object[]]> =
-    async function (_actual: unknown, expected: object[]) {
+const arrayEqual: MatcherFunction<[expected: { [index: string]: any }]> =
+    async function (_actual: unknown, expected: { [index: string]: any }) {
         const actual = _actual as ReceivedRow[];
         const messages: string[] = [];
         let passed = true;
 
-        if (actual.length !== expected.length) {
+        if (actual.length !== Object.keys(expected).length) {
             passed = false;
             messages.push("length = " + actual.length);
-            messages.push("length = " + expected.length);
+            messages.push("length = " + Object.keys(expected).length);
         }
 
         for (let i = 0; i < actual.length; i++) {
@@ -34,6 +34,6 @@ expect.extend({ arrayEqual, });
 
 declare module "expect" {
     interface Matchers<R> {
-        arrayEqual(expected: object[] ): R;
+        arrayEqual(expected: { [index: string]: any } ): R;
     }
 }
