@@ -16,7 +16,8 @@ const arrayEqual: MatcherFunction<[expected: { [index: string]: string }[]]> =
         }
 
         for (let i = 0; i < actual.length; i++) {
-            const result: SyncExpectationResult = await receivedEqual.call(this, actual[i], expected[i]);
+            const expectedValue = expected[i] as { [index: string]: string };
+            const result: SyncExpectationResult = await receivedEqual.call(this, actual[i], expectedValue);
             if (!result.pass) {
                 passed = false;
                 messages.push("[" + i + "]");
