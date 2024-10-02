@@ -29,16 +29,16 @@ describe("DateTime Tests", () => {
         expect(received.parseHeader(h6)).datesEqual({ date: "4/20/2018, 11:01:06 PM", dateNum: 1524279666000 });
     });
     test("h6_1", () => {
-        const h6_1 = "Received: test; 4/20/2018 11:01:16 PM -0400 (EDT)";
-        expect(received.parseHeader(h6_1)).datesEqual({ date: "4/20/2018, 11:01:16 PM", dateNum: 1524279676000 });
+        const str = "Received: test; 4/20/2018 11:01:16 PM -0400 (EDT)";
+        expect(received.parseHeader(str)).datesEqual({ date: "4/20/2018, 11:01:16 PM", dateNum: 1524279676000 });
     });
     test("h6_2", () => {
-        const h6_2 = "Received: test; 4/20/2018 11:01:26 PM +0000";
-        expect(received.parseHeader(h6_2)).datesEqual({ date: "4/20/2018, 7:01:26 PM", dateNum: 1524265286000 });
+        const str = "Received: test; 4/20/2018 11:01:26 PM +0000";
+        expect(received.parseHeader(str)).datesEqual({ date: "4/20/2018, 7:01:26 PM", dateNum: 1524265286000 });
     });
     test("h6_3", () => {
-        const h6_3 = "Received: test; 4/20/2018 11:01:36 PM";
-        expect(received.parseHeader(h6_3)).datesEqual({ date: "4/20/2018, 7:01:36 PM", dateNum: 1524265296000 });
+        const str = "Received: test; 4/20/2018 11:01:36 PM";
+        expect(received.parseHeader(str)).datesEqual({ date: "4/20/2018, 7:01:36 PM", dateNum: 1524265296000 });
     });
     test("h7", () => {
         const h7 = "Received: test; 4-20-2018 11:01:07 PM";

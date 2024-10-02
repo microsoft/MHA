@@ -45,15 +45,15 @@ export class HeaderModel {
         let iNextHeader = 0;
         let prevHeader: Header | undefined;
         let body = false;
-        header_section: while (!body) {
-            unfold_lines: for (let line of lines) {
+        headerSection: while (!body) {
+            unfoldLines: for (let line of lines) {
                 // Handling empty lines. The body is separated from the header section by an empty line (RFC 5322, 2.1).
                 // To avoid processing the body as headers we should stop there, as someone might paste an entire message.
                 // Empty lines at the beginning can be omitted, because that could be a common copy-paste error.
-                if (body) break header_section;
+                if (body) break headerSection;
                 if (line === "") {
                     if (headerList.length > 0) body = true;
-                    continue unfold_lines;
+                    continue unfoldLines;
                 }
 
                 // Recognizing a header:
@@ -79,7 +79,7 @@ export class HeaderModel {
                         // Tack this line to the previous line
                         // All folding whitespace should collapse to a single space
                         line = line.replace(/^[\s]+/, "");
-                        if (!line) continue unfold_lines;
+                        if (!line) continue unfoldLines;
                         if (prevHeader) {
                             const separator: string = prevHeader.value ? " " : "";
                             prevHeader.value += separator + line;
@@ -94,7 +94,7 @@ export class HeaderModel {
                     }
                 }
             }
-            break header_section;
+            break headerSection;
         }
 
         // 2047 decode our headers now

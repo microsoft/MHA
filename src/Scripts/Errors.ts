@@ -1,7 +1,6 @@
 import { StackFrame, StackTraceOptions } from "stacktrace-js";
 import { Diagnostics } from "./diag";
 import { strings } from "./Strings";
-import StackTrace from "stacktrace-js";
 
 let errorArray: string[] = [];
 
@@ -53,7 +52,7 @@ export class Errors {
                 Source: "",
                 Stack: "",
                 Description: "",
-                Error_message: ""
+                ErrorMessage: ""
             };
 
             if (Errors.isError(error) && (error as { exception?: unknown }).exception) {
@@ -63,7 +62,7 @@ export class Errors {
             else {
                 props.Source = "Error.log Event";
                 if (typeof error === "object" && "description" in error) props.Description = (error as { description: string }).description;
-                if (typeof error === "object" && "message" in error) props.Error_message = (error as { message: string }).message;
+                if (typeof error === "object" && "message" in error) props.ErrorMessage = (error as { message: string }).message;
                 if (typeof error === "object" && "stack" in error) props.Stack = (error as { stack: string }).stack;
                 if (typeof error === "object" && "description" in error) {
                     event.name = (error as { description: string }).description;

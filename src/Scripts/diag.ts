@@ -100,8 +100,8 @@ class diag {
             this.appInsights.trackEvent(event, customProperties);
         }
         else {
-            const msg_base = `Event ${JSON.stringify(event)}: ${JSON.stringify(customProperties)}`;
-            console.log(msg_base);
+            const mgsBase = `Event ${JSON.stringify(event)}: ${JSON.stringify(customProperties)}`;
+            console.log(mgsBase);
         }
     }
 
@@ -110,8 +110,8 @@ class diag {
             this.appInsights.trackException(event, customProperties);
         }
         else {
-            const msg_base = `Exception ${JSON.stringify(event)}: ${JSON.stringify(customProperties)}`;
-            console.log(msg_base);
+            const mgsBase = `Exception ${JSON.stringify(event)}: ${JSON.stringify(customProperties)}`;
+            console.log(mgsBase);
         }
     }
 
@@ -122,8 +122,8 @@ class diag {
             this.appInsights.trackEvent({ name: eventType, properties: { source: source, exception: JSON.stringify(e), message: message, stack: stack } });
         }
         else {
-            const msg_base = `Error ${eventType} from ${source}: ${message}`;
-            console.log(msg_base + " exception: " + JSON.stringify(e));
+            const mgsBase = `Error ${eventType} from ${source}: ${message}`;
+            console.log(mgsBase + " exception: " + JSON.stringify(e));
         }
     }
 
