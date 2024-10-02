@@ -3,9 +3,8 @@ import { ReceivedRow } from "../../row/ReceivedRow";
 import { expect } from "@jest/globals";
 
 export const receivedEqual: MatcherFunction<[expected: { [index: string]: string | number | null }]> =
-    function (_actual: unknown, _expected: unknown) {
+    function (_actual: unknown, expected: { [index: string]: string | number | null }) {
         const actual = _actual as ReceivedRow;
-        const expected = _expected as { [index: string]: string | number | null };
         let passed = true;
         const messages: string[] = [];
 
