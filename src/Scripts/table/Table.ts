@@ -1,21 +1,11 @@
 import $ from "jquery";
-import { HeaderModel } from "./Headers";
-import { mhaStrings } from "./mhaStrings";
-import { Row } from "./Summary";
+import { HeaderModel } from "../HeaderModel";
+import { mhaStrings } from "../mhaStrings";
+import { Row } from "../row/Row";
 import { iTable } from "./itable";
-import { ReceivedRow } from "./Received";
-import { OtherRow } from "./Other";
-
-class column {
-    constructor(id: string, label: string, columnClass: string) {
-        this.id = id;
-        this.label = label;
-        this.class = columnClass;
-    }
-    id: string;
-    label: string;
-    class: string;
-}
+import { ReceivedRow } from "../row/ReceivedRow";
+import { OtherRow } from "../row/OtherRow";
+import { column } from "./column";
 
 type Binding = {
     name: string;

@@ -1,5 +1,5 @@
-﻿import { AntiSpamReport } from "../Antispam";
-import { ForefrontAntiSpamReport } from "../ForefrontAntispam";
+﻿import { AntiSpamReport } from "../row/Antispam";
+import { ForefrontAntiSpamReport } from "../row/ForefrontAntispam";
 import "./matchers/arrayEqual";
 import { expect } from "@jest/globals";
 

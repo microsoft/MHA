@@ -1,75 +1,10 @@
 ﻿import { iTable } from "./itable";
-import { mhaStrings } from "./mhaStrings";
-import { mhaDates, DateWithNum } from "./dates";
-import { Header } from "./Headers";
-
-class ReceivedField {
-    constructor(label: string, value?: string | number | null) {
-        this.label = label;
-        this.value = value !== undefined ? value : "";
-    }
-    label: string;
-    value: string | number | null;
-    toString(): string { return this.value !== null ? this.value.toString() : "null"; }
-}
-
-export class ReceivedRow {
-    constructor(receivedHeader: string | null) {
-        this.sourceHeader = new ReceivedField("", receivedHeader);
-        this.hop = new ReceivedField(mhaStrings.mhaReceivedHop);
-        this.from = new ReceivedField(mhaStrings.mhaReceivedFrom);
-        this.by = new ReceivedField(mhaStrings.mhaReceivedBy);
-        this.with = new ReceivedField(mhaStrings.mhaReceivedWith);
-        this.id = new ReceivedField(mhaStrings.mhaReceivedId);
-        this.for = new ReceivedField(mhaStrings.mhaReceivedFor);
-        this.via = new ReceivedField(mhaStrings.mhaReceivedVia);
-        this.date = new ReceivedField(mhaStrings.mhaReceivedDate);
-        this.delay = new ReceivedField(mhaStrings.mhaReceivedDelay);
-        this.percent = new ReceivedField(mhaStrings.mhaReceivedPercent, 0);
-        this.delaySort = new ReceivedField("", -1);
-        this.dateNum = new ReceivedField("");
-    }
-    [index: string]: ReceivedField | ((fieldName: string, fieldValue: string) => boolean) | (() => string);
-    sourceHeader: ReceivedField;
-    hop: ReceivedField;
-    from: ReceivedField;
-    by: ReceivedField;
-    with: ReceivedField;
-    id: ReceivedField;
-    for: ReceivedField;
-    via: ReceivedField;
-    date: ReceivedField;
-    delay: ReceivedField;
-    percent: ReceivedField;
-    delaySort: ReceivedField;
-    dateNum: ReceivedField;
-
-    setField(fieldName: string, fieldValue: string): boolean {
-        if (!fieldName || !fieldValue) {
-            return false;
-        }
-
-        const field = this[fieldName.toLowerCase()] as unknown as ReceivedField;
-        if (!field) return false;
-
-        if (field.value) { field.value += "; " + fieldValue; }
-        else { field.value = fieldValue; }
-
-        return false;
-    }
-
-    toString(): string {
-        const str: string[] = [];
-        for (const key in this) {
-            const field = this[key] as ReceivedField;
-            if (field && field.label && field.toString()) {
-                str.push(field.label + ": " + field.toString());
-            }
-        }
-
-        return str.join("\n");
-    }
-}
+import { mhaStrings } from "../mhaStrings";
+import { mhaDates } from "../dates";
+import { DateWithNum } from "../DateWithNum";
+import { Header } from "../row/Header";
+import { ReceivedRow } from "../row/ReceivedRow";
+import { match } from "../row/match";
 
 export class Received extends iTable {
     private _receivedRows: ReceivedRow[] = [];
@@ -140,7 +75,6 @@ export class Received extends iTable {
             const tokens = receivedHeader.split(/\s+/);
 
             // Build array of header locations
-            class match { fieldName = ""; iToken = 0; }
             const headerMatches: match[] = [];
 
             let fieldName: string;

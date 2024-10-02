@@ -1,5 +1,5 @@
 import type { MatcherFunction, SyncExpectationResult } from "expect";
-import { ReceivedRow } from "../../Received";
+import { ReceivedRow } from "../../row/ReceivedRow";
 import { expect } from "@jest/globals";
 import { receivedEqual } from "./receivedEqual";
 

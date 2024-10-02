@@ -5,11 +5,12 @@ import "../Content/newDesktopFrame.css";
 import $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
 import { mhaStrings } from "./mhaStrings";
-import { HeaderModel } from "./Headers";
+import { HeaderModel } from "./HeaderModel";
 import { poster } from "./poster";
-import { Row, SummaryRow } from "./Summary";
-import { ReceivedRow } from "./Received";
-import { OtherRow } from "./Other";
+import { SummaryRow } from "./row/SummaryRow";
+import { Row } from "./row/Row";
+import { ReceivedRow } from "./row/ReceivedRow";
+import { OtherRow } from "./row/OtherRow";
 import { findTabStops } from "./findTabStops";
 
 // This is the "new" UI rendered in newDesktopFrame.html

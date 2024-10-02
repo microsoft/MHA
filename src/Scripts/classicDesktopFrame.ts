@@ -2,8 +2,8 @@
 import "../Content/classicDesktopFrame.css";
 import $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
-import { HeaderModel } from "./Headers";
-import { Table } from "./Table";
+import { HeaderModel } from "./HeaderModel";
+import { Table } from "./table/Table";
 import { poster } from "./poster";
 
 // This is the "classic" UI rendered in classicDesktopFrame.html

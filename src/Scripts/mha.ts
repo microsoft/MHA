@@ -6,9 +6,9 @@ import "../Content/classicDesktopFrame.css";
 import $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
 import { strings } from "./Strings";
-import { HeaderModel } from "./Headers";
+import { HeaderModel } from "./HeaderModel";
 import { Diagnostics } from "./diag";
-import { Table } from "./Table";
+import { Table } from "./table/Table";
 
 let viewModel: HeaderModel;
 let table: Table;

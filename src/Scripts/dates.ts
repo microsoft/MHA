@@ -1,15 +1,6 @@
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-
-export class DateWithNum {
-    constructor(dateNum: number, date: string) {
-        this.dateNum = dateNum;
-        this.date = date;
-    }
-    dateNum: number;
-    date: string;
-    public toString = (): string => { return this.date; };
-}
+import { DateWithNum } from "./DateWithNum";
 
 export class mhaDates {
     static {

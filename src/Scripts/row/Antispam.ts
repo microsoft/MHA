@@ -1,7 +1,7 @@
-import { mhaStrings } from "./mhaStrings";
-import { strings } from "./Strings";
-import { Row } from "./Summary";
-import { Header } from "./Headers";
+import { mhaStrings } from "../mhaStrings";
+import { strings } from "../Strings";
+import { Row } from "./Row";
+import { Header } from "./Header";
 
 export class AntiSpamReport {
     private _source = "";

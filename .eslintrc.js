@@ -25,6 +25,7 @@ module.exports = {
         "linebreak-style": ["error", "windows"],
         "quotes": ["error", "double"],
         "semi": ["error", "always"],
+        "max-classes-per-file": ["error", 1],
         "@stylistic/js/no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0, "maxBOF": 0 }],
         "@stylistic/js/no-trailing-spaces": "error",
         "@typescript-eslint/no-explicit-any": "off", // TODO: consider removing this

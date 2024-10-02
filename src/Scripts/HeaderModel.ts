@@ -1,19 +1,11 @@
-import { AntiSpamReport } from "./Antispam";
-import { ForefrontAntiSpamReport } from "./ForefrontAntispam";
 import { Decoder } from "./2047";
-import { Other } from "./Other";
-import { Received } from "./Received";
-import { Summary } from "./Summary";
+import { AntiSpamReport } from "./row/Antispam";
+import { ForefrontAntiSpamReport } from "./row/ForefrontAntispam";
+import { Header } from "./row/Header";
+import { Other } from "./table/Other";
 import { poster } from "./poster";
-
-export class Header {
-    constructor(header: string, value: string) {
-        this.header = header;
-        this.value = value;
-    }
-    header: string;
-    value: string;
-}
+import { Received } from "./table/Received";
+import { Summary } from "./Summary";
 
 export class HeaderModel {
     public originalHeaders: string;
@@ -53,7 +45,7 @@ export class HeaderModel {
         let iNextHeader = 0;
         let prevHeader: Header | undefined;
         let body = false;
-        header_section: while(!body) {
+        header_section: while (!body) {
             unfold_lines: for (let line of lines) {
                 // Handling empty lines. The body is separated from the header section by an empty line (RFC 5322, 2.1).
                 // To avoid processing the body as headers we should stop there, as someone might paste an entire message.

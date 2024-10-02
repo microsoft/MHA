@@ -7,11 +7,12 @@ import { Framework7 } from "./framework7";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { mhaStrings } from "./mhaStrings";
-import { HeaderModel } from "./Headers";
+import { HeaderModel } from "./HeaderModel";
 import { poster } from "./poster";
-import { Row, SummaryRow } from "./Summary";
-import { ReceivedRow } from "./Received";
-import { OtherRow } from "./Other";
+import { SummaryRow } from "./row/SummaryRow";
+import { Row } from "./row/Row";
+import { ReceivedRow } from "./row/ReceivedRow";
+import { OtherRow } from "./row/OtherRow";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 

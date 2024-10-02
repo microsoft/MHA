@@ -1,7 +1,7 @@
-import { mhaStrings } from "./mhaStrings";
+import { mhaStrings } from "../mhaStrings";
 import { AntiSpamReport } from "./Antispam";
-import { Row } from "./Summary";
-import { Header } from "./Headers";
+import { Row } from "./Row";
+import { Header } from "./Header";
 
 export class ForefrontAntiSpamReport extends AntiSpamReport {
     private forefrontAntiSpamRows: Row[] = [

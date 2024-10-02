@@ -6,17 +6,8 @@ import { GetHeaders } from "./GetHeaders";
 import { poster } from "./poster";
 import { strings } from "./Strings";
 import { findTabStops } from "./findTabStops";
-
-class Choice {
-    label = "";
-    url = "";
-    checked = false;
-}
-
-class DeferredError {
-    error: Error = <Error>{};
-    message = "";
-}
+import { Choice } from "./Choice";
+import { DeferredError } from "./DeferredError";
 
 export class ParentFrame {
     private static iFrame: Window | null;
