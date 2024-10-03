@@ -1,5 +1,5 @@
-﻿import { Received } from "../table/Received";
-import "./matchers/datesEqual";
+﻿import { Received } from "./table/Received";
+import "./jestMatchers/datesEqual";
 import { expect } from "@jest/globals";
 
 describe("DateTime Tests", () => {

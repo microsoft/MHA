@@ -1,4 +1,4 @@
-import { Decoder } from "../2047";
+import { Decoder } from "./2047";
 
 // Polyfill missing TextEncoder - https://stackoverflow.com/questions/68468203/why-am-i-getting-textencoder-is-not-defined-in-jest
 import { TextEncoder, TextDecoder } from "util";

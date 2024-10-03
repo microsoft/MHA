@@ -1,4 +1,4 @@
-import { strings } from "../Strings";
+import { strings } from "./Strings";
 
 describe("joinArray Tests", () => {
     test("null", () => { expect(strings.joinArray(null, " : ")).toBe(""); });

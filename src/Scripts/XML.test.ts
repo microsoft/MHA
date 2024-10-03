@@ -1,4 +1,4 @@
-﻿import { GetHeadersEWS } from "../GetHeadersEWS";
+﻿import { GetHeadersEWS } from "./GetHeadersEWS";
 
 describe("XML Tests", () => {
     test("extractHeadersFromXml 1", () => {

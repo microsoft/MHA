@@ -1,6 +1,6 @@
 ﻿import { AntiSpamReport } from "../row/Antispam";
 import { ForefrontAntiSpamReport } from "../row/ForefrontAntispam";
-import "./matchers/arrayEqual";
+import "../jestMatchers/arrayEqual";
 import { expect } from "@jest/globals";
 
 describe("antiSpam Tests", () => {

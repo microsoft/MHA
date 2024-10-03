@@ -1,4 +1,4 @@
-import { findTabStops, isFocusableElement } from "../findTabStops";
+import { findTabStops, isFocusableElement } from "./findTabStops";
 
 describe("findTabStops finds all focusable elements within the given element", () => {
     // Create a container element
