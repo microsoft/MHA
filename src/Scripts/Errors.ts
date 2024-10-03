@@ -1,4 +1,5 @@
 import { StackFrame, StackTraceOptions } from "stacktrace-js";
+import * as StackTrace from "stacktrace-js";
 import { Diagnostics } from "./diag";
 import { strings } from "./Strings";
 
