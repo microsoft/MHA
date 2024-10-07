@@ -42,7 +42,7 @@
   "homepage": "https://github.com/microsoft/MHA#readme",
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@stylistic/eslint-plugin-js": "^2.8.0",
+    "@stylistic/eslint-plugin-js": "^2.9.0",
     "@types/jest": "^29.5.13",
     "@types/jquery": "^3.5.31",
     "@types/office-js": "^1.0.433",
