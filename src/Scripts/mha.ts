@@ -7,7 +7,7 @@ import $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
 import { Strings } from "./Strings";
 import { HeaderModel } from "./HeaderModel";
-import { diagnostics } from "./diag";
+import { diagnostics } from "./Diag";
 import { Table } from "./table/Table";
 
 let viewModel: HeaderModel;

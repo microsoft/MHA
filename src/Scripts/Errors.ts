@@ -1,6 +1,6 @@
 import { StackFrame, StackTraceOptions } from "stacktrace-js";
 import * as stackTrace from "stacktrace-js";
-import { diagnostics } from "./diag";
+import { diagnostics } from "./Diag";
 import { Strings } from "./Strings";
 
 let errorArray: string[] = [];

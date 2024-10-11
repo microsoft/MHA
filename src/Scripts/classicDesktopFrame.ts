@@ -4,7 +4,7 @@ import $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./HeaderModel";
 import { Table } from "./table/Table";
-import { Poster } from "./poster";
+import { Poster } from "./Poster";
 
 // This is the "classic" UI rendered in classicDesktopFrame.html
 

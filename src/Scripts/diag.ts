@@ -1,11 +1,11 @@
 import $ from "jquery";
 import { ApplicationInsights, IEventTelemetry, ICustomProperties, ITelemetryItem } from "@microsoft/applicationinsights-web";
-import { ParentFrame } from "./parentFrame";
+import { ParentFrame } from "./ParentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersAPI } from "./GetHeadersAPI";
 import { GetHeadersRest } from "./GetHeadersRest";
 import { aikey } from "./aikey";
-import { mhaVersion } from "./version";
+import { mhaVersion } from "./mhaVersion";
 import { buildTime } from "./buildTime";
 import stackTrace from "stacktrace-js";
 import "promise-polyfill/dist/polyfill";

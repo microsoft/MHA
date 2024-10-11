@@ -1,5 +1,5 @@
 ﻿import cptable from "codepage";
-import { Block } from "./block";
+import { Block } from "./Block";
 
 export class Decoder {
     // http://tools.ietf.org/html/rfc2047

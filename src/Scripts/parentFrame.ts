@@ -1,9 +1,9 @@
 ﻿import $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
-import { diagnostics } from "./diag";
+import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";
-import { Poster } from "./poster";
+import { Poster } from "./Poster";
 import { Strings } from "./Strings";
 import { findTabStops } from "./findTabStops";
 import { Choice } from "./Choice";

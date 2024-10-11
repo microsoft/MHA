@@ -6,7 +6,7 @@ import $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./HeaderModel";
-import { Poster } from "./poster";
+import { Poster } from "./Poster";
 import { SummaryRow } from "./row/SummaryRow";
 import { Row } from "./row/Row";
 import { ReceivedRow } from "./row/ReceivedRow";

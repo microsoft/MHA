@@ -3,7 +3,7 @@ import { AntiSpamReport } from "./row/Antispam";
 import { ForefrontAntiSpamReport } from "./row/ForefrontAntispam";
 import { Header } from "./row/Header";
 import { Other } from "./table/Other";
-import { Poster } from "./poster";
+import { Poster } from "./Poster";
 import { Received } from "./table/Received";
 import { Summary } from "./Summary";
 

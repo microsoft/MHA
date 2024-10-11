@@ -1,10 +1,10 @@
 import  $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
 import { Errors } from "./Errors";
-import { ParentFrame } from "./parentFrame";
+import { ParentFrame } from "./ParentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersEWS } from "./GetHeadersEWS";
-import { diagnostics } from "./diag";
+import { diagnostics } from "./Diag";
 import { jwtDecode } from "jwt-decode";
 
 /*

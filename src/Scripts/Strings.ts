@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { diagnostics } from "./diag";
+import { diagnostics } from "./Diag";
 
 export class Strings {
     public static copyToClipboard(str: string): void {

@@ -1,6 +1,6 @@
 ﻿import { ITable } from "./itable";
 import { mhaStrings } from "../mhaStrings";
-import { MHADates } from "../dates";
+import { MHADates } from "../MHADates";
 import { DateWithNum } from "../DateWithNum";
 import { Header } from "../row/Header";
 import { ReceivedRow } from "../row/ReceivedRow";
