@@ -1,9 +1,9 @@
 import { Row } from "./Row";
-import { strings } from "../Strings";
+import { Strings } from "../Strings";
 
 export class SummaryRow extends Row {
     constructor(header: string, label: string) {
         super(header, label, "");
-        this.url = strings.mapHeaderToURL(header, label);
+        this.url = Strings.mapHeaderToURL(header, label);
     }
 }

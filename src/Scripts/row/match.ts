@@ -1,3 +1,3 @@
-export class match {
+export class Match {
     fieldName = ""; iToken = 0;
 }

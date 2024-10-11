@@ -1,15 +1,15 @@
-﻿import { iTable } from "./itable";
+﻿import { ITable } from "./itable";
 import { mhaStrings } from "../mhaStrings";
-import { mhaDates } from "../dates";
+import { MHADates } from "../dates";
 import { DateWithNum } from "../DateWithNum";
 import { Header } from "../row/Header";
 import { ReceivedRow } from "../row/ReceivedRow";
-import { match } from "../row/match";
+import { Match } from "../row/match";
 
-export class Received extends iTable {
-    private _receivedRows: ReceivedRow[] = [];
-    protected _sortColumn = "hop";
-    protected _sortOrder = 1;
+export class Received extends ITable {
+    private receivedRows: ReceivedRow[] = [];
+    protected sortColumnInternal = "hop";
+    protected sortOrderInternal = 1;
     public readonly tableName: string = "receivedHeaders";
 
     // Builds array of values for each header in receivedHeaderNames.
@@ -46,7 +46,7 @@ export class Received extends iTable {
             if (iDate !== -1 && receivedHeader.length !== iDate + 1) {
                 const dateField = receivedHeader.substring(iDate + 1);
                 receivedHeader = receivedHeader.substring(0, iDate);
-                const parsedDate: DateWithNum = mhaDates.parseDate(dateField);
+                const parsedDate: DateWithNum = MHADates.parseDate(dateField);
 
                 if (parsedDate) {
                     receivedFields["date"].value = parsedDate.date;
@@ -75,13 +75,13 @@ export class Received extends iTable {
             const tokens = receivedHeader.split(/\s+/);
 
             // Build array of header locations
-            const headerMatches: match[] = [];
+            const headerMatches: Match[] = [];
 
             let fieldName: string;
             for (fieldName in receivedFields) {
                 tokens.some(function (token, iToken) {
                     if (fieldName.toLowerCase() === token.toLowerCase()) {
-                        headerMatches.push(<match>{ fieldName: fieldName, iToken: iToken });
+                        headerMatches.push(<Match>{ fieldName: fieldName, iToken: iToken });
                         // We don't return true so we can match any duplicate headers
                         // In doing this, we risk failing to parse a string where a header
                         // keyword appears as the value for another header
@@ -114,10 +114,10 @@ export class Received extends iTable {
 
     public doSort(col: string): void {
         if (this.sortColumn === col) {
-            this._sortOrder *= -1;
+            this.sortOrderInternal *= -1;
         } else {
-            this._sortColumn = col;
-            this._sortOrder = 1;
+            this.sortColumnInternal = col;
+            this.sortOrderInternal = 1;
         }
 
         if (this.rows[0] && this.sortColumn + "Sort" in this.rows[0]) {
@@ -240,7 +240,7 @@ export class Received extends iTable {
         return iEndTime !== iStartTime ? Received.computeTime(iEndTime, iStartTime) : "";
     }
 
-    public get rows(): ReceivedRow[] { return this._receivedRows; }
+    public get rows(): ReceivedRow[] { return this.receivedRows; }
     public toString(): string {
         if (!this.exists()) return "";
         const ret: string[] = ["Received"];

@@ -4,8 +4,8 @@ import { expect } from "@jest/globals";
 import { receivedEqual } from "./receivedEqual";
 
 const arrayEqual: MatcherFunction<[expected: { [index: string]: string }[]]> =
-    async function (_actual: unknown, expected: { [index: string]: string }[]) {
-        const actual = _actual as ReceivedRow[];
+    async function (actualUnknown: unknown, expected: { [index: string]: string }[]) {
+        const actual = actualUnknown as ReceivedRow[];
         const messages: string[] = [];
         let passed = true;
 

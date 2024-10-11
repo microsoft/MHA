@@ -3,12 +3,12 @@ import "framework7/dist/css/framework7.ios.colors.min.css";
 import "framework7-icons/css/framework7-icons.css";
 import "../Content/newMobilePaneIosFrame.css";
 import $ from "jquery";
-import { Framework7 } from "./framework7";
+import { framework7 } from "./framework7";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./HeaderModel";
-import { poster } from "./poster";
+import { Poster } from "./poster";
 import { SummaryRow } from "./row/SummaryRow";
 import { Row } from "./row/Row";
 import { ReceivedRow } from "./row/ReceivedRow";
@@ -17,16 +17,16 @@ import { OtherRow } from "./row/OtherRow";
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
 // Framework7 app object
-let myApp: typeof Framework7 = null;
+let myApp: typeof framework7 = null;
 
 dayjs.extend(utc);
 
 function postError(error: unknown, message: string): void {
-    poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+    Poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
 function initializeFramework7(): void {
-    myApp = new Framework7();
+    myApp = new framework7();
 
     myApp.addView("#summary-view");
     myApp.addView("#received-view");
@@ -411,8 +411,8 @@ function renderItem(headers: string): void {
 
 // Handles rendering of an error.
 // Does not log the error - caller is responsible for calling PostError
-function showError(_error: unknown, message: string): void {
-    // TODO: Do something with the error
+function showError(error: unknown, message: string): void {
+    console.error("Error:", error);
     if (myApp) {
         myApp.hidePreloader();
         myApp.alert(message, "An Error Occurred");
@@ -420,7 +420,7 @@ function showError(_error: unknown, message: string): void {
 }
 
 function eventListener(event: MessageEvent): void {
-    if (!event || event.origin !== poster.site()) return;
+    if (!event || event.origin !== Poster.site()) return;
 
     if (event.data) {
         switch (event.data.eventName) {
@@ -442,7 +442,7 @@ $(function() {
         initializeFramework7();
         updateStatus(mhaStrings.mhaLoading);
         window.addEventListener("message", eventListener, false);
-        poster.postMessageToParent("frameActive");
+        Poster.postMessageToParent("frameActive");
     }
     catch (e) {
         postError(e, "Failed initializing frame");

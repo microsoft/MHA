@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 module.exports = {
     "env": {
         "browser": true,
@@ -35,5 +36,14 @@ module.exports = {
         "@stylistic/js/no-trailing-spaces": "error",
         "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/no-inferrable-types": "error",
+        "@typescript-eslint/naming-convention": [
+            "error",
+            { "selector": "default", "format": ["camelCase"] },
+            { "selector": "variableLike", "format": ["camelCase"] },
+            { "selector": "typeLike", "format": ["PascalCase"] },
+            { "selector": "enumMember", "format": ["PascalCase"] },
+            { "selector": "property", "format": ["camelCase"] },
+            { "selector": "method", "format": ["camelCase"] }
+        ]
     }
 };

@@ -1,27 +1,27 @@
-﻿import { iTable } from "./itable";
+﻿import { ITable } from "./itable";
 import { Header } from "../row/Header";
 import { OtherRow } from "../row/OtherRow";
 
-export class Other extends iTable {
-    private _otherRows: OtherRow[] = [];
-    protected _sortColumn = "number";
-    protected _sortOrder = 1;
+export class Other extends ITable {
+    private otherRows: OtherRow[] = [];
+    protected sortColumnInternal = "number";
+    protected sortOrderInternal = 1;
     public readonly tableName: string = "otherHeaders";
 
     public doSort(col: string): void {
-        if (this._sortColumn === col) {
-            this._sortOrder *= -1;
+        if (this.sortColumnInternal === col) {
+            this.sortOrderInternal *= -1;
         } else {
-            this._sortColumn = col;
-            this._sortOrder = 1;
+            this.sortColumnInternal = col;
+            this.sortOrderInternal = 1;
         }
 
-        if (this.rows[0] && this._sortColumn + "Sort" in this.rows[0]) {
+        if (this.rows[0] && this.sortColumnInternal + "Sort" in this.rows[0]) {
             col = col + "Sort";
         }
 
         this.rows.sort((a: OtherRow, b: OtherRow) => {
-            return this._sortOrder * ((a[col] as string | number) < (b[col] as string | number) ? -1 : 1);
+            return this.sortOrderInternal * ((a[col] as string | number) < (b[col] as string | number) ? -1 : 1);
         });
     }
 
@@ -39,7 +39,7 @@ export class Other extends iTable {
 
     public exists() { return this.rows.length > 0; }
 
-    public get rows(): OtherRow[] { return this._otherRows; }
+    public get rows(): OtherRow[] { return this.otherRows; }
     public toString() {
         if (!this.exists()) return "";
         const ret: string[] = ["Other"];

@@ -4,7 +4,7 @@ import { Errors } from "./Errors";
 import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersEWS } from "./GetHeadersEWS";
-import { Diagnostics } from "./diag";
+import { diagnostics } from "./diag";
 import { jwtDecode } from "jwt-decode";
 
 /*
@@ -107,8 +107,8 @@ export class GetHeadersRest {
             url: getMessageUrl,
             dataType: "json",
             headers: {
-                "Authorization": "Bearer" + accessToken,
-                "Accept": "application/json; odata.metadata=none"
+                "Authorization": "Bearer" + accessToken, //eslint-disable-line @typescript-eslint/naming-convention
+                "Accept": "application/json; odata.metadata=none" //eslint-disable-line @typescript-eslint/naming-convention
             }
         }).done(function (item) {
             try {
@@ -124,9 +124,9 @@ export class GetHeadersRest {
             }
         }).fail(function (jqXHR, textStatus, errorThrown) {
             try {
-                Diagnostics.set("jqXHR", JSON.stringify(jqXHR));
-                Diagnostics.set("textStatus", JSON.stringify(textStatus));
-                Diagnostics.set("resterror", JSON.stringify(errorThrown));
+                diagnostics.set("jqXHR", JSON.stringify(jqXHR));
+                diagnostics.set("textStatus", JSON.stringify(textStatus));
+                diagnostics.set("resterror", JSON.stringify(errorThrown));
                 if (textStatus === "error" && jqXHR.status === 0) {
                     GetHeadersEWS.send(headersLoadedCallback);
                 } else if (textStatus === "error" && jqXHR.status === 404) {
@@ -160,7 +160,7 @@ export class GetHeadersRest {
                     const accessToken: string = result.value;
                     GetHeadersRest.getHeaders(accessToken, headersLoadedCallback);
                 } else {
-                    Diagnostics.set("callbackTokenFailure", JSON.stringify(result));
+                    diagnostics.set("callbackTokenFailure", JSON.stringify(result));
                     Errors.log(result.error, "Unable to obtain callback token.\nFallback to EWS.\n" + JSON.stringify(result, null, 2), true);
                     GetHeadersEWS.send(headersLoadedCallback);
                 }

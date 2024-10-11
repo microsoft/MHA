@@ -6,7 +6,7 @@ import $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./HeaderModel";
-import { poster } from "./poster";
+import { Poster } from "./poster";
 import { SummaryRow } from "./row/SummaryRow";
 import { Row } from "./row/Row";
 import { ReceivedRow } from "./row/ReceivedRow";
@@ -19,7 +19,7 @@ let overlay: fabric.Overlay;
 let spinner: fabric.Spinner;
 
 function postError(error: unknown, message: string): void {
-    poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+    Poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
 function initializeFabric(): void {
@@ -433,14 +433,14 @@ function renderItem(headers: string): void {
 
 // Handles rendering of an error.
 // Does not log the error - caller is responsible for calling PostError
-function showError(_error: unknown, message: string): void {
-    // TODO: Do something with the error
+function showError(error: unknown, message: string): void {
+    console.error("Error:", error);
     $("#error-display .ms-MessageBar-text").text(message);
     $("#error-display").show();
 }
 
 function eventListener(event: MessageEvent): void {
-    if (!event || event.origin !== poster.site()) return;
+    if (!event || event.origin !== Poster.site()) return;
 
     if (event.data) {
         switch (event.data.eventName) {
@@ -462,7 +462,7 @@ $(function() {
         initializeFabric();
         updateStatus(mhaStrings.mhaLoading);
         window.addEventListener("message", eventListener, false);
-        poster.postMessageToParent("frameActive");
+        Poster.postMessageToParent("frameActive");
     }
     catch (e) {
         postError(e, "Failed initializing frame");

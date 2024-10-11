@@ -4,7 +4,7 @@ import $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
 import { HeaderModel } from "./HeaderModel";
 import { Table } from "./table/Table";
-import { poster } from "./poster";
+import { Poster } from "./poster";
 
 // This is the "classic" UI rendered in classicDesktopFrame.html
 
@@ -12,7 +12,7 @@ let viewModel: HeaderModel;
 let table: Table;
 
 function postError(error: unknown, message: string): void {
-    poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+    Poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
 function enableSpinner(): void {
@@ -46,15 +46,15 @@ function renderItem(headers: string) {
 
 // Handles rendering of an error.
 // Does not log the error - caller is responsible for calling PostError
-function showError(_error: unknown, message: string) {
-    // TODO: Do something with the error
+function showError(error: unknown, message: string) {
+    console.error("Error:", error);
     updateStatus(message);
     disableSpinner();
     table.rebuildSections(viewModel);
 }
 
 function eventListener(event: MessageEvent): void {
-    if (!event || event.origin !== poster.site()) return;
+    if (!event || event.origin !== Poster.site()) return;
 
     if (event.data) {
         switch (event.data.eventName) {
@@ -80,7 +80,7 @@ $(function() {
         table.initializeTableUI(viewModel);
         updateStatus(mhaStrings.mhaLoading);
         window.addEventListener("message", eventListener, false);
-        poster.postMessageToParent("frameActive");
+        Poster.postMessageToParent("frameActive");
     }
     catch (e) {
         postError(e, "Failed initializing frame");

@@ -2,7 +2,7 @@ import { Decoder } from "./2047";
 
 // Polyfill missing TextEncoder - https://stackoverflow.com/questions/68468203/why-am-i-getting-textencoder-is-not-defined-in-jest
 import { TextEncoder, TextDecoder } from "util";
-Object.assign(global, { TextDecoder, TextEncoder });
+Object.assign(global, { TextDecoder, TextEncoder }); // eslint-disable-line @typescript-eslint/naming-convention
 
 describe("2047 Tests", () => {
     test("RFC 2047 Tests", function () {

@@ -1,7 +1,7 @@
 import { StackFrame, StackTraceOptions } from "stacktrace-js";
-import * as StackTrace from "stacktrace-js";
-import { Diagnostics } from "./diag";
-import { strings } from "./Strings";
+import * as stackTrace from "stacktrace-js";
+import { diagnostics } from "./diag";
+import { Strings } from "./Strings";
 
 let errorArray: string[] = [];
 
@@ -12,14 +12,14 @@ export class Errors {
 
     public static add(eventName: string, stack: string[], suppressTracking: boolean): void {
         if (eventName || stack) {
-            const stackString = strings.joinArray(stack, "\n");
-            errorArray.push(strings.joinArray([eventName, stackString], "\n"));
+            const stackString = Strings.joinArray(stack, "\n");
+            errorArray.push(Strings.joinArray([eventName, stackString], "\n"));
 
             if (!suppressTracking) {
-                Diagnostics.trackEvent({ name: eventName },
+                diagnostics.trackEvent({ name: eventName },
                     {
-                        Stack: stackString,
-                        Source: "Errors.add"
+                        stack: stackString,
+                        source: "Errors.add"
                     });
             }
         }
@@ -35,7 +35,7 @@ export class Errors {
             if (typeof (error) === "number") return false;
             if (typeof error === "object" && "stack" in error) return true;
         } catch (e) {
-            Diagnostics.trackEvent({ name: "isError exception with error", properties: { error: JSON.stringify(e) } });
+            diagnostics.trackEvent({ name: "isError exception with error", properties: { error: JSON.stringify(e) } });
         }
 
         return false;
@@ -48,35 +48,35 @@ export class Errors {
         if (error && !suppressTracking) {
             const event = { name: "Errors.log" };
             const props = {
-                Message: message,
-                Error: JSON.stringify(error, null, 2),
-                Source: "",
-                Stack: "",
-                Description: "",
-                ErrorMessage: ""
+                message: message,
+                error: JSON.stringify(error, null, 2),
+                source: "",
+                stack: "",
+                description: "",
+                errorMessage: ""
             };
 
             if (Errors.isError(error) && (error as { exception?: unknown }).exception) {
-                props.Source = "Error.log Exception";
+                props.source = "Error.log Exception";
                 event.name = "Exception";
             }
             else {
-                props.Source = "Error.log Event";
-                if (typeof error === "object" && "description" in error) props.Description = (error as { description: string }).description;
-                if (typeof error === "object" && "message" in error) props.ErrorMessage = (error as { message: string }).message;
-                if (typeof error === "object" && "stack" in error) props.Stack = (error as { stack: string }).stack;
+                props.source = "Error.log Event";
+                if (typeof error === "object" && "description" in error) props.description = (error as { description: string }).description;
+                if (typeof error === "object" && "message" in error) props.errorMessage = (error as { message: string }).message;
+                if (typeof error === "object" && "stack" in error) props.stack = (error as { stack: string }).stack;
                 if (typeof error === "object" && "description" in error) {
                     event.name = (error as { description: string }).description;
                 } else if (typeof error === "object" && "message" in error) {
                     event.name = (error as { message: string }).message;
-                } else if (props.Message) {
-                    event.name = props.Message;
+                } else if (props.message) {
+                    event.name = props.message;
                 } else {
                     event.name = "Unknown error object";
                 }
             }
 
-            Diagnostics.trackException(event, props);
+            diagnostics.trackException(event, props);
         }
 
         Errors.parse(error, message, function (eventName: string, stack: string[]): void {
@@ -91,7 +91,7 @@ export class Errors {
         let stack;
         const exceptionMessage = Errors.getErrorMessage(exception);
 
-        let eventName = strings.joinArray([message, exceptionMessage], " : ");
+        let eventName = Strings.joinArray([message, exceptionMessage], " : ");
         if (!eventName) {
             eventName = "Unknown exception";
         }
@@ -120,7 +120,7 @@ export class Errors {
         }
 
         function errback(err: Error) {
-            Diagnostics.trackEvent({ name: "Errors.parse errback" });
+            diagnostics.trackEvent({ name: "Errors.parse errback" });
             stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
             handler(eventName, stack);
         }
@@ -128,9 +128,9 @@ export class Errors {
         // TODO: Move filter from callbacks into gets
         const options: StackTraceOptions = {offline: true};
         if (!Errors.isError(exception)) {
-            StackTrace.get(options).then(callback).catch(errback);
+            stackTrace.get(options).then(callback).catch(errback);
         } else {
-            StackTrace.fromError(exception as Error, options).then(callback).catch(errback);
+            stackTrace.fromError(exception as Error, options).then(callback).catch(errback);
         }
     }
 

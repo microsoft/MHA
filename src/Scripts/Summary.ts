@@ -6,7 +6,7 @@ import { CreationRow } from "./row/CreationRow";
 import { ArchivedRow } from "./row/ArchivedRow";
 
 export class Summary {
-    private _totalTime = "";
+    private totalTimeInternal = "";
 
     private creationPostFix(totalTime: string): string {
         if (!totalTime) {
@@ -53,9 +53,9 @@ export class Summary {
     }
 
     public get rows(): SummaryRow[] { return this.summaryRows; }
-    public get totalTime(): string { return this._totalTime; }
+    public get totalTime(): string { return this.totalTimeInternal; }
     public set totalTime(value: string) {
-        this._totalTime = value;
+        this.totalTimeInternal = value;
         this.dateRow.postFix = this.creationPostFix(value);
     }
 

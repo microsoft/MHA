@@ -7,12 +7,12 @@ import { GetHeadersRest } from "./GetHeadersRest";
 import { aikey } from "./aikey";
 import { mhaVersion } from "./version";
 import { buildTime } from "./buildTime";
-import StackTrace from "stacktrace-js";
+import stackTrace from "stacktrace-js";
 import "promise-polyfill/dist/polyfill";
 
 // diagnostics module
 
-class diag {
+class Diag {
     private appDiagnostics: { [k: string]: string | number | boolean } | null = null;
     private itemDiagnostics: { [k: string]: string | boolean } | null = null;
     private inGet = false;
@@ -48,8 +48,8 @@ class diag {
                 // custom data for the ExceptionData type lives in a different place
                 // Log an extra event with parsed stack frame
                 if (envelope.baseData["exceptions"].length > 0) {
-                    StackTrace.fromError(envelope.baseData["exceptions"][0])
-                        .then((stackframes: StackTrace.StackFrame[]): void => {
+                    stackTrace.fromError(envelope.baseData["exceptions"][0])
+                        .then((stackframes: stackTrace.StackFrame[]): void => {
                             this.appInsights.trackEvent({
                                 name: "Exception Details", properties: {
                                     stack: stackframes,
@@ -330,4 +330,4 @@ class diag {
     }
 }
 
-export const Diagnostics: diag = new diag();
+export const diagnostics: Diag = new Diag();

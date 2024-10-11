@@ -1,4 +1,4 @@
-import { strings } from "../Strings";
+import { Strings } from "../Strings";
 import { Row } from "./Row";
 
 export class OtherRow extends Row {
@@ -6,7 +6,7 @@ export class OtherRow extends Row {
         super(header, "", "");
         this.number = number;
         this.value = value;
-        this.url = strings.mapHeaderToURL(header);
+        this.url = Strings.mapHeaderToURL(header);
     }
 
     number: number;

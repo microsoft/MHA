@@ -1,10 +1,10 @@
 ﻿import $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
-import { Diagnostics } from "./diag";
+import { diagnostics } from "./diag";
 import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";
-import { poster } from "./poster";
-import { strings } from "./Strings";
+import { Poster } from "./poster";
+import { Strings } from "./Strings";
 import { findTabStops } from "./findTabStops";
 import { Choice } from "./Choice";
 import { DeferredError } from "./DeferredError";
@@ -58,12 +58,12 @@ export class ParentFrame {
 
     private static postMessageToFrame(eventName: string, data: string | { error: string, message: string }): void {
         if (ParentFrame.iFrame) {
-            poster.postMessageToFrame(ParentFrame.iFrame, eventName, data);
+            Poster.postMessageToFrame(ParentFrame.iFrame, eventName, data);
         }
     }
 
     private static render(): void {
-        if (ParentFrame.headers) Diagnostics.trackEvent({ name: "analyzeHeaders" });
+        if (ParentFrame.headers) diagnostics.trackEvent({ name: "analyzeHeaders" });
         ParentFrame.postMessageToFrame("renderItem", ParentFrame.headers);
     }
 
@@ -96,7 +96,7 @@ export class ParentFrame {
     }
 
     private static eventListener(event: MessageEvent): void {
-        if (!event || event.origin !== poster.site()) return;
+        if (!event || event.origin !== Poster.site()) return;
 
         if (event.data) {
             switch (event.data.eventName) {
@@ -115,9 +115,9 @@ export class ParentFrame {
 
     private static loadNewItem(): void {
         if (Office.context.mailbox.item) {
-            GetHeaders.send(function (_headers: string, apiUsed: string): void {
-                ParentFrame.headers = _headers;
-                Diagnostics.set("API used", apiUsed);
+            GetHeaders.send(function (headers: string, apiUsed: string): void {
+                ParentFrame.headers = headers;
+                diagnostics.set("API used", apiUsed);
                 ParentFrame.render();
             });
         }
@@ -129,7 +129,7 @@ export class ParentFrame {
                 Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged,
                     function (): void {
                         Errors.clear();
-                        Diagnostics.clear();
+                        diagnostics.clear();
                         ParentFrame.loadNewItem();
                     });
             }
@@ -261,33 +261,33 @@ export class ParentFrame {
         const telemetryCheckbox: HTMLElement | null = document.querySelector("#dialog-enableTelemetry");
         if (!telemetryCheckbox) return;
         this.telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
-        ParentFrame.setSendTelemetryUI(Diagnostics.canSendTelemetry());
+        ParentFrame.setSendTelemetryUI(diagnostics.canSendTelemetry());
 
         function actionHandler(event: Event): void {
             const action = (event.currentTarget as HTMLButtonElement).id;
 
             function getDiagnostics(): string {
-                let diagnostics = "";
+                let diagnosticsString = "";
                 try {
-                    const diagnosticMap = Diagnostics.get();
+                    const diagnosticMap = diagnostics.get();
                     for (const diag in diagnosticMap) {
                         if (Object.prototype.hasOwnProperty.call(diagnosticMap, diag)) {
-                            diagnostics += diag + " = " + diagnosticMap[diag] + "\n";
+                            diagnosticsString += diag + " = " + diagnosticMap[diag] + "\n";
                         }
                     }
                 } catch {
-                    diagnostics += "ERROR: Failed to get diagnostics\n";
+                    diagnosticsString += "ERROR: Failed to get diagnostics\n";
                 }
 
                 const errors: string[] = Errors.get();
                 errors.forEach((error: string) => {
-                    diagnostics += "ERROR: " + error + "\n";
+                    diagnosticsString += "ERROR: " + error + "\n";
                 });
 
-                return diagnostics;
+                return diagnosticsString;
             }
 
-            Diagnostics.setSendTelemetry(ParentFrame.telemetryCheckboxComponent.getValue());
+            diagnostics.setSendTelemetry(ParentFrame.telemetryCheckboxComponent.getValue());
 
             switch (action) {
                 case "actionsSettings-OK": {
@@ -341,7 +341,7 @@ export class ParentFrame {
 
         const copyButton: HTMLButtonElement = header.querySelector(".copy-button") as HTMLButtonElement;
         copyButton.onclick = function (): void {
-            strings.copyToClipboard(ParentFrame.modelToString);
+            Strings.copyToClipboard(ParentFrame.modelToString);
         };
 
         // Tabbing into the radio buttons doesn't do what we want by default, so watch for tabbing and handle all the cases
@@ -458,7 +458,7 @@ export class ParentFrame {
         try {
             const choice: Choice = Office.context.roamingSettings.get(ParentFrame.getSettingsKey());
             const sendTelemetry: boolean = Office.context.roamingSettings.get("sendTelemetry");
-            Diagnostics.initSendTelemetry(sendTelemetry);
+            diagnostics.initSendTelemetry(sendTelemetry);
 
             const input: JQuery<HTMLElement> = $("#uiToggle" + choice.label);
             input.prop("checked", "true");

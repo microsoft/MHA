@@ -1,7 +1,7 @@
 import $ from "jquery";
-import { Diagnostics } from "./diag";
+import { diagnostics } from "./diag";
 
-export class strings {
+export class Strings {
     public static copyToClipboard(str: string): void {
         const textArea: HTMLTextAreaElement = document.createElement("textarea");
         textArea.style.position = "absolute";
@@ -11,14 +11,14 @@ export class strings {
         textArea.select();
         const succeeded: boolean = document.execCommand("copy");
         document.body.removeChild(textArea);
-        Diagnostics.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "textarea" } });
+        diagnostics.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "textarea" } });
 
         if (!succeeded) {
             try {
                 navigator.clipboard.writeText(str).then(function (): void {
-                    Diagnostics.trackEvent({ name: "copy", properties: { succeeded: "true", style: "navigator" } });
+                    diagnostics.trackEvent({ name: "copy", properties: { succeeded: "true", style: "navigator" } });
                 }, function () {
-                    Diagnostics.trackEvent({ name: "copy", properties: { succeeded: "false", style: "navigator" } });
+                    diagnostics.trackEvent({ name: "copy", properties: { succeeded: "false", style: "navigator" } });
                 });
             }
             catch { /**/ }
@@ -27,7 +27,7 @@ export class strings {
         try {
             const queryOpts: PermissionDescriptor = { name: "clipboard-write" as PermissionName };
             navigator.permissions.query(queryOpts).then(function (result: PermissionStatus) {
-                Diagnostics.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "permissions", clipboardWrite: result.state } });
+                diagnostics.trackEvent({ name: "copy", properties: { succeeded: succeeded, style: "permissions", clipboardWrite: result.state } });
             });
         }
         catch { /**/ }
@@ -98,7 +98,7 @@ export class strings {
 
     public static mapHeaderToURL(headerName: string, text?: string): string {
         let url = "";
-        strings.headerToURLMap.forEach((h: string[]) => {
+        Strings.headerToURLMap.forEach((h: string[]) => {
             if (url === "" && headerName.toLowerCase() === h[0]?.toLowerCase()) {
                 url = h[1] ?? "";
             }

@@ -3,7 +3,7 @@ import { AntiSpamReport } from "./row/Antispam";
 import { ForefrontAntiSpamReport } from "./row/ForefrontAntispam";
 import { Header } from "./row/Header";
 import { Other } from "./table/Other";
-import { poster } from "./poster";
+import { Poster } from "./poster";
 import { Received } from "./table/Received";
 import { Summary } from "./Summary";
 
@@ -14,11 +14,11 @@ export class HeaderModel {
     public forefrontAntiSpamReport: ForefrontAntiSpamReport;
     public antiSpamReport: AntiSpamReport;
     public otherHeaders: Other;
-    private _hasData: boolean;
-    private _status: string;
-    public get hasData(): boolean { return this._hasData || !!this._status; }
-    public get status(): string { return this._status; }
-    public set status(value) { this._status = value; }
+    private hasDataInternal: boolean;
+    private statusInternal: string;
+    public get hasData(): boolean { return this.hasDataInternal || !!this.statusInternal; }
+    public get status(): string { return this.statusInternal; }
+    public set status(value) { this.statusInternal = value; }
     [index: string]: unknown;
 
     constructor(headers?: string) {
@@ -28,15 +28,15 @@ export class HeaderModel {
         this.antiSpamReport = new AntiSpamReport();
         this.otherHeaders = new Other();
         this.originalHeaders = "";
-        this._status = "";
-        this._hasData = false;
+        this.statusInternal = "";
+        this.hasDataInternal = false;
         if (headers) {
             this.parseHeaders(headers);
-            poster.postMessageToParent("modelToString", this.toString());
+            Poster.postMessageToParent("modelToString", this.toString());
         }
     }
 
-    public GetHeaderList(headers: string): Header[] {
+    public getHeaderList(headers: string): Header[] {
         // First, break up out input by lines.
         // Keep empty lines for recognizing the boundary between the header section & the body.
         const lines: string[] = headers.split(/\r\n|\r|\n/);
@@ -112,10 +112,10 @@ export class HeaderModel {
         // Initialize originalHeaders in case we have parsing problems
         // Flatten CRLF to LF to avoid extra blank lines
         this.originalHeaders = headers.replace(/(?:\r\n|\r|\n)/g, "\n");
-        const headerList: Header[] = this.GetHeaderList(headers);
+        const headerList: Header[] = this.getHeaderList(headers);
 
         if (headerList.length > 0) {
-            this._hasData = true;
+            this.hasDataInternal = true;
         }
 
         headerList.forEach((header: Header) => {

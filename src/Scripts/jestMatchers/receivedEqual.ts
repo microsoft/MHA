@@ -3,8 +3,8 @@ import { ReceivedRow } from "../row/ReceivedRow";
 import { expect } from "@jest/globals";
 
 export const receivedEqual: MatcherFunction<[expected: { [index: string]: string | number | null }]> =
-    function (_actual: unknown, expected: { [index: string]: string | number | null }) {
-        const actual = _actual as ReceivedRow;
+    function (actualUnknown: unknown, expected: { [index: string]: string | number | null }) {
+        const actual = actualUnknown as ReceivedRow;
         let passed = true;
         const messages: string[] = [];
 
@@ -26,7 +26,7 @@ export const receivedEqual: MatcherFunction<[expected: { [index: string]: string
             for (const [field, value] of Object.entries(expected)) {
                 if (field === "date") continue;
                 if (field === "postFix") continue;
-                if (field === "_value") continue;
+                if (field === "valueInternal") continue;
                 if (value === null && actual[field]?.toString() === "null") continue;
                 if (typeof value === "number" && value.toString() === actual[field]?.toString()) continue;
                 if (typeof value === "string" && value === actual[field]?.toString()) continue;
@@ -41,7 +41,7 @@ export const receivedEqual: MatcherFunction<[expected: { [index: string]: string
                 if (field === "onGetUrl") continue;
                 if (field === "setField") continue;
                 if (field === "postFix") continue;
-                if (field === "_value") continue;
+                if (field === "valueInternal") continue;
                 // If a field in value is non-null/empty there must also be a field in expected
                 if (actual[field] && actual[field].toString() && expected[field] === undefined) {
                     messages.push("actual: " + field + " = " + actual[field]);

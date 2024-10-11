@@ -20,8 +20,8 @@ function cleanStack(stack: string[]) {
 }
 
 export const stacksEqual: MatcherFunction<[expected: string[]]> =
-    function (_actual: unknown, expected: string[]) {
-        const actual = _actual as string[];
+    function (actualUnknown: unknown, expected: string[]) {
+        const actual = actualUnknown as string[];
         let passed = true;
         const messages: string[] = [];
 

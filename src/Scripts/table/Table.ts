@@ -2,10 +2,10 @@ import $ from "jquery";
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Row } from "../row/Row";
-import { iTable } from "./itable";
+import { ITable } from "./itable";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { OtherRow } from "../row/OtherRow";
-import { column } from "./column";
+import { Column } from "./column";
 
 type Binding = {
     name: string;
@@ -198,8 +198,8 @@ export class Table {
 
     // Rebuilds content and recalculates what sections should be displayed
     // Repopulate the UI with the current viewModel
-    public rebuildSections(_viewModel: HeaderModel): void {
-        this.viewModel = _viewModel;
+    public rebuildSections(viewModel: HeaderModel): void {
+        this.viewModel = viewModel;
 
         // Summary
         this.viewModel.summary.rows.forEach((row: Row) => {
@@ -272,7 +272,7 @@ export class Table {
         this.recalculateVisibility();
     }
 
-    private makeSortableColumn(tableName: string, column: column): JQuery<HTMLElement> {
+    private makeSortableColumn(tableName: string, column: Column): JQuery<HTMLElement> {
         const header = $(document.createElement("th"));
         if (header !== null) {
             const headerButton = $(document.createElement("button"));
@@ -290,8 +290,8 @@ export class Table {
                 headerButton.on("click", this, function (eventObject) {
                     const table: Table = eventObject.data as Table;
                     if (table) {
-                        if (table.viewModel[tableName] instanceof iTable) {
-                            const itable = table.viewModel[tableName] as iTable;
+                        if (table.viewModel[tableName] instanceof ITable) {
+                            const itable = table.viewModel[tableName] as ITable;
                             itable.doSort(column.id);
                             table.setArrows(itable.tableName, itable.sortColumn,
                                 itable.sortOrder);
@@ -313,7 +313,7 @@ export class Table {
         return header;
     }
 
-    private addColumns(tableName: string, columns: column[]): void {
+    private addColumns(tableName: string, columns: Column[]): void {
         const tableHeader = $(document.createElement("thead"));
         if (tableHeader !== null) {
             $("#" + tableName).append(tableHeader);
@@ -323,7 +323,7 @@ export class Table {
                 headerRow.addClass("tableHeader");
                 tableHeader.append(headerRow); // Must happen before we append cells to appease IE7
 
-                columns.forEach((column: column) => {
+                columns.forEach((column: Column) => {
                     headerRow.append(this.makeSortableColumn(tableName, column));
                 });
             }
@@ -358,8 +358,8 @@ export class Table {
     }
 
     // Initialize UI with an empty viewModel
-    public initializeTableUI(_viewModel: HeaderModel): void {
-        this.viewModel = _viewModel;
+    public initializeTableUI(viewModel: HeaderModel): void {
+        this.viewModel = viewModel;
 
         // Headers
         this.makeResizablePane("originalHeaders", "sectionHeader", mhaStrings.mhaOriginalHeaders, (table: Table) => { return table.viewModel.originalHeaders.length > 0; });
@@ -373,15 +373,15 @@ export class Table {
         this.makeResizablePane("receivedHeaders", "tableCaption", mhaStrings.mhaReceivedHeaders, function (table: Table) { return table.viewModel.receivedHeaders.exists(); });
 
         const receivedColumns = [
-            new column("hop", mhaStrings.mhaReceivedHop, ""),
-            new column("from", mhaStrings.mhaReceivedSubmittingHost, ""),
-            new column("by", mhaStrings.mhaReceivedReceivingHost, ""),
-            new column("date", mhaStrings.mhaReceivedTime, ""),
-            new column("delay", mhaStrings.mhaReceivedDelay, ""),
-            new column("with", mhaStrings.mhaReceivedType, ""),
-            new column("id", mhaStrings.mhaReceivedId, "extraCol"),
-            new column("for", mhaStrings.mhaReceivedFor, "extraCol"),
-            new column("via", mhaStrings.mhaReceivedVia, "extraCol")
+            new Column("hop", mhaStrings.mhaReceivedHop, ""),
+            new Column("from", mhaStrings.mhaReceivedSubmittingHost, ""),
+            new Column("by", mhaStrings.mhaReceivedReceivingHost, ""),
+            new Column("date", mhaStrings.mhaReceivedTime, ""),
+            new Column("delay", mhaStrings.mhaReceivedDelay, ""),
+            new Column("with", mhaStrings.mhaReceivedType, ""),
+            new Column("id", mhaStrings.mhaReceivedId, "extraCol"),
+            new Column("for", mhaStrings.mhaReceivedFor, "extraCol"),
+            new Column("via", mhaStrings.mhaReceivedVia, "extraCol")
         ];
 
         this.addColumns(this.viewModel.receivedHeaders.tableName, receivedColumns);
@@ -423,9 +423,9 @@ export class Table {
         this.makeResizablePane("otherHeaders", "tableCaption", mhaStrings.mhaOtherHeaders, function (table: Table) { return table.viewModel.otherHeaders.rows.length > 0; });
 
         const otherColumns = [
-            new column("number", mhaStrings.mhaNumber, ""),
-            new column("header", mhaStrings.mhaHeader, ""),
-            new column("value", mhaStrings.mhaValue, "")
+            new Column("number", mhaStrings.mhaNumber, ""),
+            new Column("header", mhaStrings.mhaHeader, ""),
+            new Column("value", mhaStrings.mhaValue, "")
         ];
 
         this.addColumns(this.viewModel.otherHeaders.tableName, otherColumns);
@@ -436,8 +436,8 @@ export class Table {
 
     // Rebuilds the UI with a new viewModel
     // Used by mha.ts and Default.ts to rebuild with new viewModel
-    public rebuildTables(_viewModel: HeaderModel): void {
-        this.viewModel = _viewModel;
+    public rebuildTables(viewModel: HeaderModel): void {
+        this.viewModel = viewModel;
         this.rebuildSections(this.viewModel);
         this.hideExtraColumns();
     }

@@ -4,8 +4,8 @@ import { expect } from "@jest/globals";
 import { DateWithNum } from "../DateWithNum";
 
 export const datesEqual: MatcherFunction<[expected: DateWithNum]> =
-    function (_actual: unknown, expected: DateWithNum) {
-        const actual = _actual as ReceivedRow;
+    function (actualUnknown: unknown, expected: DateWithNum) {
+        const actual = actualUnknown as ReceivedRow;
         let passed = true;
         const messages: string[] = [];
 

@@ -5,9 +5,9 @@ import "../Content/Office.css";
 import "../Content/classicDesktopFrame.css";
 import $ from "jquery";
 import { mhaStrings } from "./mhaStrings";
-import { strings } from "./Strings";
+import { Strings } from "./Strings";
 import { HeaderModel } from "./HeaderModel";
-import { Diagnostics } from "./diag";
+import { diagnostics } from "./diag";
 import { Table } from "./table/Table";
 
 let viewModel: HeaderModel;
@@ -37,7 +37,7 @@ function updateStatus(statusText: string) {
 function analyze() {
     // Can't do anything without jQuery
     if (!$) return;
-    Diagnostics.trackEvent({ name: "analyzeHeaders" });
+    diagnostics.trackEvent({ name: "analyzeHeaders" });
     viewModel = new HeaderModel($("#inputHeaders").val() as string);
     table.resetArrows();
 
@@ -60,13 +60,13 @@ function clear() {
 }
 
 function copy() {
-    strings.copyToClipboard(viewModel.toString());
+    Strings.copyToClipboard(viewModel.toString());
     document.getElementById("copyButton")?.focus();
 }
 
 if ($) {
     $(function() {
-        Diagnostics.set("API used", "standalone");
+        diagnostics.set("API used", "standalone");
         viewModel = new HeaderModel();
         table = new Table();
         table.initializeTableUI(viewModel);

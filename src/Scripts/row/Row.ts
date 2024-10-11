@@ -4,20 +4,20 @@ export class Row {
         this.label = label;
         this.headerName = headerName;
         this.url = "";
-        this._value = "";
+        this.valueInternal = "";
     }
 
     [index: string]: unknown;
-    protected _value: string;
+    protected valueInternal: string;
     header: string;
     label: string;
     headerName: string;
     url: string;
     onGetUrl?: (headerName: string, value: string) => string;
 
-    public set value(value: string) { this._value = value; }
-    get value(): string { return this._value; }
-    get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this.headerName, this._value) : ""; }
+    public set value(value: string) { this.valueInternal = value; }
+    get value(): string { return this.valueInternal; }
+    get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this.headerName, this.valueInternal) : ""; }
     get id(): string { return this.header + "_id"; }
 
     toString(): string { return this.label + ": " + this.value; }

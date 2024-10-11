@@ -1,4 +1,4 @@
-export class column {
+export class Column {
     constructor(id: string, label: string, columnClass: string) {
         this.id = id;
         this.label = label;

@@ -1,11 +1,11 @@
 import { mhaStrings } from "../mhaStrings";
-import { strings } from "../Strings";
+import { Strings } from "../Strings";
 import { Row } from "./Row";
 import { Header } from "./Header";
 
 export class AntiSpamReport {
-    private _source = "";
-    private _unparsed = "";
+    private sourceInternal = "";
+    private unparsedInternal = "";
     private antiSpamRows: Row[] = [
         new Row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
         new Row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
@@ -27,7 +27,7 @@ export class AntiSpamReport {
         for (const row of rows) {
             if (row.header.toUpperCase() === key.toUpperCase()) {
                 row.value = value;
-                row.onGetUrl = (headerName: string, value: string) => { return strings.mapHeaderToURL(headerName, value); };
+                row.onGetUrl = (headerName: string, value: string) => { return Strings.mapHeaderToURL(headerName, value); };
                 return true;
             }
         }
@@ -37,7 +37,7 @@ export class AntiSpamReport {
 
     // https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers
     public parse(report: string): void {
-        this._source = report;
+        this.sourceInternal = report;
         if (!report) {
             return;
         }
@@ -55,20 +55,20 @@ export class AntiSpamReport {
         report = report.replace(/;+/g, ";");
 
         const lines = report.match(/(.*?):(.*?);/g);
-        this._unparsed = "";
+        this.unparsedInternal = "";
         if (lines) {
             for (let iLine = 0; iLine < lines.length; iLine++) {
                 const line = lines[iLine]?.match(/(.*?):(.*?);/m);
                 if (line && line[1]) {
                     if (!this.setRowValue(this.rows, line[1], line[2] ?? "")) {
-                        this._unparsed += line[1] + ":" + line[2] + ";";
+                        this.unparsedInternal += line[1] + ":" + line[2] + ";";
                     }
                 }
             }
         }
 
-        this.setRowValue(this.rows, "source", this._source);
-        this.setRowValue(this.rows, "unparsed", this._unparsed);
+        this.setRowValue(this.rows, "source", this.sourceInternal);
+        this.setRowValue(this.rows, "unparsed", this.unparsedInternal);
     }
 
     public addInternal(report: string): void { this.parse(report); }
@@ -83,8 +83,8 @@ export class AntiSpamReport {
 
     public exists(): boolean { return this.existsInternal(this.rows); }
 
-    public get source(): string { return this._source; }
-    public get unparsed(): string { return this._unparsed; }
+    public get source(): string { return this.sourceInternal; }
+    public get unparsed(): string { return this.unparsedInternal; }
     public get rows(): Row[] { return this.antiSpamRows; }
     public toString(): string {
         if (!this.exists()) return "";
