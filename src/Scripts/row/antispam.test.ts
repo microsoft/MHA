@@ -1,7 +1,8 @@
-﻿import { AntiSpamReport } from "./Antispam";
-import { ForefrontAntiSpamReport } from "./ForefrontAntispam";
-import "../jestMatchers/arrayEqual";
+﻿import "../jestMatchers/arrayEqual";
 import { expect } from "@jest/globals";
+
+import { AntiSpamReport } from "./Antispam";
+import { ForefrontAntiSpamReport } from "./ForefrontAntispam";
 
 describe("antiSpam Tests", () => {
     const header = "BCL:1;";

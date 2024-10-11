@@ -1,6 +1,7 @@
-﻿import { Errors } from "./Errors";
-import "./jestMatchers/stacksEqual";
+﻿import "./jestMatchers/stacksEqual";
 import { expect } from "@jest/globals";
+
+import { Errors } from "./Errors";
 
 function testParse(done: jest.DoneCallback, exception: unknown, message: string | null, expectedEventName: string, expectedStack: string[]) {
     Errors.parse(exception, message, function (eventName, stack) {

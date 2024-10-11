@@ -1,8 +1,9 @@
-﻿import { HeaderModel } from "./HeaderModel";
+﻿import { TextDecoder, TextEncoder } from "util";
+
+import { HeaderModel } from "./HeaderModel";
 
 // Polyfill missing TextEncoder - https://stackoverflow.com/questions/68468203/why-am-i-getting-textencoder-is-not-defined-in-jest
 // TODO: Move this to a global setup file
-import { TextEncoder, TextDecoder } from "util";
 Object.assign(global, { TextDecoder, TextEncoder }); // eslint-disable-line @typescript-eslint/naming-convention
 
 describe("GetHeaderList Tests", () => {

@@ -1,7 +1,8 @@
-import type { MatcherFunction, SyncExpectationResult } from "expect";
-import { ReceivedRow } from "../row/ReceivedRow";
 import { expect } from "@jest/globals";
+import type { MatcherFunction, SyncExpectationResult } from "expect";
+
 import { receivedEqual } from "./receivedEqual";
+import { ReceivedRow } from "../row/ReceivedRow";
 
 const arrayEqual: MatcherFunction<[expected: { [index: string]: string }[]]> =
     async function (actualUnknown: unknown, expected: { [index: string]: string }[]) {

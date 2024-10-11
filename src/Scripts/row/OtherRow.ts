@@ -10,5 +10,7 @@ export class OtherRow extends Row {
     }
 
     number: number;
-    override toString() { return this.header + ": " + this.value; }
+    override toString() {
+        return this.header + ": " + this.value;
+    }
 }

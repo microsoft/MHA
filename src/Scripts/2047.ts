@@ -1,4 +1,5 @@
 ﻿import cptable from "codepage";
+
 import { Block } from "./Block";
 
 export class Decoder {

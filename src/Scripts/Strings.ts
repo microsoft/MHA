@@ -1,4 +1,5 @@
 import $ from "jquery";
+
 import { diagnostics } from "./Diag";
 
 export class Strings {

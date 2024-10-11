@@ -1,9 +1,9 @@
 import { mhaStrings } from "./mhaStrings";
+import { ArchivedRow } from "./row/ArchivedRow";
+import { CreationRow } from "./row/CreationRow";
 import { Header } from "./row/Header";
 import { Row } from "./row/Row";
 import { SummaryRow } from "./row/SummaryRow";
-import { CreationRow } from "./row/CreationRow";
-import { ArchivedRow } from "./row/ArchivedRow";
 
 export class Summary {
     private totalTimeInternal = "";

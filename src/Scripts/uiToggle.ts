@@ -3,6 +3,7 @@ import "office-ui-fabric-js/dist/css/fabric.components.min.css";
 import "../Content/fabric.css";
 import "../Content/uiToggle.css";
 import $ from "jquery";
+
 import { ParentFrame } from "./ParentFrame";
 
 // Controller for Settings screen which controls what is being displayed

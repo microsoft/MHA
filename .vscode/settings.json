@@ -1,7 +1,7 @@
 {
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript"
-  ]
+  "editor.formatOnSave": false,
+  "eslint.validate": ["javascript", "javascriptreact", "typescript"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  }
 }

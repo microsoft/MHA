@@ -1,8 +1,9 @@
 import $ from "jquery";
-import { mhaStrings } from "./mhaStrings";
+
 import { Errors } from "./Errors";
-import { ParentFrame } from "./ParentFrame";
 import { GetHeaders } from "./GetHeaders";
+import { mhaStrings } from "./mhaStrings";
+import { ParentFrame } from "./ParentFrame";
 
 /*
  * GetHeadersEWS.js

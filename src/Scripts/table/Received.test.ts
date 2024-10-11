@@ -1,6 +1,7 @@
-﻿import { Received } from "./Received";
-import "../jestMatchers/receivedEqual";
+﻿import "../jestMatchers/receivedEqual";
 import { expect } from "@jest/globals";
+
+import { Received } from "./Received";
 
 describe("receivedEqual Sanity Tests", () => {
     test("receivedEqual compares equal arrays", () => {

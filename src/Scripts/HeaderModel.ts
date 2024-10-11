@@ -1,11 +1,11 @@
 import { Decoder } from "./2047";
+import { Poster } from "./Poster";
 import { AntiSpamReport } from "./row/Antispam";
 import { ForefrontAntiSpamReport } from "./row/ForefrontAntispam";
 import { Header } from "./row/Header";
-import { Other } from "./table/Other";
-import { Poster } from "./Poster";
-import { Received } from "./table/Received";
 import { Summary } from "./Summary";
+import { Other } from "./table/Other";
+import { Received } from "./table/Received";
 
 export class HeaderModel {
     public originalHeaders: string;

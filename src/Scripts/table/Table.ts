@@ -1,11 +1,12 @@
 import $ from "jquery";
+
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
-import { Row } from "../row/Row";
-import { ITable } from "./itable";
-import { ReceivedRow } from "../row/ReceivedRow";
-import { OtherRow } from "../row/OtherRow";
 import { Column } from "./column";
+import { ITable } from "./itable";
+import { OtherRow } from "../row/OtherRow";
+import { ReceivedRow } from "../row/ReceivedRow";
+import { Row } from "../row/Row";
 
 type Binding = {
     name: string;

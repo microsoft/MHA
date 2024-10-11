@@ -4,10 +4,11 @@ import "../Content/fabric.css";
 import "../Content/Office.css";
 import "../Content/classicDesktopFrame.css";
 import $ from "jquery";
+
+import { diagnostics } from "./Diag";
+import { HeaderModel } from "./HeaderModel";
 import { mhaStrings } from "./mhaStrings";
 import { Strings } from "./Strings";
-import { HeaderModel } from "./HeaderModel";
-import { diagnostics } from "./Diag";
 import { Table } from "./table/Table";
 
 let viewModel: HeaderModel;

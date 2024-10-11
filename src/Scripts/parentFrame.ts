@@ -1,13 +1,14 @@
 ﻿import $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
+
+import { Choice } from "./Choice";
+import { DeferredError } from "./DeferredError";
 import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
+import { findTabStops } from "./findTabStops";
 import { GetHeaders } from "./GetHeaders";
 import { Poster } from "./Poster";
 import { Strings } from "./Strings";
-import { findTabStops } from "./findTabStops";
-import { Choice } from "./Choice";
-import { DeferredError } from "./DeferredError";
 
 export class ParentFrame {
     private static iFrame: Window | null;

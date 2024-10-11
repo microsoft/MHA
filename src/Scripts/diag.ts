@@ -1,13 +1,15 @@
+import { ApplicationInsights, ICustomProperties, IEventTelemetry, ITelemetryItem } from "@microsoft/applicationinsights-web";
 import $ from "jquery";
-import { ApplicationInsights, IEventTelemetry, ICustomProperties, ITelemetryItem } from "@microsoft/applicationinsights-web";
-import { ParentFrame } from "./ParentFrame";
+import stackTrace from "stacktrace-js";
+
+import { aikey } from "./aikey";
+import { buildTime } from "./buildTime";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersAPI } from "./GetHeadersAPI";
 import { GetHeadersRest } from "./GetHeadersRest";
-import { aikey } from "./aikey";
 import { mhaVersion } from "./mhaVersion";
-import { buildTime } from "./buildTime";
-import stackTrace from "stacktrace-js";
+import { ParentFrame } from "./ParentFrame";
+
 import "promise-polyfill/dist/polyfill";
 
 // diagnostics module

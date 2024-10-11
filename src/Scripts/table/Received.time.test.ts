@@ -1,6 +1,7 @@
-﻿import { Received } from "./Received";
-import "../jestMatchers/datesEqual";
+﻿import "../jestMatchers/datesEqual";
 import { expect } from "@jest/globals";
+
+import { Received } from "./Received";
 
 describe("Received Time Tests", () => {
     const received = new Received();

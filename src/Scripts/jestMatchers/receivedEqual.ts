@@ -1,6 +1,7 @@
-import type { MatcherFunction } from "expect";
-import { ReceivedRow } from "../row/ReceivedRow";
 import { expect } from "@jest/globals";
+import type { MatcherFunction } from "expect";
+
+import { ReceivedRow } from "../row/ReceivedRow";
 
 export const receivedEqual: MatcherFunction<[expected: { [index: string]: string | number | null }]> =
     function (actualUnknown: unknown, expected: { [index: string]: string | number | null }) {

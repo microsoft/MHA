@@ -1,5 +1,5 @@
-import type { MatcherFunction } from "expect";
 import { expect } from "@jest/globals";
+import type { MatcherFunction } from "expect";
 
 // Strip stack of rows with jest.
 // Used to normalize cross environment differences strictly for testing purposes

@@ -1,10 +1,10 @@
 ﻿import { ITable } from "./itable";
-import { mhaStrings } from "../mhaStrings";
-import { MHADates } from "../MHADates";
 import { DateWithNum } from "../DateWithNum";
+import { MHADates } from "../MHADates";
+import { mhaStrings } from "../mhaStrings";
 import { Header } from "../row/Header";
-import { ReceivedRow } from "../row/ReceivedRow";
 import { Match } from "../row/match";
+import { ReceivedRow } from "../row/ReceivedRow";
 
 export class Received extends ITable {
     private receivedRows: ReceivedRow[] = [];

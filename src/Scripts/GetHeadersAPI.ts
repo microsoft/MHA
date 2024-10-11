@@ -1,9 +1,9 @@
-import { mhaStrings } from "./mhaStrings";
+import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
-import { ParentFrame } from "./ParentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersRest } from "./GetHeadersRest";
-import { diagnostics } from "./Diag";
+import { mhaStrings } from "./mhaStrings";
+import { ParentFrame } from "./ParentFrame";
 
 /*
  * GetHeadersAPI.js

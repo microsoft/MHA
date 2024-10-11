@@ -1,11 +1,12 @@
 import  $ from "jquery";
-import { mhaStrings } from "./mhaStrings";
+import { jwtDecode } from "jwt-decode";
+
+import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
-import { ParentFrame } from "./ParentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersEWS } from "./GetHeadersEWS";
-import { diagnostics } from "./Diag";
-import { jwtDecode } from "jwt-decode";
+import { mhaStrings } from "./mhaStrings";
+import { ParentFrame } from "./ParentFrame";
 
 /*
  * GetHeadersRest.js

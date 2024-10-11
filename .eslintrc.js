@@ -9,8 +9,7 @@ module.exports = {
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended"
     ],
-    "overrides": [
-    ],
+    "overrides": [],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest",
@@ -19,8 +18,10 @@ module.exports = {
     "plugins": [
         "@typescript-eslint",
         "@stylistic/js",
-        "node"
+        "node",
+        "import"
     ],
+    settings: { "import/resolver": { typescript: { project: "./tsconfig.json" } } },
     "rules": {
         "indent": ["error", 4, { "SwitchCase": 1, },],
         "linebreak-style": ["error", "windows"],
@@ -32,6 +33,7 @@ module.exports = {
         "no-unmodified-loop-condition": "error",
         "block-scoped-var": "error",
         "camelcase": ["error", { "properties": "always" }],
+        "sort-imports": ["error", { ignoreDeclarationSort: true }],
         "@stylistic/js/no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0, "maxBOF": 0 }],
         "@stylistic/js/no-trailing-spaces": "error",
         "@typescript-eslint/no-explicit-any": "error",
@@ -44,6 +46,23 @@ module.exports = {
             { "selector": "enumMember", "format": ["PascalCase"] },
             { "selector": "property", "format": ["camelCase"] },
             { "selector": "method", "format": ["camelCase"] }
-        ]
-    }
+        ],
+        "import/no-unresolved": "error",
+        "import/no-named-as-default-member": "off",
+        "import/order": [
+            "error",
+            {
+                groups: [
+                    "builtin", // Built-in imports (come from NodeJS native) go first
+                    "external", // <- External imports
+                    "internal", // <- Absolute imports
+                    ["sibling", "parent"], // <- Relative imports, the sibling and parent types they can be mingled together
+                    "index", // <- index imports
+                    "unknown", // <- unknown
+                ],
+                "newlines-between": "always",
+                alphabetize: { order: "asc", caseInsensitive: true, },
+            },
+        ],
+    },
 };
