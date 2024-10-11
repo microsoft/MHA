@@ -1,8 +1,8 @@
-﻿import { Received } from "./table/Received";
-import "./jestMatchers/datesEqual";
+﻿import { Received } from "./Received";
+import "../jestMatchers/datesEqual";
 import { expect } from "@jest/globals";
 
-describe("DateTime Tests", () => {
+describe("Received Time Tests", () => {
     const received = new Received();
     test("h1", () => {
         const h1 = "Received: test; Sat, 21 Apr 2018 03:01:01 +0000";

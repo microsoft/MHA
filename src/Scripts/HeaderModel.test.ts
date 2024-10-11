@@ -1,4 +1,4 @@
-﻿import { HeaderModel } from "../HeaderModel";
+﻿import { HeaderModel } from "./HeaderModel";
 
 // Polyfill missing TextEncoder - https://stackoverflow.com/questions/68468203/why-am-i-getting-textencoder-is-not-defined-in-jest
 // TODO: Move this to a global setup file

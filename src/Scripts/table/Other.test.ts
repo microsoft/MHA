@@ -1,4 +1,4 @@
-import { Other } from "../table/Other";
+import { Other } from "./Other";
 import { Header } from "../row/Header";
 
 describe("Other", () => {

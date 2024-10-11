@@ -1,4 +1,4 @@
-﻿import { Received } from "../table/Received";
+﻿import { Received } from "./Received";
 import "../jestMatchers/receivedEqual";
 import { expect } from "@jest/globals";
 
