@@ -3,7 +3,7 @@ import { DateWithNum } from "../DateWithNum";
 import { MHADates } from "../MHADates";
 import { mhaStrings } from "../mhaStrings";
 import { Header } from "../row/Header";
-import { Match } from "../row/match";
+import { Match } from "../row/Match";
 import { ReceivedRow } from "../row/ReceivedRow";
 
 export class Received extends ITable {

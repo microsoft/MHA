@@ -1,4 +1,4 @@
-import { Match } from "./match";
+import { Match } from "./Match";
 
 describe("Match", () => {
     it("should create an instance with the given fieldName and iToken", () => {
