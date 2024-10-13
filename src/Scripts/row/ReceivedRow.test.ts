@@ -18,28 +18,14 @@ describe("ReceivedRow", () => {
     });
 
     test("should set field value correctly", () => {
-        const result = receivedRow.setField("hop", "Test Hop");
-        expect(result).toBe(false);
+        receivedRow.setField("hop", "Test Hop");
         expect(receivedRow.hop.value).toBe("Test Hop");
     });
 
     test("should append to existing field value", () => {
         receivedRow.setField("hop", "First Value");
-        const result = receivedRow.setField("hop", "Second Value");
-        expect(result).toBe(false);
+        receivedRow.setField("hop", "Second Value");
         expect(receivedRow.hop.value).toBe("First Value; Second Value");
-    });
-
-    test("should return false for invalid field name", () => {
-        const result = receivedRow.setField("invalidField", "Test Value");
-        expect(result).toBe(false);
-    });
-
-    test("should return false for empty field name or value", () => {
-        let result = receivedRow.setField("", "Test Value");
-        expect(result).toBe(false);
-        result = receivedRow.setField("hop", "");
-        expect(result).toBe(false);
     });
 
     test("toString should return correct string representation", () => {

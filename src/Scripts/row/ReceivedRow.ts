@@ -17,7 +17,7 @@ export class ReceivedRow {
         this.delaySort = new ReceivedField("", -1);
         this.dateNum = new ReceivedField("");
     }
-    [index: string]: ReceivedField | ((fieldName: string, fieldValue: string) => boolean) | (() => string);
+    [index: string]: ReceivedField | ((fieldName: string, fieldValue: string) => void) | (() => string);
     sourceHeader: ReceivedField;
     hop: ReceivedField;
     from: ReceivedField;
@@ -32,18 +32,16 @@ export class ReceivedRow {
     delaySort: ReceivedField;
     dateNum: ReceivedField;
 
-    setField(fieldName: string, fieldValue: string): boolean {
+    setField(fieldName: string, fieldValue: string) {
         if (!fieldName || !fieldValue) {
-            return false;
+            return;
         }
 
         const field = this[fieldName.toLowerCase()] as unknown as ReceivedField;
-        if (!field) return false;
+        if (!field) return;
 
         if (field.value) { field.value += "; " + fieldValue; }
         else { field.value = fieldValue; }
-
-        return false;
     }
 
     toString(): string {
