@@ -60,7 +60,7 @@ export class AntiSpamReport {
             for (let iLine = 0; iLine < lines.length; iLine++) {
                 const line = lines[iLine]?.match(/(.*?):(.*?);/m);
                 if (line && line[1]) {
-                    if (!this.setRowValue(this.rows, line[1], line[2] ?? "")) {
+                    if (line[2] === undefined || !this.setRowValue(this.rows, line[1], line[2])) {
                         this.unparsedInternal += line[1] + ":" + line[2] + ";";
                     }
                 }
