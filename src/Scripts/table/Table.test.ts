@@ -9,6 +9,8 @@ describe("Table", () => {
     let viewModel: HeaderModel;
 
     beforeEach(() => {
+        $("body").append("<table id=\"receivedHeaders\"></table>");
+        $("body").append("<table id=\"otherHeaders\"></table>");
         table = new Table();
         viewModel = new HeaderModel(
             "Received: from example.com (::1) by" +
@@ -135,9 +137,9 @@ describe("Table", () => {
         expect(table["showExtra"]).toBe(false);
     });
 
-    // it("should reset arrows", () => {
-    //     table.resetArrows();
-    //     expect($("#receivedHeaders th button").attr("aria-sort")).toBe("none");
-    //     expect($("#otherHeaders th button").attr("aria-sort")).toBe("none");
-    // });
+    it("should reset arrows", () => {
+        table.resetArrows();
+        expect($("#receivedHeaders th button").attr("aria-sort")).toBe("descending");
+        expect($("#otherHeaders th button").attr("aria-sort")).toBe("descending");
+    });
 });
