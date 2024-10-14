@@ -2,7 +2,7 @@ import $ from "jquery";
 
 import { HeaderModel } from "../HeaderModel";
 import { Table } from "./Table";
-// import { Row } from "../row/Row";
+import { Row } from "../row/Row";
 
 describe("Table", () => {
     let table: Table;
@@ -23,10 +23,10 @@ describe("Table", () => {
             " CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:something.example.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(4022899009)(41050700001);DIR:INT;" +
             "Content-Language: en-US"
         );
+        table.initializeTableUI(viewModel);
     });
 
     it("should initialize table UI", () => {
-        table.initializeTableUI(viewModel);
         expect(table["viewModel"]).toEqual(viewModel);
     });
 
@@ -86,21 +86,23 @@ describe("Table", () => {
         $(`#${tableId}`).remove();
     });
 
-    // it("should set row value", () => {
-    //     const row: Row = new Row("testHeader", "testValue", "testId");
-    //     $("body").append("<div id=\"testHeaderSUMVal\"></div>");
-    //     table["setRowValue"](row, "SUM");
-    //     expect($("#testHeaderSUMVal").text()).toBe("testValue");
-    //     $("#testHeaderSUMVal").remove();
-    // });
+    it("should set row value", () => {
+        const row: Row = new Row("testHeader", "testValue", "testId");
+        row.value = "testValue";
+        $("body").append("<div id=\"testHeaderSUMVal\"></div>");
+        table["setRowValue"](row, "SUM");
+        expect($("#testHeaderSUMVal").text()).toBe("testValue");
+        $("#testHeaderSUMVal").remove();
+    });
 
-    // it("should append cell", () => {
-    //     const row = document.createElement("tr");
-    //     table["appendCell"](row, "text", "<b>html</b>", "cellClass");
-    //     expect($(row).find("td").eq(0).text()).toBe("text");
-    //     expect($(row).find("td").eq(1).html()).toBe("<b>html</b>");
-    //     expect($(row).find("td").eq(1).hasClass("cellClass")).toBe(true);
-    // });
+    it("should append cell", () => {
+        const row = document.createElement("tr");
+        table["appendCell"](row, "", "<b>html</b>test", "cellClass");
+        const td = $(row).find("td");
+        expect(td[0]?.textContent).toBe("htmltest");
+        expect(td[0]?.innerHTML).toBe("<b>html</b>test");
+        expect(td[0]?.className).toBe("cellClass");
+    });
 
     it("should empty table UI", () => {
         const tableId = "testTable";
