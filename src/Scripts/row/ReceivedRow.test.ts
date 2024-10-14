@@ -35,4 +35,19 @@ describe("ReceivedRow", () => {
         expect(result).toContain(`${mhaStrings.mhaReceivedHop}: Test Hop`);
         expect(result).toContain(`${mhaStrings.mhaReceivedFrom}: Test From`);
     });
+
+    test("should not set field value if fieldName is empty", () => {
+        receivedRow.setField("", "Test Value");
+        expect(receivedRow.sourceHeader.value).toBe("Test Header");
+    });
+
+    test("should not set field value if fieldValue is empty", () => {
+        receivedRow.setField("hop", "");
+        expect(receivedRow.hop.value).toBe("");
+    });
+
+    test("should not set field value if field does not exist", () => {
+        receivedRow.setField("nonExistentField", "Test Value");
+        expect(receivedRow["nonExistentField"]).toBeUndefined();
+    });
 });
