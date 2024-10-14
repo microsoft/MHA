@@ -2,6 +2,7 @@
 import { expect } from "@jest/globals";
 
 import { Received } from "./Received";
+import { Header } from "../row/Header";
 
 describe("receivedEqual Sanity Tests", () => {
     test("receivedEqual compares equal arrays", () => {
@@ -380,5 +381,90 @@ describe("Received Tests parseHeader", () => {
                 "percent": 0,
                 "sourceHeader": broke4
             });
+    });
+
+    describe("Received Tests add", () => {
+        let received: Received;
+
+        beforeEach(() => {
+            received = new Received();
+        });
+
+        test("add valid Received header", () => {
+            const header: Header = { header: "Received", value: "from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000" };
+            const result = received.add(header);
+            expect(result).toBe(true);
+            expect(received.rows.length).toBe(1);
+            expect(received.rows[0]).toMatchObject({
+                "by": { "label": "By", "value": "example.org" },
+                "dateNum": { "label": "", "value": 1522071336000 },
+                "from": { "label": "From", "value": "example.com" },
+                "sourceHeader": { "label": "", "value": header.value}
+            });
+        });
+
+        test("add invalid header", () => {
+            const header: Header = { header: "Subject", value: "This is a test" };
+            const result = received.add(header);
+            expect(result).toBe(false);
+            expect(received.rows.length).toBe(0);
+        });
+
+        test("add empty header value", () => {
+            const header: Header = { header: "Received", value: "" };
+            const result = received.add(header);
+            expect(result).toBe(true);
+            expect(received.rows.length).toBe(1);
+            expect(received.rows[0]).toMatchObject({
+                "sourceHeader": {"label": "", "value": "" }
+            });
+        });
+    });
+
+    describe("Received Tests toString", () => {
+        let received: Received;
+
+        beforeEach(() => {
+            received = new Received();
+        });
+
+        test("toString with multiple rows", () => {
+            const header1 = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
+            const header2 = "Received: from another.com by another.org; Tue, 27 Mar 2018 14:35:36 +0000";
+            received.addInternal(header1);
+            received.addInternal(header2);
+
+            const result = received.toString();
+            expect(result).toBe(
+                "Received\n" +
+                "From: example.com\n" +
+                "By: example.org\n" +
+                "Date: 3/26/2018 9:35:36 AM\n" +
+                "Percent: 0\n\n" +
+                "From: another.com\n" +
+                "By: another.org\n" +
+                "Date: 3/27/2018 10:35:36 AM\n" +
+                "Percent: 0"
+            );
+        });
+
+        test("toString with no rows", () => {
+            const result = received.toString();
+            expect(result).toBe("");
+        });
+
+        test("toString with one row", () => {
+            const header = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
+            received.addInternal(header);
+
+            const result = received.toString();
+            expect(result).toBe(
+                "Received\n" +
+                "From: example.com\n" +
+                "By: example.org\n" +
+                "Date: 3/26/2018 9:35:36 AM\n" +
+                "Percent: 0"
+            );
+        });
     });
 });
