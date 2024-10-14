@@ -382,89 +382,199 @@ describe("Received Tests parseHeader", () => {
                 "sourceHeader": broke4
             });
     });
+});
 
-    describe("Received Tests add", () => {
-        let received: Received;
+describe("Received Tests add", () => {
+    let received: Received;
 
-        beforeEach(() => {
-            received = new Received();
-        });
+    beforeEach(() => {
+        received = new Received();
+    });
 
-        test("add valid Received header", () => {
-            const header: Header = { header: "Received", value: "from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000" };
-            const result = received.add(header);
-            expect(result).toBe(true);
-            expect(received.rows.length).toBe(1);
-            expect(received.rows[0]).toMatchObject({
-                "by": { "label": "By", "value": "example.org" },
-                "dateNum": { "label": "", "value": 1522071336000 },
-                "from": { "label": "From", "value": "example.com" },
-                "sourceHeader": { "label": "", "value": header.value}
-            });
-        });
-
-        test("add invalid header", () => {
-            const header: Header = { header: "Subject", value: "This is a test" };
-            const result = received.add(header);
-            expect(result).toBe(false);
-            expect(received.rows.length).toBe(0);
-        });
-
-        test("add empty header value", () => {
-            const header: Header = { header: "Received", value: "" };
-            const result = received.add(header);
-            expect(result).toBe(true);
-            expect(received.rows.length).toBe(1);
-            expect(received.rows[0]).toMatchObject({
-                "sourceHeader": {"label": "", "value": "" }
-            });
+    test("add valid Received header", () => {
+        const header: Header = { header: "Received", value: "from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000" };
+        const result = received.add(header);
+        expect(result).toBe(true);
+        expect(received.rows.length).toBe(1);
+        expect(received.rows[0]).toMatchObject({
+            "by": { "label": "By", "value": "example.org" },
+            "dateNum": { "label": "", "value": 1522071336000 },
+            "from": { "label": "From", "value": "example.com" },
+            "sourceHeader": { "label": "", "value": header.value}
         });
     });
 
-    describe("Received Tests toString", () => {
-        let received: Received;
+    test("add invalid header", () => {
+        const header: Header = { header: "Subject", value: "This is a test" };
+        const result = received.add(header);
+        expect(result).toBe(false);
+        expect(received.rows.length).toBe(0);
+    });
 
-        beforeEach(() => {
-            received = new Received();
+    test("add empty header value", () => {
+        const header: Header = { header: "Received", value: "" };
+        const result = received.add(header);
+        expect(result).toBe(true);
+        expect(received.rows.length).toBe(1);
+        expect(received.rows[0]).toMatchObject({
+            "sourceHeader": {"label": "", "value": "" }
         });
+    });
+});
 
-        test("toString with multiple rows", () => {
-            const header1 = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
-            const header2 = "Received: from another.com by another.org; Tue, 27 Mar 2018 14:35:36 +0000";
-            received.addInternal(header1);
-            received.addInternal(header2);
+describe("Received Tests toString", () => {
+    let received: Received;
 
-            const result = received.toString();
-            expect(result).toBe(
-                "Received\n" +
-                "From: example.com\n" +
-                "By: example.org\n" +
-                "Date: 3/26/2018 9:35:36 AM\n" +
-                "Percent: 0\n\n" +
-                "From: another.com\n" +
-                "By: another.org\n" +
-                "Date: 3/27/2018 10:35:36 AM\n" +
-                "Percent: 0"
-            );
-        });
+    beforeEach(() => {
+        received = new Received();
+    });
 
-        test("toString with no rows", () => {
-            const result = received.toString();
-            expect(result).toBe("");
-        });
+    test("toString with multiple rows", () => {
+        const header1 = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
+        const header2 = "Received: from another.com by another.org; Tue, 27 Mar 2018 14:35:36 +0000";
+        received.addInternal(header1);
+        received.addInternal(header2);
 
-        test("toString with one row", () => {
-            const header = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
-            received.addInternal(header);
+        const result = received.toString();
+        expect(result).toBe(
+            "Received\n" +
+            "From: example.com\n" +
+            "By: example.org\n" +
+            "Date: 3/26/2018 9:35:36 AM\n" +
+            "Percent: 0\n\n" +
+            "From: another.com\n" +
+            "By: another.org\n" +
+            "Date: 3/27/2018 10:35:36 AM\n" +
+            "Percent: 0"
+        );
+    });
 
-            const result = received.toString();
-            expect(result).toBe(
-                "Received\n" +
-                "From: example.com\n" +
-                "By: example.org\n" +
-                "Date: 3/26/2018 9:35:36 AM\n" +
-                "Percent: 0"
-            );
-        });
+    test("toString with no rows", () => {
+        const result = received.toString();
+        expect(result).toBe("");
+    });
+
+    test("toString with one row", () => {
+        const header = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
+        received.addInternal(header);
+
+        const result = received.toString();
+        expect(result).toBe(
+            "Received\n" +
+            "From: example.com\n" +
+            "By: example.org\n" +
+            "Date: 3/26/2018 9:35:36 AM\n" +
+            "Percent: 0"
+        );
+    });
+});
+
+describe("Received Tests doSort", () => {
+    let received: Received;
+
+    beforeEach(() => {
+        received = new Received();
+    });
+
+    test("doSort sorts by specified column in ascending order", () => {
+        const header1 = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
+        const header2 = "Received: from another.com by another.org; Tue, 27 Mar 2018 14:35:36 +0000";
+        received.addInternal(header1);
+        received.addInternal(header2);
+
+        received.doSort("dateNum");
+
+        expect(received.rows.length).toBe(2);
+        expect(received.rows[0]?.dateNum.value).toBe(1522071336000);
+        expect(received.rows[1]?.dateNum.value).toBe(1522161336000);
+    });
+
+    test("doSort sorts by specified column in descending order", () => {
+        const header1 = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
+        const header2 = "Received: from another.com by another.org; Tue, 27 Mar 2018 14:35:36 +0000";
+        received.addInternal(header1);
+        received.addInternal(header2);
+
+        received.doSort("dateNum");
+        received.doSort("dateNum"); // Sort again to change order to descending
+
+        expect(received.rows.length).toBe(2);
+        expect(received.rows[0]?.dateNum.value).toBe(1522161336000);
+        expect(received.rows[1]?.dateNum.value).toBe(1522071336000);
+    });
+
+    test("doSort sorts by multiple columns correctly", () => {
+        const header1 = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
+        const header2 = "Received: from another.com by another.org; Tue, 27 Mar 2018 14:35:36 +0000";
+        received.addInternal(header1);
+        received.addInternal(header2);
+
+        received.doSort("dateNum");
+        expect(received.sortColumn).toBe("dateNum");
+        expect(received.sortOrder).toBe(1);
+        received.doSort("by");
+        expect(received.sortColumn).toBe("by");
+        expect(received.sortOrder).toBe(1);
+    });
+
+    test("doSort sorts by delay  correctly", () => {
+        const header1 = "Received: from example.com by example.org; Wed, 28 Mar 2018 16:35:36 +0000";
+        const header2 = "Received: from another.com by another.org; Tue, 27 Mar 2018 14:35:36 +0000";
+        const header3 = "Received: from third.com by third.org; Mon, 26 Mar 2018 13:35:36 +0000";
+        received.addInternal(header1);
+        received.addInternal(header2);
+        received.addInternal(header3);
+        received.computeDeltas();
+
+        received.doSort("delay");
+        expect(received.sortColumn).toBe("delay");
+        expect(received.sortOrder).toBe(1);
+        expect(received.rows[0]?.delay.value).toBe("");
+        expect(received.rows[0]?.by.value).toBe("third.org");
+        expect(received.rows[1]?.delay.value).toBe("1500 minutes");
+        expect(received.rows[1]?.by.value).toBe("another.org");
+        expect(received.rows[2]?.delay.value).toBe("1560 minutes");
+        expect(received.rows[2]?.by.value).toBe("example.org");
+    });
+
+    test("doSort handles missing column gracefully", () => {
+        const header1 = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
+        const header2 = "Received: from another.com by another.org; Tue, 27 Mar 2018 14:35:36 +0000";
+        received.addInternal(header1);
+        received.addInternal(header2);
+
+        received.doSort("nonExistentColumn");
+
+        // Expect the order to remain unchanged
+        expect(received.rows.length).toBe(2);
+        expect(received.rows[0]?.sourceHeader.value).toBe(header1);
+        expect(received.rows[1]?.sourceHeader.value).toBe(header2);
+    });
+
+    test("doSort handles missing sort column gracefully", () => {
+        const header1 = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
+        const header2 = "Received: from another.com; Tue, 27 Mar 2018 14:35:36 +0000";
+        const header3 = "Received: from third.com by third.org; Wed, 28 Mar 2018 14:35:36 +0000";
+        const header4 = "Received: from fourth.com; Thur, 29 Mar 2018 14:35:36 +0000";
+        received.addInternal(header1);
+        received.addInternal(header2);
+        received.addInternal(header3);
+        received.addInternal(header4);
+
+        received.doSort("by");
+
+        // Missing sort values sort after everything else in ascending
+        expect(received.rows.length).toBe(4);
+        expect(received.rows[0]?.sourceHeader.value).toBe(header1);
+        expect(received.rows[1]?.sourceHeader.value).toBe(header3);
+        expect(received.rows[2]?.sourceHeader.value).toBe(header2);
+        expect(received.rows[3]?.sourceHeader.value).toBe(header4);
+    });
+
+    test("doSort handles empty rows array", () => {
+        received.doSort("dateNum");
+
+        // Expect no errors and rows array to remain empty
+        expect(received.rows.length).toBe(0);
     });
 });

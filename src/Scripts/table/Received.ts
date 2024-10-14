@@ -125,9 +125,9 @@ export class Received extends ITable {
         }
 
         this.rows.sort((a: ReceivedRow, b: ReceivedRow) => {
-            const acol = a[col];
+            const acol = a[col]?.toString();
             if (!acol) return 1;
-            const bcol = b[col];
+            const bcol = b[col]?.toString();
             if (!bcol) return -1;
             return this.sortOrder * (acol < bcol ? -1 : 1);
         });
