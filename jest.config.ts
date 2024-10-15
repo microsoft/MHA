@@ -14,10 +14,10 @@ const config: Config = {
     coverageReporters: ["json", "lcov", "text", "clover"],
     coverageThreshold: {
         global: {
-            branches: 25,
-            functions: 20,
-            lines: 25,
-            statements: 25,
+            branches: 35,
+            functions: 45,
+            lines: 45,
+            statements: 40,
         },
     },
     reporters: [
