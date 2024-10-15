@@ -9,8 +9,22 @@ describe("Table", () => {
     let viewModel: HeaderModel;
 
     beforeEach(() => {
-        $("body").append("<table id=\"receivedHeaders\"></table>");
-        $("body").append("<table id=\"otherHeaders\"></table>");
+        // Set up the page as it's set in mhh.html and classicDesktopFrame.html
+        // TODO: Actually do this setup for thos pages as part of the table init
+        // initializeTableUI should just add all the components to the page
+        $("body").append(`
+            <hr id="lineBreak" />
+            <div id="response" class="hiddenElement">
+                <div class="responsePane">
+                    <div id="status"></div>
+                    <table id="summary"></table>
+                    <table id="receivedHeaders"></table>
+                    <table id="forefrontAntiSpamReport"></table>
+                    <table id="antiSpamReport"></table>
+                    <table id="otherHeaders"></table>
+                </div>
+            </div>
+          `);
         table = new Table();
         viewModel = new HeaderModel(
             "Received: from example.com (::1) by" +
@@ -37,12 +51,13 @@ describe("Table", () => {
         expect(table["viewModel"]).toEqual(viewModel);
     });
 
-    // it("should recalculate visibility", () => {
-    //     table.recalculateVisibility();
-    //     table["visibilityBindings"].forEach(binding => {
-    //         expect($(binding.name).hasClass("hiddenElement")).toBe(!binding.visible(table));
-    //     });
-    // });
+    it("should recalculate visibility", () => {
+        table.recalculateVisibility();
+        table["visibilityBindings"].forEach(binding => {
+            const element = $(binding.name);
+            expect(element.hasClass("hiddenElement")).toBe(!binding.visible(table));
+        });
+    });
 
     it("should toggle collapse", () => {
         const id = "testElement";
