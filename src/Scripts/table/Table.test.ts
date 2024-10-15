@@ -138,8 +138,17 @@ describe("Table", () => {
     });
 
     it("should reset arrows", () => {
+        const by = $("#receivedHeaders th #by");
+        const hop = $("#receivedHeaders th #hop");
+        const number = $("#otherHeaders th #number");
+        expect(hop.attr("aria-sort")).toBe("descending");
+        expect(by.attr("aria-sort")).toBe("none");
+        expect(number.attr("aria-sort")).toBe("descending");
+        by.trigger("click");
+        expect(hop.attr("aria-sort")).toBe("none");
+        expect(by.attr("aria-sort")).toBe("descending");
         table.resetArrows();
-        expect($("#receivedHeaders th button").attr("aria-sort")).toBe("descending");
-        expect($("#otherHeaders th button").attr("aria-sort")).toBe("descending");
+        expect(hop.attr("aria-sort")).toBe("descending");
+        expect(by.attr("aria-sort")).toBe("none");
     });
 });
