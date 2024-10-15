@@ -5,7 +5,7 @@ import { mhaStrings } from "../mhaStrings";
 import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
-import { Column } from "../table/column";
+import { Column } from "../table/Column";
 import { ITable } from "../table/itable";
 
 type Binding = {

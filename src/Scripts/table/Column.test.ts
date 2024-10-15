@@ -1,4 +1,4 @@
-import { Column } from "../table/column";
+import { Column } from "./Column";
 
 describe("column", () => {
     it("should create an instance with the given id, label, and class", () => {
