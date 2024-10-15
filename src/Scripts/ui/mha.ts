@@ -1,15 +1,15 @@
 import "office-ui-fabric-js/dist/css/fabric.min.css";
 import "office-ui-fabric-js/dist/css/fabric.components.min.css";
-import "../Content/fabric.css";
-import "../Content/Office.css";
-import "../Content/classicDesktopFrame.css";
+import "../../Content/fabric.css";
+import "../../Content/Office.css";
+import "../../Content/classicDesktopFrame.css";
 import $ from "jquery";
 
-import { diagnostics } from "./Diag";
-import { HeaderModel } from "./HeaderModel";
-import { mhaStrings } from "./mhaStrings";
-import { Strings } from "./Strings";
-import { Table } from "./table/Table";
+import { diagnostics } from "../Diag";
+import { HeaderModel } from "../HeaderModel";
+import { mhaStrings } from "../mhaStrings";
+import { Strings } from "../Strings";
+import { Table } from "./Table";
 
 let viewModel: HeaderModel;
 let table: Table;

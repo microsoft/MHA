@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 const path = require("path");
-const devCerts = require("office-addin-dev-certs");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+
 const FileManagerPlugin = require("filemanager-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const devCerts = require("office-addin-dev-certs");
 const webpack = require("webpack");
 
 async function getHttpsOptions() {
@@ -40,12 +41,12 @@ const buildTime = new Date().toUTCString();
 console.log("buildTime:", buildTime);
 
 const pages = [
-    { name: "mha", script: "mha" },
-    { name: "uitoggle", script: "uiToggle" },
-    { name: "newDesktopFrame", script: "newDesktopFrame" },
-    { name: "classicDesktopFrame", script: "classicDesktopFrame" },
-    { name: "newMobilePaneIosFrame", script: "newMobilePaneIosFrame" },
-    { name: "privacy", script: "privacy" },
+    { name: "mha", script: "ui/mha" },
+    { name: "uitoggle", script: "ui/uiToggle" },
+    { name: "newDesktopFrame", script: "ui/newDesktopFrame" },
+    { name: "classicDesktopFrame", script: "ui/classicDesktopFrame" },
+    { name: "newMobilePaneIosFrame", script: "ui/newMobilePaneIosFrame" },
+    { name: "privacy", script: "ui/privacy" },
     // Redirection/static pages
     { name: "Default" }, // uitoggle.html?default=classic
     { name: "DefaultPhone" }, // uitoggle.html?default=classic

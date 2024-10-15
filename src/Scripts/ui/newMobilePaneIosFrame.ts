@@ -1,19 +1,19 @@
 import "framework7/dist/css/framework7.ios.min.css";
 import "framework7/dist/css/framework7.ios.colors.min.css";
 import "framework7-icons/css/framework7-icons.css";
-import "../Content/newMobilePaneIosFrame.css";
+import "../../Content/newMobilePaneIosFrame.css";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import $ from "jquery";
 
-import { framework7 } from "./framework7";
-import { HeaderModel } from "./HeaderModel";
-import { mhaStrings } from "./mhaStrings";
-import { Poster } from "./Poster";
-import { OtherRow } from "./row/OtherRow";
-import { ReceivedRow } from "./row/ReceivedRow";
-import { Row } from "./row/Row";
-import { SummaryRow } from "./row/SummaryRow";
+import { framework7 } from "../framework7";
+import { HeaderModel } from "../HeaderModel";
+import { mhaStrings } from "../mhaStrings";
+import { Poster } from "../Poster";
+import { OtherRow } from "../row/OtherRow";
+import { ReceivedRow } from "../row/ReceivedRow";
+import { Row } from "../row/Row";
+import { SummaryRow } from "../row/SummaryRow";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 

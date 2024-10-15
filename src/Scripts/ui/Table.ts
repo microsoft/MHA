@@ -2,11 +2,11 @@ import $ from "jquery";
 
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
-import { Column } from "./column";
-import { ITable } from "./itable";
 import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
+import { Column } from "../table/column";
+import { ITable } from "../table/itable";
 
 type Binding = {
     name: string;

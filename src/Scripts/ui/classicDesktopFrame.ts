@@ -1,11 +1,11 @@
-﻿import "../Content/Office.css";
-import "../Content/classicDesktopFrame.css";
+﻿import "../../Content/Office.css";
+import "../../Content/classicDesktopFrame.css";
 import $ from "jquery";
 
-import { HeaderModel } from "./HeaderModel";
-import { mhaStrings } from "./mhaStrings";
-import { Poster } from "./Poster";
-import { Table } from "./table/Table";
+import { HeaderModel } from "../HeaderModel";
+import { mhaStrings } from "../mhaStrings";
+import { Poster } from "../Poster";
+import { Table } from "./Table";
 
 // This is the "classic" UI rendered in classicDesktopFrame.html
 
