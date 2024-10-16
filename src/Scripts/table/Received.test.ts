@@ -4,6 +4,12 @@ import { expect } from "@jest/globals";
 import { Received } from "./Received";
 import { Header } from "../row/Header";
 
+describe("Timezones", () => {
+    it("should always be UTC (for tests)", () => {
+        expect(new Date().getTimezoneOffset()).toBe(0);
+    });
+});
+
 describe("receivedEqual Sanity Tests", () => {
     test("receivedEqual compares equal arrays", () => {
         expect({ "field1": "val1", "field2": "val2" }).receivedEqual({ "field1": "val1", "field2": "val2" });
@@ -430,22 +436,26 @@ describe("Received Tests toString", () => {
     });
 
     test("toString with multiple rows", () => {
-        const header1 = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
-        const header2 = "Received: from another.com by another.org; Tue, 27 Mar 2018 14:35:36 +0000";
+        const header1 = "Received: from another.com by another.org; Tue, 27 Mar 2018 14:35:36 +0000";
+        const header2 = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
         received.addInternal(header1);
         received.addInternal(header2);
+        received.computeDeltas();
 
         const result = received.toString();
         expect(result).toBe(
             "Received\n" +
+            "Hop: 1\n" +
             "From: example.com\n" +
             "By: example.org\n" +
-            "Date: 3/26/2018 9:35:36 AM\n" +
+            "Date: 3/26/2018 1:35:36 PM\n" +
             "Percent: 0\n\n" +
+            "Hop: 2\n" +
             "From: another.com\n" +
             "By: another.org\n" +
-            "Date: 3/27/2018 10:35:36 AM\n" +
-            "Percent: 0"
+            "Date: 3/27/2018 2:35:36 PM\n" +
+            "Delay: 1500 minutes\n" +
+            "Percent: 100"
         );
     });
 
@@ -457,13 +467,15 @@ describe("Received Tests toString", () => {
     test("toString with one row", () => {
         const header = "Received: from example.com by example.org; Mon, 26 Mar 2018 13:35:36 +0000";
         received.addInternal(header);
+        received.computeDeltas();
 
         const result = received.toString();
         expect(result).toBe(
             "Received\n" +
+            "Hop: 1\n" +
             "From: example.com\n" +
             "By: example.org\n" +
-            "Date: 3/26/2018 9:35:36 AM\n" +
+            "Date: 3/26/2018 1:35:36 PM\n" +
             "Percent: 0"
         );
     });

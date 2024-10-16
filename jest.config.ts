@@ -2,6 +2,7 @@ import type {Config} from "jest";
 // https://github.com/jest-community/awesome-jest
 const config: Config = {
     testEnvironment: "jsdom",
+    globalSetup: "./global-setup.js",
     transform: {
         "^.+.tsx?$": ["ts-jest",{ diagnostics: { ignoreCodes: ["TS151001"] } }],
     },
