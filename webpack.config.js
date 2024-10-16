@@ -124,9 +124,6 @@ function generateEntry() {
     }, {});
 }
 
-const entry = generateEntry();
-console.log("entry:", entry);
-
 /**
  * Generates an array of HtmlWebpackPlugin instances for each page.
  *
