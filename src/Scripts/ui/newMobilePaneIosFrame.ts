@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import $ from "jquery";
 
-import { framework7 } from "../framework7";
+import { Framework7 } from "../framework7";
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Poster } from "../Poster";
@@ -18,7 +18,7 @@ import { SummaryRow } from "../row/SummaryRow";
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
 // Framework7 app object
-let myApp: typeof framework7 = null;
+let myApp: typeof Framework7 = null;
 
 dayjs.extend(utc);
 
@@ -27,7 +27,7 @@ function postError(error: unknown, message: string): void {
 }
 
 function initializeFramework7(): void {
-    myApp = new framework7();
+    myApp = new Framework7();
 
     myApp.addView("#summary-view");
     myApp.addView("#received-view");
