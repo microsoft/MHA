@@ -85,12 +85,12 @@ const buildTime = new Date().toUTCString();
 console.log("buildTime:", buildTime);
 
 const pages = [
-    { name: "mha", script: "ui/mha" },
-    { name: "uitoggle", script: "ui/uiToggle" },
-    { name: "newDesktopFrame", script: "ui/newDesktopFrame" },
-    { name: "classicDesktopFrame", script: "ui/classicDesktopFrame" },
-    { name: "newMobilePaneIosFrame", script: "ui/newMobilePaneIosFrame" },
-    { name: "privacy", script: "ui/privacy" },
+    { name: "mha", script: "mha" },
+    { name: "uitoggle", script: "uiToggle" },
+    { name: "newDesktopFrame", script: "newDesktopFrame" },
+    { name: "classicDesktopFrame", script: "classicDesktopFrame" },
+    { name: "newMobilePaneIosFrame", script: "newMobilePaneIosFrame" },
+    { name: "privacy", script: "privacy" },
     // Redirection/static pages
     { name: "Default" }, // uitoggle.html?default=classic
     { name: "DefaultPhone" }, // uitoggle.html?default=classic
@@ -108,8 +108,8 @@ const pages = [
  * corresponding TypeScript file.
  * Entry object looks like this:
  * {
- * 'ui/mha': './src/Scripts/ui/mha.ts',
- * 'ui/uiToggle': './src/Scripts/ui/uiToggle.ts',
+ * 'mha': './src/Scripts/ui/mha.ts',
+ * 'uiToggle': './src/Scripts/ui/uiToggle.ts',
  * ...
  * }
  *
@@ -118,11 +118,14 @@ const pages = [
 function generateEntry() {
     return pages.reduce((config, page) => {
         if (page.script) {
-            config[page.script] = `./src/Scripts/${page.script}.ts`;
+            config[page.script] = `./src/Scripts/ui/${page.script}.ts`;
         }
         return config;
     }, {});
 }
+
+const entry = generateEntry();
+console.log("entry:", entry);
 
 /**
  * Generates an array of HtmlWebpackPlugin instances for each page.
