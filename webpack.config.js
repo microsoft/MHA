@@ -1,13 +1,51 @@
+/**
+ * Webpack configuration file for the MHA project.
+ *
+ * This configuration file sets up various plugins and settings for building the project,
+ * including handling TypeScript files, CSS extraction, HTML template generation, and more.
+ *
+ * Plugins used:
+ * - FileManagerPlugin: Manages file operations like copying resources.
+ * - ForkTsCheckerWebpackPlugin: Runs TypeScript type checking in a separate process.
+ * - HtmlWebpackPlugin: Generates HTML files for each page.
+ * - MiniCssExtractPlugin: Extracts CSS into separate files.
+ * - webpack.DefinePlugin: Defines global constants.
+ *
+ * Functions:
+ * - getHttpsOptions: Asynchronously retrieves HTTPS options for the development server.
+ * - getHash: Generates a short hash from a given string.
+ * - generateEntry: Generates an entry object for webpack configuration.
+ * - generateHtmlWebpackPlugins: Generates an array of HtmlWebpackPlugin instances for each page.
+ *
+ * Environment Variables:
+ * - SCM_COMMIT_ID: The commit ID used to generate a version hash.
+ * - APPINSIGHTS_INSTRUMENTATIONKEY: Application Insights instrumentation key.
+ * - npm_package_config_dev_server_port: Port for the development server.
+ *
+ * @param {Object} env - Environment variables passed to the webpack configuration.
+ * @param {Object} options - Options passed to the webpack configuration.
+ * @returns {Promise<Object>} The webpack configuration object.
+ */
+
 /* eslint-disable @typescript-eslint/no-require-imports */
 const path = require("path");
 
-const FileManagerPlugin = require("filemanager-webpack-plugin");
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const FileManagerPlugin = require("filemanager-webpack-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
+const HtmlWebpackPlugin = require("html-webpack-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
+const MiniCssExtractPlugin = require("mini-css-extract-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
 const devCerts = require("office-addin-dev-certs");
 const webpack = require("webpack");
 
+/**
+ * Asynchronously retrieves HTTPS server options.
+ *
+ * This function attempts to get HTTPS server options using the `devCerts` library.
+ * If successful, it returns an object containing the certificate authority (CA),
+ * key, and certificate. If an error occurs, it logs the error and returns an empty object.
+ *
+ * @returns {Promise<{ca: string, key: string, cert: string} | {}>} A promise that resolves to an object with HTTPS options or an empty object if an error occurs.
+ */
 async function getHttpsOptions() {
     try {
         const httpsOptions = await devCerts.getHttpsServerOptions();
@@ -18,7 +56,13 @@ async function getHttpsOptions() {
     }
 }
 
-// Simple hash function to reduce commit ID to something short
+/**
+ * Generates a hash for a given string.
+ * Used to reduce commit ID to something short.
+ *
+ * @param {string} str - The input string to hash.
+ * @returns {string} The hexadecimal representation of the hash.
+ */
 const getHash = (str) => {
     let hash = 42;
     if (str.length) {
@@ -56,6 +100,21 @@ const pages = [
     { name: "Functions" },
 ];
 
+/**
+ * Generates an entry object for webpack configuration.
+ *
+ * This function iterates over a list of pages and constructs an entry object
+ * where each key is the name of a script and the value is the path to the
+ * corresponding TypeScript file.
+ * Entry object looks like this:
+ * {
+ * 'ui/mha': './src/Scripts/ui/mha.ts',
+ * 'ui/uiToggle': './src/Scripts/ui/uiToggle.ts',
+ * ...
+ * }
+ *
+ * @returns {Object} An object representing the entry points for webpack.
+ */
 function generateEntry() {
     return pages.reduce((config, page) => {
         if (page.script) {
@@ -65,6 +124,11 @@ function generateEntry() {
     }, {});
 }
 
+/**
+ * Generates an array of HtmlWebpackPlugin instances for each page.
+ *
+ * @returns {HtmlWebpackPlugin[]} An array of HtmlWebpackPlugin instances.
+ */
 function generateHtmlWebpackPlugins() {
     return pages.map((page) => new HtmlWebpackPlugin({
         inject: true,
@@ -80,9 +144,9 @@ module.exports = async (env, options) => {
         plugins: [
             new MiniCssExtractPlugin({ filename: `${version}/[name].css` }),
             new webpack.DefinePlugin({
-                __VERSION__: JSON.stringify(version),
-                __AIKEY__: JSON.stringify(aikey),
-                __BUILDTIME__: JSON.stringify(buildTime),
+                __VERSION__: JSON.stringify(version), // eslint-disable-line @typescript-eslint/naming-convention
+                __AIKEY__: JSON.stringify(aikey), // eslint-disable-line @typescript-eslint/naming-convention
+                __BUILDTIME__: JSON.stringify(buildTime), // eslint-disable-line @typescript-eslint/naming-convention
             }),
             new FileManagerPlugin({
                 events: {
@@ -130,7 +194,7 @@ module.exports = async (env, options) => {
             clean: true,
         },
         devServer: {
-            headers: { "Access-Control-Allow-Origin": "*" },
+            headers: { "Access-Control-Allow-Origin": "*" }, // eslint-disable-line @typescript-eslint/naming-convention
             static: __dirname,
             server: {
                 type: "https",
