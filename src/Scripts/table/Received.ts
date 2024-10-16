@@ -1,4 +1,4 @@
-﻿import { ITable } from "./itable";
+﻿import { ITable } from "./ITable";
 import { DateWithNum } from "../DateWithNum";
 import { MHADates } from "../MHADates";
 import { mhaStrings } from "../mhaStrings";

@@ -6,7 +6,7 @@ import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { Column } from "../table/Column";
-import { ITable } from "../table/itable";
+import { ITable } from "../table/ITable";
 
 type Binding = {
     name: string;

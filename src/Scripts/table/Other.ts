@@ -1,4 +1,4 @@
-﻿import { ITable } from "./itable";
+﻿import { ITable } from "./ITable";
 import { Header } from "../row/Header";
 import { OtherRow } from "../row/OtherRow";
 
