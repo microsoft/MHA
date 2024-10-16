@@ -1,9 +1,9 @@
-import { mhaStrings } from "./mhaStrings";
+import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
-import { ParentFrame } from "./parentFrame";
 import { GetHeaders } from "./GetHeaders";
 import { GetHeadersRest } from "./GetHeadersRest";
-import { Diagnostics } from "./diag";
+import { mhaStrings } from "./mhaStrings";
+import { ParentFrame } from "./ParentFrame";
 
 /*
  * GetHeadersAPI.js
@@ -38,7 +38,7 @@ export class GetHeadersAPI {
                 if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
                     headersLoadedCallback(asyncResult.value, "API");
                 } else {
-                    Diagnostics.set("getAllInternetHeadersAsyncFailure", JSON.stringify(asyncResult));
+                    diagnostics.set("getAllInternetHeadersAsyncFailure", JSON.stringify(asyncResult));
                     Errors.log(asyncResult.error, "Unable to obtain callback token.\nFallback to Rest.\n" + JSON.stringify(asyncResult, null, 2), true);
                     GetHeadersRest.send(headersLoadedCallback);
                 }

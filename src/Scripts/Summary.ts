@@ -1,60 +1,12 @@
 import { mhaStrings } from "./mhaStrings";
-import { strings } from "./Strings";
-import { Header } from "./Headers";
-
-export class Row {
-    constructor(header: string, label: string, headerName: string) {
-        this.header = header;
-        this.label = label;
-        this.headerName = headerName;
-        this.url = "";
-        this._value = "";
-    }
-
-    [index: string]: any;
-    protected _value: string;
-    header: string;
-    label: string;
-    headerName: string;
-    url: string;
-    onGetUrl?: (headerName: string, value: string) => string;
-
-    public set value(value: string) { this._value = value; }
-    get value(): string { return this._value; }
-    get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this.headerName, this._value) : ""; }
-    get id(): string { return this.header + "_id"; }
-
-    toString(): string { return this.label + ": " + this.value; }
-}
-
-export class SummaryRow extends Row {
-    constructor(header: string, label: string) {
-        super(header, label, "");
-        this.url = strings.mapHeaderToURL(header, label);
-    }
-}
-
-export class CreationRow extends SummaryRow {
-    constructor(header: string, label: string) {
-        super(header, label);
-        this.url = strings.mapHeaderToURL(header, label);
-        this.postFix = "";
-    }
-    postFix: string;
-    override get value(): string { return this._value + this.postFix; }
-    override set value(value: string) { this._value = value; }
-}
-
-export class ArchivedRow extends SummaryRow {
-    constructor(header: string, label: string) {
-        super(header, label);
-        this.url = strings.mapHeaderToURL(header, label);
-    }
-    override get valueUrl(): string { return strings.mapValueToURL(this._value); }
-}
+import { ArchivedRow } from "./row/ArchivedRow";
+import { CreationRow } from "./row/CreationRow";
+import { Header } from "./row/Header";
+import { Row } from "./row/Row";
+import { SummaryRow } from "./row/SummaryRow";
 
 export class Summary {
-    private _totalTime = "";
+    private totalTimeInternal = "";
 
     private creationPostFix(totalTime: string): string {
         if (!totalTime) {
@@ -101,9 +53,9 @@ export class Summary {
     }
 
     public get rows(): SummaryRow[] { return this.summaryRows; }
-    public get totalTime(): string { return this._totalTime; }
+    public get totalTime(): string { return this.totalTimeInternal; }
     public set totalTime(value: string) {
-        this._totalTime = value;
+        this.totalTimeInternal = value;
         this.dateRow.postFix = this.creationPostFix(value);
     }
 

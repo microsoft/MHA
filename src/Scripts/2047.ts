@@ -1,33 +1,29 @@
 ﻿import cptable from "codepage";
 
-interface block {
-    charset: string;
-    type: string;
-    text: string;
-}
+import { Block } from "./Block";
 
 export class Decoder {
     // http://tools.ietf.org/html/rfc2047
     // http://tools.ietf.org/html/rfc2231
 
-    private static getBlock(token: string): block {
+    private static getBlock(token: string): Block {
         const matches = token.match(/=\?(.*?)\?(.)\?(.*?)\?=/m);
         if (matches) {
-            return <block>{ charset: matches[1], type: matches[2]?.toUpperCase(), text: matches[3] };
+            return <Block>{ charset: matches[1], type: matches[2]?.toUpperCase(), text: matches[3] };
         }
 
-        return <block>{ text: token, };
+        return <Block>{ text: token, };
     }
 
-    private static splitToBlocks(buffer: string): block[] {
-        const unparsedblocks: block[] = [];
+    private static splitToBlocks(buffer: string): Block[] {
+        const unparsedblocks: Block[] = [];
         //split string into blocks
         while (buffer.length) {
             try {
                 const matches = buffer.match(/([\S\s]*?)(=\?.*?\?.\?.*?\?=)([\S\s]*)/m);
                 if (matches) {
                     if (matches[1]) {
-                        unparsedblocks.push(<block>{ text: matches[1] });
+                        unparsedblocks.push(<Block>{ text: matches[1] });
                     }
 
                     if (matches[2]) {
@@ -38,14 +34,14 @@ export class Decoder {
                 } else if (buffer) {
                     // Once we're out of matches, we've parsed the whole string.
                     // Append the rest of the buffer to the result.
-                    unparsedblocks.push(<block>{ text: buffer });
+                    unparsedblocks.push(<Block>{ text: buffer });
                     break;
                 }
             }
             catch {
                 // Firefox will throw when passed a large non-matching buffer
                 // Such a buffer isn't a match anyway, so we just push it as raw text
-                unparsedblocks.push(<block>{ text: buffer });
+                unparsedblocks.push(<Block>{ text: buffer });
                 buffer = "";
             }
         }
@@ -86,7 +82,7 @@ export class Decoder {
     }
 
     // Javascript auto converted from C# implementation + improvements.
-    private static _F = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    private static base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     public static decodeBase64(charSet: string, input: string): string {
         if (!input) {
             return input;
@@ -98,10 +94,10 @@ export class Decoder {
             let $v$1, $v$2, $v$3, $v$4, $v$5, $v$6, $v$7;
             let $v$8 = 0;
             while ($v$8 < input.length) {
-                $v$4 = Decoder._F.indexOf(input.charAt($v$8++));
-                $v$5 = Decoder._F.indexOf(input.charAt($v$8++));
-                $v$6 = Decoder._F.indexOf(input.charAt($v$8++));
-                $v$7 = Decoder._F.indexOf(input.charAt($v$8++));
+                $v$4 = Decoder.base64Chars.indexOf(input.charAt($v$8++));
+                $v$5 = Decoder.base64Chars.indexOf(input.charAt($v$8++));
+                $v$6 = Decoder.base64Chars.indexOf(input.charAt($v$8++));
+                $v$7 = Decoder.base64Chars.indexOf(input.charAt($v$8++));
                 $v$1 = $v$4 << 2 | $v$5 >> 4;
                 $v$2 = ($v$5 & 15) << 4 | $v$6 >> 2;
                 $v$3 = ($v$6 & 3) << 6 | $v$7;
@@ -189,9 +185,9 @@ export class Decoder {
 
         const unparsedblocks = Decoder.splitToBlocks(buffer);
 
-        const collapsedBlocks: block[] = [];
-        let previousBlock: block;
-        unparsedblocks.forEach((unparsedblock: block, index: number) => {
+        const collapsedBlocks: Block[] = [];
+        let previousBlock: Block;
+        unparsedblocks.forEach((unparsedblock: Block, index: number) => {
             collapsedBlocks.push(unparsedblock);
             // Combine a block with the previous block if the charset matches
             if (index >= 1 &&
@@ -200,14 +196,14 @@ export class Decoder {
                 unparsedblock.charset === previousBlock.charset) {
                 unparsedblock.text = previousBlock.text + unparsedblock.text;
                 // Clear the previous block so we don't process it later
-                collapsedBlocks[index - 1] = <block>{};
+                collapsedBlocks[index - 1] = <Block>{};
             }
 
             previousBlock = unparsedblock;
         });
 
         const result: string[] = [];
-        collapsedBlocks.forEach(function (block: block): void {
+        collapsedBlocks.forEach(function (block: Block): void {
             if (block.type === "B") {
                 result.push(Decoder.decodeBase64(block.charset, block.text));
             }
