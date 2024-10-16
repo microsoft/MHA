@@ -126,6 +126,13 @@ function generateEntry() {
 
 /**
  * Generates an array of HtmlWebpackPlugin instances for each page.
+ * One looks like this:
+ * new HtmlWebpackPlugin ({
+ *  inject: true,
+ *  template: './src/Pages/mha.html',
+ *  filename: 'mha.html',
+ *  chunks: [ 'mha' ]
+ * })
  *
  * @returns {HtmlWebpackPlugin[]} An array of HtmlWebpackPlugin instances.
  */
