@@ -134,6 +134,8 @@ function generateEntry() {
  *  chunks: [ 'mha' ]
  * })
  *
+ * This is how our actual html files are generated, with includes for the appropriate scripts and CSS.
+ *
  * @returns {HtmlWebpackPlugin[]} An array of HtmlWebpackPlugin instances.
  */
 function generateHtmlWebpackPlugins() {
