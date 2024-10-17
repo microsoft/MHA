@@ -5,4 +5,5 @@ import "framework7";
 // So we do a naked import and then export it from here so the rest of our code can treat
 // it as a regular module.
 // @ts-expect-error Framework doesn't exist, but it does - just do it
-export const framework7 = window.Framework7;
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const Framework7 = window.Framework7;
