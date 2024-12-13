@@ -78,7 +78,7 @@
   },
   "dependencies": {
     "@microsoft/applicationinsights-web": "^3.3.4",
-    "@microsoft/office-js": "^1.1.97",
+    "@microsoft/office-js": "^1.1.98",
     "codepage": "^1.15.0",
     "dayjs": "^1.11.13",
     "framework7": "^1.7.1",
