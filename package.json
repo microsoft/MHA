@@ -45,7 +45,7 @@
     "@stylistic/eslint-plugin-js": "^2.13.0",
     "@types/jest": "^29.5.14",
     "@types/jquery": "^3.5.32",
-    "@types/office-js": "^1.0.455",
+    "@types/office-js": "^1.0.457",
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
     "css-loader": "^7.1.2",
