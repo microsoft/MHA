@@ -98,6 +98,11 @@ const pages = [
     { name: "DesktopPane" }, // uitoggle.html?default=new
     { name: "MobilePane" }, // uitoggle.html?default=new-mobile
     { name: "Functions" },
+    { name: "auth", template: "src/Pages/fallback/auth.html" },
+    { name: "dialog", script: "msal/fallback/fallbackauthdialog", template: "src/Pages/fallback/dialog.html" },
+    { name: "signoutdialoginternetexplorer", script: "msal/fallback/signoutdialoginternetexplorer", template: "src/Pages/fallback/dialog.html" },
+    { name: "signoutdialog", script: "msal/fallback/signoutdialog", template: "src/Pages/fallback/dialog.html"  },
+    { name: "dialoginternetexplorer", script: "msal/fallback/fallbackauthdialoginternetexplorer", template: "src/Pages/fallback/dialog.html"  },
 ];
 
 /**
@@ -141,7 +146,7 @@ function generateEntry() {
 function generateHtmlWebpackPlugins() {
     return pages.map((page) => new HtmlWebpackPlugin({
         inject: true,
-        template: `./src/Pages/${page.name}.html`,
+        template: page.template??`./src/Pages/${page.name}.html`,
         filename: `${page.name}.html`,
         chunks: [page.script],
     }));
