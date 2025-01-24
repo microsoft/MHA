@@ -1,10 +1,8 @@
-import  $ from "jquery";
 import { jwtDecode } from "jwt-decode";
 
 import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
 import { GetHeaders } from "./GetHeaders";
-import { GetHeadersEWS } from "./GetHeadersEWS";
 import { mhaStrings } from "./mhaStrings";
 import { ParentFrame } from "./ParentFrame";
 
@@ -79,20 +77,20 @@ export class GetHeadersRest {
         return "https://outlook.office.com";
     }
 
-    private static getHeaders(accessToken: string, headersLoadedCallback: (_headers: string, apiUsed: string) => void): void {
+    private static async getHeaders(accessToken: string): Promise<string> {
         if (!accessToken) {
             Errors.log(null, "No access token?");
-            return;
+            return "";
         }
 
         if (!Office.context.mailbox.item) {
             Errors.log(null, "No item");
-            return;
+            return "";
         }
 
         if (!Office.context.mailbox.item.itemId) {
             Errors.log(null, "No itemId");
-            return;
+            return "";
         }
 
         // Get the item's REST ID
@@ -104,71 +102,75 @@ export class GetHeadersRest {
             // PR_TRANSPORT_MESSAGE_HEADERS
             "?$select=SingleValueExtendedProperties&$expand=SingleValueExtendedProperties($filter=PropertyId eq 'String 0x007D')";
 
-        $.ajax({
-            url: getMessageUrl,
-            dataType: "json",
-            headers: {
-                "Authorization": "Bearer" + accessToken, //eslint-disable-line @typescript-eslint/naming-convention
-                "Accept": "application/json; odata.metadata=none" //eslint-disable-line @typescript-eslint/naming-convention
-            }
-        }).done(function (item) {
-            try {
-                if (item.SingleValueExtendedProperties !== undefined) {
-                    headersLoadedCallback(item.SingleValueExtendedProperties[0].Value, "REST");
-                } else {
-                    headersLoadedCallback("", "REST");
-                    ParentFrame.showError(null, mhaStrings.mhaHeadersMissing, true);
+        try{
+            const response = await fetch(getMessageUrl, {
+                headers: {
+                    "Authorization": "Bearer " + accessToken, //eslint-disable-line @typescript-eslint/naming-convention
+                    "Accept": "application/json; odata.metadata=none" //eslint-disable-line @typescript-eslint/naming-convention
                 }
-            }
-            catch (e) {
-                ParentFrame.showError(e, "Failed parsing headers");
-            }
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            try {
-                diagnostics.set("jqXHR", JSON.stringify(jqXHR));
-                diagnostics.set("textStatus", JSON.stringify(textStatus));
-                diagnostics.set("resterror", JSON.stringify(errorThrown));
-                if (textStatus === "error" && jqXHR.status === 0) {
-                    GetHeadersEWS.send(headersLoadedCallback);
-                } else if (textStatus === "error" && jqXHR.status === 404) {
+            });
+
+            if (!response.ok) {
+                diagnostics.set("getHeadersFailure", JSON.stringify(response));
+                if (response.status === 0) {
+                    // Fallback to EWS now
+                } else if (response.status === 404) {
                     ParentFrame.showError(null, mhaStrings.mhaMessageMissing, true);
-                } else {
-                    ParentFrame.showError(null, "textStatus: " + textStatus + "\nerrorThrown: " + errorThrown + "\nState: " + jqXHR.state() + "\njqXHR: " + JSON.stringify(jqXHR, null, 2));
                 }
+
+                return "";
             }
-            catch (e) {
-                ParentFrame.showError(e, "Failed handling REST failure case");
+
+            const item = await response.json();
+
+            if (item.SingleValueExtendedProperties !== undefined) {
+                return item.SingleValueExtendedProperties[0].Value;
+            } else {
+                ParentFrame.showError(null, mhaStrings.mhaHeadersMissing, true);
+                return "";
             }
+        }
+        catch (e) {
+            ParentFrame.showError(e, "Failed parsing headers");
+        }
+
+        return "";
+    }
+
+    private static async getCallbackToken(): Promise<string> {
+        return new Promise((resolve) => {
+            Office.context.mailbox.getCallbackTokenAsync((result) => {
+                if (result.status === Office.AsyncResultStatus.Succeeded) {
+                    resolve(result.value);
+                } else {
+                    diagnostics.set("callbackTokenFailure", JSON.stringify(result));
+                    Errors.log(result.error, "Unable to obtain callback token.\nFallback to EWS.\n" + JSON.stringify(result, null, 2), true);
+                }
+            });
         });
     }
 
-    public static send(headersLoadedCallback: (_headers: string, apiUsed: string) => void) {
+    public static async send(): Promise<string> {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (REST)", true);
-            return;
+            return "";
         }
 
         if (!GetHeadersRest.canUseRest()) {
-            GetHeadersEWS.send(headersLoadedCallback);
-            return;
+            return "";
         }
 
         ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
 
-        Office.context.mailbox.getCallbackTokenAsync({ isRest: true }, function (result) {
-            try {
-                if (result.status === Office.AsyncResultStatus.Succeeded) {
-                    const accessToken: string = result.value;
-                    GetHeadersRest.getHeaders(accessToken, headersLoadedCallback);
-                } else {
-                    diagnostics.set("callbackTokenFailure", JSON.stringify(result));
-                    Errors.log(result.error, "Unable to obtain callback token.\nFallback to EWS.\n" + JSON.stringify(result, null, 2), true);
-                    GetHeadersEWS.send(headersLoadedCallback);
-                }
-            }
-            catch (e) {
-                ParentFrame.showError(e, "Failed in getCallbackTokenAsync");
-            }
-        });
+        try {
+            const accessToken= await GetHeadersRest.getCallbackToken();
+            const headers = GetHeadersRest.getHeaders(accessToken);
+            return headers;
+        }
+        catch (e) {
+            ParentFrame.showError(e, "Failed in getCallbackTokenAsync");
+        }
+
+        return "";
     }
 }

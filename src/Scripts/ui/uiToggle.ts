@@ -34,5 +34,5 @@ async function getUserData() {
         diagnostics.set("error", JSON.stringify(ex));
     }
 
-    ParentFrame.initUI();
+    await ParentFrame.initUI();
 }
