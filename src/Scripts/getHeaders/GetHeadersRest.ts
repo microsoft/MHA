@@ -1,10 +1,10 @@
 import { jwtDecode } from "jwt-decode";
 
-import { diagnostics } from "./Diag";
-import { Errors } from "./Errors";
+import { diagnostics } from "../Diag";
+import { Errors } from "../Errors";
 import { GetHeaders } from "./GetHeaders";
-import { mhaStrings } from "./mhaStrings";
-import { ParentFrame } from "./ParentFrame";
+import { mhaStrings } from "../mhaStrings";
+import { ParentFrame } from "../ParentFrame";
 
 /*
  * GetHeadersRest.js

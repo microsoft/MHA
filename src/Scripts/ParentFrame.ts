@@ -6,7 +6,7 @@ import { DeferredError } from "./DeferredError";
 import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
 import { findTabStops } from "./findTabStops";
-import { GetHeaders } from "./GetHeaders";
+import { GetHeaders } from "./getHeaders/GetHeaders";
 import { Poster } from "./Poster";
 import { Strings } from "./Strings";
 

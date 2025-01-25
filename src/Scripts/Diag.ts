@@ -4,9 +4,9 @@ import stackTrace from "stacktrace-js";
 
 import { aikey } from "./aikey";
 import { buildTime } from "./buildTime";
-import { GetHeaders } from "./GetHeaders";
-import { GetHeadersAPI } from "./GetHeadersAPI";
-import { GetHeadersRest } from "./GetHeadersRest";
+import { GetHeaders } from "./getHeaders/GetHeaders";
+import { GetHeadersAPI } from "./getHeaders/GetHeadersAPI";
+import { GetHeadersRest } from "./getHeaders/GetHeadersRest";
 import { mhaVersion } from "./mhaVersion";
 import { ParentFrame } from "./ParentFrame";
 
