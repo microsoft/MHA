@@ -5,6 +5,7 @@ import { Errors } from "../Errors";
 import { GetHeaders } from "./GetHeaders";
 import { mhaStrings } from "../mhaStrings";
 import { ParentFrame } from "../ParentFrame";
+import { getAccessToken } from "../ui/msal/authHelper";
 
 /*
  * GetHeadersRest.js
@@ -163,12 +164,23 @@ export class GetHeadersRest {
         ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
 
         try {
-            const accessToken= await GetHeadersRest.getCallbackToken();
-            const headers = GetHeadersRest.getHeaders(accessToken);
+            const accessToken =  await getAccessToken(["Mail.Read"]);
+            const headers = await GetHeadersRest.getHeaders(accessToken);
+
             return headers;
         }
         catch (e) {
-            ParentFrame.showError(e, "Failed in getCallbackTokenAsync");
+            ParentFrame.showError(e, "Failed using NAA");
+        }
+
+        try {
+            const accessToken= await GetHeadersRest.getCallbackToken();
+            const headers = await GetHeadersRest.getHeaders(accessToken);
+
+            return headers;
+        }
+        catch (e) {
+            ParentFrame.showError(e, "Failed using getCallbackTokenAsync");
         }
 
         return "";
