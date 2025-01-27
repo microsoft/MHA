@@ -117,7 +117,7 @@
       },
       "presentation": {
         "clear": true,
-        "panel": "dedicated",
+        "panel": "dedicated"
       },
     }
   ],

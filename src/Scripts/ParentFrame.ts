@@ -6,9 +6,9 @@ import { DeferredError } from "./DeferredError";
 import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
 import { findTabStops } from "./findTabStops";
-import { GetHeaders } from "./getHeaders/GetHeaders";
 import { Poster } from "./Poster";
 import { Strings } from "./Strings";
+import { GetHeaders } from "./ui/getHeaders/GetHeaders";
 
 export class ParentFrame {
     private static iFrame: Window | null;

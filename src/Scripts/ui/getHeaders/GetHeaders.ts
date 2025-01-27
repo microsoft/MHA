@@ -1,8 +1,8 @@
-import { diagnostics } from "../Diag";
 import { GetHeadersAPI } from "./GetHeadersAPI";
 import { GetHeadersEWS } from "./GetHeadersEWS";
 import { GetHeadersRest } from "./GetHeadersRest";
-import { ParentFrame } from "../ParentFrame";
+import { diagnostics } from "../../Diag";
+import { ParentFrame } from "../../ParentFrame";
 
 /*
  * GetHeaders.js

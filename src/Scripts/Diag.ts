@@ -4,11 +4,11 @@ import stackTrace from "stacktrace-js";
 
 import { aikey } from "./aikey";
 import { buildTime } from "./buildTime";
-import { GetHeaders } from "./getHeaders/GetHeaders";
-import { GetHeadersAPI } from "./getHeaders/GetHeadersAPI";
-import { GetHeadersRest } from "./getHeaders/GetHeadersRest";
 import { mhaVersion } from "./mhaVersion";
 import { ParentFrame } from "./ParentFrame";
+import { GetHeaders } from "./ui/getHeaders/GetHeaders";
+import { GetHeadersAPI } from "./ui/getHeaders/GetHeadersAPI";
+import { GetHeadersRest } from "./ui/getHeaders/GetHeadersRest";
 
 import "promise-polyfill/dist/polyfill";
 
