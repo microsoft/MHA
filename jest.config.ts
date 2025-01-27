@@ -18,7 +18,7 @@ const config: Config = {
             branches: 35,
             functions: 40,
             lines: 40,
-            statements: 40,
+            statements: 40
         },
     },
     reporters: [
