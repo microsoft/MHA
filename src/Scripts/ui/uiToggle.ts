@@ -13,7 +13,8 @@ import { makeGraphRequest } from "./msal/msgraph-helper";
 Office.onReady(async (info) => {
     if (info.host === Office.HostType.Outlook) {
         await initializeAuthMethod();
-        await getUserData();
+        await testGetUserData();
+        await ParentFrame.initUI();
     }
 });
 
@@ -21,7 +22,7 @@ Office.onReady(async (info) => {
  * Gets the user data such as name and email and displays it
  * in the diagnostics pane.
  */
-async function getUserData() {
+async function testGetUserData() {
     try {
         // Specify minimum scopes for the token needed.
 
@@ -33,6 +34,4 @@ async function getUserData() {
     } catch (ex) {
         diagnostics.set("error", JSON.stringify(ex));
     }
-
-    await ParentFrame.initUI();
 }
