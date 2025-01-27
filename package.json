@@ -16,6 +16,8 @@
     "dev-server": "webpack serve --mode=development",
     "start": "office-addin-debugging start ManifestDebugLocal.xml",
     "start:debug-server": "office-addin-debugging start manifestDebugServer.xml",
+    "start:desktop": "office-addin-debugging start ManifestDebugLocal.xml desktop",
+    "start:web": "office-addin-debugging start ManifestDebugLocal.xml web",
     "stop": "office-addin-debugging stop ManifestDebugLocal.xml && office-addin-debugging stop manifestDebugServer.xml",
     "validate": "office-addin-manifest validate Manifest.xml",
     "test": "jest",
@@ -87,7 +89,8 @@
     "jwt-decode": "^4.0.0",
     "office-ui-fabric-js": "^1.5.0",
     "promise-polyfill": "8.3.0",
-    "stacktrace-js": "^2.0.2"
+    "stacktrace-js": "^2.0.2",
+    "unfetch": "^5.0.0"
   },
   "-vs-binding": {
     "BeforeBuild": [
