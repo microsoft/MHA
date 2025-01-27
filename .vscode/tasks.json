@@ -36,15 +36,12 @@
     },
     {
       "label": "Debug: Outlook Desktop",
-      "type": "npm",
-      "script": "start",
-      "dependsOn": [
-        "Check OS",
-        "Install"
-      ],
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "start:desktop", "--", "--app", "Outlook"],
       "presentation": {
         "clear": true,
-        "panel": "dedicated",
+        "panel": "dedicated"
       },
       "problemMatcher": []
     },
