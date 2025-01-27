@@ -1,5 +1,4 @@
 import { GetHeaders } from "./GetHeaders";
-import { GetHeadersRest } from "./GetHeadersRest";
 import { diagnostics } from "../../Diag";
 import { Errors } from "../../Errors";
 import { mhaStrings } from "../../mhaStrings";
@@ -20,32 +19,39 @@ export class GetHeadersAPI {
 
     public static canUseAPI(): boolean { return GetHeaders.canUseAPI("API", GetHeadersAPI.minAPISet); }
 
-    public static send(headersLoadedCallback: (_headers: string, apiUsed: string) => void): void {
+    private static async getAllInternetHeaders(item: Office.MessageRead): Promise<string> {
+        return new Promise((resolve) => {
+            item.getAllInternetHeadersAsync((asyncResult) => {
+                if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+                    resolve(asyncResult.value);
+                } else {
+                    diagnostics.set("getAllInternetHeadersAsyncFailure", JSON.stringify(asyncResult));
+                    Errors.log(asyncResult.error, "Unable to obtain callback token.\nFallback to Rest.\n" + JSON.stringify(asyncResult, null, 2), true);
+                }
+            });
+        });
+    }
+
+    public static async send(): Promise<string> {
         if (!GetHeaders.validItem() || !Office.context.mailbox.item) {
             Errors.log(null, "No item selected (API)", true);
-            return;
+            return "";
         }
 
         if (!GetHeadersAPI.canUseAPI()) {
-            GetHeadersRest.send(headersLoadedCallback);
-            return;
+            return "";
         }
 
         ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
 
         try {
-            Office.context.mailbox.item.getAllInternetHeadersAsync(function (asyncResult) {
-                if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-                    headersLoadedCallback(asyncResult.value, "API");
-                } else {
-                    diagnostics.set("getAllInternetHeadersAsyncFailure", JSON.stringify(asyncResult));
-                    Errors.log(asyncResult.error, "Unable to obtain callback token.\nFallback to Rest.\n" + JSON.stringify(asyncResult, null, 2), true);
-                    GetHeadersRest.send(headersLoadedCallback);
-                }
-            });
+            const headers = await GetHeadersAPI.getAllInternetHeaders(Office.context.mailbox.item);
+            return headers;
         }
         catch (e) {
             ParentFrame.showError(e, "Failed in getAllInternetHeadersAsync");
         }
+
+        return "";
     }
 }

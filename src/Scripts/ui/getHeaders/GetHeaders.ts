@@ -1,4 +1,6 @@
 import { GetHeadersAPI } from "./GetHeadersAPI";
+import { GetHeadersEWS } from "./GetHeadersEWS";
+import { GetHeadersRest } from "./GetHeadersRest";
 import { diagnostics } from "../../Diag";
 import { ParentFrame } from "../../ParentFrame";
 
@@ -36,6 +38,8 @@ export class GetHeaders {
     }
 
     public static canUseAPI(apiType: string, minset: string): boolean {
+        // if (apiType === "API") { return false; }
+        // if (apiType === "Rest") { return false; }
         if (typeof (Office) === "undefined") { diagnostics.set(`no${apiType}reason`, "Office undefined"); return false; }
         if (!Office) { diagnostics.set(`no${apiType}reason`, "Office false"); return false; }
         if (!Office.context) { diagnostics.set("noUseRestReason", "context false"); return false; }
@@ -57,7 +61,7 @@ export class GetHeaders {
         return true;
     }
 
-    public static send(headersLoadedCallback: (_headers: string, apiUsed: string) => void) {
+    public static async send(headersLoadedCallback: (_headers: string, apiUsed: string) => void) {
         if (!GetHeaders.validItem()) {
             ParentFrame.showError(null, "No item selected", true);
             return;
@@ -69,7 +73,21 @@ export class GetHeaders {
         }
 
         try {
-            GetHeadersAPI.send(headersLoadedCallback);
+            let headers:string = await GetHeadersAPI.send();
+            if (headers !== "") {
+                headersLoadedCallback(headers, "API");
+                return;
+            }
+            headers = await GetHeadersRest.send();
+            if (headers !== "") {
+                headersLoadedCallback(headers, "REST");
+                return;
+            }
+            headers = await GetHeadersEWS.send();
+            if (headers !== "") {
+                headersLoadedCallback(headers, "EWS");
+                return;
+            }
         } catch (e) {
             ParentFrame.showError(e, "Could not send header request");
         }

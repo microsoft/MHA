@@ -89,7 +89,8 @@
     "jwt-decode": "^4.0.0",
     "office-ui-fabric-js": "^1.5.0",
     "promise-polyfill": "8.3.0",
-    "stacktrace-js": "^2.0.2"
+    "stacktrace-js": "^2.0.2",
+    "unfetch": "^5.0.0"
   },
   "-vs-binding": {
     "BeforeBuild": [

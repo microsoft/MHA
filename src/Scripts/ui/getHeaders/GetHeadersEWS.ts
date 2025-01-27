@@ -67,7 +67,7 @@ export class GetHeadersEWS {
     }
 
     // Function called when the EWS request is complete.
-    private static callbackEws(asyncResult: Office.AsyncResult<string>, headersLoadedCallback: (_headers: string, apiUsed: string) => void): void {
+    private static callbackEws(asyncResult: Office.AsyncResult<string>): string {
         try {
             // Process the returned response here.
             let header = null;
@@ -77,15 +77,14 @@ export class GetHeadersEWS {
                 // We might not have a prop and also no error. This is OK if the prop is just missing.
                 if (!header.prop) {
                     if (header.responseCode === "NoError") {
-                        headersLoadedCallback("", "EWS");
                         ParentFrame.showError(null, mhaStrings.mhaHeadersMissing, true);
-                        return;
+                        return "";
                     }
                 }
             }
 
             if (header && header.prop) {
-                headersLoadedCallback(header.prop, "EWS");
+                return header.prop;
             }
             else {
                 throw new Error(mhaStrings.mhaRequestFailed);
@@ -96,9 +95,10 @@ export class GetHeadersEWS {
                 Errors.log(asyncResult.error, "Async Response\n" + GetHeadersEWS.stripHeaderFromXml(JSON.stringify(asyncResult, null, 2)));
             }
 
-            headersLoadedCallback("", "EWS");
             ParentFrame.showError(e, "EWS callback failed");
         }
+
+        return "";
     }
 
     private static getSoapEnvelope(request: string): string {
@@ -130,10 +130,18 @@ export class GetHeadersEWS {
             "</GetItem>";
     }
 
-    public static send(headersLoadedCallback: (_headers: string, apiUsed: string) => void): void {
+    private static async makeEwsRequest(mailbox: Office.Mailbox, envelope:string): Promise<string> {
+        return new Promise((resolve) => {
+            mailbox.makeEwsRequestAsync(envelope, function (asyncResult: Office.AsyncResult<string>) {
+                resolve(GetHeadersEWS.callbackEws(asyncResult));
+            });
+        });
+    }
+
+    public static async send(): Promise<string> {
         if (!GetHeaders.validItem()) {
             Errors.log(null, "No item selected (EWS)", true);
-            return;
+            return "";
         }
 
         try {
@@ -142,12 +150,13 @@ export class GetHeadersEWS {
             if (mailbox && mailbox.item) {
                 const request = GetHeadersEWS.getHeadersRequest(mailbox.item.itemId);
                 const envelope = GetHeadersEWS.getSoapEnvelope(request);
-                mailbox.makeEwsRequestAsync(envelope, function (asyncResult) {
-                    GetHeadersEWS.callbackEws(asyncResult, headersLoadedCallback);
-                });
+                const headers = await GetHeadersEWS.makeEwsRequest(mailbox, envelope);
+                return headers;
             }
         } catch (e2) {
             ParentFrame.showError(e2, mhaStrings.mhaRequestFailed);
         }
+
+        return "";
     }
 }
