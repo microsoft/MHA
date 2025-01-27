@@ -114,9 +114,9 @@ export class ParentFrame {
         }
     }
 
-    private static loadNewItem(): void {
+    private static async loadNewItem() {
         if (Office.context.mailbox.item) {
-            GetHeaders.send(function (headers: string, apiUsed: string): void {
+            await GetHeaders.send(function (headers: string, apiUsed: string): void {
                 ParentFrame.headers = headers;
                 diagnostics.set("API used", apiUsed);
                 ParentFrame.render();
@@ -451,7 +451,7 @@ export class ParentFrame {
         }
     }
 
-    public static initUI(): void {
+    public static async initUI() {
         ParentFrame.setDefault();
         ParentFrame.addChoices();
         ParentFrame.initFabric();
@@ -471,7 +471,7 @@ export class ParentFrame {
         ParentFrame.registerItemChangedEvent();
 
         window.addEventListener("message", ParentFrame.eventListener, false);
-        ParentFrame.loadNewItem();
+        await ParentFrame.loadNewItem();
     }
 
     public static get choice(): Choice { return ParentFrame.currentChoice; }
