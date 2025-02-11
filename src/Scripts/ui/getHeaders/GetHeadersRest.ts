@@ -149,6 +149,7 @@ export class GetHeadersRest {
                 } else {
                     diagnostics.set("callbackTokenFailure", JSON.stringify(result));
                     Errors.log(result.error, "Unable to obtain callback token.\nFallback to EWS.\n" + JSON.stringify(result, null, 2), true);
+                    resolve("");
                 }
             });
         });

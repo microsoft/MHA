@@ -25,6 +25,7 @@ export class GetHeadersAPI {
                     resolve(asyncResult.value);
                 } else {
                     Errors.log(asyncResult.error, "getAllInternetHeadersAsync failed.\nFallback to Rest.\n" + JSON.stringify(asyncResult, null, 2), true);
+                    resolve("");
                 }
             });
         });
