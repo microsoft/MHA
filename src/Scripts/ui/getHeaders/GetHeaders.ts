@@ -63,7 +63,6 @@ export class GetHeaders {
     }
 
     public static async send(headersLoadedCallback: (_headers: string, apiUsed: string) => void) {
-        Errors.log(null, "testing stacks", true);
         if (!GetHeaders.validItem()) {
             ParentFrame.showError(null, "No item selected", true);
             return;
