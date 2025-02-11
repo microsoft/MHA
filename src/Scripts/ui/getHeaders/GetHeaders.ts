@@ -2,6 +2,7 @@ import { GetHeadersAPI } from "./GetHeadersAPI";
 import { GetHeadersEWS } from "./GetHeadersEWS";
 import { GetHeadersRest } from "./GetHeadersRest";
 import { diagnostics } from "../../Diag";
+import { Errors } from "../../Errors";
 import { ParentFrame } from "../../ParentFrame";
 
 /*
@@ -78,6 +79,7 @@ export class GetHeaders {
                 headersLoadedCallback(headers, "API");
                 return;
             }
+            Errors.logMessage("1-API failed, trying REST");
             headers = await GetHeadersRest.send();
             if (headers !== "") {
                 headersLoadedCallback(headers, "REST");

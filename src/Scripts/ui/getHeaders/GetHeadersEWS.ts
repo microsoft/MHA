@@ -140,7 +140,7 @@ export class GetHeadersEWS {
 
     public static async send(): Promise<string> {
         if (!GetHeaders.validItem()) {
-            Errors.log(null, "No item selected (EWS)", true);
+            Errors.logMessage("No item selected (EWS)");
             return "";
         }
 

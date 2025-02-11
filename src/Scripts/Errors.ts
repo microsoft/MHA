@@ -85,6 +85,10 @@ export class Errors {
         });
     }
 
+    public static logMessage(message:string): void {
+        Errors.add(message, [], true);
+    }
+
     // exception - an exception object
     // message - a string describing the error
     // handler - function to call with parsed error
