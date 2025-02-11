@@ -21,6 +21,8 @@ export class Stack {
             if (item.functionName === "Stack.getExceptionStack") return false;
             if (item.functionName === "Function.parse") return false;
             if (item.functionName === "Stack.parse") return false;
+            if (item.functionName === "Function.getExceptionStack [as parse]") return false;
+            if (item.functionName === "Function.get [as getExceptionStack]") return false;
             if (item.functionName === "Errors.isError") return false; // Not called from anywhere interesting
             if (item.functionName?.indexOf("Promise._immediateFn") !== -1) return false; // only shows in IE stacks
             return true;
