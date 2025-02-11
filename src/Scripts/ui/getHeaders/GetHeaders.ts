@@ -74,20 +74,20 @@ export class GetHeaders {
         }
 
         try {
-            Errors.logMessage("0-Enter send");
             let headers:string = await GetHeadersAPI.send();
             if (headers !== "") {
-                Errors.logMessage("How are we here?");
-                Errors.logMessage(headers);
                 headersLoadedCallback(headers, "API");
                 return;
             }
-            Errors.logMessage("1-API failed, trying REST");
+
+            Errors.logMessage("API failed, trying REST");
             headers = await GetHeadersRest.send();
             if (headers !== "") {
                 headersLoadedCallback(headers, "REST");
                 return;
             }
+
+            Errors.logMessage("REST failed, trying EWS");
             headers = await GetHeadersEWS.send();
             if (headers !== "") {
                 headersLoadedCallback(headers, "EWS");

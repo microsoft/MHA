@@ -24,7 +24,6 @@ export class GetHeadersRest {
     public static canUseRest(): boolean { return GetHeaders.canUseAPI("Rest", GetHeadersRest.minRestSet); }
 
     private static getItemRestId(): string {
-        Errors.logMessage("getItemRestId");
         if (!Office.context.mailbox.item) return "";
         // Currently the only Outlook Mobile version that supports add-ins
         // is Outlook for iOS.
@@ -41,14 +40,12 @@ export class GetHeadersRest {
     }
 
     private static getBaseUrl(url: string): string {
-        Errors.logMessage("getBaseUrl");
         const parts = url.split("/");
 
         return parts[0] + "//" + parts[2];
     }
 
     private static getRestUrl(accessToken: string): string {
-        Errors.logMessage("getRestUrl");
         // Shim function to workaround
         // mailbox.restUrl == null case
         if (Office.context.mailbox.restUrl) {
@@ -81,8 +78,7 @@ export class GetHeadersRest {
     }
 
     private static async getHeaders(accessToken: string): Promise<string> {
-        Errors.logMessage("getHeaders");
-        if (!accessToken) {
+        if (!accessToken || accessToken === "") {
             Errors.logMessage("No access token?");
             return "";
         }
@@ -156,30 +152,24 @@ export class GetHeadersRest {
     }
 
     public static async send(): Promise<string> {
-        Errors.logMessage("2-Enter send");
         if (!GetHeaders.validItem()) {
             Errors.logMessage("No item selected (REST)");
             return "";
         }
 
         if (!GetHeadersRest.canUseRest()) {
-            Errors.logMessage("3-can't use rest");
             return "";
         }
 
         ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
 
         try {
-            Errors.logMessage("4-Trying get token");
             const accessToken= await GetHeadersRest.getCallbackToken();
-            Errors.logMessage("5-Trying get Headers");
             const headers = await GetHeadersRest.getHeaders(accessToken);
 
             return headers;
         }
         catch (e) {
-            Errors.logMessage("6-Caught exception");
-            Errors.log(e, "7 Failed using getCallbackTokenAsync");
             ParentFrame.showError(e, "Failed using getCallbackTokenAsync");
         }
 

@@ -1,4 +1,5 @@
 import { GetHeaders } from "./GetHeaders";
+import { diagnostics } from "../../Diag";
 import { Errors } from "../../Errors";
 import { mhaStrings } from "../../mhaStrings";
 import { ParentFrame } from "../../ParentFrame";
@@ -24,6 +25,7 @@ export class GetHeadersAPI {
                 if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
                     resolve(asyncResult.value);
                 } else {
+                    diagnostics.set("getAllInternetHeadersAsyncFailure", JSON.stringify(asyncResult));
                     Errors.log(asyncResult.error, "getAllInternetHeadersAsync failed.\nFallback to Rest.\n" + JSON.stringify(asyncResult, null, 2), true);
                     resolve("");
                 }
@@ -51,7 +53,6 @@ export class GetHeadersAPI {
             Errors.log(e, "Failed in getAllInternetHeadersAsync");
         }
 
-        Errors.logMessage("API failed, trying REST");
         return "";
     }
 }
