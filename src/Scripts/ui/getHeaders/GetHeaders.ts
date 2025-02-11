@@ -74,6 +74,7 @@ export class GetHeaders {
         }
 
         try {
+            Errors.logMessage("0-Enter send");
             let headers:string = await GetHeadersAPI.send();
             if (headers !== "") {
                 Errors.logMessage("How are we here?");

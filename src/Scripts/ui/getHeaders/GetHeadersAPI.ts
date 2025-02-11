@@ -47,9 +47,10 @@ export class GetHeadersAPI {
             return headers;
         }
         catch (e) {
-            ParentFrame.showError(e, "Failed in getAllInternetHeadersAsync");
+            Errors.log(e, "Failed in getAllInternetHeadersAsync");
         }
 
+        Errors.logMessage("API failed, trying REST");
         return "";
     }
 }
