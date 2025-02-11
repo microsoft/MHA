@@ -1,7 +1,5 @@
-import { StackFrame, StackTraceOptions } from "stacktrace-js";
-import * as stackTrace from "stacktrace-js";
-
 import { diagnostics } from "./Diag";
+import { Stack } from "./stacks";
 import { Strings } from "./Strings";
 
 let errorArray: string[] = [];
@@ -80,63 +78,13 @@ export class Errors {
             diagnostics.trackException(event, props);
         }
 
-        Errors.parse(error, message, function (eventName: string, stack: string[]): void {
+        Stack.parse(error, message, function (eventName: string, stack: string[]): void {
             Errors.add(eventName, stack, suppressTracking ?? false);
         });
     }
 
     public static logMessage(message:string): void {
         Errors.add(message, [], true);
-    }
-
-    // exception - an exception object
-    // message - a string describing the error
-    // handler - function to call with parsed error
-    public static parse(exception: unknown, message: string | null, handler: (eventName: string, stack: string[]) => void): void {
-        let stack;
-        const exceptionMessage = Errors.getErrorMessage(exception);
-
-        let eventName = Strings.joinArray([message, exceptionMessage], " : ");
-        if (!eventName) {
-            eventName = "Unknown exception";
-        }
-
-        // While trying to get our error tracking under control, let's not filter our stacks
-        function filterStack(stack: StackFrame[]) {
-            return stack.filter(function (item: StackFrame) {
-                if (!item.fileName) return true;
-                if (item.fileName.indexOf("stacktrace") !== -1) return false; // remove stacktrace.js frames
-                //if (item.functionName === "ShowError") return false;
-                //if (item.functionName === "showError") return false;
-                //if (item.functionName === "Errors.log") return false; // Logs with Errors.log in them usually have location where it was called from - keep those
-                //if (item.functionName === "GetStack") return false;
-                if (item.functionName === "Errors.parse") return false; // Only ever called from Errors.log
-                if (item.functionName === "Errors.isError") return false; // Not called from anywhere interesting
-                if (item.functionName?.indexOf("Promise._immediateFn") !== -1) return false; // only shows in IE stacks
-                return true;
-            });
-        }
-
-        function callback(stackframes: StackFrame[]) {
-            stack = filterStack(stackframes).map(function (sf) {
-                return sf.toString();
-            });
-            handler(eventName, stack);
-        }
-
-        function errback(err: Error) {
-            diagnostics.trackEvent({ name: "Errors.parse errback" });
-            stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
-            handler(eventName, stack);
-        }
-
-        // TODO: Move filter from callbacks into gets
-        const options: StackTraceOptions = {offline: true};
-        if (!Errors.isError(exception)) {
-            stackTrace.get(options).then(callback).catch(errback);
-        } else {
-            stackTrace.fromError(exception as Error, options).then(callback).catch(errback);
-        }
     }
 
     public static getErrorMessage(error: unknown): string {
