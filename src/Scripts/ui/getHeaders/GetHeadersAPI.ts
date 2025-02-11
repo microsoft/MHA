@@ -26,7 +26,8 @@ export class GetHeadersAPI {
                     resolve(asyncResult.value);
                 } else {
                     diagnostics.set("getAllInternetHeadersAsyncFailure", JSON.stringify(asyncResult));
-                    Errors.log(asyncResult.error, "Unable to obtain callback token.\nFallback to Rest.\n" + JSON.stringify(asyncResult, null, 2), true);
+                    Errors.log(asyncResult.error, "getAllInternetHeadersAsync failed.\nFallback to Rest.\n" + JSON.stringify(asyncResult, null, 2), true);
+                    resolve("");
                 }
             });
         });
@@ -34,7 +35,7 @@ export class GetHeadersAPI {
 
     public static async send(): Promise<string> {
         if (!GetHeaders.validItem() || !Office.context.mailbox.item) {
-            Errors.log(null, "No item selected (API)", true);
+            Errors.logMessage("No item selected (API)");
             return "";
         }
 
@@ -49,7 +50,7 @@ export class GetHeadersAPI {
             return headers;
         }
         catch (e) {
-            ParentFrame.showError(e, "Failed in getAllInternetHeadersAsync");
+            Errors.log(e, "Failed in getAllInternetHeadersAsync");
         }
 
         return "";

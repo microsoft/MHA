@@ -78,18 +78,18 @@ export class GetHeadersRest {
     }
 
     private static async getHeaders(accessToken: string): Promise<string> {
-        if (!accessToken) {
-            Errors.log(null, "No access token?");
+        if (!accessToken || accessToken === "") {
+            Errors.logMessage("No access token?");
             return "";
         }
 
         if (!Office.context.mailbox.item) {
-            Errors.log(null, "No item");
+            Errors.logMessage("No item");
             return "";
         }
 
         if (!Office.context.mailbox.item.itemId) {
-            Errors.log(null, "No itemId");
+            Errors.logMessage("No itemId");
             return "";
         }
 
@@ -145,6 +145,7 @@ export class GetHeadersRest {
                 } else {
                     diagnostics.set("callbackTokenFailure", JSON.stringify(result));
                     Errors.log(result.error, "Unable to obtain callback token.\nFallback to EWS.\n" + JSON.stringify(result, null, 2), true);
+                    resolve("");
                 }
             });
         });
@@ -152,7 +153,7 @@ export class GetHeadersRest {
 
     public static async send(): Promise<string> {
         if (!GetHeaders.validItem()) {
-            Errors.log(null, "No item selected (REST)", true);
+            Errors.logMessage("No item selected (REST)");
             return "";
         }
 
