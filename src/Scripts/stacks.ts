@@ -13,16 +13,11 @@ export class Stack {
         return stack.filter(function (item: StackFrame) {
             if (!item.fileName) return true;
             if (item.fileName.indexOf("stacktrace") !== -1) return false; // remove stacktrace.js frames
+            if (item.fileName.indexOf("stacks.ts") !== -1) return false; // remove stacks.ts frames
             //if (item.functionName === "ShowError") return false;
             //if (item.functionName === "showError") return false;
             //if (item.functionName === "Errors.log") return false; // Logs with Errors.log in them usually have location where it was called from - keep those
             //if (item.functionName === "GetStack") return false;
-            if (item.functionName === "Function.getExceptionStack") return false;
-            if (item.functionName === "Stack.getExceptionStack") return false;
-            if (item.functionName === "Function.parse") return false;
-            if (item.functionName === "Stack.parse") return false;
-            if (item.functionName === "Function.getExceptionStack [as parse]") return false;
-            if (item.functionName === "Function.get [as getExceptionStack]") return false;
             if (item.functionName === "Errors.isError") return false; // Not called from anywhere interesting
             if (item.functionName?.indexOf("Promise._immediateFn") !== -1) return false; // only shows in IE stacks
             return true;
