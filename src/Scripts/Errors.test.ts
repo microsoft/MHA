@@ -17,7 +17,7 @@ function testParse(done: jest.DoneCallback, exception: unknown, message: string 
 }
 
 describe("Errors.parse Tests", () => {
-    beforeAll(() => { Stack.options = { offline: true }; });
+    beforeAll(() => { Stack.options.offline = true; });
 
     test("stringError", done => {
         testParse(done, "stringError", "message", "message : stringError", [
