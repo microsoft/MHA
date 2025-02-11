@@ -1,5 +1,4 @@
 import { GetHeaders } from "./GetHeaders";
-import { diagnostics } from "../../Diag";
 import { Errors } from "../../Errors";
 import { mhaStrings } from "../../mhaStrings";
 import { ParentFrame } from "../../ParentFrame";
