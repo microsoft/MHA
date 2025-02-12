@@ -22,6 +22,8 @@ class Diag {
     private appInsights = new ApplicationInsights({
         config: {
             instrumentationKey: aikey(),
+            disableAjaxTracking: true,
+            disableFetchTracking: true,
             /* ...Other Configuration Options... */
         }
     });
@@ -37,7 +39,6 @@ class Diag {
                 return false;
             }
             const doLog: boolean = (document.domain !== "localhost" && document.location.protocol !== "file:");
-            if (envelope.baseType === "RemoteDependencyData") return doLog;
             if (envelope.baseType === "PageviewData") return doLog;
             if (envelope.baseType === "PageviewPerformanceData") return doLog;
 
