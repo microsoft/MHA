@@ -247,7 +247,7 @@ function buildViews(headers: string) {
                     .addClass("ms-ProgressIndicator-progressTrack")
                     .appendTo(bar);
 
-                const width: number = 1.8 * (Number(row.percent.value) ?? 0);
+                const width: number = 1.8 * (Number(row.percent.value ?? 0));
 
                 $("<div/>")
                     .addClass("ms-ProgressIndicator-progressBar")

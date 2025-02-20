@@ -58,7 +58,7 @@ describe("2047 Tests", () => {
                 "Subject: =?Windows-1252?Q?Fwd:_Scam_Alert_from_a_neighbor_on_NextDoor_-_Don=92t_re?=\n" +
                 " =?Windows-1252?Q?ad_out_your_2_factored_authentication_code_to_anyone_on_?=\n" +
                 "=?Windows-1252?Q?the_phone?="))
-            .toBe("Subject: Fwd: Scam Alert from a neighbor on NextDoor - Don’t read out your 2 factored authentication code to anyone on the phone");
+            .toBe("Subject: Fwd: Scam Alert from a neighbor on NextDoor - Dont read out your 2 factored authentication code to anyone on the phone");
         expect(
             Decoder.clean2047Encoding(
                 "Subject: =?gb2312?B?RndkOiDT67DCwu3SqdK119y+rcDto6ywosDvsM2wzdfcvOCjrMu5sdi/y9fc?=" +
@@ -165,6 +165,7 @@ describe("2047 Tests", () => {
     test("2047 Hex Tests", function () {
         expect(Decoder.decodeHex("US-ASCII", "=61=62")).toBe("ab");
         expect(Decoder.decodeHex("ISO-8859-1", "Keld J=F8rn Simonsen")).toBe("Keld Jørn Simonsen");
+        expect(Decoder.decodeHex("Windows-1252", "Don=92t re")).toBe("Dont re");
     });
 
     test("2047 Quoted Tests", function () {
