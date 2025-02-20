@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { DateWithNum } from "./DateWithNum";
 import { MHADates } from "./MHADates";
 

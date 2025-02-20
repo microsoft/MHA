@@ -165,6 +165,7 @@ describe("2047 Tests", () => {
     test("2047 Hex Tests", function () {
         expect(Decoder.decodeHex("US-ASCII", "=61=62")).toBe("ab");
         expect(Decoder.decodeHex("ISO-8859-1", "Keld J=F8rn Simonsen")).toBe("Keld Jørn Simonsen");
+        expect(Decoder.decodeHex("Windows-1252", "Don=92t re")).toBe("Don’t re");
     });
 
     test("2047 Quoted Tests", function () {
