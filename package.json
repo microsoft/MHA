@@ -54,7 +54,7 @@
     "@typescript-eslint/parser": "^8.28.0",
     "css-loader": "^7.1.2",
     "eslint": "^9.20.1",
-    "eslint-import-resolver-typescript": "^4.2.4",
+    "eslint-import-resolver-typescript": "^4.2.5",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-node": "^11.1.0",
     "exports-loader": "^5.0.0",
@@ -79,7 +79,7 @@
     "typescript": "^5.8.2",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0"
+    "webpack-dev-server": "^5.2.1"
   },
   "dependencies": {
     "@microsoft/applicationinsights-web": "^3.3.6",
