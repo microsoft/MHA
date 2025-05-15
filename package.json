@@ -73,7 +73,7 @@
     "office-addin-manifest": "^2.0.3",
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
-    "ts-jest": "^29.3.2",
+    "ts-jest": "^29.3.3",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
