@@ -16,7 +16,7 @@
     "dev-server": "webpack serve --mode=development",
     "start": "office-addin-debugging start ManifestDebugLocal.xml",
     "start:debug-server": "office-addin-debugging start manifestDebugServer.xml",
-    "start:desktop": "office-addin-debugging start ManifestDebugLocal.xml desktop",
+    "start:desktop": "office-addin-debugging start ManifestDebugLocal.xml desktop --app",
     "stop": "office-addin-debugging stop ManifestDebugLocal.xml && office-addin-debugging stop manifestDebugServer.xml",
     "validate": "office-addin-manifest validate Manifest.xml",
     "test": "jest",
