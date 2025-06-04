@@ -46,11 +46,11 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.28.0",
     "@jest/globals": "^29.7.0",
-    "@stylistic/eslint-plugin-js": "^4.4.0",
+    "@stylistic/eslint-plugin-js": "^4.4.1",
     "@types/jest": "^29.5.14",
     "@types/jquery": "^3.5.32",
-    "@types/office-js": "^1.0.505",
-    "@typescript-eslint/eslint-plugin": "^8.33.0",
+    "@types/office-js": "^1.0.507",
+    "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.32.1",
     "css-loader": "^7.1.2",
     "eslint": "^9.20.1",
@@ -79,7 +79,7 @@
     "typescript": "^5.8.3",
     "webpack": "^5.99.9",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.1"
+    "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
     "@microsoft/applicationinsights-web": "^3.3.8",
