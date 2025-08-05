@@ -55,9 +55,9 @@ describe("2047 Tests", () => {
                 "🏈  2019's No.1 Recruit, The World's Tallest Teenager, Top Plays of the Week & more");
         expect(
             Decoder.clean2047Encoding(
-                "Subject: =?Windows-1252?Q?Fwd:_Scam_Alert_from_a_neighbor_on_NextDoor_-_Don=92t_re?=\n" +
-                " =?Windows-1252?Q?ad_out_your_2_factored_authentication_code_to_anyone_on_?=\n" +
-                "=?Windows-1252?Q?the_phone?="))
+                "Subject: =?Windows-1251?Q?Fwd:_Scam_Alert_from_a_neighbor_on_NextDoor_-_Don=92t_re?=\n" +
+                " =?Windows-1251?Q?ad_out_your_2_factored_authentication_code_to_anyone_on_?=\n" +
+                "=?Windows-1251?Q?the_phone?="))
             .toBe("Subject: Fwd: Scam Alert from a neighbor on NextDoor - Don’t read out your 2 factored authentication code to anyone on the phone");
         expect(
             Decoder.clean2047Encoding(
@@ -165,7 +165,9 @@ describe("2047 Tests", () => {
     test("2047 Hex Tests", function () {
         expect(Decoder.decodeHex("US-ASCII", "=61=62")).toBe("ab");
         expect(Decoder.decodeHex("ISO-8859-1", "Keld J=F8rn Simonsen")).toBe("Keld Jørn Simonsen");
-        expect(Decoder.decodeHex("Windows-1252", "Don=92t re")).toBe("Don’t re");
+        // "Windows-1252" works in browsers, but for some reason not in Node.js
+        // So we use "Windows-1251" instead, since the goal here is to test our code, not TextDecoder
+        expect(Decoder.decodeHex("Windows-1251", "Don=92t re")).toBe("Don’t re");
     });
 
     test("2047 Quoted Tests", function () {
