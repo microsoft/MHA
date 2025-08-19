@@ -27,14 +27,17 @@
  * @returns {Promise<Object>} The webpack configuration object.
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports */
-const path = require("path");
+import path from "path";
+import { fileURLToPath } from "url";
 
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
-const HtmlWebpackPlugin = require("html-webpack-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
-const MiniCssExtractPlugin = require("mini-css-extract-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
-const devCerts = require("office-addin-dev-certs");
-const webpack = require("webpack");
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import devCerts from "office-addin-dev-certs";
+import webpack from "webpack";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Asynchronously retrieves HTTPS server options.
@@ -146,7 +149,7 @@ function generateHtmlWebpackPlugins() {
     }));
 }
 
-module.exports = async (env, options) => {
+export default async (env, options) => {
     const isProduction = options.mode === 'production';
     
     const config = {
