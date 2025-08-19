@@ -172,10 +172,19 @@ module.exports = async (env, options) => {
         ],
         mode: "development",
         devtool: "source-map",
-        target: ["web", "es5"],
+        target: ["web", "es2022"],
         module: {
             rules: [
-                { test: /fabric(\.min)?\.js$/, use: "exports-loader?exports=fabric" },
+                {
+                    test: /fabric(\.min)?\.js$/,
+                    use: [{
+                        loader: "exports-loader",
+                        options: {
+                            type: "commonjs",
+                            exports: "fabric"
+                        }
+                    }]
+                },
                 {
                     test: /\.tsx?$/,
                     use: [{ loader: "ts-loader", options: { logLevel: "info" } }],
