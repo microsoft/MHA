@@ -3,9 +3,9 @@
  *
  * This configuration file sets up various plugins and settings for building the project,
  * including handling TypeScript files, CSS extraction, HTML template generation, and more.
+ * The configuration is environment-aware, with different optimizations for development and production.
  *
  * Plugins used:
- * - FileManagerPlugin: Manages file operations like copying resources.
  * - ForkTsCheckerWebpackPlugin: Runs TypeScript type checking in a separate process.
  * - HtmlWebpackPlugin: Generates HTML files for each page.
  * - MiniCssExtractPlugin: Extracts CSS into separate files.
@@ -27,15 +27,18 @@
  * @returns {Promise<Object>} The webpack configuration object.
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports */
-const path = require("path");
+import path from "path";
+import { fileURLToPath } from "url";
 
-const FileManagerPlugin = require("filemanager-webpack-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
-const HtmlWebpackPlugin = require("html-webpack-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
-const MiniCssExtractPlugin = require("mini-css-extract-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
-const devCerts = require("office-addin-dev-certs");
-const webpack = require("webpack");
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import devCerts from "office-addin-dev-certs";
+import webpack from "webpack";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Asynchronously retrieves HTTPS server options.
@@ -147,42 +150,70 @@ function generateHtmlWebpackPlugins() {
     }));
 }
 
-module.exports = async (env, options) => {
+export default async (env, options) => {
+    const isProduction = options.mode === "production";
+
     const config = {
         entry: generateEntry(),
         plugins: [
             new MiniCssExtractPlugin({ filename: `${version}/[name].css` }),
             new webpack.DefinePlugin({
-                __VERSION__: JSON.stringify(version), // eslint-disable-line @typescript-eslint/naming-convention
-                __AIKEY__: JSON.stringify(aikey), // eslint-disable-line @typescript-eslint/naming-convention
-                __BUILDTIME__: JSON.stringify(buildTime), // eslint-disable-line @typescript-eslint/naming-convention
-            }),
-            new FileManagerPlugin({
-                events: {
-                    onEnd: {
-                        copy: [
-                            { source: "./src/Resources/*.gif", destination: "./Resources/" },
-                            { source: "./src/Resources/*.jpg", destination: "./Resources/" },
-                        ],
-                    },
-                },
+                __VERSION__: JSON.stringify(version),
+                __AIKEY__: JSON.stringify(aikey),
+                __BUILDTIME__: JSON.stringify(buildTime),
             }),
             new ForkTsCheckerWebpackPlugin(),
             ...generateHtmlWebpackPlugins(),
+            // Bundle analyzer (when env.analyze is set)
+            ...(env?.analyze ? [new BundleAnalyzerPlugin({
+                analyzerMode: "static",
+                openAnalyzer: false,
+                reportFilename: "../Pages/bundle-analysis/bundle-report.html",
+            })] : []),
         ],
-        mode: "development",
-        devtool: "source-map",
-        target: ["web", "es5"],
+        mode: isProduction ? "production" : "development",
+        devtool: isProduction ? "source-map" : "eval-cheap-module-source-map",
+        target: ["web", "es2022"],
         module: {
             rules: [
-                { test: /fabric(\.min)?\.js$/, use: "exports-loader?exports=fabric" },
+                {
+                    test: /fabric(\.min)?\.js$/,
+                    use: [{
+                        loader: "exports-loader",
+                        options: {
+                            type: "commonjs",
+                            exports: "fabric"
+                        }
+                    }]
+                },
                 {
                     test: /\.tsx?$/,
-                    use: [{ loader: "ts-loader", options: { logLevel: "info" } }],
+                    use: [{
+                        loader: "ts-loader",
+                        options: {
+                            logLevel: "info",
+                            transpileOnly: true, // Let ForkTsCheckerWebpackPlugin handle type checking
+                            experimentalWatchApi: true, // Faster incremental builds
+                        }
+                    }],
                     exclude: /node_modules/,
                 },
                 { test: /\.css$/i, use: [MiniCssExtractPlugin.loader, "css-loader"] },
                 { test: /\.js$/, enforce: "pre", use: ["source-map-loader"] },
+                {
+                    test: /\.(gif|jpg|jpeg|png|svg)$/i,
+                    type: "asset/resource",
+                    generator: {
+                        filename: "Resources/[name][ext]"
+                    }
+                },
+                {
+                    test: /\.(woff|woff2|ttf|eot)$/i,
+                    type: "asset/resource",
+                    generator: {
+                        filename: "fonts/[name][ext]"
+                    }
+                }
             ],
         },
         optimization: {
@@ -190,27 +221,150 @@ module.exports = async (env, options) => {
             splitChunks: {
                 chunks: "all",
                 maxInitialRequests: Infinity,
-                minSize: 0,
+                minSize: 20000, // 20KB minimum chunk size
+                maxSize: 500000, // 500KB maximum chunk size
+                cacheGroups: {
+                    // Framework libraries (React, Vue, etc. if any)
+                    framework: {
+                        test: /[\\/]node_modules[\\/](react|react-dom|vue|angular)[\\/]/,
+                        name: "framework",
+                        priority: 40,
+                        reuseExistingChunk: true,
+                    },
+                    // Large libraries that should be separate
+                    largeLibs: {
+                        test: /[\\/]node_modules[\\/](framework7|fabric|lodash|moment|date-fns)[\\/]/,
+                        name: "large-libs",
+                        priority: 30,
+                        reuseExistingChunk: true,
+                    },
+                    // Office/Microsoft specific libraries
+                    office: {
+                        test: /[\\/]node_modules[\\/](office-addin|@microsoft)[\\/]/,
+                        name: "office-libs",
+                        priority: 25,
+                        reuseExistingChunk: true,
+                    },
+                    // Utilities and smaller libraries
+                    vendor: {
+                        test: /[\\/]node_modules[\\/]/,
+                        name: "vendors",
+                        priority: 20,
+                        reuseExistingChunk: true,
+                        maxSize: 200000, // 200KB - more aggressive splitting
+                        minSize: 30000, // 30KB minimum
+                    },
+                    // Common code between entry points
+                    common: {
+                        name: "common",
+                        minChunks: 2,
+                        priority: 10,
+                        reuseExistingChunk: true,
+                    },
+                    // Default group for everything else
+                    default: {
+                        minChunks: 2,
+                        priority: 5,
+                        reuseExistingChunk: true,
+                    }
+                }
             },
         },
         resolve: {
             extensions: [".tsx", ".ts", ".js"],
+            // Improve module resolution performance
+            alias: {
+                "@": path.resolve(__dirname, "src"),
+                "@scripts": path.resolve(__dirname, "src/Scripts"),
+                "@styles": path.resolve(__dirname, "src/Content"),
+            },
         },
         output: {
             filename: `${version}/[name].js`,
             path: path.resolve(__dirname, "Pages"),
             publicPath: "/Pages/",
             clean: true,
+            chunkLoadingGlobal: "mhaChunkLoad",
+            crossOriginLoading: "anonymous",
+            asyncChunks: true,
+            compareBeforeEmit: true,
         },
         devServer: {
-            headers: { "Access-Control-Allow-Origin": "*" }, // eslint-disable-line @typescript-eslint/naming-convention
+            headers: {
+                "Access-Control-Allow-Origin": "*", // eslint-disable-line @typescript-eslint/naming-convention
+                "X-Content-Type-Options": "nosniff", // eslint-disable-line @typescript-eslint/naming-convention
+                "X-Frame-Options": "SAMEORIGIN", // eslint-disable-line @typescript-eslint/naming-convention
+                "X-XSS-Protection": "1; mode=block", // eslint-disable-line @typescript-eslint/naming-convention
+                "Referrer-Policy": "strict-origin-when-cross-origin", // eslint-disable-line @typescript-eslint/naming-convention
+            },
             static: __dirname,
             server: {
                 type: "https",
                 options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
             },
             port: process.env.npm_package_config_dev_server_port || 44336,
+            compress: true, // Enable gzip compression
+            hot: true, // Enable hot module replacement
+            open: false, // Don't auto-open browser
+            client: {
+                overlay: {
+                    errors: true,
+                    warnings: false,
+                },
+                progress: true,
+            },
+        },
+        stats: {
+            preset: "minimal",
+            colors: true,
+            timings: true,
+            assets: false,
+            chunks: false,
+            modules: false,
+            children: false,
+            warnings: true,
+            errors: true,
+            errorDetails: true,
         },
     };
+
+    // Production-specific optimizations
+    if (isProduction) {
+        // Remove console.log statements in production
+        config.optimization.minimizer = [
+            "...",
+            new webpack.DefinePlugin({
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                "console.log": "void 0",
+            })
+        ];
+
+        // Add performance budgets with more realistic limits for chunked bundles
+        config.performance = {
+            maxAssetSize: 500000, // 500KB per asset (more realistic with chunking)
+            maxEntrypointSize: 1000000, // 1MB per entry point (reduced from 1.5MB)
+            hints: "warning",
+        };
+
+        // Production-specific optimization
+        config.optimization.usedExports = true;
+        config.optimization.sideEffects = false;
+    } else {
+        // Development-specific optimizations
+        config.cache = {
+            type: "filesystem",
+            buildDependencies: {
+                config: [__filename],
+            },
+        };
+
+        // Faster source map generation in development
+        config.module.rules.forEach(rule => {
+            if (rule.enforce === "pre" && rule.use && rule.use.includes("source-map-loader")) {
+                rule.exclude = /node_modules/;
+            }
+        });
+    }
+
     return config;
 };

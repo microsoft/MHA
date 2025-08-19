@@ -90,6 +90,19 @@ For both IOS and Android click open an email, then press the three dots under th
 
 - Follow the steps given [here](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/debug-desktop-using-edge-chromium#use-the-visual-studio-code-debugger).
 
+### Bundle Analysis
+
+- Start the dev server: `npm run dev-server`
+- Generate bundle analysis report: `npm run build:analyze`
+- This creates a production build with a detailed bundle composition report
+- View the report here: <https://localhost:44336/Pages/bundle-analysis/bundle-report.html>
+- The report shows:
+  - Bundle size visualization with interactive treemap
+  - Chunk breakdown and module dependencies
+  - Optimization opportunities for large modules
+  - Code splitting effectiveness analysis
+- Use this for performance auditing and identifying optimization opportunities
+
 ### Clean
 
 - Clean build artifacts: `npm clean`
