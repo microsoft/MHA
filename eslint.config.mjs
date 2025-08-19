@@ -1,5 +1,5 @@
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import stylisticJs from "@stylistic/eslint-plugin-js";
+import stylistic from "@stylistic/eslint-plugin";
 import node from "eslint-plugin-node";
 import _import from "eslint-plugin-import";
 import { fixupPluginRules } from "@eslint/compat";
@@ -24,7 +24,7 @@ export default [{
 }, ...compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended"), {
     plugins: {
         "@typescript-eslint": typescriptEslint,
-        "@stylistic/js": stylisticJs,
+        "@stylistic": stylistic,
         node,
         import: fixupPluginRules(_import),
     },
@@ -70,13 +70,13 @@ export default [{
             ignoreDeclarationSort: true,
         }],
 
-        "@stylistic/js/no-multiple-empty-lines": ["error", {
+        "@stylistic/no-multiple-empty-lines": ["error", {
             max: 1,
             maxEOF: 0,
             maxBOF: 0,
         }],
 
-        "@stylistic/js/no-trailing-spaces": "error",
+        "@stylistic/no-trailing-spaces": "error",
         "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/no-inferrable-types": "error",
 
