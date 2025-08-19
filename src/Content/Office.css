@@ -47,7 +47,7 @@ fieldset { margin: 0 0 1.4em 0; padding: 0; border: none; }
 input[type="text"], input[type="password"] { display: block; width: 85%; }
 textarea { width: 85%; }
 input[type="submit"], input[type="button"] { height: 24px; padding-left: 1em; padding-right: 1em; background-color: white; border: 1px solid grey; border-color: #dedfe0 #b9b9b9 #b9b9b9 #dedfe0; cursor: pointer; }
-   
+
 /* Tables
 ***************************************************************/
 th, td { text-align: left; vertical-align: top; padding: .4em 1.2em 1em 0; line-height: 1.3em; }

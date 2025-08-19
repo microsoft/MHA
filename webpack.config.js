@@ -35,6 +35,7 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import devCerts from "office-addin-dev-certs";
 import webpack from "webpack";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -150,8 +151,8 @@ function generateHtmlWebpackPlugins() {
 }
 
 export default async (env, options) => {
-    const isProduction = options.mode === 'production';
-    
+    const isProduction = options.mode === "production";
+
     const config = {
         entry: generateEntry(),
         plugins: [
@@ -163,9 +164,15 @@ export default async (env, options) => {
             }),
             new ForkTsCheckerWebpackPlugin(),
             ...generateHtmlWebpackPlugins(),
+            // Bundle analyzer (when env.analyze is set)
+            ...(env?.analyze ? [new BundleAnalyzerPlugin({
+                analyzerMode: "static",
+                openAnalyzer: false,
+                reportFilename: "../Pages/bundle-analysis/bundle-report.html",
+            })] : []),
         ],
-        mode: isProduction ? 'production' : 'development',
-        devtool: isProduction ? 'source-map' : 'eval-source-map',
+        mode: isProduction ? "production" : "development",
+        devtool: isProduction ? "source-map" : "eval-cheap-module-source-map",
         target: ["web", "es2022"],
         module: {
             rules: [
@@ -181,13 +188,13 @@ export default async (env, options) => {
                 },
                 {
                     test: /\.tsx?$/,
-                    use: [{ 
-                        loader: "ts-loader", 
-                        options: { 
+                    use: [{
+                        loader: "ts-loader",
+                        options: {
                             logLevel: "info",
                             transpileOnly: true, // Let ForkTsCheckerWebpackPlugin handle type checking
                             experimentalWatchApi: true, // Faster incremental builds
-                        } 
+                        }
                     }],
                     exclude: /node_modules/,
                 },
@@ -195,16 +202,16 @@ export default async (env, options) => {
                 { test: /\.js$/, enforce: "pre", use: ["source-map-loader"] },
                 {
                     test: /\.(gif|jpg|jpeg|png|svg)$/i,
-                    type: 'asset/resource',
+                    type: "asset/resource",
                     generator: {
-                        filename: 'Resources/[name][ext]'
+                        filename: "Resources/[name][ext]"
                     }
                 },
                 {
                     test: /\.(woff|woff2|ttf|eot)$/i,
-                    type: 'asset/resource',
+                    type: "asset/resource",
                     generator: {
-                        filename: 'fonts/[name][ext]'
+                        filename: "fonts/[name][ext]"
                     }
                 }
             ],
@@ -220,28 +227,28 @@ export default async (env, options) => {
                     // Framework libraries (React, Vue, etc. if any)
                     framework: {
                         test: /[\\/]node_modules[\\/](react|react-dom|vue|angular)[\\/]/,
-                        name: 'framework',
+                        name: "framework",
                         priority: 40,
                         reuseExistingChunk: true,
                     },
                     // Large libraries that should be separate
                     largeLibs: {
                         test: /[\\/]node_modules[\\/](framework7|fabric|lodash|moment|date-fns)[\\/]/,
-                        name: 'large-libs',
+                        name: "large-libs",
                         priority: 30,
                         reuseExistingChunk: true,
                     },
                     // Office/Microsoft specific libraries
                     office: {
                         test: /[\\/]node_modules[\\/](office-addin|@microsoft)[\\/]/,
-                        name: 'office-libs',
+                        name: "office-libs",
                         priority: 25,
                         reuseExistingChunk: true,
                     },
                     // Utilities and smaller libraries
                     vendor: {
                         test: /[\\/]node_modules[\\/]/,
-                        name: 'vendors',
+                        name: "vendors",
                         priority: 20,
                         reuseExistingChunk: true,
                         maxSize: 200000, // 200KB - more aggressive splitting
@@ -249,7 +256,7 @@ export default async (env, options) => {
                     },
                     // Common code between entry points
                     common: {
-                        name: 'common',
+                        name: "common",
                         minChunks: 2,
                         priority: 10,
                         reuseExistingChunk: true,
@@ -267,9 +274,13 @@ export default async (env, options) => {
             extensions: [".tsx", ".ts", ".js"],
             // Improve module resolution performance
             alias: {
-                '@': path.resolve(__dirname, 'src'),
-                '@scripts': path.resolve(__dirname, 'src/Scripts'),
-                '@styles': path.resolve(__dirname, 'src/Content'),
+                // ESLint naming exception for webpack aliases
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                "@": path.resolve(__dirname, "src"),
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                "@scripts": path.resolve(__dirname, "src/Scripts"),
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                "@styles": path.resolve(__dirname, "src/Content"),
             },
         },
         output: {
@@ -277,9 +288,13 @@ export default async (env, options) => {
             path: path.resolve(__dirname, "Pages"),
             publicPath: "/Pages/",
             clean: true,
+            chunkLoadingGlobal: "mhaChunkLoad",
+            crossOriginLoading: "anonymous",
+            asyncChunks: true,
+            compareBeforeEmit: true,
         },
         devServer: {
-            headers: { 
+            headers: {
                 "Access-Control-Allow-Origin": "*", // eslint-disable-line @typescript-eslint/naming-convention
                 "X-Content-Type-Options": "nosniff", // eslint-disable-line @typescript-eslint/naming-convention
                 "X-Frame-Options": "SAMEORIGIN", // eslint-disable-line @typescript-eslint/naming-convention
@@ -295,6 +310,25 @@ export default async (env, options) => {
             compress: true, // Enable gzip compression
             hot: true, // Enable hot module replacement
             open: false, // Don't auto-open browser
+            client: {
+                overlay: {
+                    errors: true,
+                    warnings: false,
+                },
+                progress: true,
+            },
+        },
+        stats: {
+            preset: "minimal",
+            colors: true,
+            timings: true,
+            assets: false,
+            chunks: false,
+            modules: false,
+            children: false,
+            warnings: true,
+            errors: true,
+            errorDetails: true,
         },
     };
 
@@ -302,34 +336,35 @@ export default async (env, options) => {
     if (isProduction) {
         // Remove console.log statements in production
         config.optimization.minimizer = [
-            '...',
+            "...",
             new webpack.DefinePlugin({
-                'console.log': 'void 0',
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                "console.log": "void 0",
             })
         ];
-        
+
         // Add performance budgets with more realistic limits for chunked bundles
         config.performance = {
             maxAssetSize: 500000, // 500KB per asset (more realistic with chunking)
             maxEntrypointSize: 1000000, // 1MB per entry point (reduced from 1.5MB)
-            hints: 'warning',
+            hints: "warning",
         };
-        
+
         // Production-specific optimization
         config.optimization.usedExports = true;
         config.optimization.sideEffects = false;
     } else {
         // Development-specific optimizations
         config.cache = {
-            type: 'filesystem',
+            type: "filesystem",
             buildDependencies: {
                 config: [__filename],
             },
         };
-        
+
         // Faster source map generation in development
         config.module.rules.forEach(rule => {
-            if (rule.enforce === 'pre' && rule.use && rule.use.includes('source-map-loader')) {
+            if (rule.enforce === "pre" && rule.use && rule.use.includes("source-map-loader")) {
                 rule.exclude = /node_modules/;
             }
         });

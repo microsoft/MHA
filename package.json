@@ -13,7 +13,7 @@
     "watch": "webpack --watch --mode=development",
     "build": "webpack --mode=production --node-env=production",
     "build:dev": "webpack --mode=development",
-    "build:analyze": "webpack --mode=production --analyze",
+    "build:analyze": "webpack --mode=production --env analyze",
     "serve": "webpack serve --mode=development",
     "dev-server": "webpack serve --mode=development",
     "start": "office-addin-debugging start ManifestDebugLocal.xml",
