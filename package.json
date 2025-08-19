@@ -9,10 +9,11 @@
   "private": true,
   "scripts": {
     "clean": "node tasks/clean.js",
-    "watch": "webpack --watch",
+    "watch": "webpack --watch --mode=development",
     "build": "webpack --mode=production --node-env=production",
     "build:dev": "webpack --mode=development",
-    "serve": "webpack serve",
+    "build:analyze": "webpack --mode=production --analyze",
+    "serve": "webpack serve --mode=development",
     "dev-server": "webpack serve --mode=development",
     "start": "office-addin-debugging start ManifestDebugLocal.xml",
     "start:debug-server": "office-addin-debugging start manifestDebugServer.xml",
@@ -76,6 +77,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
     "webpack": "^5.101.2",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2"
   },

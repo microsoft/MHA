@@ -3,9 +3,9 @@
  *
  * This configuration file sets up various plugins and settings for building the project,
  * including handling TypeScript files, CSS extraction, HTML template generation, and more.
+ * The configuration is environment-aware, with different optimizations for development and production.
  *
  * Plugins used:
- * - FileManagerPlugin: Manages file operations like copying resources.
  * - ForkTsCheckerWebpackPlugin: Runs TypeScript type checking in a separate process.
  * - HtmlWebpackPlugin: Generates HTML files for each page.
  * - MiniCssExtractPlugin: Extracts CSS into separate files.
@@ -147,6 +147,8 @@ function generateHtmlWebpackPlugins() {
 }
 
 module.exports = async (env, options) => {
+    const isProduction = options.mode === 'production';
+    
     const config = {
         entry: generateEntry(),
         plugins: [
@@ -159,8 +161,8 @@ module.exports = async (env, options) => {
             new ForkTsCheckerWebpackPlugin(),
             ...generateHtmlWebpackPlugins(),
         ],
-        mode: "development",
-        devtool: "source-map",
+        mode: isProduction ? 'production' : 'development',
+        devtool: isProduction ? 'source-map' : 'eval-source-map',
         target: ["web", "es2022"],
         module: {
             rules: [
@@ -203,6 +205,20 @@ module.exports = async (env, options) => {
                 chunks: "all",
                 maxInitialRequests: Infinity,
                 minSize: 0,
+                cacheGroups: {
+                    vendor: {
+                        test: /[\\/]node_modules[\\/]/,
+                        name: 'vendors',
+                        priority: 10,
+                        reuseExistingChunk: true,
+                    },
+                    common: {
+                        name: 'common',
+                        minChunks: 2,
+                        priority: 5,
+                        reuseExistingChunk: true,
+                    }
+                }
             },
         },
         resolve: {
@@ -224,5 +240,17 @@ module.exports = async (env, options) => {
             port: process.env.npm_package_config_dev_server_port || 44336,
         },
     };
+
+    // Production-specific optimizations
+    if (isProduction) {
+        // Remove console.log statements in production
+        config.optimization.minimizer = [
+            '...',
+            new webpack.DefinePlugin({
+                'console.log': 'void 0',
+            })
+        ];
+    }
+
     return config;
 };
