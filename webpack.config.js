@@ -30,7 +30,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 const path = require("path");
 
-const FileManagerPlugin = require("filemanager-webpack-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
 const HtmlWebpackPlugin = require("html-webpack-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
 const MiniCssExtractPlugin = require("mini-css-extract-plugin"); // eslint-disable-line @typescript-eslint/naming-convention
@@ -157,16 +156,6 @@ module.exports = async (env, options) => {
                 __AIKEY__: JSON.stringify(aikey), // eslint-disable-line @typescript-eslint/naming-convention
                 __BUILDTIME__: JSON.stringify(buildTime), // eslint-disable-line @typescript-eslint/naming-convention
             }),
-            new FileManagerPlugin({
-                events: {
-                    onEnd: {
-                        copy: [
-                            { source: "./src/Resources/*.gif", destination: "./Resources/" },
-                            { source: "./src/Resources/*.jpg", destination: "./Resources/" },
-                        ],
-                    },
-                },
-            }),
             new ForkTsCheckerWebpackPlugin(),
             ...generateHtmlWebpackPlugins(),
         ],
@@ -192,6 +181,20 @@ module.exports = async (env, options) => {
                 },
                 { test: /\.css$/i, use: [MiniCssExtractPlugin.loader, "css-loader"] },
                 { test: /\.js$/, enforce: "pre", use: ["source-map-loader"] },
+                {
+                    test: /\.(gif|jpg|jpeg|png|svg)$/i,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: 'Resources/[name][ext]'
+                    }
+                },
+                {
+                    test: /\.(woff|woff2|ttf|eot)$/i,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: 'fonts/[name][ext]'
+                    }
+                }
             ],
         },
         optimization: {
