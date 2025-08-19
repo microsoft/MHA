@@ -181,7 +181,14 @@ export default async (env, options) => {
                 },
                 {
                     test: /\.tsx?$/,
-                    use: [{ loader: "ts-loader", options: { logLevel: "info" } }],
+                    use: [{ 
+                        loader: "ts-loader", 
+                        options: { 
+                            logLevel: "info",
+                            transpileOnly: true, // Let ForkTsCheckerWebpackPlugin handle type checking
+                            experimentalWatchApi: true, // Faster incremental builds
+                        } 
+                    }],
                     exclude: /node_modules/,
                 },
                 { test: /\.css$/i, use: [MiniCssExtractPlugin.loader, "css-loader"] },
@@ -234,13 +241,22 @@ export default async (env, options) => {
             clean: true,
         },
         devServer: {
-            headers: { "Access-Control-Allow-Origin": "*" }, // eslint-disable-line @typescript-eslint/naming-convention
+            headers: { 
+                "Access-Control-Allow-Origin": "*", // eslint-disable-line @typescript-eslint/naming-convention
+                "X-Content-Type-Options": "nosniff", // eslint-disable-line @typescript-eslint/naming-convention
+                "X-Frame-Options": "SAMEORIGIN", // eslint-disable-line @typescript-eslint/naming-convention
+                "X-XSS-Protection": "1; mode=block", // eslint-disable-line @typescript-eslint/naming-convention
+                "Referrer-Policy": "strict-origin-when-cross-origin", // eslint-disable-line @typescript-eslint/naming-convention
+            },
             static: __dirname,
             server: {
                 type: "https",
                 options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
             },
             port: process.env.npm_package_config_dev_server_port || 44336,
+            compress: true, // Enable gzip compression
+            hot: true, // Enable hot module replacement
+            open: false, // Don't auto-open browser
         },
     };
 
@@ -253,6 +269,28 @@ export default async (env, options) => {
                 'console.log': 'void 0',
             })
         ];
+        
+        // Add performance budgets
+        config.performance = {
+            maxAssetSize: 1000000, // 1MB per asset
+            maxEntrypointSize: 1500000, // 1.5MB per entry point
+            hints: 'warning',
+        };
+    } else {
+        // Development-specific optimizations
+        config.cache = {
+            type: 'filesystem',
+            buildDependencies: {
+                config: [__filename],
+            },
+        };
+        
+        // Faster source map generation in development
+        config.module.rules.forEach(rule => {
+            if (rule.enforce === 'pre' && rule.use && rule.use.includes('source-map-loader')) {
+                rule.exclude = /node_modules/;
+            }
+        });
     }
 
     return config;
