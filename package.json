@@ -22,8 +22,8 @@
     "stop": "office-addin-debugging stop ManifestDebugLocal.xml && office-addin-debugging stop manifestDebugServer.xml",
     "validate": "office-addin-manifest validate Manifest.xml",
     "test": "jest",
-    "lint": "eslint src",
-    "lint:fix": "eslint --fix --ext .ts src",
+    "lint": "eslint \"*.{js,ts}\" \"src/**/*\" \"tasks/**/*\"",
+    "lint:fix": "eslint --fix \"*.{js,ts}\" \"src/**/*\" \"tasks/**/*\"",
     "pretest": "npm run lint",
     "prebuild": "npm run clean"
   },

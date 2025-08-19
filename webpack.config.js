@@ -158,9 +158,9 @@ export default async (env, options) => {
         plugins: [
             new MiniCssExtractPlugin({ filename: `${version}/[name].css` }),
             new webpack.DefinePlugin({
-                __VERSION__: JSON.stringify(version), // eslint-disable-line @typescript-eslint/naming-convention
-                __AIKEY__: JSON.stringify(aikey), // eslint-disable-line @typescript-eslint/naming-convention
-                __BUILDTIME__: JSON.stringify(buildTime), // eslint-disable-line @typescript-eslint/naming-convention
+                __VERSION__: JSON.stringify(version),
+                __AIKEY__: JSON.stringify(aikey),
+                __BUILDTIME__: JSON.stringify(buildTime),
             }),
             new ForkTsCheckerWebpackPlugin(),
             ...generateHtmlWebpackPlugins(),
@@ -274,12 +274,8 @@ export default async (env, options) => {
             extensions: [".tsx", ".ts", ".js"],
             // Improve module resolution performance
             alias: {
-                // ESLint naming exception for webpack aliases
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 "@": path.resolve(__dirname, "src"),
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 "@scripts": path.resolve(__dirname, "src/Scripts"),
-                // eslint-disable-next-line @typescript-eslint/naming-convention
                 "@styles": path.resolve(__dirname, "src/Content"),
             },
         },

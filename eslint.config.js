@@ -1,14 +1,15 @@
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import stylistic from "@stylistic/eslint-plugin";
-import node from "eslint-plugin-node";
-import _import from "eslint-plugin-import";
-import { fixupPluginRules } from "@eslint/compat";
-import globals from "globals";
-import tsParser from "@typescript-eslint/parser";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
+
+import { fixupPluginRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
+import js from "@eslint/js";
+import stylistic from "@stylistic/eslint-plugin";
+import typescriptEslint from "@typescript-eslint/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+import importPlugin from "eslint-plugin-import";
+import node from "eslint-plugin-node";
+import globals from "globals";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,14 +20,15 @@ const compat = new FlatCompat({
 });
 
 export default [{
+    ignores: ["Pages/**"],
+}, {
     files: ["**/*.ts","**/*.js"],
-    ignores: ["Pages"],
 }, ...compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended"), {
     plugins: {
         "@typescript-eslint": typescriptEslint,
         "@stylistic": stylistic,
         node,
-        import: fixupPluginRules(_import),
+        import: fixupPluginRules(importPlugin),
     },
 
     languageOptions: {
@@ -86,6 +88,20 @@ export default [{
         }, {
             selector: "variableLike",
             format: ["camelCase"],
+            filter: {
+                regex: "^(__filename|__dirname)$",
+                match: false
+            }
+        }, {
+            selector: "variable",
+            filter: {
+                regex: "^(__filename|__dirname)$",
+                match: true
+            },
+            format: null
+        }, {
+            selector: "import",
+            format: ["camelCase", "PascalCase"]
         }, {
             selector: "typeLike",
             format: ["PascalCase"],
@@ -95,6 +111,17 @@ export default [{
         }, {
             selector: "property",
             format: ["camelCase"],
+            filter: {
+                regex: "^(@|import/|linebreak-style|max-classes-per-file|no-duplicate-imports|no-inner-declarations|no-unmodified-loop-condition|block-scoped-var|sort-imports|newlines-between|SwitchCase|__[A-Z_]+__|\\^.+\\$)",
+                match: false
+            }
+        }, {
+            selector: "property",
+            filter: {
+                regex: "^(@|import/|linebreak-style|max-classes-per-file|no-duplicate-imports|no-inner-declarations|no-unmodified-loop-condition|block-scoped-var|sort-imports|newlines-between|SwitchCase|__[A-Z_]+__|\\^.+\\$)",
+                match: true
+            },
+            format: null
         }, {
             selector: "method",
             format: ["camelCase"],
