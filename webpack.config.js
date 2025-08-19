@@ -214,16 +214,48 @@ export default async (env, options) => {
             splitChunks: {
                 chunks: "all",
                 maxInitialRequests: Infinity,
-                minSize: 0,
+                minSize: 20000, // 20KB minimum chunk size
+                maxSize: 500000, // 500KB maximum chunk size
                 cacheGroups: {
+                    // Framework libraries (React, Vue, etc. if any)
+                    framework: {
+                        test: /[\\/]node_modules[\\/](react|react-dom|vue|angular)[\\/]/,
+                        name: 'framework',
+                        priority: 40,
+                        reuseExistingChunk: true,
+                    },
+                    // Large libraries that should be separate
+                    largeLibs: {
+                        test: /[\\/]node_modules[\\/](framework7|fabric|lodash|moment|date-fns)[\\/]/,
+                        name: 'large-libs',
+                        priority: 30,
+                        reuseExistingChunk: true,
+                    },
+                    // Office/Microsoft specific libraries
+                    office: {
+                        test: /[\\/]node_modules[\\/](office-addin|@microsoft)[\\/]/,
+                        name: 'office-libs',
+                        priority: 25,
+                        reuseExistingChunk: true,
+                    },
+                    // Utilities and smaller libraries
                     vendor: {
                         test: /[\\/]node_modules[\\/]/,
                         name: 'vendors',
+                        priority: 20,
+                        reuseExistingChunk: true,
+                        maxSize: 200000, // 200KB - more aggressive splitting
+                        minSize: 30000, // 30KB minimum
+                    },
+                    // Common code between entry points
+                    common: {
+                        name: 'common',
+                        minChunks: 2,
                         priority: 10,
                         reuseExistingChunk: true,
                     },
-                    common: {
-                        name: 'common',
+                    // Default group for everything else
+                    default: {
                         minChunks: 2,
                         priority: 5,
                         reuseExistingChunk: true,
@@ -233,6 +265,12 @@ export default async (env, options) => {
         },
         resolve: {
             extensions: [".tsx", ".ts", ".js"],
+            // Improve module resolution performance
+            alias: {
+                '@': path.resolve(__dirname, 'src'),
+                '@scripts': path.resolve(__dirname, 'src/Scripts'),
+                '@styles': path.resolve(__dirname, 'src/Content'),
+            },
         },
         output: {
             filename: `${version}/[name].js`,
@@ -270,12 +308,16 @@ export default async (env, options) => {
             })
         ];
         
-        // Add performance budgets
+        // Add performance budgets with more realistic limits for chunked bundles
         config.performance = {
-            maxAssetSize: 1000000, // 1MB per asset
-            maxEntrypointSize: 1500000, // 1.5MB per entry point
+            maxAssetSize: 500000, // 500KB per asset (more realistic with chunking)
+            maxEntrypointSize: 1000000, // 1MB per entry point (reduced from 1.5MB)
             hints: 'warning',
         };
+        
+        // Production-specific optimization
+        config.optimization.usedExports = true;
+        config.optimization.sideEffects = false;
     } else {
         // Development-specific optimizations
         config.cache = {
