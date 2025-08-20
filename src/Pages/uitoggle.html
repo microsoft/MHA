@@ -6,39 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
 </head>
-<body class="ms-Fabric">
+<body>
     <div id="uiToggleFrame">
         <div class="header-row">
-            <div class="ms-CommandBar">
-                <div class="ms-CommandBar-mainArea">
-                    <div class="ms-CommandButton">
-                        <button class="ms-CommandButton-button copy-button" title="Copy" id="copyButton" tabindex="0">
-                            <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Copy"></i></span>
-                        </button>
-                    </div>
-                    <div class="ms-CommandButton">
-                        <button class="ms-CommandButton-button gear-button" title="Settings" id="settingsButton" tabindex="0">
-                            <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Settings"></i></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <fluent-toolbar>
+                <fluent-button id="copyButton" title="Copy" tabindex="0">
+                    <span slot="start" class="icon-copy"></span>
+                </fluent-button>
+                <fluent-button id="settingsButton" title="Settings" tabindex="0">
+                    <span slot="start" class="icon-settings"></span>
+                </fluent-button>
+            </fluent-toolbar>
+        </div>
 
-            <!-- Settings Dialog-->
-            <div class="ms-Dialog ms-Dialog--lgHeader" id="dialog-Settings" title="Settings" role="dialog">
-                <div class="ms-Dialog-title">Settings</div>
-                <div class="ms-Dialog-content">
-                    <p class="ms-Dialog-subText">UI style</p>
-                    <div class="ms-ChoiceFieldGroup" id="uiChoice" role="radiogroup">
-                        <ul class="ms-ChoiceFieldGroup-list" id="uiChoice-list"></ul>
-                    </div>
-                </div>
-                <div class="ms-CheckBox" id="dialog-enableTelemetry">
-                    <input tabindex="-1" type="checkbox" class="ms-CheckBox-input" id="telemetryInput">
-                    <label for="telemetryInput" role="checkbox" class="ms-CheckBox-field" tabindex="0" aria-checked="false" name="telemetryLabel" id="telemetryLabel">
-                        <span class="ms-Label">Send telemetry</span>
-                    </label>
-                </div>
+        <div class="frame-row">
+            <iframe id="uiFrame" src="newDesktopFrame.html" title="Message Header Analyzer" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+
+        <!-- Settings Dialog-->
+        <fluent-dialog id="dialog-Settings" aria-label="Settings" modal="true" hidden>
+            <div class="dialog-header">
+                <h2>Settings</h2>
+            </div>
+            <div class="dialog-content">
+                <p>UI style</p>
+                <fluent-radio-group orientation="vertical" id="uiChoice" name="uiChoice">
+                    <!-- Radio options will be dynamically populated -->
+                </fluent-radio-group>
+                <fluent-checkbox id="telemetryInput">Send telemetry</fluent-checkbox>
                 <div align="right">
                     <strong>
                         <small>
@@ -46,33 +41,25 @@
                         </small>
                     </strong>
                 </div>
-                <div class="ms-Dialog-actions">
-                    <button class="ms-Button ms-Dialog-action" id="actionsSettings-diag">
-                        <span class="ms-Button-label">diagnostics</span>
-                    </button>
-                    <button class="ms-Button ms-Button--primary ms-Dialog-action" id="actionsSettings-OK">
-                        <span class="ms-Button-label">OK</span>
-                    </button>
-                </div>
             </div>
-
-            <!-- Diagnostics dialog-->
-            <div class="ms-Dialog ms-Dialog--lgHeader" id="dialog-Diagnostics" title="Diagnostics" role="dialog">
-                <div class="ms-Dialog-title">Diagnostics</div>
-                <div class="ms-Dialog-content">
-                    <div class="code-box"><pre tabindex="0" id="diagpre"><code id="diagnostics"></code></pre></div>
-                </div>
-                <div class="ms-Dialog-actions">
-                    <button class="ms-Button ms-Button--primary ms-Dialog-action" id="actionsDiag-OK">
-                        <span class="ms-Button-label">OK</span>
-                    </button>
-                </div>
+            <div class="dialog-actions">
+                <fluent-button id="actionsSettings-diag">diagnostics</fluent-button>
+                <fluent-button appearance="accent" id="actionsSettings-OK">OK</fluent-button>
             </div>
-        </div>
+        </fluent-dialog>
 
-        <div class="frame-row">
-            <iframe id="uiFrame" src="newDesktopFrame.html" title="Message Header Analyzer" sandbox="allow-scripts allow-same-origin"></iframe>
-        </div>
+        <!-- Diagnostics dialog-->
+        <fluent-dialog id="dialog-Diagnostics" aria-label="Diagnostics" modal="true" hidden>
+            <div class="dialog-header">
+                <h2>Diagnostics</h2>
+            </div>
+            <div class="dialog-content">
+                <div class="code-box"><pre tabindex="0" id="diagpre"><code id="diagnostics"></code></pre></div>
+            </div>
+            <div class="dialog-actions">
+                <fluent-button appearance="accent" id="actionsDiag-OK">OK</fluent-button>
+            </div>
+        </fluent-dialog>
     </div>
 </body>
 </html>

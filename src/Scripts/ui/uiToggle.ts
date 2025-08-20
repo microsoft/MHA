@@ -1,9 +1,25 @@
-import "office-ui-fabric-js/dist/css/fabric.min.css";
-import "office-ui-fabric-js/dist/css/fabric.components.min.css";
-import "../../Content/fabric.css";
+import {
+    fluentButton,
+    fluentCheckbox,
+    fluentDialog,
+    fluentRadio,
+    fluentRadioGroup,
+    fluentToolbar,
+    provideFluentDesignSystem
+} from "@fluentui/web-components";
 import "../../Content/uiToggle.css";
 
 import { ParentFrame } from "../ParentFrame";
+
+// Register Fluent UI Web Components
+provideFluentDesignSystem().register(
+    fluentButton(),
+    fluentCheckbox(),
+    fluentDialog(),
+    fluentRadio(),
+    fluentRadioGroup(),
+    fluentToolbar()
+);
 
 /* global Office */
 

@@ -1,9 +1,10 @@
-/* https://stackoverflow.com/questions/325273/make-iframe-to-fit-100-of-containers-remaining-height */
+/* Fluent UI uiToggle styling */
 body, html {
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0
+    padding: 0;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", sans-serif;
 }
 
 .header-row {
@@ -11,6 +12,7 @@ body, html {
     top: 0;
     right: 0;
     z-index: 10;
+    background: transparent;
 }
 
 .frame-row {
@@ -29,19 +31,235 @@ body, html {
 }
 
 .code-box > pre {
-    background-color: #eaeaea;
+    background-color: #f5f5f5;
     border: 1px solid #ccc;
-    padding: 5px;
+    border-radius: 4px;
+    padding: 12px;
     word-wrap: break-word;
     white-space: pre-wrap;
-    font-size: .8em;
-    max-height: 300px;
+    font-size: 14px;
+    line-height: 1.4;
+    height: 100%;
+    max-height: 60vh;
     overflow-x: hidden;
     overflow-y: auto;
+    font-family: "Consolas", "Monaco", "Courier New", monospace;
+    margin: 0;
 }
 
-#dialog-Diagnostics {
-    width: calc(100% - 24px);
-    box-sizing: border-box;
-    max-width: none;
+/* Fluent UI Dialog customization */
+fluent-dialog {
+    --dialog-width: 400px;
+    --dialog-height: auto;
+    --dialog-border-radius: 8px;
+}
+
+fluent-dialog[hidden] {
+    display: none !important;
+}
+
+fluent-dialog[aria-label="Diagnostics"] {
+    --dialog-width: calc(100% - 24px);
+    --dialog-max-width: 600px;
+    --dialog-height: 70vh;
+}
+
+/* Dialog structure styling */
+.dialog-header {
+    padding: 16px 20px 12px 20px;
+    border-bottom: 1px solid #0078d4;
+    margin: -1px -1px 0 -1px;
+    background: #0078d4;
+    border-radius: 8px 8px 0 0;
+}
+
+.dialog-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.dialog-content {
+    padding: 0 4px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    border-top: 2px solid #f3f2f1;
+    margin-top: 2px;
+}
+
+/* Ensure dialog action buttons are visible and properly styled */
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 0;
+    padding: 16px 20px;
+    border-top: 1px solid #e1e1e1;
+    background: #ffffff;
+    border-radius: 0 0 8px 8px;
+    flex-shrink: 0;
+}
+
+.dialog-actions fluent-button {
+    min-width: 80px;
+}
+
+/* Specific styling for diagnostics dialog actions */
+fluent-dialog[aria-label="Diagnostics"] .dialog-actions {
+    margin-bottom: 0;
+    border-top: none;
+}
+
+/* Override general dialog spacing for diagnostics */
+fluent-dialog[aria-label="Diagnostics"] > div {
+    margin: 0;
+}
+
+fluent-dialog[aria-label="Diagnostics"] .dialog-header {
+    margin: -1px -1px 0 -1px;
+}
+
+fluent-dialog[aria-label="Diagnostics"] .dialog-content {
+    margin: 0;
+    height: calc(70vh - 120px);
+    overflow: hidden;
+}
+
+fluent-dialog[aria-label="Diagnostics"] .code-box {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+fluent-dialog[aria-label="Diagnostics"] .code-box > pre {
+    flex: 1;
+    margin: 0;
+    min-height: 0;
+    max-height: none;
+}
+
+/* Dialog content spacing */
+fluent-dialog > div {
+    margin: 12px 0;
+}
+
+fluent-dialog fluent-radio-group {
+    margin: 4px 0 2px 0;
+}
+
+fluent-dialog fluent-radio {
+    margin: 3px 0;
+}
+
+fluent-dialog fluent-checkbox {
+    margin: 2px 0 3px 0;
+}
+
+/* Fluent UI Toolbar styling */
+fluent-toolbar {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 0;
+    height: 44px;
+    align-items: stretch;
+}
+
+fluent-toolbar fluent-button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0;
+    margin: 0;
+    padding: 0 !important;
+    font-size: 18px;
+    color: #0078d4;
+    cursor: pointer;
+    outline: none;
+}
+
+fluent-toolbar fluent-button:focus-visible {
+    outline: 2px solid #0078d4 !important;
+    outline-offset: 2px !important;
+}
+
+fluent-toolbar fluent-button::part(control) {
+    background: transparent !important;
+    border: none !important;
+    padding: 6px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+fluent-toolbar fluent-button span {
+    font-family: "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
+    font-size: 18px;
+    color: #0078d4;
+    line-height: 1;
+}
+
+/* Icon definitions using Fabric icon font Unicode values */
+.icon-copy::before {
+    content: "\E8C8"; /* Fabric Copy icon */
+}
+
+.icon-settings::before {
+    content: "\E713"; /* Fabric Settings/Gear icon */
+}
+
+fluent-toolbar fluent-button:hover {
+    background: rgba(0, 120, 212, 0.1) !important;
+}
+
+fluent-toolbar fluent-button:active {
+    background: rgba(0, 120, 212, 0.2) !important;
+}
+
+/* Focus styles for accessibility */
+fluent-button:focus-visible,
+fluent-checkbox:focus-visible,
+fluent-radio:focus-visible {
+    outline: 2px solid #0078d4;
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    fluent-button,
+    fluent-checkbox,
+    fluent-radio {
+        border: 2px solid ButtonText;
+    }
+    
+    .code-box > pre {
+        background-color: ButtonFace;
+        border: 2px solid ButtonText;
+        color: ButtonText;
+    }
+}
+
+/* Privacy policy link styling */
+fluent-dialog a {
+    color: #0078d4;
+    text-decoration: none;
+}
+
+fluent-dialog a:hover {
+    text-decoration: underline;
+}
+
+fluent-dialog a:focus {
+    outline: 2px solid #0078d4;
+    outline-offset: 2px;
 }
