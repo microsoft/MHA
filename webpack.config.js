@@ -172,7 +172,7 @@ export default async (env, options) => {
             })] : []),
         ],
         mode: isProduction ? "production" : "development",
-        devtool: isProduction ? "source-map" : "eval-cheap-module-source-map",
+        devtool: isProduction ? "source-map" : "source-map",
         target: ["web", "es2022"],
         module: {
             rules: [
