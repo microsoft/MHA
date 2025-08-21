@@ -310,15 +310,18 @@ export class TabNavigation {
         if (!element) return "N/A";
 
         // Try various ways to get meaningful text
-        const text = element.textContent?.trim() ||
-                    element.innerText?.trim() ||
-                    element.getAttribute("aria-label") ||
-                    element.getAttribute("title") ||
-                    element.getAttribute("alt") ||
-                    element.getAttribute("placeholder") ||
-                    element.getAttribute("value") ||
-                    element.id ||
-                    "No readable text";
+        let text = element.textContent?.trim() ||
+                   element.innerText?.trim() ||
+                   element.getAttribute("aria-label") ||
+                   element.getAttribute("title") ||
+                   element.getAttribute("alt") ||
+                   element.getAttribute("placeholder") ||
+                   element.getAttribute("value") ||
+                   element.id ||
+                   "No readable text";
+
+        // Replace any newlines, tabs, or multiple spaces with single spaces to ensure single line
+        text = text.replace(/\s+/g, " ");
 
         return text.substring(0, 50) + (text.length > 50 ? "..." : "");
     }
@@ -339,25 +342,8 @@ export class TabNavigation {
             console.log(`🔍 Found ${allFocusable.length} focusable elements in ${frameType}:`);
             allFocusable.forEach((el, i) => {
                 const isCurrent = el === focused;
-
-                // Handle wrapping for previous/next indicators
-                let isPrevious = false;
-                let isNext = false;
-
-                if (currentIndex >= 0 && allFocusable.length > 1) {
-                    const prevIndex = currentIndex === 0 ? allFocusable.length - 1 : currentIndex - 1;
-                    const nextIndex = currentIndex === allFocusable.length - 1 ? 0 : currentIndex + 1;
-
-                    isPrevious = i === prevIndex;
-                    isNext = i === nextIndex;
-                }
-
-                let marker = "  ";
-                if (isCurrent) marker = "👉";
-                else if (isPrevious) marker = "⬅️";
-                else if (isNext) marker = "➡️";
-
-                console.log(`${marker} ${i + 1}: ${el.tagName.toLowerCase()}#${el.id || "no-id"} "${TabNavigation.getElementText(el)}"`);
+                const marker = isCurrent ? "👉" : "  ";
+                console.log(`  ${marker} ${i + 1}: ${el.tagName.toLowerCase()}#${el.id || "no-id"} "${TabNavigation.getElementText(el)}"`);
             });
 
             if (currentIndex < 0) {
