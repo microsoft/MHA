@@ -276,8 +276,8 @@ export class TabNavigation {
         } else {
             console.log("🔜 Tab direction: Moving to next element");
         }
-        console.log(`🎯 Current Focus Control Type: ${focused?.tagName?.toLowerCase() || "unknown"}`);
-        console.log(`📝 Current Focus Text: "${TabNavigation.getElementText(focused)}"`);
+
+        console.log(`🔍 Current Focus Element: ${focused.tagName.toLowerCase()}#${focused.id || "no-id"} "${TabNavigation.getElementText(focused)}"`);
 
         // Log iframe info
         if (frameType === "parent") {
@@ -286,8 +286,7 @@ export class TabNavigation {
                 console.log(`🌐 iFrame URL: ${TabNavigation.iFrame.location.href}`);
             }
         } else {
-            console.log("🖼️ Frame Type: iframe content");
-            console.log(`🏠 Parent Available: ${window.parent ? "Yes" : "No"}`);
+            console.log(`🖼️ Frame Type: iframe content, 🏠 Parent Available: ${window.parent ? "Yes" : "No"}`);
         }
 
         // Log natural tab order information
