@@ -4,9 +4,9 @@ import { Choice } from "./Choice";
 import { DeferredError } from "./DeferredError";
 import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
-import { findTabStops } from "./findTabStops";
 import { Poster } from "./Poster";
 import { Strings } from "./Strings";
+import { TabNavigation } from "./TabNavigation";
 import { GetHeaders } from "./ui/getHeaders/GetHeaders";
 
 // Debug info to help identify this process
@@ -97,6 +97,7 @@ export class ParentFrame {
 
     private static setFrame(frame: Window): void {
         ParentFrame.iFrame = frame;
+        TabNavigation.setIFrame(frame);
 
         if (ParentFrame.iFrame) {
             // If we have any deferred status, signal them
@@ -360,94 +361,8 @@ export class ParentFrame {
             Strings.copyToClipboard(ParentFrame.modelToString);
         });
 
-        // Tabbing into the radio buttons doesn't do what we want by default, so watch for tabbing and handle all the cases
-        document.addEventListener("keydown", function (e) {
-            if (e.key === "Tab") {
-                const shiftPressed = e.shiftKey;
-                const focused: HTMLElement = document.activeElement as HTMLElement;
-                ParentFrame.logElement("focused", focused);
-                console.log("Shift pressed = " + shiftPressed);
-
-                // Get the currently checked radio button in Fluent UI
-                const radioGroup = document.getElementById("uiChoice") as FluentRadioGroup;
-                const checkedRadio = radioGroup?.querySelector("fluent-radio[checked]") as HTMLElement;
-
-                // Tab forward from body, or OK should go to radio buttons
-                // Tab backwards from telemetry checkbox should go to radio buttons
-                if ((!shiftPressed && focused === document.body) ||
-                    (!shiftPressed && focused.id === "actionsSettings-OK") ||
-                    (shiftPressed && focused.id === "telemetryInput")) {
-                    if (checkedRadio) {
-                        checkedRadio.focus();
-                        e.preventDefault();
-                    }
-                }
-                // Shift tab from radio buttons or body should go to OK
-                else if ((shiftPressed && focused.tagName.toLowerCase() === "fluent-radio") ||
-                    (shiftPressed && focused === document.body)) {
-                    const okButton: HTMLElement = document.getElementById("actionsSettings-OK")!;
-                    okButton.focus();
-                    e.preventDefault();
-                }
-                // Tab or shift tab from diagnostics OK should go to code
-                else if (focused.id === "actionsDiag-OK") {
-                    const diagButton: HTMLElement = document.getElementById("diagpre")!;
-                    diagButton.focus();
-                    e.preventDefault();
-                }
-
-                // Insert the settings and copy buttons into the tab order for the ribbon if we have one
-                // This handles tabbing out from these buttons.
-                // Tabbing into these buttons is over in newDesktopFrame.ts
-                if (!shiftPressed && focused.id === "settingsButton") {
-                    // Find first header-view which is visible, but skip the tab buttons
-                    const view = ParentFrame.iFrame?.document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
-                    if (view) {
-                        // Look for focusable elements in the content area, excluding the tab buttons
-                        const contentArea = view.querySelector(".ms-Pivot-content, .header-view-content, [role='tabpanel']") as HTMLElement;
-                        const targetArea = contentArea || view;
-
-                        const tabStops = findTabStops(targetArea);
-                        // Filter out any tab buttons from the focusable elements
-                        const contentTabStops = tabStops.filter(el =>
-                            !el.classList.contains("ms-Pivot-link") &&
-                            !el.classList.contains("ms-Button--pivot") &&
-                            !el.id.includes("-btn") &&
-                            !el.getAttribute("role")?.includes("tab")
-                        );
-
-                        // Set focus on first content element if we can
-                        if (contentTabStops.length > 0){
-                            contentTabStops[0]?.focus();
-                            e.preventDefault();
-                        }
-                    }
-                }
-                else if (shiftPressed && focused.id === "copyButton") {
-                    const otherButton = ParentFrame.iFrame?.document.getElementById("other-btn");
-                    if (otherButton) {
-                        otherButton.focus();
-                        e.preventDefault();
-                    }
-                }
-            }
-        });
-    }
-
-    private static logElement(title: string, element: HTMLElement): void {
-        let out = title + " element:" + element;
-        // make sure element isn't null
-        if (element) {
-            if (element.id) out += " id:" + element.id;
-            if (element.className) out += " class:" + element.className;
-            if (element.getAttribute("role")) out += " role:" + element.getAttribute("role");
-            if (element.title) out += " title:" + element.title;
-            if (element.getAttribute("aria-checked")) out += " aria-checked:" + element.getAttribute("aria-checked");
-            if (element.getAttribute("for")) out += " for:" + element.getAttribute("for");
-            if (element.getAttribute("name")) out += " name:" + element.getAttribute("name");
-        }
-
-        console.log(out);
+        // Initialize tab navigation handling
+        TabNavigation.initialize();
     }
 
     public static setSendTelemetryUI(sendTelemetry: boolean) {
