@@ -103,22 +103,16 @@ export class TabNavigation {
                 const shiftPressed = e.shiftKey;
                 const focused: HTMLElement = document.activeElement as HTMLElement;
 
-                TabNavigation.logDetailedTabInfo(focused, shiftPressed, "iframe");
+                // Determine the target element for this tab operation
+                let targetElement: HTMLElement | null = null;
 
                 // Tab from Other goes to copy button
                 if (!shiftPressed && focused.id === "other-btn") {
-                    window.parent.document.getElementById("copyButton")!.focus();
-                    e.preventDefault();
+                    targetElement = TabNavigation.getTabFromOtherButtonTarget();
                 }
                 // Tab back from Summary goes to end of view
                 else if (shiftPressed && focused.id === "summary-btn") {
-                    const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
-                    const tabStops = TabNavigation.findTabStops(view);
-                    // Set focus on last element in the list if we can
-                    if (tabStops.length > 0){
-                        tabStops[tabStops.length - 1]?.focus();
-                        e.preventDefault();
-                    }
+                    targetElement = TabNavigation.getShiftTabFromSummaryButtonTarget();
                 }
                 // If we're tabbing off of the view, we want to tab to the appropriate ribbon button
                 else {
@@ -128,17 +122,24 @@ export class TabNavigation {
                     if (shiftPressed){
                         // If our current focus is the first element in the list, we want to move focus to the settings button
                         if (tabStops.length > 0 && focused === tabStops[0]){
-                            window.parent.document.getElementById("settingsButton")!.focus();
-                            e.preventDefault();
+                            targetElement = TabNavigation.getShiftTabFromFirstViewElementTarget();
                         }
                     }
                     else{
                         // If our current focus is the last element in the list, we want to move focus to the summary-btn
                         if (tabStops.length > 0 && focused === tabStops[tabStops.length - 1]){
-                            document.getElementById("summary-btn")!.focus();
-                            e.preventDefault();
+                            targetElement = TabNavigation.getTabFromLastViewElementTarget();
                         }
                     }
+                }
+
+                // If we found a target element, log details and set focus
+                if (targetElement) {
+                    TabNavigation.logDetailedTabInfo(focused, shiftPressed, "iframe", targetElement);
+                    targetElement.focus();
+                    e.preventDefault();
+                } else {
+                    TabNavigation.logDetailedTabInfo(focused, shiftPressed, "iframe");
                 }
             }
         });
@@ -154,53 +155,85 @@ export class TabNavigation {
                 const shiftPressed = e.shiftKey;
                 const focused: HTMLElement = document.activeElement as HTMLElement;
 
-                TabNavigation.logDetailedTabInfo(focused, shiftPressed, "parent");
-
                 // Get the currently checked radio button in Fluent UI
                 const radioGroup = document.getElementById("uiChoice") as FluentRadioGroup;
                 const checkedRadio = radioGroup?.querySelector("fluent-radio[checked]") as HTMLElement;
+
+                let targetElement: HTMLElement | null = null;
 
                 // Tab forward from body, or OK should go to radio buttons
                 // Tab backwards from telemetry checkbox should go to radio buttons
                 if ((!shiftPressed && focused === document.body) ||
                     (!shiftPressed && focused.id === "actionsSettings-OK") ||
                     (shiftPressed && focused.id === "telemetryInput")) {
-                    if (checkedRadio) {
-                        checkedRadio.focus();
-                        e.preventDefault();
-                    }
+                    targetElement = checkedRadio;
                 }
                 // Shift tab from radio buttons or body should go to OK
                 else if ((shiftPressed && focused.tagName.toLowerCase() === "fluent-radio") ||
                     (shiftPressed && focused === document.body)) {
-                    const okButton: HTMLElement = document.getElementById("actionsSettings-OK")!;
-                    okButton.focus();
-                    e.preventDefault();
+                    targetElement = document.getElementById("actionsSettings-OK");
                 }
                 // Tab or shift tab from diagnostics OK should go to code
                 else if (focused.id === "actionsDiag-OK") {
-                    const diagButton: HTMLElement = document.getElementById("diagpre")!;
-                    diagButton.focus();
-                    e.preventDefault();
+                    targetElement = document.getElementById("diagpre");
                 }
 
                 // Insert the settings and copy buttons into the tab order for the ribbon if we have one
                 // This handles tabbing out from these buttons.
                 // Tabbing into these buttons is handled in iframe
                 if (!shiftPressed && focused.id === "settingsButton") {
-                    TabNavigation.handleTabFromSettingsButton(e);
+                    targetElement = TabNavigation.getTabFromSettingsButtonTarget();
                 }
                 else if (shiftPressed && focused.id === "copyButton") {
-                    TabNavigation.handleShiftTabFromCopyButton(e);
+                    targetElement = TabNavigation.getShiftTabFromCopyButtonTarget();
+                }
+
+                // If we found a target element, log details and set focus
+                if (targetElement) {
+                    TabNavigation.logDetailedTabInfo(focused, shiftPressed, "parent", targetElement);
+                    targetElement.focus();
+                    e.preventDefault();
+                } else {
+                    TabNavigation.logDetailedTabInfo(focused, shiftPressed, "parent");
                 }
             }
         });
     }
 
     /**
-     * Handle tab navigation from the settings button
+     * Get target element when tabbing from Other button in iframe
      */
-    private static handleTabFromSettingsButton(e: KeyboardEvent): void {
+    private static getTabFromOtherButtonTarget(): HTMLElement | null {
+        return window.parent.document.getElementById("copyButton");
+    }
+
+    /**
+     * Get target element when shift+tabbing from Summary button in iframe
+     */
+    private static getShiftTabFromSummaryButtonTarget(): HTMLElement | null {
+        const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
+        const tabStops = TabNavigation.findTabStops(view);
+        return tabStops.length > 0 ? (tabStops[tabStops.length - 1] || null) : null;
+    }
+
+    /**
+     * Get target element when shift+tabbing from first view element in iframe
+     */
+    private static getShiftTabFromFirstViewElementTarget(): HTMLElement | null {
+        return window.parent.document.getElementById("settingsButton");
+    }
+
+    /**
+     * Get target element when tabbing from last view element in iframe
+     */
+    private static getTabFromLastViewElementTarget(): HTMLElement | null {
+        return document.getElementById("summary-btn");
+    }
+
+    /**
+     * Get target element when tabbing from settings button in parent frame
+     */
+    private static getTabFromSettingsButtonTarget(): HTMLElement | null {
         // Find first header-view which is visible, but skip the tab buttons
         const view = TabNavigation.iFrame?.document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
         if (view) {
@@ -217,29 +250,22 @@ export class TabNavigation {
                 !el.getAttribute("role")?.includes("tab")
             );
 
-            // Set focus on first content element if we can
-            if (contentTabStops.length > 0){
-                contentTabStops[0]?.focus();
-                e.preventDefault();
-            }
+            return contentTabStops.length > 0 ? (contentTabStops[0] || null) : null;
         }
+        return null;
     }
 
     /**
-     * Handle shift+tab navigation from the copy button
+     * Get target element when shift+tabbing from copy button in parent frame
      */
-    private static handleShiftTabFromCopyButton(e: KeyboardEvent): void {
-        const otherButton = TabNavigation.iFrame?.document.getElementById("other-btn");
-        if (otherButton) {
-            otherButton.focus();
-            e.preventDefault();
-        }
+    private static getShiftTabFromCopyButtonTarget(): HTMLElement | null {
+        return TabNavigation.iFrame?.document.getElementById("other-btn") || null;
     }
 
     /**
      * Log detailed tab navigation information for debugging
      */
-    private static logDetailedTabInfo(focused: HTMLElement, shiftPressed: boolean, frameType: string): void {
+    private static logDetailedTabInfo(focused: HTMLElement, shiftPressed: boolean, frameType: string, targetElement?: HTMLElement | null): void {
         const handlerType = frameType === "parent" ? "PARENT FRAME" : "IFRAME";
         console.group(`� ${handlerType} Tab Handler Triggered`);
 
@@ -266,6 +292,16 @@ export class TabNavigation {
 
         // Log natural tab order information
         TabNavigation.logNaturalTabOrder(focused, frameType);
+
+        // Log target element if provided
+        if (targetElement) {
+            console.log(`🎯 Target Element Type: ${targetElement.tagName?.toLowerCase() || "unknown"}`);
+            console.log(`📝 Target Element Text: "${TabNavigation.getElementText(targetElement)}"`);
+        }
+        else
+        {
+            console.log("🎯 Target Element decided by browser");
+        }
 
         console.groupEnd();
     }
