@@ -281,7 +281,6 @@ export class TabNavigation {
 
         // Log iframe info
         if (frameType === "parent") {
-            console.log(`🖼️ Using iFrame: ${TabNavigation.iFrame ? "Available" : "Not set"}`);
             if (TabNavigation.iFrame) {
                 console.log(`🌐 iFrame URL: ${TabNavigation.iFrame.location.href}`);
             }
