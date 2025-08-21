@@ -7,16 +7,16 @@ export class TabNavigation {
     private static iFrame: Window | null = null;
 
     /**
-     * Finds all tab stops within a given HTML element.
-     * This function searches for all focusable elements within the specified element
+     * Finds all focusable elements within a given HTML element or document.
+     * This function searches for all focusable elements within the specified container
      * and returns an array of those elements that are not disabled, have a non-negative
      * tabIndex, and are visible.
      */
-    public static findTabStops(element: HTMLElement | null): HTMLElement[] {
-        if (element === null) return [];
+    public static findTabStops(container: HTMLElement | Document | null): HTMLElement[] {
+        if (container === null) return [];
 
         // Comprehensive selector that includes both standard and Fluent UI elements
-        const focusableElements = element.querySelectorAll(
+        const focusableElements = container.querySelectorAll(
             "a, button, input, textarea, select, [tabindex], " +
             "fluent-button, fluent-checkbox, fluent-radio, fluent-text-field, " +
             "fluent-text-area, fluent-select, fluent-combobox, details, [contenteditable]"
@@ -299,7 +299,7 @@ export class TabNavigation {
                 (TabNavigation.iFrame?.document || document);
 
             // Get all focusable elements in the document
-            const allFocusable = TabNavigation.getAllFocusableElements(targetDocument);
+            const allFocusable = TabNavigation.findTabStops(targetDocument);
             const currentIndex = allFocusable.indexOf(focused);
 
             // Debug: Log all focusable elements found
@@ -336,18 +336,5 @@ export class TabNavigation {
         } catch (error) {
             console.log(`⚠️ Error getting tab order info: ${error}`);
         }
-    }
-
-    /**
-     * Get all focusable elements in a document (used for logging and debugging)
-     */
-    private static getAllFocusableElements(doc: Document): HTMLElement[] {
-        const allElements = doc.querySelectorAll(
-            "a, button, input, textarea, select, [tabindex], " +
-            "fluent-button, fluent-checkbox, fluent-radio, fluent-text-field, " +
-            "fluent-text-area, fluent-select, fluent-combobox, details, [contenteditable]"
-        );
-
-        return Array.from(allElements).filter(TabNavigation.isFocusableElement);
     }
 }
