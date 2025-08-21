@@ -294,8 +294,7 @@ export class TabNavigation {
 
         // Log target element if provided
         if (targetElement) {
-            console.log(`🎯 Target Element Type: ${targetElement.tagName?.toLowerCase() || "unknown"}`);
-            console.log(`📝 Target Element Text: "${TabNavigation.getElementText(targetElement)}"`);
+            console.log(`🎯 Target Element: ${targetElement.tagName.toLowerCase()}#${targetElement.id || "no-id"} "${TabNavigation.getElementText(targetElement)}"`);
         }
         else
         {
@@ -341,31 +340,28 @@ export class TabNavigation {
             console.log(`🔍 Found ${allFocusable.length} focusable elements in ${frameType}:`);
             allFocusable.forEach((el, i) => {
                 const isCurrent = el === focused;
-                const marker = isCurrent ? "👉" : "  ";
+
+                // Handle wrapping for previous/next indicators
+                let isPrevious = false;
+                let isNext = false;
+
+                if (currentIndex >= 0 && allFocusable.length > 1) {
+                    const prevIndex = currentIndex === 0 ? allFocusable.length - 1 : currentIndex - 1;
+                    const nextIndex = currentIndex === allFocusable.length - 1 ? 0 : currentIndex + 1;
+
+                    isPrevious = i === prevIndex;
+                    isNext = i === nextIndex;
+                }
+
+                let marker = "  ";
+                if (isCurrent) marker = "👉";
+                else if (isPrevious) marker = "⬅️";
+                else if (isNext) marker = "➡️";
+
                 console.log(`${marker} ${i + 1}: ${el.tagName.toLowerCase()}#${el.id || "no-id"} "${TabNavigation.getElementText(el)}"`);
             });
 
-            if (currentIndex >= 0) {
-                console.log(`📊 Current position in tab order: ${currentIndex + 1} of ${allFocusable.length}`);
-
-                // Log previous element
-                const prevIndex = currentIndex - 1;
-                if (prevIndex >= 0 && allFocusable[prevIndex]) {
-                    const prevElement = allFocusable[prevIndex];
-                    console.log(`⬅️ Previous in tab order: ${prevElement.tagName.toLowerCase()}#${prevElement.id || "no-id"} "${TabNavigation.getElementText(prevElement)}"`);
-                } else {
-                    console.log("⬅️ Previous in tab order: [NONE - at beginning]");
-                }
-
-                // Log next element
-                const nextIndex = currentIndex + 1;
-                if (nextIndex < allFocusable.length && allFocusable[nextIndex]) {
-                    const nextElement = allFocusable[nextIndex];
-                    console.log(`➡️ Next in tab order: ${nextElement.tagName.toLowerCase()}#${nextElement.id || "no-id"} "${TabNavigation.getElementText(nextElement)}"`);
-                } else {
-                    console.log("➡️ Next in tab order: [NONE - at end]");
-                }
-            } else {
+            if (currentIndex < 0) {
                 console.log("❌ Current element not found in natural tab order");
             }
         } catch (error) {
