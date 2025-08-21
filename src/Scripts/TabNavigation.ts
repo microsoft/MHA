@@ -235,6 +235,15 @@ export class TabNavigation {
             const allFocusable = TabNavigation.getAllFocusableElements(targetDocument);
             const currentIndex = Array.from(allFocusable).indexOf(focused);
 
+            // Debug: Log all focusable elements found
+            console.log(`🔍 Found ${allFocusable.length} focusable elements in ${frameType}:`);
+            Array.from(allFocusable).forEach((el, i) => {
+                const htmlEl = el as HTMLElement;
+                const isCurrent = el === focused;
+                const marker = isCurrent ? "👉" : "  ";
+                console.log(`${marker} ${i + 1}: ${htmlEl.tagName.toLowerCase()}#${htmlEl.id || "no-id"} "${TabNavigation.getElementText(htmlEl)}"`);
+            });
+
             if (currentIndex >= 0) {
                 console.log(`📊 Current position in tab order: ${currentIndex + 1} of ${allFocusable.length}`);
 
@@ -268,7 +277,10 @@ export class TabNavigation {
      */
     private static getAllFocusableElements(doc: Document): NodeListOf<Element> {
         return doc.querySelectorAll(
-            "a[href], button, input, textarea, select, details, [tabindex]:not([tabindex=\"-1\"]), [contenteditable=\"true\"]"
+            "a[href], button, input, textarea, select, details, " +
+            "[tabindex]:not([tabindex=\"-1\"]), [contenteditable=\"true\"], " +
+            "fluent-button, fluent-checkbox, fluent-radio, fluent-text-field, " +
+            "fluent-text-area, fluent-select, fluent-combobox"
         );
     }
 }
