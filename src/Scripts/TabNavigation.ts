@@ -177,7 +177,12 @@ export class TabNavigation {
         console.group(`� ${handlerType} Tab Handler Triggered`);
 
         // Log basic info
-        console.log(`🔀 Shift Key: ${shiftPressed ? "PRESSED (going backward)" : "NOT PRESSED (going forward)"}`);
+        // Log direction-specific information
+        if (shiftPressed) {
+            console.log("🔙 Shift+Tab direction: Moving to previous element");
+        } else {
+            console.log("🔜 Tab direction: Moving to next element");
+        }
         console.log(`🎯 Current Focus Control Type: ${focused?.tagName?.toLowerCase() || "unknown"}`);
         console.log(`📝 Current Focus Text: "${TabNavigation.getElementText(focused)}"`);
 
@@ -193,7 +198,7 @@ export class TabNavigation {
         }
 
         // Log natural tab order information
-        TabNavigation.logNaturalTabOrder(focused, shiftPressed, frameType);
+        TabNavigation.logNaturalTabOrder(focused, frameType);
 
         console.groupEnd();
     }
@@ -221,7 +226,7 @@ export class TabNavigation {
     /**
      * Log information about natural tab order
      */
-    private static logNaturalTabOrder(focused: HTMLElement, shiftPressed: boolean, frameType: string): void {
+    private static logNaturalTabOrder(focused: HTMLElement, frameType: string): void {
         try {
             const targetDocument = frameType === "parent" ? document :
                 (TabNavigation.iFrame?.document || document);
@@ -249,13 +254,6 @@ export class TabNavigation {
                     console.log(`➡️ Next in tab order: ${nextElement.tagName.toLowerCase()}#${nextElement.id || "no-id"} "${TabNavigation.getElementText(nextElement)}"`);
                 } else {
                     console.log("➡️ Next in tab order: [NONE - at end]");
-                }
-
-                // Log direction-specific information
-                if (shiftPressed) {
-                    console.log("🔙 Shift+Tab direction: Moving to previous element");
-                } else {
-                    console.log("🔜 Tab direction: Moving to next element");
                 }
             } else {
                 console.log("❌ Current element not found in natural tab order");
