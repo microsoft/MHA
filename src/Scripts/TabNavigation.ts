@@ -1,5 +1,3 @@
-import { findTabStops } from "./findTabStops";
-
 // Fluent UI Web Components interfaces for tab navigation
 interface FluentRadioGroup extends HTMLElement {
     value: string;
@@ -7,6 +5,75 @@ interface FluentRadioGroup extends HTMLElement {
 
 export class TabNavigation {
     private static iFrame: Window | null = null;
+
+    /**
+     * Finds all tab stops within a given HTML element.
+     * This function searches for all focusable elements within the specified element
+     * and returns an array of those elements that are not disabled, have a non-negative
+     * tabIndex, and are visible.
+     */
+    public static findTabStops(element: HTMLElement | null): HTMLElement[] {
+        if (element === null) return [];
+
+        // Comprehensive selector that includes both standard and Fluent UI elements
+        const focusableElements = element.querySelectorAll(
+            "a, button, input, textarea, select, [tabindex], " +
+            "fluent-button, fluent-checkbox, fluent-radio, fluent-text-field, " +
+            "fluent-text-area, fluent-select, fluent-combobox, details, [contenteditable]"
+        );
+
+        return Array.from(focusableElements).filter(TabNavigation.isFocusableElement);
+    }
+
+    /**
+     * Checks if an element is focusable based on various criteria
+     */
+    public static isFocusableElement(el: Element): el is HTMLElement {
+        if (!(el instanceof HTMLElement)) {
+            return false;
+        }
+        if (el.hasAttribute("disabled")) {
+            return false;
+        }
+
+        // Check if element is visible (offsetParent is null for hidden elements)
+        if (el.offsetParent === null) {
+            return false;
+        }
+
+        // For fluent components, they are focusable by default unless explicitly disabled
+        const tagName = el.tagName.toLowerCase();
+        if (tagName.startsWith("fluent-")) {
+            return true;
+        }
+
+        // For standard HTML elements, check tabIndex
+        if (el.tabIndex < 0) {
+            return false;
+        }
+
+        // For elements with explicit tabindex, they're focusable
+        if (el.hasAttribute("tabindex")) {
+            return true;
+        }
+
+        // Standard focusable elements
+        const focusableTags = ["a", "button", "input", "textarea", "select", "details"];
+        if (focusableTags.includes(tagName)) {
+            // Special case: anchor tags need href to be focusable
+            if (tagName === "a") {
+                return el.hasAttribute("href");
+            }
+            return true;
+        }
+
+        // Elements with contenteditable are focusable
+        if (el.hasAttribute("contenteditable") && el.getAttribute("contenteditable") !== "false") {
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Set the iframe reference for cross-frame navigation
@@ -46,7 +113,7 @@ export class TabNavigation {
                 // Tab back from Summary goes to end of view
                 else if (shiftPressed && focused.id === "summary-btn") {
                     const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
-                    const tabStops = findTabStops(view);
+                    const tabStops = TabNavigation.findTabStops(view);
                     // Set focus on last element in the list if we can
                     if (tabStops.length > 0){
                         tabStops[tabStops.length - 1]?.focus();
@@ -56,7 +123,7 @@ export class TabNavigation {
                 // If we're tabbing off of the view, we want to tab to the appropriate ribbon button
                 else {
                     const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
-                    const tabStops = findTabStops(view);
+                    const tabStops = TabNavigation.findTabStops(view);
 
                     if (shiftPressed){
                         // If our current focus is the first element in the list, we want to move focus to the settings button
@@ -141,7 +208,7 @@ export class TabNavigation {
             const contentArea = view.querySelector(".ms-Pivot-content, .header-view-content, [role='tabpanel']") as HTMLElement;
             const targetArea = contentArea || view;
 
-            const tabStops = findTabStops(targetArea);
+            const tabStops = TabNavigation.findTabStops(targetArea);
             // Filter out any tab buttons from the focusable elements
             const contentTabStops = tabStops.filter(el =>
                 !el.classList.contains("ms-Pivot-link") &&
@@ -233,15 +300,14 @@ export class TabNavigation {
 
             // Get all focusable elements in the document
             const allFocusable = TabNavigation.getAllFocusableElements(targetDocument);
-            const currentIndex = Array.from(allFocusable).indexOf(focused);
+            const currentIndex = allFocusable.indexOf(focused);
 
             // Debug: Log all focusable elements found
             console.log(`🔍 Found ${allFocusable.length} focusable elements in ${frameType}:`);
-            Array.from(allFocusable).forEach((el, i) => {
-                const htmlEl = el as HTMLElement;
+            allFocusable.forEach((el, i) => {
                 const isCurrent = el === focused;
                 const marker = isCurrent ? "👉" : "  ";
-                console.log(`${marker} ${i + 1}: ${htmlEl.tagName.toLowerCase()}#${htmlEl.id || "no-id"} "${TabNavigation.getElementText(htmlEl)}"`);
+                console.log(`${marker} ${i + 1}: ${el.tagName.toLowerCase()}#${el.id || "no-id"} "${TabNavigation.getElementText(el)}"`);
             });
 
             if (currentIndex >= 0) {
@@ -249,8 +315,8 @@ export class TabNavigation {
 
                 // Log previous element
                 const prevIndex = currentIndex - 1;
-                if (prevIndex >= 0) {
-                    const prevElement = allFocusable[prevIndex] as HTMLElement;
+                if (prevIndex >= 0 && allFocusable[prevIndex]) {
+                    const prevElement = allFocusable[prevIndex];
                     console.log(`⬅️ Previous in tab order: ${prevElement.tagName.toLowerCase()}#${prevElement.id || "no-id"} "${TabNavigation.getElementText(prevElement)}"`);
                 } else {
                     console.log("⬅️ Previous in tab order: [NONE - at beginning]");
@@ -258,8 +324,8 @@ export class TabNavigation {
 
                 // Log next element
                 const nextIndex = currentIndex + 1;
-                if (nextIndex < allFocusable.length) {
-                    const nextElement = allFocusable[nextIndex] as HTMLElement;
+                if (nextIndex < allFocusable.length && allFocusable[nextIndex]) {
+                    const nextElement = allFocusable[nextIndex];
                     console.log(`➡️ Next in tab order: ${nextElement.tagName.toLowerCase()}#${nextElement.id || "no-id"} "${TabNavigation.getElementText(nextElement)}"`);
                 } else {
                     console.log("➡️ Next in tab order: [NONE - at end]");
@@ -273,14 +339,15 @@ export class TabNavigation {
     }
 
     /**
-     * Get all focusable elements in a document
+     * Get all focusable elements in a document (used for logging and debugging)
      */
-    private static getAllFocusableElements(doc: Document): NodeListOf<Element> {
-        return doc.querySelectorAll(
-            "a[href], button, input, textarea, select, details, " +
-            "[tabindex]:not([tabindex=\"-1\"]), [contenteditable=\"true\"], " +
+    private static getAllFocusableElements(doc: Document): HTMLElement[] {
+        const allElements = doc.querySelectorAll(
+            "a, button, input, textarea, select, [tabindex], " +
             "fluent-button, fluent-checkbox, fluent-radio, fluent-text-field, " +
-            "fluent-text-area, fluent-select, fluent-combobox"
+            "fluent-text-area, fluent-select, fluent-combobox, details, [contenteditable]"
         );
+
+        return Array.from(allElements).filter(TabNavigation.isFocusableElement);
     }
 }
