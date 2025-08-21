@@ -36,6 +36,8 @@ export class TabNavigation {
                 const shiftPressed = e.shiftKey;
                 const focused: HTMLElement = document.activeElement as HTMLElement;
 
+                TabNavigation.logDetailedTabInfo(focused, shiftPressed, "iframe");
+
                 // Tab from Other goes to copy button
                 if (!shiftPressed && focused.id === "other-btn") {
                     window.parent.document.getElementById("copyButton")!.focus();
@@ -78,14 +80,14 @@ export class TabNavigation {
     /**
      * Initialize tab navigation for the parent frame
      */
-    private static initializeParentFrameTabHandling(): void {
+    public static initializeParentFrameTabHandling(): void {
         // Tabbing into the radio buttons doesn't do what we want by default, so watch for tabbing and handle all the cases
         document.addEventListener("keydown", function (e) {
             if (e.key === "Tab") {
                 const shiftPressed = e.shiftKey;
                 const focused: HTMLElement = document.activeElement as HTMLElement;
-                TabNavigation.logElement("focused", focused);
-                console.log("Shift pressed = " + shiftPressed);
+
+                TabNavigation.logDetailedTabInfo(focused, shiftPressed, "parent");
 
                 // Get the currently checked radio button in Fluent UI
                 const radioGroup = document.getElementById("uiChoice") as FluentRadioGroup;
@@ -168,21 +170,107 @@ export class TabNavigation {
     }
 
     /**
-     * Log element information for debugging
+     * Log detailed tab navigation information for debugging
      */
-    private static logElement(title: string, element: HTMLElement): void {
-        let out = title + " element:" + element;
-        // make sure element isn't null
-        if (element) {
-            if (element.id) out += " id:" + element.id;
-            if (element.className) out += " class:" + element.className;
-            if (element.getAttribute("role")) out += " role:" + element.getAttribute("role");
-            if (element.title) out += " title:" + element.title;
-            if (element.getAttribute("aria-checked")) out += " aria-checked:" + element.getAttribute("aria-checked");
-            if (element.getAttribute("for")) out += " for:" + element.getAttribute("for");
-            if (element.getAttribute("name")) out += " name:" + element.getAttribute("name");
+    private static logDetailedTabInfo(focused: HTMLElement, shiftPressed: boolean, frameType: string): void {
+        const handlerType = frameType === "parent" ? "PARENT FRAME" : "IFRAME";
+        console.group(`� ${handlerType} Tab Handler Triggered`);
+
+        // Log basic info
+        console.log(`🔀 Shift Key: ${shiftPressed ? "PRESSED (going backward)" : "NOT PRESSED (going forward)"}`);
+        console.log(`🎯 Current Focus Control Type: ${focused?.tagName?.toLowerCase() || "unknown"}`);
+        console.log(`📝 Current Focus Text: "${TabNavigation.getElementText(focused)}"`);
+
+        // Log iframe info
+        if (frameType === "parent") {
+            console.log(`🖼️ Using iFrame: ${TabNavigation.iFrame ? "Available" : "Not set"}`);
+            if (TabNavigation.iFrame) {
+                console.log(`🌐 iFrame URL: ${TabNavigation.iFrame.location.href}`);
+            }
+        } else {
+            console.log("🖼️ Frame Type: iframe content");
+            console.log(`🏠 Parent Available: ${window.parent ? "Yes" : "No"}`);
         }
 
-        console.log(out);
+        // Log natural tab order information
+        TabNavigation.logNaturalTabOrder(focused, shiftPressed, frameType);
+
+        console.groupEnd();
+    }
+
+    /**
+     * Get readable text content from an element
+     */
+    private static getElementText(element: HTMLElement): string {
+        if (!element) return "N/A";
+
+        // Try various ways to get meaningful text
+        const text = element.textContent?.trim() ||
+                    element.innerText?.trim() ||
+                    element.getAttribute("aria-label") ||
+                    element.getAttribute("title") ||
+                    element.getAttribute("alt") ||
+                    element.getAttribute("placeholder") ||
+                    element.getAttribute("value") ||
+                    element.id ||
+                    "No readable text";
+
+        return text.substring(0, 50) + (text.length > 50 ? "..." : "");
+    }
+
+    /**
+     * Log information about natural tab order
+     */
+    private static logNaturalTabOrder(focused: HTMLElement, shiftPressed: boolean, frameType: string): void {
+        try {
+            const targetDocument = frameType === "parent" ? document :
+                (TabNavigation.iFrame?.document || document);
+
+            // Get all focusable elements in the document
+            const allFocusable = TabNavigation.getAllFocusableElements(targetDocument);
+            const currentIndex = Array.from(allFocusable).indexOf(focused);
+
+            if (currentIndex >= 0) {
+                console.log(`📊 Current position in tab order: ${currentIndex + 1} of ${allFocusable.length}`);
+
+                // Log previous element
+                const prevIndex = currentIndex - 1;
+                if (prevIndex >= 0) {
+                    const prevElement = allFocusable[prevIndex] as HTMLElement;
+                    console.log(`⬅️ Previous in tab order: ${prevElement.tagName.toLowerCase()}#${prevElement.id || "no-id"} "${TabNavigation.getElementText(prevElement)}"`);
+                } else {
+                    console.log("⬅️ Previous in tab order: [NONE - at beginning]");
+                }
+
+                // Log next element
+                const nextIndex = currentIndex + 1;
+                if (nextIndex < allFocusable.length) {
+                    const nextElement = allFocusable[nextIndex] as HTMLElement;
+                    console.log(`➡️ Next in tab order: ${nextElement.tagName.toLowerCase()}#${nextElement.id || "no-id"} "${TabNavigation.getElementText(nextElement)}"`);
+                } else {
+                    console.log("➡️ Next in tab order: [NONE - at end]");
+                }
+
+                // Log direction-specific information
+                if (shiftPressed) {
+                    console.log("🔙 Shift+Tab direction: Moving to previous element");
+                } else {
+                    console.log("🔜 Tab direction: Moving to next element");
+                }
+            } else {
+                console.log("❌ Current element not found in natural tab order");
+            }
+        } catch (error) {
+            console.log(`⚠️ Error getting tab order info: ${error}`);
+        }
+    }
+
+    /**
+     * Get all focusable elements in a document
+     */
+    private static getAllFocusableElements(doc: Document): NodeListOf<Element> {
+        return doc.querySelectorAll(
+            "a[href], button, input, textarea, select, details, [tabindex]:not([tabindex=\"-1\"]), [contenteditable=\"true\"]"
+        );
     }
 }
