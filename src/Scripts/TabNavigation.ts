@@ -19,6 +19,12 @@ export class TabNavigation {
         "fluent-button, fluent-checkbox, fluent-radio, fluent-text-field, " +
         "fluent-text-area, fluent-select, fluent-combobox, details, [contenteditable]";
 
+    // CSS selectors for common UI elements
+    private static readonly selectors = {
+        visibleHeaderView: ".header-view[style*=\"display: block\"]",
+        contentMain: ".content-main"
+    } as const;
+
     /**
      * Finds all focusable elements within a given HTML element or document.
      * Returns elements that are focusable based on:
@@ -161,7 +167,7 @@ export class TabNavigation {
                 }
                 // If we're tabbing off of the view, we want to tab to the appropriate ribbon button
                 else {
-                    const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
+                    const view = document.querySelector(TabNavigation.selectors.visibleHeaderView) as HTMLElement;
                     const tabStops = TabNavigation.findTabStops(view);
 
                     if (shiftPressed){
@@ -259,7 +265,7 @@ export class TabNavigation {
      * Get target element when shift+tabbing from Summary button in iframe
      */
     private static getShiftTabFromSummaryButtonTarget(): TabTargetResult {
-        const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
+        const view = document.querySelector(TabNavigation.selectors.visibleHeaderView) as HTMLElement;
         const tabStops = TabNavigation.findTabStops(view);
         return {
             element: tabStops[tabStops.length - 1] || null,
@@ -292,7 +298,7 @@ export class TabNavigation {
      */
     private static getTabFromSettingsButtonTarget(): TabTargetResult {
         // Find first header-view which is visible, but skip the tab buttons
-        const view = TabNavigation.iFrame?.document.querySelector(".content-main") as HTMLElement | null;
+        const view = TabNavigation.iFrame?.document.querySelector(TabNavigation.selectors.contentMain) as HTMLElement | null;
         if (view) {
             const tabStops = TabNavigation.findTabStops(view);
 
