@@ -158,6 +158,11 @@ fluent-dialog fluent-checkbox {
 }
 
 /* Fluent UI Button Container styling */
+:root {
+    --focus-outline-color: #0072cc;
+    --outline-color: #0072cc;
+}
+
 .button-container {
     background: transparent;
     border: none;
@@ -185,10 +190,10 @@ fluent-dialog fluent-checkbox {
     outline: none;
 }
 
-.button-container fluent-button:focus-visible {
-    outline: 2px solid #0078d4 !important;
-    outline-offset: 2px !important;
-}
+.button-container fluent-button::part(control):focus {
+    outline: 2px solid #0072cc !important;
+    outline-offset: -6px !important;
+}   
 
 .button-container fluent-button::part(control) {
     background: transparent !important;
@@ -230,7 +235,7 @@ fluent-dialog fluent-checkbox {
 fluent-button:focus-visible,
 fluent-checkbox:focus-visible,
 fluent-radio:focus-visible {
-    outline: 2px solid #0078d4;
+    outline: 2px solid #0072cc;
     outline-offset: 2px;
 }
 
@@ -260,6 +265,6 @@ fluent-dialog a:hover {
 }
 
 fluent-dialog a:focus {
-    outline: 2px solid #0078d4;
+    outline: 2px solid #0072cc;
     outline-offset: 2px;
 }
