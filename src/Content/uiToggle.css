@@ -56,6 +56,16 @@ fluent-dialog[aria-label="Diagnostics"] .code-box > pre {
     flex: 1;
     min-height: 0;
     max-height: none;
+    background-color: #eaeaea;
+    color: #000000;
+    border: 1px solid #ccc;
+    text-align: left;
+    line-height: 1.4;
+    font-size: .8em;
+    font-family: "Consolas", "Monaco", "Courier New", monospace;
+    margin: 0;
+    padding: 5px;
+    white-space: pre-wrap;
 }
 
 /* Fluent UI Dialog customization */
@@ -158,6 +168,7 @@ fluent-dialog[aria-label="Diagnostics"] .dialog-content {
     margin: 0;
     height: calc(70vh - 120px);
     overflow: hidden;
+    padding: 12px;
 }
 
 fluent-dialog[aria-label="Diagnostics"] .code-box {
