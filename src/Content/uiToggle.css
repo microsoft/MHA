@@ -89,6 +89,19 @@ fluent-dialog[aria-label="Diagnostics"] {
     margin-top: 2px;
 }
 
+/* Privacy policy link alignment */
+.privacy-link {
+    text-align: right;
+}
+
+/* UI style section styling */
+.ui-style-section label {
+    display: block;
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: inherit;
+}
+
 /* Ensure dialog action buttons are visible and properly styled */
 .dialog-actions {
     display: flex;
