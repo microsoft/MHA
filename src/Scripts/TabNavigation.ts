@@ -39,8 +39,7 @@ export class TabNavigation {
         const htmlElements = Array.from(focusableElements)
             .filter((el): el is HTMLElement => TabNavigation.isHTMLElement(el));
 
-        const focusableResults = htmlElements.filter(TabNavigation.isFocusableElement);
-        return focusableResults;
+        return htmlElements.filter(TabNavigation.isFocusableElement);
     }
 
     /**
