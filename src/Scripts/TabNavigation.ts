@@ -12,6 +12,12 @@ interface TabTargetResult {
 export class TabNavigation {
     private static iFrame: Window | null = null;
 
+    // Comprehensive selector that includes both standard and Fluent UI elements
+    private static readonly focusableSelector =
+        "a, button, input, textarea, select, [tabindex], " +
+        "fluent-button, fluent-checkbox, fluent-radio, fluent-text-field, " +
+        "fluent-text-area, fluent-select, fluent-combobox, details, [contenteditable]";
+
     /**
      * Finds all focusable elements within a given HTML element or document.
      * Returns elements that are focusable based on:
@@ -27,12 +33,7 @@ export class TabNavigation {
             return [];
         }
 
-        // Comprehensive selector that includes both standard and Fluent UI elements
-        const selector = "a, button, input, textarea, select, [tabindex], " +
-            "fluent-button, fluent-checkbox, fluent-radio, fluent-text-field, " +
-            "fluent-text-area, fluent-select, fluent-combobox, details, [contenteditable]";
-
-        const focusableElements = container.querySelectorAll(selector);
+        const focusableElements = container.querySelectorAll(TabNavigation.focusableSelector);
 
         // For cross-frame compatibility, filter and type-check elements
         // Elements from iframe have different HTMLElement constructor than parent frame
