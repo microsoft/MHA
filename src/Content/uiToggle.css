@@ -94,12 +94,21 @@ fluent-dialog[aria-label="Diagnostics"] {
     text-align: right;
 }
 
-/* UI style section styling */
-.ui-style-section label {
-    display: block;
-    margin: 0 0 8px 0;
-    font-size: 14px;
-    color: inherit;
+/* UI settings fieldset styling */
+fieldset {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 12px;
+    margin: 0 0 16px 0;
+}
+
+fieldset legend {
+    padding: 0 8px;
+    font-weight: 600;
+}
+
+fieldset fluent-checkbox {
+    margin-top: 12px;
 }
 
 /* Ensure dialog action buttons are visible and properly styled */
