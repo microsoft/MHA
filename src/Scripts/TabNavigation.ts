@@ -11,6 +11,7 @@ interface TabTargetResult {
 
 export class TabNavigation {
     private static iFrame: Window | null = null;
+    private static readonly debugEnabled = false; // Set to false to disable all debug logging
 
     // Comprehensive selector that includes both standard and Fluent UI elements
     private static readonly focusableSelector =
@@ -321,6 +322,8 @@ export class TabNavigation {
      * Log detailed tab navigation information for debugging
      */
     private static logDetailedTabInfo(focused: HTMLElement, shiftPressed: boolean, frameType: string, targetElement?: HTMLElement | null, routine?: string): void {
+        if (!TabNavigation.debugEnabled) return;
+
         const handlerType = frameType === "parent" ? "PARENT FRAME" : "IFRAME";
         console.group(`� ${handlerType} Tab Handler Triggered`);
 
