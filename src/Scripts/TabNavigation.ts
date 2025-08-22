@@ -34,6 +34,9 @@ export class TabNavigation {
      * - Elements with contenteditable
      * Elements must be visible (not disabled, not hidden) to be included.
      * Works across different document contexts (e.g., iframe).
+     *
+     * @param container - The HTML element, document, or null to search within for focusable elements
+     * @returns Array of focusable HTMLElements, empty array if container is null
      */
     public static findTabStops(container: HTMLElement | Document | null): HTMLElement[] {
         if (container === null) {
@@ -52,6 +55,9 @@ export class TabNavigation {
 
     /**
      * Checks if an element is an HTMLElement in any document context (cross-frame compatible)
+     *
+     * @param el - The element to check
+     * @returns True if the element is an HTMLElement in any document context
      */
     private static isHTMLElement(el: Element): el is HTMLElement {
         // Check if it's an HTMLElement in any document context
@@ -67,6 +73,9 @@ export class TabNavigation {
     /**
      * Checks if an element is focusable based on various criteria
      * Handles cross-frame elements properly
+     *
+     * @param el - The element to check for focusability
+     * @returns True if the element is focusable and should be included in tab navigation
      */
     public static isFocusableElement(el: Element): el is HTMLElement {
         // Check if it's an HTMLElement in any document context (cross-frame compatible)
@@ -128,6 +137,8 @@ export class TabNavigation {
 
     /**
      * Set the iframe reference for cross-frame navigation
+     *
+     * @param frame - The iframe window object to enable cross-frame tab navigation, or null to clear
      */
     public static setIFrame(frame: Window | null): void {
         TabNavigation.iFrame = frame;
@@ -136,6 +147,7 @@ export class TabNavigation {
     /**
      * Initialize tab navigation event listeners
      * Should be called once when the application starts
+     * Sets up all keyboard event handling for cross-frame tab navigation
      */
     public static initialize(): void {
         TabNavigation.initializeParentFrameTabHandling();
@@ -198,6 +210,8 @@ export class TabNavigation {
 
     /**
      * Initialize tab navigation for the parent frame
+     * Sets up keyboard event listeners to handle tab navigation between UI elements
+     * and cross-frame communication with iframe content
      */
     public static initializeParentFrameTabHandling(): void {
         // Tabbing into the radio buttons doesn't do what we want by default, so watch for tabbing and handle all the cases
@@ -253,6 +267,8 @@ export class TabNavigation {
 
     /**
      * Get target element when tabbing from Other button in iframe
+     *
+     * @returns TabTargetResult containing the copy button element from parent frame
      */
     private static getTabFromOtherButtonTarget(): TabTargetResult {
         return {
@@ -263,6 +279,8 @@ export class TabNavigation {
 
     /**
      * Get target element when shift+tabbing from Summary button in iframe
+     *
+     * @returns TabTargetResult containing the last focusable element in the visible header view
      */
     private static getShiftTabFromSummaryButtonTarget(): TabTargetResult {
         const view = document.querySelector(TabNavigation.selectors.visibleHeaderView) as HTMLElement;
@@ -275,6 +293,8 @@ export class TabNavigation {
 
     /**
      * Get target element when shift+tabbing from first view element in iframe
+     *
+     * @returns TabTargetResult containing the settings button from parent frame
      */
     private static getShiftTabFromFirstViewElementTarget(): TabTargetResult {
         return {
@@ -285,6 +305,8 @@ export class TabNavigation {
 
     /**
      * Get target element when tabbing from last view element in iframe
+     *
+     * @returns TabTargetResult containing the summary button element
      */
     private static getTabFromLastViewElementTarget(): TabTargetResult {
         return {
@@ -295,6 +317,8 @@ export class TabNavigation {
 
     /**
      * Get target element when tabbing from settings button in parent frame
+     *
+     * @returns TabTargetResult containing the first focusable element in iframe content area
      */
     private static getTabFromSettingsButtonTarget(): TabTargetResult {
         // Find first header-view which is visible, but skip the tab buttons
@@ -326,6 +350,12 @@ export class TabNavigation {
 
     /**
      * Log detailed tab navigation information for debugging
+     *
+     * @param focused - The currently focused element
+     * @param shiftPressed - Whether shift key was pressed (reverse tab direction)
+     * @param frameType - The frame context ("parent" or "iframe")
+     * @param targetElement - The target element for navigation (optional)
+     * @param routine - The name of the routine handling the navigation (optional)
      */
     private static logDetailedTabInfo(focused: HTMLElement, shiftPressed: boolean, frameType: string, targetElement?: HTMLElement | null, routine?: string): void {
         if (!TabNavigation.debugEnabled) return;
@@ -371,7 +401,10 @@ export class TabNavigation {
     }
 
     /**
-     * Get readable text content from an element
+     * Get readable text content from an element for debugging purposes
+     *
+     * @param element - The HTML element to extract text from
+     * @returns Truncated readable text representation of the element (max 50 chars)
      */
     private static getElementText(element: HTMLElement): string {
         if (!element) return "N/A";
@@ -394,7 +427,10 @@ export class TabNavigation {
     }
 
     /**
-     * Log information about natural tab order
+     * Log information about natural tab order for debugging
+     *
+     * @param focused - The currently focused element
+     * @param frameType - The frame context ("parent" or "iframe")
      */
     private static logNaturalTabOrder(focused: HTMLElement, frameType: string): void {
         try {
