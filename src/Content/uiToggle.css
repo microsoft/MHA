@@ -39,12 +39,23 @@ body, html {
     white-space: pre-wrap;
     font-size: 14px;
     line-height: 1.4;
-    height: 100%;
-    max-height: 60vh;
-    overflow-x: hidden;
-    overflow-y: auto;
     font-family: "Consolas", "Monaco", "Courier New", monospace;
     margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Settings dialog code-box sizing */
+fluent-dialog[aria-label="Settings"] .code-box > pre {
+    height: 100%;
+    max-height: 60vh;
+}
+
+/* Diagnostics dialog code-box sizing */
+fluent-dialog[aria-label="Diagnostics"] .code-box > pre {
+    flex: 1;
+    min-height: 0;
+    max-height: none;
 }
 
 /* Fluent UI Dialog customization */
@@ -85,6 +96,10 @@ fluent-dialog[aria-label="Diagnostics"] {
     display: flex;
     flex-direction: column;
     flex: 1;
+}
+
+/* Settings dialog specific content styling */
+fluent-dialog[aria-label="Settings"] .dialog-content {
     border-top: 2px solid #f3f2f1;
     margin-top: 2px;
 }
@@ -139,10 +154,6 @@ fluent-dialog[aria-label="Diagnostics"] > div {
     margin: 0;
 }
 
-fluent-dialog[aria-label="Diagnostics"] .dialog-header {
-    margin: -1px -1px 0 -1px;
-}
-
 fluent-dialog[aria-label="Diagnostics"] .dialog-content {
     margin: 0;
     height: calc(70vh - 120px);
@@ -153,13 +164,6 @@ fluent-dialog[aria-label="Diagnostics"] .code-box {
     height: 100%;
     display: flex;
     flex-direction: column;
-}
-
-fluent-dialog[aria-label="Diagnostics"] .code-box > pre {
-    flex: 1;
-    margin: 0;
-    min-height: 0;
-    max-height: none;
 }
 
 /* Dialog content spacing */
@@ -180,11 +184,6 @@ fluent-dialog fluent-checkbox {
 }
 
 /* Fluent UI Button Container styling */
-:root {
-    --focus-outline-color: #0072cc;
-    --outline-color: #0072cc;
-}
-
 .button-container {
     background: transparent;
     border: none;
