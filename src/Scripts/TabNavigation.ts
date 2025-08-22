@@ -19,19 +19,8 @@ export class TabNavigation {
      * tabIndex, and are visible. Works across different document contexts (e.g., iframe).
      */
     public static findTabStops(container: HTMLElement | Document | null): HTMLElement[] {
-        console.group("🔍 findTabStops called");
-        console.log("📦 Container:", container ? `${container.constructor.name} ${container instanceof HTMLElement ? `#${container.id || "no-id"}.${container.className}` : "(Document)"}` : "null");
-
         if (container === null) {
-            console.log("❌ Container is null, returning empty array");
-            console.groupEnd();
             return [];
-        }
-
-        // Log container context
-        if (container instanceof HTMLElement) {
-            console.log("🌐 Container document:", container.ownerDocument === document ? "main document" : "different document (likely iframe)");
-            console.log("👥 Container children count:", container.children.length);
         }
 
         // Comprehensive selector that includes both standard and Fluent UI elements
@@ -39,14 +28,7 @@ export class TabNavigation {
             "fluent-button, fluent-checkbox, fluent-radio, fluent-text-field, " +
             "fluent-text-area, fluent-select, fluent-combobox, details, [contenteditable]";
 
-        console.log("🎯 Using selector:", selector);
         const focusableElements = container.querySelectorAll(selector);
-        console.log("🔎 Raw elements found:", focusableElements.length);
-
-        // Log first few raw elements for debugging
-        Array.from(focusableElements).forEach((el, i) => {
-            console.log(`  ${i + 1}: ${el.tagName.toLowerCase()}#${(el as HTMLElement).id || "no-id"}.${(el as HTMLElement).className}`);
-        });
 
         // For cross-frame compatibility, filter and type-check elements
         // Elements from iframe have different HTMLElement constructor than parent frame
@@ -61,17 +43,8 @@ export class TabNavigation {
                 const iframeHTMLElement = elementDoc?.defaultView?.HTMLElement;
                 return !!(iframeHTMLElement && el instanceof iframeHTMLElement);
             });
-        console.log("✅ Elements that are HTMLElement (cross-frame):", htmlElements.length);
 
         const focusableResults = htmlElements.filter(TabNavigation.isFocusableElement);
-        console.log("🎯 Final focusable elements after filtering:", focusableResults.length);
-
-        // Log final results
-        focusableResults.forEach((el, i) => {
-            console.log(`  ✓ ${i + 1}: ${el.tagName.toLowerCase()}#${el.id || "no-id"}.${el.className} "${TabNavigation.getElementText(el)}"`);
-        });
-
-        console.groupEnd();
         return focusableResults;
     }
 
@@ -308,70 +281,24 @@ export class TabNavigation {
      * Get target element when tabbing from settings button in parent frame
      */
     private static getTabFromSettingsButtonTarget(): TabTargetResult {
-        console.group("🔍 getTabFromSettingsButtonTarget called");
         // Find first header-view which is visible, but skip the tab buttons
         const view = TabNavigation.iFrame?.document.querySelector(".content-main") as HTMLElement | null;
-        console.log("🔍 Raw view element:", view ? view.constructor.name : "null");
-
         if (view) {
-            // Debug: Check what type of element this actually is
-            console.log("🔍 Element details:");
-            console.log("  - Constructor:", view.constructor.name);
-            console.log("  - instanceof Element:", view instanceof Element);
-            console.log("  - instanceof HTMLElement:", view instanceof HTMLElement);
-            console.log("  - instanceof Node:", view instanceof Node);
-            console.log("  - tagName:", view.tagName);
-            console.log("  - nodeType:", view.nodeType);
-            console.log("  - ownerDocument === iframe doc:", view.ownerDocument === TabNavigation.iFrame?.document);
-            console.log("  - ownerDocument === main doc:", view.ownerDocument === document);
-
-            // Try to use the element from its own document context
-            const iframeDoc = TabNavigation.iFrame?.document;
-            const iframeHTMLElement = iframeDoc?.defaultView?.HTMLElement;
-            if (iframeHTMLElement) {
-                console.log("  - instanceof iframe HTMLElement:", view instanceof iframeHTMLElement);
-            }
-
-            console.log("🔍 View found:", view.className, view.id);
-            console.log("🔍 View children:", Array.from(view.children).map(child =>
-                `${child.tagName.toLowerCase()}.${child.className} #${child.id}`
-            ));
-
             const tabStops = TabNavigation.findTabStops(view);
-            console.log("🔍 All tab stops found:", tabStops.length);
-            console.log("🔍 Tab stops details:", tabStops.map(el =>
-                `${el.tagName.toLowerCase()}#${el.id || "no-id"}.${el.className} "${TabNavigation.getElementText(el)}"`
-            ));
 
-            // Filter out any tab buttons from the focusable elements
-            // const contentTabStops = tabStops.filter(el => {
-            //     const isNavButton = el.classList.contains("ms-Pivot-link") ||
-            //         el.classList.contains("ms-Button--pivot") ||
-            //         el.id.includes("-btn") ||
-            //         el.getAttribute("role")?.includes("tab");
-
-            //     if (isNavButton) {
-            //         console.log("🚫 Filtering out nav button:", `${el.tagName.toLowerCase()}#${el.id}`);
-            //     }
-            //     return !isNavButton;
-            // });
-            const contentTabStops = tabStops;
-            console.log("🔍 Content tab stops after filtering:", contentTabStops.length);
-
-            console.groupEnd();
             return {
-                element: contentTabStops[0] || null,
+                element: tabStops[0] || null,
                 routine: "getTabFromSettingsButtonTarget"
             };
         }
 
-        console.log("❌ View element not found or not an HTMLElement");
-        console.groupEnd();
         return {
             element: null,
             routine: "getTabFromSettingsButtonTarget"
         };
-    }    /**
+    }
+
+    /**
      * Get target element when shift+tabbing from copy button in parent frame
      */
     private static getShiftTabFromCopyButtonTarget(): TabTargetResult {
