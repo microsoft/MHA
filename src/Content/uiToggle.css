@@ -157,8 +157,8 @@ fluent-dialog fluent-checkbox {
     margin: 2px 0 3px 0;
 }
 
-/* Fluent UI Toolbar styling */
-fluent-toolbar {
+/* Fluent UI Button Container styling */
+.button-container {
     background: transparent;
     border: none;
     padding: 0;
@@ -169,7 +169,7 @@ fluent-toolbar {
     align-items: stretch;
 }
 
-fluent-toolbar fluent-button {
+.button-container fluent-button {
     width: 44px;
     height: 44px;
     min-width: 44px;
@@ -185,12 +185,12 @@ fluent-toolbar fluent-button {
     outline: none;
 }
 
-fluent-toolbar fluent-button:focus-visible {
+.button-container fluent-button:focus-visible {
     outline: 2px solid #0078d4 !important;
     outline-offset: 2px !important;
 }
 
-fluent-toolbar fluent-button::part(control) {
+.button-container fluent-button::part(control) {
     background: transparent !important;
     border: none !important;
     padding: 6px;
@@ -202,7 +202,7 @@ fluent-toolbar fluent-button::part(control) {
     pointer-events: none;
 }
 
-fluent-toolbar fluent-button span {
+.button-container fluent-button span {
     font-family: "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
     font-size: 18px;
     color: #0078d4;
@@ -218,11 +218,11 @@ fluent-toolbar fluent-button span {
     content: "\E713"; /* Fabric Settings/Gear icon */
 }
 
-fluent-toolbar fluent-button:hover {
+.button-container fluent-button:hover {
     background: rgba(0, 120, 212, 0.1) !important;
 }
 
-fluent-toolbar fluent-button:active {
+.button-container fluent-button:active {
     background: rgba(0, 120, 212, 0.2) !important;
 }
 

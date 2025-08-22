@@ -238,7 +238,7 @@ export class ParentFrame {
     }
 
     // Hook the UI together for display
-    private static initFabric(): void {
+    private static initFluent(): void {
         const header: Element | null = document.querySelector(".header-row");
         if (!header) return;
 
@@ -374,7 +374,7 @@ export class ParentFrame {
     public static async initUI() {
         ParentFrame.setDefault();
         ParentFrame.addChoices();
-        ParentFrame.initFabric();
+        ParentFrame.initFluent();
 
         try {
             const choice: Choice = Office.context.roamingSettings.get(ParentFrame.getSettingsKey());
