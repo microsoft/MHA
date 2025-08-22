@@ -261,7 +261,7 @@ export class TabNavigation {
         const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
         const tabStops = TabNavigation.findTabStops(view);
         return {
-            element: tabStops.length > 0 ? (tabStops[tabStops.length - 1] || null) : null,
+            element: tabStops[tabStops.length - 1] || null,
             routine: "getShiftTabFromSummaryButtonTarget"
         };
     }
