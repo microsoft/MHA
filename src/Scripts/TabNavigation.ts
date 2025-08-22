@@ -14,9 +14,13 @@ export class TabNavigation {
 
     /**
      * Finds all focusable elements within a given HTML element or document.
-     * This function searches for all focusable elements within the specified container
-     * and returns an array of those elements that are not disabled, have a non-negative
-     * tabIndex, and are visible. Works across different document contexts (e.g., iframe).
+     * Returns elements that are focusable based on:
+     * - Standard focusable elements (a[href], button, input, textarea, select, details)
+     * - Fluent UI components (fluent-button, fluent-radio, etc.)
+     * - Elements with explicit tabindex attribute
+     * - Elements with contenteditable
+     * Elements must be visible (not disabled, not hidden) to be included.
+     * Works across different document contexts (e.g., iframe).
      */
     public static findTabStops(container: HTMLElement | Document | null): HTMLElement[] {
         if (container === null) {
@@ -33,19 +37,24 @@ export class TabNavigation {
         // For cross-frame compatibility, filter and type-check elements
         // Elements from iframe have different HTMLElement constructor than parent frame
         const htmlElements = Array.from(focusableElements)
-            .filter((el): el is HTMLElement => {
-                // Check if it's an HTMLElement in any document context
-                if (el instanceof HTMLElement) return true;
-
-                // Check if it's an HTMLElement in the iframe context
-                const element = el as Element;
-                const elementDoc = element.ownerDocument;
-                const iframeHTMLElement = elementDoc?.defaultView?.HTMLElement;
-                return !!(iframeHTMLElement && el instanceof iframeHTMLElement);
-            });
+            .filter((el): el is HTMLElement => TabNavigation.isHTMLElement(el));
 
         const focusableResults = htmlElements.filter(TabNavigation.isFocusableElement);
         return focusableResults;
+    }
+
+    /**
+     * Checks if an element is an HTMLElement in any document context (cross-frame compatible)
+     */
+    private static isHTMLElement(el: Element): el is HTMLElement {
+        // Check if it's an HTMLElement in any document context
+        if (el instanceof HTMLElement) return true;
+
+        // Check if it's an HTMLElement in the iframe context
+        const element = el as Element;
+        const elementDoc = element.ownerDocument;
+        const iframeHTMLElement = elementDoc?.defaultView?.HTMLElement;
+        return !!(iframeHTMLElement && el instanceof iframeHTMLElement);
     }
 
     /**
