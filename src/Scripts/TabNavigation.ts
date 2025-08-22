@@ -25,6 +25,19 @@ export class TabNavigation {
         contentMain: ".content-main"
     } as const;
 
+    // Element IDs for common UI components
+    private static readonly elementIds = {
+        uiChoice: "uiChoice",
+        actionsSettingsOk: "actionsSettings-OK",
+        actionsDiagOk: "actionsDiag-OK",
+        diagPre: "diagpre",
+        copyButton: "copyButton",
+        settingsButton: "settingsButton",
+        summaryBtn: "summary-btn",
+        otherBtn: "other-btn",
+        telemetryInput: "telemetryInput"
+    } as const;
+
     /**
      * Finds all focusable elements within a given HTML element or document.
      * Returns elements that are focusable based on:
@@ -221,7 +234,7 @@ export class TabNavigation {
                 const focused: HTMLElement = document.activeElement as HTMLElement;
 
                 // Get the currently checked radio button in Fluent UI
-                const radioGroup = document.getElementById("uiChoice") as FluentRadioGroup;
+                const radioGroup = document.getElementById(TabNavigation.elementIds.uiChoice) as FluentRadioGroup;
                 const checkedRadio = radioGroup?.querySelector("fluent-radio[checked]") as HTMLElement;
 
                 let targetResult: TabTargetResult | null = null;
@@ -229,27 +242,27 @@ export class TabNavigation {
                 // Tab forward from body, or OK should go to radio buttons
                 // Tab backwards from telemetry checkbox should go to radio buttons
                 if ((!shiftPressed && focused === document.body) ||
-                    (!shiftPressed && focused.id === "actionsSettings-OK") ||
-                    (shiftPressed && focused.id === "telemetryInput")) {
+                    (!shiftPressed && focused.id === TabNavigation.elementIds.actionsSettingsOk) ||
+                    (shiftPressed && focused.id === TabNavigation.elementIds.telemetryInput)) {
                     targetResult = { element: checkedRadio, routine: "radioButtonNavigation" };
                 }
                 // Shift tab from radio buttons or body should go to OK
                 else if ((shiftPressed && focused.tagName.toLowerCase() === "fluent-radio") ||
                     (shiftPressed && focused === document.body)) {
-                    targetResult = { element: document.getElementById("actionsSettings-OK"), routine: "toOKButton" };
+                    targetResult = { element: document.getElementById(TabNavigation.elementIds.actionsSettingsOk), routine: "toOKButton" };
                 }
                 // Tab or shift tab from diagnostics OK should go to code
-                else if (focused.id === "actionsDiag-OK") {
-                    targetResult = { element: document.getElementById("diagpre"), routine: "diagnosticsNavigation" };
+                else if (focused.id === TabNavigation.elementIds.actionsDiagOk) {
+                    targetResult = { element: document.getElementById(TabNavigation.elementIds.diagPre), routine: "diagnosticsNavigation" };
                 }
 
                 // Insert the settings and copy buttons into the tab order for the ribbon if we have one
                 // This handles tabbing out from these buttons.
                 // Tabbing into these buttons is handled in iframe
-                if (!shiftPressed && focused.id === "settingsButton") {
+                if (!shiftPressed && focused.id === TabNavigation.elementIds.settingsButton) {
                     targetResult = TabNavigation.getTabFromSettingsButtonTarget();
                 }
-                else if (shiftPressed && focused.id === "copyButton") {
+                else if (shiftPressed && focused.id === TabNavigation.elementIds.copyButton) {
                     targetResult = TabNavigation.getShiftTabFromCopyButtonTarget();
                 }
 
@@ -272,7 +285,7 @@ export class TabNavigation {
      */
     private static getTabFromOtherButtonTarget(): TabTargetResult {
         return {
-            element: window.parent.document.getElementById("copyButton"),
+            element: window.parent.document.getElementById(TabNavigation.elementIds.copyButton),
             routine: "getTabFromOtherButtonTarget"
         };
     }
@@ -298,7 +311,7 @@ export class TabNavigation {
      */
     private static getShiftTabFromFirstViewElementTarget(): TabTargetResult {
         return {
-            element: window.parent.document.getElementById("settingsButton"),
+            element: window.parent.document.getElementById(TabNavigation.elementIds.settingsButton),
             routine: "getShiftTabFromFirstViewElementTarget"
         };
     }
@@ -310,7 +323,7 @@ export class TabNavigation {
      */
     private static getTabFromLastViewElementTarget(): TabTargetResult {
         return {
-            element: document.getElementById("summary-btn"),
+            element: document.getElementById(TabNavigation.elementIds.summaryBtn),
             routine: "getTabFromLastViewElementTarget"
         };
     }
@@ -343,7 +356,7 @@ export class TabNavigation {
      */
     private static getShiftTabFromCopyButtonTarget(): TabTargetResult {
         return {
-            element: TabNavigation.iFrame?.document.getElementById("other-btn") || null,
+            element: TabNavigation.iFrame?.document.getElementById(TabNavigation.elementIds.otherBtn) || null,
             routine: "getShiftTabFromCopyButtonTarget"
         };
     }
