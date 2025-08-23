@@ -264,7 +264,7 @@ export class ParentFrame {
             }
         });
 
-        // Add escape key to dismiss dialogs
+        // Add escape key to dismiss dialogs and enter key to apply settings
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
                 if (!dialogSettings.hidden) {
@@ -273,6 +273,26 @@ export class ParentFrame {
                 if (!dialogDiagnostics.hidden) {
                     dialogDiagnostics.hidden = true;
                 }
+            }
+
+            if (e.key === "Enter" && !dialogSettings.hidden) {
+                // Trigger the same action as the OK button
+                const radioGroup = document.getElementById("uiChoice") as FluentRadioGroup;
+                if (radioGroup && radioGroup.value) {
+                    const iChoice = parseInt(radioGroup.value);
+                    const choice: Choice | undefined = ParentFrame.choices[iChoice];
+                    if (choice && choice.label !== ParentFrame.currentChoice.label) {
+                        ParentFrame.go(choice);
+                    }
+                }
+
+                // Update telemetry setting
+                if (ParentFrame.telemetryCheckbox) {
+                    diagnostics.setSendTelemetry(ParentFrame.telemetryCheckbox.checked);
+                }
+
+                dialogSettings.hidden = true;
+                e.preventDefault(); // Prevent default form submission behavior
             }
         });
 
@@ -336,6 +356,14 @@ export class ParentFrame {
             dialogSettings.hidden = true;
             dialogDiagnostics.hidden = false;
             document.getElementById("diagpre")?.focus();
+        });
+
+        // Add Enter key support for diagnostics button
+        diagButton?.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                diagButton.click(); // Trigger the click event
+            }
         });
 
         const diagOkButton = document.getElementById("actionsDiag-OK");
