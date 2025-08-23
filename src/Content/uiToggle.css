@@ -9,6 +9,9 @@
     --background-lighter-gray: #f3f2f1;
     --white: #ffffff;
     --black: #000000;
+    --font-monospace: "Consolas", "Monaco", "Courier New", monospace;
+    --hover-blue: rgba(0, 120, 212, 0.1);
+    --active-blue: rgba(0, 120, 212, 0.2);
 }
 
 body, html {
@@ -51,7 +54,7 @@ body, html {
     white-space: pre-wrap;
     font-size: 14px;
     line-height: 1.4;
-    font-family: "Consolas", "Monaco", "Courier New", monospace;
+    font-family: var(--font-monospace);
     margin: 0;
     overflow-x: hidden;
     overflow-y: auto;
@@ -74,7 +77,7 @@ fluent-dialog[aria-label="Diagnostics"] .code-box > pre {
     text-align: left;
     line-height: 1.4;
     font-size: .8em;
-    font-family: "Consolas", "Monaco", "Courier New", monospace;
+    font-family: var(--font-monospace);
     margin: 0;
     padding: 5px;
     white-space: pre-wrap;
@@ -268,11 +271,11 @@ fluent-dialog fluent-checkbox {
 }
 
 .button-container fluent-button:hover {
-    background: rgba(0, 120, 212, 0.1) !important;
+    background: var(--hover-blue) !important;
 }
 
 .button-container fluent-button:active {
-    background: rgba(0, 120, 212, 0.2) !important;
+    background: var(--active-blue) !important;
 }
 
 /* Focus styles for accessibility */
