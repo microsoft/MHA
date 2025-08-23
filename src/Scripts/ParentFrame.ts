@@ -276,23 +276,40 @@ export class ParentFrame {
             }
 
             if (e.key === "Enter" && !dialogSettings.hidden) {
-                // Trigger the same action as the OK button
-                const radioGroup = document.getElementById("uiChoice") as FluentRadioGroup;
-                if (radioGroup && radioGroup.value) {
-                    const iChoice = parseInt(radioGroup.value);
-                    const choice: Choice | undefined = ParentFrame.choices[iChoice];
-                    if (choice && choice.label !== ParentFrame.currentChoice.label) {
-                        ParentFrame.go(choice);
+                // Only trigger OK action when focused on radio buttons or checkboxes
+                const activeElement = document.activeElement;
+                const isRadioOrCheckbox = activeElement &&
+                    (activeElement.tagName.toLowerCase() === "fluent-radio" ||
+                     activeElement.tagName.toLowerCase() === "fluent-checkbox");
+
+                if (isRadioOrCheckbox) {
+                    // Trigger the same action as the OK button
+                    const radioGroup = document.getElementById("uiChoice") as FluentRadioGroup;
+                    if (radioGroup && radioGroup.value) {
+                        const iChoice = parseInt(radioGroup.value);
+                        const choice: Choice | undefined = ParentFrame.choices[iChoice];
+                        if (choice && choice.label !== ParentFrame.currentChoice.label) {
+                            ParentFrame.go(choice);
+                        }
                     }
-                }
 
-                // Update telemetry setting
-                if (ParentFrame.telemetryCheckbox) {
-                    diagnostics.setSendTelemetry(ParentFrame.telemetryCheckbox.checked);
-                }
+                    // Update telemetry setting
+                    if (ParentFrame.telemetryCheckbox) {
+                        diagnostics.setSendTelemetry(ParentFrame.telemetryCheckbox.checked);
+                    }
 
-                dialogSettings.hidden = true;
-                e.preventDefault(); // Prevent default form submission behavior
+                    dialogSettings.hidden = true;
+                    e.preventDefault(); // Prevent default form submission behavior
+                }
+            }
+
+            if (e.key === "Enter" && !dialogDiagnostics.hidden) {
+                // Close diagnostics dialog when Enter is pressed on the code box
+                const activeElement = document.activeElement;
+                if (activeElement && activeElement.id === "diagpre") {
+                    dialogDiagnostics.hidden = true;
+                    e.preventDefault();
+                }
             }
         });
 
@@ -356,14 +373,6 @@ export class ParentFrame {
             dialogSettings.hidden = true;
             dialogDiagnostics.hidden = false;
             document.getElementById("diagpre")?.focus();
-        });
-
-        // Add Enter key support for diagnostics button
-        diagButton?.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                diagButton.click(); // Trigger the click event
-            }
         });
 
         const diagOkButton = document.getElementById("actionsDiag-OK");
