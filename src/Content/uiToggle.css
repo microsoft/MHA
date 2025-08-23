@@ -5,6 +5,10 @@
     --border-gray: #ccc;
     --background-gray: #f5f5f5;
     --text-gray: #e1e1e1;
+    --background-light-gray: #eaeaea;
+    --background-lighter-gray: #f3f2f1;
+    --white: #ffffff;
+    --black: #000000;
 }
 
 body, html {
@@ -64,9 +68,9 @@ fluent-dialog[aria-label="Diagnostics"] .code-box > pre {
     flex: 1;
     min-height: 0;
     max-height: none;
-    background-color: #eaeaea;
-    color: #000000;
-    border: 1px solid #ccc;
+    background-color: var(--background-light-gray);
+    color: var(--black);
+    border: 1px solid var(--border-gray);
     text-align: left;
     line-height: 1.4;
     font-size: .8em;
@@ -106,7 +110,7 @@ fluent-dialog[aria-label="Diagnostics"] {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--white);
 }
 
 .dialog-content {
@@ -118,7 +122,7 @@ fluent-dialog[aria-label="Diagnostics"] {
 
 /* Settings dialog specific content styling */
 fluent-dialog[aria-label="Settings"] .dialog-content {
-    border-top: 2px solid #f3f2f1;
+    border-top: 2px solid var(--background-lighter-gray);
     margin-top: 2px;
 }
 
@@ -129,7 +133,7 @@ fluent-dialog[aria-label="Settings"] .dialog-content {
 
 /* UI settings fieldset styling */
 fieldset {
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-gray);
     border-radius: 4px;
     padding: 12px;
     margin: 0 0 16px 0;
@@ -151,8 +155,8 @@ fieldset fluent-checkbox {
     gap: 8px;
     margin-top: 0;
     padding: 16px 20px;
-    border-top: 1px solid #e1e1e1;
-    background: #ffffff;
+    border-top: 1px solid var(--text-gray);
+    background: var(--white);
     border-radius: 0 0 8px 8px;
     flex-shrink: 0;
 }
@@ -225,13 +229,13 @@ fluent-dialog fluent-checkbox {
     margin: 0;
     padding: 0 !important;
     font-size: 18px;
-    color: #0078d4;
+    color: var(--primary-blue);
     cursor: pointer;
     outline: none;
 }
 
 .button-container fluent-button::part(control):focus {
-    outline: 2px solid #0072cc !important;
+    outline: 2px solid var(--focus-blue) !important;
     outline-offset: -6px !important;
 }   
 
@@ -250,7 +254,7 @@ fluent-dialog fluent-checkbox {
 .button-container fluent-button span {
     font-family: "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
     font-size: 18px;
-    color: #0078d4;
+    color: var(--primary-blue);
     line-height: 1;
 }
 
@@ -275,7 +279,7 @@ fluent-dialog fluent-checkbox {
 fluent-button:focus-visible,
 fluent-checkbox:focus-visible,
 fluent-radio:focus-visible {
-    outline: 2px solid #0072cc;
+    outline: 2px solid var(--focus-blue);
     outline-offset: 2px;
 }
 
@@ -309,7 +313,7 @@ fluent-checkbox::part(control):hover {
 
 /* Privacy policy link styling */
 fluent-dialog a {
-    color: #0078d4;
+    color: var(--primary-blue);
     text-decoration: none;
 }
 
@@ -318,6 +322,6 @@ fluent-dialog a:hover {
 }
 
 fluent-dialog a:focus {
-    outline: 2px solid #0072cc;
+    outline: 2px solid var(--focus-blue);
     outline-offset: 2px;
 }
