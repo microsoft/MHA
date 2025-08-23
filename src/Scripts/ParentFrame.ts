@@ -1,6 +1,4 @@
-﻿import $ from "jquery";
-
-import { Choice } from "./Choice";
+﻿import { Choice } from "./Choice";
 import { DeferredError } from "./DeferredError";
 import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
@@ -418,8 +416,6 @@ export class ParentFrame {
             const sendTelemetry: boolean = Office.context.roamingSettings.get("sendTelemetry");
             diagnostics.initSendTelemetry(sendTelemetry);
 
-            const input: JQuery<HTMLElement> = $("#uiToggle" + choice.label);
-            input.prop("checked", "true");
             ParentFrame.go(choice);
         } catch {
             ParentFrame.goDefaultChoice();
