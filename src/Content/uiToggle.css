@@ -10,8 +10,8 @@
     --white: #ffffff;
     --black: #000000;
     --font-monospace: "Consolas", "Monaco", "Courier New", monospace;
-    --hover-blue: rgba(0, 120, 212, 0.1);
-    --active-blue: rgba(0, 120, 212, 0.2);
+    --hover-blue: color-mix(in srgb, var(--primary-blue) 10%, transparent);
+    --active-blue: color-mix(in srgb, var(--primary-blue) 20%, transparent);
 }
 
 body, html {
