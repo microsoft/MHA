@@ -271,6 +271,19 @@ fluent-radio:focus-visible {
     outline-offset: 2px;
 }
 
+/* Remove all internal highlights from radio and checkbox controls */
+fluent-radio::part(control),
+fluent-radio::part(control):focus,
+fluent-radio::part(control):focus-visible,
+fluent-radio::part(control):hover,
+fluent-checkbox::part(control),
+fluent-checkbox::part(control):focus,
+fluent-checkbox::part(control):focus-visible,
+fluent-checkbox::part(control):hover {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 /* High contrast mode support */
 @media (prefers-contrast: high) {
     fluent-button,
