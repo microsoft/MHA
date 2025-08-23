@@ -74,10 +74,7 @@ fluent-dialog[aria-label="Diagnostics"] .code-box > pre {
     text-align: left;
     line-height: 1.4;
     font-size: .8em;
-    font-family: var(--font-monospace);
-    margin: 0;
     padding: 5px;
-    white-space: pre-wrap;
 }
 
 /* Fluent UI Dialog customization */
