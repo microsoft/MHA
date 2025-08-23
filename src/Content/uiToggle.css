@@ -63,12 +63,6 @@ body, html {
     overflow-y: auto;
 }
 
-/* Settings dialog code-box sizing */
-fluent-dialog[aria-label="Settings"] .code-box > pre {
-    height: 100%;
-    max-height: 60vh;
-}
-
 /* Diagnostics dialog code-box sizing */
 fluent-dialog[aria-label="Diagnostics"] .code-box > pre {
     flex: 1;
