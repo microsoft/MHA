@@ -7,16 +7,8 @@ import { Strings } from "./Strings";
 import { TabNavigation } from "./TabNavigation";
 import { GetHeaders } from "./ui/getHeaders/GetHeaders";
 
-// Debug info to help identify this process
-console.log("🔍 MHA Debug Info:");
-console.log("Process ID:", window.location.href);
-console.log("User Agent:", navigator.userAgent);
-console.log("Timestamp:", new Date().toISOString());
-
 // Fluent UI Web Components interfaces
 interface FluentDialog extends HTMLElement {
-    show(): void;
-    hide(): void;
     hidden: boolean;
     addEventListener(type: "dismiss", listener: (event: Event) => void): void;
     addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
@@ -54,7 +46,6 @@ export class ParentFrame {
         const vars: string[] = window.location.search.substring(1).split("&");
 
         let found = "";
-        // Find seems appropriate here but still fails in IE. Use forEach instead.
         vars.forEach((v: string) => {
             if (found === "") {
                 const pair: string[] = v.split("=");
