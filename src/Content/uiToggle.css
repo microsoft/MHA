@@ -61,20 +61,17 @@ body, html {
     margin: 0;
     overflow-x: hidden;
     overflow-y: auto;
+    color: var(--black);
+    min-height: 0;
+    max-height: none;
+    text-align: left;
+    flex: 1;
 }
 
 /* Diagnostics dialog code-box sizing */
 fluent-dialog[aria-label="Diagnostics"] .code-box > pre {
-    flex: 1;
-    min-height: 0;
-    max-height: none;
     background-color: var(--background-light-gray);
-    color: var(--black);
-    border: 1px solid var(--border-gray);
-    text-align: left;
-    line-height: 1.4;
     font-size: .8em;
-    padding: 5px;
 }
 
 /* Fluent UI Dialog customization */
