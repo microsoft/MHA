@@ -65,7 +65,8 @@ body, html {
     min-height: 0;
     max-height: none;
     text-align: left;
-    flex: 1;
+    flex: none;
+    height: auto;
 }
 
 /* Diagnostics dialog code-box sizing */
@@ -89,7 +90,7 @@ fluent-dialog[hidden] {
 fluent-dialog[aria-label="Diagnostics"] {
     --dialog-width: calc(100% - 24px);
     --dialog-max-width: 600px;
-    --dialog-height: 70vh;
+    --dialog-height: auto;
 }
 
 /* Dialog structure styling */
@@ -173,13 +174,13 @@ fluent-dialog[aria-label="Diagnostics"] > div {
 
 fluent-dialog[aria-label="Diagnostics"] .dialog-content {
     margin: 0;
-    height: calc(70vh - 120px);
-    overflow: hidden;
+    height: auto;
+    overflow: visible;
     padding: var(--spacing-medium);
 }
 
 fluent-dialog[aria-label="Diagnostics"] .code-box {
-    height: 100%;
+    height: auto;
     display: flex;
     flex-direction: column;
 }
