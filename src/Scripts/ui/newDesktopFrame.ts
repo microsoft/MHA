@@ -1,9 +1,6 @@
-import "office-ui-fabric-js/dist/css/fabric.min.css";
-import "office-ui-fabric-js/dist/css/fabric.components.min.css";
 import "../../Content/fabric.css";
 import "../../Content/newDesktopFrame.css";
 import $ from "jquery";
-import { fabric } from "office-ui-fabric-js/dist/js/fabric";
 
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
@@ -16,66 +13,59 @@ import { TabNavigation } from "../TabNavigation";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
-let overlay: fabric.Overlay;
-let spinner: fabric.Spinner;
+// Overlay element for loading display
+let overlayElement: HTMLElement | null = null;
 
 function postError(error: unknown, message: string): void {
     Poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
-function initializeFabric(): void {
-    const overlayComponent: HTMLElement | null = document.querySelector(".ms-Overlay");
-    if (!overlayComponent) return;
+function initializeFluentUI(): void {
+    // Store references for overlay control
+    overlayElement = document.querySelector("#loading-overlay");
 
     // Override click so user can't dismiss overlay
-    overlayComponent.addEventListener("click", function (e: Event): void {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-    });
-    overlay = new fabric["Overlay"](overlayComponent);
+    if (overlayElement) {
+        overlayElement.addEventListener("click", function (e: Event): void {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        });
+    }
 
-    const spinnerElement: HTMLElement | null = document.querySelector(".ms-Spinner");
-    if (!spinnerElement) return;
+    // Fluent UI Web Components don't need JavaScript initialization for most components
+    // Navigation and button behavior is handled with standard DOM events
 
-    spinner = new fabric["Spinner"](spinnerElement);
-    spinner.stop();
-
-    const commandBarElements: NodeListOf<Element> = document.querySelectorAll(".ms-CommandBar");
-    Array.prototype.forEach.call(commandBarElements, (commandBarElement: Element) => {
-        new fabric["CommandBar"](commandBarElement);
-    });
-
-    const commandButtonElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-CommandButton");
-    Array.prototype.forEach.call(commandButtonElements, (commandButtonElement: HTMLElement) => {
-        new fabric["CommandButton"](commandButtonElement);
-    });
-
+    // Set up original headers toggle button
     const buttonElement: HTMLElement | null = document.querySelector("#orig-header-btn");
-    if (!buttonElement) return;
-    new fabric["Button"](buttonElement, function (event: Event): void {
-        if (event.currentTarget) {
-            const btnIcon: JQuery<HTMLElement> = $(event.currentTarget).find(".ms-Icon");
-            if (btnIcon.hasClass("ms-Icon--Add")) {
-                buttonElement.setAttribute("aria-expanded", "true");
-                $("#original-headers").show();
-                btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
-            } else {
-                buttonElement.setAttribute("aria-expanded", "false");
-                $("#original-headers").hide();
-                btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
+    if (buttonElement) {
+        buttonElement.addEventListener("click", function (event: Event): void {
+            if (event.currentTarget) {
+                const btnIcon: JQuery<HTMLElement> = $(event.currentTarget).find(".expand-icon");
+                const isExpanded = buttonElement.getAttribute("aria-expanded") === "true";
+
+                if (!isExpanded) {
+                    buttonElement.setAttribute("aria-expanded", "true");
+                    $("#original-headers").show();
+                    btnIcon.text("➖");
+                } else {
+                    buttonElement.setAttribute("aria-expanded", "false");
+                    $("#original-headers").hide();
+                    btnIcon.text("➕");
+                }
             }
-        }
-    });
+        });
+    }
 
     // Show summary by default
     $(".header-view[data-content='summary-view']").show();
     document.getElementById("summary-btn")!.focus();
 
     // Wire up click events for nav buttons
-    $("#nav-bar .ms-CommandButton").click(function (): void {
+    $("#nav-bar .nav-button").click(function (): void {
         // Fix for Bug 1691252 - To set aria-label dynamically on click based on button name
-        if ($("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label")!.length !== 0) {
-            $("#nav-bar .is-active .ms-CommandButton-button").attr("aria-label", $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label").text());
+        if ($("#nav-bar .is-active")!.length !== 0) {
+            const activeButtonText = $("#nav-bar .is-active").text().trim();
+            $("#nav-bar .is-active").attr("aria-label", activeButtonText);
         }
 
         // Remove active from current active
@@ -88,9 +78,9 @@ function initializeFabric(): void {
         // Hide sub-views
 
         // Fix for Bug 1691252 - To set aria-label as button after selection like "Summary Selected"
-        const ariaLabel = $(this).find(".ms-CommandButton-label")!.text() + " Selected";
-        $(this).find(".ms-CommandButton-label")!.attr("aria-label",ariaLabel);
-        $(this).find("button.ms-CommandButton-button").attr("aria-label",ariaLabel);
+        const buttonText = $(this).text().trim();
+        const ariaLabel = buttonText + " Selected";
+        $(this).attr("aria-label", ariaLabel);
         $(".header-view").hide();
         $(".header-view[data-content='" + content + "']").show();
     });
@@ -101,8 +91,9 @@ function initializeFabric(): void {
 
 function updateStatus(message: string) {
     $(".status-message").text(message);
-    overlay.show();
-    spinner.start();
+    if (overlayElement) {
+        overlayElement.classList.remove("hidden");
+    }
 }
 
 function makeBold(text: string) {
@@ -347,26 +338,14 @@ function buildViews(headers: string) {
         }
     });
 
-    // Initialize any fabric lists added
-    const listElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-List");
-    Array.prototype.forEach.call(listElements, (listElement: HTMLElement) => {
-        new fabric["List"](listElement);
-    });
-
-    const listItemElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-ListItem");
-    Array.prototype.forEach.call(listItemElements, (listItem: HTMLElement) => {
-        new fabric["ListItem"](listItem);
-
-        // Init corresponding callout
-        const calloutElement: HTMLElement | null = listItem.querySelector(".ms-Callout");
-        if (!calloutElement) return;
-        new fabric["Callout"](calloutElement, listItem, "right");
-    });
+    // Fluent UI Web Components handle their own initialization
+    // Lists and callouts work with standard DOM interactions
 }
 
 function hideStatus(): void {
-    spinner.stop();
-    overlay.hide();
+    if (overlayElement) {
+        overlayElement.classList.add("hidden");
+    }
 }
 
 function renderItem(headers: string): void {
@@ -377,7 +356,7 @@ function renderItem(headers: string): void {
     $(".received-list").empty();
     $(".antispam-list").empty();
     $(".other-list").empty();
-    $("#error-display .ms-MessageBar-text").empty();
+    $("#error-display .error-text").empty();
     $("#error-display").hide();
 
     // Load new itemDescription
@@ -390,7 +369,7 @@ function renderItem(headers: string): void {
 // Does not log the error - caller is responsible for calling PostError
 function showError(error: unknown, message: string): void {
     console.error("Error:", error);
-    $("#error-display .ms-MessageBar-text").text(message);
+    $("#error-display .error-text").text(message);
     $("#error-display").show();
 }
 
@@ -414,7 +393,7 @@ function eventListener(event: MessageEvent): void {
 
 $(function() {
     try {
-        initializeFabric();
+        initializeFluentUI();
         updateStatus(mhaStrings.mhaLoading);
         window.addEventListener("message", eventListener, false);
         Poster.postMessageToParent("frameActive");
