@@ -92,7 +92,7 @@ function initializeFluentUI(): void {
 function updateStatus(message: string) {
     $(".status-message").text(message);
     if (overlayElement) {
-        overlayElement.classList.remove("hidden");
+        overlayElement.style.display = "block";
     }
 }
 
@@ -344,11 +344,14 @@ function buildViews(headers: string) {
 
 function hideStatus(): void {
     if (overlayElement) {
-        overlayElement.classList.add("hidden");
+        overlayElement.style.display = "none";
     }
 }
 
 function renderItem(headers: string): void {
+    // Hide loading status as soon as we start rendering
+    hideStatus();
+
     // Empty data
     $(".summary-list").empty();
     $("#original-headers code").empty();
@@ -359,10 +362,8 @@ function renderItem(headers: string): void {
     $("#error-display .error-text").empty();
     $("#error-display").hide();
 
-    // Load new itemDescription
-    updateStatus(mhaStrings.mhaLoading);
+    // Build views with the loaded data
     buildViews(headers);
-    hideStatus();
 }
 
 // Handles rendering of an error.
