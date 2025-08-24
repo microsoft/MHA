@@ -72,6 +72,7 @@ body, html {
 fluent-dialog[aria-label="Diagnostics"] .code-box > pre {
     background-color: var(--background-light-gray);
     font-size: .8em;
+    line-height: 1.2;
 }
 
 /* Fluent UI Dialog customization */
