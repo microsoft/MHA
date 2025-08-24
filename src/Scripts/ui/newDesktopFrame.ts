@@ -5,7 +5,6 @@ import "../../Content/newDesktopFrame.css";
 import $ from "jquery";
 import { fabric } from "office-ui-fabric-js/dist/js/fabric";
 
-import { findTabStops } from "../findTabStops";
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Poster } from "../Poster";
@@ -13,6 +12,7 @@ import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
+import { TabNavigation } from "../TabNavigation";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -95,54 +95,8 @@ function initializeFabric(): void {
         $(".header-view[data-content='" + content + "']").show();
     });
 
-    // Insert the settings and copy buttons into the tab order for the ribbon
-    // This handles tabbing into from these buttons.
-    // Tabbing out from these buttons is over in parentframe.ts
-    document.addEventListener("keydown", function (e) {
-        if (e.key === "Tab") {
-            const shiftPressed = e.shiftKey;
-            const focused: HTMLElement = document.activeElement as HTMLElement;
-            // console.log("Shift pressed = " + shiftPressed);
-            // console.log("Focused element:" + focused + " class:" + focused.className + " id:" + focused.id + " title:" + focused.title);
-
-            // Tab from Other goes to copy button
-            if (!shiftPressed && focused.id === "other-btn") {
-                window.parent.document.getElementById("copyButton")!.focus();
-                e.preventDefault();
-            }
-            // Tab back from Summary goes to end of view
-            else if (shiftPressed && focused.id === "summary-btn") {
-                const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
-                const tabStops = findTabStops(view);
-                // Set focus on last element in the list if we can
-                if (tabStops.length > 0){
-                    tabStops[tabStops.length - 1]?.focus();
-                    e.preventDefault();
-                }
-            }
-            // If we're tabbing off of the view, we want to tab to the appropriate ribbon button
-            else
-            {
-                const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
-                const tabStops = findTabStops(view);
-
-                if (shiftPressed){
-                    // If our current focus is the first element in the list, we want to move focus to the copy button
-                    if (tabStops.length > 0 && focused === tabStops[0]){
-                        window.parent.document.getElementById("settingsButton")!.focus();
-                        e.preventDefault();
-                    }
-                }
-                else{
-                    // If our current focus is the last element in the list, we want to move focus to the summary-btn
-                    if (tabStops.length > 0 && focused === tabStops[tabStops.length - 1]){
-                        document.getElementById("summary-btn")!.focus();
-                        e.preventDefault();
-                    }
-                }
-            }
-        }
-    });
+    // Initialize iframe tab navigation handling
+    TabNavigation.initializeIFrameTabHandling();
 }
 
 function updateStatus(message: string) {

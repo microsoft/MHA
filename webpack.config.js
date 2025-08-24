@@ -172,7 +172,7 @@ export default async (env, options) => {
             })] : []),
         ],
         mode: isProduction ? "production" : "development",
-        devtool: isProduction ? "source-map" : "eval-cheap-module-source-map",
+        devtool: isProduction ? "source-map" : "source-map",
         target: ["web", "es2022"],
         module: {
             rules: [
@@ -298,6 +298,12 @@ export default async (env, options) => {
                 "Referrer-Policy": "strict-origin-when-cross-origin", // eslint-disable-line @typescript-eslint/naming-convention
             },
             static: __dirname,
+            watchFiles: {
+                paths: ["src/**/*", "Pages/**/*", "*.xml"],
+                options: {
+                    ignored: ["**/.git/**", "**/node_modules/**", "**/coverage/**"],
+                },
+            },
             server: {
                 type: "https",
                 options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),

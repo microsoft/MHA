@@ -11,7 +11,12 @@
       "useWebView": true,
       "port": 9229,
       "timeout": 600000,
-      "webRoot": "${workspaceRoot}",
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "webpack://mha/./src/*": "${workspaceFolder}/src/*",
+        "webpack://mha/*": "${workspaceFolder}/*",
+        "/src/*": "${workspaceFolder}/src/*"
+      },
       "preLaunchTask": "Debug: Outlook Desktop"
     }
   ]
