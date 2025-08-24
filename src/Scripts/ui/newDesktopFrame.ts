@@ -64,26 +64,33 @@ function initializeFluentUI(): void {
     $("#nav-bar .nav-button").click(function (): void {
         // Fix for Bug 1691252 - To set aria-label dynamically on click based on button name
         if ($("#nav-bar .is-active")!.length !== 0) {
-            const activeButtonText = $("#nav-bar .is-active").text().trim();
+            const activeButtonText = $("#nav-bar .is-active .button-label").text().trim();
             $("#nav-bar .is-active").attr("aria-label", activeButtonText);
         }
 
-        // Remove active from current active
+        // Remove active from current active and hide its label
         $("#nav-bar .is-active").removeClass("is-active");
-        // Add active class to clicked button
+        $("#nav-bar .button-label").hide();
+
+        // Add active class to clicked button and show its label
         $(this).addClass("is-active");
+        $(this).find(".button-label").show();
 
         // Get content marker
         const content: string | undefined = $(this).attr("data-content");
         // Hide sub-views
 
         // Fix for Bug 1691252 - To set aria-label as button after selection like "Summary Selected"
-        const buttonText = $(this).text().trim();
+        const buttonText = $(this).find(".button-label").text().trim();
         const ariaLabel = buttonText + " Selected";
         $(this).attr("aria-label", ariaLabel);
         $(".header-view").hide();
         $(".header-view[data-content='" + content + "']").show();
     });
+
+    // Initialize label visibility - only show active button label
+    $("#nav-bar .button-label").hide();
+    $("#nav-bar .is-active .button-label").show();
 
     // Initialize iframe tab navigation handling
     TabNavigation.initializeIFrameTabHandling();
