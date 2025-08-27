@@ -77,9 +77,26 @@
     font-size: 16px;
     color: var(--primary-blue);
     line-height: 1;
+    display: inline-block;
 }
 
 /* Icon definitions using Fabric icon font Unicode values */
+.ms-Icon--Info::before {
+    content: "\E946"; /* Fabric Info icon */
+}
+
+.ms-Icon--Timer::before {
+    content: "\E91E"; /* Fabric Timer icon */
+}
+
+.ms-Icon--MailAlert::before {
+    content: "\ED80"; /* Fabric MailAlert icon */
+}
+
+.ms-Icon--Cake::before {
+    content: "\E7BB"; /* Fabric Cake icon */
+}
+
 .icon-copy::before {
     content: "\E8C8"; /* Fabric Copy icon */
 }
