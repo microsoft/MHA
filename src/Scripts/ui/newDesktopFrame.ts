@@ -231,23 +231,23 @@ function buildViews(headers: string) {
     const receivedList = document.querySelector(".received-list") as HTMLElement;
 
     if (viewModel.receivedHeaders.rows.length > 0) {
-        const list = $("<ul/>")
-            .addClass("ms-List")
-            .appendTo(receivedList);
+        // Use HTML template for list creation
+        const listClone = cloneTemplate("received-list-template");
+        receivedList.appendChild(listClone);
+        const list = receivedList.querySelector("ul") as HTMLElement;
 
         let firstRow = true;
         viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, index) => {
             // Fix for Bug 1846002 - Added attr ID to set focus for the first element in the list
-            const listItem = $("<li/>")
-                .addClass("ms-ListItem")
-                .attr("tabindex", 0)
-                .attr("id", "received" + index)
-                .addClass("ms-ListItem--document")
-                .appendTo(list);
+            // Use HTML template for list item creation
+            const itemClone = cloneTemplate("list-item-template");
+            const listItem = itemClone.querySelector("li") as HTMLElement;
+            listItem.id = "received" + index;
+            list.appendChild(itemClone);
 
             if (firstRow) {
                 // Use HTML template for first row content
-                const listItemElement = listItem[0];
+                const listItemElement = listItem;
                 if (listItemElement) {
                     const clone = cloneTemplate("first-row-template");
                     setTemplateText(clone, ".from-value", String(row.from));
@@ -256,46 +256,24 @@ function buildViews(headers: string) {
                 }
                 firstRow = false;
             } else {
-                const wrap = $("<div/>")
-                    .addClass("progress-icon")
-                    .appendTo(listItem);
+                // Use HTML template for progress icon
+                const progressClone = cloneTemplate("progress-icon-template");
 
-                const iconbox = $("<div/>")
-                    .addClass("ms-font-xxl")
-                    .addClass("down-icon")
-                    .appendTo(wrap);
-
-                $("<i/>")
-                    .addClass("ms-Icon")
-                    .addClass("ms-Icon--Down")
-                    .appendTo(iconbox);
-
-                const delay = $("<div/>")
-                    .addClass("ms-ProgressIndicator")
-                    .appendTo(wrap);
-
-                const bar = $("<div/>")
-                    .addClass("ms-ProgressIndicator-itemProgress")
-                    .appendTo(delay);
-
-                $("<div/>")
-                    .addClass("ms-ProgressIndicator-progressTrack")
-                    .appendTo(bar);
-
+                // Set the progress bar width
                 const width: number = 1.8 * (Number(row.percent.value ?? 0));
+                const progressBar = progressClone.querySelector(".ms-ProgressIndicator-progressBar") as HTMLElement;
+                if (progressBar) {
+                    progressBar.style.width = width + "px";
+                }
 
-                $("<div/>")
-                    .addClass("ms-ProgressIndicator-progressBar")
-                    .css("width", width)
-                    .appendTo(bar);
+                // Set the description text
+                const delayText = row.delay.value !== null ? String(row.delay.value) : "";
+                setTemplateText(progressClone, ".ms-ProgressIndicator-itemDescription", delayText);
 
-                $("<div/>")
-                    .addClass("ms-ProgressIndicator-itemDescription")
-                    .text(row.delay.value !== null ? row.delay.value : "")
-                    .appendTo(delay);
+                listItem.appendChild(progressClone);
 
                 // Use HTML template for secondary text
-                const listItemElement = listItem[0];
+                const listItemElement = listItem;
                 if (listItemElement) {
                     const clone = cloneTemplate("secondary-text-template");
                     setTemplateText(clone, ".to-value", String(row.by));
@@ -306,53 +284,48 @@ function buildViews(headers: string) {
             index=index+1;
             // Add selection target using HTML template
             const selectionClone = cloneTemplate("selection-target-template");
-            listItem[0]?.appendChild(selectionClone);
+            listItem.appendChild(selectionClone);
 
-            // Callout
-            const callout = $("<div/>")
-                .addClass("ms-Callout is-hidden")
-                .appendTo(listItem);
+            // Callout - Use HTML template for callout structure
+            const calloutClone = cloneTemplate("callout-template");
 
-            const calloutMain = $("<div/>")
-                .addClass("ms-Callout-main")
-                .appendTo(callout);
-
-            // Add callout close button and header using HTML template
-            const calloutMainElement = calloutMain[0];
+            // Add callout header to the callout main element
+            const calloutMainElement = calloutClone.querySelector(".ms-Callout-main") as HTMLElement;
             if (calloutMainElement) {
                 const headerClone = cloneTemplate("callout-header-template");
-                calloutMainElement.appendChild(headerClone);
+                calloutMainElement.insertBefore(headerClone, calloutMainElement.firstChild);
             }
 
-            const calloutInner = $("<div/>")
-                .addClass("ms-Callout-inner")
-                .appendTo(calloutMain);
+            // Get the callout content container
+            const calloutContent = calloutClone.querySelector(".ms-Callout-content") as HTMLElement;
 
-            const calloutContent: JQuery<HTMLElement> = $("<div/>")
-                .addClass("ms-Callout-content")
-                .appendTo(calloutInner);
+            listItem.appendChild(calloutClone);
 
-            addCalloutEntry("From", row.from.value, calloutContent);
-            addCalloutEntry("To", row.by.value, calloutContent);
-            addCalloutEntry("Time", row.date.value, calloutContent);
-            addCalloutEntry("Type", row.with.value, calloutContent);
-            addCalloutEntry("ID", row.id.value, calloutContent);
-            addCalloutEntry("For", row.for.value, calloutContent);
-            addCalloutEntry("Via", row.via.value, calloutContent);
+            // Add callout entries - need to wrap in jQuery for compatibility with addCalloutEntry
+            const $calloutContent = $(calloutContent);
+            addCalloutEntry("From", row.from.value, $calloutContent);
+            addCalloutEntry("To", row.by.value, $calloutContent);
+            addCalloutEntry("Time", row.date.value, $calloutContent);
+            addCalloutEntry("Type", row.with.value, $calloutContent);
+            addCalloutEntry("ID", row.id.value, $calloutContent);
+            addCalloutEntry("For", row.for.value, $calloutContent);
+            addCalloutEntry("Via", row.via.value, $calloutContent);
 
             // Add click handler to show/hide callout
-            listItem.on("click", function(this: HTMLElement, event: Event) {
+            listItem.addEventListener("click", function(event: Event) {
                 event.preventDefault();
-                const calloutElement = $(this).find(".ms-Callout");
+                const calloutElement = this.querySelector(".ms-Callout") as HTMLElement;
 
                 // Hide all other callouts first
-                $(".ms-Callout").addClass("is-hidden");
+                document.querySelectorAll(".ms-Callout").forEach(callout => {
+                    callout.classList.add("is-hidden");
+                });
 
                 // Toggle this callout
-                if (calloutElement.hasClass("is-hidden")) {
-                    calloutElement.removeClass("is-hidden");
-                } else {
-                    calloutElement.addClass("is-hidden");
+                if (calloutElement && calloutElement.classList.contains("is-hidden")) {
+                    calloutElement.classList.remove("is-hidden");
+                } else if (calloutElement) {
+                    calloutElement.classList.add("is-hidden");
                 }
             });
         });
