@@ -50,13 +50,6 @@ function hideAllElements(selector: string): void {
 // Overlay element for loading display
 let overlayElement: HTMLElement | null = null;
 
-// HTML escaping utility for safe template rendering
-function escapeHtml(text: string): string {
-    const div = document.createElement("div");
-    div.textContent = text;
-    return div.innerHTML;
-}
-
 function postError(error: unknown, message: string): void {
     Poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
@@ -167,18 +160,23 @@ function updateStatus(message: string) {
     }
 }
 
-function makeBold(text: string) {
-    return "<span class=\"ms-fontWeight-semibold\">" + text + "</span>";
-}
-
 function addCalloutEntry(name: string, value: string | number | null, parent: JQuery<HTMLElement>) {
     if (value) {
-        const calloutEntryTemplate = `
-            <p class="ms-Callout-subText">${makeBold(escapeHtml(name) + ": ")}${escapeHtml(String(value))}</p>
-        `;
-        const parentElement = parent[0]; // Get DOM element from jQuery object
-        if (parentElement) {
-            parentElement.insertAdjacentHTML("beforeend", calloutEntryTemplate);
+        // Use HTML template for callout entries
+        const template = document.getElementById("callout-entry-template") as HTMLTemplateElement;
+        const clone = template.content.cloneNode(true) as DocumentFragment;
+
+        const nameSpan = clone.querySelector(".ms-fontWeight-semibold") as HTMLElement;
+        const valueSpan = clone.querySelector(".callout-value") as HTMLElement;
+
+        if (nameSpan && valueSpan) {
+            nameSpan.textContent = name + ": ";
+            valueSpan.textContent = String(value);
+
+            const parentElement = parent[0]; // Get DOM element from jQuery object
+            if (parentElement) {
+                parentElement.appendChild(clone);
+            }
         }
     }
 }
@@ -189,13 +187,18 @@ function buildViews(headers: string) {
     const summaryList = document.querySelector(".summary-list") as HTMLElement;
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
-            const summaryRowTemplate = `
-                <div class="ms-font-s ms-fontWeight-semibold">${escapeHtml(row.label)}</div>
-                <div class="code-box">
-                    <pre><code>${escapeHtml(row.value)}</code></pre>
-                </div>
-            `;
-            summaryList.insertAdjacentHTML("beforeend", summaryRowTemplate);
+            // Use HTML template for summary rows
+            const template = document.getElementById("summary-row-template") as HTMLTemplateElement;
+            const clone = template.content.cloneNode(true) as DocumentFragment;
+
+            const labelDiv = clone.querySelector(".ms-font-s") as HTMLElement;
+            const codeElement = clone.querySelector("code") as HTMLElement;
+
+            if (labelDiv && codeElement) {
+                labelDiv.textContent = row.label;
+                codeElement.textContent = row.value;
+                summaryList.appendChild(clone);
+            }
         }
     });
 
@@ -225,13 +228,20 @@ function buildViews(headers: string) {
 
             if (firstRow) {
                 // Use HTML template for first row content
-                const firstRowTemplate = `
-                    <span class="ms-ListItem-primaryText">${makeBold("From: ")}${escapeHtml(String(row.from))}</span>
-                    <span class="ms-ListItem-secondaryText">${makeBold("To: ")}${escapeHtml(String(row.by))}</span>
-                `;
-                const listItemElement = listItem[0];
-                if (listItemElement) {
-                    listItemElement.insertAdjacentHTML("beforeend", firstRowTemplate);
+                const template = document.getElementById("first-row-template") as HTMLTemplateElement;
+                const clone = template.content.cloneNode(true) as DocumentFragment;
+
+                const fromValue = clone.querySelector(".from-value") as HTMLElement;
+                const toValue = clone.querySelector(".to-value") as HTMLElement;
+
+                if (fromValue && toValue) {
+                    fromValue.textContent = String(row.from);
+                    toValue.textContent = String(row.by);
+
+                    const listItemElement = listItem[0];
+                    if (listItemElement) {
+                        listItemElement.appendChild(clone);
+                    }
                 }
                 firstRow = false;
             } else {
@@ -274,16 +284,25 @@ function buildViews(headers: string) {
                     .appendTo(delay);
 
                 // Use HTML template for secondary text
-                const secondaryTextTemplate = `<span class="ms-ListItem-secondaryText">${makeBold("To: ")}${escapeHtml(String(row.by))}</span>`;
-                const listItemElement = listItem[0];
-                if (listItemElement) {
-                    listItemElement.insertAdjacentHTML("beforeend", secondaryTextTemplate);
+                const template = document.getElementById("secondary-text-template") as HTMLTemplateElement;
+                const clone = template.content.cloneNode(true) as DocumentFragment;
+
+                const toValue = clone.querySelector(".to-value") as HTMLElement;
+                if (toValue) {
+                    toValue.textContent = String(row.by);
+
+                    const listItemElement = listItem[0];
+                    if (listItemElement) {
+                        listItemElement.appendChild(clone);
+                    }
                 }
             }
 
             index=index+1;
-            // Add selection target using template
-            listItem[0]?.insertAdjacentHTML("beforeend", "<div class=\"ms-ListItem-selectionTarget\"></div>");
+            // Add selection target using HTML template
+            const selectionTemplate = document.getElementById("selection-target-template") as HTMLTemplateElement;
+            const selectionClone = selectionTemplate.content.cloneNode(true) as DocumentFragment;
+            listItem[0]?.appendChild(selectionClone);
 
             // Callout
             const callout = $("<div/>")
@@ -294,16 +313,12 @@ function buildViews(headers: string) {
                 .addClass("ms-Callout-main")
                 .appendTo(callout);
 
-            // Add callout close button and header using template
-            const calloutHeaderTemplate = `
-                <div class="ms-Callout-close" style="display:none"></div>
-                <div class="ms-Callout-header">
-                    <p class="ms-Callout-title">Hop Details</p>
-                </div>
-            `;
+            // Add callout close button and header using HTML template
+            const headerTemplate = document.getElementById("callout-header-template") as HTMLTemplateElement;
+            const headerClone = headerTemplate.content.cloneNode(true) as DocumentFragment;
             const calloutMainElement = calloutMain[0];
             if (calloutMainElement) {
-                calloutMainElement.insertAdjacentHTML("beforeend", calloutHeaderTemplate);
+                calloutMainElement.appendChild(headerClone);
             }
 
             const calloutInner = $("<div/>")
@@ -345,26 +360,33 @@ function buildViews(headers: string) {
         // Forefront
         if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
             // Use HTML template for section header
-            const forefrontHeaderTemplate = `
-                <div class="ms-font-m">Forefront Antispam Report</div>
-                <hr/>
-            `;
-            antispamList.insertAdjacentHTML("beforeend", forefrontHeaderTemplate);
+            const headerTemplate = document.getElementById("forefront-header-template") as HTMLTemplateElement;
+            const headerClone = headerTemplate.content.cloneNode(true) as DocumentFragment;
+            antispamList.appendChild(headerClone);
 
             // Create table using HTML template
-            const tableTemplate = "<table class=\"ms-Table ms-Table--fixed spam-report\"><tbody></tbody></table>";
-            antispamList.insertAdjacentHTML("beforeend", tableTemplate);
+            const tableTemplate = document.getElementById("antispam-table-template") as HTMLTemplateElement;
+            const tableClone = tableTemplate.content.cloneNode(true) as DocumentFragment;
+            antispamList.appendChild(tableClone);
+
             const tbodyElement = antispamList.querySelector("table:last-child tbody");
             if (tbodyElement) {
                 viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
                     // Use HTML template for table rows
-                    const tableRowTemplate = `
-                        <tr>
-                            <td id="${escapeHtml(antispamrow.id)}">${escapeHtml(antispamrow.label)}</td>
-                            <td aria-labelledby="${escapeHtml(antispamrow.id)}">${antispamrow.valueUrl}</td>
-                        </tr>
-                    `;
-                    tbodyElement.insertAdjacentHTML("beforeend", tableRowTemplate);
+                    const rowTemplate = document.getElementById("table-row-template") as HTMLTemplateElement;
+                    const rowClone = rowTemplate.content.cloneNode(true) as DocumentFragment;
+
+                    const cells = rowClone.querySelectorAll("td");
+                    if (cells.length >= 2) {
+                        const cell0 = cells[0] as HTMLElement;
+                        const cell1 = cells[1] as HTMLElement;
+                        cell0.id = antispamrow.id;
+                        cell0.textContent = antispamrow.label;
+                        cell1.setAttribute("aria-labelledby", antispamrow.id);
+                        cell1.innerHTML = antispamrow.valueUrl; // Note: valueUrl may contain HTML
+                    }
+
+                    tbodyElement.appendChild(rowClone);
                 });
             }
         }
@@ -372,26 +394,33 @@ function buildViews(headers: string) {
         // Microsoft
         if (viewModel.antiSpamReport.rows.length > 0) {
             // Use HTML template for section header
-            const microsoftHeaderTemplate = `
-                <div class="ms-font-m">Microsoft Antispam Report</div>
-                <hr/>
-            `;
-            antispamList.insertAdjacentHTML("beforeend", microsoftHeaderTemplate);
+            const headerTemplate = document.getElementById("microsoft-header-template") as HTMLTemplateElement;
+            const headerClone = headerTemplate.content.cloneNode(true) as DocumentFragment;
+            antispamList.appendChild(headerClone);
 
             // Create table using HTML template
-            const tableTemplate2 = "<table class=\"ms-Table ms-Table--fixed spam-report\"><tbody></tbody></table>";
-            antispamList.insertAdjacentHTML("beforeend", tableTemplate2);
+            const tableTemplate = document.getElementById("antispam-table-template") as HTMLTemplateElement;
+            const tableClone = tableTemplate.content.cloneNode(true) as DocumentFragment;
+            antispamList.appendChild(tableClone);
+
             const tbodyElement2 = antispamList.querySelector("table:last-child tbody");
             if (tbodyElement2) {
                 viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
                     // Use HTML template for table rows
-                    const tableRowTemplate = `
-                        <tr>
-                            <td id="${escapeHtml(antispamrow.id)}">${escapeHtml(antispamrow.label)}</td>
-                            <td aria-labelledby="${escapeHtml(antispamrow.id)}">${antispamrow.valueUrl}</td>
-                        </tr>
-                    `;
-                    tbodyElement2.insertAdjacentHTML("beforeend", tableRowTemplate);
+                    const rowTemplate = document.getElementById("table-row-template") as HTMLTemplateElement;
+                    const rowClone = rowTemplate.content.cloneNode(true) as DocumentFragment;
+
+                    const cells = rowClone.querySelectorAll("td");
+                    if (cells.length >= 2) {
+                        const cell0 = cells[0] as HTMLElement;
+                        const cell1 = cells[1] as HTMLElement;
+                        cell0.id = antispamrow.id;
+                        cell0.textContent = antispamrow.label;
+                        cell1.setAttribute("aria-labelledby", antispamrow.id);
+                        cell1.innerHTML = antispamrow.valueUrl; // Note: valueUrl may contain HTML
+                    }
+
+                    tbodyElement2.appendChild(rowClone);
                 });
             }
         }
@@ -403,14 +432,18 @@ function buildViews(headers: string) {
     viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
             // Use HTML template for other headers
-            const headerContent = otherRow.url ? otherRow.url : escapeHtml(otherRow.header);
-            const otherRowTemplate = `
-                <div class="ms-font-s ms-fontWeight-semibold">${headerContent}</div>
-                <div class="code-box">
-                    <pre><code>${escapeHtml(otherRow.value)}</code></pre>
-                </div>
-            `;
-            otherList.insertAdjacentHTML("beforeend", otherRowTemplate);
+            const template = document.getElementById("other-row-template") as HTMLTemplateElement;
+            const clone = template.content.cloneNode(true) as DocumentFragment;
+
+            const labelDiv = clone.querySelector(".ms-font-s") as HTMLElement;
+            const codeElement = clone.querySelector("code") as HTMLElement;
+
+            if (labelDiv && codeElement) {
+                const headerContent = otherRow.url ? otherRow.url : otherRow.header;
+                labelDiv.innerHTML = headerContent; // May contain HTML (url)
+                codeElement.textContent = otherRow.value;
+                otherList.appendChild(clone);
+            }
         }
     });
 
