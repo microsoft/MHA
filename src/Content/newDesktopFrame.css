@@ -35,6 +35,12 @@
 }
 
 /* Navigation button label management */
+.content-header,
+.nav-bar,
+#nav-bar {
+    background-color: #f4f4f4;
+}
+
 #nav-bar .button-label {
     display: none;
 }
