@@ -223,14 +223,6 @@ fluent-dialog fluent-checkbox {
     background: var(--active-blue) !important;
 }
 
-/* Focus styles for accessibility */
-fluent-button:focus-visible,
-fluent-checkbox:focus-visible,
-fluent-radio:focus-visible {
-    outline: var(--focus-outline);
-    outline-offset: 2px;
-}
-
 /* Remove all internal highlights from radio and checkbox controls */
 fluent-radio::part(control),
 fluent-radio::part(control):focus,
