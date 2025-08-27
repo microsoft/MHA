@@ -40,64 +40,96 @@ function initializeFluentUI(): void {
     if (buttonElement) {
         buttonElement.addEventListener("click", function (event: Event): void {
             if (event.currentTarget) {
-                const btnIcon: JQuery<HTMLElement> = $(event.currentTarget).find(".ms-Icon--Add, .ms-Icon--Remove");
+                const currentTarget = event.currentTarget as HTMLElement;
+                const btnIcon = currentTarget.querySelector(".ms-Icon--Add, .ms-Icon--Remove");
+                const originalHeaders = document.querySelector("#original-headers") as HTMLElement;
                 const isExpanded = buttonElement.getAttribute("aria-expanded") === "true";
 
                 if (!isExpanded) {
                     buttonElement.setAttribute("aria-expanded", "true");
-                    $("#original-headers").show();
-                    btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
+                    if (originalHeaders) originalHeaders.style.display = "block";
+                    if (btnIcon) {
+                        btnIcon.classList.remove("ms-Icon--Add");
+                        btnIcon.classList.add("ms-Icon--Remove");
+                    }
                 } else {
                     buttonElement.setAttribute("aria-expanded", "false");
-                    $("#original-headers").hide();
-                    btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
+                    if (originalHeaders) originalHeaders.style.display = "none";
+                    if (btnIcon) {
+                        btnIcon.classList.remove("ms-Icon--Remove");
+                        btnIcon.classList.add("ms-Icon--Add");
+                    }
                 }
             }
         });
     }
 
     // Show summary by default
-    $(".header-view[data-content='summary-view']").show();
+    const summaryView = document.querySelector(".header-view[data-content='summary-view']") as HTMLElement;
+    if (summaryView) summaryView.style.display = "block";
     document.getElementById("summary-btn")!.focus();
 
     // Wire up click events for nav buttons
-    $("#nav-bar .nav-button").click(function (): void {
-        // Fix for Bug 1691252 - To set aria-label dynamically on click based on button name
-        if ($("#nav-bar .is-active")!.length !== 0) {
-            const activeButtonText = $("#nav-bar .is-active .button-label").text().trim();
-            $("#nav-bar .is-active").attr("aria-label", activeButtonText);
-        }
+    const navButtons = document.querySelectorAll("#nav-bar .nav-button");
+    navButtons.forEach(button => {
+        button.addEventListener("click", function (this: HTMLElement): void {
+            // Fix for Bug 1691252 - To set aria-label dynamically on click based on button name
+            const currentActive = document.querySelector("#nav-bar .is-active");
+            if (currentActive) {
+                const activeButtonLabel = currentActive.querySelector(".button-label") as HTMLElement;
+                if (activeButtonLabel) {
+                    const activeButtonText = activeButtonLabel.textContent?.trim() || "";
+                    currentActive.setAttribute("aria-label", activeButtonText);
+                }
+            }
 
-        // Remove active from current active and hide its label
-        $("#nav-bar .is-active").removeClass("is-active");
-        $("#nav-bar .button-label").hide();
+            // Remove active from current active and hide its label
+            if (currentActive) {
+                currentActive.classList.remove("is-active");
+            }
+            const allLabels = document.querySelectorAll("#nav-bar .button-label");
+            allLabels.forEach(label => (label as HTMLElement).style.display = "none");
 
-        // Add active class to clicked button and show its label
-        $(this).addClass("is-active");
-        $(this).find(".button-label").show();
+            // Add active class to clicked button and show its label
+            this.classList.add("is-active");
+            const thisLabel = this.querySelector(".button-label") as HTMLElement;
+            if (thisLabel) thisLabel.style.display = "block";
 
-        // Get content marker
-        const content: string | undefined = $(this).attr("data-content");
-        // Hide sub-views
+            // Get content marker
+            const content = this.getAttribute("data-content");
 
-        // Fix for Bug 1691252 - To set aria-label as button after selection like "Summary Selected"
-        const buttonText = $(this).find(".button-label").text().trim();
-        const ariaLabel = buttonText + " Selected";
-        $(this).attr("aria-label", ariaLabel);
-        $(".header-view").hide();
-        $(".header-view[data-content='" + content + "']").show();
+            // Fix for Bug 1691252 - To set aria-label as button after selection like "Summary Selected"
+            const buttonText = thisLabel?.textContent?.trim() || "";
+            const ariaLabel = buttonText + " Selected";
+            this.setAttribute("aria-label", ariaLabel);
+
+            // Hide all header views
+            const allHeaderViews = document.querySelectorAll(".header-view");
+            allHeaderViews.forEach(view => (view as HTMLElement).style.display = "none");
+
+            // Show the selected content view
+            if (content) {
+                const targetView = document.querySelector(`.header-view[data-content='${content}']`) as HTMLElement;
+                if (targetView) targetView.style.display = "block";
+            }
+        });
     });
 
     // Initialize label visibility - only show active button label
-    $("#nav-bar .button-label").hide();
-    $("#nav-bar .is-active .button-label").show();
+    const allLabels = document.querySelectorAll("#nav-bar .button-label");
+    allLabels.forEach(label => (label as HTMLElement).style.display = "none");
+    const activeLabel = document.querySelector("#nav-bar .is-active .button-label") as HTMLElement;
+    if (activeLabel) activeLabel.style.display = "block";
 
     // Initialize iframe tab navigation handling
     TabNavigation.initializeIFrameTabHandling();
 }
 
 function updateStatus(message: string) {
-    $(".status-message").text(message);
+    const statusElements = document.querySelectorAll(".status-message");
+    statusElements.forEach(element => {
+        element.textContent = message;
+    });
     if (overlayElement) {
         overlayElement.style.display = "block";
     }
@@ -138,9 +170,11 @@ function buildViews(headers: string) {
     });
 
     // Save original headers and show ui
-    $("#original-headers code").text(viewModel.originalHeaders);
+    const originalHeadersCode = document.querySelector("#original-headers code");
+    if (originalHeadersCode) originalHeadersCode.textContent = viewModel.originalHeaders;
     if (viewModel.originalHeaders) {
-        $(".orig-header-ui").show();
+        const origHeaderUI = document.querySelector(".orig-header-ui") as HTMLElement;
+        if (origHeaderUI) origHeaderUI.style.display = "block";
     }
 
     // Build received view
@@ -360,11 +394,20 @@ function renderItem(headers: string): void {
     hideStatus();
 
     // Empty data
-    $(".summary-list").empty();
-    $("#original-headers code").empty();
-    $(".orig-header-ui").hide();
-    $(".received-list").empty();
-    $(".antispam-list").empty();
+    const summaryList = document.querySelector(".summary-list");
+    if (summaryList) summaryList.innerHTML = "";
+
+    const originalHeadersCode = document.querySelector("#original-headers code");
+    if (originalHeadersCode) originalHeadersCode.textContent = "";
+
+    const origHeaderUI = document.querySelector(".orig-header-ui") as HTMLElement;
+    if (origHeaderUI) origHeaderUI.style.display = "none";
+
+    const receivedList = document.querySelector(".received-list");
+    if (receivedList) receivedList.innerHTML = "";
+
+    const antispamList = document.querySelector(".antispam-list");
+    if (antispamList) antispamList.innerHTML = "";
     $(".other-list").empty();
     $("#error-display .error-text").empty();
     $("#error-display").hide();
