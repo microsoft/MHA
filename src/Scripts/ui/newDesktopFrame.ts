@@ -224,15 +224,15 @@ function buildViews(headers: string) {
                 .appendTo(list);
 
             if (firstRow) {
-                $("<span/>")
-                    .addClass("ms-ListItem-primaryText")
-                    .html(makeBold("From: ") + row.from)
-                    .appendTo(listItem);
-
-                $("<span/>")
-                    .addClass("ms-ListItem-secondaryText")
-                    .html(makeBold("To: ") + row.by)
-                    .appendTo(listItem);
+                // Use HTML template for first row content
+                const firstRowTemplate = `
+                    <span class="ms-ListItem-primaryText">${makeBold("From: ")}${escapeHtml(String(row.from))}</span>
+                    <span class="ms-ListItem-secondaryText">${makeBold("To: ")}${escapeHtml(String(row.by))}</span>
+                `;
+                const listItemElement = listItem[0];
+                if (listItemElement) {
+                    listItemElement.insertAdjacentHTML("beforeend", firstRowTemplate);
+                }
                 firstRow = false;
             } else {
                 const wrap = $("<div/>")
@@ -273,10 +273,12 @@ function buildViews(headers: string) {
                     .text(row.delay.value !== null ? row.delay.value : "")
                     .appendTo(delay);
 
-                $("<span/>")
-                    .addClass("ms-ListItem-secondaryText")
-                    .html(makeBold("To: ") + row.by)
-                    .appendTo(listItem);
+                // Use HTML template for secondary text
+                const secondaryTextTemplate = `<span class="ms-ListItem-secondaryText">${makeBold("To: ")}${escapeHtml(String(row.by))}</span>`;
+                const listItemElement = listItem[0];
+                if (listItemElement) {
+                    listItemElement.insertAdjacentHTML("beforeend", secondaryTextTemplate);
+                }
             }
 
             index=index+1;
@@ -292,19 +294,17 @@ function buildViews(headers: string) {
                 .addClass("ms-Callout-main")
                 .appendTo(callout);
 
-            $("<div/>")
-                .addClass("ms-Callout-close")
-                .attr("style","display:none")
-                .appendTo(calloutMain);
-
-            const calloutHeader = $("<div/>")
-                .addClass("ms-Callout-header")
-                .appendTo(calloutMain);
-
-            $("<p/>")
-                .addClass("ms-Callout-title")
-                .text("Hop Details")
-                .appendTo(calloutHeader);
+            // Add callout close button and header using template
+            const calloutHeaderTemplate = `
+                <div class="ms-Callout-close" style="display:none"></div>
+                <div class="ms-Callout-header">
+                    <p class="ms-Callout-title">Hop Details</p>
+                </div>
+            `;
+            const calloutMainElement = calloutMain[0];
+            if (calloutMainElement) {
+                calloutMainElement.insertAdjacentHTML("beforeend", calloutHeaderTemplate);
+            }
 
             const calloutInner = $("<div/>")
                 .addClass("ms-Callout-inner")
@@ -351,14 +351,10 @@ function buildViews(headers: string) {
             `;
             antispamList.insertAdjacentHTML("beforeend", forefrontHeaderTemplate);
 
-            const table = $("<table/>")
-                .addClass("ms-Table")
-                .addClass("ms-Table--fixed")
-                .addClass("spam-report")
-                .appendTo(antispamList);
-            const tbody = $("<tbody/>")
-                .appendTo(table);
-            const tbodyElement = tbody[0]; // Get the DOM element from jQuery object
+            // Create table using HTML template
+            const tableTemplate = "<table class=\"ms-Table ms-Table--fixed spam-report\"><tbody></tbody></table>";
+            antispamList.insertAdjacentHTML("beforeend", tableTemplate);
+            const tbodyElement = antispamList.querySelector("table:last-child tbody");
             if (tbodyElement) {
                 viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
                     // Use HTML template for table rows
@@ -382,15 +378,11 @@ function buildViews(headers: string) {
             `;
             antispamList.insertAdjacentHTML("beforeend", microsoftHeaderTemplate);
 
-            const table = $("<table/>")
-                .addClass("ms-Table")
-                .addClass("ms-Table--fixed")
-                .addClass("spam-report")
-                .appendTo(antispamList);
-            const tbody = $("<tbody/>")
-                .appendTo(table);
-            const tbodyElement = tbody[0]; // Get the DOM element from jQuery object
-            if (tbodyElement) {
+            // Create table using HTML template
+            const tableTemplate2 = "<table class=\"ms-Table ms-Table--fixed spam-report\"><tbody></tbody></table>";
+            antispamList.insertAdjacentHTML("beforeend", tableTemplate2);
+            const tbodyElement2 = antispamList.querySelector("table:last-child tbody");
+            if (tbodyElement2) {
                 viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
                     // Use HTML template for table rows
                     const tableRowTemplate = `
@@ -399,7 +391,7 @@ function buildViews(headers: string) {
                             <td aria-labelledby="${escapeHtml(antispamrow.id)}">${antispamrow.valueUrl}</td>
                         </tr>
                     `;
-                    tbodyElement.insertAdjacentHTML("beforeend", tableRowTemplate);
+                    tbodyElement2.insertAdjacentHTML("beforeend", tableRowTemplate);
                 });
             }
         }
