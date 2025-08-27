@@ -13,6 +13,45 @@ import { TabNavigation } from "../TabNavigation";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
+// DOM utility functions to reduce duplication
+function getElement(selector: string): HTMLElement | null {
+    return document.querySelector(selector) as HTMLElement;
+}
+
+function getElements(selector: string): NodeListOf<HTMLElement> {
+    return document.querySelectorAll(selector) as NodeListOf<HTMLElement>;
+}
+
+function clearElement(selector: string): void {
+    const element = getElement(selector);
+    if (element) element.innerHTML = "";
+}
+
+function setText(selector: string, text: string): void {
+    const element = getElement(selector);
+    if (element) element.textContent = text;
+}
+
+function showElement(selector: string): void {
+    const element = getElement(selector);
+    if (element) element.style.display = "block";
+}
+
+function hideElement(selector: string): void {
+    const element = getElement(selector);
+    if (element) element.style.display = "none";
+}
+
+function hideAllElements(selector: string): void {
+    const elements = getElements(selector);
+    elements.forEach(element => element.style.display = "none");
+}
+
+function setTextAll(selector: string, text: string): void {
+    const elements = getElements(selector);
+    elements.forEach(element => element.textContent = text);
+}
+
 // Overlay element for loading display
 let overlayElement: HTMLElement | null = null;
 
@@ -22,7 +61,7 @@ function postError(error: unknown, message: string): void {
 
 function initializeFluentUI(): void {
     // Store references for overlay control
-    overlayElement = document.querySelector("#loading-overlay");
+    overlayElement = getElement("#loading-overlay");
 
     // Override click so user can't dismiss overlay
     if (overlayElement) {
@@ -36,13 +75,13 @@ function initializeFluentUI(): void {
     // Navigation and button behavior is handled with standard DOM events
 
     // Set up original headers toggle button
-    const buttonElement: HTMLElement | null = document.querySelector("#orig-header-btn");
+    const buttonElement = getElement("#orig-header-btn");
     if (buttonElement) {
         buttonElement.addEventListener("click", function (event: Event): void {
             if (event.currentTarget) {
                 const currentTarget = event.currentTarget as HTMLElement;
                 const btnIcon = currentTarget.querySelector(".ms-Icon--Add, .ms-Icon--Remove");
-                const originalHeaders = document.querySelector("#original-headers") as HTMLElement;
+                const originalHeaders = getElement("#original-headers");
                 const isExpanded = buttonElement.getAttribute("aria-expanded") === "true";
 
                 if (!isExpanded) {
@@ -65,16 +104,14 @@ function initializeFluentUI(): void {
     }
 
     // Show summary by default
-    const summaryView = document.querySelector(".header-view[data-content='summary-view']") as HTMLElement;
-    if (summaryView) summaryView.style.display = "block";
+    showElement(".header-view[data-content='summary-view']");
     document.getElementById("summary-btn")!.focus();
 
     // Wire up click events for nav buttons
-    const navButtons = document.querySelectorAll("#nav-bar .nav-button");
-    navButtons.forEach(button => {
+    getElements("#nav-bar .nav-button").forEach(button => {
         button.addEventListener("click", function (this: HTMLElement): void {
             // Fix for Bug 1691252 - To set aria-label dynamically on click based on button name
-            const currentActive = document.querySelector("#nav-bar .is-active");
+            const currentActive = getElement("#nav-bar .is-active");
             if (currentActive) {
                 const activeButtonLabel = currentActive.querySelector(".button-label") as HTMLElement;
                 if (activeButtonLabel) {
@@ -87,8 +124,7 @@ function initializeFluentUI(): void {
             if (currentActive) {
                 currentActive.classList.remove("is-active");
             }
-            const allLabels = document.querySelectorAll("#nav-bar .button-label");
-            allLabels.forEach(label => (label as HTMLElement).style.display = "none");
+            hideAllElements("#nav-bar .button-label");
 
             // Add active class to clicked button and show its label
             this.classList.add("is-active");
@@ -104,21 +140,18 @@ function initializeFluentUI(): void {
             this.setAttribute("aria-label", ariaLabel);
 
             // Hide all header views
-            const allHeaderViews = document.querySelectorAll(".header-view");
-            allHeaderViews.forEach(view => (view as HTMLElement).style.display = "none");
+            hideAllElements(".header-view");
 
             // Show the selected content view
             if (content) {
-                const targetView = document.querySelector(`.header-view[data-content='${content}']`) as HTMLElement;
-                if (targetView) targetView.style.display = "block";
+                showElement(`.header-view[data-content='${content}']`);
             }
         });
     });
 
     // Initialize label visibility - only show active button label
-    const allLabels = document.querySelectorAll("#nav-bar .button-label");
-    allLabels.forEach(label => (label as HTMLElement).style.display = "none");
-    const activeLabel = document.querySelector("#nav-bar .is-active .button-label") as HTMLElement;
+    hideAllElements("#nav-bar .button-label");
+    const activeLabel = getElement("#nav-bar .is-active .button-label");
     if (activeLabel) activeLabel.style.display = "block";
 
     // Initialize iframe tab navigation handling
@@ -126,10 +159,7 @@ function initializeFluentUI(): void {
 }
 
 function updateStatus(message: string) {
-    const statusElements = document.querySelectorAll(".status-message");
-    statusElements.forEach(element => {
-        element.textContent = message;
-    });
+    setTextAll(".status-message", message);
     if (overlayElement) {
         overlayElement.style.display = "block";
     }
@@ -170,11 +200,9 @@ function buildViews(headers: string) {
     });
 
     // Save original headers and show ui
-    const originalHeadersCode = document.querySelector("#original-headers code");
-    if (originalHeadersCode) originalHeadersCode.textContent = viewModel.originalHeaders;
+    setText("#original-headers code", viewModel.originalHeaders);
     if (viewModel.originalHeaders) {
-        const origHeaderUI = document.querySelector(".orig-header-ui") as HTMLElement;
-        if (origHeaderUI) origHeaderUI.style.display = "block";
+        showElement(".orig-header-ui");
     }
 
     // Build received view
@@ -394,29 +422,14 @@ function renderItem(headers: string): void {
     hideStatus();
 
     // Empty data
-    const summaryList = document.querySelector(".summary-list");
-    if (summaryList) summaryList.innerHTML = "";
-
-    const originalHeadersCode = document.querySelector("#original-headers code");
-    if (originalHeadersCode) originalHeadersCode.textContent = "";
-
-    const origHeaderUI = document.querySelector(".orig-header-ui") as HTMLElement;
-    if (origHeaderUI) origHeaderUI.style.display = "none";
-
-    const receivedList = document.querySelector(".received-list");
-    if (receivedList) receivedList.innerHTML = "";
-
-    const antispamList = document.querySelector(".antispam-list");
-    if (antispamList) antispamList.innerHTML = "";
-
-    const otherList = document.querySelector(".other-list");
-    if (otherList) otherList.innerHTML = "";
-
-    const errorText = document.querySelector("#error-display .error-text");
-    if (errorText) errorText.textContent = "";
-
-    const errorDisplay = document.querySelector("#error-display") as HTMLElement;
-    if (errorDisplay) errorDisplay.style.display = "none";
+    clearElement(".summary-list");
+    setText("#original-headers code", "");
+    hideElement(".orig-header-ui");
+    clearElement(".received-list");
+    clearElement(".antispam-list");
+    clearElement(".other-list");
+    setText("#error-display .error-text", "");
+    hideElement("#error-display");
 
     // Build views with the loaded data
     buildViews(headers);
@@ -426,11 +439,8 @@ function renderItem(headers: string): void {
 // Does not log the error - caller is responsible for calling PostError
 function showError(error: unknown, message: string): void {
     console.error("Error:", error);
-    const errorText = document.querySelector("#error-display .error-text");
-    if (errorText) errorText.textContent = message;
-
-    const errorDisplay = document.querySelector("#error-display") as HTMLElement;
-    if (errorDisplay) errorDisplay.style.display = "block";
+    setText("#error-display .error-text", message);
+    showElement("#error-display");
 }
 
 function eventListener(event: MessageEvent): void {
