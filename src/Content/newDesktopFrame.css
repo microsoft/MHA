@@ -1,15 +1,5 @@
-/* CSS Custom Properties - matching uiToggle.css */
-:root {
-    --primary-blue: #0078d4;
-    --focus-blue: #0072cc;
-    --border-gray: #ccc;
-    --background-gray: #f5f5f5;
-    --white: #ffffff;
-    --black: #000000;
-    --hover-blue: color-mix(in srgb, var(--primary-blue) 10%, transparent);
-    --active-blue: color-mix(in srgb, var(--primary-blue) 20%, transparent);
-    --focus-outline: 2px solid var(--focus-blue);
-}
+/* Import shared Fluent UI styles */
+@import url("fluentCommon.css");
 
 .content-wrap {
     background: #fff;
@@ -44,29 +34,12 @@
     text-align: right;
 }
 
-.code-box > pre {
-    background-color: #eaeaea;
-    border: 1px solid #ccc;
-    padding: 5px;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    font-size: .8em;
-}
-
 #nav-bar .ms-CommandButton-label {
     display: none;
 }
 
 #nav-bar .ms-CommandButton:hover .ms-CommandButton-label {
     display: inline-block;
-}
-
-/* Basic styling to match uiToggle.css - keeping existing label system intact */
-.nav-bar .nav-button {
-    background: transparent !important;
-    border: none !important;
-    color: var(--primary-blue);
-    font-size: 18px;
 }
 
 #nav-bar .is-active .ms-CommandButton-label {

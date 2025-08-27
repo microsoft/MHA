@@ -1,3 +1,4 @@
+import "../../Content/fluentCommon.css";
 import "../../Content/fabric.css";
 import "../../Content/newDesktopFrame.css";
 import $ from "jquery";
