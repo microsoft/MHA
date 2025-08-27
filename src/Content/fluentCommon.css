@@ -148,10 +148,10 @@ fluent-radio:focus-visible {
     background-color: var(--background-gray);
     border: 1px solid var(--border-gray);
     border-radius: var(--border-radius);
-    padding: var(--spacing-medium);
+    padding: 5px;
     word-wrap: break-word;
     white-space: pre-wrap;
-    font-size: 14px;
+    font-size: 10.4px;
     line-height: 1.4;
     font-family: var(--font-monospace);
     margin: 0;
