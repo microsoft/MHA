@@ -47,6 +47,42 @@ function hideAllElements(selector: string): void {
     elements.forEach(element => element.style.display = "none");
 }
 
+// Template utility functions for cleaner HTML template usage
+function cloneTemplate(templateId: string): DocumentFragment {
+    const template = document.getElementById(templateId) as HTMLTemplateElement;
+    if (!template) {
+        throw new Error(`Template with id "${templateId}" not found`);
+    }
+    return template.content.cloneNode(true) as DocumentFragment;
+}
+
+function appendTemplate(templateId: string, parent: HTMLElement): DocumentFragment {
+    const clone = cloneTemplate(templateId);
+    parent.appendChild(clone);
+    return clone;
+}
+
+function setTemplateText(clone: DocumentFragment, selector: string, text: string): void {
+    const element = clone.querySelector(selector) as HTMLElement;
+    if (element) {
+        element.textContent = text;
+    }
+}
+
+function setTemplateHTML(clone: DocumentFragment, selector: string, html: string): void {
+    const element = clone.querySelector(selector) as HTMLElement;
+    if (element) {
+        element.innerHTML = html;
+    }
+}
+
+function setTemplateAttribute(clone: DocumentFragment, selector: string, attribute: string, value: string): void {
+    const element = clone.querySelector(selector) as HTMLElement;
+    if (element) {
+        element.setAttribute(attribute, value);
+    }
+}
+
 // Overlay element for loading display
 let overlayElement: HTMLElement | null = null;
 
@@ -162,21 +198,12 @@ function updateStatus(message: string) {
 
 function addCalloutEntry(name: string, value: string | number | null, parent: JQuery<HTMLElement>) {
     if (value) {
-        // Use HTML template for callout entries
-        const template = document.getElementById("callout-entry-template") as HTMLTemplateElement;
-        const clone = template.content.cloneNode(true) as DocumentFragment;
-
-        const nameSpan = clone.querySelector(".ms-fontWeight-semibold") as HTMLElement;
-        const valueSpan = clone.querySelector(".callout-value") as HTMLElement;
-
-        if (nameSpan && valueSpan) {
-            nameSpan.textContent = name + ": ";
-            valueSpan.textContent = String(value);
-
-            const parentElement = parent[0]; // Get DOM element from jQuery object
-            if (parentElement) {
-                parentElement.appendChild(clone);
-            }
+        const parentElement = parent[0]; // Get DOM element from jQuery object
+        if (parentElement) {
+            const clone = cloneTemplate("callout-entry-template");
+            setTemplateText(clone, ".ms-fontWeight-semibold", name + ": ");
+            setTemplateText(clone, ".callout-value", String(value));
+            parentElement.appendChild(clone);
         }
     }
 }
@@ -187,18 +214,10 @@ function buildViews(headers: string) {
     const summaryList = document.querySelector(".summary-list") as HTMLElement;
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
-            // Use HTML template for summary rows
-            const template = document.getElementById("summary-row-template") as HTMLTemplateElement;
-            const clone = template.content.cloneNode(true) as DocumentFragment;
-
-            const labelDiv = clone.querySelector(".ms-font-s") as HTMLElement;
-            const codeElement = clone.querySelector("code") as HTMLElement;
-
-            if (labelDiv && codeElement) {
-                labelDiv.textContent = row.label;
-                codeElement.textContent = row.value;
-                summaryList.appendChild(clone);
-            }
+            const clone = cloneTemplate("summary-row-template");
+            setTemplateText(clone, ".ms-font-s", row.label);
+            setTemplateText(clone, "code", row.value);
+            summaryList.appendChild(clone);
         }
     });
 
@@ -228,20 +247,12 @@ function buildViews(headers: string) {
 
             if (firstRow) {
                 // Use HTML template for first row content
-                const template = document.getElementById("first-row-template") as HTMLTemplateElement;
-                const clone = template.content.cloneNode(true) as DocumentFragment;
-
-                const fromValue = clone.querySelector(".from-value") as HTMLElement;
-                const toValue = clone.querySelector(".to-value") as HTMLElement;
-
-                if (fromValue && toValue) {
-                    fromValue.textContent = String(row.from);
-                    toValue.textContent = String(row.by);
-
-                    const listItemElement = listItem[0];
-                    if (listItemElement) {
-                        listItemElement.appendChild(clone);
-                    }
+                const listItemElement = listItem[0];
+                if (listItemElement) {
+                    const clone = cloneTemplate("first-row-template");
+                    setTemplateText(clone, ".from-value", String(row.from));
+                    setTemplateText(clone, ".to-value", String(row.by));
+                    listItemElement.appendChild(clone);
                 }
                 firstRow = false;
             } else {
@@ -284,24 +295,17 @@ function buildViews(headers: string) {
                     .appendTo(delay);
 
                 // Use HTML template for secondary text
-                const template = document.getElementById("secondary-text-template") as HTMLTemplateElement;
-                const clone = template.content.cloneNode(true) as DocumentFragment;
-
-                const toValue = clone.querySelector(".to-value") as HTMLElement;
-                if (toValue) {
-                    toValue.textContent = String(row.by);
-
-                    const listItemElement = listItem[0];
-                    if (listItemElement) {
-                        listItemElement.appendChild(clone);
-                    }
+                const listItemElement = listItem[0];
+                if (listItemElement) {
+                    const clone = cloneTemplate("secondary-text-template");
+                    setTemplateText(clone, ".to-value", String(row.by));
+                    listItemElement.appendChild(clone);
                 }
             }
 
             index=index+1;
             // Add selection target using HTML template
-            const selectionTemplate = document.getElementById("selection-target-template") as HTMLTemplateElement;
-            const selectionClone = selectionTemplate.content.cloneNode(true) as DocumentFragment;
+            const selectionClone = cloneTemplate("selection-target-template");
             listItem[0]?.appendChild(selectionClone);
 
             // Callout
@@ -314,10 +318,9 @@ function buildViews(headers: string) {
                 .appendTo(callout);
 
             // Add callout close button and header using HTML template
-            const headerTemplate = document.getElementById("callout-header-template") as HTMLTemplateElement;
-            const headerClone = headerTemplate.content.cloneNode(true) as DocumentFragment;
             const calloutMainElement = calloutMain[0];
             if (calloutMainElement) {
+                const headerClone = cloneTemplate("callout-header-template");
                 calloutMainElement.appendChild(headerClone);
             }
 
@@ -360,31 +363,28 @@ function buildViews(headers: string) {
         // Forefront
         if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
             // Use HTML template for section header
-            const headerTemplate = document.getElementById("forefront-header-template") as HTMLTemplateElement;
-            const headerClone = headerTemplate.content.cloneNode(true) as DocumentFragment;
-            antispamList.appendChild(headerClone);
+            appendTemplate("forefront-header-template", antispamList);
 
             // Create table using HTML template
-            const tableTemplate = document.getElementById("antispam-table-template") as HTMLTemplateElement;
-            const tableClone = tableTemplate.content.cloneNode(true) as DocumentFragment;
-            antispamList.appendChild(tableClone);
+            appendTemplate("antispam-table-template", antispamList);
 
             const tbodyElement = antispamList.querySelector("table:last-child tbody");
             if (tbodyElement) {
                 viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
                     // Use HTML template for table rows
-                    const rowTemplate = document.getElementById("table-row-template") as HTMLTemplateElement;
-                    const rowClone = rowTemplate.content.cloneNode(true) as DocumentFragment;
+                    const rowClone = cloneTemplate("table-row-template");
 
+                    // Set first cell content and id
                     const cells = rowClone.querySelectorAll("td");
                     if (cells.length >= 2) {
                         const cell0 = cells[0] as HTMLElement;
-                        const cell1 = cells[1] as HTMLElement;
                         cell0.id = antispamrow.id;
                         cell0.textContent = antispamrow.label;
-                        cell1.setAttribute("aria-labelledby", antispamrow.id);
-                        cell1.innerHTML = antispamrow.valueUrl; // Note: valueUrl may contain HTML
                     }
+
+                    // Use helper for setting aria-labelledby attribute
+                    setTemplateAttribute(rowClone, "td:nth-child(2)", "aria-labelledby", antispamrow.id);
+                    setTemplateHTML(rowClone, "td:nth-child(2)", antispamrow.valueUrl); // Note: valueUrl may contain HTML
 
                     tbodyElement.appendChild(rowClone);
                 });
@@ -394,31 +394,28 @@ function buildViews(headers: string) {
         // Microsoft
         if (viewModel.antiSpamReport.rows.length > 0) {
             // Use HTML template for section header
-            const headerTemplate = document.getElementById("microsoft-header-template") as HTMLTemplateElement;
-            const headerClone = headerTemplate.content.cloneNode(true) as DocumentFragment;
-            antispamList.appendChild(headerClone);
+            appendTemplate("microsoft-header-template", antispamList);
 
             // Create table using HTML template
-            const tableTemplate = document.getElementById("antispam-table-template") as HTMLTemplateElement;
-            const tableClone = tableTemplate.content.cloneNode(true) as DocumentFragment;
-            antispamList.appendChild(tableClone);
+            appendTemplate("antispam-table-template", antispamList);
 
             const tbodyElement2 = antispamList.querySelector("table:last-child tbody");
             if (tbodyElement2) {
                 viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
                     // Use HTML template for table rows
-                    const rowTemplate = document.getElementById("table-row-template") as HTMLTemplateElement;
-                    const rowClone = rowTemplate.content.cloneNode(true) as DocumentFragment;
+                    const rowClone = cloneTemplate("table-row-template");
 
+                    // Set first cell content and id
                     const cells = rowClone.querySelectorAll("td");
                     if (cells.length >= 2) {
                         const cell0 = cells[0] as HTMLElement;
-                        const cell1 = cells[1] as HTMLElement;
                         cell0.id = antispamrow.id;
                         cell0.textContent = antispamrow.label;
-                        cell1.setAttribute("aria-labelledby", antispamrow.id);
-                        cell1.innerHTML = antispamrow.valueUrl; // Note: valueUrl may contain HTML
                     }
+
+                    // Use helper for setting aria-labelledby attribute
+                    setTemplateAttribute(rowClone, "td:nth-child(2)", "aria-labelledby", antispamrow.id);
+                    setTemplateHTML(rowClone, "td:nth-child(2)", antispamrow.valueUrl); // Note: valueUrl may contain HTML
 
                     tbodyElement2.appendChild(rowClone);
                 });
@@ -432,18 +429,11 @@ function buildViews(headers: string) {
     viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
             // Use HTML template for other headers
-            const template = document.getElementById("other-row-template") as HTMLTemplateElement;
-            const clone = template.content.cloneNode(true) as DocumentFragment;
-
-            const labelDiv = clone.querySelector(".ms-font-s") as HTMLElement;
-            const codeElement = clone.querySelector("code") as HTMLElement;
-
-            if (labelDiv && codeElement) {
-                const headerContent = otherRow.url ? otherRow.url : otherRow.header;
-                labelDiv.innerHTML = headerContent; // May contain HTML (url)
-                codeElement.textContent = otherRow.value;
-                otherList.appendChild(clone);
-            }
+            const clone = cloneTemplate("other-row-template");
+            const headerContent = otherRow.url ? otherRow.url : otherRow.header;
+            setTemplateHTML(clone, ".ms-font-s", headerContent); // May contain HTML (url)
+            setTemplateText(clone, "code", otherRow.value);
+            otherList.appendChild(clone);
         }
     });
 
