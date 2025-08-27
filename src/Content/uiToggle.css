@@ -10,11 +10,17 @@ body, html {
 }
 
 .header-row {
-    position: absolute;
-    top: 0;
-    right: 0;
+    position: fixed;
+    top: 0px;
+    right: 0px;
     z-index: 10;
     background: transparent;
+    display: flex;
+    align-items: flex-start;
+    min-height: var(--button-height);
+    width: auto;
+    height: var(--button-height);
+    contain: layout style;
 }
 
 .frame-row {
@@ -163,7 +169,7 @@ fluent-dialog fluent-checkbox {
     margin: 0;
     display: flex;
     gap: 0;
-    align-items: stretch;
+    align-items: flex-start;
 }
 
 .button-container fluent-button {
@@ -180,6 +186,11 @@ fluent-dialog fluent-checkbox {
     color: var(--primary-blue);
     cursor: pointer;
     outline: none;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: top;
+    box-sizing: border-box;
 }
 
 .button-container fluent-button::part(control):focus {
