@@ -1,6 +1,5 @@
 import "../../Content/fluentCommon.css";
 import "../../Content/newDesktopFrame.css";
-import $ from "jquery";
 
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
@@ -196,15 +195,12 @@ function updateStatus(message: string) {
     }
 }
 
-function addCalloutEntry(name: string, value: string | number | null, parent: JQuery<HTMLElement>) {
+function addCalloutEntry(name: string, value: string | number | null, parent: HTMLElement) {
     if (value) {
-        const parentElement = parent[0]; // Get DOM element from jQuery object
-        if (parentElement) {
-            const clone = cloneTemplate("callout-entry-template");
-            setTemplateText(clone, ".ms-fontWeight-semibold", name + ": ");
-            setTemplateText(clone, ".callout-value", String(value));
-            parentElement.appendChild(clone);
-        }
+        const clone = cloneTemplate("callout-entry-template");
+        setTemplateText(clone, ".ms-fontWeight-semibold", name + ": ");
+        setTemplateText(clone, ".callout-value", String(value));
+        parent.appendChild(clone);
     }
 }
 
@@ -301,15 +297,14 @@ function buildViews(headers: string) {
 
             listItem.appendChild(calloutClone);
 
-            // Add callout entries - need to wrap in jQuery for compatibility with addCalloutEntry
-            const $calloutContent = $(calloutContent);
-            addCalloutEntry("From", row.from.value, $calloutContent);
-            addCalloutEntry("To", row.by.value, $calloutContent);
-            addCalloutEntry("Time", row.date.value, $calloutContent);
-            addCalloutEntry("Type", row.with.value, $calloutContent);
-            addCalloutEntry("ID", row.id.value, $calloutContent);
-            addCalloutEntry("For", row.for.value, $calloutContent);
-            addCalloutEntry("Via", row.via.value, $calloutContent);
+            // Add callout entries
+            addCalloutEntry("From", row.from.value, calloutContent);
+            addCalloutEntry("To", row.by.value, calloutContent);
+            addCalloutEntry("Time", row.date.value, calloutContent);
+            addCalloutEntry("Type", row.with.value, calloutContent);
+            addCalloutEntry("ID", row.id.value, calloutContent);
+            addCalloutEntry("For", row.for.value, calloutContent);
+            addCalloutEntry("Via", row.via.value, calloutContent);
 
             // Add click handler to show/hide callout
             listItem.addEventListener("click", function(event: Event) {
