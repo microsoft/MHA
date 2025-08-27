@@ -60,7 +60,9 @@
 .fluent-button-base.is-active,
 .nav-button:active,
 .nav-button.is-active {
-    background: var(--active-blue) !important;
+    background: transparent !important;
+    border-bottom: 3px solid var(--primary-blue) !important;
+    border-radius: 0 !important;
 }
 
 /* Icon Styling */
