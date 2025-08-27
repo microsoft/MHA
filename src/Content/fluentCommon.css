@@ -10,9 +10,11 @@
     --text-gray: #e1e1e1;
     --background-light-gray: #eaeaea;
     --background-lighter-gray: #f3f2f1;
+    --command-bar-gray: #f4f4f4;
     --white: #ffffff;
     --black: #000000;
     --font-monospace: "Consolas", "Monaco", "Courier New", monospace;
+    --font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", sans-serif;
     --hover-blue: color-mix(in srgb, var(--primary-blue) 10%, transparent);
     --active-blue: color-mix(in srgb, var(--primary-blue) 20%, transparent);
     --border-radius: 4px;
@@ -33,7 +35,7 @@
     padding: 0 !important;
     height: var(--button-height);
     min-height: var(--button-height);
-    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", sans-serif;
+    font-family: var(--font-family);
 }
 
 .fluent-button-base::part(control),

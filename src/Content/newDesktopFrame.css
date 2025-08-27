@@ -2,7 +2,7 @@
 @import url("fluentCommon.css");
 
 .content-wrap {
-    background: #fff;
+    background: var(--white);
     position: fixed;
     top: 0;
     left: 0;
@@ -38,7 +38,7 @@
 .content-header,
 .nav-bar,
 #nav-bar {
-    background-color: #f4f4f4;
+    background-color: var(--command-bar-gray);
 }
 
 #nav-bar .button-label {
@@ -144,7 +144,7 @@
 }
 
 .ms-ListItem:hover {
-    background-color: #eaeaea;
+    background-color: var(--background-light-gray);
     cursor: pointer;
     outline: 1px solid transparent;
 }
