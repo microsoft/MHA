@@ -26,7 +26,62 @@
         vertical-align: top;
         word-wrap: break-word;
         word-break: break-all;
+        padding: 8px 0;
     }
+
+    .summary-table tr:first-child td {
+        padding-top: 4px;
+    }
+
+    .summary-table tr:last-child td {
+        padding-bottom: 4px;
+    }
+
+/* Spacing for summary list items */
+.summary-list .ms-font-s.ms-fontWeight-semibold {
+    margin-top: 16px;
+    margin-bottom: 4px;
+}
+
+.summary-list .ms-font-s.ms-fontWeight-semibold:first-child {
+    margin-top: 8px;
+}
+
+.summary-list .code-box {
+    margin-bottom: 8px;
+}
+
+/* Spacing for antispam report sections */
+.antispam-list > div.ms-font-m {
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
+
+.antispam-list > div.ms-font-m:first-child {
+    margin-top: 8px;
+}
+
+.antispam-list .ms-Table.spam-report {
+    margin-bottom: 20px;
+}
+
+.antispam-list .ms-Table.spam-report td {
+    padding: 8px 12px;
+}
+
+/* Other view spacing */
+.other-list .ms-font-s.ms-fontWeight-semibold {
+    margin-top: 16px;
+    margin-bottom: 4px;
+}
+
+.other-list .ms-font-s.ms-fontWeight-semibold:first-child {
+    margin-top: 8px;
+}
+
+.other-list .code-box {
+    margin-bottom: 8px;
+}
 
 .field-name {
     width: 15ch;
