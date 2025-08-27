@@ -173,10 +173,14 @@ function makeBold(text: string) {
 
 function addCalloutEntry(name: string, value: string | number | null, parent: JQuery<HTMLElement>) {
     if (value) {
-        $("<p/>")
-            .addClass("ms-Callout-subText")
-            .html(makeBold(name + ": ") + value)
-            .appendTo(parent);
+        // Convert to HTML template instead of jQuery DOM building
+        const calloutEntryTemplate = `
+            <p class="ms-Callout-subText">${makeBold(escapeHtml(name) + ": ")}${escapeHtml(String(value))}</p>
+        `;
+        const parentElement = parent[0]; // Get DOM element from jQuery object
+        if (parentElement) {
+            parentElement.insertAdjacentHTML("beforeend", calloutEntryTemplate);
+        }
     }
 }
 
@@ -278,9 +282,8 @@ function buildViews(headers: string) {
             }
 
             index=index+1;
-            $("<div/>")
-                .addClass("ms-ListItem-selectionTarget")
-                .appendTo(listItem);
+            // Add selection target using template
+            listItem[0]?.insertAdjacentHTML("beforeend", "<div class=\"ms-ListItem-selectionTarget\"></div>");
 
             // Callout
             const callout = $("<div/>")
@@ -343,12 +346,13 @@ function buildViews(headers: string) {
 
         // Forefront
         if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
-            $("<div/>")
-                .addClass("ms-font-m")
-                .text("Forefront Antispam Report")
-                .appendTo(antispamList);
+            // Use HTML template for section header
+            const forefrontHeaderTemplate = `
+                <div class="ms-font-m">Forefront Antispam Report</div>
+                <hr/>
+            `;
+            antispamList.insertAdjacentHTML("beforeend", forefrontHeaderTemplate);
 
-            $("<hr/>").appendTo(antispamList);
             const table = $("<table/>")
                 .addClass("ms-Table")
                 .addClass("ms-Table--fixed")
@@ -373,12 +377,13 @@ function buildViews(headers: string) {
 
         // Microsoft
         if (viewModel.antiSpamReport.rows.length > 0) {
-            $("<div/>")
-                .addClass("ms-font-m")
-                .text("Microsoft Antispam Report")
-                .appendTo(antispamList);
+            // Use HTML template for section header
+            const microsoftHeaderTemplate = `
+                <div class="ms-font-m">Microsoft Antispam Report</div>
+                <hr/>
+            `;
+            antispamList.insertAdjacentHTML("beforeend", microsoftHeaderTemplate);
 
-            $("<hr/>").appendTo(antispamList);
             const table = $("<table/>")
                 .addClass("ms-Table")
                 .addClass("ms-Table--fixed")
