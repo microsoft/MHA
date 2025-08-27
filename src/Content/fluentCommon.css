@@ -100,7 +100,7 @@
 }
 
 .ms-Icon--Cake::before {
-    content: "\E7BB"; /* Fabric Cake icon */
+    content: "\ECA4"; /* Fabric Cake icon */
 }
 
 .ms-Icon--Add::before {
