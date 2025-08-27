@@ -47,11 +47,6 @@ function hideAllElements(selector: string): void {
     elements.forEach(element => element.style.display = "none");
 }
 
-function setTextAll(selector: string, text: string): void {
-    const elements = getElements(selector);
-    elements.forEach(element => element.textContent = text);
-}
-
 // Overlay element for loading display
 let overlayElement: HTMLElement | null = null;
 
@@ -159,7 +154,7 @@ function initializeFluentUI(): void {
 }
 
 function updateStatus(message: string) {
-    setTextAll(".status-message", message);
+    setText("#status-message", message);
     if (overlayElement) {
         overlayElement.style.display = "block";
     }
