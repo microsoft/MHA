@@ -15,7 +15,7 @@
 .content-main {
     padding: 10px;
     overflow-y: auto; /* Enable scrollbars within main content section */
-    height: calc(100% - 60px); /* 40px for nav bar, 20px for padding */
+    height: calc(100% - var(--button-height) - 20px); /* nav bar height + padding */
 }
 
 .summary-table {
