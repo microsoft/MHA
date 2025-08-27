@@ -33,6 +33,7 @@
     padding: 0 !important;
     height: var(--button-height);
     min-height: var(--button-height);
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", sans-serif;
 }
 
 .fluent-button-base::part(control),
@@ -100,6 +101,14 @@
 
 .ms-Icon--Cake::before {
     content: "\E7BB"; /* Fabric Cake icon */
+}
+
+.ms-Icon--Add::before {
+    content: "\E710"; /* Fabric Add/Plus icon */
+}
+
+.ms-Icon--Remove::before {
+    content: "\E738"; /* Fabric Remove/Minus icon */
 }
 
 .icon-copy::before {

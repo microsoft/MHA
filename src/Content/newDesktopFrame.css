@@ -44,6 +44,50 @@
     display: inline-block;
 }
 
+/* Original Headers Button Styling */
+#orig-header-btn {
+    color: var(--primary-blue) !important;
+    border: none !important;
+    padding: 8px 0 !important;
+    height: auto !important;
+    min-height: 32px !important;
+    margin: 0 !important;
+    text-align: left !important;
+    width: auto !important;
+}
+
+#orig-header-btn .ms-Icon--Add,
+#orig-header-btn .ms-Icon--Remove {
+    background: var(--white);
+    color: var(--primary-blue);
+    border: 2px solid var(--primary-blue);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    font-size: 12px;
+}
+
+#orig-header-btn::part(control) {
+    background: transparent !important;
+    border: none !important;
+    padding: 8px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    color: var(--primary-blue) !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+}
+
+#orig-header-btn::part(control):focus {
+    outline: var(--focus-outline) !important;
+    outline-offset: 2px !important;
+    border-radius: 0 !important;
+}
+
 .status-display {
     position: absolute;
     top: 50%;

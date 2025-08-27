@@ -40,17 +40,17 @@ function initializeFluentUI(): void {
     if (buttonElement) {
         buttonElement.addEventListener("click", function (event: Event): void {
             if (event.currentTarget) {
-                const btnIcon: JQuery<HTMLElement> = $(event.currentTarget).find(".expand-icon");
+                const btnIcon: JQuery<HTMLElement> = $(event.currentTarget).find(".ms-Icon--Add, .ms-Icon--Remove");
                 const isExpanded = buttonElement.getAttribute("aria-expanded") === "true";
 
                 if (!isExpanded) {
                     buttonElement.setAttribute("aria-expanded", "true");
                     $("#original-headers").show();
-                    btnIcon.text("➖");
+                    btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
                 } else {
                     buttonElement.setAttribute("aria-expanded", "false");
                     $("#original-headers").hide();
-                    btnIcon.text("➕");
+                    btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
                 }
             }
         });
