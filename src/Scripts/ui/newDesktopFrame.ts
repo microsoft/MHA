@@ -173,7 +173,6 @@ function makeBold(text: string) {
 
 function addCalloutEntry(name: string, value: string | number | null, parent: JQuery<HTMLElement>) {
     if (value) {
-        // Convert to HTML template instead of jQuery DOM building
         const calloutEntryTemplate = `
             <p class="ms-Callout-subText">${makeBold(escapeHtml(name) + ": ")}${escapeHtml(String(value))}</p>
         `;
@@ -190,7 +189,6 @@ function buildViews(headers: string) {
     const summaryList = document.querySelector(".summary-list") as HTMLElement;
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
-            // Use HTML template instead of jQuery DOM building
             const summaryRowTemplate = `
                 <div class="ms-font-s ms-fontWeight-semibold">${escapeHtml(row.label)}</div>
                 <div class="code-box">
