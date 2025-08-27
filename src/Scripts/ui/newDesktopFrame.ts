@@ -50,6 +50,13 @@ function hideAllElements(selector: string): void {
 // Overlay element for loading display
 let overlayElement: HTMLElement | null = null;
 
+// HTML escaping utility for safe template rendering
+function escapeHtml(text: string): string {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 function postError(error: unknown, message: string): void {
     Poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
@@ -179,18 +186,14 @@ function buildViews(headers: string) {
     const summaryList = document.querySelector(".summary-list") as HTMLElement;
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
-            $("<div/>")
-                .addClass("ms-font-s")
-                .addClass("ms-fontWeight-semibold")
-                .text(row.label)
-                .appendTo(summaryList);
-            const headerVal = $("<div/>")
-                .addClass("code-box")
-                .appendTo(summaryList);
-            const pre = $("<pre/>").appendTo(headerVal);
-            $("<code/>")
-                .text(row.value)
-                .appendTo(pre);
+            // Use HTML template instead of jQuery DOM building
+            const summaryRowTemplate = `
+                <div class="ms-font-s ms-fontWeight-semibold">${escapeHtml(row.label)}</div>
+                <div class="code-box">
+                    <pre><code>${escapeHtml(row.value)}</code></pre>
+                </div>
+            `;
+            summaryList.insertAdjacentHTML("beforeend", summaryRowTemplate);
         }
     });
 
@@ -337,17 +340,19 @@ function buildViews(headers: string) {
                 .appendTo(antispamList);
             const tbody = $("<tbody/>")
                 .appendTo(table);
-            viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
-                const row = $("<tr/>").appendTo(tbody);
-                $("<td/>")
-                    .text(antispamrow.label)
-                    .attr("id", antispamrow.id)
-                    .appendTo(row);
-                $("<td/>")
-                    .html(antispamrow.valueUrl)
-                    .attr("aria-labelledby", antispamrow.id)
-                    .appendTo(row);
-            });
+            const tbodyElement = tbody[0]; // Get the DOM element from jQuery object
+            if (tbodyElement) {
+                viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
+                    // Use HTML template for table rows
+                    const tableRowTemplate = `
+                        <tr>
+                            <td id="${escapeHtml(antispamrow.id)}">${escapeHtml(antispamrow.label)}</td>
+                            <td aria-labelledby="${escapeHtml(antispamrow.id)}">${antispamrow.valueUrl}</td>
+                        </tr>
+                    `;
+                    tbodyElement.insertAdjacentHTML("beforeend", tableRowTemplate);
+                });
+            }
         }
 
         // Microsoft
@@ -365,17 +370,19 @@ function buildViews(headers: string) {
                 .appendTo(antispamList);
             const tbody = $("<tbody/>")
                 .appendTo(table);
-            viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
-                const row = $("<tr/>").appendTo(tbody);
-                $("<td/>")
-                    .text(antispamrow.label)
-                    .attr("id", antispamrow.id)
-                    .appendTo(row);
-                $("<td/>")
-                    .html(antispamrow.valueUrl)
-                    .attr("aria-labelledby", antispamrow.id)
-                    .appendTo(row);
-            });
+            const tbodyElement = tbody[0]; // Get the DOM element from jQuery object
+            if (tbodyElement) {
+                viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
+                    // Use HTML template for table rows
+                    const tableRowTemplate = `
+                        <tr>
+                            <td id="${escapeHtml(antispamrow.id)}">${escapeHtml(antispamrow.label)}</td>
+                            <td aria-labelledby="${escapeHtml(antispamrow.id)}">${antispamrow.valueUrl}</td>
+                        </tr>
+                    `;
+                    tbodyElement.insertAdjacentHTML("beforeend", tableRowTemplate);
+                });
+            }
         }
     }
 
@@ -384,21 +391,15 @@ function buildViews(headers: string) {
 
     viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
-            const headerName = $("<div/>")
-                .addClass("ms-font-s")
-                .addClass("ms-fontWeight-semibold")
-                .text(otherRow.header)
-                .appendTo(otherList);
-            if (otherRow.url) {
-                headerName.html(otherRow.url);
-            }
-            const headerVal = $("<div/>")
-                .addClass("code-box")
-                .appendTo(otherList);
-            const pre = $("<pre/>").appendTo(headerVal);
-            $("<code/>")
-                .text(otherRow.value)
-                .appendTo(pre);
+            // Use HTML template for other headers
+            const headerContent = otherRow.url ? otherRow.url : escapeHtml(otherRow.header);
+            const otherRowTemplate = `
+                <div class="ms-font-s ms-fontWeight-semibold">${headerContent}</div>
+                <div class="code-box">
+                    <pre><code>${escapeHtml(otherRow.value)}</code></pre>
+                </div>
+            `;
+            otherList.insertAdjacentHTML("beforeend", otherRowTemplate);
         }
     });
 
