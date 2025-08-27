@@ -34,15 +34,13 @@
     text-align: right;
 }
 
-#nav-bar .ms-CommandButton-label {
+/* Navigation button label management */
+#nav-bar .button-label {
     display: none;
 }
 
-#nav-bar .ms-CommandButton:hover .ms-CommandButton-label {
-    display: inline-block;
-}
-
-#nav-bar .is-active .ms-CommandButton-label {
+#nav-bar .nav-button:hover .button-label,
+#nav-bar .is-active .button-label {
     display: inline-block;
 }
 
