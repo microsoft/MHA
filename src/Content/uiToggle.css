@@ -206,15 +206,6 @@ fluent-dialog fluent-checkbox {
     line-height: 1;
 }
 
-/* Icon definitions using Fabric icon font Unicode values */
-.icon-copy::before {
-    content: "\E8C8"; /* Fabric Copy icon */
-}
-
-.icon-settings::before {
-    content: "\E713"; /* Fabric Settings/Gear icon */
-}
-
 .button-container fluent-button:hover {
     background: var(--hover-blue) !important;
 }
