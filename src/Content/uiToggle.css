@@ -163,15 +163,14 @@ fluent-dialog fluent-checkbox {
     margin: 0;
     display: flex;
     gap: 0;
-    height: 44px;
     align-items: stretch;
 }
 
 .button-container fluent-button {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
+    width: var(--button-height);
+    height: var(--button-height);
+    min-width: var(--button-height);
+    min-height: var(--button-height);
     background: transparent !important;
     border: none !important;
     border-radius: 0;

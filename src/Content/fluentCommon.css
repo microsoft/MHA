@@ -18,6 +18,7 @@
     --border-radius: 4px;
     --spacing-medium: 12px;
     --focus-outline: 2px solid var(--focus-blue);
+    --button-height: 44px;
 }
 
 /* Fluent Button Common Styling */
@@ -30,6 +31,8 @@
     outline: none;
     margin: 0;
     padding: 0 !important;
+    height: var(--button-height);
+    min-height: var(--button-height);
 }
 
 .fluent-button-base::part(control),

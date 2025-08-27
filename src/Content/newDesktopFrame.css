@@ -34,24 +34,6 @@
     text-align: right;
 }
 
-/* Navigation bar styling - match button height with copy/gear buttons */
-.nav-bar {
-    height: 44px;
-    display: flex;
-    align-items: stretch;
-}
-
-.nav-bar-main {
-    display: flex;
-    gap: 0;
-    height: 100%;
-}
-
-.nav-bar .nav-button {
-    height: 44px;
-    min-height: 44px;
-}
-
 /* Navigation button label management */
 #nav-bar .button-label {
     display: none;
