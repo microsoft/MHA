@@ -320,6 +320,22 @@ function buildViews(headers: string) {
             addCalloutEntry("ID", row.id.value, calloutContent);
             addCalloutEntry("For", row.for.value, calloutContent);
             addCalloutEntry("Via", row.via.value, calloutContent);
+
+            // Add click handler to show/hide callout
+            listItem.on("click", function(this: HTMLElement, event: Event) {
+                event.preventDefault();
+                const calloutElement = $(this).find(".ms-Callout");
+
+                // Hide all other callouts first
+                $(".ms-Callout").addClass("is-hidden");
+
+                // Toggle this callout
+                if (calloutElement.hasClass("is-hidden")) {
+                    calloutElement.removeClass("is-hidden");
+                } else {
+                    calloutElement.addClass("is-hidden");
+                }
+            });
         });
 
         // Build antispam view
