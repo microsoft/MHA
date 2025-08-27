@@ -151,7 +151,7 @@ function addCalloutEntry(name: string, value: string | number | null, parent: JQ
 function buildViews(headers: string) {
     const viewModel: HeaderModel = new HeaderModel(headers);
     // Build summary view
-    const summaryList = $(".summary-list");
+    const summaryList = document.querySelector(".summary-list") as HTMLElement;
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
             $("<div/>")
@@ -178,7 +178,7 @@ function buildViews(headers: string) {
     }
 
     // Build received view
-    const receivedList = $(".received-list");
+    const receivedList = document.querySelector(".received-list") as HTMLElement;
 
     if (viewModel.receivedHeaders.rows.length > 0) {
         const list = $("<ul/>")
@@ -297,7 +297,7 @@ function buildViews(headers: string) {
         });
 
         // Build antispam view
-        const antispamList = $(".antispam-list");
+        const antispamList = document.querySelector(".antispam-list") as HTMLElement;
 
         // Forefront
         if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
@@ -357,7 +357,7 @@ function buildViews(headers: string) {
     }
 
     // Build other view
-    const otherList = $(".other-list");
+    const otherList = document.querySelector(".other-list") as HTMLElement;
 
     viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
@@ -408,9 +408,15 @@ function renderItem(headers: string): void {
 
     const antispamList = document.querySelector(".antispam-list");
     if (antispamList) antispamList.innerHTML = "";
-    $(".other-list").empty();
-    $("#error-display .error-text").empty();
-    $("#error-display").hide();
+
+    const otherList = document.querySelector(".other-list");
+    if (otherList) otherList.innerHTML = "";
+
+    const errorText = document.querySelector("#error-display .error-text");
+    if (errorText) errorText.textContent = "";
+
+    const errorDisplay = document.querySelector("#error-display") as HTMLElement;
+    if (errorDisplay) errorDisplay.style.display = "none";
 
     // Build views with the loaded data
     buildViews(headers);
@@ -420,8 +426,11 @@ function renderItem(headers: string): void {
 // Does not log the error - caller is responsible for calling PostError
 function showError(error: unknown, message: string): void {
     console.error("Error:", error);
-    $("#error-display .error-text").text(message);
-    $("#error-display").show();
+    const errorText = document.querySelector("#error-display .error-text");
+    if (errorText) errorText.textContent = message;
+
+    const errorDisplay = document.querySelector("#error-display") as HTMLElement;
+    if (errorDisplay) errorDisplay.style.display = "block";
 }
 
 function eventListener(event: MessageEvent): void {
@@ -442,7 +451,8 @@ function eventListener(event: MessageEvent): void {
     }
 }
 
-$(function() {
+// Initialize when DOM is ready
+document.addEventListener("DOMContentLoaded", function() {
     try {
         initializeFluentUI();
         updateStatus(mhaStrings.mhaLoading);
