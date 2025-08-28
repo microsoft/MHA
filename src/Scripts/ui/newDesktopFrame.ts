@@ -277,7 +277,6 @@ function buildViews(headers: string) {
                 }
             }
 
-            index=index+1;
             // Add selection target using HTML template
             const selectionClone = cloneTemplate("selection-target-template");
             listItem.appendChild(selectionClone);
