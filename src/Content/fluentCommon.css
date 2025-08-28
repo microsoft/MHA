@@ -169,7 +169,7 @@
     .ms-RadioButton-field,
     .ms-CheckBox-field,
     .ms-CheckBox-field:after {
-       color: buttonborder;
+    color: buttonborder;
     }
 
     .ms-CheckBox-field:focus .ms-Label,
@@ -224,7 +224,7 @@ fluent-radio:focus-visible {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
-    color: var(--white);
+    color: var(--white); 
 }
 
 /* Code Box Styling */

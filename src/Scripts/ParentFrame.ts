@@ -6,6 +6,7 @@ import { Poster } from "./Poster";
 import { Strings } from "./Strings";
 import { TabNavigation } from "./TabNavigation";
 import { GetHeaders } from "./ui/getHeaders/GetHeaders";
+import { ParentFrameUtils } from "./utils/ParentFrameUtils";
 
 // Fluent UI Web Components interfaces
 interface FluentDialog extends HTMLElement {
@@ -42,35 +43,13 @@ export class ParentFrame {
         { label: "new-mobile", url: "newMobilePaneIosFrame.html", checked: false }
     ];
 
-    private static getQueryVariable(variable: string): string {
-        const vars: string[] = window.location.search.substring(1).split("&");
-
-        let found = "";
-        vars.forEach((v: string) => {
-            if (found === "") {
-                const pair: string[] = v.split("=");
-                if (pair[0] === variable) {
-                    found = pair[1] ?? "";
-                }
-            }
-        });
-
-        return found;
-    }
-
     private static setDefault(): void {
-        let uiDefault: string = ParentFrame.getQueryVariable("default");
+        let uiDefault: string = ParentFrameUtils.getQueryVariable("default");
         if (uiDefault === null) {
             uiDefault = "new";
         }
 
-        ParentFrame.choices.forEach((choice: Choice) => {
-            if (uiDefault === choice.label) {
-                choice.checked = true;
-            } else {
-                choice.checked = false;
-            }
-        });
+        ParentFrameUtils.setDefaultChoice(ParentFrame.choices, uiDefault);
     }
 
     private static postMessageToFrame(eventName: string, data: string | { error: string, message: string }): void {
@@ -178,28 +157,19 @@ export class ParentFrame {
         }
     }
 
-    private static getSettingsKey(): string {
-        try {
-            return "frame" + Office.context.mailbox.diagnostics.hostName;
-        } catch {
-            return "frame";
-        }
-    }
-
     // Display primary UI
     private static go(choice: Choice): void {
         ParentFrame.iFrame = null;
         ParentFrame.currentChoice = choice;
         (document.getElementById("uiFrame") as HTMLIFrameElement).src = choice.url;
         if (Office.context) {
-            Office.context.roamingSettings.set(ParentFrame.getSettingsKey(), choice);
+            Office.context.roamingSettings.set(ParentFrameUtils.getSettingsKey(), choice);
             Office.context.roamingSettings.saveAsync();
         }
     }
 
     private static goDefaultChoice(): void {
-        let choice: Choice | undefined;
-        ParentFrame.choices.forEach((c: Choice) => { if (!choice && c.checked) choice = c; });
+        const choice = ParentFrame.choices.find((c: Choice) => c.checked);
         if (choice) {
             ParentFrame.go(choice);
         }
@@ -308,27 +278,6 @@ export class ParentFrame {
             ParentFrame.setSendTelemetryUI(diagnostics.canSendTelemetry());
         }
 
-        function getDiagnostics(): string {
-            let diagnosticsString = "";
-            try {
-                const diagnosticMap = diagnostics.get();
-                for (const diag in diagnosticMap) {
-                    if (Object.prototype.hasOwnProperty.call(diagnosticMap, diag)) {
-                        diagnosticsString += diag + " = " + diagnosticMap[diag] + "\n";
-                    }
-                }
-            } catch {
-                diagnosticsString += "ERROR: Failed to get diagnostics\n";
-            }
-
-            const errors: string[] = Errors.get();
-            errors.forEach((error: string) => {
-                diagnosticsString += "ERROR: " + error + "\n";
-            });
-
-            return diagnosticsString;
-        }
-
         // Wire up action buttons
         const okButton = document.getElementById("actionsSettings-OK");
         okButton?.addEventListener("click", () => {
@@ -352,7 +301,7 @@ export class ParentFrame {
 
         const diagButton = document.getElementById("actionsSettings-diag");
         diagButton?.addEventListener("click", () => {
-            const diagnosticsText = getDiagnostics();
+            const diagnosticsText = ParentFrameUtils.getDiagnosticsString();
             const diagnosticsElement = document.getElementById("diagnostics");
             if (diagnosticsElement) {
                 diagnosticsElement.textContent = diagnosticsText;
@@ -403,7 +352,7 @@ export class ParentFrame {
         ParentFrame.initFluent();
 
         try {
-            const choice: Choice = Office.context.roamingSettings.get(ParentFrame.getSettingsKey());
+            const choice: Choice = Office.context.roamingSettings.get(ParentFrameUtils.getSettingsKey());
             const sendTelemetry: boolean = Office.context.roamingSettings.get("sendTelemetry");
             diagnostics.initSendTelemetry(sendTelemetry);
 

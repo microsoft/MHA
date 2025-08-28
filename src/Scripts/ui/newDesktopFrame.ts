@@ -1,4 +1,5 @@
 import "../../Content/fluentCommon.css";
+import "../../Content/fluentCommon.css";
 import "../../Content/newDesktopFrame.css";
 
 import { HeaderModel } from "../HeaderModel";
@@ -9,6 +10,7 @@ import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
 import { TabNavigation } from "../TabNavigation";
+import { DomUtils } from "./domUtils";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -163,6 +165,8 @@ function initializeFluentUI(): void {
 
             // Get content marker
             const content = this.getAttribute("data-content");
+            // Get content marker
+            const content = this.getAttribute("data-content");
 
             // Fix for Bug 1691252 - To set aria-label as button after selection like "Summary Selected"
             const buttonText = thisLabel?.textContent?.trim() || "";
@@ -196,6 +200,7 @@ function updateStatus(message: string) {
 }
 
 function addCalloutEntry(name: string, value: string | number | null, parent: HTMLElement) {
+function addCalloutEntry(name: string, value: string | number | null, parent: HTMLElement) {
     if (value) {
         const clone = cloneTemplate("callout-entry-template");
         setTemplateText(clone, ".ms-fontWeight-semibold", name + ": ");
@@ -207,6 +212,7 @@ function addCalloutEntry(name: string, value: string | number | null, parent: HT
 function buildViews(headers: string) {
     const viewModel: HeaderModel = new HeaderModel(headers);
     // Build summary view
+    const summaryList = document.querySelector(".summary-list") as HTMLElement;
     const summaryList = document.querySelector(".summary-list") as HTMLElement;
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
@@ -224,6 +230,7 @@ function buildViews(headers: string) {
     }
 
     // Build received view
+    const receivedList = document.querySelector(".received-list") as HTMLElement;
     const receivedList = document.querySelector(".received-list") as HTMLElement;
 
     if (viewModel.receivedHeaders.rows.length > 0) {
@@ -323,9 +330,28 @@ function buildViews(headers: string) {
                     calloutElement.classList.add("is-hidden");
                 }
             });
+
+            // Add click handler to show/hide callout
+            listItem.addEventListener("click", function(event: Event) {
+                event.preventDefault();
+                const calloutElement = this.querySelector(".ms-Callout") as HTMLElement;
+
+                // Hide all other callouts first
+                document.querySelectorAll(".ms-Callout").forEach(callout => {
+                    callout.classList.add("is-hidden");
+                });
+
+                // Toggle this callout
+                if (calloutElement && calloutElement.classList.contains("is-hidden")) {
+                    calloutElement.classList.remove("is-hidden");
+                } else if (calloutElement) {
+                    calloutElement.classList.add("is-hidden");
+                }
+            });
         });
 
         // Build antispam view
+        const antispamList = document.querySelector(".antispam-list") as HTMLElement;
         const antispamList = document.querySelector(".antispam-list") as HTMLElement;
 
         // Forefront
@@ -393,6 +419,7 @@ function buildViews(headers: string) {
 
     // Build other view
     const otherList = document.querySelector(".other-list") as HTMLElement;
+    const otherList = document.querySelector(".other-list") as HTMLElement;
 
     viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
@@ -407,15 +434,23 @@ function buildViews(headers: string) {
 
     // Fluent UI Web Components handle their own initialization
     // Lists and callouts work with standard DOM interactions
+    // Fluent UI Web Components handle their own initialization
+    // Lists and callouts work with standard DOM interactions
 }
 
 function hideStatus(): void {
     if (overlayElement) {
         overlayElement.style.display = "none";
     }
+    if (overlayElement) {
+        overlayElement.style.display = "none";
+    }
 }
 
 function renderItem(headers: string): void {
+    // Hide loading status as soon as we start rendering
+    hideStatus();
+
     // Hide loading status as soon as we start rendering
     hideStatus();
 
@@ -429,6 +464,7 @@ function renderItem(headers: string): void {
     setText("#error-display .error-text", "");
     hideElement("#error-display");
 
+    // Build views with the loaded data
     // Build views with the loaded data
     buildViews(headers);
 }
@@ -461,7 +497,10 @@ function eventListener(event: MessageEvent): void {
 
 // Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", function() {
+// Initialize when DOM is ready
+document.addEventListener("DOMContentLoaded", function() {
     try {
+        initializeFluentUI();
         initializeFluentUI();
         updateStatus(mhaStrings.mhaLoading);
         window.addEventListener("message", eventListener, false);
