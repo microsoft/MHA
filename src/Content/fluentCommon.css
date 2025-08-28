@@ -121,6 +121,88 @@
     content: "\E713"; /* Fabric Settings/Gear icon */
 }
 
+.ms-Icon--Down::before {
+    content: "\E70D"; /* Fabric Down arrow icon */
+}
+
+.ms-ProgressIndicator {
+    position: relative;
+    padding: 8px 0;
+}
+
+.ms-ProgressIndicator-itemProgress {
+    position: relative;
+    height: 2px;
+    padding: 8px 0;
+}
+
+.ms-ProgressIndicator-progressTrack {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: var(--background-light-gray);
+    border-radius: 1px;
+}
+
+.ms-ProgressIndicator-progressBar {
+    background-color: var(--primary-blue);
+    height: 2px;
+    border-radius: 1px;
+    transition: width 0.3s ease;
+}
+
+.ms-ProgressIndicator-itemDescription {
+    color: var(--black);
+    font-size: 12px;
+    font-family: var(--font-family);
+    padding-top: 4px;
+}
+
+@media screen and (-ms-high-contrast: black-on-white) {
+    .ms-RadioButton-field.is-checked:after {
+        background-color: buttonborder;
+    }
+}
+
+@media screen and (-ms-high-contrast:active) {
+    .ms-Icon,
+    .ms-RadioButton-field,
+    .ms-CheckBox-field,
+    .ms-CheckBox-field:after {
+       color: buttonborder;
+    }
+
+    .ms-CheckBox-field:focus .ms-Label,
+    input[type="radio"]:focus+label {
+        outline-color: highlight;
+    }
+
+    .ms-ProgressIndicator-progressBar {
+        background-color: highlight;
+    }
+}
+
+@media screen and (-ms-high-contrast: white-on-black) {
+    .ms-RadioButton-field.is-checked:after {
+        background-color: buttonborder;
+    }
+}
+
+.ms-RadioButton-field:before {
+    border-color: var(--border-gray) !important;
+}
+
+.ms-CheckBox-field:before {
+    border-color: var(--border-gray) !important;
+}
+
+.ms-CheckBox-field:focus .ms-Label,
+a:focus,
+input[type="radio"]:focus+label {
+    outline: 2px solid var(--focus-blue);
+    outline-offset: 2px;
+}
+
 /* Focus styles for accessibility */
 fluent-button:focus-visible,
 fluent-checkbox:focus-visible,
