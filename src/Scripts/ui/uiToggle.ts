@@ -7,6 +7,7 @@ import {
     fluentToolbar,
     provideFluentDesignSystem
 } from "@fluentui/web-components";
+import "../../Content/fluentCommon.css";
 import "../../Content/uiToggle.css";
 
 import { ParentFrame } from "../ParentFrame";

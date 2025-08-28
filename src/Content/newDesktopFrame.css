@@ -1,5 +1,8 @@
+/* Import shared Fluent UI styles */
+@import url("fluentCommon.css");
+
 .content-wrap {
-    background: #fff;
+    background: var(--white);
     position: fixed;
     top: 0;
     left: 0;
@@ -12,7 +15,7 @@
 .content-main {
     padding: 10px;
     overflow-y: auto; /* Enable scrollbars within main content section */
-    height: calc(100% - 60px); /* 40px for nav bar, 20px for padding */
+    height: calc(100% - var(--button-height) - 20px); /* nav bar height + padding */
 }
 
 .summary-table {
@@ -23,7 +26,62 @@
         vertical-align: top;
         word-wrap: break-word;
         word-break: break-all;
+        padding: 8px 0;
     }
+
+    .summary-table tr:first-child td {
+        padding-top: 4px;
+    }
+
+    .summary-table tr:last-child td {
+        padding-bottom: 4px;
+    }
+
+/* Spacing for summary list items */
+.summary-list .ms-font-s.ms-fontWeight-semibold {
+    margin-top: 16px;
+    margin-bottom: 4px;
+}
+
+.summary-list .ms-font-s.ms-fontWeight-semibold:first-child {
+    margin-top: 8px;
+}
+
+.summary-list .code-box {
+    margin-bottom: 8px;
+}
+
+/* Spacing for antispam report sections */
+.antispam-list > div.ms-font-m {
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
+
+.antispam-list > div.ms-font-m:first-child {
+    margin-top: 8px;
+}
+
+.antispam-list .ms-Table.spam-report {
+    margin-bottom: 20px;
+}
+
+.antispam-list .ms-Table.spam-report td {
+    padding: 8px 12px;
+}
+
+/* Other view spacing */
+.other-list .ms-font-s.ms-fontWeight-semibold {
+    margin-top: 16px;
+    margin-bottom: 4px;
+}
+
+.other-list .ms-font-s.ms-fontWeight-semibold:first-child {
+    margin-top: 8px;
+}
+
+.other-list .code-box {
+    margin-bottom: 8px;
+}
 
 .field-name {
     width: 15ch;
@@ -31,25 +89,64 @@
     text-align: right;
 }
 
-.code-box > pre {
-    background-color: #eaeaea;
-    border: 1px solid #ccc;
-    padding: 5px;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    font-size: .8em;
+/* Navigation button label management */
+.content-header,
+.nav-bar,
+#nav-bar {
+    background-color: var(--command-bar-gray);
 }
 
-#nav-bar .ms-CommandButton-label {
+#nav-bar .button-label {
     display: none;
 }
 
-#nav-bar .ms-CommandButton:hover .ms-CommandButton-label {
+#nav-bar .nav-button:hover .button-label,
+#nav-bar .is-active .button-label {
     display: inline-block;
 }
 
-#nav-bar .is-active .ms-CommandButton-label {
-    display: inline-block;
+/* Original Headers Button Styling */
+#orig-header-btn {
+    color: var(--primary-blue) !important;
+    border: none !important;
+    padding: 8px 0 !important;
+    height: auto !important;
+    min-height: 32px !important;
+    margin: 0 !important;
+    text-align: left !important;
+    width: auto !important;
+}
+
+#orig-header-btn .ms-Icon--Add,
+#orig-header-btn .ms-Icon--Remove {
+    background: var(--white);
+    color: var(--primary-blue);
+    border: 2px solid var(--primary-blue);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    font-size: 12px;
+}
+
+#orig-header-btn::part(control) {
+    background: transparent !important;
+    border: none !important;
+    padding: 8px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    color: var(--primary-blue) !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+}
+
+#orig-header-btn::part(control):focus {
+    outline: var(--focus-outline) !important;
+    outline-offset: 2px !important;
+    border-radius: 0 !important;
 }
 
 .status-display {
@@ -102,7 +199,7 @@
 }
 
 .ms-ListItem:hover {
-    background-color: #eaeaea;
+    background-color: var(--background-light-gray);
     cursor: pointer;
     outline: 1px solid transparent;
 }

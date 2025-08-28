@@ -1,36 +1,26 @@
-/* Fluent UI uiToggle styling */
-:root {
-    --primary-blue: #0078d4;
-    --focus-blue: #0072cc;
-    --border-gray: #ccc;
-    --background-gray: #f5f5f5;
-    --text-gray: #e1e1e1;
-    --background-light-gray: #eaeaea;
-    --background-lighter-gray: #f3f2f1;
-    --white: #ffffff;
-    --black: #000000;
-    --font-monospace: "Consolas", "Monaco", "Courier New", monospace;
-    --hover-blue: color-mix(in srgb, var(--primary-blue) 10%, transparent);
-    --active-blue: color-mix(in srgb, var(--primary-blue) 20%, transparent);
-    --border-radius: 4px;
-    --spacing-medium: 12px;
-    --focus-outline: 2px solid var(--focus-blue);
-}
+/* Import shared Fluent UI styles */
+@import url("fluentCommon.css");
 
 body, html {
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", sans-serif;
+    font-family: var(--font-family);
 }
 
 .header-row {
-    position: absolute;
-    top: 0;
-    right: 0;
+    position: fixed;
+    top: 0px;
+    right: 0px;
     z-index: 10;
     background: transparent;
+    display: flex;
+    align-items: flex-start;
+    min-height: var(--button-height);
+    width: auto;
+    height: var(--button-height);
+    contain: layout style;
 }
 
 .frame-row {
@@ -48,23 +38,8 @@ body, html {
     border: none;
 }
 
+/* Frame-specific overrides */
 .code-box > pre {
-    background-color: var(--background-gray);
-    border: 1px solid var(--border-gray);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-medium);
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    font-size: 14px;
-    line-height: 1.4;
-    font-family: var(--font-monospace);
-    margin: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    color: var(--black);
-    min-height: 0;
-    max-height: none;
-    text-align: left;
     flex: none;
     height: auto;
 }
@@ -91,22 +66,6 @@ fluent-dialog[aria-label="Diagnostics"] {
     --dialog-width: calc(100% - 24px);
     --dialog-max-width: 600px;
     --dialog-height: auto;
-}
-
-/* Dialog structure styling */
-.dialog-header {
-    padding: 16px 20px 12px 20px;
-    border-bottom: 1px solid var(--primary-blue);
-    margin: -1px -1px 0 -1px;
-    background: var(--primary-blue);
-    border-radius: 8px 8px 0 0;
-}
-
-.dialog-header h2 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--white);
 }
 
 .dialog-content {
@@ -210,15 +169,14 @@ fluent-dialog fluent-checkbox {
     margin: 0;
     display: flex;
     gap: 0;
-    height: 44px;
-    align-items: stretch;
+    align-items: flex-start;
 }
 
 .button-container fluent-button {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
+    width: var(--button-height);
+    height: var(--button-height);
+    min-width: var(--button-height);
+    min-height: var(--button-height);
     background: transparent !important;
     border: none !important;
     border-radius: 0;
@@ -228,6 +186,11 @@ fluent-dialog fluent-checkbox {
     color: var(--primary-blue);
     cursor: pointer;
     outline: none;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: top;
+    box-sizing: border-box;
 }
 
 .button-container fluent-button::part(control):focus {
@@ -254,29 +217,12 @@ fluent-dialog fluent-checkbox {
     line-height: 1;
 }
 
-/* Icon definitions using Fabric icon font Unicode values */
-.icon-copy::before {
-    content: "\E8C8"; /* Fabric Copy icon */
-}
-
-.icon-settings::before {
-    content: "\E713"; /* Fabric Settings/Gear icon */
-}
-
 .button-container fluent-button:hover {
     background: var(--hover-blue) !important;
 }
 
 .button-container fluent-button:active {
     background: var(--active-blue) !important;
-}
-
-/* Focus styles for accessibility */
-fluent-button:focus-visible,
-fluent-checkbox:focus-visible,
-fluent-radio:focus-visible {
-    outline: var(--focus-outline);
-    outline-offset: 2px;
 }
 
 /* Remove all internal highlights from radio and checkbox controls */

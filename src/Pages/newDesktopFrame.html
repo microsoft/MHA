@@ -4,63 +4,56 @@
     <meta charset="UTF-8">
     <title>New Desktop Frame</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="module" src="https://unpkg.com/@fluentui/web-components"></script>
 </head>
 <body>
     <div class="content-wrap">
         <div class="content-header">
-            <div class="ms-CommandBar" id="nav-bar">
-                <div class="ms-CommandBar-mainArea">
-                    <div class="ms-CommandButton ms-CommandButton--pivot is-active" data-content="summary-view">
-                        <button class="ms-CommandButton-button" id="summary-btn" title="Summary" aria-label="Summary Selected"> <!-- Fix for Bug 1691252 - Removed aria-label and added dynamically on button click -->
-                            <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Info"></i></span>
-                            <span class="ms-CommandButton-label">Summary</span>
-                        </button>
-                    </div>
-                    <div class="ms-CommandButton ms-CommandButton--pivot" data-content="received-view">
-                        <button class="ms-CommandButton-button" id="received-btn" title="Received" aria-label="Received"> <!-- Bug fix 1696469 -->
-                            <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Timer"></i></span>
-                            <span class="ms-CommandButton-label">Received</span>
-                        </button>
-                    </div>
-                    <div class="ms-CommandButton ms-CommandButton--pivot" data-content="antispam-view">
-                        <button class="ms-CommandButton-button" id="antispam-btn" title="Antispam" aria-label="Antispam">
-                            <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--MailAlert"></i></span>
-                            <span class="ms-CommandButton-label">Antispam</span>
-                        </button>
-                    </div>
-                    <div class="ms-CommandButton ms-CommandButton--pivot" data-content="other-view">
-                        <button class="ms-CommandButton-button" id="other-btn" title="Other" aria-label="Other">
-                            <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Cake"></i></span>
-                            <span class="ms-CommandButton-label">Other</span>
-                        </button>
-                    </div>
+            <div class="nav-bar" id="nav-bar">
+                <div class="nav-bar-main">
+                    <fluent-button appearance="subtle" class="nav-button is-active" data-content="summary-view" id="summary-btn" title="Summary" aria-label="Summary Selected">
+                        <span slot="start" aria-hidden="true"><i class="ms-Icon ms-Icon--Info"></i></span>
+                        <span class="button-label">Summary</span>
+                    </fluent-button>
+                    <fluent-button appearance="subtle" class="nav-button" data-content="received-view" id="received-btn" title="Received" aria-label="Received">
+                        <span slot="start" aria-hidden="true"><i class="ms-Icon ms-Icon--Timer"></i></span>
+                        <span class="button-label">Received</span>
+                    </fluent-button>
+                    <fluent-button appearance="subtle" class="nav-button" data-content="antispam-view" id="antispam-btn" title="Antispam" aria-label="Antispam">
+                        <span slot="start" aria-hidden="true"><i class="ms-Icon ms-Icon--MailAlert"></i></span>
+                        <span class="button-label">Antispam</span>
+                    </fluent-button>
+                    <fluent-button appearance="subtle" class="nav-button" data-content="other-view" id="other-btn" title="Other" aria-label="Other">
+                        <span slot="start" aria-hidden="true"><i class="ms-Icon ms-Icon--Cake"></i></span>
+                        <span class="button-label">Other</span>
+                    </fluent-button>
                 </div>
             </div>
         </div>
         <div class="content-main">
-            <div class="ms-Overlay">
+            <div class="overlay" id="loading-overlay">
                 <div class="status-display">
-                    <div class="status-message ms-font-xl"></div>
-                    <div class="status-spinner ms-Spinner ms-Spinner--large"></div>
+                    <div id="status-message"></div>
+                    <fluent-progress-ring class="status-spinner"></fluent-progress-ring>
                 </div>
             </div>
-            <div id="error-display" class="ms-MessageBar ms-MessageBar--error">
-                <div class="ms-MessageBar-content">
-                    <div class="ms-MessageBar-icon">
-                        <i class="ms-Icon ms-Icon--ErrorBadge"></i>
+            <div id="error-display" class="error-message" hidden>
+                <fluent-card class="error-card">
+                    <div class="error-content">
+                        <span class="error-icon" aria-hidden="true">❌</span>
+                        <div class="error-text"></div>
                     </div>
-                    <div class="ms-MessageBar-text"></div>
-                </div>
+                </fluent-card>
             </div>
             <div class="header-view" data-content="summary-view">
                 <div class="ms-font-l">Summary</div>
                 <hr />
                 <div class="summary-list"></div>
                 <div class="orig-header-ui">
-                    <button id="orig-header-btn" class="ms-Button ms-Button--hero" aria-expanded="false">
-                        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--Add"></i></span>
-                        <span class="ms-Button-label">Original Headers</span>
-                    </button>
+                    <fluent-button id="orig-header-btn" appearance="accent" aria-expanded="false">
+                        <span slot="start" class="ms-Icon ms-Icon--Add" aria-hidden="true"></span>
+                        Original Headers
+                    </fluent-button>
                     <div id="original-headers" class="code-box">
                         <pre><code></code></pre>
                     </div>
@@ -83,5 +76,113 @@
             </div>
         </div>
     </div>
+
+    <!-- Static HTML Templates -->
+    <template id="summary-row-template">
+        <div class="ms-font-s ms-fontWeight-semibold"></div>
+        <div class="code-box">
+            <pre><code></code></pre>
+        </div>
+    </template>
+
+    <template id="callout-header-template">
+        <div class="ms-Callout-close" style="display:none"></div>
+        <div class="ms-Callout-header">
+            <p class="ms-Callout-title">Hop Details</p>
+        </div>
+    </template>
+
+    <template id="antispam-table-template">
+        <table class="ms-Table ms-Table--fixed spam-report">
+            <tbody></tbody>
+        </table>
+    </template>
+
+    <template id="forefront-header-template">
+        <div class="ms-font-m">Forefront Antispam Report</div>
+        <hr/>
+    </template>
+
+    <template id="microsoft-header-template">
+        <div class="ms-font-m">Microsoft Antispam Report</div>
+        <hr/>
+    </template>
+
+    <template id="table-row-template">
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+    </template>
+
+    <template id="selection-target-template">
+        <div class="ms-ListItem-selectionTarget"></div>
+    </template>
+
+    <template id="other-row-template">
+        <div class="ms-font-s ms-fontWeight-semibold"></div>
+        <div class="code-box">
+            <pre><code></code></pre>
+        </div>
+    </template>
+
+    <template id="callout-entry-template">
+        <p class="ms-Callout-subText">
+            <span class="ms-fontWeight-semibold"></span>
+            <span class="callout-value"></span>
+        </p>
+    </template>
+
+    <template id="first-row-template">
+        <span class="ms-ListItem-primaryText">
+            <span class="ms-fontWeight-semibold">From: </span>
+            <span class="from-value"></span>
+        </span>
+        <span class="ms-ListItem-secondaryText">
+            <span class="ms-fontWeight-semibold">To: </span>
+            <span class="to-value"></span>
+        </span>
+    </template>
+
+    <template id="secondary-text-template">
+        <span class="ms-ListItem-secondaryText">
+            <span class="ms-fontWeight-semibold">To: </span>
+            <span class="to-value"></span>
+        </span>
+    </template>
+
+    <template id="received-list-template">
+        <ul class="ms-List"></ul>
+    </template>
+
+    <template id="list-item-template">
+        <li class="ms-ListItem ms-ListItem--document" tabindex="0"></li>
+    </template>
+
+    <template id="progress-icon-template">
+        <div class="progress-icon">
+            <div class="ms-font-xxl down-icon">
+                <i class="ms-Icon ms-Icon--Down"></i>
+            </div>
+            <div class="ms-ProgressIndicator">
+                <div class="ms-ProgressIndicator-itemProgress">
+                    <div class="ms-ProgressIndicator-progressTrack"></div>
+                    <div class="ms-ProgressIndicator-progressBar" style="width: 0"></div>
+                </div>
+                <div class="ms-ProgressIndicator-itemDescription"></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="callout-template">
+        <div class="ms-Callout is-hidden">
+            <div class="ms-Callout-main">
+                <div class="ms-Callout-inner">
+                    <div class="ms-Callout-content"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
 </body>
 </html>
