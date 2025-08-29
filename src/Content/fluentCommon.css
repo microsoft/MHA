@@ -1,16 +1,6 @@
 /* Shared Fluent UI Web Components Styling */
 /* This file contains common styles used across multiple frames */
 
-/* Fabric MDL2 Icon Font */
-@font-face {
-    font-family: "FabricMDL2Icons";
-    src: url("https://static2.sharepointonline.com/files/fabric/assets/icons/fabricmdl2icons-2.68.woff2") format("woff2"),
-         url("https://static2.sharepointonline.com/files/fabric/assets/icons/fabricmdl2icons-2.68.woff") format("woff");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
 /* CSS Custom Properties - Design System */
 :root {
     --primary-blue: #0078d4;
@@ -106,15 +96,37 @@
 }
 
 .ms-Icon--Timer::before {
-    content: "\E91E"; /* Fabric Timer icon */
+    content: "\E916"; /* Stopwatch icon */
+}
+
+.ms-Icon--MailAlert {
+    position: relative;
+    display: inline-block;
 }
 
 .ms-Icon--MailAlert::before {
-    content: "\ED80"; /* Fabric MailAlert icon */
+    content: "\E715"; /* Mail icon as base */
+    position: relative;
+    z-index: 1;
+}
+
+.ms-Icon--MailAlert::after {
+    content: "\E946"; /* Info icon as overlay */
+    position: absolute;
+    bottom: -2px;
+    right: -4px;
+    font-size: 12px;
+    color: var(--primary-blue);
+    background: white;
+    border-radius: 50%;
+    padding: 1px;
+    z-index: 2;
 }
 
 .ms-Icon--Cake::before {
-    content: "\ECA4"; /* Fabric Cake icon */
+    content: "\1F370\FE0E"; /* Unicode cake slice with text presentation */
+    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
+    font-variant-emoji: text;
 }
 
 .ms-Icon--Add::before {
