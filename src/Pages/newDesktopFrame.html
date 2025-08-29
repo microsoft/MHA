@@ -46,7 +46,7 @@
                 </fluent-card>
             </div>
             <div class="header-view" data-content="summary-view">
-                <div class="ms-font-l">Summary</div>
+                <div class="page-title">Summary</div>
                 <hr />
                 <div class="summary-list"></div>
                 <div class="orig-header-ui">
@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="header-view" data-content="received-view">
-                <div class="ms-font-l">Received</div>
+                <div class="page-title">Received</div>
                 <hr />
                 <div class="received-list"></div>
             </div>
@@ -70,7 +70,7 @@
                 <div class="antispam-list"></div>
             </div>
             <div class="header-view" data-content="other-view">
-                <div class="ms-font-l">Other</div>
+                <div class="page-title">Other</div>
                 <hr />
                 <div class="other-list"></div>
             </div>
@@ -79,7 +79,7 @@
 
     <!-- Static HTML Templates -->
     <template id="summary-row-template">
-        <div class="ms-font-s ms-fontWeight-semibold"></div>
+        <div class="section-header"></div>
         <div class="code-box">
             <pre><code></code></pre>
         </div>
@@ -116,11 +116,11 @@
     </template>
 
     <template id="selection-target-template">
-        <div class="ms-ListItem-selectionTarget"></div>
+        <div class="hop-list-selection"></div>
     </template>
 
     <template id="other-row-template">
-        <div class="ms-font-s ms-fontWeight-semibold"></div>
+        <div class="section-header"></div>
         <div class="code-box">
             <pre><code></code></pre>
         </div>
@@ -134,29 +134,29 @@
     </template>
 
     <template id="first-row-template">
-        <span class="ms-ListItem-primaryText">
-            <span class="ms-fontWeight-semibold">From: </span>
+        <span class="hop-primary-text">
+            <span class="hop-label">From: </span>
             <span class="from-value"></span>
         </span>
-        <span class="ms-ListItem-secondaryText">
-            <span class="ms-fontWeight-semibold">To: </span>
+        <span class="hop-secondary-text">
+            <span class="hop-label">To: </span>
             <span class="to-value"></span>
         </span>
     </template>
 
     <template id="secondary-text-template">
-        <span class="ms-ListItem-secondaryText">
-            <span class="ms-fontWeight-semibold">To: </span>
+        <span class="hop-secondary-text">
+            <span class="hop-label">To: </span>
             <span class="to-value"></span>
         </span>
     </template>
 
     <template id="received-list-template">
-        <ul class="ms-List"></ul>
+        <ul class="hop-list"></ul>
     </template>
 
     <template id="list-item-template">
-        <li class="ms-ListItem ms-ListItem--document" tabindex="0"></li>
+        <li class="hop-list-item" tabindex="0"></li>
     </template>
 
     <template id="progress-icon-template">

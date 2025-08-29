@@ -129,7 +129,7 @@ document.addEventListener("click", function(event: Event) {
     }
 
     // Don't close if clicking on a list item (that will handle its own toggle)
-    if (target.closest(".ms-ListItem")) {
+    if (target.closest(".hop-list-item")) {
         return;
     }
 
@@ -173,7 +173,7 @@ function buildViews(headers: string) {
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
             const clone = DomUtils.cloneTemplate("summary-row-template");
-            DomUtils.setTemplateText(clone, ".ms-font-s", row.label);
+            DomUtils.setTemplateText(clone, ".section-header", row.label);
             DomUtils.setTemplateText(clone, "code", row.value);
             summaryList.appendChild(clone);
         }
@@ -384,7 +384,7 @@ function buildViews(headers: string) {
             // Use HTML template for other headers
             const clone = DomUtils.cloneTemplate("other-row-template");
             const headerContent = otherRow.url ? otherRow.url : otherRow.header;
-            DomUtils.setTemplateHTML(clone, ".ms-font-s", headerContent); // May contain HTML (url)
+            DomUtils.setTemplateHTML(clone, ".section-header", headerContent); // May contain HTML (url)
             DomUtils.setTemplateText(clone, "code", otherRow.value);
             otherList.appendChild(clone);
         }
