@@ -137,8 +137,8 @@
     content: "\E713"; /* Segoe Fluent Icons Settings/Gear icon */
 }
 
-.fluent-icon--down::before {
-    content: "\E70D"; /* Segoe Fluent Icons Down arrow icon */
+.fluent-icon--arrow-circle-down::before {
+    content: "\E74B"; /* Segoe Fluent Icons CircleDown icon */
 }
 
 /* Legacy icon classes still in use */
