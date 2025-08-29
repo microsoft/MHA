@@ -1,3 +1,4 @@
+import "office-ui-fabric-js/dist/css/fabric.min.css";
 import "../../Content/fluentCommon.css";
 import "../../Content/Office.css";
 import "../../Content/classicDesktopFrame.css";
