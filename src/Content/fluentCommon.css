@@ -71,16 +71,8 @@
     border-radius: 0 !important;
 }
 
-/* Icon Styling */
+/* Modern Fluent Icon Styling */
 .fluent-icon {
-    font-family: "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
-    font-size: 18px;
-    color: var(--primary-blue);
-    line-height: 1;
-}
-
-/* Icons - Segoe Fluent Icons with fallbacks */
-.ms-Icon {
     font-family: "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
     font-size: 20px;
     font-style: normal;
@@ -90,28 +82,28 @@
     display: inline-block;
 }
 
-/* Icon definitions - mix of Fabric MDL2, Segoe MDL2 Assets, and Unicode */
-.ms-Icon--Info::before {
-    content: "\E946"; /* Segoe MDL2 Assets Info icon */
+/* Modern Fluent Icon Classes */
+.fluent-icon--info::before {
+    content: "\E946"; /* Segoe Fluent Icons Info icon */
 }
 
-.ms-Icon--Timer::before {
-    content: "\E916"; /* Segoe MDL2 Assets Stopwatch icon */
+.fluent-icon--stopwatch::before {
+    content: "\E916"; /* Segoe Fluent Icons Stopwatch icon */
 }
 
-.ms-Icon--MailAlert {
+.fluent-icon--mail-alert {
     position: relative;
     display: inline-block;
 }
 
-.ms-Icon--MailAlert::before {
-    content: "\E715"; /* Segoe MDL2 Assets Mail icon as base */
+.fluent-icon--mail-alert::before {
+    content: "\E715"; /* Segoe Fluent Icons Mail icon as base */
     position: relative;
     z-index: 1;
 }
 
-.ms-Icon--MailAlert::after {
-    content: "\E946"; /* Segoe MDL2 Assets Info icon as overlay */
+.fluent-icon--mail-alert::after {
+    content: "\E946"; /* Segoe Fluent Icons Info icon as overlay */
     position: absolute;
     bottom: -2px;
     right: -4px;
@@ -123,30 +115,50 @@
     z-index: 2;
 }
 
-.ms-Icon--Cake::before {
+.fluent-icon--cake::before {
     content: "\1F370\FE0E"; /* Unicode cake slice with text presentation */
     font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
     font-variant-emoji: text;
 }
 
-.ms-Icon--Add::before {
-    content: "\E710"; /* Segoe MDL2 Assets Add/Plus icon */
+.fluent-icon--add::before {
+    content: "\E710"; /* Segoe Fluent Icons Add/Plus icon */
 }
 
-.ms-Icon--Remove::before {
-    content: "\E738"; /* Segoe MDL2 Assets Remove/Minus icon */
+.fluent-icon--remove::before {
+    content: "\E738"; /* Segoe Fluent Icons Remove/Minus icon */
+}
+
+.fluent-icon--copy::before {
+    content: "\E8C8"; /* Segoe Fluent Icons Copy icon */
+}
+
+.fluent-icon--settings::before {
+    content: "\E713"; /* Segoe Fluent Icons Settings/Gear icon */
+}
+
+.fluent-icon--down::before {
+    content: "\E70D"; /* Segoe Fluent Icons Down arrow icon */
+}
+
+/* Legacy icon classes still in use */
+.icon-copy,
+.icon-settings {
+    font-family: "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: normal;
+    color: var(--primary-blue);
+    line-height: 1;
+    display: inline-block;
 }
 
 .icon-copy::before {
-    content: "\E8C8"; /* Segoe MDL2 Assets Copy icon */
+    content: "\E8C8"; /* Segoe Fluent Icons Copy icon */
 }
 
 .icon-settings::before {
-    content: "\E713"; /* Segoe MDL2 Assets Settings/Gear icon */
-}
-
-.ms-Icon--Down::before {
-    content: "\E70D"; /* Segoe MDL2 Assets Down arrow icon */
+    content: "\E713"; /* Segoe Fluent Icons Settings/Gear icon */
 }
 
 .ms-ProgressIndicator {
@@ -189,7 +201,7 @@
 }
 
 @media screen and (-ms-high-contrast:active) {
-    .ms-Icon,
+    .fluent-icon,
     .ms-RadioButton-field,
     .ms-CheckBox-field,
     .ms-CheckBox-field:after {

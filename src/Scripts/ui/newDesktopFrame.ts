@@ -41,7 +41,7 @@ function initializeFluentUI(): void {
         buttonElement.addEventListener("click", function (event: Event): void {
             if (event.currentTarget) {
                 const currentTarget = event.currentTarget as HTMLElement;
-                const btnIcon = currentTarget.querySelector(".ms-Icon--Add, .ms-Icon--Remove");
+                const btnIcon = currentTarget.querySelector(".fluent-icon--add, .fluent-icon--remove");
                 const originalHeaders = DomUtils.getElement("#original-headers");
                 const isExpanded = buttonElement.getAttribute("aria-expanded") === "true";
 
@@ -49,15 +49,15 @@ function initializeFluentUI(): void {
                     buttonElement.setAttribute("aria-expanded", "true");
                     if (originalHeaders) originalHeaders.style.display = "block";
                     if (btnIcon) {
-                        btnIcon.classList.remove("ms-Icon--Add");
-                        btnIcon.classList.add("ms-Icon--Remove");
+                        btnIcon.classList.remove("fluent-icon--add");
+                        btnIcon.classList.add("fluent-icon--remove");
                     }
                 } else {
                     buttonElement.setAttribute("aria-expanded", "false");
                     if (originalHeaders) originalHeaders.style.display = "none";
                     if (btnIcon) {
-                        btnIcon.classList.remove("ms-Icon--Remove");
-                        btnIcon.classList.add("ms-Icon--Add");
+                        btnIcon.classList.remove("fluent-icon--remove");
+                        btnIcon.classList.add("fluent-icon--add");
                     }
                 }
             }

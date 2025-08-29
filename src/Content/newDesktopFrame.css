@@ -117,8 +117,8 @@
     width: auto !important;
 }
 
-#orig-header-btn .ms-Icon--Add,
-#orig-header-btn .ms-Icon--Remove {
+#orig-header-btn .fluent-icon--add,
+#orig-header-btn .fluent-icon--remove {
     background: var(--white);
     color: var(--primary-blue);
     border: 2px solid var(--primary-blue);
