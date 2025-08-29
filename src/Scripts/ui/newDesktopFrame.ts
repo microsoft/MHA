@@ -217,16 +217,17 @@ function buildViews(headers: string) {
                 // Use HTML template for progress icon
                 const progressClone = DomUtils.cloneTemplate("progress-icon-template");
 
-                // Set the progress bar width
-                const width: number = 1.8 * (Number(row.percent.value ?? 0));
-                const progressBar = progressClone.querySelector(".ms-ProgressIndicator-progressBar") as HTMLElement;
-                if (progressBar) {
-                    progressBar.style.width = width + "px";
+                // Set the progress value for fluent-progress
+                const percent = Number(row.percent.value ?? 0);
+                const progressElement = progressClone.querySelector(".hop-progress") as HTMLElement;
+                if (progressElement) {
+                    progressElement.setAttribute("value", String(percent));
+                    progressElement.setAttribute("max", "100");
                 }
 
                 // Set the description text
                 const delayText = row.delay.value !== null ? String(row.delay.value) : "";
-                DomUtils.setTemplateText(progressClone, ".ms-ProgressIndicator-itemDescription", delayText);
+                DomUtils.setTemplateText(progressClone, ".progress-description", delayText);
 
                 listItem.appendChild(progressClone);
 

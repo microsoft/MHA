@@ -200,8 +200,35 @@
     text-align: center;
 }
 
-.progress-icon .ms-ProgressIndicator {
-    padding-left: 40px;
+.progress-icon {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.progress-icon .down-icon {
+    flex-shrink: 0;
+    color: #323130;
+    margin-top: 2px;
+}
+
+.progress-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.progress-icon .hop-progress {
+    width: 100%;
+    font-family: var(--font-family);
+}
+
+.progress-description {
+    font-size: 12px;
+    color: #323130;
+    margin-top: 4px;
+    text-align: left;
+    font-family: var(--font-family);
 }
 
 .ms-ListItem:hover {
