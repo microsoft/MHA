@@ -270,14 +270,18 @@ function buildViews(headers: string) {
                 event.preventDefault();
                 const calloutElement = this.querySelector(".hop-details-overlay") as HTMLElement;
 
-                // Hide all other callouts first
+                // Check if this callout is currently shown BEFORE hiding others
+                const isCurrentlyShown = calloutElement && calloutElement.classList.contains("is-shown");
+
+                // Hide all callouts first
                 document.querySelectorAll(".hop-details-overlay").forEach(callout => {
                     callout.classList.remove("is-shown");
                     callout.classList.add("is-hidden");
                 });
 
-                // Toggle this callout
-                if (calloutElement && !calloutElement.classList.contains("is-shown")) {
+                // If this callout was NOT currently shown, show it
+                // If it WAS currently shown, leave it hidden (toggle behavior)
+                if (calloutElement && !isCurrentlyShown) {
                     calloutElement.classList.remove("is-hidden");
                     calloutElement.classList.add("is-shown");
 
@@ -302,10 +306,6 @@ function buildViews(headers: string) {
 
                     calloutElement.style.left = `${leftPosition}px`;
                     calloutElement.style.top = `${topPosition}px`;
-
-                } else if (calloutElement) {
-                    calloutElement.classList.remove("is-shown");
-                    calloutElement.classList.add("is-hidden");
                 }
             });
         });
