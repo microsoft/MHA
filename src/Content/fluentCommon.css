@@ -79,7 +79,7 @@
     line-height: 1;
 }
 
-/* Fabric Icons */
+/* Icons - System fonts with fallback to Fabric MDL2 */
 .ms-Icon {
     font-family: "FabricMDL2Icons", "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
     font-size: 20px;
@@ -90,13 +90,13 @@
     display: inline-block;
 }
 
-/* Icon definitions using Fabric icon font Unicode values */
+/* Icon definitions - mix of Fabric MDL2, Segoe MDL2 Assets, and Unicode */
 .ms-Icon--Info::before {
-    content: "\E946"; /* Fabric Info icon */
+    content: "\E946"; /* Segoe MDL2 Assets Info icon */
 }
 
 .ms-Icon--Timer::before {
-    content: "\E916"; /* Stopwatch icon */
+    content: "\E916"; /* Segoe MDL2 Assets Stopwatch icon */
 }
 
 .ms-Icon--MailAlert {
@@ -105,13 +105,13 @@
 }
 
 .ms-Icon--MailAlert::before {
-    content: "\E715"; /* Mail icon as base */
+    content: "\E715"; /* Segoe MDL2 Assets Mail icon as base */
     position: relative;
     z-index: 1;
 }
 
 .ms-Icon--MailAlert::after {
-    content: "\E946"; /* Info icon as overlay */
+    content: "\E946"; /* Segoe MDL2 Assets Info icon as overlay */
     position: absolute;
     bottom: -2px;
     right: -4px;
@@ -130,23 +130,23 @@
 }
 
 .ms-Icon--Add::before {
-    content: "\E710"; /* Fabric Add/Plus icon */
+    content: "\E710"; /* Segoe MDL2 Assets Add/Plus icon */
 }
 
 .ms-Icon--Remove::before {
-    content: "\E738"; /* Fabric Remove/Minus icon */
+    content: "\E738"; /* Segoe MDL2 Assets Remove/Minus icon */
 }
 
 .icon-copy::before {
-    content: "\E8C8"; /* Fabric Copy icon */
+    content: "\E8C8"; /* Segoe MDL2 Assets Copy icon */
 }
 
 .icon-settings::before {
-    content: "\E713"; /* Fabric Settings/Gear icon */
+    content: "\E713"; /* Segoe MDL2 Assets Settings/Gear icon */
 }
 
 .ms-Icon--Down::before {
-    content: "\E70D"; /* Fabric Down arrow icon */
+    content: "\E70D"; /* Segoe MDL2 Assets Down arrow icon */
 }
 
 .ms-ProgressIndicator {
