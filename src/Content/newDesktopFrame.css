@@ -257,7 +257,7 @@
 }
 
 .header-view[data-content="antispam-view"] {
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
 }
 
 .header-view[data-content="antispam-view"] .page-title {
@@ -273,4 +273,20 @@
 .header-view[data-content="antispam-view"] .fluent-table,
 .header-view[data-content="antispam-view"] .fluent-table td {
     font-size: 12px;
+}
+
+.header-view[data-content="antispam-view"] .fluent-table {
+    table-layout: auto;
+    width: 100%;
+}
+
+.header-view[data-content="antispam-view"] .fluent-table td:first-child {
+    width: max-content;
+    white-space: nowrap;
+    min-width: fit-content;
+}
+
+.header-view[data-content="antispam-view"] .fluent-table td:last-child {
+    width: auto;
+    word-break: break-word;
 }
