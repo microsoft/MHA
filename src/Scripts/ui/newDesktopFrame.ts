@@ -123,11 +123,6 @@ function initializeFluentUI(): void {
 document.addEventListener("click", function(event: Event) {
     const target = event.target as HTMLElement;
 
-    // Don't close if clicking on a callout or inside a callout
-    if (target.closest(".hop-details-overlay")) {
-        return;
-    }
-
     // Don't close if clicking on a list item (that will handle its own toggle)
     if (target.closest(".hop-list-item")) {
         return;
@@ -267,6 +262,13 @@ function buildViews(headers: string) {
 
             // Add click handler to show/hide callout
             listItem.addEventListener("click", function(event: Event) {
+                const target = event.target as HTMLElement;
+
+                // Don't handle the click if it was inside the callout content
+                if (target.closest(".hop-details-overlay")) {
+                    return;
+                }
+
                 event.preventDefault();
                 const calloutElement = this.querySelector(".hop-details-overlay") as HTMLElement;
 
