@@ -141,7 +141,6 @@
     content: "\E74B"; /* Segoe Fluent Icons CircleDown icon */
 }
 
-/* Legacy icon classes still in use */
 .icon-copy,
 .icon-settings {
     font-family: "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
