@@ -218,75 +218,23 @@
     display: none;
 }
 
-.ms-Callout {
-    word-wrap: break-word;
-    word-break: break-all;
-}
-
-.ms-Callout.is-hidden {
+/* Overlay functionality with Fluent styling */
+.hop-details-overlay.is-hidden {
     display: none !important;
 }
 
-/* Callout overlay panel - only shown when explicitly triggered by click */
-.ms-Callout.is-shown {
+.hop-details-overlay.is-shown {
     display: block;
     position: fixed;
     z-index: 1000;
-    background: var(--white);
-    border: 1px solid var(--border-gray);
-    border-radius: var(--border-radius);
-    padding: 0;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-    width: 90%;
-    max-width: 600px;
-    min-width: 400px;
-    max-height: 300px;
-    overflow-y: auto;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: var(--font-family);
-}
-
-.ms-Callout-main {
-    padding: 0;
-}
-
-.ms-Callout-inner {
-    padding: 0;
-}
-
-.ms-Callout-content {
+    background: var(--white);
+    border: 1px solid var(--border-gray);
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
     padding: 16px;
-}
-
-.ms-Callout-title {
-    margin: 0 0 12px 0;
-    font-size: 21px;
-    font-weight: 600;
-    color: #201f1e;
-}
-
-.ms-Callout-subText {
-    margin: 0 0 6px 0;
-    font-size: 12px;
-    line-height: 1.3;
-    color: #323130;
-}
-
-.ms-Callout-subText:last-child {
-    margin-bottom: 0;
-}
-
-.ms-Callout-subText .ms-fontWeight-semibold {
-    font-weight: 600;
-    color: #201f1e;
-    margin-right: 4px;
-    font-size: 12px;
-}
-
-.ms-Callout-subText .callout-value {
-    word-break: break-word;
-    color: #323130;
-    font-size: 12px;
+    max-width: 400px;
+    min-width: 300px;
 }

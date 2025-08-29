@@ -86,9 +86,9 @@
     </template>
 
     <template id="callout-header-template">
-        <div class="ms-Callout-close" style="display:none"></div>
-        <div class="ms-Callout-header">
-            <p class="ms-Callout-title">Hop Details</p>
+        <div class="hop-details-close" style="display:none"></div>
+        <div class="hop-details-header">
+            <h2 class="hop-title">Hop Details</h2>
         </div>
     </template>
 
@@ -127,8 +127,8 @@
     </template>
 
     <template id="callout-entry-template">
-        <p class="ms-Callout-subText">
-            <span class="ms-fontWeight-semibold"></span>
+        <p class="hop-details-entry">
+            <span class="hop-label"></span>
             <span class="callout-value"></span>
         </p>
     </template>
@@ -175,12 +175,8 @@
     </template>
 
     <template id="callout-template">
-        <div class="ms-Callout is-hidden">
-            <div class="ms-Callout-main">
-                <div class="ms-Callout-inner">
-                    <div class="ms-Callout-content"></div>
-                </div>
-            </div>
+        <div class="hop-details-overlay is-hidden">
+            <div class="hop-details-content"></div>
         </div>
     </template>
 

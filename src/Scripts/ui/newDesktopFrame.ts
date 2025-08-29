@@ -122,19 +122,19 @@ function initializeFluentUI(): void {
 // Add document-level click handler to close callouts when clicking outside
 document.addEventListener("click", function(event: Event) {
     const target = event.target as HTMLElement;
-    
+
     // Don't close if clicking on a callout or inside a callout
-    if (target.closest(".ms-Callout")) {
+    if (target.closest(".hop-details-overlay")) {
         return;
     }
-    
+
     // Don't close if clicking on a list item (that will handle its own toggle)
     if (target.closest(".ms-ListItem")) {
         return;
     }
-    
+
     // Close all open callouts
-    document.querySelectorAll(".ms-Callout.is-shown").forEach(callout => {
+    document.querySelectorAll(".hop-details-overlay.is-shown").forEach(callout => {
         callout.classList.remove("is-shown");
         callout.classList.add("is-hidden");
     });
@@ -143,7 +143,7 @@ document.addEventListener("click", function(event: Event) {
 // Add escape key handler to close callouts
 document.addEventListener("keydown", function(event: KeyboardEvent) {
     if (event.key === "Escape") {
-        document.querySelectorAll(".ms-Callout.is-shown").forEach(callout => {
+        document.querySelectorAll(".hop-details-overlay.is-shown").forEach(callout => {
             callout.classList.remove("is-shown");
             callout.classList.add("is-hidden");
         });
@@ -160,7 +160,7 @@ function updateStatus(message: string) {
 function addCalloutEntry(name: string, value: string | number | null, parent: HTMLElement) {
     if (value) {
         const clone = DomUtils.cloneTemplate("callout-entry-template");
-        DomUtils.setTemplateText(clone, ".ms-fontWeight-semibold", name + ": ");
+        DomUtils.setTemplateText(clone, ".hop-label", name + ": ");
         DomUtils.setTemplateText(clone, ".callout-value", String(value));
         parent.appendChild(clone);
     }
@@ -246,15 +246,12 @@ function buildViews(headers: string) {
             // Callout - Use HTML template for callout structure
             const calloutClone = DomUtils.cloneTemplate("callout-template");
 
-            // Add callout header to the callout main element
-            const calloutMainElement = calloutClone.querySelector(".ms-Callout-main") as HTMLElement;
-            if (calloutMainElement) {
+            // Add callout header to the tooltip content
+            const calloutContent = calloutClone.querySelector(".hop-details-content") as HTMLElement;
+            if (calloutContent) {
                 const headerClone = DomUtils.cloneTemplate("callout-header-template");
-                calloutMainElement.insertBefore(headerClone, calloutMainElement.firstChild);
+                calloutContent.appendChild(headerClone);
             }
-
-            // Get the callout content container
-            const calloutContent = calloutClone.querySelector(".ms-Callout-content") as HTMLElement;
 
             listItem.appendChild(calloutClone);
 
@@ -270,10 +267,10 @@ function buildViews(headers: string) {
             // Add click handler to show/hide callout
             listItem.addEventListener("click", function(event: Event) {
                 event.preventDefault();
-                const calloutElement = this.querySelector(".ms-Callout") as HTMLElement;
+                const calloutElement = this.querySelector(".hop-details-overlay") as HTMLElement;
 
                 // Hide all other callouts first
-                document.querySelectorAll(".ms-Callout").forEach(callout => {
+                document.querySelectorAll(".hop-details-overlay").forEach(callout => {
                     callout.classList.remove("is-shown");
                     callout.classList.add("is-hidden");
                 });
