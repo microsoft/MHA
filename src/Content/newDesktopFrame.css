@@ -218,7 +218,6 @@
     display: none;
 }
 
-/* Overlay functionality with Fluent styling */
 .hop-details-overlay.is-hidden {
     display: none !important;
 }
@@ -234,7 +233,38 @@
     border: 1px solid var(--border-gray);
     border-radius: var(--border-radius);
     box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-    padding: 16px;
+    padding: 24px 28px 12px 28px;
     max-width: 400px;
     min-width: 300px;
+    font-family: var(--font-family);
+}
+
+.hop-title {
+    margin: 0 0 12px 0;
+    font-size: 21px;
+    font-weight: 600;
+    font-family: var(--font-family);
+}
+
+.hop-label {
+    font-weight: 600;
+    font-size: 12px;
+    font-family: var(--font-family);
+}
+
+.hop-details-entry {
+    margin: 0 0 6px 0;
+    font-size: 12px;
+    font-family: var(--font-family);
+}
+
+.hop-details-entry:last-child {
+    margin-bottom: 0;
+}
+
+.callout-value {
+    font-weight: 400;
+    word-break: break-word;
+    font-size: 12px;
+    font-family: var(--font-family);
 }
