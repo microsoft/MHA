@@ -51,40 +51,6 @@
     margin-bottom: 8px;
 }
 
-/* Spacing for antispam report sections */
-.antispam-list > div.ms-font-m {
-    margin-top: 20px;
-    margin-bottom: 8px;
-}
-
-.antispam-list > div.ms-font-m:first-child {
-    margin-top: 8px;
-}
-
-.header-view[data-content="antispam-view"] .ms-font-l {
-    font-family: var(--font-family);
-    font-size: 17px;
-    font-weight: 600;
-}
-
-.antispam-list > div.ms-font-m {
-    font-family: var(--font-family);
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.antispam-list .ms-Table.spam-report {
-    margin-bottom: 20px;
-    font-family: var(--font-family);
-    table-layout: auto;
-}
-
-.antispam-list .ms-Table.spam-report td {
-    padding: 8px 12px;
-    font-family: var(--font-family);
-    font-size: 12px;
-}
-
 /* Other view spacing */
 .other-list .ms-font-s.ms-fontWeight-semibold {
     margin-top: 16px;
@@ -191,20 +157,6 @@
 .header-view {
     display: none;
 }
-
-.spam-report {
-    word-wrap: break-word;
-    word-break: break-all;
-    font-family: var(--font-family);
-}
-
-    .spam-report td {
-        vertical-align: top;
-        line-height: 1em;
-        padding: 10px;
-        font-family: var(--font-family);
-        font-size: 12px;
-    }
 
 .down-icon {
     float: left;
