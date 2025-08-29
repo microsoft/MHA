@@ -119,6 +119,37 @@ function initializeFluentUI(): void {
     TabNavigation.initializeIFrameTabHandling();
 }
 
+// Add document-level click handler to close callouts when clicking outside
+document.addEventListener("click", function(event: Event) {
+    const target = event.target as HTMLElement;
+    
+    // Don't close if clicking on a callout or inside a callout
+    if (target.closest(".ms-Callout")) {
+        return;
+    }
+    
+    // Don't close if clicking on a list item (that will handle its own toggle)
+    if (target.closest(".ms-ListItem")) {
+        return;
+    }
+    
+    // Close all open callouts
+    document.querySelectorAll(".ms-Callout.is-shown").forEach(callout => {
+        callout.classList.remove("is-shown");
+        callout.classList.add("is-hidden");
+    });
+});
+
+// Add escape key handler to close callouts
+document.addEventListener("keydown", function(event: KeyboardEvent) {
+    if (event.key === "Escape") {
+        document.querySelectorAll(".ms-Callout.is-shown").forEach(callout => {
+            callout.classList.remove("is-shown");
+            callout.classList.add("is-hidden");
+        });
+    }
+});
+
 function updateStatus(message: string) {
     DomUtils.setText("#status-message", message);
     if (overlayElement) {
@@ -243,13 +274,16 @@ function buildViews(headers: string) {
 
                 // Hide all other callouts first
                 document.querySelectorAll(".ms-Callout").forEach(callout => {
+                    callout.classList.remove("is-shown");
                     callout.classList.add("is-hidden");
                 });
 
                 // Toggle this callout
-                if (calloutElement && calloutElement.classList.contains("is-hidden")) {
+                if (calloutElement && !calloutElement.classList.contains("is-shown")) {
                     calloutElement.classList.remove("is-hidden");
+                    calloutElement.classList.add("is-shown");
                 } else if (calloutElement) {
+                    calloutElement.classList.remove("is-shown");
                     calloutElement.classList.add("is-hidden");
                 }
             });
