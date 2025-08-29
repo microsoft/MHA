@@ -299,9 +299,18 @@ export default async (env, options) => {
             },
             static: __dirname,
             watchFiles: {
-                paths: ["src/**/*", "Pages/**/*", "*.xml"],
+                paths: [
+                    "src/**/*.{ts,js,css}",
+                    "src/Pages/*.html"
+                ],
                 options: {
-                    ignored: ["**/.git/**", "**/node_modules/**", "**/coverage/**"],
+                    ignored: [
+                        "**/.git/**",
+                        "**/node_modules/**",
+                        "**/coverage/**",
+                        "**/*.map",
+                        "**/*.log"
+                    ],
                 },
             },
             server: {
