@@ -159,9 +159,9 @@ function updateStatus(message: string) {
 
 function addCalloutEntry(name: string, value: string | number | null, parent: HTMLElement) {
     if (value) {
-        const clone = DomUtils.cloneTemplate("callout-entry-template");
+        const clone = DomUtils.cloneTemplate("hop-entry-template");
         DomUtils.setTemplateText(clone, ".hop-label", name + ": ");
-        DomUtils.setTemplateText(clone, ".callout-value", String(value));
+        DomUtils.setTemplateText(clone, ".hop-value", String(value));
         parent.appendChild(clone);
     }
 }
@@ -244,12 +244,12 @@ function buildViews(headers: string) {
             listItem.appendChild(selectionClone);
 
             // Callout - Use HTML template for callout structure
-            const calloutClone = DomUtils.cloneTemplate("callout-template");
+            const calloutClone = DomUtils.cloneTemplate("hop-template");
 
             // Add callout header to the tooltip content
             const calloutContent = calloutClone.querySelector(".hop-details-content") as HTMLElement;
             if (calloutContent) {
-                const headerClone = DomUtils.cloneTemplate("callout-header-template");
+                const headerClone = DomUtils.cloneTemplate("hop-header-template");
                 calloutContent.appendChild(headerClone);
             }
 
@@ -279,6 +279,29 @@ function buildViews(headers: string) {
                 if (calloutElement && !calloutElement.classList.contains("is-shown")) {
                     calloutElement.classList.remove("is-hidden");
                     calloutElement.classList.add("is-shown");
+
+                    // Position the callout relative to the clicked line
+                    const listItemRect = this.getBoundingClientRect();
+                    const viewportWidth = window.innerWidth;
+                    const viewportHeight = window.innerHeight;
+
+                    // Center the callout horizontally relative to the viewport
+                    const leftPosition = (viewportWidth - calloutElement.offsetWidth) / 2;
+
+                    // Position below the clicked line so arrow points up to it
+                    let topPosition = listItemRect.bottom + 15; // 15px gap for arrow
+
+                    // Ensure callout stays within viewport
+                    if (topPosition + calloutElement.offsetHeight > viewportHeight - 10) {
+                        topPosition = viewportHeight - calloutElement.offsetHeight - 10;
+                    }
+                    if (topPosition < 10) {
+                        topPosition = 10;
+                    }
+
+                    calloutElement.style.left = `${leftPosition}px`;
+                    calloutElement.style.top = `${topPosition}px`;
+
                 } else if (calloutElement) {
                     calloutElement.classList.remove("is-shown");
                     calloutElement.classList.add("is-hidden");

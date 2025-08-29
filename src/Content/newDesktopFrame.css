@@ -226,17 +226,29 @@
     display: block;
     position: fixed;
     z-index: 1000;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     background: var(--white);
     border: 1px solid var(--border-gray);
     border-radius: var(--border-radius);
     box-shadow: 0 8px 16px rgba(0,0,0,0.15);
     padding: 24px 28px 12px 28px;
-    max-width: 400px;
-    min-width: 300px;
+    width: 90vw;
+    max-width: 500px;
     font-family: var(--font-family);
+}
+
+/* Arrow pointing upward at the top of the pane */
+.hop-details-overlay.is-shown::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -10px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid var(--white);
+    filter: drop-shadow(0 -1px 1px rgba(0,0,0,0.1));
 }
 
 .hop-title {
@@ -262,7 +274,7 @@
     margin-bottom: 0;
 }
 
-.callout-value {
+.hop-value {
     font-weight: 400;
     word-break: break-word;
     font-size: 12px;
