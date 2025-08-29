@@ -79,9 +79,9 @@
     line-height: 1;
 }
 
-/* Icons - System fonts with fallback to Fabric MDL2 */
+/* Icons - Segoe Fluent Icons with fallbacks */
 .ms-Icon {
-    font-family: "FabricMDL2Icons", "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
+    font-family: "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: normal;
