@@ -309,8 +309,12 @@ export default async (env, options) => {
                         "**/node_modules/**",
                         "**/coverage/**",
                         "**/*.map",
-                        "**/*.log"
+                        "**/*.log",
+                        ".gitignore",
+                        ".gitattributes"
                     ],
+                    usePolling: false,
+                    ignoreInitial: true,
                 },
             },
             server: {
