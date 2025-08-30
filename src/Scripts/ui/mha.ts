@@ -1,3 +1,7 @@
+import {
+    fluentButton,
+    provideFluentDesignSystem
+} from "@fluentui/web-components";
 import "../../Content/fluentCommon.css";
 import "../../Content/Office.css";
 import "../../Content/classicDesktopFrame.css";
@@ -8,6 +12,11 @@ import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Strings } from "../Strings";
 import { Table } from "./Table";
+
+// Register Fluent UI Web Components
+provideFluentDesignSystem().register(
+    fluentButton()
+);
 
 let viewModel: HeaderModel;
 let table: Table;
