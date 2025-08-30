@@ -129,16 +129,15 @@
 
 .fluent-icon--copy::before {
     content: "\1F5D0"; /* Unicode 🗐 icon */
-    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
-    font-variant-emoji: text; /* Force monochrome */
 }
 
 .fluent-icon--settings::before {
-    content: "\E713"; /* Segoe Fluent Icons Settings/Gear icon */
+    content: "\2699"; /* Unicode ⚙ gear icon */
+    font-weight: bolder;
 }
 
 .fluent-icon--arrow-circle-down::before {
-    content: "\E74B"; /* Segoe Fluent Icons CircleDown icon */
+    content: "\2B07"; /* Unicode ⬇ down arrow */
 }
 
 .ms-ProgressIndicator {
