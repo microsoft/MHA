@@ -80,7 +80,6 @@
     color: var(--primary-blue);
     line-height: 1;
     display: inline-block;
-    font-variant-emoji: text;
 }
 
 /* Modern Fluent Icon Classes */
@@ -118,17 +117,14 @@
 
 .fluent-icon--cake::before {
     content: "\1F370\FE0E"; /* Unicode cake slice with text presentation */
-    font-variant-emoji: text;
 }
 
 .fluent-icon--add::before {
     content: "\2295"; /* Unicode circled plus ⊕ */
-    font-variant-emoji: text;
 }
 
 .fluent-icon--remove::before {
     content: "\2296"; /* Unicode circled minus ⊖ */
-    font-variant-emoji: text;
 }
 
 .fluent-icon--copy::before {
