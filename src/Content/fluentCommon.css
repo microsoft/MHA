@@ -73,25 +73,23 @@
 
 /* Modern Fluent Icon Styling */
 .fluent-icon {
-    font-family: "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
+    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: normal;
     color: var(--primary-blue);
     line-height: 1;
     display: inline-block;
+    font-variant-emoji: text;
 }
 
 /* Modern Fluent Icon Classes */
 .fluent-icon--info::before {
     content: "\24D8"; /* Unicode ⓘ icon */
-    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
 }
 
 .fluent-icon--stopwatch::before {
     content: "\23F1"; /* Unicode stopwatch ⏱ */
-    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
-    font-variant-emoji: text;
 }
 
 .fluent-icon--mail-alert {
@@ -101,14 +99,12 @@
 
 .fluent-icon--mail-alert::before {
     content: "\2709"; /* Unicode Mail icon ✉ */
-    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
     position: relative;
     z-index: 1;
 }
 
 .fluent-icon--mail-alert::after {
     content: "\24D8"; /* Unicode Info icon ⓘ */
-    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
     position: absolute;
     bottom: -2px;
     right: -4px;
@@ -118,24 +114,20 @@
     border-radius: 50%;
     padding: 1px;
     z-index: 2;
-    font-variant-emoji: text;
 }
 
 .fluent-icon--cake::before {
     content: "\1F370\FE0E"; /* Unicode cake slice with text presentation */
-    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
     font-variant-emoji: text;
 }
 
 .fluent-icon--add::before {
     content: "\2295"; /* Unicode circled plus ⊕ */
-    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
     font-variant-emoji: text;
 }
 
 .fluent-icon--remove::before {
     content: "\2296"; /* Unicode circled minus ⊖ */
-    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
     font-variant-emoji: text;
 }
 
