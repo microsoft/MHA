@@ -71,6 +71,30 @@
     border-radius: 0 !important;
 }
 
+/* Secondary Button Styling - Default black border, blue highlight */
+fluent-button:not([appearance]):not(.nav-button):not(.primary-button),
+fluent-button[appearance="neutral"]:not(.nav-button):not(.primary-button) {
+    border: 1px solid var(--black) !important;
+}
+
+fluent-button:not([appearance]):not(.nav-button):not(.primary-button)::part(control),
+fluent-button[appearance="neutral"]:not(.nav-button):not(.primary-button)::part(control) {
+    border: 1px solid var(--black) !important;
+}
+
+fluent-button:not([appearance]):not(.nav-button):not(.primary-button):hover,
+fluent-button[appearance="neutral"]:not(.nav-button):not(.primary-button):hover {
+    background-color: var(--hover-blue) !important;
+}
+
+fluent-button:not([appearance]):not(.nav-button):not(.primary-button):focus,
+fluent-button[appearance="neutral"]:not(.nav-button):not(.primary-button):focus,
+fluent-button:not([appearance]):not(.nav-button):not(.primary-button)::part(control):focus,
+fluent-button[appearance="neutral"]:not(.nav-button):not(.primary-button)::part(control):focus {
+    border: 2px solid var(--primary-blue) !important;
+    outline: none !important;
+}
+
 /* Modern Fluent Icon Styling */
 .fluent-icon {
     font-family: "Segoe UI", "Arial Unicode MS", sans-serif;

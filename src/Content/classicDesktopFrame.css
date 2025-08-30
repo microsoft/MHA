@@ -300,20 +300,8 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     background-color: #0677D3;
 }
 
-#SectionContent .secondary-button,
-#SectionContent button.secondary-button {
-    background-color: var(--background-light-gray) !important;
-    color: var(--black) !important;
-    border: 2px solid var(--black) !important;
-    border-radius: 0 !important;
-    padding: 8px 16px !important;
-    font-family: var(--font-family) !important;
-    font-size: 14px !important;
-    cursor: pointer !important;
-    min-height: 32px !important;
-}
-
-#SectionContent button.hiddenElement {
+#SectionContent button.hiddenElement,
+#SectionContent fluent-button.hiddenElement {
     display: none;
     border: 0;
 }
@@ -321,15 +309,4 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
 #SectionContent .fluent-icon--copy {
     font-size: 16px;
     margin-right: 4px;
-}
-
-#SectionContent .secondary-button:focus,
-#SectionContent button.secondary-button:focus {
-    border: 2px solid var(--primary-blue) !important;
-    outline: none !important;
-}
-
-#SectionContent .secondary-button:hover,
-#SectionContent button.secondary-button:hover {
-    background-color: var(--background-gray) !important;
 }
