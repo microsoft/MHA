@@ -260,17 +260,8 @@ function buildViews(headers: string) {
             addCalloutEntry("For", row.for.value, calloutContent);
             addCalloutEntry("Via", row.via.value, calloutContent);
 
-            // Add click handler to show/hide callout
-            listItem.addEventListener("click", function(event: Event) {
-                const target = event.target as HTMLElement;
-
-                // Don't handle the click if it was inside the callout content
-                if (target.closest(".hop-details-overlay")) {
-                    return;
-                }
-
-                event.preventDefault();
-                const calloutElement = this.querySelector(".hop-details-overlay") as HTMLElement;
+            function toggleCallout(listItem: HTMLElement) {
+                const calloutElement = listItem.querySelector(".hop-details-overlay") as HTMLElement;
 
                 // Check if this callout is currently shown BEFORE hiding others
                 const isCurrentlyShown = calloutElement && calloutElement.classList.contains("is-shown");
@@ -287,15 +278,15 @@ function buildViews(headers: string) {
                     calloutElement.classList.remove("is-hidden");
                     calloutElement.classList.add("is-shown");
 
-                    // Position the callout relative to the clicked line
-                    const listItemRect = this.getBoundingClientRect();
+                    // Position the callout relative to the list item
+                    const listItemRect = listItem.getBoundingClientRect();
                     const viewportWidth = window.innerWidth;
                     const viewportHeight = window.innerHeight;
 
                     // Center the callout horizontally relative to the viewport
                     const leftPosition = (viewportWidth - calloutElement.offsetWidth) / 2;
 
-                    // Position below the clicked line so arrow points up to it
+                    // Position below the list item so arrow points up to it
                     let topPosition = listItemRect.bottom + 15; // 15px gap for arrow
 
                     // Ensure callout stays within viewport
@@ -309,7 +300,31 @@ function buildViews(headers: string) {
                     calloutElement.style.left = `${leftPosition}px`;
                     calloutElement.style.top = `${topPosition}px`;
                 }
+            }
+
+            // Add click handler to show/hide callout
+            listItem.addEventListener("click", function(event: Event) {
+                const target = event.target as HTMLElement;
+
+                // Don't handle the click if it was inside the callout content
+                if (target.closest(".hop-details-overlay")) {
+                    return;
+                }
+
+                event.preventDefault();
+                toggleCallout(this);
             });
+
+            // Add keyboard handler for accessibility (Enter/Space to show hop details)
+            listItem.addEventListener("keydown", function(event: KeyboardEvent) {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    toggleCallout(this);
+                }
+            });
+
+            // Make list item focusable for keyboard navigation
+            listItem.setAttribute("tabindex", "0");
         });
 
         // Build antispam view
