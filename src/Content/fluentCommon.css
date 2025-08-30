@@ -84,11 +84,14 @@
 
 /* Modern Fluent Icon Classes */
 .fluent-icon--info::before {
-    content: "\E946"; /* Segoe Fluent Icons Info icon */
+    content: "\24D8"; /* Unicode ⓘ icon */
+    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
 }
 
 .fluent-icon--stopwatch::before {
-    content: "\E916"; /* Segoe Fluent Icons Stopwatch icon */
+    content: "\23F1"; /* Unicode stopwatch ⏱ */
+    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
+    font-variant-emoji: text;
 }
 
 .fluent-icon--mail-alert {
@@ -97,22 +100,25 @@
 }
 
 .fluent-icon--mail-alert::before {
-    content: "\E715"; /* Segoe Fluent Icons Mail icon as base */
+    content: "\2709"; /* Unicode Mail icon ✉ */
+    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
     position: relative;
     z-index: 1;
 }
 
 .fluent-icon--mail-alert::after {
-    content: "\E946"; /* Segoe Fluent Icons Info icon as overlay */
+    content: "\24D8"; /* Unicode Info icon ⓘ */
+    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
     position: absolute;
     bottom: -2px;
     right: -4px;
-    font-size: 12px;
+    font-size: 8px;
     color: var(--primary-blue);
     background: white;
     border-radius: 50%;
     padding: 1px;
     z-index: 2;
+    font-variant-emoji: text;
 }
 
 .fluent-icon--cake::before {
@@ -122,11 +128,15 @@
 }
 
 .fluent-icon--add::before {
-    content: "\E710"; /* Segoe Fluent Icons Add/Plus icon */
+    content: "\2295"; /* Unicode circled plus ⊕ */
+    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
+    font-variant-emoji: text;
 }
 
 .fluent-icon--remove::before {
-    content: "\E738"; /* Segoe Fluent Icons Remove/Minus icon */
+    content: "\2296"; /* Unicode circled minus ⊖ */
+    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
+    font-variant-emoji: text;
 }
 
 .fluent-icon--copy::before {

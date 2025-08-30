@@ -187,17 +187,15 @@
 
 #orig-header-btn .fluent-icon--add,
 #orig-header-btn .fluent-icon--remove {
-    background: var(--white);
     color: var(--primary-blue);
-    border: 2px solid var(--primary-blue);
-    border-radius: 50%;
     width: 20px;
     height: 20px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     margin-right: 8px;
-    font-size: 12px;
+    font-size: 20px;
+    vertical-align: middle;
 }
 
 #orig-header-btn::part(control) {
