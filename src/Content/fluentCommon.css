@@ -128,7 +128,9 @@
 }
 
 .fluent-icon--copy::before {
-    content: "\E8C8"; /* Segoe Fluent Icons Copy icon */
+    content: "\1F5D0"; /* Unicode 🗐 icon */
+    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
+    font-variant-emoji: text; /* Force monochrome */
 }
 
 .fluent-icon--settings::before {
@@ -137,25 +139,6 @@
 
 .fluent-icon--arrow-circle-down::before {
     content: "\E74B"; /* Segoe Fluent Icons CircleDown icon */
-}
-
-.icon-copy,
-.icon-settings {
-    font-family: "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: normal;
-    color: var(--primary-blue);
-    line-height: 1;
-    display: inline-block;
-}
-
-.icon-copy::before {
-    content: "\E8C8"; /* Segoe Fluent Icons Copy icon */
-}
-
-.icon-settings::before {
-    content: "\E713"; /* Segoe Fluent Icons Settings/Gear icon */
 }
 
 .ms-ProgressIndicator {

@@ -331,11 +331,8 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     border: 0;
 }
 
-#SectionContent .icon-copy {
-    font-family: "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
+#SectionContent .fluent-icon--copy {
     font-size: 16px;
-    line-height: 1;
-    display: inline-block;
     margin-right: 4px;
 }
 
