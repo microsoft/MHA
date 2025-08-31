@@ -152,11 +152,12 @@ export class Table {
         }
     }
 
-    private appendCell(row: HTMLTableRowElement, text: string | number | null, html: string, cellClass: string): void {
+    private appendCell(row: HTMLTableRowElement, text: string | number | null, html: string, cellClass: string, headerId?: string): void {
         const cell = $(row.insertCell(-1));
         if (text) { cell.text(text); }
         if (html) { cell.html(html); }
         if (cellClass) { cell.addClass(cellClass); }
+        if (headerId) { cell.attr("headers", headerId); }
     }
 
     // Restores table to empty state so we can repopulate it
@@ -212,10 +213,10 @@ export class Table {
         this.viewModel.receivedHeaders.rows.forEach((receivedRow: ReceivedRow) => {
             const row: HTMLTableRowElement = document.createElement("tr");
             $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
-            this.appendCell(row, receivedRow.hop.value, "", "");
-            this.appendCell(row, receivedRow.from.value, "", "");
-            this.appendCell(row, receivedRow.by.value, "", "");
-            this.appendCell(row, receivedRow.date.value, "", "");
+            this.appendCell(row, receivedRow.hop.value, "", "", "hop");
+            this.appendCell(row, receivedRow.from.value, "", "", "from");
+            this.appendCell(row, receivedRow.by.value, "", "", "by");
+            this.appendCell(row, receivedRow.date.value, "", "", "date");
             let labelClass = "hotBarLabel";
             if (receivedRow.delaySort.value !== null && typeof receivedRow.delaySort.value === "number" && receivedRow.delaySort.value < 0) {
                 labelClass += " negativeCell";
@@ -226,11 +227,11 @@ export class Table {
                 "   <div class='" + labelClass + "'>" + receivedRow.delay + "</div>" +
                 "   <div class='hotBarBar' style='width:" + receivedRow.percent + "%'></div>" +
                 "</div>";
-            this.appendCell(row, "", hotBar, "hotBarCell");
-            this.appendCell(row, receivedRow.with.value, "", "");
-            this.appendCell(row, receivedRow.id.value, "", "extraCol");
-            this.appendCell(row, receivedRow.for.value, "", "extraCol");
-            this.appendCell(row, receivedRow.via.value, "", "extraCol");
+            this.appendCell(row, "", hotBar, "hotBarCell", "delay");
+            this.appendCell(row, receivedRow.with.value, "", "", "with");
+            this.appendCell(row, receivedRow.id.value, "", "extraCol", "id");
+            this.appendCell(row, receivedRow.for.value, "", "extraCol", "for");
+            this.appendCell(row, receivedRow.via.value, "", "extraCol", "via");
         });
 
         // Calculate heights for the hotbar cells (progress bars in Delay column)
@@ -260,9 +261,9 @@ export class Table {
         this.viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
             const row: HTMLTableRowElement = document.createElement("tr");
             $("#otherHeaders").append(row); // Must happen before we append cells to appease IE7
-            this.appendCell(row, otherRow.number.toString(), "", "");
-            this.appendCell(row, otherRow.header, otherRow.url, "");
-            this.appendCell(row, otherRow.value, "", "allowBreak");
+            this.appendCell(row, otherRow.number.toString(), "", "", "number");
+            this.appendCell(row, otherRow.header, otherRow.url, "", "header");
+            this.appendCell(row, otherRow.value, "", "allowBreak", "value");
         });
 
         $("#otherHeaders tr:odd").addClass("oddRow");
