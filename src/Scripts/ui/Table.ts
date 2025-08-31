@@ -7,6 +7,7 @@ import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { Column } from "../table/Column";
 import { DataTable } from "../table/DataTable";
+import { SummaryTable } from "../table/SummaryTable";
 import { TableSection } from "../table/TableSection";
 
 type Binding = {
@@ -365,41 +366,65 @@ export class Table {
         this.recalculateVisibility();
     }
 
-    public resetArrows(): void {
-        this.setArrows("receivedHeaders", "hop", 1);
-        this.setArrows("otherHeaders", "number", 1);
+    // Helper method to initialize a table section using the unified TableSection approach
+    private initializeTableSection(section: TableSection, sectionProperty: keyof HeaderModel): void {
+        // Create resizable pane using TableSection properties, but with proper closure
+        this.makeResizablePane(section.tableName, section.paneClass, section.displayName, (table: Table) => {
+            // Use table.viewModel[sectionProperty] to get the current section with data
+            const currentSection = table.viewModel[sectionProperty] as TableSection;
+            return currentSection.exists();
+        });
+
+        // Handle DataTable-specific initialization (sortable tables)
+        if (section instanceof DataTable) {
+            const dataTable = section as DataTable;
+
+            // Special handling for received headers
+            if (dataTable.tableName === "receivedHeaders") {
+                const receivedColumns = [
+                    new Column("hop", mhaStrings.mhaReceivedHop, ""),
+                    new Column("from", mhaStrings.mhaReceivedSubmittingHost, ""),
+                    new Column("by", mhaStrings.mhaReceivedReceivingHost, ""),
+                    new Column("date", mhaStrings.mhaReceivedTime, ""),
+                    new Column("delay", mhaStrings.mhaReceivedDelay, ""),
+                    new Column("with", mhaStrings.mhaReceivedType, ""),
+                    new Column("id", mhaStrings.mhaReceivedId, "extraCol"),
+                    new Column("for", mhaStrings.mhaReceivedFor, "extraCol"),
+                    new Column("via", mhaStrings.mhaReceivedVia, "extraCol")
+                ];
+                this.addColumns(dataTable.tableName, receivedColumns);
+                this.setupReceivedHeadersUI();
+            }
+
+            // Special handling for other headers
+            if (dataTable.tableName === "otherHeaders") {
+                const otherColumns = [
+                    new Column("number", mhaStrings.mhaNumber, ""),
+                    new Column("header", mhaStrings.mhaHeader, ""),
+                    new Column("value", mhaStrings.mhaValue, "")
+                ];
+                this.addColumns(dataTable.tableName, otherColumns);
+            }
+        }
+
+        // Handle SummaryTable-specific initialization
+        if (section instanceof SummaryTable) {
+            const summaryTable = section as SummaryTable;
+
+            // Determine the tag based on table name
+            let tag = "";
+            if (summaryTable.tableName === "summary") tag = "SUM";
+            else if (summaryTable.tableName === "forefrontAntiSpamReport") tag = "FFAS";
+            else if (summaryTable.tableName === "antiSpamReport") tag = "AS";
+
+            this.makeSummaryTable(`#${summaryTable.tableName}`, summaryTable.rows, tag);
+        }
+
+        // Add accessibility features
+        this.addTableCaption(section);
     }
 
-    // Initialize UI with an empty viewModel
-    public initializeTableUI(viewModel: HeaderModel): void {
-        this.viewModel = viewModel;
-
-        // Temporary: Revert to old approach to debug
-        // Headers
-        this.makeResizablePane("originalHeaders", "sectionHeader", mhaStrings.mhaOriginalHeaders, (table: Table) => { return table.viewModel.originalHeaders.length > 0; });
-        this.toggleCollapse("originalHeaders"); // start this section hidden
-
-        // Summary
-        this.makeResizablePane("summary", "sectionHeader", mhaStrings.mhaSummary, function (table: Table) { return table.viewModel.summary.exists(); });
-        this.makeSummaryTable("#summary", this.viewModel.summary.rows, "SUM");
-
-        // Received
-        this.makeResizablePane("receivedHeaders", "tableCaption", mhaStrings.mhaReceivedHeaders, function (table: Table) { return table.viewModel.receivedHeaders.exists(); });
-
-        const receivedColumns = [
-            new Column("hop", mhaStrings.mhaReceivedHop, ""),
-            new Column("from", mhaStrings.mhaReceivedSubmittingHost, ""),
-            new Column("by", mhaStrings.mhaReceivedReceivingHost, ""),
-            new Column("date", mhaStrings.mhaReceivedTime, ""),
-            new Column("delay", mhaStrings.mhaReceivedDelay, ""),
-            new Column("with", mhaStrings.mhaReceivedType, ""),
-            new Column("id", mhaStrings.mhaReceivedId, "extraCol"),
-            new Column("for", mhaStrings.mhaReceivedFor, "extraCol"),
-            new Column("via", mhaStrings.mhaReceivedVia, "extraCol")
-        ];
-
-        this.addColumns(this.viewModel.receivedHeaders.tableName, receivedColumns);
-
+    private setupReceivedHeadersUI(): void {
         const withColumn = $("#receivedHeaders #with");
         if (withColumn !== null) {
             const leftSpan = $(document.createElement("span"));
@@ -424,32 +449,29 @@ export class Table {
                 eventObject.stopPropagation();
             }
         });
+    }
 
-        // FFAS
-        this.makeResizablePane("forefrontAntiSpamReport", "sectionHeader", mhaStrings.mhaForefrontAntiSpamReport, function (table: Table) { return table.viewModel.forefrontAntiSpamReport.exists(); });
-        this.makeSummaryTable("#forefrontAntiSpamReport", this.viewModel.forefrontAntiSpamReport.rows, "FFAS");
+    public resetArrows(): void {
+        this.setArrows("receivedHeaders", "hop", 1);
+        this.setArrows("otherHeaders", "number", 1);
+    }
 
-        // AntiSpam
-        this.makeResizablePane("antiSpamReport", "sectionHeader", mhaStrings.mhaAntiSpamReport, (table: Table) => { return table.viewModel.antiSpamReport.exists(); });
-        this.makeSummaryTable("#antiSpamReport", this.viewModel.antiSpamReport.rows, "AS");
+    // Initialize UI with an empty viewModel using unified TableSection approach
+    public initializeTableUI(viewModel: HeaderModel): void {
+        this.viewModel = viewModel;
 
-        // Other
-        this.makeResizablePane("otherHeaders", "tableCaption", mhaStrings.mhaOtherHeaders, function (table: Table) { return table.viewModel.otherHeaders.rows.length > 0; });
+        // Original headers (not a TableSection, handle separately)
+        this.makeResizablePane("originalHeaders", "sectionHeader", mhaStrings.mhaOriginalHeaders, (table: Table) => {
+            return table.viewModel.originalHeaders.length > 0;
+        });
+        this.toggleCollapse("originalHeaders"); // start this section hidden
 
-        const otherColumns = [
-            new Column("number", mhaStrings.mhaNumber, ""),
-            new Column("header", mhaStrings.mhaHeader, ""),
-            new Column("value", mhaStrings.mhaValue, "")
-        ];
-
-        this.addColumns(this.viewModel.otherHeaders.tableName, otherColumns);
-
-        // Add accessible captions to all tables
-        this.addTableCaption(this.viewModel.summary);
-        this.addTableCaption(this.viewModel.receivedHeaders);
-        this.addTableCaption(this.viewModel.forefrontAntiSpamReport);
-        this.addTableCaption(this.viewModel.antiSpamReport);
-        this.addTableCaption(this.viewModel.otherHeaders);
+        // Initialize all TableSection-based tables using unified approach
+        this.initializeTableSection(this.viewModel.summary, "summary");
+        this.initializeTableSection(this.viewModel.receivedHeaders, "receivedHeaders");
+        this.initializeTableSection(this.viewModel.forefrontAntiSpamReport, "forefrontAntiSpamReport");
+        this.initializeTableSection(this.viewModel.antiSpamReport, "antiSpamReport");
+        this.initializeTableSection(this.viewModel.otherHeaders, "otherHeaders");
 
         this.resetArrows();
         this.rebuildSections(this.viewModel);
