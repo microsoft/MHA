@@ -24,25 +24,25 @@
 }
 
 /* Secondary Button Styling - Default black border, blue highlight */
-fluent-button:not([appearance]):not(.nav-button):not(.primary-button),
-fluent-button[appearance="neutral"]:not(.nav-button):not(.primary-button) {
+fluent-button:not([appearance]),
+fluent-button[appearance="neutral"] {
     border: 1px solid var(--black) !important;
 }
 
-fluent-button:not([appearance]):not(.nav-button):not(.primary-button)::part(control),
-fluent-button[appearance="neutral"]:not(.nav-button):not(.primary-button)::part(control) {
+fluent-button:not([appearance])::part(control),
+fluent-button[appearance="neutral"]::part(control) {
     border: 1px solid var(--black) !important;
 }
 
-fluent-button:not([appearance]):not(.nav-button):not(.primary-button):hover,
-fluent-button[appearance="neutral"]:not(.nav-button):not(.primary-button):hover {
+fluent-button:not([appearance]):hover,
+fluent-button[appearance="neutral"]:hover {
     background-color: var(--hover-blue) !important;
 }
 
-fluent-button:not([appearance]):not(.nav-button):not(.primary-button):focus,
-fluent-button[appearance="neutral"]:not(.nav-button):not(.primary-button):focus,
-fluent-button:not([appearance]):not(.nav-button):not(.primary-button)::part(control):focus,
-fluent-button[appearance="neutral"]:not(.nav-button):not(.primary-button)::part(control):focus {
+fluent-button:not([appearance]):focus,
+fluent-button[appearance="neutral"]:focus,
+fluent-button:not([appearance])::part(control):focus,
+fluent-button[appearance="neutral"]::part(control):focus {
     border: 2px solid var(--primary-blue) !important;
     outline: none !important;
 }
