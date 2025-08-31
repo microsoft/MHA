@@ -23,54 +23,6 @@
     --button-height: 44px;
 }
 
-/* Fluent Button Common Styling */
-.fluent-button-base,
-.nav-button {
-    background: transparent !important;
-    border: none !important;
-    color: var(--primary-blue);
-    cursor: pointer;
-    outline: none;
-    margin: 0;
-    padding: 0 !important;
-    height: var(--button-height);
-    min-height: var(--button-height);
-    font-family: var(--font-family);
-}
-
-.fluent-button-base::part(control),
-.nav-button::part(control) {
-    background: transparent !important;
-    border: none !important;
-    padding: 6px;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: auto;
-}
-
-.fluent-button-base::part(control):focus,
-.nav-button::part(control):focus {
-    outline: var(--focus-outline) !important;
-    outline-offset: -6px !important;
-}
-
-.fluent-button-base:hover,
-.nav-button:hover {
-    background: var(--hover-blue) !important;
-}
-
-.fluent-button-base:active,
-.fluent-button-base.is-active,
-.nav-button:active,
-.nav-button.is-active {
-    background: transparent !important;
-    border-bottom: 3px solid var(--primary-blue) !important;
-    border-radius: 0 !important;
-}
-
 /* Secondary Button Styling - Default black border, blue highlight */
 fluent-button:not([appearance]):not(.nav-button):not(.primary-button),
 fluent-button[appearance="neutral"]:not(.nav-button):not(.primary-button) {
