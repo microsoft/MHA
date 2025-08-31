@@ -97,12 +97,11 @@ export class Table {
         }
     }
 
-    // Add accessible caption to any table using TableSection methods
-    private addTableCaption(section: TableSection): void {
+    // Add accessible labeling to any table using TableSection methods
+    private addTableAccessibility(section: TableSection): void {
         const table = $(`#${section.tableName}`);
-        if (table.length && !table.find("caption").length) {
-            table.prepend(`<caption class="visually-hidden">${section.getTableCaption()}</caption>`);
-            // Also add aria-label for additional accessibility
+        if (table.length) {
+            // Use aria-label only - no visual caption element that could show in Outlook
             table.attr("aria-label", section.getAriaLabel());
         }
     }
@@ -414,7 +413,7 @@ export class Table {
         }
 
         // Add accessibility features
-        this.addTableCaption(section);
+        this.addTableAccessibility(section);
     }
 
     private setupReceivedHeadersUI(): void {
