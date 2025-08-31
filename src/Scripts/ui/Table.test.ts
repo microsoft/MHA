@@ -3,6 +3,9 @@ import $ from "jquery";
 import { HeaderModel } from "../HeaderModel";
 import { Table } from "./Table";
 import { Row } from "../row/Row";
+import { DataTable } from "../table/DataTable";
+import { SummaryTable } from "../table/SummaryTable";
+import { TableSection } from "../table/TableSection";
 
 describe("Table", () => {
     let table: Table;
@@ -165,5 +168,140 @@ describe("Table", () => {
         table.resetArrows();
         expect(hop.attr("aria-sort")).toBe("descending");
         expect(by.attr("aria-sort")).toBe("none");
+    });
+
+    describe("TableSection Integration", () => {
+        it("should initialize table sections with proper accessibility", () => {
+            // Check that table sections exist on viewModel (some may be undefined if no data)
+            const summary = table["viewModel"]["summary"] as TableSection | undefined;
+            const received = table["viewModel"]["received"] as TableSection | undefined;
+            const antispam = table["viewModel"]["antispam"] as TableSection | undefined;
+            const forefrontAntispam = table["viewModel"]["forefrontAntispam"] as TableSection | undefined;
+            const other = table["viewModel"]["other"] as TableSection | undefined;
+
+            // At least summary should exist
+            expect(summary).toBeDefined();
+
+            // Only test defined sections for accessibility
+            if (received) {
+                expect(received.getTableCaption).toBeDefined();
+                expect(received.getAriaLabel).toBeDefined();
+            }
+            if (antispam) {
+                expect(antispam.getTableCaption).toBeDefined();
+                expect(antispam.getAriaLabel).toBeDefined();
+            }
+            if (forefrontAntispam) {
+                expect(forefrontAntispam.getTableCaption).toBeDefined();
+                expect(forefrontAntispam.getAriaLabel).toBeDefined();
+            }
+            if (other) {
+                expect(other.getTableCaption).toBeDefined();
+                expect(other.getAriaLabel).toBeDefined();
+            }
+        });
+
+        it("should apply accessibility attributes to tables", () => {
+            // Verify aria-label is applied to each table
+            const summaryTable = $("#summary");
+            const receivedTable = $("#receivedHeaders");
+            const antispamTable = $("#antiSpamReport");
+            const forefrontTable = $("#forefrontAntiSpamReport");
+            const otherTable = $("#otherHeaders");
+
+            expect(summaryTable.attr("aria-label")).toContain("table");
+            expect(receivedTable.attr("aria-label")).toContain("table");
+            expect(antispamTable.attr("aria-label")).toContain("table");
+            expect(forefrontTable.attr("aria-label")).toContain("table");
+            expect(otherTable.attr("aria-label")).toContain("table");
+        });
+
+        it("should handle table section existence properly", () => {
+            // Each table section should implement exists() method
+            const summary = table["viewModel"]["summary"] as TableSection | undefined;
+            const received = table["viewModel"]["received"] as TableSection | undefined;
+            const antispam = table["viewModel"]["antispam"] as TableSection | undefined;
+            const forefrontAntispam = table["viewModel"]["forefrontAntispam"] as TableSection | undefined;
+            const other = table["viewModel"]["other"] as TableSection | undefined;
+
+            if (summary) expect(typeof summary.exists).toBe("function");
+            if (received) expect(typeof received.exists).toBe("function");
+            if (antispam) expect(typeof antispam.exists).toBe("function");
+            if (forefrontAntispam) expect(typeof forefrontAntispam.exists).toBe("function");
+            if (other) expect(typeof other.exists).toBe("function");
+        });
+
+        it("should provide consistent accessibility methods", () => {
+            const summary = table["viewModel"]["summary"] as TableSection | undefined;
+
+            if (summary) {
+                expect(typeof summary.getTableCaption).toBe("function");
+                expect(typeof summary.getAriaLabel).toBe("function");
+
+                const caption = summary.getTableCaption();
+                const ariaLabel = summary.getAriaLabel();
+
+                expect(typeof caption).toBe("string");
+                expect(typeof ariaLabel).toBe("string");
+                expect(ariaLabel).toContain("table");
+            }
+        });
+
+        it("should handle DataTable sorting interface", () => {
+            const received = table["viewModel"]["received"] as DataTable | undefined;
+            const other = table["viewModel"]["other"] as DataTable | undefined;
+
+            if (received) {
+                // DataTable instances should have sorting properties
+                expect(typeof received.sortColumn).toBe("string");
+                expect(typeof received.sortOrder).toBe("number");
+                expect(typeof received.doSort).toBe("function");
+            }
+
+            if (other) {
+                expect(typeof other.sortColumn).toBe("string");
+                expect(typeof other.sortOrder).toBe("number");
+                expect(typeof other.doSort).toBe("function");
+            }
+        });
+
+        it("should handle SummaryTable tag interface", () => {
+            const summary = table["viewModel"]["summary"] as SummaryTable | undefined;
+            const antispam = table["viewModel"]["antispam"] as SummaryTable | undefined;
+            const forefrontAntispam = table["viewModel"]["forefrontAntispam"] as SummaryTable | undefined;
+
+            if (summary) {
+                // SummaryTable instances should have tag property
+                expect(typeof summary.tag).toBe("string");
+                expect(summary.tag).toBe("SUM");
+            }
+            if (antispam) {
+                expect(typeof antispam.tag).toBe("string");
+                expect(antispam.tag).toBe("AS");
+            }
+            if (forefrontAntispam) {
+                expect(typeof forefrontAntispam.tag).toBe("string");
+                expect(forefrontAntispam.tag).toBe("FFAS");
+            }
+        });
+
+        it("should properly distinguish DataTable vs SummaryTable", () => {
+            const received = table["viewModel"]["received"] as TableSection | undefined;
+            const other = table["viewModel"]["other"] as TableSection | undefined;
+            const summary = table["viewModel"]["summary"] as TableSection | undefined;
+            const antispam = table["viewModel"]["antispam"] as TableSection | undefined;
+
+            if (received && other) {
+                // DataTables should have tableCaption paneClass
+                expect(received.paneClass).toBe("tableCaption");
+                expect(other.paneClass).toBe("tableCaption");
+            }
+
+            if (summary && antispam) {
+                // SummaryTables should have sectionHeader paneClass
+                expect(summary.paneClass).toBe("sectionHeader");
+                expect(antispam.paneClass).toBe("sectionHeader");
+            }
+        });
     });
 });
