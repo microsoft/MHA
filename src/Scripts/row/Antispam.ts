@@ -7,6 +7,7 @@ import { SummaryTable } from "../table/SummaryTable";
 export class AntiSpamReport extends SummaryTable {
     public readonly tableName: string = "antiSpamReport";
     public readonly displayName: string = mhaStrings.mhaAntiSpamReport;
+    public readonly tag: string = "AS";
     private sourceInternal = "";
     private unparsedInternal = "";
     private antiSpamRows: Row[] = [

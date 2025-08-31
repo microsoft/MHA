@@ -410,14 +410,7 @@ export class Table {
         // Handle SummaryTable-specific initialization
         if (section instanceof SummaryTable) {
             const summaryTable = section as SummaryTable;
-
-            // Determine the tag based on table name
-            let tag = "";
-            if (summaryTable.tableName === "summary") tag = "SUM";
-            else if (summaryTable.tableName === "forefrontAntiSpamReport") tag = "FFAS";
-            else if (summaryTable.tableName === "antiSpamReport") tag = "AS";
-
-            this.makeSummaryTable(`#${summaryTable.tableName}`, summaryTable.rows, tag);
+            this.makeSummaryTable(`#${summaryTable.tableName}`, summaryTable.rows, summaryTable.tag);
         }
 
         // Add accessibility features

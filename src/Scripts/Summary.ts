@@ -9,6 +9,7 @@ import { SummaryTable } from "./table/SummaryTable";
 export class Summary extends SummaryTable {
     public readonly tableName: string = "summary";
     public readonly displayName: string = mhaStrings.mhaSummary;
+    public readonly tag: string = "SUM";
     private totalTimeInternal = "";
 
     private creationPostFix(totalTime: string): string {
