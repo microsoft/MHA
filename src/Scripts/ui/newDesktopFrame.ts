@@ -175,7 +175,7 @@ function buildViews(headers: string) {
     });
 
     // Save original headers and show ui
-    DomUtils.setText("#original-headers code", viewModel.originalHeaders);
+    DomUtils.setText("#original-headers textarea", viewModel.originalHeaders);
     if (viewModel.originalHeaders) {
         DomUtils.showElement(".orig-header-ui");
     }

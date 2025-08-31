@@ -255,13 +255,12 @@ fluent-radio:focus-visible {
 }
 
 /* Code Box Styling */
-.code-box > pre {
+.code-box > pre,
+.code-box > textarea {
     background-color: var(--background-gray);
     border: 1px solid var(--border-gray);
     border-radius: var(--border-radius);
     padding: 5px;
-    word-wrap: break-word;
-    white-space: pre-wrap;
     font-size: 10.4px;
     line-height: 1.4;
     font-family: var(--font-monospace);
@@ -269,7 +268,22 @@ fluent-radio:focus-visible {
     overflow-x: hidden;
     overflow-y: auto;
     color: var(--black);
+    text-align: left;
+}
+
+/* Pre-specific styles */
+.code-box > pre {
+    word-wrap: break-word;
+    white-space: pre-wrap;
     min-height: 0;
     max-height: none;
-    text-align: left;
+}
+
+/* Textarea-specific styles */
+.code-box > textarea {
+    resize: vertical;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: pre;
+    height: 400px;
 }
