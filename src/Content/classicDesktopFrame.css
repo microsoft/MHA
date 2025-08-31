@@ -298,6 +298,9 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
 #SectionContent fluent-button.hiddenElement {
     display: none;
     border: 0;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
 }
 
 #SectionContent .fluent-icon--copy {
