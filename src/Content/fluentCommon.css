@@ -205,9 +205,28 @@ fluent-button[appearance="subtle"].is-active:has(.button-label) {
     content: "\2B07"; /* Unicode ⬇ down arrow */
 }
 
-@media screen and (-ms-high-contrast:active) {
+/* High contrast mode support - modern and legacy combined */
+@media (prefers-contrast: high), (forced-colors: active), screen and (-ms-high-contrast: active) {
     .fluent-icon {
-        color: buttonborder;
+        color: ButtonText;
+        forced-color-adjust: none;
+    }
+    
+    fluent-button {
+        border: 1px solid ButtonText !important;
+        forced-color-adjust: none;
+    }
+    
+    fluent-button:focus,
+    fluent-button:focus-visible {
+        outline: 2px solid ButtonText !important;
+        outline-offset: 2px;
+    }
+    
+    fluent-button[appearance="accent"] {
+        background-color: ButtonFace !important;
+        color: ButtonText !important;
+        border: 2px solid ButtonText !important;
     }
 }
 

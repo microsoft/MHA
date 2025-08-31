@@ -253,9 +253,14 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     color: #E44D4D; /* A nice red */
 }
 
-@media screen and (-ms-high-contrast:active) {
+/* High contrast support for error styling - modern and legacy combined */
+@media (prefers-contrast: high), (forced-colors: active), screen and (-ms-high-contrast: active) {
     .negativeCell {
-        color: highlight;
+        color: CanvasText !important;
+        background-color: Canvas !important;
+        border: 1px solid CanvasText !important;
+        font-weight: bold;
+        forced-color-adjust: none;
     }
 }
 
