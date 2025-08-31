@@ -294,12 +294,6 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     button .collapsibleSwitch::after { color: buttontext; }
 }
 
-/* bug fix 1691247 */
-.ms-Button.ms-Button--primary {
-    color: #FFFFFF;
-    background-color: #0677D3;
-}
-
 #SectionContent button.hiddenElement,
 #SectionContent fluent-button.hiddenElement {
     display: none;

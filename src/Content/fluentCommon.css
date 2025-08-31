@@ -1,6 +1,15 @@
 /* Shared Fluent UI Web Components Styling */
 /* This file contains common styles used across multiple frames */
 
+/*
+ * MHA Button System Documentation:
+ * 
+ * PRIMARY BUTTONS: Use appearance="accent" - Blue background, white text
+ * SECONDARY BUTTONS: Use default (no appearance) - White background, black border, blue hover
+ * TOOLBAR BUTTONS: Use appearance="subtle" - Transparent, square, content-aware labels
+ * SPECIAL BUTTONS: Maintain unique styling as needed (e.g., Original Headers)
+ */
+
 /* CSS Custom Properties - Design System */
 :root {
     --primary-blue: #0078d4;
