@@ -6,7 +6,8 @@ import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { Column } from "../table/Column";
-import { ITable } from "../table/ITable";
+import { DataTable } from "../table/DataTable";
+import { TableSection } from "../table/TableSection";
 
 type Binding = {
     name: string;
@@ -92,6 +93,16 @@ export class Table {
             $(id).removeClass("hiddenElement");
         } else {
             $(id).addClass("hiddenElement");
+        }
+    }
+
+    // Add accessible caption to any table using TableSection methods
+    private addTableCaption(section: TableSection): void {
+        const table = $(`#${section.tableName}`);
+        if (table.length && !table.find("caption").length) {
+            table.prepend(`<caption class="visually-hidden">${section.getTableCaption()}</caption>`);
+            // Also add aria-label for additional accessibility
+            table.attr("aria-label", section.getAriaLabel());
         }
     }
 
@@ -292,11 +303,11 @@ export class Table {
                 headerButton.on("click", this, function (eventObject) {
                     const table: Table = eventObject.data as Table;
                     if (table) {
-                        if (table.viewModel[tableName] instanceof ITable) {
-                            const itable = table.viewModel[tableName] as ITable;
-                            itable.doSort(column.id);
-                            table.setArrows(itable.tableName, itable.sortColumn,
-                                itable.sortOrder);
+                        if (table.viewModel[tableName] instanceof DataTable) {
+                            const dataTable = table.viewModel[tableName] as DataTable;
+                            dataTable.doSort(column.id);
+                            table.setArrows(dataTable.tableName, dataTable.sortColumn,
+                                dataTable.sortOrder);
                             table.rebuildSections(table.viewModel);
                         }
                     }
@@ -363,6 +374,7 @@ export class Table {
     public initializeTableUI(viewModel: HeaderModel): void {
         this.viewModel = viewModel;
 
+        // Temporary: Revert to old approach to debug
         // Headers
         this.makeResizablePane("originalHeaders", "sectionHeader", mhaStrings.mhaOriginalHeaders, (table: Table) => { return table.viewModel.originalHeaders.length > 0; });
         this.toggleCollapse("originalHeaders"); // start this section hidden
@@ -431,6 +443,13 @@ export class Table {
         ];
 
         this.addColumns(this.viewModel.otherHeaders.tableName, otherColumns);
+
+        // Add accessible captions to all tables
+        this.addTableCaption(this.viewModel.summary);
+        this.addTableCaption(this.viewModel.receivedHeaders);
+        this.addTableCaption(this.viewModel.forefrontAntiSpamReport);
+        this.addTableCaption(this.viewModel.antiSpamReport);
+        this.addTableCaption(this.viewModel.otherHeaders);
 
         this.resetArrows();
         this.rebuildSections(this.viewModel);
