@@ -9,26 +9,24 @@
 <body>
     <div class="content-wrap">
         <div class="content-header">
-            <div class="nav-bar" id="nav-bar">
-                <div class="nav-bar-main">
-                    <fluent-button appearance="subtle" class="nav-button is-active" data-content="summary-view" id="summary-btn" title="Summary" aria-label="Summary Selected">
-                        <span slot="start" aria-hidden="true"><i class="fluent-icon fluent-icon--info"></i></span>
-                        <span class="button-label">Summary</span>
-                    </fluent-button>
-                    <fluent-button appearance="subtle" class="nav-button" data-content="received-view" id="received-btn" title="Received" aria-label="Received">
-                        <span slot="start" aria-hidden="true"><i class="fluent-icon fluent-icon--stopwatch"></i></span>
-                        <span class="button-label">Received</span>
-                    </fluent-button>
-                    <fluent-button appearance="subtle" class="nav-button" data-content="antispam-view" id="antispam-btn" title="Antispam" aria-label="Antispam">
-                        <span slot="start" aria-hidden="true"><i class="fluent-icon fluent-icon--mail-alert"></i></span>
-                        <span class="button-label">Antispam</span>
-                    </fluent-button>
-                    <fluent-button appearance="subtle" class="nav-button" data-content="other-view" id="other-btn" title="Other" aria-label="Other">
-                        <span slot="start" aria-hidden="true"><i class="fluent-icon fluent-icon--cake"></i></span>
-                        <span class="button-label">Other</span>
-                    </fluent-button>
-                </div>
-            </div>
+            <nav class="toolbar nav-bar" id="nav-bar" role="toolbar" aria-label="Navigation">
+                <fluent-button appearance="subtle" class="nav-button is-active" data-content="summary-view" id="summary-btn" title="Summary" aria-label="Summary Selected">
+                    <span slot="start" aria-hidden="true"><i class="fluent-icon fluent-icon--info"></i></span>
+                    <span class="button-label">Summary</span>
+                </fluent-button>
+                <fluent-button appearance="subtle" class="nav-button" data-content="received-view" id="received-btn" title="Received" aria-label="Received">
+                    <span slot="start" aria-hidden="true"><i class="fluent-icon fluent-icon--stopwatch"></i></span>
+                    <span class="button-label">Received</span>
+                </fluent-button>
+                <fluent-button appearance="subtle" class="nav-button" data-content="antispam-view" id="antispam-btn" title="Antispam" aria-label="Antispam">
+                    <span slot="start" aria-hidden="true"><i class="fluent-icon fluent-icon--mail-alert"></i></span>
+                    <span class="button-label">Antispam</span>
+                </fluent-button>
+                <fluent-button appearance="subtle" class="nav-button" data-content="other-view" id="other-btn" title="Other" aria-label="Other">
+                    <span slot="start" aria-hidden="true"><i class="fluent-icon fluent-icon--cake"></i></span>
+                    <span class="button-label">Other</span>
+                </fluent-button>
+            </nav>
         </div>
         <div class="content-main">
             <div class="overlay" id="loading-overlay">

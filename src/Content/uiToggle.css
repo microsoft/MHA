@@ -161,69 +161,6 @@ fluent-dialog fluent-checkbox {
     margin: 2px 0 3px 0;
 }
 
-/* Fluent UI Button Container styling */
-.button-container {
-    background: transparent;
-    border: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 0;
-    align-items: flex-start;
-}
-
-.button-container fluent-button {
-    width: var(--button-height);
-    height: var(--button-height);
-    min-width: var(--button-height);
-    min-height: var(--button-height);
-    background: transparent !important;
-    border: none !important;
-    border-radius: 0;
-    margin: 0;
-    padding: 0 !important;
-    font-size: 18px;
-    color: var(--primary-blue);
-    cursor: pointer;
-    outline: none;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    vertical-align: top;
-    box-sizing: border-box;
-}
-
-.button-container fluent-button::part(control):focus {
-    outline: var(--focus-outline) !important;
-    outline-offset: -6px !important;
-}   
-
-.button-container fluent-button::part(control) {
-    background: transparent !important;
-    border: none !important;
-    padding: 6px;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-}
-
-.button-container fluent-button span {
-    font-family: "Segoe MDL2 Assets", "Segoe UI Symbol", "Segoe UI", Arial, sans-serif;
-    font-size: 18px;
-    color: var(--primary-blue);
-    line-height: 1;
-}
-
-.button-container fluent-button:hover {
-    background: var(--hover-blue) !important;
-}
-
-.button-container fluent-button:active {
-    background: var(--active-blue) !important;
-}
 
 /* Remove all internal highlights from radio and checkbox controls */
 fluent-radio::part(control),
