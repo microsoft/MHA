@@ -33,25 +33,20 @@
 }
 
 /* Secondary Button Styling - Default black border, blue highlight */
-fluent-button:not([appearance]):not([disabled]),
-fluent-button[appearance="neutral"]:not([disabled]) {
+fluent-button:is(:not([appearance]), [appearance="neutral"]):not([disabled]) {
     border: 1px solid var(--black);
 }
 
-fluent-button:not([appearance])::part(control),
-fluent-button[appearance="neutral"]::part(control) {
+fluent-button:is(:not([appearance]), [appearance="neutral"])::part(control) {
     border: 1px solid var(--black);
 }
 
-fluent-button:not([appearance]):hover,
-fluent-button[appearance="neutral"]:hover {
+fluent-button:is(:not([appearance]), [appearance="neutral"]):hover {
     background-color: var(--hover-blue);
 }
 
-fluent-button:not([appearance]):focus,
-fluent-button[appearance="neutral"]:focus,
-fluent-button:not([appearance])::part(control):focus,
-fluent-button[appearance="neutral"]::part(control):focus {
+fluent-button:is(:not([appearance]), [appearance="neutral"]):focus,
+fluent-button:is(:not([appearance]), [appearance="neutral"])::part(control):focus {
     border: 1px solid var(--primary-blue);
     outline: none;
 }
@@ -123,14 +118,12 @@ fluent-button[appearance="subtle"] .button-label {
     white-space: nowrap;
 }
 
-fluent-button[appearance="subtle"]:hover .button-label,
-fluent-button[appearance="subtle"].is-active .button-label {
+fluent-button[appearance="subtle"]:is(:hover, .is-active) .button-label {
     display: inline-block;
 }
 
 /* Navigation buttons with labels need flexible width when label shows */
-fluent-button[appearance="subtle"]:hover:has(.button-label),
-fluent-button[appearance="subtle"].is-active:has(.button-label) {
+fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label) {
     width: auto;
     min-width: var(--button-height);
     padding: 0 8px;
@@ -236,6 +229,14 @@ fluent-checkbox:focus-visible,
 fluent-radio:focus-visible {
     outline: var(--focus-outline);
     outline-offset: 2px;
+}
+
+/* Enhanced focus with modern CSS */
+@supports (outline-style: auto) {
+    fluent-button:focus-visible {
+        outline: 2px auto Highlight;
+        outline-offset: 2px;
+    }
 }
 
 /* Dialog Common Styling */
