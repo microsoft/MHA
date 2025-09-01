@@ -33,14 +33,14 @@
 }
 
 /* Secondary Button Styling - Default black border, blue highlight */
-fluent-button:not([appearance]),
-fluent-button[appearance="neutral"] {
-    border: 1px solid var(--black) !important;
+fluent-button:not([appearance]):not([disabled]),
+fluent-button[appearance="neutral"]:not([disabled]) {
+    border: 1px solid var(--black);
 }
 
 fluent-button:not([appearance])::part(control),
 fluent-button[appearance="neutral"]::part(control) {
-    border: 1px solid var(--black) !important;
+    border: 1px solid var(--black);
 }
 
 fluent-button:not([appearance]):hover,
