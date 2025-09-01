@@ -97,11 +97,9 @@ export class Table {
         }
     }
 
-    // Add accessible labeling to any table using TableSection methods
     private addTableAccessibility(section: TableSection): void {
         const table = $(`#${section.tableName}`);
         if (table.length) {
-            // Use aria-label only - no visual caption element that could show in Outlook
             table.attr("aria-label", section.getAriaLabel());
         }
     }
