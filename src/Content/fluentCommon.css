@@ -45,15 +45,15 @@ fluent-button[appearance="neutral"]::part(control) {
 
 fluent-button:not([appearance]):hover,
 fluent-button[appearance="neutral"]:hover {
-    background-color: var(--hover-blue) !important;
+    background-color: var(--hover-blue);
 }
 
 fluent-button:not([appearance]):focus,
 fluent-button[appearance="neutral"]:focus,
 fluent-button:not([appearance])::part(control):focus,
 fluent-button[appearance="neutral"]::part(control):focus {
-    border: 1px solid var(--primary-blue) !important;
-    outline: none !important;
+    border: 1px solid var(--primary-blue);
+    outline: none;
 }
 
 .toolbar {
@@ -63,27 +63,27 @@ fluent-button[appearance="neutral"]::part(control):focus {
 }
 
 fluent-button[appearance="subtle"] {
-    width: var(--button-height) !important;
-    height: var(--button-height) !important;
-    min-width: var(--button-height) !important;
-    min-height: var(--button-height) !important;
-    background: transparent !important;
-    border: none !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    width: var(--button-height);
+    height: var(--button-height);
+    min-width: var(--button-height);
+    min-height: var(--button-height);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
     color: var(--primary-blue);
     cursor: pointer;
     outline: none;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-family: var(--font-family);
 }
 
 fluent-button[appearance="subtle"]::part(control) {
-    background: transparent !important;
-    border: none !important;
+    background: transparent;
+    border: none;
     padding: 6px;
     width: 100%;
     height: 100%;
@@ -93,19 +93,19 @@ fluent-button[appearance="subtle"]::part(control) {
 }
 
 fluent-button[appearance="subtle"]::part(control):focus {
-    outline: var(--focus-outline) !important;
-    outline-offset: -2px !important;
+    outline: var(--focus-outline);
+    outline-offset: -2px;
 }
 
 fluent-button[appearance="subtle"]:hover {
-    background: var(--hover-blue) !important;
+    background: var(--hover-blue);
 }
 
 fluent-button[appearance="subtle"]:active,
 fluent-button[appearance="subtle"].is-active {
-    background: transparent !important;
-    border-bottom: 3px solid var(--primary-blue) !important;
-    border-radius: 0 !important;
+    background: transparent;
+    border-bottom: 3px solid var(--primary-blue);
+    border-radius: 0;
 }
 
 /* Icon styling for toolbar buttons */
@@ -131,9 +131,9 @@ fluent-button[appearance="subtle"].is-active .button-label {
 /* Navigation buttons with labels need flexible width when label shows */
 fluent-button[appearance="subtle"]:hover:has(.button-label),
 fluent-button[appearance="subtle"].is-active:has(.button-label) {
-    width: auto !important;
-    min-width: var(--button-height) !important;
-    padding: 0 8px !important;
+    width: auto;
+    min-width: var(--button-height);
+    padding: 0 8px;
 }
 
 /* Modern Fluent Icon Styling */
