@@ -27,6 +27,7 @@
     --hover-blue: color-mix(in srgb, var(--primary-blue) 10%, transparent);
     --active-blue: color-mix(in srgb, var(--primary-blue) 20%, transparent);
     --border-radius: 4px;
+    --spacing-small: 8px;
     --spacing-medium: 12px;
     --focus-outline: 2px solid var(--focus-blue);
     --button-height: 44px;
@@ -92,12 +93,11 @@ fluent-button[appearance="subtle"]::part(control):focus {
     outline-offset: -2px;
 }
 
-fluent-button[appearance="subtle"]:hover {
+fluent-button[appearance="subtle"]:is(:hover, :active, .is-active) {
     background: var(--hover-blue);
 }
 
-fluent-button[appearance="subtle"]:active,
-fluent-button[appearance="subtle"].is-active {
+fluent-button[appearance="subtle"]:is(:active, .is-active) {
     background: transparent;
     border-bottom: 3px solid var(--primary-blue);
     border-radius: 0;
@@ -112,7 +112,7 @@ fluent-button[appearance="subtle"] .fluent-icon {
 /* Label management: Hide labels by default, show on hover/active if they exist */
 fluent-button[appearance="subtle"] .button-label {
     display: none;
-    margin-left: 8px;
+    margin-inline-start: var(--spacing-small);
     font-size: 14px;
     color: var(--primary-blue);
     white-space: nowrap;
@@ -126,7 +126,7 @@ fluent-button[appearance="subtle"]:is(:hover, .is-active) .button-label {
 fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label) {
     width: auto;
     min-width: var(--button-height);
-    padding: 0 8px;
+    padding-inline: var(--spacing-small);
 }
 
 /* Modern Fluent Icon Styling */
@@ -139,6 +139,10 @@ fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label) {
     line-height: 1;
     display: inline-block;
 }
+
+/* Icon size variants */
+.fluent-icon--small { font-size: 16px; }
+.fluent-icon--large { font-size: 24px; }
 
 /* Modern Fluent Icon Classes */
 .fluent-icon--info::before {
