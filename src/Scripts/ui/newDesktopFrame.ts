@@ -41,7 +41,7 @@ function initializeFluentUI(): void {
         buttonElement.addEventListener("click", function (event: Event): void {
             if (event.currentTarget) {
                 const currentTarget = event.currentTarget as HTMLElement;
-                const btnIcon = currentTarget.querySelector(".ms-Icon--Add, .ms-Icon--Remove");
+                const btnIcon = currentTarget.querySelector(".fluent-icon--add, .fluent-icon--remove");
                 const originalHeaders = DomUtils.getElement("#original-headers");
                 const isExpanded = buttonElement.getAttribute("aria-expanded") === "true";
 
@@ -49,15 +49,15 @@ function initializeFluentUI(): void {
                     buttonElement.setAttribute("aria-expanded", "true");
                     if (originalHeaders) originalHeaders.style.display = "block";
                     if (btnIcon) {
-                        btnIcon.classList.remove("ms-Icon--Add");
-                        btnIcon.classList.add("ms-Icon--Remove");
+                        btnIcon.classList.remove("fluent-icon--add");
+                        btnIcon.classList.add("fluent-icon--remove");
                     }
                 } else {
                     buttonElement.setAttribute("aria-expanded", "false");
                     if (originalHeaders) originalHeaders.style.display = "none";
                     if (btnIcon) {
-                        btnIcon.classList.remove("ms-Icon--Remove");
-                        btnIcon.classList.add("ms-Icon--Add");
+                        btnIcon.classList.remove("fluent-icon--remove");
+                        btnIcon.classList.add("fluent-icon--add");
                     }
                 }
             }
@@ -119,6 +119,32 @@ function initializeFluentUI(): void {
     TabNavigation.initializeIFrameTabHandling();
 }
 
+// Add document-level click handler to close callouts when clicking outside
+document.addEventListener("click", function(event: Event) {
+    const target = event.target as HTMLElement;
+
+    // Don't close if clicking on a list item (that will handle its own toggle)
+    if (target.closest(".hop-list-item")) {
+        return;
+    }
+
+    // Close all open callouts
+    document.querySelectorAll(".hop-details-overlay.is-shown").forEach(callout => {
+        callout.classList.remove("is-shown");
+        callout.classList.add("is-hidden");
+    });
+});
+
+// Add escape key handler to close callouts
+document.addEventListener("keydown", function(event: KeyboardEvent) {
+    if (event.key === "Escape") {
+        document.querySelectorAll(".hop-details-overlay.is-shown").forEach(callout => {
+            callout.classList.remove("is-shown");
+            callout.classList.add("is-hidden");
+        });
+    }
+});
+
 function updateStatus(message: string) {
     DomUtils.setText("#status-message", message);
     if (overlayElement) {
@@ -128,9 +154,9 @@ function updateStatus(message: string) {
 
 function addCalloutEntry(name: string, value: string | number | null, parent: HTMLElement) {
     if (value) {
-        const clone = DomUtils.cloneTemplate("callout-entry-template");
-        DomUtils.setTemplateText(clone, ".ms-fontWeight-semibold", name + ": ");
-        DomUtils.setTemplateText(clone, ".callout-value", String(value));
+        const clone = DomUtils.cloneTemplate("hop-entry-template");
+        DomUtils.setTemplateText(clone, ".hop-label", name + ": ");
+        DomUtils.setTemplateText(clone, ".hop-value", String(value));
         parent.appendChild(clone);
     }
 }
@@ -142,14 +168,14 @@ function buildViews(headers: string) {
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
             const clone = DomUtils.cloneTemplate("summary-row-template");
-            DomUtils.setTemplateText(clone, ".ms-font-s", row.label);
+            DomUtils.setTemplateText(clone, ".section-header", row.label);
             DomUtils.setTemplateText(clone, "code", row.value);
             summaryList.appendChild(clone);
         }
     });
 
     // Save original headers and show ui
-    DomUtils.setText("#original-headers code", viewModel.originalHeaders);
+    DomUtils.setText("#original-headers textarea", viewModel.originalHeaders);
     if (viewModel.originalHeaders) {
         DomUtils.showElement(".orig-header-ui");
     }
@@ -186,16 +212,17 @@ function buildViews(headers: string) {
                 // Use HTML template for progress icon
                 const progressClone = DomUtils.cloneTemplate("progress-icon-template");
 
-                // Set the progress bar width
-                const width: number = 1.8 * (Number(row.percent.value ?? 0));
-                const progressBar = progressClone.querySelector(".ms-ProgressIndicator-progressBar") as HTMLElement;
-                if (progressBar) {
-                    progressBar.style.width = width + "px";
+                // Set the progress value for fluent-progress
+                const percent = Number(row.percent.value ?? 0);
+                const progressElement = progressClone.querySelector(".hop-progress") as HTMLElement;
+                if (progressElement) {
+                    progressElement.setAttribute("value", String(percent));
+                    progressElement.setAttribute("max", "100");
                 }
 
                 // Set the description text
                 const delayText = row.delay.value !== null ? String(row.delay.value) : "";
-                DomUtils.setTemplateText(progressClone, ".ms-ProgressIndicator-itemDescription", delayText);
+                DomUtils.setTemplateText(progressClone, ".progress-description", delayText);
 
                 listItem.appendChild(progressClone);
 
@@ -213,17 +240,14 @@ function buildViews(headers: string) {
             listItem.appendChild(selectionClone);
 
             // Callout - Use HTML template for callout structure
-            const calloutClone = DomUtils.cloneTemplate("callout-template");
+            const calloutClone = DomUtils.cloneTemplate("hop-template");
 
-            // Add callout header to the callout main element
-            const calloutMainElement = calloutClone.querySelector(".ms-Callout-main") as HTMLElement;
-            if (calloutMainElement) {
-                const headerClone = DomUtils.cloneTemplate("callout-header-template");
-                calloutMainElement.insertBefore(headerClone, calloutMainElement.firstChild);
+            // Add callout header to the tooltip content
+            const calloutContent = calloutClone.querySelector(".hop-details-content") as HTMLElement;
+            if (calloutContent) {
+                const headerClone = DomUtils.cloneTemplate("hop-header-template");
+                calloutContent.appendChild(headerClone);
             }
-
-            // Get the callout content container
-            const calloutContent = calloutClone.querySelector(".ms-Callout-content") as HTMLElement;
 
             listItem.appendChild(calloutClone);
 
@@ -236,23 +260,71 @@ function buildViews(headers: string) {
             addCalloutEntry("For", row.for.value, calloutContent);
             addCalloutEntry("Via", row.via.value, calloutContent);
 
-            // Add click handler to show/hide callout
-            listItem.addEventListener("click", function(event: Event) {
-                event.preventDefault();
-                const calloutElement = this.querySelector(".ms-Callout") as HTMLElement;
+            function toggleCallout(listItem: HTMLElement) {
+                const calloutElement = listItem.querySelector(".hop-details-overlay") as HTMLElement;
 
-                // Hide all other callouts first
-                document.querySelectorAll(".ms-Callout").forEach(callout => {
+                // Check if this callout is currently shown BEFORE hiding others
+                const isCurrentlyShown = calloutElement && calloutElement.classList.contains("is-shown");
+
+                // Hide all callouts first
+                document.querySelectorAll(".hop-details-overlay").forEach(callout => {
+                    callout.classList.remove("is-shown");
                     callout.classList.add("is-hidden");
                 });
 
-                // Toggle this callout
-                if (calloutElement && calloutElement.classList.contains("is-hidden")) {
+                // If this callout was NOT currently shown, show it
+                // If it WAS currently shown, leave it hidden (toggle behavior)
+                if (calloutElement && !isCurrentlyShown) {
                     calloutElement.classList.remove("is-hidden");
-                } else if (calloutElement) {
-                    calloutElement.classList.add("is-hidden");
+                    calloutElement.classList.add("is-shown");
+
+                    // Position the callout relative to the list item
+                    const listItemRect = listItem.getBoundingClientRect();
+                    const viewportWidth = window.innerWidth;
+                    const viewportHeight = window.innerHeight;
+
+                    // Center the callout horizontally relative to the viewport
+                    const leftPosition = (viewportWidth - calloutElement.offsetWidth) / 2;
+
+                    // Position below the list item so arrow points up to it
+                    let topPosition = listItemRect.bottom + 15; // 15px gap for arrow
+
+                    // Ensure callout stays within viewport
+                    if (topPosition + calloutElement.offsetHeight > viewportHeight - 10) {
+                        topPosition = viewportHeight - calloutElement.offsetHeight - 10;
+                    }
+                    if (topPosition < 10) {
+                        topPosition = 10;
+                    }
+
+                    calloutElement.style.left = `${leftPosition}px`;
+                    calloutElement.style.top = `${topPosition}px`;
+                }
+            }
+
+            // Add click handler to show/hide callout
+            listItem.addEventListener("click", function(event: Event) {
+                const target = event.target as HTMLElement;
+
+                // Don't handle the click if it was inside the callout content
+                if (target.closest(".hop-details-overlay")) {
+                    return;
+                }
+
+                event.preventDefault();
+                toggleCallout(this);
+            });
+
+            // Add keyboard handler for accessibility (Enter/Space to show hop details)
+            listItem.addEventListener("keydown", function(event: KeyboardEvent) {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    toggleCallout(this);
                 }
             });
+
+            // Make list item focusable for keyboard navigation
+            listItem.setAttribute("tabindex", "0");
         });
 
         // Build antispam view
@@ -329,7 +401,7 @@ function buildViews(headers: string) {
             // Use HTML template for other headers
             const clone = DomUtils.cloneTemplate("other-row-template");
             const headerContent = otherRow.url ? otherRow.url : otherRow.header;
-            DomUtils.setTemplateHTML(clone, ".ms-font-s", headerContent); // May contain HTML (url)
+            DomUtils.setTemplateHTML(clone, ".section-header", headerContent); // May contain HTML (url)
             DomUtils.setTemplateText(clone, "code", otherRow.value);
             otherList.appendChild(clone);
         }

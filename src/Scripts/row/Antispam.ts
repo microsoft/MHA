@@ -2,8 +2,12 @@ import { mhaStrings } from "../mhaStrings";
 import { Strings } from "../Strings";
 import { Header } from "./Header";
 import { Row } from "./Row";
+import { SummaryTable } from "../table/SummaryTable";
 
-export class AntiSpamReport {
+export class AntiSpamReport extends SummaryTable {
+    public readonly tableName: string = "antiSpamReport";
+    public readonly displayName: string = mhaStrings.mhaAntiSpamReport;
+    public readonly tag: string = "AS";
     private sourceInternal = "";
     private unparsedInternal = "";
     private antiSpamRows: Row[] = [
@@ -12,6 +16,8 @@ export class AntiSpamReport {
         new Row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
         new Row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
     ];
+
+    public get rows(): Row[] { return this.antiSpamRows; }
 
     public existsInternal(rows: Row[]): boolean {
         for (const row of rows) {
@@ -81,12 +87,11 @@ export class AntiSpamReport {
         return false;
     }
 
-    public exists(): boolean { return this.existsInternal(this.rows); }
+    public override exists(): boolean { return this.existsInternal(this.rows); }
 
     public get source(): string { return this.sourceInternal; }
     public get unparsed(): string { return this.unparsedInternal; }
-    public get rows(): Row[] { return this.antiSpamRows; }
-    public toString(): string {
+    public override toString(): string {
         if (!this.exists()) return "";
         const ret = ["AntiSpamReport"];
         this.rows.forEach(function (row) {

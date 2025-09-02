@@ -4,8 +4,12 @@ import { CreationRow } from "./row/CreationRow";
 import { Header } from "./row/Header";
 import { Row } from "./row/Row";
 import { SummaryRow } from "./row/SummaryRow";
+import { SummaryTable } from "./table/SummaryTable";
 
-export class Summary {
+export class Summary extends SummaryTable {
+    public readonly tableName: string = "summary";
+    public readonly displayName: string = mhaStrings.mhaSummary;
+    public readonly tag: string = "SUM";
     private totalTimeInternal = "";
 
     private creationPostFix(totalTime: string): string {
@@ -31,7 +35,7 @@ export class Summary {
         new SummaryRow("CC", mhaStrings.mhaCc)
     ];
 
-    public exists(): boolean {
+    public override exists(): boolean {
         let row: Row | undefined;
         this.rows.forEach((r: Row) => { if (!row && r.value) row = r; });
         return row !== undefined;
@@ -59,7 +63,7 @@ export class Summary {
         this.dateRow.postFix = this.creationPostFix(value);
     }
 
-    public toString(): string {
+    public override toString(): string {
         if (!this.exists()) return "";
         const ret = ["Summary"];
         this.rows.forEach(function (row) {

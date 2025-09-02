@@ -177,16 +177,6 @@ export default async (env, options) => {
         module: {
             rules: [
                 {
-                    test: /fabric(\.min)?\.js$/,
-                    use: [{
-                        loader: "exports-loader",
-                        options: {
-                            type: "commonjs",
-                            exports: "fabric"
-                        }
-                    }]
-                },
-                {
                     test: /\.tsx?$/,
                     use: [{
                         loader: "ts-loader",
@@ -233,7 +223,7 @@ export default async (env, options) => {
                     },
                     // Large libraries that should be separate
                     largeLibs: {
-                        test: /[\\/]node_modules[\\/](framework7|fabric|lodash|moment|date-fns)[\\/]/,
+                        test: /[\\/]node_modules[\\/](framework7|lodash|moment|date-fns)[\\/]/,
                         name: "large-libs",
                         priority: 30,
                         reuseExistingChunk: true,
@@ -299,9 +289,22 @@ export default async (env, options) => {
             },
             static: __dirname,
             watchFiles: {
-                paths: ["src/**/*", "Pages/**/*", "*.xml"],
+                paths: [
+                    "src/**/*.{ts,js,css}",
+                    "src/Pages/*.html"
+                ],
                 options: {
-                    ignored: ["**/.git/**", "**/node_modules/**", "**/coverage/**"],
+                    ignored: [
+                        "**/.git/**",
+                        "**/node_modules/**",
+                        "**/coverage/**",
+                        "**/*.map",
+                        "**/*.log",
+                        ".gitignore",
+                        ".gitattributes"
+                    ],
+                    usePolling: false,
+                    ignoreInitial: true,
                 },
             },
             server: {
