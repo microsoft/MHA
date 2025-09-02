@@ -103,12 +103,6 @@ fluent-button[appearance="subtle"]:is(:active, .is-active) {
     border-radius: 0;
 }
 
-/* Icon styling for toolbar buttons */
-fluent-button[appearance="subtle"] .fluent-icon {
-    font-size: 20px;
-    color: var(--primary-blue);
-}
-
 /* Label management: Hide labels by default, show on hover/active if they exist */
 fluent-button[appearance="subtle"] .button-label {
     display: none;
