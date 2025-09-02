@@ -123,7 +123,7 @@ fluent-button[appearance="subtle"]:is(:hover, .is-active) .button-label {
 }
 
 /* Navigation buttons with labels need flexible width when label shows */
-fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label) {
+fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label:not([style*="display: none"])) {
     width: auto;
     min-width: var(--button-height);
     padding-inline: var(--spacing-small);
