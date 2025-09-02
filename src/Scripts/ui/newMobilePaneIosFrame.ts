@@ -1,5 +1,4 @@
-import "framework7/dist/css/framework7.ios.min.css";
-import "framework7/dist/css/framework7.ios.colors.min.css";
+import "framework7/css";
 import "framework7-icons/css/framework7-icons.css";
 import "../../Content/newMobilePaneIosFrame.css";
 import dayjs from "dayjs";
@@ -7,6 +6,7 @@ import utc from "dayjs/plugin/utc";
 import $ from "jquery";
 
 import { Framework7 } from "../framework7";
+import type Framework7Instance from "framework7";
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Poster } from "../Poster";
@@ -18,7 +18,7 @@ import { SummaryRow } from "../row/SummaryRow";
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
 // Framework7 app object
-let myApp: typeof Framework7 = null;
+let myApp: Framework7Instance | null = null;
 
 dayjs.extend(utc);
 
@@ -27,19 +27,20 @@ function postError(error: unknown, message: string): void {
 }
 
 function initializeFramework7(): void {
-    myApp = new Framework7();
+    myApp = new Framework7({
+        // App name
+        name: 'MHA',
+        // Set theme based on platform
+        theme: 'auto',
+    });
 
-    myApp.addView("#summary-view");
-    myApp.addView("#received-view");
-    myApp.addView("#antispam-view");
-    myApp.addView("#other-view");
     document.getElementById("summary-btn")!.focus();
 }
 
 function updateStatus(message: string): void {
     if (myApp) {
-        myApp.hidePreloader();
-        myApp.showPreloader(message);
+        myApp.preloader.hide();
+        myApp.preloader.show(message);
     }
 }
 
@@ -240,7 +241,9 @@ function buildViews(headers: string): void {
                     .appendTo(progress);
 
                 try {
-                    myApp.showProgressbar(".progress-wrap-" + i, row.percent);
+                    if (myApp && row.percent.value !== null) {
+                        myApp.progressbar.show(".progress-wrap-" + i, Number(row.percent.value));
+                    }
                 } catch (e) {
                     $("#original-headers").text(JSON.stringify(e));
                     return;
@@ -407,7 +410,7 @@ function renderItem(headers: string): void {
         observer.observe(accordion, { attributes: true });
     });
 
-    if (myApp) myApp.hidePreloader();
+    if (myApp) myApp.preloader.hide();
 }
 
 // Handles rendering of an error.
@@ -415,8 +418,8 @@ function renderItem(headers: string): void {
 function showError(error: unknown, message: string): void {
     console.error("Error:", error);
     if (myApp) {
-        myApp.hidePreloader();
-        myApp.alert(message, "An Error Occurred");
+        myApp.preloader.hide();
+        myApp.dialog.alert(message, "An Error Occurred");
     }
 }
 
