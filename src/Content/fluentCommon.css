@@ -134,8 +134,11 @@ fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label:not(
     color: var(--primary-blue);
     background: white;
     border-radius: 50%;
-    padding: 1px;
     z-index: 2;
+    width: 10px;
+    height: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .fluent-icon--cake::before {
