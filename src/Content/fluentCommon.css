@@ -97,7 +97,6 @@ fluent-button[appearance="subtle"]:is(:hover, :active, .is-active) {
 fluent-button[appearance="subtle"]:is(:active, .is-active) {
     background: transparent;
     border-bottom: 3px solid var(--primary-blue);
-    border-radius: 0;
 }
 
 /* Navigation buttons with labels need flexible width when label shows */
