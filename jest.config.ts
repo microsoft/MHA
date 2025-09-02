@@ -12,7 +12,7 @@ const config: Config = {
     collectCoverage: true,
     collectCoverageFrom: ["./src/**"],
     coverageDirectory: "./Pages/coverage",
-    coverageReporters: ["json", "lcov", "text", "clover"],
+    coverageReporters: ["json", "lcov", "text", "clover", "text-summary"],
     coverageThreshold: {
         global: {
             branches: 35,

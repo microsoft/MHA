@@ -1,11 +1,6 @@
-import "office-ui-fabric-js/dist/css/fabric.min.css";
-import "office-ui-fabric-js/dist/css/fabric.components.min.css";
-import "../../Content/fabric.css";
+import "../../Content/fluentCommon.css";
 import "../../Content/newDesktopFrame.css";
-import $ from "jquery";
-import { fabric } from "office-ui-fabric-js/dist/js/fabric";
 
-import { findTabStops } from "../findTabStops";
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Poster } from "../Poster";
@@ -13,294 +8,250 @@ import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
+import { TabNavigation } from "../TabNavigation";
+import { DomUtils } from "./domUtils";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
-let overlay: fabric.Overlay;
-let spinner: fabric.Spinner;
+// Overlay element for loading display
+let overlayElement: HTMLElement | null = null;
 
 function postError(error: unknown, message: string): void {
     Poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
-function initializeFabric(): void {
-    const overlayComponent: HTMLElement | null = document.querySelector(".ms-Overlay");
-    if (!overlayComponent) return;
+function initializeFluentUI(): void {
+    // Store references for overlay control
+    overlayElement = DomUtils.getElement("#loading-overlay");
 
     // Override click so user can't dismiss overlay
-    overlayComponent.addEventListener("click", function (e: Event): void {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-    });
-    overlay = new fabric["Overlay"](overlayComponent);
+    if (overlayElement) {
+        overlayElement.addEventListener("click", function (e: Event): void {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        });
+    }
 
-    const spinnerElement: HTMLElement | null = document.querySelector(".ms-Spinner");
-    if (!spinnerElement) return;
+    // Fluent UI Web Components don't need JavaScript initialization for most components
+    // Navigation and button behavior is handled with standard DOM events
 
-    spinner = new fabric["Spinner"](spinnerElement);
-    spinner.stop();
+    // Set up original headers toggle button
+    const buttonElement = DomUtils.getElement("#orig-header-btn");
+    if (buttonElement) {
+        buttonElement.addEventListener("click", function (event: Event): void {
+            if (event.currentTarget) {
+                const currentTarget = event.currentTarget as HTMLElement;
+                const btnIcon = currentTarget.querySelector(".fluent-icon--add, .fluent-icon--remove");
+                const originalHeaders = DomUtils.getElement("#original-headers");
+                const isExpanded = buttonElement.getAttribute("aria-expanded") === "true";
 
-    const commandBarElements: NodeListOf<Element> = document.querySelectorAll(".ms-CommandBar");
-    Array.prototype.forEach.call(commandBarElements, (commandBarElement: Element) => {
-        new fabric["CommandBar"](commandBarElement);
-    });
-
-    const commandButtonElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-CommandButton");
-    Array.prototype.forEach.call(commandButtonElements, (commandButtonElement: HTMLElement) => {
-        new fabric["CommandButton"](commandButtonElement);
-    });
-
-    const buttonElement: HTMLElement | null = document.querySelector("#orig-header-btn");
-    if (!buttonElement) return;
-    new fabric["Button"](buttonElement, function (event: Event): void {
-        if (event.currentTarget) {
-            const btnIcon: JQuery<HTMLElement> = $(event.currentTarget).find(".ms-Icon");
-            if (btnIcon.hasClass("ms-Icon--Add")) {
-                buttonElement.setAttribute("aria-expanded", "true");
-                $("#original-headers").show();
-                btnIcon.removeClass("ms-Icon--Add").addClass("ms-Icon--Remove");
-            } else {
-                buttonElement.setAttribute("aria-expanded", "false");
-                $("#original-headers").hide();
-                btnIcon.removeClass("ms-Icon--Remove").addClass("ms-Icon--Add");
+                if (!isExpanded) {
+                    buttonElement.setAttribute("aria-expanded", "true");
+                    if (originalHeaders) originalHeaders.style.display = "block";
+                    if (btnIcon) {
+                        btnIcon.classList.remove("fluent-icon--add");
+                        btnIcon.classList.add("fluent-icon--remove");
+                    }
+                } else {
+                    buttonElement.setAttribute("aria-expanded", "false");
+                    if (originalHeaders) originalHeaders.style.display = "none";
+                    if (btnIcon) {
+                        btnIcon.classList.remove("fluent-icon--remove");
+                        btnIcon.classList.add("fluent-icon--add");
+                    }
+                }
             }
-        }
-    });
+        });
+    }
 
     // Show summary by default
-    $(".header-view[data-content='summary-view']").show();
+    DomUtils.showElement(".header-view[data-content='summary-view']");
     document.getElementById("summary-btn")!.focus();
 
     // Wire up click events for nav buttons
-    $("#nav-bar .ms-CommandButton").click(function (): void {
-        // Fix for Bug 1691252 - To set aria-label dynamically on click based on button name
-        if ($("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label")!.length !== 0) {
-            $("#nav-bar .is-active .ms-CommandButton-button").attr("aria-label", $("#nav-bar .is-active .ms-CommandButton-button .ms-CommandButton-label").text());
-        }
+    DomUtils.getElements("#nav-bar .nav-button").forEach((button: Element) => {
+        button.addEventListener("click", function (this: HTMLElement): void {
+            // Fix for Bug 1691252 - To set aria-label dynamically on click based on button name
+            const currentActive = DomUtils.getElement("#nav-bar .is-active");
+            if (currentActive) {
+                const activeButtonLabel = currentActive.querySelector(".button-label") as HTMLElement;
+                if (activeButtonLabel) {
+                    const activeButtonText = activeButtonLabel.textContent?.trim() || "";
+                    currentActive.setAttribute("aria-label", activeButtonText);
+                }
+            }
 
-        // Remove active from current active
-        $("#nav-bar .is-active").removeClass("is-active");
-        // Add active class to clicked button
-        $(this).addClass("is-active");
+            // Remove active from current active and hide its label
+            if (currentActive) {
+                currentActive.classList.remove("is-active");
+            }
+            DomUtils.hideAllElements("#nav-bar .button-label");
 
-        // Get content marker
-        const content: string | undefined = $(this).attr("data-content");
-        // Hide sub-views
+            // Add active class to clicked button and show its label
+            this.classList.add("is-active");
+            const thisLabel = this.querySelector(".button-label") as HTMLElement;
+            if (thisLabel) thisLabel.style.display = "block";
 
-        // Fix for Bug 1691252 - To set aria-label as button after selection like "Summary Selected"
-        const ariaLabel = $(this).find(".ms-CommandButton-label")!.text() + " Selected";
-        $(this).find(".ms-CommandButton-label")!.attr("aria-label",ariaLabel);
-        $(this).find("button.ms-CommandButton-button").attr("aria-label",ariaLabel);
-        $(".header-view").hide();
-        $(".header-view[data-content='" + content + "']").show();
+            // Get content marker
+            const content = this.getAttribute("data-content");
+
+            // Fix for Bug 1691252 - To set aria-label as button after selection like "Summary Selected"
+            const buttonText = thisLabel?.textContent?.trim() || "";
+            const ariaLabel = buttonText + " Selected";
+            this.setAttribute("aria-label", ariaLabel);
+
+            // Hide all header views
+            DomUtils.hideAllElements(".header-view");
+
+            // Show the selected content view
+            if (content) {
+                DomUtils.showElement(`.header-view[data-content='${content}']`);
+            }
+        });
     });
 
-    // Insert the settings and copy buttons into the tab order for the ribbon
-    // This handles tabbing into from these buttons.
-    // Tabbing out from these buttons is over in parentframe.ts
-    document.addEventListener("keydown", function (e) {
-        if (e.key === "Tab") {
-            const shiftPressed = e.shiftKey;
-            const focused: HTMLElement = document.activeElement as HTMLElement;
-            // console.log("Shift pressed = " + shiftPressed);
-            // console.log("Focused element:" + focused + " class:" + focused.className + " id:" + focused.id + " title:" + focused.title);
+    // Initialize label visibility - only show active button label
+    DomUtils.hideAllElements("#nav-bar .button-label");
+    const activeLabel = DomUtils.getElement("#nav-bar .is-active .button-label");
+    if (activeLabel) activeLabel.style.display = "block";
 
-            // Tab from Other goes to copy button
-            if (!shiftPressed && focused.id === "other-btn") {
-                window.parent.document.getElementById("copyButton")!.focus();
-                e.preventDefault();
-            }
-            // Tab back from Summary goes to end of view
-            else if (shiftPressed && focused.id === "summary-btn") {
-                const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
-                const tabStops = findTabStops(view);
-                // Set focus on last element in the list if we can
-                if (tabStops.length > 0){
-                    tabStops[tabStops.length - 1]?.focus();
-                    e.preventDefault();
-                }
-            }
-            // If we're tabbing off of the view, we want to tab to the appropriate ribbon button
-            else
-            {
-                const view = document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
-                const tabStops = findTabStops(view);
-
-                if (shiftPressed){
-                    // If our current focus is the first element in the list, we want to move focus to the copy button
-                    if (tabStops.length > 0 && focused === tabStops[0]){
-                        window.parent.document.getElementById("settingsButton")!.focus();
-                        e.preventDefault();
-                    }
-                }
-                else{
-                    // If our current focus is the last element in the list, we want to move focus to the summary-btn
-                    if (tabStops.length > 0 && focused === tabStops[tabStops.length - 1]){
-                        document.getElementById("summary-btn")!.focus();
-                        e.preventDefault();
-                    }
-                }
-            }
-        }
-    });
+    // Initialize iframe tab navigation handling
+    TabNavigation.initializeIFrameTabHandling();
 }
+
+// Add document-level click handler to close callouts when clicking outside
+document.addEventListener("click", function(event: Event) {
+    const target = event.target as HTMLElement;
+
+    // Don't close if clicking on a list item (that will handle its own toggle)
+    if (target.closest(".hop-list-item")) {
+        return;
+    }
+
+    // Close all open callouts
+    document.querySelectorAll(".hop-details-overlay.is-shown").forEach(callout => {
+        callout.classList.remove("is-shown");
+        callout.classList.add("is-hidden");
+    });
+});
+
+// Add escape key handler to close callouts
+document.addEventListener("keydown", function(event: KeyboardEvent) {
+    if (event.key === "Escape") {
+        document.querySelectorAll(".hop-details-overlay.is-shown").forEach(callout => {
+            callout.classList.remove("is-shown");
+            callout.classList.add("is-hidden");
+        });
+    }
+});
 
 function updateStatus(message: string) {
-    $(".status-message").text(message);
-    overlay.show();
-    spinner.start();
+    DomUtils.setText("#status-message", message);
+    if (overlayElement) {
+        overlayElement.style.display = "block";
+    }
 }
 
-function makeBold(text: string) {
-    return "<span class=\"ms-fontWeight-semibold\">" + text + "</span>";
-}
-
-function addCalloutEntry(name: string, value: string | number | null, parent: JQuery<HTMLElement>) {
+function addCalloutEntry(name: string, value: string | number | null, parent: HTMLElement) {
     if (value) {
-        $("<p/>")
-            .addClass("ms-Callout-subText")
-            .html(makeBold(name + ": ") + value)
-            .appendTo(parent);
+        const clone = DomUtils.cloneTemplate("hop-entry-template");
+        DomUtils.setTemplateText(clone, ".hop-label", name + ": ");
+        DomUtils.setTemplateText(clone, ".hop-value", String(value));
+        parent.appendChild(clone);
     }
 }
 
 function buildViews(headers: string) {
     const viewModel: HeaderModel = new HeaderModel(headers);
     // Build summary view
-    const summaryList = $(".summary-list");
+    const summaryList = document.querySelector(".summary-list") as HTMLElement;
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
-            $("<div/>")
-                .addClass("ms-font-s")
-                .addClass("ms-fontWeight-semibold")
-                .text(row.label)
-                .appendTo(summaryList);
-            const headerVal = $("<div/>")
-                .addClass("code-box")
-                .appendTo(summaryList);
-            const pre = $("<pre/>").appendTo(headerVal);
-            $("<code/>")
-                .text(row.value)
-                .appendTo(pre);
+            const clone = DomUtils.cloneTemplate("summary-row-template");
+            DomUtils.setTemplateText(clone, ".section-header", row.label);
+            DomUtils.setTemplateText(clone, "code", row.value);
+            summaryList.appendChild(clone);
         }
     });
 
     // Save original headers and show ui
-    $("#original-headers code").text(viewModel.originalHeaders);
+    DomUtils.setText("#original-headers textarea", viewModel.originalHeaders);
     if (viewModel.originalHeaders) {
-        $(".orig-header-ui").show();
+        DomUtils.showElement(".orig-header-ui");
     }
 
     // Build received view
-    const receivedList = $(".received-list");
+    const receivedList = document.querySelector(".received-list") as HTMLElement;
 
     if (viewModel.receivedHeaders.rows.length > 0) {
-        const list = $("<ul/>")
-            .addClass("ms-List")
-            .appendTo(receivedList);
+        // Use HTML template for list creation
+        const listClone = DomUtils.cloneTemplate("received-list-template");
+        receivedList.appendChild(listClone);
+        const list = receivedList.querySelector("ul") as HTMLElement;
 
         let firstRow = true;
         viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, index) => {
             // Fix for Bug 1846002 - Added attr ID to set focus for the first element in the list
-            const listItem = $("<li/>")
-                .addClass("ms-ListItem")
-                .attr("tabindex", 0)
-                .attr("id", "received" + index)
-                .addClass("ms-ListItem--document")
-                .appendTo(list);
+            // Use HTML template for list item creation
+            const itemClone = DomUtils.cloneTemplate("list-item-template");
+            const listItem = itemClone.querySelector("li") as HTMLElement;
+            listItem.id = "received" + index;
+            list.appendChild(itemClone);
 
             if (firstRow) {
-                $("<span/>")
-                    .addClass("ms-ListItem-primaryText")
-                    .html(makeBold("From: ") + row.from)
-                    .appendTo(listItem);
-
-                $("<span/>")
-                    .addClass("ms-ListItem-secondaryText")
-                    .html(makeBold("To: ") + row.by)
-                    .appendTo(listItem);
+                // Use HTML template for first row content
+                const listItemElement = listItem;
+                if (listItemElement) {
+                    const clone = DomUtils.cloneTemplate("first-row-template");
+                    DomUtils.setTemplateText(clone, ".from-value", String(row.from));
+                    DomUtils.setTemplateText(clone, ".to-value", String(row.by));
+                    listItemElement.appendChild(clone);
+                }
                 firstRow = false;
             } else {
-                const wrap = $("<div/>")
-                    .addClass("progress-icon")
-                    .appendTo(listItem);
+                // Use HTML template for progress icon
+                const progressClone = DomUtils.cloneTemplate("progress-icon-template");
 
-                const iconbox = $("<div/>")
-                    .addClass("ms-font-xxl")
-                    .addClass("down-icon")
-                    .appendTo(wrap);
+                // Set the progress value for fluent-progress
+                const percent = Number(row.percent.value ?? 0);
+                const progressElement = progressClone.querySelector(".hop-progress") as HTMLElement;
+                if (progressElement) {
+                    progressElement.setAttribute("value", String(percent));
+                    progressElement.setAttribute("max", "100");
+                }
 
-                $("<i/>")
-                    .addClass("ms-Icon")
-                    .addClass("ms-Icon--Down")
-                    .appendTo(iconbox);
+                // Set the description text
+                const delayText = row.delay.value !== null ? String(row.delay.value) : "";
+                DomUtils.setTemplateText(progressClone, ".progress-description", delayText);
 
-                const delay = $("<div/>")
-                    .addClass("ms-ProgressIndicator")
-                    .appendTo(wrap);
+                listItem.appendChild(progressClone);
 
-                const bar = $("<div/>")
-                    .addClass("ms-ProgressIndicator-itemProgress")
-                    .appendTo(delay);
-
-                $("<div/>")
-                    .addClass("ms-ProgressIndicator-progressTrack")
-                    .appendTo(bar);
-
-                const width: number = 1.8 * (Number(row.percent.value ?? 0));
-
-                $("<div/>")
-                    .addClass("ms-ProgressIndicator-progressBar")
-                    .css("width", width)
-                    .appendTo(bar);
-
-                $("<div/>")
-                    .addClass("ms-ProgressIndicator-itemDescription")
-                    .text(row.delay.value !== null ? row.delay.value : "")
-                    .appendTo(delay);
-
-                $("<span/>")
-                    .addClass("ms-ListItem-secondaryText")
-                    .html(makeBold("To: ") + row.by)
-                    .appendTo(listItem);
+                // Use HTML template for secondary text
+                const listItemElement = listItem;
+                if (listItemElement) {
+                    const clone = DomUtils.cloneTemplate("secondary-text-template");
+                    DomUtils.setTemplateText(clone, ".to-value", String(row.by));
+                    listItemElement.appendChild(clone);
+                }
             }
 
-            index=index+1;
-            $("<div/>")
-                .addClass("ms-ListItem-selectionTarget")
-                .appendTo(listItem);
+            // Add selection target using HTML template
+            const selectionClone = DomUtils.cloneTemplate("selection-target-template");
+            listItem.appendChild(selectionClone);
 
-            // Callout
-            const callout = $("<div/>")
-                .addClass("ms-Callout is-hidden")
-                .appendTo(listItem);
+            // Callout - Use HTML template for callout structure
+            const calloutClone = DomUtils.cloneTemplate("hop-template");
 
-            const calloutMain = $("<div/>")
-                .addClass("ms-Callout-main")
-                .appendTo(callout);
+            // Add callout header to the tooltip content
+            const calloutContent = calloutClone.querySelector(".hop-details-content") as HTMLElement;
+            if (calloutContent) {
+                const headerClone = DomUtils.cloneTemplate("hop-header-template");
+                calloutContent.appendChild(headerClone);
+            }
 
-            $("<div/>")
-                .addClass("ms-Callout-close")
-                .attr("style","display:none")
-                .appendTo(calloutMain);
+            listItem.appendChild(calloutClone);
 
-            const calloutHeader = $("<div/>")
-                .addClass("ms-Callout-header")
-                .appendTo(calloutMain);
-
-            $("<p/>")
-                .addClass("ms-Callout-title")
-                .text("Hop Details")
-                .appendTo(calloutHeader);
-
-            const calloutInner = $("<div/>")
-                .addClass("ms-Callout-inner")
-                .appendTo(calloutMain);
-
-            const calloutContent: JQuery<HTMLElement> = $("<div/>")
-                .addClass("ms-Callout-content")
-                .appendTo(calloutInner);
-
+            // Add callout entries
             addCalloutEntry("From", row.from.value, calloutContent);
             addCalloutEntry("To", row.by.value, calloutContent);
             addCalloutEntry("Time", row.date.value, calloutContent);
@@ -308,136 +259,188 @@ function buildViews(headers: string) {
             addCalloutEntry("ID", row.id.value, calloutContent);
             addCalloutEntry("For", row.for.value, calloutContent);
             addCalloutEntry("Via", row.via.value, calloutContent);
+
+            function toggleCallout(listItem: HTMLElement) {
+                const calloutElement = listItem.querySelector(".hop-details-overlay") as HTMLElement;
+
+                // Check if this callout is currently shown BEFORE hiding others
+                const isCurrentlyShown = calloutElement && calloutElement.classList.contains("is-shown");
+
+                // Hide all callouts first
+                document.querySelectorAll(".hop-details-overlay").forEach(callout => {
+                    callout.classList.remove("is-shown");
+                    callout.classList.add("is-hidden");
+                });
+
+                // If this callout was NOT currently shown, show it
+                // If it WAS currently shown, leave it hidden (toggle behavior)
+                if (calloutElement && !isCurrentlyShown) {
+                    calloutElement.classList.remove("is-hidden");
+                    calloutElement.classList.add("is-shown");
+
+                    // Position the callout relative to the list item
+                    const listItemRect = listItem.getBoundingClientRect();
+                    const viewportWidth = window.innerWidth;
+                    const viewportHeight = window.innerHeight;
+
+                    // Center the callout horizontally relative to the viewport
+                    const leftPosition = (viewportWidth - calloutElement.offsetWidth) / 2;
+
+                    // Position below the list item so arrow points up to it
+                    let topPosition = listItemRect.bottom + 15; // 15px gap for arrow
+
+                    // Ensure callout stays within viewport
+                    if (topPosition + calloutElement.offsetHeight > viewportHeight - 10) {
+                        topPosition = viewportHeight - calloutElement.offsetHeight - 10;
+                    }
+                    if (topPosition < 10) {
+                        topPosition = 10;
+                    }
+
+                    calloutElement.style.left = `${leftPosition}px`;
+                    calloutElement.style.top = `${topPosition}px`;
+                }
+            }
+
+            // Add click handler to show/hide callout
+            listItem.addEventListener("click", function(event: Event) {
+                const target = event.target as HTMLElement;
+
+                // Don't handle the click if it was inside the callout content
+                if (target.closest(".hop-details-overlay")) {
+                    return;
+                }
+
+                event.preventDefault();
+                toggleCallout(this);
+            });
+
+            // Add keyboard handler for accessibility (Enter/Space to show hop details)
+            listItem.addEventListener("keydown", function(event: KeyboardEvent) {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    toggleCallout(this);
+                }
+            });
+
+            // Make list item focusable for keyboard navigation
+            listItem.setAttribute("tabindex", "0");
         });
 
         // Build antispam view
-        const antispamList = $(".antispam-list");
+        const antispamList = document.querySelector(".antispam-list") as HTMLElement;
 
         // Forefront
         if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
-            $("<div/>")
-                .addClass("ms-font-m")
-                .text("Forefront Antispam Report")
-                .appendTo(antispamList);
+            // Use HTML template for section header
+            DomUtils.appendTemplate("forefront-header-template", antispamList);
 
-            $("<hr/>").appendTo(antispamList);
-            const table = $("<table/>")
-                .addClass("ms-Table")
-                .addClass("ms-Table--fixed")
-                .addClass("spam-report")
-                .appendTo(antispamList);
-            const tbody = $("<tbody/>")
-                .appendTo(table);
-            viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
-                const row = $("<tr/>").appendTo(tbody);
-                $("<td/>")
-                    .text(antispamrow.label)
-                    .attr("id", antispamrow.id)
-                    .appendTo(row);
-                $("<td/>")
-                    .html(antispamrow.valueUrl)
-                    .attr("aria-labelledby", antispamrow.id)
-                    .appendTo(row);
-            });
+            // Create table using HTML template
+            DomUtils.appendTemplate("antispam-table-template", antispamList);
+
+            const tbodyElement = antispamList.querySelector("table:last-child tbody");
+            if (tbodyElement) {
+                viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
+                    // Use HTML template for table rows
+                    const rowClone = DomUtils.cloneTemplate("table-row-template");
+
+                    // Set first cell content and id
+                    const cells = rowClone.querySelectorAll("td");
+                    if (cells.length >= 2) {
+                        const cell0 = cells[0] as HTMLElement;
+                        cell0.id = antispamrow.id;
+                        cell0.textContent = antispamrow.label;
+                    }
+
+                    // Use helper for setting aria-labelledby attribute
+                    DomUtils.setTemplateAttribute(rowClone, "td:nth-child(2)", "aria-labelledby", antispamrow.id);
+                    DomUtils.setTemplateHTML(rowClone, "td:nth-child(2)", antispamrow.valueUrl); // Note: valueUrl may contain HTML
+
+                    tbodyElement.appendChild(rowClone);
+                });
+            }
         }
 
         // Microsoft
         if (viewModel.antiSpamReport.rows.length > 0) {
-            $("<div/>")
-                .addClass("ms-font-m")
-                .text("Microsoft Antispam Report")
-                .appendTo(antispamList);
+            // Use HTML template for section header
+            DomUtils.appendTemplate("microsoft-header-template", antispamList);
 
-            $("<hr/>").appendTo(antispamList);
-            const table = $("<table/>")
-                .addClass("ms-Table")
-                .addClass("ms-Table--fixed")
-                .addClass("spam-report")
-                .appendTo(antispamList);
-            const tbody = $("<tbody/>")
-                .appendTo(table);
-            viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
-                const row = $("<tr/>").appendTo(tbody);
-                $("<td/>")
-                    .text(antispamrow.label)
-                    .attr("id", antispamrow.id)
-                    .appendTo(row);
-                $("<td/>")
-                    .html(antispamrow.valueUrl)
-                    .attr("aria-labelledby", antispamrow.id)
-                    .appendTo(row);
-            });
+            // Create table using HTML template
+            DomUtils.appendTemplate("antispam-table-template", antispamList);
+
+            const tbodyElement2 = antispamList.querySelector("table:last-child tbody");
+            if (tbodyElement2) {
+                viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
+                    // Use HTML template for table rows
+                    const rowClone = DomUtils.cloneTemplate("table-row-template");
+
+                    // Set first cell content and id
+                    const cells = rowClone.querySelectorAll("td");
+                    if (cells.length >= 2) {
+                        const cell0 = cells[0] as HTMLElement;
+                        cell0.id = antispamrow.id;
+                        cell0.textContent = antispamrow.label;
+                    }
+
+                    // Use helper for setting aria-labelledby attribute
+                    DomUtils.setTemplateAttribute(rowClone, "td:nth-child(2)", "aria-labelledby", antispamrow.id);
+                    DomUtils.setTemplateHTML(rowClone, "td:nth-child(2)", antispamrow.valueUrl); // Note: valueUrl may contain HTML
+
+                    tbodyElement2.appendChild(rowClone);
+                });
+            }
         }
     }
 
     // Build other view
-    const otherList = $(".other-list");
+    const otherList = document.querySelector(".other-list") as HTMLElement;
 
     viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
-            const headerName = $("<div/>")
-                .addClass("ms-font-s")
-                .addClass("ms-fontWeight-semibold")
-                .text(otherRow.header)
-                .appendTo(otherList);
-            if (otherRow.url) {
-                headerName.html(otherRow.url);
-            }
-            const headerVal = $("<div/>")
-                .addClass("code-box")
-                .appendTo(otherList);
-            const pre = $("<pre/>").appendTo(headerVal);
-            $("<code/>")
-                .text(otherRow.value)
-                .appendTo(pre);
+            // Use HTML template for other headers
+            const clone = DomUtils.cloneTemplate("other-row-template");
+            const headerContent = otherRow.url ? otherRow.url : otherRow.header;
+            DomUtils.setTemplateHTML(clone, ".section-header", headerContent); // May contain HTML (url)
+            DomUtils.setTemplateText(clone, "code", otherRow.value);
+            otherList.appendChild(clone);
         }
     });
 
-    // Initialize any fabric lists added
-    const listElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-List");
-    Array.prototype.forEach.call(listElements, (listElement: HTMLElement) => {
-        new fabric["List"](listElement);
-    });
-
-    const listItemElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ms-ListItem");
-    Array.prototype.forEach.call(listItemElements, (listItem: HTMLElement) => {
-        new fabric["ListItem"](listItem);
-
-        // Init corresponding callout
-        const calloutElement: HTMLElement | null = listItem.querySelector(".ms-Callout");
-        if (!calloutElement) return;
-        new fabric["Callout"](calloutElement, listItem, "right");
-    });
+    // Fluent UI Web Components handle their own initialization
+    // Lists and callouts work with standard DOM interactions
 }
 
 function hideStatus(): void {
-    spinner.stop();
-    overlay.hide();
+    if (overlayElement) {
+        overlayElement.style.display = "none";
+    }
 }
 
 function renderItem(headers: string): void {
-    // Empty data
-    $(".summary-list").empty();
-    $("#original-headers code").empty();
-    $(".orig-header-ui").hide();
-    $(".received-list").empty();
-    $(".antispam-list").empty();
-    $(".other-list").empty();
-    $("#error-display .ms-MessageBar-text").empty();
-    $("#error-display").hide();
-
-    // Load new itemDescription
-    updateStatus(mhaStrings.mhaLoading);
-    buildViews(headers);
+    // Hide loading status as soon as we start rendering
     hideStatus();
+
+    // Empty data
+    DomUtils.clearElement(".summary-list");
+    DomUtils.setText("#original-headers code", "");
+    DomUtils.hideElement(".orig-header-ui");
+    DomUtils.clearElement(".received-list");
+    DomUtils.clearElement(".antispam-list");
+    DomUtils.clearElement(".other-list");
+    DomUtils.setText("#error-display .error-text", "");
+    DomUtils.hideElement("#error-display");
+
+    // Build views with the loaded data
+    buildViews(headers);
 }
 
 // Handles rendering of an error.
 // Does not log the error - caller is responsible for calling PostError
 function showError(error: unknown, message: string): void {
     console.error("Error:", error);
-    $("#error-display .ms-MessageBar-text").text(message);
-    $("#error-display").show();
+    DomUtils.setText("#error-display .error-text", message);
+    DomUtils.showElement("#error-display");
 }
 
 function eventListener(event: MessageEvent): void {
@@ -458,9 +461,10 @@ function eventListener(event: MessageEvent): void {
     }
 }
 
-$(function() {
+// Initialize when DOM is ready
+document.addEventListener("DOMContentLoaded", function() {
     try {
-        initializeFabric();
+        initializeFluentUI();
         updateStatus(mhaStrings.mhaLoading);
         window.addEventListener("message", eventListener, false);
         Poster.postMessageToParent("frameActive");

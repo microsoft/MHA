@@ -1,4 +1,4 @@
 // Use UTC timezone for all tests
-module.exports = async () => {
+export default async () => {
     process.env.TZ = "UTC";
 };

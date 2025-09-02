@@ -1,14 +1,32 @@
-﻿import $ from "jquery";
-import { fabric } from "office-ui-fabric-js/dist/js/fabric";
-
-import { Choice } from "./Choice";
+﻿import { Choice } from "./Choice";
 import { DeferredError } from "./DeferredError";
 import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
-import { findTabStops } from "./findTabStops";
 import { Poster } from "./Poster";
 import { Strings } from "./Strings";
+import { TabNavigation } from "./TabNavigation";
 import { GetHeaders } from "./ui/getHeaders/GetHeaders";
+import { ParentFrameUtils } from "./utils/ParentFrameUtils";
+
+// Fluent UI Web Components interfaces
+interface FluentDialog extends HTMLElement {
+    hidden: boolean;
+    addEventListener(type: "dismiss", listener: (event: Event) => void): void;
+    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+}
+
+interface FluentRadioGroup extends HTMLElement {
+    value: string;
+}
+
+interface FluentRadio extends HTMLElement {
+    value: string;
+    checked: boolean;
+}
+
+interface FluentCheckbox extends HTMLElement {
+    checked: boolean;
+}
 
 export class ParentFrame {
     private static iFrame: Window | null;
@@ -17,7 +35,7 @@ export class ParentFrame {
     private static deferredStatus: string[] = [];
     private static headers = "";
     private static modelToString = "";
-    protected static telemetryCheckboxComponent: fabric.CheckBox;
+    protected static telemetryCheckbox: FluentCheckbox | null = null;
 
     private static choices: Array<Choice> = [
         { label: "classic", url: "classicDesktopFrame.html", checked: false },
@@ -25,36 +43,13 @@ export class ParentFrame {
         { label: "new-mobile", url: "newMobilePaneIosFrame.html", checked: false }
     ];
 
-    private static getQueryVariable(variable: string): string {
-        const vars: string[] = window.location.search.substring(1).split("&");
-
-        let found = "";
-        // Find seems appropriate here but still fails in IE. Use forEach instead.
-        vars.forEach((v: string) => {
-            if (found === "") {
-                const pair: string[] = v.split("=");
-                if (pair[0] === variable) {
-                    found = pair[1] ?? "";
-                }
-            }
-        });
-
-        return found;
-    }
-
     private static setDefault(): void {
-        let uiDefault: string = ParentFrame.getQueryVariable("default");
+        let uiDefault: string = ParentFrameUtils.getQueryVariable("default");
         if (uiDefault === null) {
             uiDefault = "new";
         }
 
-        ParentFrame.choices.forEach((choice: Choice) => {
-            if (uiDefault === choice.label) {
-                choice.checked = true;
-            } else {
-                choice.checked = false;
-            }
-        });
+        ParentFrameUtils.setDefaultChoice(ParentFrame.choices, uiDefault);
     }
 
     private static postMessageToFrame(eventName: string, data: string | { error: string, message: string }): void {
@@ -70,6 +65,7 @@ export class ParentFrame {
 
     private static setFrame(frame: Window): void {
         ParentFrame.iFrame = frame;
+        TabNavigation.setIFrame(frame);
 
         if (ParentFrame.iFrame) {
             // If we have any deferred status, signal them
@@ -161,308 +157,205 @@ export class ParentFrame {
         }
     }
 
-    private static getSettingsKey(): string {
-        try {
-            return "frame" + Office.context.mailbox.diagnostics.hostName;
-        } catch {
-            return "frame";
-        }
-    }
-
     // Display primary UI
     private static go(choice: Choice): void {
         ParentFrame.iFrame = null;
         ParentFrame.currentChoice = choice;
         (document.getElementById("uiFrame") as HTMLIFrameElement).src = choice.url;
         if (Office.context) {
-            Office.context.roamingSettings.set(ParentFrame.getSettingsKey(), choice);
+            Office.context.roamingSettings.set(ParentFrameUtils.getSettingsKey(), choice);
             Office.context.roamingSettings.saveAsync();
         }
     }
 
     private static goDefaultChoice(): void {
-        let choice: Choice | undefined;
-        ParentFrame.choices.forEach((c: Choice) => { if (!choice && c.checked) choice = c; });
+        const choice = ParentFrame.choices.find((c: Choice) => c.checked);
         if (choice) {
             ParentFrame.go(choice);
         }
     }
 
-    private static create<T extends HTMLElement>(parentElement: JQuery<HTMLElement>, newType: string, newClass: string): JQuery<T> {
-        const newElement: JQuery<T> = $(document.createElement(newType)) as JQuery<T>;
-        if (newClass) {
-            newElement.addClass(newClass);
-        }
-
-        if (parentElement) {
-            parentElement.append(newElement);
-        }
-
-        return newElement;
-    }
-
     // Create list of choices to display for the UI types
     private static addChoices(): void {
-        const list: JQuery<HTMLUListElement> = $("#uiChoice-list");
-        list.empty();
+        const radioGroup = document.getElementById("uiChoice") as FluentRadioGroup;
+        if (!radioGroup) return;
+
+        // Clear existing options
+        radioGroup.innerHTML = "";
 
         ParentFrame.choices.forEach((choice: Choice, iChoice: number) => {
-            // Create html: <li class="ms-RadioButton">
-            const listItem: JQuery<HTMLLIElement> = ParentFrame.create(list, "li", "ms-RadioButton");
+            const radio = document.createElement("fluent-radio") as FluentRadio;
+            radio.value = iChoice.toString();
+            radio.textContent = choice.label;
 
-            // Create html: <input tabindex="-1" type="radio" class="ms-RadioButton-input" value="classic">
-            const input: JQuery<HTMLInputElement> = ParentFrame.create(listItem, "input", "ms-RadioButton-input");
-            const id = choice.label;
+            if (choice.checked) {
+                radio.checked = true;
+            }
 
-            input.attr("type", "radio");
-            input.attr("value", iChoice);
-            input.attr("id", id);
-
-            //  Create html: <label role="radio" class="ms-RadioButton-field" tabindex="0" aria-checked="false" name="uiChoice">
-            const label: JQuery<HTMLLabelElement> = ParentFrame.create(listItem, "label", "ms-RadioButton-field");
-            label.attr("name", "uiChoice");
-            label.attr("value", choice.label);
-            label.attr("for", id);
-
-            // Create html: <span class="ms-Label">classic</span>
-            const inputSpan: JQuery<HTMLSpanElement> = ParentFrame.create(label, "span", "ms-Label");
-            inputSpan.text(choice.label);
-
-            // Keyboard navigation of the radio buttons isn't setting them, so we watch for focus and set them
-            input.on("focus", function (): void {
-                const labels: JQuery<HTMLElement> = $("#uiChoice label");
-                labels.removeClass("is-checked");
-                labels.attr("aria-checked", "false");
-                label.addClass("is-checked");
-                label.attr("aria-checked", "true");
-                // ParentFrame.logElement("focus", label[0] as HTMLElement);
-            });
+            radioGroup.appendChild(radio);
         });
     }
 
     // Hook the UI together for display
-    private static initFabric(): void {
+    private static initFluent(): void {
         const header: Element | null = document.querySelector(".header-row");
         if (!header) return;
 
-        const dialogSettings: HTMLElement | null = header.querySelector("#dialog-Settings");
-        if (!dialogSettings) return;
+        const dialogSettings = document.getElementById("dialog-Settings") as FluentDialog;
+        const dialogDiagnostics = document.getElementById("dialog-Diagnostics") as FluentDialog;
 
-        // Wire up the dialog
-        const dialogSettingsComponent = new fabric["Dialog"](dialogSettings);
+        if (!dialogSettings || !dialogDiagnostics) return;
 
-        const dialogDiagnostics: HTMLElement | null = header.querySelector("#dialog-Diagnostics");
-        if (!dialogDiagnostics) return;
-        // Wire up the dialog
-        const dialogDiagnosticsComponent = new fabric["Dialog"](dialogDiagnostics);
+        // Ensure dialogs are initially hidden
+        dialogSettings.hidden = true;
+        dialogDiagnostics.hidden = true;
 
-        const actionButtonElements: NodeListOf<Element> = header.querySelectorAll(".ms-Dialog-action");
-        if (!actionButtonElements) return;
+        // Add click-outside-to-dismiss functionality
+        dialogSettings.addEventListener("click", (e) => {
+            if (e.target === dialogSettings) {
+                dialogSettings.hidden = true;
+            }
+        });
 
-        const telemetryCheckbox: HTMLElement | null = document.querySelector("#dialog-enableTelemetry");
-        if (!telemetryCheckbox) return;
-        this.telemetryCheckboxComponent = new fabric["CheckBox"](telemetryCheckbox);
-        ParentFrame.setSendTelemetryUI(diagnostics.canSendTelemetry());
+        dialogDiagnostics.addEventListener("click", (e) => {
+            if (e.target === dialogDiagnostics) {
+                dialogDiagnostics.hidden = true;
+            }
+        });
 
-        function actionHandler(event: Event): void {
-            const action = (event.currentTarget as HTMLButtonElement).id;
+        // Add escape key to dismiss dialogs and enter key to apply settings
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                if (!dialogSettings.hidden) {
+                    dialogSettings.hidden = true;
+                }
+                if (!dialogDiagnostics.hidden) {
+                    dialogDiagnostics.hidden = true;
+                }
+            }
 
-            function getDiagnostics(): string {
-                let diagnosticsString = "";
-                try {
-                    const diagnosticMap = diagnostics.get();
-                    for (const diag in diagnosticMap) {
-                        if (Object.prototype.hasOwnProperty.call(diagnosticMap, diag)) {
-                            diagnosticsString += diag + " = " + diagnosticMap[diag] + "\n";
+            if (e.key === "Enter" && !dialogSettings.hidden) {
+                // Only trigger OK action when focused on radio buttons or checkboxes
+                const activeElement = document.activeElement;
+                const isRadioOrCheckbox = activeElement &&
+                    (activeElement.tagName.toLowerCase() === "fluent-radio" ||
+                     activeElement.tagName.toLowerCase() === "fluent-checkbox");
+
+                if (isRadioOrCheckbox) {
+                    // Trigger the same action as the OK button
+                    const radioGroup = document.getElementById("uiChoice") as FluentRadioGroup;
+                    if (radioGroup && radioGroup.value) {
+                        const iChoice = parseInt(radioGroup.value);
+                        const choice: Choice | undefined = ParentFrame.choices[iChoice];
+                        if (choice && choice.label !== ParentFrame.currentChoice.label) {
+                            ParentFrame.go(choice);
                         }
                     }
-                } catch {
-                    diagnosticsString += "ERROR: Failed to get diagnostics\n";
-                }
 
-                const errors: string[] = Errors.get();
-                errors.forEach((error: string) => {
-                    diagnosticsString += "ERROR: " + error + "\n";
-                });
-
-                return diagnosticsString;
-            }
-
-            diagnostics.setSendTelemetry(ParentFrame.telemetryCheckboxComponent.getValue());
-
-            switch (action) {
-                case "actionsSettings-OK": {
-                    // How did the user say to display it (UI to display)
-                    const iChoice: string = ($("#uiChoice .is-checked").prev()[0] as HTMLInputElement).value;
-                    const choice: Choice | undefined = ParentFrame.choices[+iChoice];
-                    if (choice && choice.label !== ParentFrame.currentChoice.label) {
-                        ParentFrame.go(choice);
+                    // Update telemetry setting
+                    if (ParentFrame.telemetryCheckbox) {
+                        diagnostics.setSendTelemetry(ParentFrame.telemetryCheckbox.checked);
                     }
 
-                    break;
-                }
-                case "actionsSettings-diag": {
-                    const diagnostics: string = getDiagnostics();
-                    $("#diagnostics").text(diagnostics);
-                    dialogDiagnosticsComponent.open();
-                    document.getElementById("diagpre")!.focus();
-                    break;
+                    dialogSettings.hidden = true;
+                    e.preventDefault(); // Prevent default form submission behavior
                 }
             }
+
+            if (e.key === "Enter" && !dialogDiagnostics.hidden) {
+                // Close diagnostics dialog when Enter is pressed on the code box
+                const activeElement = document.activeElement;
+                if (activeElement && activeElement.id === "diagpre") {
+                    dialogDiagnostics.hidden = true;
+                    e.preventDefault();
+                }
+            }
+        });
+
+        const telemetryCheckbox = document.getElementById("telemetryInput") as FluentCheckbox;
+        if (telemetryCheckbox) {
+            ParentFrame.telemetryCheckbox = telemetryCheckbox;
+            ParentFrame.setSendTelemetryUI(diagnostics.canSendTelemetry());
         }
 
-        // Wire up the buttons
-        Array.prototype.forEach.call(actionButtonElements, (button: Element) => {
-            new fabric["Button"](button, actionHandler);
+        // Wire up action buttons
+        const okButton = document.getElementById("actionsSettings-OK");
+        okButton?.addEventListener("click", () => {
+            // Get selected choice from radio group
+            const radioGroup = document.getElementById("uiChoice") as FluentRadioGroup;
+            if (radioGroup && radioGroup.value) {
+                const iChoice = parseInt(radioGroup.value);
+                const choice: Choice | undefined = ParentFrame.choices[iChoice];
+                if (choice && choice.label !== ParentFrame.currentChoice.label) {
+                    ParentFrame.go(choice);
+                }
+            }
+
+            // Update telemetry setting
+            if (ParentFrame.telemetryCheckbox) {
+                diagnostics.setSendTelemetry(ParentFrame.telemetryCheckbox.checked);
+            }
+
+            dialogSettings.hidden = true;
         });
 
-        const choiceFieldGroupElements: NodeListOf<HTMLElement> = dialogSettings.querySelectorAll(".ms-ChoiceFieldGroup");
-        Array.prototype.forEach.call(choiceFieldGroupElements, (choiceFieldGroupElement: HTMLElement) => {
-            new fabric["ChoiceFieldGroup"](choiceFieldGroupElement);
+        const diagButton = document.getElementById("actionsSettings-diag");
+        diagButton?.addEventListener("click", () => {
+            const diagnosticsText = ParentFrameUtils.getDiagnosticsString();
+            const diagnosticsElement = document.getElementById("diagnostics");
+            if (diagnosticsElement) {
+                diagnosticsElement.textContent = diagnosticsText;
+            }
+
+            // Hide settings dialog and show diagnostics dialog
+            dialogSettings.hidden = true;
+            dialogDiagnostics.hidden = false;
+            document.getElementById("diagpre")?.focus();
         });
 
-        const settingsButton: HTMLButtonElement = header.querySelector(".gear-button") as HTMLButtonElement;
-        // When clicking the button, open the dialog
-        settingsButton.onclick = function (): void {
-            // Set the current choice in the UI.
-            $("#uiChoice input").attr("checked", "false");
-            const labels: JQuery<HTMLElement> = $("#uiChoice label");
-            labels.removeClass("is-checked");
-            labels.attr("aria-checked", "false");
-            const currentSelected: JQuery<HTMLLabelElement> = $("#uiChoice label[value=" + ParentFrame.currentChoice.label + "]");
-            currentSelected.addClass("is-checked");
-            currentSelected.attr("aria-checked", "true");
-            const input: JQuery<HTMLLabelElement> = currentSelected.prevAll("input:first");
-            input.prop("checked", "true");
-            dialogSettingsComponent.open();
-            // When dialog is opened, focus on the current selected radio button
-            const inputLabel: HTMLElement = document.querySelector("#uiChoice label[value=" + ParentFrame.currentChoice.label + "]")!;
-            inputLabel.focus();
-        };
+        const diagOkButton = document.getElementById("actionsDiag-OK");
+        diagOkButton?.addEventListener("click", () => {
+            dialogDiagnostics.hidden = true;
+        });
 
-        const copyButton: HTMLButtonElement = header.querySelector(".copy-button") as HTMLButtonElement;
-        copyButton.onclick = function (): void {
+        const settingsButton = document.getElementById("settingsButton");
+        settingsButton?.addEventListener("click", () => {
+            // Set the current choice in the radio group
+            const radioGroup = document.getElementById("uiChoice") as FluentRadioGroup;
+            if (radioGroup) {
+                const currentIndex = ParentFrame.choices.findIndex(c => c.label === ParentFrame.currentChoice.label);
+                if (currentIndex >= 0) {
+                    radioGroup.value = currentIndex.toString();
+                }
+            }
+            dialogSettings.hidden = false;
+        });
+
+        const copyButton = document.getElementById("copyButton");
+        copyButton?.addEventListener("click", () => {
             Strings.copyToClipboard(ParentFrame.modelToString);
-        };
-
-        // Tabbing into the radio buttons doesn't do what we want by default, so watch for tabbing and handle all the cases
-        document.addEventListener("keydown", function (e) {
-            if (e.key === "Tab") {
-                const shiftPressed = e.shiftKey;
-                const checked: HTMLLabelElement = document.querySelector(".ms-RadioButton-field.is-checked")!;
-                const focused: HTMLElement = document.activeElement as HTMLElement;
-                ParentFrame.logElement("checked", checked);
-                ParentFrame.logElement("focused", focused);
-                console.log("Shift pressed = " + shiftPressed);
-                if (checked && focused) {
-                    // Tab forward from body, or OK should go to radio buttons
-                    // Tab backwards from telemetry checkbox should go to radio buttons
-                    if ((!shiftPressed && focused === this.body) ||
-                        (!shiftPressed && focused.id === "actionsSettings-OK") ||
-                        (shiftPressed && focused.id === "telemetryLabel")) {
-                        // console.log("Tabbing into radio buttons");
-                        checked.focus();
-                        e.preventDefault();
-                    }
-                    // Shift tab from radio buttons or body should go to OK
-                    else if ((shiftPressed && focused.className === "ms-RadioButton-input") ||
-                        (shiftPressed && focused === this.body)) {
-                        // console.log("Tabbing to OK");
-                        const okButton: HTMLElement = document.getElementById("actionsSettings-OK")!;
-                        okButton.focus();
-                        e.preventDefault();
-                    }
-                    // Tab or shift tab from diagnostics OK should go to code
-                    else if (focused.id === "actionsDiag-OK") {
-                        // console.log("Tabbing to diagnostics");
-                        const diagButton: HTMLElement = document.getElementById("diagpre")!;
-                        diagButton.focus();
-                        e.preventDefault();
-                    }
-                }
-
-                // Insert the settings and copy buttons into the tab order for the ribbon if we have one
-                // This handles tabbing out from these buttons.
-                // Tabbing into these buttons is over in newDesktopFrame.ts
-                if (!shiftPressed && focused.id === "settingsButton") {
-                    // Find first header-view which is visible
-                    const view = ParentFrame.iFrame?.document.querySelector(".header-view[style*=\"display: block\"]") as HTMLElement;
-                    if (view) {
-                        // set focus to first child in view which can get focus
-                        const tabStops = findTabStops(view);
-                        // Set focus on first element in the list if we can
-                        if (tabStops.length > 0){
-                            tabStops[0]?.focus();
-                            e.preventDefault();
-                        }
-                    }
-                }
-                else if (shiftPressed && focused.id === "copyButton") {
-                    const otherButton = ParentFrame.iFrame?.document.getElementById("other-btn");
-                    if (otherButton) {
-                        otherButton.focus();
-                        e.preventDefault();
-                    }
-                }
-            }
         });
 
-        // Mouse selection of radio buttons sets the focus on the body instead of the radio button.
-        // Watch for "is checked" class changes and set the focus on the checked radio button
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.attributeName === "class") {
-                    const target = mutation.target as HTMLElement;
-                    if (target.classList.contains("is-checked")) {
-                        // ParentFrame.logElement("MutationObserver", target);
-                        target.focus();
-                    }
-                }
-            });
-        });
-
-        const labels = document.querySelectorAll(".ms-RadioButton-field");
-        labels.forEach((label) => {
-            observer.observe(label, { attributes: true });
-        });
-    }
-
-    private static logElement(title: string, element: HTMLElement): void {
-        let out = title + " element:" + element;
-        // make sure element isn't null
-        if (element) {
-            if (element.id) out += " id:" + element.id;
-            if (element.className) out += " class:" + element.className;
-            if (element.getAttribute("role")) out += " role:" + element.getAttribute("role");
-            if (element.title) out += " title:" + element.title;
-            if (element.getAttribute("aria-checked")) out += " aria-checked:" + element.getAttribute("aria-checked");
-            if (element.getAttribute("for")) out += " for:" + element.getAttribute("for");
-            if (element.getAttribute("name")) out += " name:" + element.getAttribute("name");
-        }
-
-        console.log(out);
+        // Initialize tab navigation handling
+        TabNavigation.initialize();
     }
 
     public static setSendTelemetryUI(sendTelemetry: boolean) {
-        if (sendTelemetry) {
-            this.telemetryCheckboxComponent.check();
-        } else {
-            this.telemetryCheckboxComponent.unCheck();
+        if (ParentFrame.telemetryCheckbox) {
+            ParentFrame.telemetryCheckbox.checked = sendTelemetry;
         }
     }
 
     public static async initUI() {
         ParentFrame.setDefault();
         ParentFrame.addChoices();
-        ParentFrame.initFabric();
+        ParentFrame.initFluent();
 
         try {
-            const choice: Choice = Office.context.roamingSettings.get(ParentFrame.getSettingsKey());
+            const choice: Choice = Office.context.roamingSettings.get(ParentFrameUtils.getSettingsKey());
             const sendTelemetry: boolean = Office.context.roamingSettings.get("sendTelemetry");
             diagnostics.initSendTelemetry(sendTelemetry);
 
-            const input: JQuery<HTMLElement> = $("#uiToggle" + choice.label);
-            input.prop("checked", "true");
             ParentFrame.go(choice);
         } catch {
             ParentFrame.goDefaultChoice();

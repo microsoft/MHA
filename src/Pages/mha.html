@@ -12,18 +12,18 @@
     </div>
     <div id="SectionContent">
         <textarea id="inputHeaders" autofocus="autofocus" placeholder="Paste headers here." required="required" rows="15"></textarea>
-        <button class="ms-Button ms-Button--primary" id="analyzeButton">
-            <span class="ms-Button-label">Analyze headers</span>
-        </button>
-        <button class="ms-Button hiddenElement" id="clearButton">
-            <span class="ms-Button-label">Clear</span>
-        </button>
-        <button class="ms-Button hiddenElement" id="copyButton">
-            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--Copy"></i></span>
-            <span class="ms-Button-label">Copy</span>
-        </button>
+        <fluent-button appearance="accent" id="analyzeButton" aria-label="Analyze message headers">
+            <span>Analyze headers</span>
+        </fluent-button>
+        <fluent-button class="hiddenElement" id="clearButton" aria-label="Clear input and results">
+            <span>Clear</span>
+        </fluent-button>
+        <fluent-button class="hiddenElement" id="copyButton" aria-label="Copy analysis results to clipboard">
+            <span class="fluent-icon fluent-icon--copy"></span>
+            <span>Copy</span>
+        </fluent-button>
         <span id="mhaFooter">
-            <a href="https://github.com/microsoft/MHA" target="_blank">Submit feedback on github</a>
+            <a href="https://github.com/microsoft/MHA" target="_blank" rel="noopener">Submit feedback on github</a>
         </span>
 
         <hr id="lineBreak" />

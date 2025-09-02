@@ -1,14 +1,18 @@
-﻿import { ITable } from "./ITable";
+﻿import { DataTable } from "./DataTable";
+import { mhaStrings } from "../mhaStrings";
 import { Header } from "../row/Header";
 import { OtherRow } from "../row/OtherRow";
 
-export class Other extends ITable {
+export class Other extends DataTable {
     private otherRows: OtherRow[] = [];
     protected sortColumnInternal = "number";
     protected sortOrderInternal = 1;
     public readonly tableName: string = "otherHeaders";
+    public readonly displayName: string = mhaStrings.mhaOtherHeaders;
 
-    public doSort(col: string): void {
+    public get rows(): OtherRow[] { return this.otherRows; }
+
+    public override doSort(col: string): void {
         if (this.sortColumnInternal === col) {
             this.sortOrderInternal *= -1;
         } else {
@@ -37,10 +41,9 @@ export class Other extends ITable {
         return false;
     }
 
-    public exists() { return this.rows.length > 0; }
+    public override exists() { return this.rows.length > 0; }
 
-    public get rows(): OtherRow[] { return this.otherRows; }
-    public toString() {
+    public override toString() {
         if (!this.exists()) return "";
         const ret: string[] = ["Other"];
         this.rows.forEach(function (row) {

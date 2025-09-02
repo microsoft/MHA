@@ -4,6 +4,9 @@ import { Header } from "./Header";
 import { Row } from "./Row";
 
 export class ForefrontAntiSpamReport extends AntiSpamReport {
+    public override readonly tableName: string = "forefrontAntiSpamReport";
+    public override readonly displayName: string = mhaStrings.mhaForefrontAntiSpamReport;
+    public override readonly tag: string = "FFAS";
     private forefrontAntiSpamRows: Row[] = [
         new Row("ARC", mhaStrings.mhaArc, "X-Forefront-Antispam-Report"),
         new Row("CTRY", mhaStrings.mhaCountryRegion, "X-Forefront-Antispam-Report"),

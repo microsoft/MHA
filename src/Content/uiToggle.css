@@ -1,16 +1,26 @@
-/* https://stackoverflow.com/questions/325273/make-iframe-to-fit-100-of-containers-remaining-height */
+/* Import shared Fluent UI styles */
+@import url("fluentCommon.css");
+
 body, html {
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0
+    padding: 0;
+    font-family: var(--font-family);
 }
 
 .header-row {
-    position: absolute;
-    top: 0;
-    right: 0;
+    position: fixed;
+    top: 0px;
+    right: 0px;
     z-index: 10;
+    background: transparent;
+    display: flex;
+    align-items: flex-start;
+    min-height: var(--button-height);
+    width: auto;
+    height: var(--button-height);
+    contain: layout style;
 }
 
 .frame-row {
@@ -28,20 +38,169 @@ body, html {
     border: none;
 }
 
+/* Frame-specific overrides */
 .code-box > pre {
-    background-color: #eaeaea;
-    border: 1px solid #ccc;
-    padding: 5px;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    font-size: .8em;
-    max-height: 300px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    flex: none;
+    height: auto;
 }
 
-#dialog-Diagnostics {
-    width: calc(100% - 24px);
-    box-sizing: border-box;
-    max-width: none;
+/* Diagnostics dialog code-box sizing */
+fluent-dialog[aria-label="Diagnostics"] .code-box > pre {
+    background-color: var(--background-light-gray);
+    font-size: .8em;
+    line-height: 1.2;
+}
+
+/* Fluent UI Dialog customization */
+fluent-dialog {
+    --dialog-width: 400px;
+    --dialog-height: auto;
+    --dialog-border-radius: 8px;
+}
+
+fluent-dialog[hidden] {
+    display: none !important;
+}
+
+fluent-dialog[aria-label="Diagnostics"] {
+    --dialog-width: calc(100% - 24px);
+    --dialog-max-width: 600px;
+    --dialog-height: auto;
+}
+
+.dialog-content {
+    padding: 0 4px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* Settings dialog specific content styling */
+fluent-dialog[aria-label="Settings"] .dialog-content {
+    border-top: 2px solid var(--background-lighter-gray);
+    margin-top: 2px;
+}
+
+/* Privacy policy link alignment */
+.privacy-link {
+    text-align: right;
+}
+
+/* UI settings fieldset styling */
+fieldset {
+    border: 1px solid var(--border-gray);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-medium);
+    margin: 0 0 16px 0;
+}
+
+fieldset legend {
+    padding: 0 8px;
+    font-weight: 600;
+}
+
+fieldset fluent-checkbox {
+    margin-top: 12px;
+}
+
+/* Ensure dialog action buttons are visible and properly styled */
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 0;
+    padding: 16px 20px;
+    border-top: 1px solid var(--text-gray);
+    background: var(--white);
+    border-radius: 0 0 8px 8px;
+    flex-shrink: 0;
+}
+
+.dialog-actions fluent-button {
+    min-width: 80px;
+}
+
+/* Specific styling for diagnostics dialog actions */
+fluent-dialog[aria-label="Diagnostics"] .dialog-actions {
+    margin-bottom: 0;
+    border-top: none;
+}
+
+/* Override general dialog spacing for diagnostics */
+fluent-dialog[aria-label="Diagnostics"] > div {
+    margin: 0;
+}
+
+fluent-dialog[aria-label="Diagnostics"] .dialog-content {
+    margin: 0;
+    height: auto;
+    overflow: visible;
+    padding: var(--spacing-medium);
+}
+
+fluent-dialog[aria-label="Diagnostics"] .code-box {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Dialog content spacing */
+fluent-dialog > div {
+    margin: 12px 0;
+}
+
+fluent-dialog fluent-radio-group {
+    margin: 4px 0 2px 0;
+}
+
+fluent-dialog fluent-radio {
+    margin: 3px 0;
+}
+
+fluent-dialog fluent-checkbox {
+    margin: 2px 0 3px 0;
+}
+
+
+/* Remove all internal highlights from radio and checkbox controls */
+fluent-radio::part(control),
+fluent-radio::part(control):focus,
+fluent-radio::part(control):focus-visible,
+fluent-radio::part(control):hover,
+fluent-checkbox::part(control),
+fluent-checkbox::part(control):focus,
+fluent-checkbox::part(control):focus-visible,
+fluent-checkbox::part(control):hover {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    fluent-button,
+    fluent-checkbox,
+    fluent-radio {
+        border: 2px solid ButtonText;
+    }
+    
+    .code-box > pre {
+        background-color: ButtonFace;
+        border: 2px solid ButtonText;
+        color: ButtonText;
+    }
+}
+
+/* Privacy policy link styling */
+fluent-dialog a {
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+fluent-dialog a:hover {
+    text-decoration: underline;
+}
+
+fluent-dialog a:focus {
+    outline: var(--focus-outline);
+    outline-offset: 2px;
 }

@@ -2,6 +2,7 @@
   "name": "mha",
   "version": "1.0.0",
   "description": "Message Header Analyzer",
+  "type": "module",
   "engines": {
     "node": ">=18.12.0",
     "npm": ">=8.19.2"
@@ -9,10 +10,11 @@
   "private": true,
   "scripts": {
     "clean": "node tasks/clean.js",
-    "watch": "webpack --watch",
+    "watch": "webpack --watch --mode=development",
     "build": "webpack --mode=production --node-env=production",
     "build:dev": "webpack --mode=development",
-    "serve": "webpack serve",
+    "build:analyze": "webpack --mode=production --env analyze",
+    "serve": "webpack serve --mode=development",
     "dev-server": "webpack serve --mode=development",
     "start": "office-addin-debugging start ManifestDebugLocal.xml",
     "start:debug-server": "office-addin-debugging start manifestDebugServer.xml",
@@ -20,8 +22,8 @@
     "stop": "office-addin-debugging stop ManifestDebugLocal.xml && office-addin-debugging stop manifestDebugServer.xml",
     "validate": "office-addin-manifest validate Manifest.xml",
     "test": "jest",
-    "lint": "eslint src",
-    "lint:fix": "eslint --fix --ext .ts src",
+    "lint": "eslint \"*.{js,ts}\" \"src/**/*\" \"tasks/**/*\"",
+    "lint:fix": "eslint --fix \"*.{js,ts}\" \"src/**/*\" \"tasks/**/*\"",
     "pretest": "npm run lint",
     "prebuild": "npm run clean"
   },
@@ -46,7 +48,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.33.0",
     "@jest/globals": "^30.0.5",
-    "@stylistic/eslint-plugin-js": "^4.4.1",
+    "@stylistic/eslint-plugin": "^4.4.1",
     "@types/jest": "^30.0.0",
     "@types/jquery": "^3.5.32",
     "@types/office-js": "^1.0.525",
@@ -58,8 +60,6 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-node": "^11.1.0",
     "exports-loader": "^5.0.0",
-    "file-loader": "^6.2.0",
-    "filemanager-webpack-plugin": "^9.0.1",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
     "globals": "^16.3.0",
     "html-webpack-plugin": "^5.6.4",
@@ -78,6 +78,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
     "webpack": "^5.101.2",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2"
   },
@@ -92,7 +93,6 @@
     "framework7-icons": "^5.0.5",
     "jquery": "^3.7.1",
     "jwt-decode": "^4.0.0",
-    "office-ui-fabric-js": "^1.5.0",
     "promise-polyfill": "8.3.0",
     "stacktrace-js": "^2.0.2",
     "unfetch": "^5.0.0"

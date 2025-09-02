@@ -1,4 +1,4 @@
-﻿import { ITable } from "./ITable";
+﻿import { DataTable } from "./DataTable";
 import { DateWithNum } from "../DateWithNum";
 import { MHADates } from "../MHADates";
 import { mhaStrings } from "../mhaStrings";
@@ -6,11 +6,12 @@ import { Header } from "../row/Header";
 import { Match } from "../row/Match";
 import { ReceivedRow } from "../row/ReceivedRow";
 
-export class Received extends ITable {
+export class Received extends DataTable {
     private receivedRows: ReceivedRow[] = [];
     protected sortColumnInternal = "hop";
     protected sortOrderInternal = 1;
     public readonly tableName: string = "receivedHeaders";
+    public readonly displayName: string = mhaStrings.mhaReceivedHeaders;
 
     // Builds array of values for each header in receivedHeaderNames.
     // This algorithm should work regardless of the order of the headers, given:
@@ -110,9 +111,11 @@ export class Received extends ITable {
         return receivedFields;
     }
 
-    public exists(): boolean { return this.rows.length > 0; }
+    public get rows(): ReceivedRow[] { return this.receivedRows; }
 
-    public doSort(col: string): void {
+    public override exists(): boolean { return this.rows.length > 0; }
+
+    public override doSort(col: string): void {
         if (this.sortColumn === col) {
             this.sortOrderInternal *= -1;
         } else {
@@ -240,8 +243,7 @@ export class Received extends ITable {
         return iEndTime !== iStartTime ? Received.computeTime(iEndTime, iStartTime) : "";
     }
 
-    public get rows(): ReceivedRow[] { return this.receivedRows; }
-    public toString(): string {
+    public override toString(): string {
         if (!this.exists()) return "";
         const ret: string[] = ["Received"];
         const rows: ReceivedRow[] = [];
