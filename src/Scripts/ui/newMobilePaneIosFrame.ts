@@ -28,8 +28,6 @@ function postError(error: unknown, message: string): void {
 
 function initializeFramework7(): void {
     myApp = new Framework7({
-        // App root element
-        el: '#app',
         // App name
         name: 'MHA',
         // Set theme based on platform
