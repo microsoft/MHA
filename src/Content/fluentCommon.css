@@ -34,10 +34,7 @@
 }
 
 /* Secondary Button Styling - Default black border, blue highlight */
-fluent-button:is(:not([appearance]), [appearance="neutral"]):not([disabled]) {
-    border: 1px solid var(--black);
-}
-
+fluent-button:is(:not([appearance]), [appearance="neutral"]):not([disabled]),
 fluent-button:is(:not([appearance]), [appearance="neutral"])::part(control) {
     border: 1px solid var(--black);
 }
