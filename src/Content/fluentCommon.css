@@ -100,13 +100,9 @@ fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label:not(
 
 /* Modern Fluent Icon Styling */
 .fluent-icon {
-    font-family: "Segoe UI", "Arial Unicode MS", sans-serif;
     font-size: 20px;
     font-style: normal;
-    font-weight: normal;
     color: var(--primary-blue);
-    line-height: 1;
-    display: inline-block;
 }
 
 /* Icon size variants */
