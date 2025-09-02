@@ -100,15 +100,6 @@ fluent-button[appearance="subtle"]:is(:active, .is-active) {
     border-radius: 0;
 }
 
-/* Label management: Hide labels by default, show on hover/active if they exist */
-fluent-button[appearance="subtle"] .button-label {
-    display: none;
-    margin-inline-start: var(--spacing-small);
-    font-size: 14px;
-    color: var(--primary-blue);
-    white-space: nowrap;
-}
-
 /* Navigation buttons with labels need flexible width when label shows */
 fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label:not([style*="display: none"])) {
     width: auto;
