@@ -55,10 +55,10 @@ function initializeFramework7(): void {
 }
 
 function initializeTabVisibility(): void {
-    // Hide all tabs except the active one
-    document.querySelectorAll('.view.tab').forEach(tab => {
-        if (!tab.classList.contains('active')) {
-            (tab as HTMLElement).style.display = 'none';
+    // Hide all tabs except the active one using CSS classes
+    document.querySelectorAll('.tab').forEach(tab => {
+        if (!tab.classList.contains('tab-active')) {
+            tab.classList.remove('tab-active');
         }
     });
 }
@@ -75,22 +75,18 @@ function setupTabSwitching(): void {
             console.log('Tab clicked:', targetTab);
             
             // Remove active class from all tabs and tab links
-            document.querySelectorAll('.view.tab').forEach(tab => {
-                tab.classList.remove('active');
-                // Hide the tab
-                (tab as HTMLElement).style.display = 'none';
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('tab-active');
             });
             document.querySelectorAll('.tab-link').forEach(link => {
-                link.classList.remove('active');
+                link.classList.remove('tab-link-active');
             });
             
             // Add active class to clicked tab link and corresponding tab
-            this.classList.add('active');
+            this.classList.add('tab-link-active');
             const targetTabElement = document.querySelector(targetTab);
             if (targetTabElement) {
-                targetTabElement.classList.add('active');
-                // Show the tab
-                (targetTabElement as HTMLElement).style.display = 'block';
+                targetTabElement.classList.add('tab-active');
                 console.log('Activated tab:', targetTab);
             }
         });

@@ -1,4 +1,15 @@
 /* Framework7 specific overrides */
+
+/* Framework7 v8 tab styling */
+.tabs .tab {
+    background: #f4f4f4;
+    display: none;
+}
+
+.tabs .tab.tab-active {
+    display: block;
+}
+
 .code-box>pre {
     background-color: #eaeaea;
     border: 1px solid #ccc;
