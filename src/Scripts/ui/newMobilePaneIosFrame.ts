@@ -3,10 +3,11 @@ import "framework7-icons/css/framework7-icons.css";
 import "../../Content/newMobilePaneIosFrame.css";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import Framework7 from "framework7";
+import Preloader from "framework7/components/preloader";
+import Dialog from "framework7/components/dialog";
 import $ from "jquery";
 
-import { Framework7 } from "../framework7";
-import type Framework7Instance from "framework7";
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Poster } from "../Poster";
@@ -18,7 +19,7 @@ import { SummaryRow } from "../row/SummaryRow";
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
 // Framework7 app object
-let myApp: Framework7Instance | null = null;
+let myApp: Framework7 | null = null;
 
 dayjs.extend(utc);
 
@@ -27,18 +28,28 @@ function postError(error: unknown, message: string): void {
 }
 
 function initializeFramework7(): void {
+    // Install Framework7 components
+    Framework7.use([Preloader, Dialog]);
+    
     myApp = new Framework7({
         // App name
-        name: 'MHA',
+        name: "MHA",
         // Set theme based on platform
-        theme: 'auto',
+        theme: "auto",
+    });
+
+    // Verify components are available
+    console.log("Framework7 initialized:", {
+        hasPreloader: !!myApp.preloader,
+        hasDialog: !!myApp.dialog,
+        preloaderMethods: myApp.preloader ? Object.keys(myApp.preloader) : "not available"
     });
 
     document.getElementById("summary-btn")!.focus();
 }
 
 function updateStatus(message: string): void {
-    if (myApp) {
+    if (myApp && myApp.preloader) {
         myApp.preloader.hide();
         myApp.preloader.show(message);
     }
@@ -49,7 +60,7 @@ function addCalloutEntry(name: string, value: string | number | null, parent: JQ
         $("<p/>")
             .addClass("wrap-line")
             .html("<strong>" + name + ": </strong>" + value)
-            .appendTo(parent);
+            .appendTo(parent); 
     }
 }
 
@@ -417,9 +428,14 @@ function renderItem(headers: string): void {
 // Does not log the error - caller is responsible for calling PostError
 function showError(error: unknown, message: string): void {
     console.error("Error:", error);
-    if (myApp) {
+    if (myApp && myApp.preloader) {
         myApp.preloader.hide();
+    }
+    if (myApp && myApp.dialog) {
         myApp.dialog.alert(message, "An Error Occurred");
+    } else {
+        // Fallback to browser alert if Framework7 dialog is not available
+        alert(`An Error Occurred: ${message}`);
     }
 }
 
