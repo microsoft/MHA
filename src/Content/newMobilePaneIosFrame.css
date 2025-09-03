@@ -40,12 +40,12 @@
     background: #f4f4f4;
 }
 
-.content-block-title {
+.block-title {
     text-transform: none;
     white-space: normal;
 }
 
-.content-block {
+.block {
     word-wrap: break-word;
 }
 
@@ -71,7 +71,7 @@ a.tab-link {
     text-decoration: none;
 }
 
-.content-block-title {
+.block-title {
     overflow: visible;
 }
 /* See MutationObserver in renderItem to see how we set the height back to auto after this */
@@ -86,14 +86,14 @@ a.tab-link {
 }
 
 /* Only show chevron arrows on accordion items that can be collapsed/expanded */
-.list-block .accordion-item .item-link .item-inner {
+.list .accordion-item .item-link .item-inner {
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D%270%200%2060%20120%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cpath%20d%3D%27m60%2061.5-38.25%2038.25-9.75-9.75%2029.25-28.5-29.25-28.5%209.75-9.75z%27%20fill%3D%27%23000000%27%2F%3E%3C%2Fsvg%3E");
     background-repeat: no-repeat;
     background-position: right 15px center;
     background-size: 15px;
 }
 
-.list-block .accordion-item-expanded .item-link .item-inner {
+.list .accordion-item-expanded .item-link .item-inner {
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D'0%200%2060%20120'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%3Cpath%20d%3D'm60%2061.5-38.25%2038.25-9.75-9.75%2029.25-28.5-29.25-28.5%209.75-9.75z'%20transform%3D'translate(115%2C%2030)%20rotate(90)'%20fill%3D'%23000000'%2F%3E%3C%2Fsvg%3E");
     background-repeat: no-repeat;
     background-position: right 15px center;

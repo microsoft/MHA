@@ -137,7 +137,7 @@ function addSpamReportRow(spamRow: Row, parent: JQuery<HTMLElement>) {
             .appendTo(item);
 
         const contentBlock = $("<div/>")
-            .addClass("content-block")
+            .addClass("block")
             .appendTo(itemContent);
 
         const linkWrap = $("<p/>")
@@ -159,12 +159,12 @@ function buildViews(headers: string): void {
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
             $("<div/>")
-                .addClass("content-block-title")
+                .addClass("block-title")
                 .text(row.label)
                 .appendTo(summaryContent);
 
             const contentBlock = $("<div/>")
-                .addClass("content-block")
+                .addClass("block")
                 .appendTo(summaryContent);
 
             const headerVal = $("<div/>")
@@ -321,7 +321,7 @@ function buildViews(headers: string): void {
                 .appendTo(popover);
 
             const popoverContent = $("<div/>")
-                .addClass("content-block")
+                .addClass("block")
                 .appendTo(popoverInner);
 
             addCalloutEntry("From", row.from.value, popoverContent);
@@ -358,12 +358,12 @@ function buildViews(headers: string): void {
     // Forefront
     if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
         $("<div/>")
-            .addClass("content-block-title")
+            .addClass("block-title")
             .text("Forefront Antispam Report")
             .appendTo(antispamContent);
 
         const list: JQuery<HTMLElement> = $("<div/>")
-            .addClass("list-block")
+            .addClass("list")
             .addClass("accordion-list")
             .appendTo(antispamContent);
 
@@ -378,12 +378,12 @@ function buildViews(headers: string): void {
     // Microsoft
     if (viewModel.antiSpamReport.rows.length > 0) {
         $("<div/>")
-            .addClass("content-block-title")
+            .addClass("block-title")
             .text("Microsoft Antispam Report")
             .appendTo(antispamContent);
 
         const list: JQuery<HTMLElement> = $("<div/>")
-            .addClass("list-block")
+            .addClass("list")
             .addClass("accordion-list")
             .appendTo(antispamContent);
 
@@ -401,7 +401,7 @@ function buildViews(headers: string): void {
     viewModel.otherHeaders.rows.forEach((row: OtherRow) => {
         if (row.value) {
             const headerName = $("<div/>")
-                .addClass("content-block-title")
+                .addClass("block-title")
                 .text(row.header)
                 .appendTo(otherContent);
 
@@ -415,7 +415,7 @@ function buildViews(headers: string): void {
             else headerName.attr("tabindex", 0);
 
             const contentBlock = $("<div/>")
-                .addClass("content-block")
+                .addClass("block")
                 .appendTo(otherContent);
 
             const headerVal = $("<div/>")
