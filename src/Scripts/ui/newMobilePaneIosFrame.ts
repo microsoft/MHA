@@ -10,6 +10,7 @@ import Dialog from "framework7/components/dialog";
 import Popover from "framework7/components/popover";
 import Preloader from "framework7/components/preloader";
 import Progressbar from "framework7/components/progressbar";
+import Tabs from "framework7/components/tabs";
 import $ from "jquery";
 
 import { HeaderModel } from "../HeaderModel";
@@ -33,7 +34,7 @@ function postError(error: unknown, message: string): void {
 
 function initializeFramework7(): void {
     // Install Framework7 components
-    Framework7.use([Preloader, Dialog, Accordion, Progressbar, Popover]);
+    Framework7.use([Preloader, Dialog, Accordion, Progressbar, Popover, Tabs]);
 
     myApp = new Framework7({
         // App name
@@ -49,52 +50,7 @@ function initializeFramework7(): void {
         preloaderMethods: myApp.preloader ? Object.keys(myApp.preloader) : "not available"
     });
 
-    // Set up tab switching functionality
-    setupTabSwitching();
-
-    // Initialize tab visibility - hide all tabs except the active one
-    initializeTabVisibility();
-
     document.getElementById("summary-btn")!.focus();
-}
-
-function initializeTabVisibility(): void {
-    // Hide all tabs except the active one using CSS classes
-    document.querySelectorAll(".tab").forEach(tab => {
-        if (!tab.classList.contains("tab-active")) {
-            tab.classList.remove("tab-active");
-        }
-    });
-}
-
-function setupTabSwitching(): void {
-    // Add click handlers for tab buttons
-    document.querySelectorAll(".tab-link").forEach(tabLink => {
-        tabLink.addEventListener("click", function(this: Element, e: Event) {
-            e.preventDefault();
-
-            const targetTab = this.getAttribute("href");
-            if (!targetTab) return;
-
-            console.log("Tab clicked:", targetTab);
-
-            // Remove active class from all tabs and tab links
-            document.querySelectorAll(".tab").forEach(tab => {
-                tab.classList.remove("tab-active");
-            });
-            document.querySelectorAll(".tab-link").forEach(link => {
-                link.classList.remove("tab-link-active");
-            });
-
-            // Add active class to clicked tab link and corresponding tab
-            this.classList.add("tab-link-active");
-            const targetTabElement = document.querySelector(targetTab);
-            if (targetTabElement) {
-                targetTabElement.classList.add("tab-active");
-                console.log("Activated tab:", targetTab);
-            }
-        });
-    });
 }
 
 function updateStatus(message: string): void {
