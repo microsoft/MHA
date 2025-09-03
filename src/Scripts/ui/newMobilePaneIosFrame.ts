@@ -16,6 +16,7 @@ import $ from "jquery";
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Poster } from "../Poster";
+import { DomUtils } from "./domUtils";
 import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
@@ -396,30 +397,45 @@ function renderItem(headers: string): void {
 
     buildViews(headers);
 
-    // To avoid tabbing to the hidden content, we're using a style to set hidden content to display: none
-    // .accordion-item:not(.accordion-item-expanded) .accordion-item-content { display: none; }
-    // This interferes with Framework7's accordion behavior, so we're using a MutationObserver to set the height to auto when the accordion is expanded
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.attributeName === "class") {
-                const target = mutation.target as HTMLElement;
-                if (target.classList.contains("accordion-item-expanded")) {
-                    console.log("expanded");
-                    const content = target.querySelector(".accordion-item-content") as HTMLElement;
-                    if (content) {
-                        content.style.height = "auto";
-                    }
-                }
-            }
-        });
-    });
-
-    const accordions = document.querySelectorAll(".accordion-item");
-    accordions.forEach((accordion) => {
-        observer.observe(accordion, { attributes: true });
-    });
+    setupAccordionAccessibility();
 
     if (myApp) myApp.preloader.hide();
+}
+
+function setupAccordionAccessibility(): void {
+    if (!myApp) return;
+
+    // Set initial state - make all collapsed accordion content non-tabbable
+    const collapsedContentSelector = ".accordion-item:not(.accordion-item-expanded) .accordion-item-content";
+    DomUtils.setAccessibilityState(collapsedContentSelector, true, false);
+    DomUtils.makeFocusableElementsNonTabbable(collapsedContentSelector);
+
+    document.addEventListener("accordion:opened", (event) => {
+        const target = event.target as HTMLElement;
+        const content = target.querySelector(".accordion-item-content");
+        if (content) {
+            const contentElement = content as HTMLElement;
+            contentElement.setAttribute("aria-hidden", "false");
+            contentElement.style.visibility = "visible";
+            DomUtils.restoreFocusableElements(".accordion-item-content");
+        }
+    });
+
+    document.addEventListener("accordion:closed", (event) => {
+        const target = event.target as HTMLElement;
+        const content = target.querySelector(".accordion-item-content");
+        if (content) {
+            const contentElement = content as HTMLElement;
+            contentElement.setAttribute("aria-hidden", "true");
+            contentElement.style.visibility = "hidden";
+
+            // Make focusable elements within this specific content non-tabbable
+            const focusableElements = contentElement.querySelectorAll(DomUtils.focusableElements);
+            focusableElements.forEach((el) => {
+                (el as HTMLElement).setAttribute("tabindex", "-1");
+            });
+        }
+    });
 }
 
 // Handles rendering of an error.
