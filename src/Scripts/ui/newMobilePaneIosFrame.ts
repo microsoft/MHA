@@ -25,11 +25,39 @@ import { SummaryRow } from "../row/SummaryRow";
 
 // Framework7 app object
 let myApp: Framework7 | null = null;
+const popovers: object[] = [];
 
 dayjs.extend(utc);
 
 function postError(error: unknown, message: string): void {
     Poster.postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
+}
+
+function initializePopovers(): void {
+    if (!myApp) return;
+
+    // Find all popover triggers and create Framework7 popovers
+    $(".popover-trigger").each(function() {
+        const trigger = $(this);
+        const popoverIndex = trigger.attr("data-popover-index");
+        const popoverEl = $(`.popover-${popoverIndex}`);
+
+        if (popoverEl.length > 0 && trigger[0] && popoverEl[0]) {
+            // Create Framework7 popover instance
+            const popover = myApp!.popover.create({
+                targetEl: trigger[0],
+                el: popoverEl[0],
+            });
+
+            popovers.push(popover);
+
+            // Add click handler
+            trigger.on("click", function(e) {
+                e.preventDefault();
+                popover.open();
+            });
+        }
+    });
 }
 
 function initializeFramework7(): void {
@@ -180,8 +208,8 @@ function buildViews(headers: string): void {
                 const timelineInner: JQuery<HTMLElement> = $("<div/>")
                     .addClass("timeline-item-inner")
                     .addClass("link")
-                    .addClass("open-popover")
-                    .attr("data-popover", ".popover-" + i)
+                    .addClass("popover-trigger")
+                    .attr("data-popover-index", i.toString())
                     .appendTo(currentTimeEntry);
 
                 $("<div/>")
@@ -230,8 +258,8 @@ function buildViews(headers: string): void {
                 const timelineInner: JQuery<HTMLElement> = $("<div/>")
                     .addClass("timeline-item-inner")
                     .addClass("link")
-                    .addClass("open-popover")
-                    .attr("data-popover", ".popover-" + i)
+                    .addClass("popover-trigger")
+                    .attr("data-popover-index", i.toString())
                     .appendTo(currentTimeEntry);
 
                 $("<div/>")
@@ -310,6 +338,9 @@ function buildViews(headers: string): void {
         $("<div/>")
             .addClass("timeline-item-divider")
             .appendTo(endTimelineItem);
+
+        // Initialize Framework7 popovers
+        initializePopovers();
     }
 
     // Build antispam view
