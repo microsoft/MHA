@@ -45,7 +45,56 @@ function initializeFramework7(): void {
         preloaderMethods: myApp.preloader ? Object.keys(myApp.preloader) : "not available"
     });
 
+    // Set up tab switching functionality
+    setupTabSwitching();
+    
+    // Initialize tab visibility - hide all tabs except the active one
+    initializeTabVisibility();
+
     document.getElementById("summary-btn")!.focus();
+}
+
+function initializeTabVisibility(): void {
+    // Hide all tabs except the active one
+    document.querySelectorAll('.view.tab').forEach(tab => {
+        if (!tab.classList.contains('active')) {
+            (tab as HTMLElement).style.display = 'none';
+        }
+    });
+}
+
+function setupTabSwitching(): void {
+    // Add click handlers for tab buttons
+    document.querySelectorAll('.tab-link').forEach(tabLink => {
+        tabLink.addEventListener('click', function(this: Element, e: Event) {
+            e.preventDefault();
+            
+            const targetTab = this.getAttribute('href');
+            if (!targetTab) return;
+            
+            console.log('Tab clicked:', targetTab);
+            
+            // Remove active class from all tabs and tab links
+            document.querySelectorAll('.view.tab').forEach(tab => {
+                tab.classList.remove('active');
+                // Hide the tab
+                (tab as HTMLElement).style.display = 'none';
+            });
+            document.querySelectorAll('.tab-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab link and corresponding tab
+            this.classList.add('active');
+            const targetTabElement = document.querySelector(targetTab);
+            if (targetTabElement) {
+                targetTabElement.classList.add('active');
+                // Show the tab
+                (targetTabElement as HTMLElement).style.display = 'block';
+                console.log('Activated tab:', targetTab);
+            }
+        });
+    });
 }
 
 function updateStatus(message: string): void {
