@@ -74,10 +74,17 @@ a.tab-link {
     }
 }
 
-.list-block .item-link .item-inner, .list-block .list-button .item-inner {
+/* Only show chevron arrows on accordion items that can be collapsed/expanded */
+.list-block .accordion-item .item-link .item-inner {
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D%270%200%2060%20120%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cpath%20d%3D%27m60%2061.5-38.25%2038.25-9.75-9.75%2029.25-28.5-29.25-28.5%209.75-9.75z%27%20fill%3D%27%23000000%27%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 15px;
 }
 
-.list-block .accordion-item-expanded.media-item .accordion-item-toggle .item-title-row,.list-block .accordion-item-expanded.media-item>.item-link .item-title-row,.list-block.media-list .accordion-item-expanded .accordion-item-toggle .item-title-row,.list-block.media-list .accordion-item-expanded>.item-link .item-title-row,.list-block:not(.media-list) .accordion-item-expanded:not(.media-item) .accordion-item-toggle .item-inner,.list-block:not(.media-list) .accordion-item-expanded:not(.media-item)>.item-link .item-inner {
+.list-block .accordion-item-expanded .item-link .item-inner {
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D'0%200%2060%20120'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%3Cpath%20d%3D'm60%2061.5-38.25%2038.25-9.75-9.75%2029.25-28.5-29.25-28.5%209.75-9.75z'%20transform%3D'translate(115%2C%2030)%20rotate(90)'%20fill%3D'%23000000'%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 15px;
 }
