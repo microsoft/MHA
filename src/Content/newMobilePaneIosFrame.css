@@ -1,5 +1,25 @@
 /* Framework7 specific overrides */
 
+/* Reserve space for parent frame toolbar overlay */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.framework7-root {
+    position: absolute;
+    top: 44px; /* Reserve 44px at top for parent toolbar */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(100vh - 44px); /* Reduce height by toolbar space */
+}
+
+/* Ensure page content doesn't scroll behind bottom toolbar */
+.page-content {
+    padding-bottom: var(--f7-tabbar-icons-height, 50px); /* Use Framework7's exact tabbar height for iOS */
+}
+
 /* Framework7 v8 tab styling */
 .tabs .tab {
     background: #f4f4f4;
