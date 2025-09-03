@@ -43,13 +43,6 @@ function initializeFramework7(): void {
         theme: "auto",
     });
 
-    // Verify components are available
-    console.log("Framework7 initialized:", {
-        hasPreloader: !!myApp.preloader,
-        hasDialog: !!myApp.dialog,
-        preloaderMethods: myApp.preloader ? Object.keys(myApp.preloader) : "not available"
-    });
-
     document.getElementById("summary-btn")!.focus();
 }
 
