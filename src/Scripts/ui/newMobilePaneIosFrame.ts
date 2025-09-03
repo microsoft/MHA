@@ -4,6 +4,7 @@ import "../../Content/newMobilePaneIosFrame.css";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Framework7 from "framework7";
+import Accordion from "framework7/components/accordion";
 import Dialog from "framework7/components/dialog";
 import Preloader from "framework7/components/preloader";
 import $ from "jquery";
@@ -29,7 +30,7 @@ function postError(error: unknown, message: string): void {
 
 function initializeFramework7(): void {
     // Install Framework7 components
-    Framework7.use([Preloader, Dialog]);
+    Framework7.use([Preloader, Dialog, Accordion]);
 
     myApp = new Framework7({
         // App name

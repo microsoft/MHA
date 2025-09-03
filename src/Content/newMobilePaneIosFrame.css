@@ -75,8 +75,13 @@ a.tab-link {
     overflow: visible;
 }
 /* See MutationObserver in renderItem to see how we set the height back to auto after this */
+/* Hide collapsed accordion content using height/overflow so Framework7 can animate height.
+   Avoid display:none which prevents measuring or animating height. */
 .accordion-item:not(.accordion-item-expanded) .accordion-item-content {
-        display: none;
+    height: 0;
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 @media screen and (-ms-high-contrast:active) {
