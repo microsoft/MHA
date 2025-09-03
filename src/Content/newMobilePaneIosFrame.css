@@ -94,7 +94,13 @@ a.tab-link {
 .block-title {
     overflow: visible;
 }
-/* See MutationObserver in renderItem to see how we set the height back to auto after this */
+
+@media screen and (-ms-high-contrast:active) {
+    .progressbar span {
+        background: highlight;
+    }
+}
+
 /* Hide collapsed accordion content using height/overflow so Framework7 can animate height.
    Avoid display:none which prevents measuring or animating height. */
 .accordion-item:not(.accordion-item-expanded) .accordion-item-content {
@@ -102,12 +108,6 @@ a.tab-link {
     overflow: hidden;
     padding-top: 0;
     padding-bottom: 0;
-}
-
-@media screen and (-ms-high-contrast:active) {
-    .progressbar span {
-        background: highlight;
-    }
 }
 
 /* Only show chevron arrows on accordion items that can be collapsed/expanded */
