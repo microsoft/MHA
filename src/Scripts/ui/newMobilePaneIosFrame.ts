@@ -7,6 +7,7 @@ import Framework7 from "framework7";
 import Accordion from "framework7/components/accordion";
 import Dialog from "framework7/components/dialog";
 import Preloader from "framework7/components/preloader";
+import Progressbar from "framework7/components/progressbar";
 import $ from "jquery";
 
 import { HeaderModel } from "../HeaderModel";
@@ -30,7 +31,7 @@ function postError(error: unknown, message: string): void {
 
 function initializeFramework7(): void {
     // Install Framework7 components
-    Framework7.use([Preloader, Dialog, Accordion]);
+    Framework7.use([Preloader, Dialog, Accordion, Progressbar]);
 
     myApp = new Framework7({
         // App name
