@@ -101,22 +101,11 @@ a.tab-link {
     }
 }
 
-/* Hide native framework7 chevron */
-.list:not(.media-list) .accordion-item:not(.media-item) > .item-link .item-inner:before {
-    content:"";
+.list:not(.media-list) .accordion-item:not(.media-item):not(.accordion-item-opened) > .item-link .item-inner:before {
+    content: var(--f7-accordion-chevron-icon-up);
+    transform: rotate(90deg); /* We actually want the chevron pointing right */
 }
 
-/* Only show chevron arrows on accordion items that can be collapsed/expanded */
-.list .accordion-item:not(.accordion-item-opened) .item-link .item-inner {
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D%270%200%2060%20120%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cpath%20d%3D%27m60%2061.5-38.25%2038.25-9.75-9.75%2029.25-28.5-29.25-28.5%209.75-9.75z%27%20fill%3D%27%23000000%27%2F%3E%3C%2Fsvg%3E");
-    background-repeat: no-repeat;
-    background-position: right 15px center;
-    background-size: 15px;
-}
-
-.list .accordion-item-opened .item-link .item-inner {
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D%270%200%2060%2060%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cpath%20d%3D%27M15%2020l15%2015%2015-15-5-5-10%2010-10-10z%27%20fill%3D%27%23000000%27%2F%3E%3C%2Fsvg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: contain;
+.list:not(.media-list) .accordion-item-opened:not(.media-item) > .item-link .item-inner:before {
+    content: var(--f7-accordion-chevron-icon-down);
 }
