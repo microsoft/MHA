@@ -16,6 +16,7 @@
     --f7-link-color: black;
     --f7-accordion-chevron-icon-down: 'chevron_right';
     --f7-accordion-chevron-icon-up: 'chevron_down';
+    --f7-timeline-item-inner-bg-color: white;
 }
 
 /* Reserve space for parent frame toolbar overlay */
@@ -132,8 +133,6 @@ a.tab-link {
 }
 
 #received-view .timeline-item-inner {
-    background: white;
-    color: black;
     padding: 10px;
     margin: 5px 0;
     border-radius: 5px;
