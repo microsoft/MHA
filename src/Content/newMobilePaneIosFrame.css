@@ -27,7 +27,6 @@ body {
 
 .framework7-root {
     position: absolute;
-    top: 44px; /* Reserve 44px at top for parent toolbar */
     left: 0;
     right: 0;
     bottom: 0;
@@ -67,10 +66,6 @@ body {
 
 .wrap-line {
     word-wrap: break-word;
-}
-
-.tabs .tab {
-    padding-top: 25px;
 }
 
 .page {
