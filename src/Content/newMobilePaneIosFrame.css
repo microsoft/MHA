@@ -109,3 +109,19 @@ a.tab-link {
 .list:not(.media-list) .accordion-item-opened:not(.media-item) > .item-link .item-inner:before {
     content: var(--f7-accordion-chevron-icon-down);
 }
+
+/* Antispam page styling */
+#antispam-view .block-title {
+    color: #555555;
+}
+
+#antispam-view .accordion-item {
+    background: white;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#antispam-view .accordion-item .item-title {
+    font-size: 17px;
+    background: white;
+}
