@@ -125,3 +125,43 @@ a.tab-link {
     font-size: 17px;
     background: white;
 }
+
+/* Timeline styling for received view */
+#received-view .timeline-item-inner {
+    background: white;
+    color: black;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically like bricks */
+    align-items: flex-start; /* Left align all content */
+    text-align: left;
+    word-wrap: break-word;
+}
+
+#received-view .timeline-item-time {
+    order: 1; /* Time at top */
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#received-view .timeline-item-subtitle {
+    order: 2; /* Subtitle second */
+    margin-bottom: 5px;
+    word-wrap: break-word;
+}
+
+#received-view .timeline-item-text {
+    order: 3; /* Text content third */
+    word-wrap: break-word;
+    width: 100%;
+}
+
+#received-view .progressbar {
+    background-color: #cccccc;
+}
+
+#received-view .progressbar span {
+    background-color: #007aff;
+}
