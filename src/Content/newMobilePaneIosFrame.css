@@ -17,6 +17,7 @@
     --f7-accordion-chevron-icon-down: 'chevron_right';
     --f7-accordion-chevron-icon-up: 'chevron_down';
     --f7-timeline-item-inner-bg-color: white;
+    --f7-page-bg-color: var(-f7-tabs-bg-color);
 }
 
 /* Reserve space for parent frame toolbar overlay */
@@ -66,10 +67,6 @@ body {
 
 .wrap-line {
     word-wrap: break-word;
-}
-
-.page {
-    background: var(--f7-tabs-bg-color);
 }
 
 .block-title {
