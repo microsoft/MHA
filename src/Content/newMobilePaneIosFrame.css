@@ -30,11 +30,11 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    height: calc(100vh - 44px); /* Reduce height by toolbar space */
 }
 
-/* Ensure page content doesn't scroll behind bottom toolbar */
-.page-content {
+/* Ensure page doesn't scroll behind toolbars */
+.page {
+    padding-top: 44px; /* Push content below top toolbar */
     padding-bottom: var(--f7-tabbar-icons-height, 50px); /* Use Framework7's exact tabbar height for iOS */
 }
 
