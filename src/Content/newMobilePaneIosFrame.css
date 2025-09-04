@@ -1,5 +1,18 @@
 /* Framework7 specific overrides */
 
+:root {
+    --background-grey: #f4f4f4;
+    --code-box-bg: #eaeaea;
+    --border-light-grey: #ccc;
+    --text-dark-grey: #444;
+    --text-medium-grey: #555555;
+    --focus-outline-blue: #0072cc;
+    --light-grey-border: #e0e0e0;
+    --progress-bg-grey: #cccccc;
+    --progress-blue: #007aff;
+    --f7-block-title-text-color: black;
+}
+
 /* Reserve space for parent frame toolbar overlay */
 body {
     margin: 0;
@@ -22,7 +35,7 @@ body {
 
 /* Framework7 v8 tab styling */
 .tabs .tab {
-    background: #f4f4f4;
+    background: var(--background-grey);
     display: none;
 }
 
@@ -31,8 +44,8 @@ body {
 }
 
 .code-box>pre {
-    background-color: #eaeaea;
-    border: 1px solid #ccc;
+    background-color: var(--code-box-bg);
+    border: 1px solid var(--border-light-grey);
     padding: 5px 10px;
     word-wrap: break-word;
     white-space: pre-wrap;
@@ -53,11 +66,11 @@ body {
 
 .tabs .tab {
     padding-top: 25px;
-    background: #f4f4f4;
+    background: var(--background-grey);
 }
 
 .page {
-    background: #f4f4f4;
+    background: var(--background-grey);
 }
 
 .block-title {
@@ -71,17 +84,17 @@ body {
 
 a,
 a:visited {
-    color: #000000;
+    color: black;
     text-decoration: underline;
 }
 
 a:hover {
-    color: #444;
+    color: var(--text-dark-grey);
 }
 
 a:focus,
 div:focus {
-    outline: #0072cc solid 2px;
+    outline: var(--focus-outline-blue) solid 2px;
     outline-offset: 2px;
 }
 
@@ -110,23 +123,21 @@ a.tab-link {
     content: var(--f7-accordion-chevron-icon-down);
 }
 
-/* Antispam page styling */
 #antispam-view .block-title {
-    color: #555555;
+    color: var(--text-medium-grey);
 }
 
 #antispam-view .accordion-item {
     background: white;
-    border-top: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
+    border-top: 1px solid var(--light-grey-border);
+    border-bottom: 1px solid var(--light-grey-border);
 }
 
 #antispam-view .accordion-item .item-title {
     font-size: 17px;
-    background: white;
+    background: var(--white);
 }
 
-/* Timeline styling for received view */
 #received-view .timeline-item-inner {
     background: white;
     color: black;
@@ -134,34 +145,34 @@ a.tab-link {
     margin: 5px 0;
     border-radius: 5px;
     display: flex;
-    flex-direction: column; /* Stack elements vertically like bricks */
-    align-items: flex-start; /* Left align all content */
+    flex-direction: column;
+    align-items: flex-start;
     text-align: left;
     word-wrap: break-word;
 }
 
 #received-view .timeline-item-time {
-    order: 1; /* Time at top */
+    /* order: 1; */
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 #received-view .timeline-item-subtitle {
-    order: 2; /* Subtitle second */
+    /* order: 2; */
     margin-bottom: 5px;
     word-wrap: break-word;
 }
 
 #received-view .timeline-item-text {
-    order: 3; /* Text content third */
+    /* order: 3; */
     word-wrap: break-word;
     width: 100%;
 }
 
 #received-view .progressbar {
-    background-color: #cccccc;
+    background-color: var(--progress-bg-grey);
 }
 
 #received-view .progressbar span {
-    background-color: #007aff;
+    background-color: var(--progress-blue);
 }
