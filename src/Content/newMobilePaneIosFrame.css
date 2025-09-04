@@ -1,16 +1,21 @@
 /* Framework7 specific overrides */
 
 :root {
-    --background-grey: #f4f4f4;
     --code-box-bg: #eaeaea;
     --border-light-grey: #ccc;
     --text-dark-grey: #444;
     --text-medium-grey: #555555;
     --focus-outline-blue: #0072cc;
     --light-grey-border: #e0e0e0;
-    --progress-bg-grey: #cccccc;
-    --progress-blue: #007aff;
     --f7-block-title-text-color: black;
+    --f7-progressbar-bg-color: #cccccc;
+    --f7-progressbar-progress-color: #007aff;
+    --f7-timeline-item-inner-bg-color: white;
+    --f7-timeline-item-text-color: black;
+    --f7-tabs-bg-color: #f4f4f4;
+    --f7-link-color: black;
+    --f7-accordion-chevron-icon-down: 'chevron_right';
+    --f7-accordion-chevron-icon-up: 'chevron_down';
 }
 
 /* Reserve space for parent frame toolbar overlay */
@@ -35,7 +40,6 @@ body {
 
 /* Framework7 v8 tab styling */
 .tabs .tab {
-    background: var(--background-grey);
     display: none;
 }
 
@@ -66,11 +70,10 @@ body {
 
 .tabs .tab {
     padding-top: 25px;
-    background: var(--background-grey);
 }
 
 .page {
-    background: var(--background-grey);
+    background: var(--f7-tabs-bg-color);
 }
 
 .block-title {
@@ -84,7 +87,6 @@ body {
 
 a,
 a:visited {
-    color: black;
     text-decoration: underline;
 }
 
@@ -112,15 +114,6 @@ a.tab-link {
     .progressbar span {
         background: highlight;
     }
-}
-
-.list:not(.media-list) .accordion-item:not(.media-item):not(.accordion-item-opened) > .item-link .item-inner:before {
-    content: var(--f7-accordion-chevron-icon-up);
-    transform: rotate(90deg); /* We actually want the chevron pointing right */
-}
-
-.list:not(.media-list) .accordion-item-opened:not(.media-item) > .item-link .item-inner:before {
-    content: var(--f7-accordion-chevron-icon-down);
 }
 
 #antispam-view .block-title {
@@ -152,27 +145,16 @@ a.tab-link {
 }
 
 #received-view .timeline-item-time {
-    /* order: 1; */
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 #received-view .timeline-item-subtitle {
-    /* order: 2; */
     margin-bottom: 5px;
     word-wrap: break-word;
 }
 
 #received-view .timeline-item-text {
-    /* order: 3; */
     word-wrap: break-word;
     width: 100%;
-}
-
-#received-view .progressbar {
-    background-color: var(--progress-bg-grey);
-}
-
-#received-view .progressbar span {
-    background-color: var(--progress-blue);
 }
