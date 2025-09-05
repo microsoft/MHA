@@ -14,8 +14,8 @@
     --f7-timeline-item-text-color: black;
     --f7-tabs-bg-color: #f4f4f4;
     --f7-link-color: black;
-    --f7-accordion-chevron-icon-down: 'chevron_right';
-    --f7-accordion-chevron-icon-up: 'chevron_down';
+    --f7-accordion-chevron-icon-down: "chevron_right";
+    --f7-accordion-chevron-icon-up: "chevron_down";
     --f7-timeline-item-inner-bg-color: white;
     --f7-page-bg-color: var(-f7-tabs-bg-color);
 }
@@ -33,10 +33,15 @@ body {
     bottom: 0;
 }
 
+.top-spacer {
+    height: 44px;
+}
+
 /* Ensure page doesn't scroll behind toolbars */
 .page {
-    padding-top: 44px; /* Push content below top toolbar */
-    padding-bottom: var(--f7-tabbar-icons-height, 50px); /* Use Framework7's exact tabbar height for iOS */
+    position: relative;
+    height: calc(100vh - 44px - 24px);
+    overflow-y: auto;
 }
 
 /* Framework7 v8 tab styling */
@@ -107,7 +112,7 @@ a.tab-link {
     overflow: visible;
 }
 
-@media screen and (-ms-high-contrast:active) {
+@media screen and (-ms-high-contrast: active) {
     .progressbar span {
         background: highlight;
     }
