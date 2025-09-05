@@ -63,44 +63,50 @@ function addCalloutEntry(name: string, value: string | number | null, parent: HT
     }
 }
 
-function addSpamReportRow(spamRow: Row, parent: JQuery<HTMLElement>) {
+function addSpamReportRow(spamRow: Row, parent: HTMLElement) {
     if (spamRow.value) {
-        const item = $("<li/>")
-            .addClass("accordion-item")
-            .appendTo(parent);
+        const item = document.createElement("li");
+        item.className = "accordion-item";
+        parent.appendChild(item);
 
-        const link = $("<a/>")
-            .addClass("item-content")
-            .addClass("item-link")
-            .attr("role", "button") // Fix for the Bug 1691252- To announce link item as role button
-            .attr("href", "#")
-            .appendTo(item);
+        const link = document.createElement("a");
+        link.className = "item-content item-link";
+        link.setAttribute("role", "button"); // Fix for the Bug 1691252- To announce link item as role button
+        link.setAttribute("href", "#");
+        item.appendChild(link);
 
-        const innerItem = $("<div/>")
-            .addClass("item-inner")
-            .appendTo(link);
+        const innerItem = document.createElement("div");
+        innerItem.className = "item-inner";
+        link.appendChild(innerItem);
 
-        $("<div/>")
-            .addClass("item-title")
-            .text(spamRow.label)
-            .attr("id", spamRow.id)
-            .appendTo(innerItem);
+        const itemTitle = document.createElement("div");
+        itemTitle.className = "item-title";
+        itemTitle.textContent = spamRow.label;
+        itemTitle.setAttribute("id", spamRow.id);
+        innerItem.appendChild(itemTitle);
 
-        const itemContent = $("<div/>")
-            .addClass("accordion-item-content")
-            .appendTo(item);
+        const itemContent = document.createElement("div");
+        itemContent.className = "accordion-item-content";
+        item.appendChild(itemContent);
 
-        const contentBlock = $("<div/>")
-            .addClass("block")
-            .appendTo(itemContent);
+        const contentBlock = document.createElement("div");
+        contentBlock.className = "block";
+        itemContent.appendChild(contentBlock);
 
-        const linkWrap = $("<p/>")
-            .attr("aria-labelledby", spamRow.id)
-            .appendTo(contentBlock);
+        const linkWrap = document.createElement("p");
+        linkWrap.setAttribute("aria-labelledby", spamRow.id);
+        contentBlock.appendChild(linkWrap);
 
-        $($.parseHTML(spamRow.valueUrl))
-            .addClass("external")
-            .appendTo(linkWrap);
+        // Parse HTML string and add to linkWrap
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = spamRow.valueUrl;
+        while (tempDiv.firstChild) {
+            const child = tempDiv.firstChild as HTMLElement;
+            if (child.nodeType === Node.ELEMENT_NODE) {
+                child.classList.add("external");
+            }
+            linkWrap.appendChild(child);
+        }
     }
 }
 
@@ -304,22 +310,21 @@ function buildViews(headers: string): void {
     }
 
     // Build antispam view
-    const antispamContent = $("#antispam-content");
+    const antispamContent = document.getElementById("antispam-content")!;
 
     // Forefront
     if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
-        $("<div/>")
-            .addClass("block-title")
-            .text("Forefront Antispam Report")
-            .appendTo(antispamContent);
+        const blockTitle = document.createElement("div");
+        blockTitle.className = "block-title";
+        blockTitle.textContent = "Forefront Antispam Report";
+        antispamContent.appendChild(blockTitle);
 
-        const list: JQuery<HTMLElement> = $("<div/>")
-            .addClass("list")
-            .addClass("accordion-list")
-            .appendTo(antispamContent);
+        const list = document.createElement("div");
+        list.className = "list accordion-list";
+        antispamContent.appendChild(list);
 
-        const ul: JQuery<HTMLElement> = $("<ul/>")
-            .appendTo(list);
+        const ul = document.createElement("ul");
+        list.appendChild(ul);
 
         viewModel.forefrontAntiSpamReport.rows.forEach((row: Row) => {
             addSpamReportRow(row, ul);
@@ -328,18 +333,17 @@ function buildViews(headers: string): void {
 
     // Microsoft
     if (viewModel.antiSpamReport.rows.length > 0) {
-        $("<div/>")
-            .addClass("block-title")
-            .text("Microsoft Antispam Report")
-            .appendTo(antispamContent);
+        const blockTitle = document.createElement("div");
+        blockTitle.className = "block-title";
+        blockTitle.textContent = "Microsoft Antispam Report";
+        antispamContent.appendChild(blockTitle);
 
-        const list: JQuery<HTMLElement> = $("<div/>")
-            .addClass("list")
-            .addClass("accordion-list")
-            .appendTo(antispamContent);
+        const list = document.createElement("div");
+        list.className = "list accordion-list";
+        antispamContent.appendChild(list);
 
-        const ul: JQuery<HTMLElement> = $("<ul/>")
-            .appendTo(list);
+        const ul = document.createElement("ul");
+        list.appendChild(ul);
 
         viewModel.antiSpamReport.rows.forEach((row: Row) => {
             addSpamReportRow(row, ul);
