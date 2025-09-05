@@ -11,7 +11,6 @@ import Popover from "framework7/components/popover";
 import Preloader from "framework7/components/preloader";
 import Progressbar from "framework7/components/progressbar";
 import Tabs from "framework7/components/tabs";
-import $ from "jquery";
 
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
@@ -351,37 +350,47 @@ function buildViews(headers: string): void {
     }
 
     // Build other view
-    const otherContent = $("#other-content");
+    const otherContent = document.getElementById("other-content")!;
 
     viewModel.otherHeaders.rows.forEach((row: OtherRow) => {
         if (row.value) {
-            const headerName = $("<div/>")
-                .addClass("block-title")
-                .text(row.header)
-                .appendTo(otherContent);
+            const headerName = document.createElement("div");
+            headerName.className = "block-title";
+            headerName.textContent = row.header;
+            otherContent.appendChild(headerName);
 
             if (row.url) {
-                headerName.empty();
+                headerName.innerHTML = "";
 
-                $($.parseHTML(row.url))
-                    .addClass("external")
-                    .appendTo(headerName);
+                // Parse HTML string and add to headerName
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = row.url;
+                while (tempDiv.firstChild) {
+                    const child = tempDiv.firstChild as HTMLElement;
+                    if (child.nodeType === Node.ELEMENT_NODE) {
+                        child.classList.add("external");
+                    }
+                    headerName.appendChild(child);
+                }
             }
-            else headerName.attr("tabindex", 0);
+            else {
+                headerName.setAttribute("tabindex", "0");
+            }
 
-            const contentBlock = $("<div/>")
-                .addClass("block")
-                .appendTo(otherContent);
+            const contentBlock = document.createElement("div");
+            contentBlock.className = "block";
+            otherContent.appendChild(contentBlock);
 
-            const headerVal = $("<div/>")
-                .addClass("code-box")
-                .appendTo(contentBlock);
+            const headerVal = document.createElement("div");
+            headerVal.className = "code-box";
+            contentBlock.appendChild(headerVal);
 
-            const pre = $("<pre/>").appendTo(headerVal);
+            const pre = document.createElement("pre");
+            headerVal.appendChild(pre);
 
-            $("<code/>")
-                .text(row.value)
-                .appendTo(pre);
+            const code = document.createElement("code");
+            code.textContent = row.value;
+            pre.appendChild(code);
         }
     });
 }
