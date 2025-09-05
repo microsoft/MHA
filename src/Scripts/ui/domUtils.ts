@@ -132,4 +132,51 @@ export class DomUtils {
             element.setAttribute(attribute, value);
         }
     }
+
+    /**
+     * Common focusable element selector
+     */
+    static readonly focusableElements = "a, button, input, textarea, select, [tabindex]:not([tabindex=\"-1\"])";
+
+    /**
+     * Make elements non-tabbable by setting tabindex to -1
+     * @param selector CSS selector string
+     */
+    static makeFocusableElementsNonTabbable(selector: string): void {
+        const elements = this.getElements(selector);
+        elements.forEach(container => {
+            const focusableElements = container.querySelectorAll(this.focusableElements);
+            focusableElements.forEach((el) => {
+                (el as HTMLElement).setAttribute("tabindex", "-1");
+            });
+        });
+    }
+
+    /**
+     * Restore tabbing by removing tabindex=-1 from elements
+     * @param selector CSS selector string
+     */
+    static restoreFocusableElements(selector: string): void {
+        const elements = this.getElements(selector);
+        elements.forEach(container => {
+            const focusableElements = container.querySelectorAll("[tabindex=\"-1\"]");
+            focusableElements.forEach((el) => {
+                (el as HTMLElement).removeAttribute("tabindex");
+            });
+        });
+    }
+
+    /**
+     * Set accessibility attributes on elements
+     * @param selector CSS selector string
+     * @param hidden Whether elements should be hidden from screen readers
+     * @param visible Whether elements should be visible
+     */
+    static setAccessibilityState(selector: string, hidden: boolean, visible: boolean): void {
+        const elements = this.getElements(selector);
+        elements.forEach(element => {
+            element.setAttribute("aria-hidden", hidden.toString());
+            element.style.visibility = visible ? "visible" : "hidden";
+        });
+    }
 }

@@ -1,15 +1,21 @@
-import "framework7/dist/css/framework7.ios.min.css";
-import "framework7/dist/css/framework7.ios.colors.min.css";
+import "framework7/css";
+import "framework7/css/bundle";
 import "framework7-icons/css/framework7-icons.css";
 import "../../Content/newMobilePaneIosFrame.css";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import $ from "jquery";
+import Framework7 from "framework7";
+import Accordion from "framework7/components/accordion";
+import Dialog from "framework7/components/dialog";
+import Popover from "framework7/components/popover";
+import Preloader from "framework7/components/preloader";
+import Progressbar from "framework7/components/progressbar";
+import Tabs from "framework7/components/tabs";
 
-import { Framework7 } from "../framework7";
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Poster } from "../Poster";
+import { DomUtils } from "./domUtils";
 import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
@@ -18,7 +24,7 @@ import { SummaryRow } from "../row/SummaryRow";
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
 // Framework7 app object
-let myApp: typeof Framework7 = null;
+let myApp: Framework7 | null = null;
 
 dayjs.extend(utc);
 
@@ -27,69 +33,79 @@ function postError(error: unknown, message: string): void {
 }
 
 function initializeFramework7(): void {
-    myApp = new Framework7();
+    // Install Framework7 components
+    Framework7.use([Preloader, Dialog, Accordion, Progressbar, Popover, Tabs]);
 
-    myApp.addView("#summary-view");
-    myApp.addView("#received-view");
-    myApp.addView("#antispam-view");
-    myApp.addView("#other-view");
+    myApp = new Framework7({
+        // App name
+        name: "MHA",
+        // Set theme based on platform
+        theme: "auto",
+    });
+
     document.getElementById("summary-btn")!.focus();
 }
 
 function updateStatus(message: string): void {
-    if (myApp) {
-        myApp.hidePreloader();
-        myApp.showPreloader(message);
+    if (myApp && myApp.preloader) {
+        myApp.preloader.hide();
+        myApp.preloader.show(message);
     }
 }
 
-function addCalloutEntry(name: string, value: string | number | null, parent: JQuery<HTMLElement>): void {
+function addCalloutEntry(name: string, value: string | number | null, parent: HTMLElement): void {
     if (value) {
-        $("<p/>")
-            .addClass("wrap-line")
-            .html("<strong>" + name + ": </strong>" + value)
-            .appendTo(parent);
+        const p = document.createElement("p");
+        p.className = "wrap-line";
+        p.innerHTML = "<strong>" + name + ": </strong>" + value;
+        parent.appendChild(p);
     }
 }
 
-function addSpamReportRow(spamRow: Row, parent: JQuery<HTMLElement>) {
+function addSpamReportRow(spamRow: Row, parent: HTMLElement) {
     if (spamRow.value) {
-        const item = $("<li/>")
-            .addClass("accordion-item")
-            .appendTo(parent);
+        const item = document.createElement("li");
+        item.className = "accordion-item";
+        parent.appendChild(item);
 
-        const link = $("<a/>")
-            .addClass("item-content")
-            .addClass("item-link")
-            .attr("role", "button") // Fix for the Bug 1691252- To announce link item as role button
-            .attr("href", "#")
-            .appendTo(item);
+        const link = document.createElement("a");
+        link.className = "item-content item-link";
+        link.setAttribute("role", "button"); // Fix for the Bug 1691252- To announce link item as role button
+        link.setAttribute("href", "#");
+        item.appendChild(link);
 
-        const innerItem = $("<div/>")
-            .addClass("item-inner")
-            .appendTo(link);
+        const innerItem = document.createElement("div");
+        innerItem.className = "item-inner";
+        link.appendChild(innerItem);
 
-        $("<div/>")
-            .addClass("item-title")
-            .text(spamRow.label)
-            .attr("id", spamRow.id)
-            .appendTo(innerItem);
+        const itemTitle = document.createElement("div");
+        itemTitle.className = "item-title";
+        itemTitle.textContent = spamRow.label;
+        itemTitle.setAttribute("id", spamRow.id);
+        innerItem.appendChild(itemTitle);
 
-        const itemContent = $("<div/>")
-            .addClass("accordion-item-content")
-            .appendTo(item);
+        const itemContent = document.createElement("div");
+        itemContent.className = "accordion-item-content";
+        item.appendChild(itemContent);
 
-        const contentBlock = $("<div/>")
-            .addClass("content-block")
-            .appendTo(itemContent);
+        const contentBlock = document.createElement("div");
+        contentBlock.className = "block";
+        itemContent.appendChild(contentBlock);
 
-        const linkWrap = $("<p/>")
-            .attr("aria-labelledby", spamRow.id)
-            .appendTo(contentBlock);
+        const linkWrap = document.createElement("p");
+        linkWrap.setAttribute("aria-labelledby", spamRow.id);
+        contentBlock.appendChild(linkWrap);
 
-        $($.parseHTML(spamRow.valueUrl))
-            .addClass("external")
-            .appendTo(linkWrap);
+        // Parse HTML string and add to linkWrap
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = spamRow.valueUrl;
+        while (tempDiv.firstChild) {
+            const child = tempDiv.firstChild as HTMLElement;
+            if (child.nodeType === Node.ELEMENT_NODE) {
+                child.classList.add("external");
+            }
+            linkWrap.appendChild(child);
+        }
     }
 }
 
@@ -97,90 +113,89 @@ function buildViews(headers: string): void {
     const viewModel = new HeaderModel(headers);
 
     // Build summary view
-    const summaryContent = $("#summary-content");
+    const summaryContent = document.getElementById("summary-content")!;
 
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
-            $("<div/>")
-                .addClass("content-block-title")
-                .text(row.label)
-                .appendTo(summaryContent);
+            const blockTitle = document.createElement("div");
+            blockTitle.className = "block-title";
+            blockTitle.textContent = row.label;
+            summaryContent.appendChild(blockTitle);
 
-            const contentBlock = $("<div/>")
-                .addClass("content-block")
-                .appendTo(summaryContent);
+            const contentBlock = document.createElement("div");
+            contentBlock.className = "block";
+            summaryContent.appendChild(contentBlock);
 
-            const headerVal = $("<div/>")
-                .addClass("code-box")
-                .appendTo(contentBlock);
+            const headerVal = document.createElement("div");
+            headerVal.className = "code-box";
+            contentBlock.appendChild(headerVal);
 
-            const pre = $("<pre/>").appendTo(headerVal);
+            const pre = document.createElement("pre");
+            headerVal.appendChild(pre);
 
-            $("<code/>")
-                .text(row.value)
-                .appendTo(pre);
+            const code = document.createElement("code");
+            code.textContent = row.value;
+            pre.appendChild(code);
         }
     });
 
     if (viewModel.originalHeaders) {
-        $("#original-headers").text(viewModel.originalHeaders);
-        $("#orig-headers-ui").show();
+        DomUtils.setText("#original-headers", viewModel.originalHeaders);
+        DomUtils.showElement("#orig-headers-ui");
     }
 
     // Build received view
-    const receivedContent = $("#received-content");
+    const receivedContent = document.getElementById("received-content")!;
 
     if (viewModel.receivedHeaders.rows.length > 0) {
-        const timeline = $("<div/>")
-            .addClass("timeline")
-            .appendTo(receivedContent);
+        const timeline = document.createElement("div");
+        timeline.className = "timeline";
+        receivedContent.appendChild(timeline);
 
         let currentTime: dayjs.Dayjs = dayjs(viewModel.receivedHeaders.rows[0]?.dateNum.value).local();
-        let currentTimeEntry: JQuery<HTMLElement>;
+        let currentTimeEntry: HTMLElement;
 
         viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, i: number) => {
             if (i === 0) {
-                const timelineItem: JQuery<HTMLElement> = $("<div/>")
-                    .addClass("timeline-item")
-                    .appendTo(timeline);
+                const timelineItem = document.createElement("div");
+                timelineItem.className = "timeline-item";
+                timeline.appendChild(timelineItem);
 
                 const timelineDate: string = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
 
-                $("<div/>")
-                    .addClass("timeline-item-date")
-                    .html(timelineDate)
-                    .appendTo(timelineItem);
+                const timelineDateEl = document.createElement("div");
+                timelineDateEl.className = "timeline-item-date";
+                timelineDateEl.innerHTML = timelineDate;
+                timelineItem.appendChild(timelineDateEl);
 
-                $("<div/>")
-                    .addClass("timeline-item-divider")
-                    .appendTo(timelineItem);
+                const timelineDivider = document.createElement("div");
+                timelineDivider.className = "timeline-item-divider";
+                timelineItem.appendChild(timelineDivider);
 
-                currentTimeEntry = $("<div/>")
-                    .addClass("timeline-item-content")
-                    .appendTo(timelineItem);
+                currentTimeEntry = document.createElement("div");
+                currentTimeEntry.className = "timeline-item-content";
+                timelineItem.appendChild(currentTimeEntry);
 
                 // Add initial other rows
-                const timelineInner: JQuery<HTMLElement> = $("<div/>")
-                    .addClass("timeline-item-inner")
-                    .addClass("link")
-                    .addClass("open-popover")
-                    .attr("data-popover", ".popover-" + i)
-                    .appendTo(currentTimeEntry);
+                const timelineInner = document.createElement("div");
+                timelineInner.className = "timeline-item-inner link popover-open";
+                timelineInner.setAttribute("data-popover", ".popover-" + i);
+                currentTimeEntry.appendChild(timelineInner);
 
-                $("<div/>")
-                    .addClass("timeline-item-time")
-                    .text(currentTime.format("h:mm:ss"))
-                    .appendTo(timelineInner);
+                const timelineTime = document.createElement("div");
+                timelineTime.className = "timeline-item-time";
+                timelineTime.textContent = currentTime.format("h:mm:ss");
+                timelineInner.appendChild(timelineTime);
 
-                $("<div/>")
-                    .addClass("timeline-item-subtitle")
-                    .html("<strong>From: </strong>" + row.from)
-                    .appendTo(timelineInner);
+                const timelineSubtitle = document.createElement("div");
+                timelineSubtitle.className = "timeline-item-subtitle";
+                timelineSubtitle.innerHTML = "<strong>From: </strong>" + row.from;
+                timelineInner.appendChild(timelineSubtitle);
 
-                $("<div/>")
-                    .addClass("timeline-item-text")
-                    .html("<strong>To: </strong>" + row.by)
-                    .appendTo(timelineInner);
+                const timelineText = document.createElement("div");
+                timelineText.className = "timeline-item-text";
+                timelineText.innerHTML = "<strong>To: </strong>" + row.by;
+                timelineInner.appendChild(timelineText);
             } else {
                 // Determine if new timeline item is needed
                 const entryTime = dayjs(row.dateNum.value).local();
@@ -189,81 +204,81 @@ function buildViews(headers: string): void {
                     // Into a new minute, create a new timeline item
                     currentTime = entryTime;
 
-                    const timelineItem: JQuery<HTMLElement> = $("<div/>")
-                        .addClass("timeline-item")
-                        .appendTo(timeline);
+                    const timelineItem = document.createElement("div");
+                    timelineItem.className = "timeline-item";
+                    timeline.appendChild(timelineItem);
 
                     const timelineDate: string = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
-                    $("<div/>")
-                        .addClass("timeline-item-date")
-                        .html(timelineDate)
-                        .appendTo(timelineItem);
+                    const timelineDateEl = document.createElement("div");
+                    timelineDateEl.className = "timeline-item-date";
+                    timelineDateEl.innerHTML = timelineDate;
+                    timelineItem.appendChild(timelineDateEl);
 
-                    $("<div/>")
-                        .addClass("timeline-item-divider")
-                        .appendTo(timelineItem);
+                    const timelineDivider = document.createElement("div");
+                    timelineDivider.className = "timeline-item-divider";
+                    timelineItem.appendChild(timelineDivider);
 
-                    currentTimeEntry = $("<div/>")
-                        .addClass("timeline-item-content")
-                        .appendTo(timelineItem);
+                    currentTimeEntry = document.createElement("div");
+                    currentTimeEntry.className = "timeline-item-content";
+                    timelineItem.appendChild(currentTimeEntry);
 
                 }
 
                 // Add additional rows
-                const timelineInner: JQuery<HTMLElement> = $("<div/>")
-                    .addClass("timeline-item-inner")
-                    .addClass("link")
-                    .addClass("open-popover")
-                    .attr("data-popover", ".popover-" + i)
-                    .appendTo(currentTimeEntry);
+                const timelineInner = document.createElement("div");
+                timelineInner.className = "timeline-item-inner link popover-open";
+                timelineInner.setAttribute("data-popover", ".popover-" + i);
+                currentTimeEntry.appendChild(timelineInner);
 
-                $("<div/>")
-                    .addClass("timeline-item-time")
-                    .text(entryTime.format("h:mm:ss"))
-                    .appendTo(timelineInner);
+                const timelineTime = document.createElement("div");
+                timelineTime.className = "timeline-item-time";
+                timelineTime.textContent = entryTime.format("h:mm:ss");
+                timelineInner.appendChild(timelineTime);
 
-                $("<div/>")
-                    .addClass("timeline-item-subtitle")
-                    .html("<strong>To: </strong>" + row.by)
-                    .appendTo(timelineInner);
+                const timelineSubtitle = document.createElement("div");
+                timelineSubtitle.className = "timeline-item-subtitle";
+                timelineSubtitle.innerHTML = "<strong>To: </strong>" + row.by;
+                timelineInner.appendChild(timelineSubtitle);
 
-                const progress = $("<div/>")
-                    .addClass("timeline-item-text")
-                    .appendTo(timelineInner);
+                const progress = document.createElement("div");
+                progress.className = "timeline-item-text";
+                timelineInner.appendChild(progress);
 
-                $("<p/>")
-                    .text(row.delay.value !== null ? row.delay.value : "")
-                    .appendTo(progress);
+                const delayText = document.createElement("p");
+                delayText.textContent = row.delay.value !== null ? String(row.delay.value) : "";
+                progress.appendChild(delayText);
 
-                $("<p/>")
-                    .addClass("progress-wrap-" + i)
-                    .appendTo(progress);
+                const progressWrap = document.createElement("p");
+                progressWrap.className = "progress-wrap-" + i;
+                progress.appendChild(progressWrap);
 
                 try {
-                    myApp.showProgressbar(".progress-wrap-" + i, row.percent);
+                    if (myApp && row.percent.value !== null) {
+                        myApp.progressbar.show(".progress-wrap-" + i, Number(row.percent.value));
+                    }
                 } catch (e) {
-                    $("#original-headers").text(JSON.stringify(e));
+                    DomUtils.setText("#original-headers", JSON.stringify(e));
                     return;
                 }
             }
 
             // popover
-            const popover = $("<div/>")
-                .addClass("popover")
-                .addClass("popover-" + i)
-                .appendTo(receivedContent);
+            const receivedContentEl = document.getElementById("received-content")!;
+            const popover = document.createElement("div");
+            popover.className = "popover popover-" + i;
+            receivedContentEl.appendChild(popover);
 
-            $("<div/>")
-                .addClass("popover-angle")
-                .appendTo(popover);
+            const popoverAngle = document.createElement("div");
+            popoverAngle.className = "popover-angle";
+            popover.appendChild(popoverAngle);
 
-            const popoverInner = $("<div/>")
-                .addClass("popover-inner")
-                .appendTo(popover);
+            const popoverInner = document.createElement("div");
+            popoverInner.className = "popover-inner";
+            popover.appendChild(popoverInner);
 
-            const popoverContent = $("<div/>")
-                .addClass("content-block")
-                .appendTo(popoverInner);
+            const popoverContent = document.createElement("div");
+            popoverContent.className = "block";
+            popoverInner.appendChild(popoverContent);
 
             addCalloutEntry("From", row.from.value, popoverContent);
             addCalloutEntry("To", row.by.value, popoverContent);
@@ -277,39 +292,38 @@ function buildViews(headers: string): void {
 
         // Add a final empty timeline item to extend
         // timeline
-        const endTimelineItem = $("<div/>")
-            .addClass("timeline-item")
-            .appendTo(timeline);
+        const endTimelineItem = document.createElement("div");
+        endTimelineItem.className = "timeline-item";
+        timeline.appendChild(endTimelineItem);
 
         currentTime.add(1, "m");
         const endTimelineDate = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
-        $("<div/>")
-            .addClass("timeline-item-date")
-            .html(endTimelineDate)
-            .appendTo(endTimelineItem);
+        const endTimelineDateEl = document.createElement("div");
+        endTimelineDateEl.className = "timeline-item-date";
+        endTimelineDateEl.innerHTML = endTimelineDate;
+        endTimelineItem.appendChild(endTimelineDateEl);
 
-        $("<div/>")
-            .addClass("timeline-item-divider")
-            .appendTo(endTimelineItem);
+        const endTimelineDivider = document.createElement("div");
+        endTimelineDivider.className = "timeline-item-divider";
+        endTimelineItem.appendChild(endTimelineDivider);
     }
 
     // Build antispam view
-    const antispamContent = $("#antispam-content");
+    const antispamContent = document.getElementById("antispam-content")!;
 
     // Forefront
     if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
-        $("<div/>")
-            .addClass("content-block-title")
-            .text("Forefront Antispam Report")
-            .appendTo(antispamContent);
+        const blockTitle = document.createElement("div");
+        blockTitle.className = "block-title";
+        blockTitle.textContent = "Forefront Antispam Report";
+        antispamContent.appendChild(blockTitle);
 
-        const list: JQuery<HTMLElement> = $("<div/>")
-            .addClass("list-block")
-            .addClass("accordion-list")
-            .appendTo(antispamContent);
+        const list = document.createElement("div");
+        list.className = "list accordion-list";
+        antispamContent.appendChild(list);
 
-        const ul: JQuery<HTMLElement> = $("<ul/>")
-            .appendTo(list);
+        const ul = document.createElement("ul");
+        list.appendChild(ul);
 
         viewModel.forefrontAntiSpamReport.rows.forEach((row: Row) => {
             addSpamReportRow(row, ul);
@@ -318,18 +332,17 @@ function buildViews(headers: string): void {
 
     // Microsoft
     if (viewModel.antiSpamReport.rows.length > 0) {
-        $("<div/>")
-            .addClass("content-block-title")
-            .text("Microsoft Antispam Report")
-            .appendTo(antispamContent);
+        const blockTitle = document.createElement("div");
+        blockTitle.className = "block-title";
+        blockTitle.textContent = "Microsoft Antispam Report";
+        antispamContent.appendChild(blockTitle);
 
-        const list: JQuery<HTMLElement> = $("<div/>")
-            .addClass("list-block")
-            .addClass("accordion-list")
-            .appendTo(antispamContent);
+        const list = document.createElement("div");
+        list.className = "list accordion-list";
+        antispamContent.appendChild(list);
 
-        const ul: JQuery<HTMLElement> = $("<ul/>")
-            .appendTo(list);
+        const ul = document.createElement("ul");
+        list.appendChild(ul);
 
         viewModel.antiSpamReport.rows.forEach((row: Row) => {
             addSpamReportRow(row, ul);
@@ -337,86 +350,116 @@ function buildViews(headers: string): void {
     }
 
     // Build other view
-    const otherContent = $("#other-content");
+    const otherContent = document.getElementById("other-content")!;
 
     viewModel.otherHeaders.rows.forEach((row: OtherRow) => {
         if (row.value) {
-            const headerName = $("<div/>")
-                .addClass("content-block-title")
-                .text(row.header)
-                .appendTo(otherContent);
+            const headerName = document.createElement("div");
+            headerName.className = "block-title";
+            headerName.textContent = row.header;
+            otherContent.appendChild(headerName);
 
             if (row.url) {
-                headerName.empty();
+                headerName.innerHTML = "";
 
-                $($.parseHTML(row.url))
-                    .addClass("external")
-                    .appendTo(headerName);
+                // Parse HTML string and add to headerName
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = row.url;
+                while (tempDiv.firstChild) {
+                    const child = tempDiv.firstChild as HTMLElement;
+                    if (child.nodeType === Node.ELEMENT_NODE) {
+                        child.classList.add("external");
+                    }
+                    headerName.appendChild(child);
+                }
             }
-            else headerName.attr("tabindex", 0);
+            else {
+                headerName.setAttribute("tabindex", "0");
+            }
 
-            const contentBlock = $("<div/>")
-                .addClass("content-block")
-                .appendTo(otherContent);
+            const contentBlock = document.createElement("div");
+            contentBlock.className = "block";
+            otherContent.appendChild(contentBlock);
 
-            const headerVal = $("<div/>")
-                .addClass("code-box")
-                .appendTo(contentBlock);
+            const headerVal = document.createElement("div");
+            headerVal.className = "code-box";
+            contentBlock.appendChild(headerVal);
 
-            const pre = $("<pre/>").appendTo(headerVal);
+            const pre = document.createElement("pre");
+            headerVal.appendChild(pre);
 
-            $("<code/>")
-                .text(row.value)
-                .appendTo(pre);
+            const code = document.createElement("code");
+            code.textContent = row.value;
+            pre.appendChild(code);
         }
     });
 }
 
 function renderItem(headers: string): void {
     // Empty data
-    $("#summary-content").empty();
-    $("#received-content").empty();
-    $("#antispam-content").empty();
-    $("#other-content").empty();
-    $("#original-headers").empty();
+    DomUtils.clearElement("#summary-content");
+    DomUtils.clearElement("#received-content");
+    DomUtils.clearElement("#antispam-content");
+    DomUtils.clearElement("#other-content");
+    DomUtils.clearElement("#original-headers");
 
     updateStatus(mhaStrings.mhaLoading);
 
     buildViews(headers);
 
-    // To avoid tabbing to the hidden content, we're using a style to set hidden content to display: none
-    // .accordion-item:not(.accordion-item-expanded) .accordion-item-content { display: none; }
-    // This interferes with Framework7's accordion behavior, so we're using a MutationObserver to set the height to auto when the accordion is expanded
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.attributeName === "class") {
-                const target = mutation.target as HTMLElement;
-                if (target.classList.contains("accordion-item-expanded")) {
-                    console.log("expanded");
-                    const content = target.querySelector(".accordion-item-content") as HTMLElement;
-                    if (content) {
-                        content.style.height = "auto";
-                    }
-                }
-            }
-        });
+    setupAccordionAccessibility();
+
+    if (myApp) myApp.preloader.hide();
+}
+
+function setupAccordionAccessibility(): void {
+    if (!myApp) return;
+
+    // Set initial state - make all collapsed accordion content non-tabbable
+    const collapsedContentSelector = ".accordion-item:not(.accordion-item-expanded) .accordion-item-content";
+    DomUtils.setAccessibilityState(collapsedContentSelector, true, false);
+    DomUtils.makeFocusableElementsNonTabbable(collapsedContentSelector);
+
+    document.addEventListener("accordion:opened", (event) => {
+        const target = event.target as HTMLElement;
+        const content = target.querySelector(".accordion-item-content");
+        if (content) {
+            const contentElement = content as HTMLElement;
+            contentElement.setAttribute("aria-hidden", "false");
+            contentElement.style.visibility = "visible";
+            DomUtils.restoreFocusableElements(".accordion-item-content");
+        }
     });
 
-    const accordions = document.querySelectorAll(".accordion-item");
-    accordions.forEach((accordion) => {
-        observer.observe(accordion, { attributes: true });
-    });
+    document.addEventListener("accordion:closed", (event) => {
+        const target = event.target as HTMLElement;
+        const content = target.querySelector(".accordion-item-content");
+        if (content) {
+            const contentElement = content as HTMLElement;
+            contentElement.setAttribute("aria-hidden", "true");
+            contentElement.style.visibility = "hidden";
 
-    if (myApp) myApp.hidePreloader();
+            // Make focusable elements within this specific content non-tabbable
+            const focusableElements = contentElement.querySelectorAll(DomUtils.focusableElements);
+            focusableElements.forEach((el) => {
+                (el as HTMLElement).setAttribute("tabindex", "-1");
+            });
+        }
+    });
 }
 
 // Handles rendering of an error.
 // Does not log the error - caller is responsible for calling PostError
 function showError(error: unknown, message: string): void {
     console.error("Error:", error);
-    if (myApp) {
-        myApp.hidePreloader();
-        myApp.alert(message, "An Error Occurred");
+    if (myApp && myApp.preloader) {
+        myApp.preloader.hide();
+    }
+    if (myApp && myApp.dialog) {
+        myApp.dialog.alert(message, "An Error Occurred");
+    } else {
+        // Fallback to browser alert if Framework7 dialog is not available
+        alert(`An Error Occurred: ${message}`);
     }
 }
 
@@ -438,7 +481,7 @@ function eventListener(event: MessageEvent): void {
     }
 }
 
-$(function() {
+document.addEventListener("DOMContentLoaded", function() {
     try {
         initializeFramework7();
         updateStatus(mhaStrings.mhaLoading);

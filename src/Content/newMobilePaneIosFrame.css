@@ -1,7 +1,61 @@
 /* Framework7 specific overrides */
+
+:root {
+    --code-box-bg: #eaeaea;
+    --border-light-grey: #ccc;
+    --text-dark-grey: #444;
+    --text-medium-grey: #555555;
+    --focus-outline-blue: #0072cc;
+    --light-grey-border: #e0e0e0;
+    --f7-block-title-text-color: black;
+    --f7-progressbar-bg-color: #cccccc;
+    --f7-progressbar-progress-color: #007aff;
+    --f7-timeline-item-inner-bg-color: white;
+    --f7-timeline-item-text-color: black;
+    --f7-tabs-bg-color: #f4f4f4;
+    --f7-link-color: black;
+    --f7-accordion-chevron-icon-down: "chevron_right";
+    --f7-accordion-chevron-icon-up: "chevron_down";
+    --f7-timeline-item-inner-bg-color: white;
+    --f7-page-bg-color: var(-f7-tabs-bg-color);
+}
+
+/* Reserve space for parent frame toolbar overlay */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.framework7-root {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.top-spacer {
+    height: 44px;
+}
+
+/* Ensure page doesn't scroll behind toolbars */
+.page {
+    position: relative;
+    height: calc(100vh - 44px - 24px);
+    overflow-y: auto;
+}
+
+/* Framework7 v8 tab styling */
+.tabs .tab {
+    display: none;
+}
+
+.tabs .tab.tab-active {
+    display: block;
+}
+
 .code-box>pre {
-    background-color: #eaeaea;
-    border: 1px solid #ccc;
+    background-color: var(--code-box-bg);
+    border: 1px solid var(--border-light-grey);
     padding: 5px 10px;
     word-wrap: break-word;
     white-space: pre-wrap;
@@ -20,37 +74,31 @@
     word-wrap: break-word;
 }
 
-.tabs .tab {
-    padding-top: 25px;
-    background: #f4f4f4;
-}
-
-.page {
-    background: #f4f4f4;
-}
-
-.content-block-title {
+.block-title {
     text-transform: none;
     white-space: normal;
 }
 
-.content-block {
+.tab .block-title:first-child {
+    margin-top: 0px;
+}
+
+.block {
     word-wrap: break-word;
 }
 
 a,
 a:visited {
-    color: #000000;
     text-decoration: underline;
 }
 
 a:hover {
-    color: #444;
+    color: var(--text-dark-grey);
 }
 
 a:focus,
 div:focus {
-    outline: #0072cc solid 2px;
+    outline: var(--focus-outline-blue) solid 2px;
     outline-offset: 2px;
 }
 
@@ -60,24 +108,53 @@ a.tab-link {
     text-decoration: none;
 }
 
-.content-block-title {
+.block-title {
     overflow: visible;
 }
-/* See MutationObserver in renderItem to see how we set the height back to auto after this */
-.accordion-item:not(.accordion-item-expanded) .accordion-item-content {
-        display: none;
-}
 
-@media screen and (-ms-high-contrast:active) {
+@media screen and (-ms-high-contrast: active) {
     .progressbar span {
         background: highlight;
     }
 }
 
-.list-block .item-link .item-inner, .list-block .list-button .item-inner {
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D%270%200%2060%20120%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cpath%20d%3D%27m60%2061.5-38.25%2038.25-9.75-9.75%2029.25-28.5-29.25-28.5%209.75-9.75z%27%20fill%3D%27%23000000%27%2F%3E%3C%2Fsvg%3E");
+#antispam-view .block-title {
+    color: var(--text-medium-grey);
 }
 
-.list-block .accordion-item-expanded.media-item .accordion-item-toggle .item-title-row,.list-block .accordion-item-expanded.media-item>.item-link .item-title-row,.list-block.media-list .accordion-item-expanded .accordion-item-toggle .item-title-row,.list-block.media-list .accordion-item-expanded>.item-link .item-title-row,.list-block:not(.media-list) .accordion-item-expanded:not(.media-item) .accordion-item-toggle .item-inner,.list-block:not(.media-list) .accordion-item-expanded:not(.media-item)>.item-link .item-inner {
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D'0%200%2060%20120'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%3Cpath%20d%3D'm60%2061.5-38.25%2038.25-9.75-9.75%2029.25-28.5-29.25-28.5%209.75-9.75z'%20transform%3D'translate(115%2C%2030)%20rotate(90)'%20fill%3D'%23000000'%2F%3E%3C%2Fsvg%3E");
+#antispam-view .accordion-item {
+    background: white;
+    border-top: 1px solid var(--light-grey-border);
+    border-bottom: 1px solid var(--light-grey-border);
+}
+
+#antispam-view .accordion-item .item-title {
+    font-size: 17px;
+    background: var(--white);
+}
+
+#received-view .timeline-item-inner {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+#received-view .timeline-item-time {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#received-view .timeline-item-subtitle {
+    margin-bottom: 5px;
+    word-wrap: break-word;
+}
+
+#received-view .timeline-item-text {
+    word-wrap: break-word;
+    width: 100%;
 }
