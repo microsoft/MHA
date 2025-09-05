@@ -140,59 +140,57 @@ function buildViews(headers: string): void {
     }
 
     // Build received view
-    const receivedContent = $("#received-content");
+    const receivedContent = document.getElementById("received-content")!;
 
     if (viewModel.receivedHeaders.rows.length > 0) {
-        const timeline = $("<div/>")
-            .addClass("timeline")
-            .appendTo(receivedContent);
+        const timeline = document.createElement("div");
+        timeline.className = "timeline";
+        receivedContent.appendChild(timeline);
 
         let currentTime: dayjs.Dayjs = dayjs(viewModel.receivedHeaders.rows[0]?.dateNum.value).local();
-        let currentTimeEntry: JQuery<HTMLElement>;
+        let currentTimeEntry: HTMLElement;
 
         viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, i: number) => {
             if (i === 0) {
-                const timelineItem: JQuery<HTMLElement> = $("<div/>")
-                    .addClass("timeline-item")
-                    .appendTo(timeline);
+                const timelineItem = document.createElement("div");
+                timelineItem.className = "timeline-item";
+                timeline.appendChild(timelineItem);
 
                 const timelineDate: string = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
 
-                $("<div/>")
-                    .addClass("timeline-item-date")
-                    .html(timelineDate)
-                    .appendTo(timelineItem);
+                const timelineDateEl = document.createElement("div");
+                timelineDateEl.className = "timeline-item-date";
+                timelineDateEl.innerHTML = timelineDate;
+                timelineItem.appendChild(timelineDateEl);
 
-                $("<div/>")
-                    .addClass("timeline-item-divider")
-                    .appendTo(timelineItem);
+                const timelineDivider = document.createElement("div");
+                timelineDivider.className = "timeline-item-divider";
+                timelineItem.appendChild(timelineDivider);
 
-                currentTimeEntry = $("<div/>")
-                    .addClass("timeline-item-content")
-                    .appendTo(timelineItem);
+                currentTimeEntry = document.createElement("div");
+                currentTimeEntry.className = "timeline-item-content";
+                timelineItem.appendChild(currentTimeEntry);
 
                 // Add initial other rows
-                const timelineInner: JQuery<HTMLElement> = $("<div/>")
-                    .addClass("timeline-item-inner")
-                    .addClass("link")
-                    .addClass("popover-open")
-                    .attr("data-popover", ".popover-" + i)
-                    .appendTo(currentTimeEntry);
+                const timelineInner = document.createElement("div");
+                timelineInner.className = "timeline-item-inner link popover-open";
+                timelineInner.setAttribute("data-popover", ".popover-" + i);
+                currentTimeEntry.appendChild(timelineInner);
 
-                $("<div/>")
-                    .addClass("timeline-item-time")
-                    .text(currentTime.format("h:mm:ss"))
-                    .appendTo(timelineInner);
+                const timelineTime = document.createElement("div");
+                timelineTime.className = "timeline-item-time";
+                timelineTime.textContent = currentTime.format("h:mm:ss");
+                timelineInner.appendChild(timelineTime);
 
-                $("<div/>")
-                    .addClass("timeline-item-subtitle")
-                    .html("<strong>From: </strong>" + row.from)
-                    .appendTo(timelineInner);
+                const timelineSubtitle = document.createElement("div");
+                timelineSubtitle.className = "timeline-item-subtitle";
+                timelineSubtitle.innerHTML = "<strong>From: </strong>" + row.from;
+                timelineInner.appendChild(timelineSubtitle);
 
-                $("<div/>")
-                    .addClass("timeline-item-text")
-                    .html("<strong>To: </strong>" + row.by)
-                    .appendTo(timelineInner);
+                const timelineText = document.createElement("div");
+                timelineText.className = "timeline-item-text";
+                timelineText.innerHTML = "<strong>To: </strong>" + row.by;
+                timelineInner.appendChild(timelineText);
             } else {
                 // Determine if new timeline item is needed
                 const entryTime = dayjs(row.dateNum.value).local();
@@ -201,55 +199,53 @@ function buildViews(headers: string): void {
                     // Into a new minute, create a new timeline item
                     currentTime = entryTime;
 
-                    const timelineItem: JQuery<HTMLElement> = $("<div/>")
-                        .addClass("timeline-item")
-                        .appendTo(timeline);
+                    const timelineItem = document.createElement("div");
+                    timelineItem.className = "timeline-item";
+                    timeline.appendChild(timelineItem);
 
                     const timelineDate: string = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
-                    $("<div/>")
-                        .addClass("timeline-item-date")
-                        .html(timelineDate)
-                        .appendTo(timelineItem);
+                    const timelineDateEl = document.createElement("div");
+                    timelineDateEl.className = "timeline-item-date";
+                    timelineDateEl.innerHTML = timelineDate;
+                    timelineItem.appendChild(timelineDateEl);
 
-                    $("<div/>")
-                        .addClass("timeline-item-divider")
-                        .appendTo(timelineItem);
+                    const timelineDivider = document.createElement("div");
+                    timelineDivider.className = "timeline-item-divider";
+                    timelineItem.appendChild(timelineDivider);
 
-                    currentTimeEntry = $("<div/>")
-                        .addClass("timeline-item-content")
-                        .appendTo(timelineItem);
+                    currentTimeEntry = document.createElement("div");
+                    currentTimeEntry.className = "timeline-item-content";
+                    timelineItem.appendChild(currentTimeEntry);
 
                 }
 
                 // Add additional rows
-                const timelineInner: JQuery<HTMLElement> = $("<div/>")
-                    .addClass("timeline-item-inner")
-                    .addClass("link")
-                    .addClass("popover-open")
-                    .attr("data-popover", ".popover-" + i)
-                    .appendTo(currentTimeEntry);
+                const timelineInner = document.createElement("div");
+                timelineInner.className = "timeline-item-inner link popover-open";
+                timelineInner.setAttribute("data-popover", ".popover-" + i);
+                currentTimeEntry.appendChild(timelineInner);
 
-                $("<div/>")
-                    .addClass("timeline-item-time")
-                    .text(entryTime.format("h:mm:ss"))
-                    .appendTo(timelineInner);
+                const timelineTime = document.createElement("div");
+                timelineTime.className = "timeline-item-time";
+                timelineTime.textContent = entryTime.format("h:mm:ss");
+                timelineInner.appendChild(timelineTime);
 
-                $("<div/>")
-                    .addClass("timeline-item-subtitle")
-                    .html("<strong>To: </strong>" + row.by)
-                    .appendTo(timelineInner);
+                const timelineSubtitle = document.createElement("div");
+                timelineSubtitle.className = "timeline-item-subtitle";
+                timelineSubtitle.innerHTML = "<strong>To: </strong>" + row.by;
+                timelineInner.appendChild(timelineSubtitle);
 
-                const progress = $("<div/>")
-                    .addClass("timeline-item-text")
-                    .appendTo(timelineInner);
+                const progress = document.createElement("div");
+                progress.className = "timeline-item-text";
+                timelineInner.appendChild(progress);
 
-                $("<p/>")
-                    .text(row.delay.value !== null ? row.delay.value : "")
-                    .appendTo(progress);
+                const delayText = document.createElement("p");
+                delayText.textContent = row.delay.value !== null ? String(row.delay.value) : "";
+                progress.appendChild(delayText);
 
-                $("<p/>")
-                    .addClass("progress-wrap-" + i)
-                    .appendTo(progress);
+                const progressWrap = document.createElement("p");
+                progressWrap.className = "progress-wrap-" + i;
+                progress.appendChild(progressWrap);
 
                 try {
                     if (myApp && row.percent.value !== null) {
@@ -291,20 +287,20 @@ function buildViews(headers: string): void {
 
         // Add a final empty timeline item to extend
         // timeline
-        const endTimelineItem = $("<div/>")
-            .addClass("timeline-item")
-            .appendTo(timeline);
+        const endTimelineItem = document.createElement("div");
+        endTimelineItem.className = "timeline-item";
+        timeline.appendChild(endTimelineItem);
 
         currentTime.add(1, "m");
         const endTimelineDate = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
-        $("<div/>")
-            .addClass("timeline-item-date")
-            .html(endTimelineDate)
-            .appendTo(endTimelineItem);
+        const endTimelineDateEl = document.createElement("div");
+        endTimelineDateEl.className = "timeline-item-date";
+        endTimelineDateEl.innerHTML = endTimelineDate;
+        endTimelineItem.appendChild(endTimelineDateEl);
 
-        $("<div/>")
-            .addClass("timeline-item-divider")
-            .appendTo(endTimelineItem);
+        const endTimelineDivider = document.createElement("div");
+        endTimelineDivider.className = "timeline-item-divider";
+        endTimelineItem.appendChild(endTimelineDivider);
     }
 
     // Build antispam view
