@@ -74,6 +74,10 @@ body {
     white-space: normal;
 }
 
+.tab .block-title:first-child {
+    margin-top: 0px;
+}
+
 .block {
     word-wrap: break-word;
 }
