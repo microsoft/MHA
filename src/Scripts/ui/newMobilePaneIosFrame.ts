@@ -134,8 +134,8 @@ function buildViews(headers: string): void {
     });
 
     if (viewModel.originalHeaders) {
-        $("#original-headers").text(viewModel.originalHeaders);
-        $("#orig-headers-ui").show();
+        DomUtils.setText("#original-headers", viewModel.originalHeaders);
+        DomUtils.showElement("#orig-headers-ui");
     }
 
     // Build received view
@@ -255,7 +255,7 @@ function buildViews(headers: string): void {
                         myApp.progressbar.show(".progress-wrap-" + i, Number(row.percent.value));
                     }
                 } catch (e) {
-                    $("#original-headers").text(JSON.stringify(e));
+                    DomUtils.setText("#original-headers", JSON.stringify(e));
                     return;
                 }
             }
@@ -387,11 +387,11 @@ function buildViews(headers: string): void {
 
 function renderItem(headers: string): void {
     // Empty data
-    $("#summary-content").empty();
-    $("#received-content").empty();
-    $("#antispam-content").empty();
-    $("#other-content").empty();
-    $("#original-headers").empty();
+    DomUtils.clearElement("#summary-content");
+    DomUtils.clearElement("#received-content");
+    DomUtils.clearElement("#antispam-content");
+    DomUtils.clearElement("#other-content");
+    DomUtils.clearElement("#original-headers");
 
     updateStatus(mhaStrings.mhaLoading);
 
@@ -471,7 +471,7 @@ function eventListener(event: MessageEvent): void {
     }
 }
 
-$(function() {
+document.addEventListener("DOMContentLoaded", function() {
     try {
         initializeFramework7();
         updateStatus(mhaStrings.mhaLoading);
