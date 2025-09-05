@@ -54,12 +54,12 @@ function updateStatus(message: string): void {
     }
 }
 
-function addCalloutEntry(name: string, value: string | number | null, parent: JQuery<HTMLElement>): void {
+function addCalloutEntry(name: string, value: string | number | null, parent: HTMLElement): void {
     if (value) {
-        $("<p/>")
-            .addClass("wrap-line")
-            .html("<strong>" + name + ": </strong>" + value)
-            .appendTo(parent);
+        const p = document.createElement("p");
+        p.className = "wrap-line";
+        p.innerHTML = "<strong>" + name + ": </strong>" + value;
+        parent.appendChild(p);
     }
 }
 
@@ -108,28 +108,29 @@ function buildViews(headers: string): void {
     const viewModel = new HeaderModel(headers);
 
     // Build summary view
-    const summaryContent = $("#summary-content");
+    const summaryContent = document.getElementById("summary-content")!;
 
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
-            $("<div/>")
-                .addClass("block-title")
-                .text(row.label)
-                .appendTo(summaryContent);
+            const blockTitle = document.createElement("div");
+            blockTitle.className = "block-title";
+            blockTitle.textContent = row.label;
+            summaryContent.appendChild(blockTitle);
 
-            const contentBlock = $("<div/>")
-                .addClass("block")
-                .appendTo(summaryContent);
+            const contentBlock = document.createElement("div");
+            contentBlock.className = "block";
+            summaryContent.appendChild(contentBlock);
 
-            const headerVal = $("<div/>")
-                .addClass("code-box")
-                .appendTo(contentBlock);
+            const headerVal = document.createElement("div");
+            headerVal.className = "code-box";
+            contentBlock.appendChild(headerVal);
 
-            const pre = $("<pre/>").appendTo(headerVal);
+            const pre = document.createElement("pre");
+            headerVal.appendChild(pre);
 
-            $("<code/>")
-                .text(row.value)
-                .appendTo(pre);
+            const code = document.createElement("code");
+            code.textContent = row.value;
+            pre.appendChild(code);
         }
     });
 
@@ -261,22 +262,22 @@ function buildViews(headers: string): void {
             }
 
             // popover
-            const popover = $("<div/>")
-                .addClass("popover")
-                .addClass("popover-" + i)
-                .appendTo(receivedContent);
+            const receivedContentEl = document.getElementById("received-content")!;
+            const popover = document.createElement("div");
+            popover.className = "popover popover-" + i;
+            receivedContentEl.appendChild(popover);
 
-            $("<div/>")
-                .addClass("popover-angle")
-                .appendTo(popover);
+            const popoverAngle = document.createElement("div");
+            popoverAngle.className = "popover-angle";
+            popover.appendChild(popoverAngle);
 
-            const popoverInner = $("<div/>")
-                .addClass("popover-inner")
-                .appendTo(popover);
+            const popoverInner = document.createElement("div");
+            popoverInner.className = "popover-inner";
+            popover.appendChild(popoverInner);
 
-            const popoverContent = $("<div/>")
-                .addClass("block")
-                .appendTo(popoverInner);
+            const popoverContent = document.createElement("div");
+            popoverContent.className = "block";
+            popoverInner.appendChild(popoverContent);
 
             addCalloutEntry("From", row.from.value, popoverContent);
             addCalloutEntry("To", row.by.value, popoverContent);
