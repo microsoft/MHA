@@ -34,7 +34,10 @@ export class Table {
         const lineBreak = $("#lineBreak");
         if (lineBreak && lineBreak[0]) {
             const responseTop: number = lineBreak[0]?.offsetTop + (lineBreak.height() ?? 0);
-            $("#response").css("top", responseTop + 15);
+            const responseElement = document.getElementById("response");
+            if (responseElement) {
+                responseElement.style.top = (responseTop + 15) + "px";
+            }
         }
     }
 
@@ -140,8 +143,13 @@ export class Table {
     }
 
     private setArrows(table: string, colName: string, sortOrder: number): void {
-        $("#" + table + " th button").attr("aria-sort", "none");
-        $("#" + table + " th #" + colName).attr("aria-sort", sortOrder === 1 ? "descending" : "ascending");
+        const buttons = document.querySelectorAll(`#${table} th button`);
+        buttons.forEach(button => button.setAttribute("aria-sort", "none"));
+
+        const targetButton = document.querySelector(`#${table} th #${colName}`);
+        if (targetButton) {
+            targetButton.setAttribute("aria-sort", sortOrder === 1 ? "descending" : "ascending");
+        }
     }
 
     private setRowValue(row: Row, type: string): void {
@@ -173,8 +181,11 @@ export class Table {
     // Restores table to empty state so we can repopulate it
     private emptyTableUI(id: string): void {
         $("#" + id + " tr:not(.tableHeader)").remove(); // Remove the rows
-        $("#" + id + " th").removeClass("emptyColumn"); // Restore header visibility
-        $("#" + id + " th").removeClass("hiddenElement"); // Restore header visibility
+        const headers = document.querySelectorAll(`#${id} th`);
+        headers.forEach(header => {
+            header.classList.remove("emptyColumn"); // Restore header visibility
+            header.classList.remove("hiddenElement"); // Restore header visibility
+        });
     }
 
     // Recompute visibility with the current viewModel. Does not repopulate.
@@ -246,14 +257,19 @@ export class Table {
 
         // Calculate heights for the hotbar cells (progress bars in Delay column)
         // Not clear why we need to do this
-        $(".hotBarCell").each(function () {
-            const height: number | undefined = $(this).height();
+        const hotBarCells = document.querySelectorAll(".hotBarCell");
+        hotBarCells.forEach(cell => {
+            const height = (cell as HTMLElement).offsetHeight;
             if (height) {
-                $(this).find(".hotBarContainer").height(height);
+                const container = cell.querySelector(".hotBarContainer") as HTMLElement;
+                if (container) {
+                    container.style.height = height + "px";
+                }
             }
         });
 
-        $("#receivedHeaders tr:odd").addClass("oddRow");
+        const receivedRows = document.querySelectorAll("#receivedHeaders tr:nth-child(odd)");
+        receivedRows.forEach(row => row.classList.add("oddRow"));
         this.hideEmptyColumns("receivedHeaders");
 
         // Forefront AntiSpam Report
@@ -276,7 +292,8 @@ export class Table {
             this.appendCell(row, otherRow.value, "", "allowBreak", "value");
         });
 
-        $("#otherHeaders tr:odd").addClass("oddRow");
+        const otherRows = document.querySelectorAll("#otherHeaders tr:nth-child(odd)");
+        otherRows.forEach(row => row.classList.add("oddRow"));
 
         // Original headers
         DomUtils.setText("#originalHeaders", this.viewModel.originalHeaders);
@@ -344,14 +361,14 @@ export class Table {
 
     private hideExtraColumns(): void {
         this.showExtra = false;
-        $("#leftArrow").addClass("hiddenElement");
-        $("#rightArrow").removeClass("hiddenElement");
+        DomUtils.addClass("#leftArrow", "hiddenElement");
+        DomUtils.removeClass("#rightArrow", "hiddenElement");
     }
 
     private showExtraColumns(): void {
         this.showExtra = true;
-        $("#rightArrow").addClass("hiddenElement");
-        $("#leftArrow").removeClass("hiddenElement");
+        DomUtils.addClass("#rightArrow", "hiddenElement");
+        DomUtils.removeClass("#leftArrow", "hiddenElement");
     }
 
     private toggleExtraColumns(): void {

@@ -1,6 +1,7 @@
 import $ from "jquery";
 
 import { HeaderModel } from "../HeaderModel";
+import { DomUtils } from "./domUtils";
 import { Table } from "./Table";
 import { Row } from "../row/Row";
 import { DataTable } from "../table/DataTable";
@@ -66,9 +67,9 @@ describe("Table", () => {
         const id = "testElement";
         $("body").append(`<div id="${id}" class="hiddenElement"></div>`);
         table["toggleCollapse"](id);
-        expect($(`#${id}`).hasClass("hiddenElement")).toBe(false);
+        expect(DomUtils.hasClass(`#${id}`, "hiddenElement")).toBe(false);
         table["toggleCollapse"](id);
-        expect($(`#${id}`).hasClass("hiddenElement")).toBe(true);
+        expect(DomUtils.hasClass(`#${id}`, "hiddenElement")).toBe(true);
         $(`#${id}`).remove();
     });
 
@@ -76,9 +77,9 @@ describe("Table", () => {
         const id = "#testElement";
         $("body").append("<div id=\"testElement\" class=\"hiddenElement\"></div>");
         table["makeVisible"](id, true);
-        expect($(id).hasClass("hiddenElement")).toBe(false);
+        expect(DomUtils.hasClass(id, "hiddenElement")).toBe(false);
         table["makeVisible"](id, false);
-        expect($(id).hasClass("hiddenElement")).toBe(true);
+        expect(DomUtils.hasClass(id, "hiddenElement")).toBe(true);
         $(id).remove();
     });
 
@@ -101,8 +102,8 @@ describe("Table", () => {
             </table>
         `);
         table["hideEmptyColumns"](tableId);
-        expect($(`#${tableId} th`).eq(0).hasClass("emptyColumn")).toBe(true);
-        expect($(`#${tableId} th`).eq(1).hasClass("emptyColumn")).toBe(false);
+        expect(DomUtils.hasClass(`#${tableId} th:first-child`, "emptyColumn")).toBe(true);
+        expect(DomUtils.hasClass(`#${tableId} th:nth-child(2)`, "emptyColumn")).toBe(false);
         $(`#${tableId}`).remove();
     });
 
@@ -111,7 +112,7 @@ describe("Table", () => {
         row.value = "testValue";
         $("body").append("<div id=\"testHeaderSUMVal\"></div>");
         table["setRowValue"](row, "SUM");
-        expect($("#testHeaderSUMVal").text()).toBe("testValue");
+        expect(DomUtils.getText("#testHeaderSUMVal")).toBe("testValue");
         $("#testHeaderSUMVal").remove();
     });
 
@@ -142,8 +143,8 @@ describe("Table", () => {
         `);
         table["emptyTableUI"](tableId);
         expect($(`#${tableId} tbody tr`).length).toBe(0);
-        expect($(`#${tableId} th`).hasClass("emptyColumn")).toBe(false);
-        expect($(`#${tableId} th`).hasClass("hiddenElement")).toBe(false);
+        expect(DomUtils.hasClass(`#${tableId} th:first-child`, "emptyColumn")).toBe(false);
+        expect(DomUtils.hasClass(`#${tableId} th:first-child`, "hiddenElement")).toBe(false);
         $(`#${tableId}`).remove();
     });
 

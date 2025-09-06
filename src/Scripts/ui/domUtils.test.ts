@@ -146,6 +146,36 @@ describe("DomUtils Class", () => {
         });
     });
 
+    describe("getText", () => {
+        test("gets text content from element", () => {
+            document.body.innerHTML = "<div id=\"test-div\">test content</div>";
+            const text = DomUtils.getText("#test-div");
+            expect(text).toBe("test content");
+        });
+
+        test("returns empty string when element not found", () => {
+            const text = DomUtils.getText("#missing");
+            expect(text).toBe("");
+        });
+
+        test("returns empty string for element with no text", () => {
+            document.body.innerHTML = "<div id=\"test-div\"></div>";
+            const text = DomUtils.getText("#test-div");
+            expect(text).toBe("");
+        });
+
+        test("handles null textContent", () => {
+            document.body.innerHTML = "<div id=\"test-div\">content</div>";
+            const element = document.getElementById("test-div");
+            if (element) {
+                // Simulate null textContent
+                Object.defineProperty(element, "textContent", { value: null });
+                const text = DomUtils.getText("#test-div");
+                expect(text).toBe("");
+            }
+        });
+    });
+
     describe("showElement and hideElement", () => {
         test("shows and hides elements", () => {
             document.body.innerHTML = "<div id=\"toggle\">content</div>";
@@ -738,6 +768,90 @@ describe("DomUtils Class", () => {
         test("does nothing when element not found", () => {
             // Should not throw
             expect(() => DomUtils.setValue("#missing", "value")).not.toThrow();
+        });
+    });
+
+    describe("addClass", () => {
+        test("adds class to element", () => {
+            document.body.innerHTML = "<div id=\"test-div\"></div>";
+            DomUtils.addClass("#test-div", "new-class");
+            const element = document.getElementById("test-div");
+            expect(element?.classList.contains("new-class")).toBe(true);
+        });
+
+        test("does nothing when element not found", () => {
+            expect(() => DomUtils.addClass("#missing", "class")).not.toThrow();
+        });
+
+        test("can add multiple classes", () => {
+            document.body.innerHTML = "<div id=\"test-div\"></div>";
+            DomUtils.addClass("#test-div", "class1");
+            DomUtils.addClass("#test-div", "class2");
+            const element = document.getElementById("test-div");
+            expect(element?.classList.contains("class1")).toBe(true);
+            expect(element?.classList.contains("class2")).toBe(true);
+        });
+    });
+
+    describe("removeClass", () => {
+        test("removes class from element", () => {
+            document.body.innerHTML = "<div id=\"test-div\" class=\"remove-me keep-me\"></div>";
+            DomUtils.removeClass("#test-div", "remove-me");
+            const element = document.getElementById("test-div");
+            expect(element?.classList.contains("remove-me")).toBe(false);
+            expect(element?.classList.contains("keep-me")).toBe(true);
+        });
+
+        test("does nothing when element not found", () => {
+            expect(() => DomUtils.removeClass("#missing", "class")).not.toThrow();
+        });
+
+        test("does nothing when class not present", () => {
+            document.body.innerHTML = "<div id=\"test-div\" class=\"existing\"></div>";
+            DomUtils.removeClass("#test-div", "not-there");
+            const element = document.getElementById("test-div");
+            expect(element?.classList.contains("existing")).toBe(true);
+        });
+    });
+
+    describe("toggleClass", () => {
+        test("adds class when not present", () => {
+            document.body.innerHTML = "<div id=\"test-div\"></div>";
+            DomUtils.toggleClass("#test-div", "toggle-me");
+            const element = document.getElementById("test-div");
+            expect(element?.classList.contains("toggle-me")).toBe(true);
+        });
+
+        test("removes class when present", () => {
+            document.body.innerHTML = "<div id=\"test-div\" class=\"toggle-me\"></div>";
+            DomUtils.toggleClass("#test-div", "toggle-me");
+            const element = document.getElementById("test-div");
+            expect(element?.classList.contains("toggle-me")).toBe(false);
+        });
+
+        test("does nothing when element not found", () => {
+            expect(() => DomUtils.toggleClass("#missing", "class")).not.toThrow();
+        });
+    });
+
+    describe("hasClass", () => {
+        test("returns true when class is present", () => {
+            document.body.innerHTML = "<div id=\"test-div\" class=\"has-class other-class\"></div>";
+            expect(DomUtils.hasClass("#test-div", "has-class")).toBe(true);
+        });
+
+        test("returns false when class is not present", () => {
+            document.body.innerHTML = "<div id=\"test-div\" class=\"other-class\"></div>";
+            expect(DomUtils.hasClass("#test-div", "missing-class")).toBe(false);
+        });
+
+        test("returns false when element not found", () => {
+            expect(DomUtils.hasClass("#missing", "any-class")).toBe(false);
+        });
+
+        test("works with elements that have no classes", () => {
+            document.body.innerHTML = "<div id=\"test-div\"></div>";
+            expect(DomUtils.hasClass("#test-div", "any-class")).toBe(false);
         });
     });
 });
