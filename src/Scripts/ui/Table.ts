@@ -42,7 +42,7 @@ export class Table {
     }
 
     private toggleCollapse(id: string): void {
-        $("#"+ id).toggleClass("hiddenElement");
+        DomUtils.toggleClass("#" + id, "hiddenElement");
         this.positionResponse();
     }
 
@@ -198,23 +198,28 @@ export class Table {
     }
 
     private hideEmptyColumns(id: string): void {
-        $("#" + id + " th").each(function (i) {
+        const headers = document.querySelectorAll(`#${id} th`);
+        headers.forEach((header, i) => {
             let keep = 0;
 
             // Find a child cell which has data
-            const children = $(this).parents("table").find("tr td:nth-child(" + (i + 1).toString() + ")");
-            children.each(function () {
-                if (this.innerHTML !== "") {
-                    keep++;
-                }
-            });
+            // Match jQuery behavior: $(this).parents("table").find("tr td:nth-child(" + (i + 1) + ")")
+            const table = header.closest("table");
+            if (table) {
+                const children = table.querySelectorAll(`tr td:nth-child(${i + 1})`);
+                children.forEach((cell) => {
+                    if (cell.innerHTML !== "") {
+                        keep++;
+                    }
+                });
 
-            if (keep === 0) {
-                $(this).addClass("emptyColumn");
-                children.addClass("emptyColumn");
-            } else {
-                $(this).removeClass("emptyColumn");
-                children.removeClass("emptyColumn");
+                if (keep === 0) {
+                    header.classList.add("emptyColumn");
+                    children.forEach(cell => cell.classList.add("emptyColumn"));
+                } else {
+                    header.classList.remove("emptyColumn");
+                    children.forEach(cell => cell.classList.remove("emptyColumn"));
+                }
             }
         });
     }
