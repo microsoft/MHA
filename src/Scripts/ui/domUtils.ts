@@ -179,4 +179,24 @@ export class DomUtils {
             element.style.visibility = visible ? "visible" : "hidden";
         });
     }
+
+    /**
+     * Get the value of an input element
+     * @param selector CSS selector string
+     * @returns The input value or empty string if not found
+     */
+    static getValue(selector: string): string {
+        const element = this.getElement(selector) as HTMLInputElement;
+        return element ? element.value : "";
+    }
+
+    /**
+     * Set the value of an input element
+     * @param selector CSS selector string
+     * @param value Value to set
+     */
+    static setValue(selector: string, value: string): void {
+        const element = this.getElement(selector) as HTMLInputElement;
+        if (element) element.value = value;
+    }
 }

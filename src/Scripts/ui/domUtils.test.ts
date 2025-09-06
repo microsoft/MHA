@@ -700,4 +700,44 @@ describe("DomUtils Class", () => {
             });
         });
     });
+
+    describe("getValue", () => {
+        test("returns value from input element", () => {
+            document.body.innerHTML = "<input id=\"test-input\" value=\"test value\">";
+            const value = DomUtils.getValue("#test-input");
+            expect(value).toBe("test value");
+        });
+
+        test("returns empty string when element not found", () => {
+            const value = DomUtils.getValue("#missing");
+            expect(value).toBe("");
+        });
+
+        test("returns value from textarea", () => {
+            document.body.innerHTML = "<textarea id=\"test-textarea\">textarea content</textarea>";
+            const value = DomUtils.getValue("#test-textarea");
+            expect(value).toBe("textarea content");
+        });
+    });
+
+    describe("setValue", () => {
+        test("sets value on input element", () => {
+            document.body.innerHTML = "<input id=\"test-input\">";
+            DomUtils.setValue("#test-input", "new value");
+            const element = document.getElementById("test-input") as HTMLInputElement;
+            expect(element.value).toBe("new value");
+        });
+
+        test("sets value on textarea", () => {
+            document.body.innerHTML = "<textarea id=\"test-textarea\"></textarea>";
+            DomUtils.setValue("#test-textarea", "new content");
+            const element = document.getElementById("test-textarea") as HTMLTextAreaElement;
+            expect(element.value).toBe("new content");
+        });
+
+        test("does nothing when element not found", () => {
+            // Should not throw
+            expect(() => DomUtils.setValue("#missing", "value")).not.toThrow();
+        });
+    });
 });

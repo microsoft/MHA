@@ -2,6 +2,7 @@ import $ from "jquery";
 
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
+import { DomUtils } from "./domUtils";
 import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
@@ -278,7 +279,7 @@ export class Table {
         $("#otherHeaders tr:odd").addClass("oddRow");
 
         // Original headers
-        $("#originalHeaders").text(this.viewModel.originalHeaders);
+        DomUtils.setText("#originalHeaders", this.viewModel.originalHeaders);
 
         this.recalculateVisibility();
     }
