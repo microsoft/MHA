@@ -94,11 +94,14 @@ export class Table {
     }
 
     private makeVisible(id: string, visible: boolean): void {
-        if (visible) {
-            $(id).removeClass("hiddenElement");
-        } else {
-            $(id).addClass("hiddenElement");
-        }
+        const elements = document.querySelectorAll(id);
+        elements.forEach(element => {
+            if (visible) {
+                element.classList.remove("hiddenElement");
+            } else {
+                element.classList.add("hiddenElement");
+            }
+        });
     }
 
     private addTableAccessibility(section: TableSection): void {
