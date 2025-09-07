@@ -31,9 +31,9 @@ export class Table {
 
     // Adjusts response under our lineBreak
     private positionResponse(): void {
-        const lineBreak = $("#lineBreak");
-        if (lineBreak && lineBreak[0]) {
-            const responseTop: number = lineBreak[0]?.offsetTop + (lineBreak.height() ?? 0);
+        const lineBreak = document.getElementById("lineBreak");
+        if (lineBreak) {
+            const responseTop: number = lineBreak.offsetTop + (lineBreak.offsetHeight ?? 0);
             const responseElement = document.getElementById("response");
             if (responseElement) {
                 responseElement.style.top = (responseTop + 15) + "px";
@@ -156,18 +156,18 @@ export class Table {
     }
 
     private setRowValue(row: Row, type: string): void {
-        const headerVal = $("#" + row.header + type + "Val");
+        const headerVal = document.getElementById(row.header + type + "Val");
         if (headerVal) {
             if (row.value) {
                 if (row.valueUrl) {
-                    headerVal.html(row.valueUrl);
+                    headerVal.innerHTML = row.valueUrl;
                 } else {
-                    headerVal.text(row.value);
+                    headerVal.textContent = row.value;
                 }
 
                 this.makeVisible("#" + row.header + type, true);
             } else {
-                headerVal.text("");
+                headerVal.textContent = "";
                 this.makeVisible("#" + row.header + type, false);
             }
         }
