@@ -48,14 +48,17 @@ export class Table {
 
     // Wraps an element into a collapsible pane with a title
     public makeResizablePane(id: string, paneClass: string, title: string, visibility: (table: Table) => boolean): void {
-        const pane = $("#" + id);
+        const paneElement = document.getElementById(id);
+        if (!paneElement) return;
+        const pane = $(paneElement);
         if (pane.hasClass("collapsibleElement")) {
             return;
         }
         const hidden = pane.hasClass("hiddenElement");
 
         pane.addClass("collapsibleElement");
-        const wrap = $(document.createElement("div"));
+        const wrapElement = document.createElement("div");
+        const wrap = $(wrapElement);
         wrap.addClass("collapsibleWrapper");
         if (visibility) {
             wrap.attr("id", id + "Wrapper");
@@ -63,7 +66,8 @@ export class Table {
         }
 
         // Fix for Bug 1691235 - Create a hidden h2 element for a11y
-        const hiddenHeading = $(document.createElement("h2"));
+        const hiddenHeadingElement = document.createElement("h2");
+        const hiddenHeading = $(hiddenHeadingElement);
         hiddenHeading.attr("id", "button-heading");
         hiddenHeading.addClass("header-hidden");
         hiddenHeading.text(title);
