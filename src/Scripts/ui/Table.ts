@@ -250,7 +250,10 @@ export class Table {
         this.emptyTableUI("receivedHeaders");
         this.viewModel.receivedHeaders.rows.forEach((receivedRow: ReceivedRow) => {
             const row: HTMLTableRowElement = document.createElement("tr");
-            $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
+            const receivedHeadersTable = document.getElementById("receivedHeaders");
+            if (receivedHeadersTable) {
+                receivedHeadersTable.appendChild(row); // Must happen before we append cells to appease IE7
+            }
             this.appendCell(row, receivedRow.hop.value, "", "", "hop");
             this.appendCell(row, receivedRow.from.value, "", "", "from");
             this.appendCell(row, receivedRow.by.value, "", "", "by");
@@ -303,7 +306,10 @@ export class Table {
         this.emptyTableUI("otherHeaders");
         this.viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
             const row: HTMLTableRowElement = document.createElement("tr");
-            $("#otherHeaders").append(row); // Must happen before we append cells to appease IE7
+            const otherHeadersTable = document.getElementById("otherHeaders");
+            if (otherHeadersTable) {
+                otherHeadersTable.appendChild(row); // Must happen before we append cells to appease IE7
+            }
             this.appendCell(row, otherRow.number.toString(), "", "", "number");
             this.appendCell(row, otherRow.header, otherRow.url, "", "header");
             this.appendCell(row, otherRow.value, "", "allowBreak", "value");
