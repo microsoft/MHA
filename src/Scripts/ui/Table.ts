@@ -57,34 +57,29 @@ export class Table {
 
         paneElement.classList.add("collapsibleElement");
         const wrapElement = document.createElement("div");
-        const wrap = $(wrapElement);
-        wrap.addClass("collapsibleWrapper");
+        wrapElement.classList.add("collapsibleWrapper");
         if (visibility) {
-            wrap.attr("id", id + "Wrapper");
+            wrapElement.setAttribute("id", id + "Wrapper");
             this.visibilityBindings.push({ name: "#" + id + "Wrapper", visible: visibility });
         }
 
         // Fix for Bug 1691235 - Create a hidden h2 element for a11y
         const hiddenHeadingElement = document.createElement("h2");
-        const hiddenHeading = $(hiddenHeadingElement);
-        hiddenHeading.attr("id", "button-heading");
-        hiddenHeading.addClass("header-hidden");
-        hiddenHeading.text(title);
+        hiddenHeadingElement.setAttribute("id", "button-heading");
+        hiddenHeadingElement.classList.add("header-hidden");
+        hiddenHeadingElement.textContent = title;
 
         const headerElement = document.createElement("button");
-        const header = $(headerElement);
-        header.addClass(paneClass);
-        header.on("click", this, function (eventObject) {
-            const table: Table = eventObject.data as Table;
-            if (table) {
-                table.toggleCollapse(id);
-                header.attr("aria-expanded", header.attr("aria-expanded") === "true" ? "false" : "true");
-            }
+        headerElement.classList.add(paneClass);
+        headerElement.addEventListener("click", () => {
+            this.toggleCollapse(id);
+            const currentExpanded = headerElement.getAttribute("aria-expanded") === "true";
+            headerElement.setAttribute("aria-expanded", currentExpanded ? "false" : "true");
         });
-        header.text(title);
-        header.attr("tabindex", 0);
-        header.attr("type", "button");
-        header.attr("aria-expanded", !hidden ? "true" : "false");
+        headerElement.textContent = title;
+        headerElement.setAttribute("tabindex", "0");
+        headerElement.setAttribute("type", "button");
+        headerElement.setAttribute("aria-expanded", !hidden ? "true" : "false");
 
         const switchSpanElement = document.createElement("span");
         switchSpanElement.setAttribute("aria-hidden", "true");
