@@ -343,9 +343,9 @@ export class Table {
                     }
                 });
 
-                const arrowSpan = $(document.createElement("span"));
-                arrowSpan.attr("aria-hidden", "true");
-                arrowSpan.addClass("sortArrow");
+                const arrowSpan = document.createElement("span");
+                arrowSpan.setAttribute("aria-hidden", "true");
+                arrowSpan.classList.add("sortArrow");
 
                 // Now that everything is built, put it together
                 headerButton.append(arrowSpan);
