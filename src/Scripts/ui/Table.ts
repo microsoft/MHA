@@ -50,13 +50,12 @@ export class Table {
     public makeResizablePane(id: string, paneClass: string, title: string, visibility: (table: Table) => boolean): void {
         const paneElement = document.getElementById(id);
         if (!paneElement) return;
-        const pane = $(paneElement);
-        if (pane.hasClass("collapsibleElement")) {
+        if (paneElement.classList.contains("collapsibleElement")) {
             return;
         }
-        const hidden = pane.hasClass("hiddenElement");
+        const hidden = paneElement.classList.contains("hiddenElement");
 
-        pane.addClass("collapsibleElement");
+        paneElement.classList.add("collapsibleElement");
         const wrapElement = document.createElement("div");
         const wrap = $(wrapElement);
         wrap.addClass("collapsibleWrapper");
@@ -88,15 +87,18 @@ export class Table {
         header.attr("aria-expanded", !hidden ? "true" : "false");
 
         const switchSpanElement = document.createElement("span");
-        const switchSpan = $(switchSpanElement);
-        switchSpan.attr("aria-hidden", "true");
-        switchSpan.addClass("collapsibleSwitch");
+        switchSpanElement.setAttribute("aria-hidden", "true");
+        switchSpanElement.classList.add("collapsibleSwitch");
 
         // Now that everything is built, put it together
-        pane.wrap(wrap);
-        pane.before(hiddenHeading);
-        pane.before(header);
-        header.append(switchSpan);
+        const parent = paneElement.parentNode;
+        if (parent) {
+            parent.insertBefore(wrapElement, paneElement);
+            wrapElement.appendChild(paneElement);
+            wrapElement.insertBefore(hiddenHeadingElement, paneElement);
+            wrapElement.insertBefore(headerElement, paneElement);
+        }
+        headerElement.appendChild(switchSpanElement);
     }
 
     private makeVisible(id: string, visible: boolean): void {
@@ -128,22 +130,18 @@ export class Table {
                 if (row !== null) {
                     row.id = id;
                     summaryListElement.appendChild(row); // Must happen before we append cells to appease IE7
-                    const headerCell = $(row.insertCell(-1));
-                    if (headerCell) {
-                        if (summaryRow.url) {
-                            headerCell.html(summaryRow.url);
-                        } else {
-                            headerCell.text(summaryRow.label);
-                        }
-                        headerCell.addClass("summaryHeader");
-                        headerCell.attr("id", summaryRow.id);
+                    const headerCell = row.insertCell(-1);
+                    if (summaryRow.url) {
+                        headerCell.innerHTML = summaryRow.url;
+                    } else {
+                        headerCell.textContent = summaryRow.label;
                     }
+                    headerCell.classList.add("summaryHeader");
+                    headerCell.setAttribute("id", summaryRow.id);
 
-                    const valCell = $(row.insertCell(-1));
-                    if (valCell) {
-                        valCell.attr("id", id + "Val");
-                        valCell.attr("aria-labelledby", summaryRow.id);
-                    }
+                    const valCell = row.insertCell(-1);
+                    valCell.setAttribute("id", id + "Val");
+                    valCell.setAttribute("aria-labelledby", summaryRow.id);
 
                     this.makeVisible("#" + id, false);
                 }
