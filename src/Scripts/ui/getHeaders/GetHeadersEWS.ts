@@ -44,10 +44,10 @@ export class GetHeadersEWS {
                 if (extendedProperty) {
                     ret.prop = extendedProperty;
                 }
-            }
 
-            if (!ret.prop) {
-                ret.responseCode = filterNode(response, "m:ResponseCode");
+                if (!ret.prop) {
+                    ret.responseCode = filterNode(response, "m:ResponseCode");
+                }
             }
         } catch {
             // Exceptions thrown from parseXML are super chatty and we do not want to log them.
