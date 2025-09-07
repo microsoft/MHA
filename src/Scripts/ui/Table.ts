@@ -449,29 +449,29 @@ export class Table {
     }
 
     private setupReceivedHeadersUI(): void {
-        const withColumn = $("#receivedHeaders #with");
+        const withColumn = document.querySelector("#receivedHeaders #with");
         if (withColumn !== null) {
-            const leftSpan = $(document.createElement("span"));
-            leftSpan.attr("id", "leftArrow");
-            leftSpan.addClass("collapsibleArrow");
-            leftSpan.addClass("hiddenElement");
-            leftSpan.html("&lArr;");
+            const leftSpan = document.createElement("span");
+            leftSpan.setAttribute("id", "leftArrow");
+            leftSpan.classList.add("collapsibleArrow");
+            leftSpan.classList.add("hiddenElement");
+            leftSpan.innerHTML = "&lArr;";
 
-            const rightSpan = $(document.createElement("span"));
-            rightSpan.attr("id", "rightArrow");
-            rightSpan.addClass("collapsibleArrow");
-            rightSpan.html("&rArr;");
+            const rightSpan = document.createElement("span");
+            rightSpan.setAttribute("id", "rightArrow");
+            rightSpan.classList.add("collapsibleArrow");
+            rightSpan.innerHTML = "&rArr;";
 
-            withColumn.append(leftSpan);
-            withColumn.append(rightSpan);
+            withColumn.appendChild(leftSpan);
+            withColumn.appendChild(rightSpan);
         }
 
-        $("#receivedHeaders .collapsibleArrow").on("click", this, function (eventObject) {
-            const table: Table = eventObject.data as Table;
-            if (table) {
-                table.toggleExtraColumns();
-                eventObject.stopPropagation();
-            }
+        const arrows = document.querySelectorAll("#receivedHeaders .collapsibleArrow");
+        arrows.forEach(arrow => {
+            arrow.addEventListener("click", (event) => {
+                this.toggleExtraColumns();
+                event.stopPropagation();
+            });
         });
     }
 
