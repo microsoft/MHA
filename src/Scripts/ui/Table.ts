@@ -72,7 +72,8 @@ export class Table {
         hiddenHeading.addClass("header-hidden");
         hiddenHeading.text(title);
 
-        const header = $(document.createElement("button"));
+        const headerElement = document.createElement("button");
+        const header = $(headerElement);
         header.addClass(paneClass);
         header.on("click", this, function (eventObject) {
             const table: Table = eventObject.data as Table;
@@ -86,7 +87,8 @@ export class Table {
         header.attr("type", "button");
         header.attr("aria-expanded", !hidden ? "true" : "false");
 
-        const switchSpan = $(document.createElement("span"));
+        const switchSpanElement = document.createElement("span");
+        const switchSpan = $(switchSpanElement);
         switchSpan.attr("aria-hidden", "true");
         switchSpan.addClass("collapsibleSwitch");
 
@@ -116,7 +118,9 @@ export class Table {
     }
 
     private makeSummaryTable(summaryName: string, rows: Row[], tag: string): void {
-        const summaryList = $(summaryName);
+        const summaryListElement = document.querySelector(summaryName);
+        if (!summaryListElement) return;
+        const summaryList = $(summaryListElement);
         if (summaryList) {
             summaryList.addClass("summaryList");
 
