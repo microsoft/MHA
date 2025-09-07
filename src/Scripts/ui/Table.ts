@@ -357,19 +357,21 @@ export class Table {
     }
 
     private addColumns(tableName: string, columns: Column[]): void {
-        const tableHeader = $(document.createElement("thead"));
-        if (tableHeader !== null) {
-            $("#" + tableName).append(tableHeader);
+        const tableHeader = document.createElement("thead");
+        const table = document.getElementById(tableName);
+        if (table) {
+            table.appendChild(tableHeader);
 
-            const headerRow = $(document.createElement("tr"));
-            if (headerRow !== null) {
-                headerRow.addClass("tableHeader");
-                tableHeader.append(headerRow); // Must happen before we append cells to appease IE7
+            const headerRow = document.createElement("tr");
+            headerRow.classList.add("tableHeader");
+            tableHeader.appendChild(headerRow); // Must happen before we append cells to appease IE7
 
-                columns.forEach((column: Column) => {
-                    headerRow.append(this.makeSortableColumn(tableName, column));
-                });
-            }
+            columns.forEach((column: Column) => {
+                const sortableColumn = this.makeSortableColumn(tableName, column);
+                if (sortableColumn && sortableColumn[0]) {
+                    headerRow.appendChild(sortableColumn[0]);
+                }
+            });
         }
     }
 
