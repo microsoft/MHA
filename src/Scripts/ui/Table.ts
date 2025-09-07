@@ -315,8 +315,8 @@ export class Table {
         this.recalculateVisibility();
     }
 
-    private makeSortableColumn(tableName: string, column: Column): JQuery<HTMLElement> {
-        const header = $(document.createElement("th"));
+    private makeSortableColumn(tableName: string, column: Column): HTMLTableCellElement {
+        const header = document.createElement("th");
         if (header !== null) {
             const headerButton = $(document.createElement("button"));
             if (headerButton !== null) {
@@ -349,7 +349,7 @@ export class Table {
 
                 // Now that everything is built, put it together
                 headerButton.append(arrowSpan);
-                header.append(headerButton);
+                header.appendChild(headerButton.get(0)!);
             }
         }
 
@@ -368,8 +368,8 @@ export class Table {
 
             columns.forEach((column: Column) => {
                 const sortableColumn = this.makeSortableColumn(tableName, column);
-                if (sortableColumn && sortableColumn[0]) {
-                    headerRow.appendChild(sortableColumn[0]);
+                if (sortableColumn) {
+                    headerRow.appendChild(sortableColumn);
                 }
             });
         }
