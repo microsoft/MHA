@@ -1,5 +1,3 @@
-import $ from "jquery";
-
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { DomUtils } from "./domUtils";
@@ -206,7 +204,6 @@ export class Table {
             let keep = 0;
 
             // Find a child cell which has data
-            // Match jQuery behavior: $(this).parents("table").find("tr td:nth-child(" + (i + 1) + ")")
             const table = header.closest("table");
             if (table) {
                 const children = table.querySelectorAll(`tr td:nth-child(${i + 1})`);
@@ -318,28 +315,25 @@ export class Table {
     private makeSortableColumn(tableName: string, column: Column): HTMLTableCellElement {
         const header = document.createElement("th");
         if (header !== null) {
-            const headerButton = $(document.createElement("button"));
+            const headerButton = document.createElement("button");
             if (headerButton !== null) {
-                headerButton.addClass("tableHeaderButton");
-                headerButton.attr("id", column.id);
-                headerButton.attr("type", "button");
-                headerButton.attr("role", "columnheader");
-                headerButton.attr("aria-sort", "none");
-                headerButton.text(column.label);
+                headerButton.setAttribute("class", "tableHeaderButton");
+                headerButton.setAttribute("id", column.id);
+                headerButton.setAttribute("type", "button");
+                headerButton.setAttribute("role", "columnheader");
+                headerButton.setAttribute("aria-sort", "none");
+                headerButton.innerHTML = column.label;
                 if (column.class !== null) {
-                    headerButton.addClass(column.class);
+                    headerButton.setAttribute("class", "tableHeaderButton " + column.class);
                 }
 
-                headerButton.on("click", this, function (eventObject) {
-                    const table: Table = eventObject.data as Table;
-                    if (table) {
-                        if (table.viewModel[tableName] instanceof DataTable) {
-                            const dataTable = table.viewModel[tableName] as DataTable;
-                            dataTable.doSort(column.id);
-                            table.setArrows(dataTable.tableName, dataTable.sortColumn,
-                                dataTable.sortOrder);
-                            table.rebuildSections(table.viewModel);
-                        }
+                headerButton.addEventListener("click", () => {
+                    if (this.viewModel[tableName] instanceof DataTable) {
+                        const dataTable = this.viewModel[tableName] as DataTable;
+                        dataTable.doSort(column.id);
+                        this.setArrows(dataTable.tableName, dataTable.sortColumn,
+                            dataTable.sortOrder);
+                        this.rebuildSections(this.viewModel);
                     }
                 });
 
@@ -348,8 +342,8 @@ export class Table {
                 arrowSpan.classList.add("sortArrow");
 
                 // Now that everything is built, put it together
-                headerButton.append(arrowSpan);
-                header.appendChild(headerButton.get(0)!);
+                headerButton.appendChild(arrowSpan);
+                header.appendChild(headerButton);
             }
         }
 
