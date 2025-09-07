@@ -119,17 +119,15 @@ export class Table {
 
     private makeSummaryTable(summaryName: string, rows: Row[], tag: string): void {
         const summaryListElement = document.querySelector(summaryName);
-        if (!summaryListElement) return;
-        const summaryList = $(summaryListElement);
-        if (summaryList) {
-            summaryList.addClass("summaryList");
+        if (summaryListElement) {
+            summaryListElement.classList.add("summaryList");
 
             rows.forEach((summaryRow: Row) => {
                 const id = summaryRow.header + tag;
                 const row = document.createElement("tr");
                 if (row !== null) {
                     row.id = id;
-                    summaryList.append(row); // Must happen before we append cells to appease IE7
+                    summaryListElement.appendChild(row); // Must happen before we append cells to appease IE7
                     const headerCell = $(row.insertCell(-1));
                     if (headerCell) {
                         if (summaryRow.url) {
