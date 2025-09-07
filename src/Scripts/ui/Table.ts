@@ -105,9 +105,9 @@ export class Table {
     }
 
     private addTableAccessibility(section: TableSection): void {
-        const table = $(`#${section.tableName}`);
-        if (table.length) {
-            table.attr("aria-label", section.getAriaLabel());
+        const table = document.getElementById(section.tableName);
+        if (table) {
+            table.setAttribute("aria-label", section.getAriaLabel());
         }
     }
 
@@ -174,16 +174,17 @@ export class Table {
     }
 
     private appendCell(row: HTMLTableRowElement, text: string | number | null, html: string, cellClass: string, headerId?: string): void {
-        const cell = $(row.insertCell(-1));
-        if (text) { cell.text(text); }
-        if (html) { cell.html(html); }
-        if (cellClass) { cell.addClass(cellClass); }
-        if (headerId) { cell.attr("headers", headerId); }
+        const cell = row.insertCell(-1);
+        if (text) { cell.textContent = text.toString(); }
+        if (html) { cell.innerHTML = html; }
+        if (cellClass) { cell.classList.add(cellClass); }
+        if (headerId) { cell.setAttribute("headers", headerId); }
     }
 
     // Restores table to empty state so we can repopulate it
     private emptyTableUI(id: string): void {
-        $("#" + id + " tr:not(.tableHeader)").remove(); // Remove the rows
+        const rowsToRemove = document.querySelectorAll(`#${id} tr:not(.tableHeader)`);
+        rowsToRemove.forEach(row => row.remove()); // Remove the rows
         const headers = document.querySelectorAll(`#${id} th`);
         headers.forEach(header => {
             header.classList.remove("emptyColumn"); // Restore header visibility
