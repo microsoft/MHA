@@ -3,77 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>New Mobile Pane iOS Frame</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 </head>
-<body class="framework7-root">
-    <div class="views tabs toolbar-through">
-        <div id="summary-view" class="view view-main tab active" data-page="summary">
-            <div class="pages">
-                <div data-page="summary" class="page">
-                    <div class="page-content">
-                        <div id="summary-content"></div>
-                        <div id="orig-headers-ui" class="list-block">
-                            <ul>
-                                <li class="accordion-item">
-                                    <a href="#" class="item-content item-link">
-                                        <div class="item-inner">
-                                            <div class="item-title">Original Headers</div>
+<body>
+    <div id="app" class="framework7-root">
+        <div class="view view-main view-init" data-master-detail-breakpoint="800">
+            <div class="top-spacer"></div>
+            <div class="page" data-name="home">
+                <div class="page-content">
+                    <div class="tabs">
+                        <div id="summary-view" class="tab tab-active">
+                            <div id="summary-content"></div>
+                            <div id="orig-headers-ui" class="list">
+                                <ul>
+                                    <li class="accordion-item">
+                                        <a href="#" class="item-content item-link">
+                                            <div class="item-inner">
+                                                <div class="item-title">Original Headers</div>
+                                            </div>
+                                        </a>
+                                        <div class="accordion-item-content">
+                                            <div class="code-box">
+                                                <pre><code id="original-headers"></code></pre>
+                                            </div>
                                         </div>
-                                    </a>
-                                    <div class="accordion-item-content">
-                                        <div class="code-box">
-                                            <pre><code id="original-headers"></code></pre>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="received-view" class="tab">
+                            <div id="received-content"></div>
+                        </div>
+                        <div id="antispam-view" class="tab">
+                            <div id="antispam-content"></div>
+                        </div>
+                        <div id="other-view" class="tab">
+                            <div id="other-content"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="received-view" class="view tab" data-page="received">
-            <div class="pages">
-                <div data-page="received" class="page">
-                    <div id="received-content" class="page-content"></div>
+
+            <div id="bottom-toolbar" class="toolbar toolbar-bottom tabbar">
+                <div class="toolbar-inner">
+                    <a href="#summary-view" class="tab-link tab-link-active" id="summary-btn">
+                        <i class="f7-icons">info</i>
+                        <span class="tabbar-label">Summary</span>
+                    </a>
+                    <a href="#received-view" class="tab-link">
+                        <i class="f7-icons">graph_square</i>
+                        <span class="tabbar-label">Received</span>
+                    </a>
+                    <a href="#antispam-view" class="tab-link">
+                        <i class="f7-icons">trash</i>
+                        <span class="tabbar-label">Antispam</span>
+                    </a>
+                    <a href="#other-view" class="tab-link">
+                        <i class="f7-icons">data</i>
+                        <span class="tabbar-label">Other</span>
+                    </a>
                 </div>
-            </div>
-        </div>
-        <div id="antispam-view" class="view tab" data-page="antispam">
-            <div class="pages">
-                <div data-page="antispam" class="page">
-                    <div class="page-content">
-                        <div id="antispam-content"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="other-view" class="view tab" data-page="other">
-            <div class="pages">
-                <div data-page="other" class="page">
-                    <div class="page-content">
-                        <div id="other-content"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="toolbar tabbar tabbar-labels">
-            <div class="toolbar-inner" role="toolbar">
-                <a href="#summary-view" class="tab-link active" role="button" id="summary-btn">
-                    <i class="f7-icons">info</i>
-                    <span class="tabbar-label">Summary</span>
-                </a>
-                <a href="#received-view" class="tab-link" role="button">
-                    <i class="f7-icons">graph_square</i>
-                    <span class="tabbar-label">Received</span>
-                </a>
-                <a href="#antispam-view" class="tab-link" role="button">
-                    <i class="f7-icons">trash</i>
-                    <span class="tabbar-label">Antispam</span>
-                </a>
-                <a href="#other-view" class="tab-link" role="button">
-                    <i class="f7-icons">data</i>
-                    <span class="tabbar-label">Other</span>
-                </a>
             </div>
         </div>
     </div>
