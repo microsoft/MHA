@@ -1,5 +1,4 @@
 import { ApplicationInsights, ICustomProperties, IEventTelemetry, ITelemetryItem } from "@microsoft/applicationinsights-web";
-import $ from "jquery";
 import stackTrace from "stacktrace-js";
 
 import { aikey } from "./aikey";
@@ -44,7 +43,7 @@ class Diag {
 
             envelope.baseData = envelope.baseData || {};
             envelope.baseData["properties"] = envelope.baseData["properties"] || {};
-            $.extend(envelope.baseData["properties"], this.get());
+            Object.assign(envelope.baseData["properties"], this.get());
 
             // If we're not one of the above types, tag in our diagnostics data
             if (envelope.baseType === "ExceptionData" && envelope.baseData) {
@@ -315,9 +314,8 @@ class Diag {
             this.inGet = false;
         }
 
-        // Ideally we'd combine with Object.assign or the spread operator(...) but not all our browsers (IE) support that.
-        // jQuery's extend should work everywhere.
-        return $.extend({}, this.appDiagnostics, this.itemDiagnostics);
+        // Use Object.assign for object merging
+        return Object.assign({}, this.appDiagnostics, this.itemDiagnostics);
     }
 
     public set(field: string, value: string): void {

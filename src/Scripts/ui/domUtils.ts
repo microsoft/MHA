@@ -41,6 +41,16 @@ export class DomUtils {
     }
 
     /**
+     * Get the text content of an element
+     * @param selector CSS selector string
+     * @returns The text content or empty string if not found
+     */
+    static getText(selector: string): string {
+        const element = this.getElement(selector);
+        return element ? element.textContent || "" : "";
+    }
+
+    /**
      * Show an element by setting display to block
      * @param selector CSS selector string
      */
@@ -178,5 +188,66 @@ export class DomUtils {
             element.setAttribute("aria-hidden", hidden.toString());
             element.style.visibility = visible ? "visible" : "hidden";
         });
+    }
+
+    /**
+     * Get the value of an input element
+     * @param selector CSS selector string
+     * @returns The input value or empty string if not found
+     */
+    static getValue(selector: string): string {
+        const element = this.getElement(selector) as HTMLInputElement;
+        return element ? element.value : "";
+    }
+
+    /**
+     * Set the value of an input element
+     * @param selector CSS selector string
+     * @param value Value to set
+     */
+    static setValue(selector: string, value: string): void {
+        const element = this.getElement(selector) as HTMLInputElement;
+        if (element) element.value = value;
+    }
+
+    /**
+     * Add a CSS class to an element
+     * @param selector CSS selector string
+     * @param className Class name to add
+     */
+    static addClass(selector: string, className: string): void {
+        const element = this.getElement(selector);
+        if (element) element.classList.add(className);
+    }
+
+    /**
+     * Remove a CSS class from an element
+     * @param selector CSS selector string
+     * @param className Class name to remove
+     */
+    static removeClass(selector: string, className: string): void {
+        const element = this.getElement(selector);
+        if (element) element.classList.remove(className);
+    }
+
+    /**
+     * Toggle a CSS class on an element
+     * @param selector CSS selector string
+     * @param className Class name to toggle
+     */
+    static toggleClass(selector: string, className: string): void {
+        const element = this.getElement(selector);
+        if (element) element.classList.toggle(className);
+    }
+
+    /**
+     * Check if an element has a CSS class
+     * @param selector CSS selector string
+     * @param className Class name to check
+     * @returns True if element has the class, false otherwise
+     */
+    static hasClass(selector: string, className: string): boolean {
+        const element = this.getElement(selector);
+        return element ? element.classList.contains(className) : false;
     }
 }
