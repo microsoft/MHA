@@ -1,10 +1,10 @@
 ﻿import "../../Content/Office.css";
 import "../../Content/classicDesktopFrame.css";
-import $ from "jquery";
 
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Poster } from "../Poster";
+import { DomUtils } from "./domUtils";
 import { Table } from "./Table";
 
 // This is the "classic" UI rendered in classicDesktopFrame.html
@@ -17,18 +17,24 @@ function postError(error: unknown, message: string): void {
 }
 
 function enableSpinner(): void {
-    $("#response").css("background-image", "url(../Resources/loader.gif)");
-    $("#response").css("background-repeat", "no-repeat");
-    $("#response").css("background-position", "center");
+    const responseElement = document.getElementById("response");
+    if (responseElement) {
+        responseElement.style.backgroundImage = "url(../Resources/loader.gif)";
+        responseElement.style.backgroundRepeat = "no-repeat";
+        responseElement.style.backgroundPosition = "center";
+    }
 }
 
 function disableSpinner(): void {
-    $("#response").css("background", "none");
+    const responseElement = document.getElementById("response");
+    if (responseElement) {
+        responseElement.style.background = "none";
+    }
 }
 
 function updateStatus(statusText: string): void {
     enableSpinner();
-    $("#status").text(statusText);
+    DomUtils.setText("#status", statusText);
     if (viewModel !== null) {
         viewModel.status = statusText;
     }
@@ -38,7 +44,7 @@ function updateStatus(statusText: string): void {
 
 function renderItem(headers: string) {
     updateStatus(mhaStrings.mhaFoundHeaders);
-    $("#originalHeaders").text(headers);
+    DomUtils.setText("#originalHeaders", headers);
     viewModel = new HeaderModel(headers);
     table.rebuildTables(viewModel);
     updateStatus("");
@@ -74,7 +80,7 @@ function eventListener(event: MessageEvent): void {
 
 // This function is run when the app is ready to start interacting with the host application.
 // It ensures the DOM is ready before updating the span elements with values from the current message.
-$(function() {
+document.addEventListener("DOMContentLoaded", function() {
     try {
         viewModel = new HeaderModel();
         table = new Table();

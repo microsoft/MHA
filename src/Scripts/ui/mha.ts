@@ -5,12 +5,12 @@ import {
 import "../../Content/fluentCommon.css";
 import "../../Content/Office.css";
 import "../../Content/classicDesktopFrame.css";
-import $ from "jquery";
 
 import { diagnostics } from "../Diag";
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Strings } from "../Strings";
+import { DomUtils } from "./domUtils";
 import { Table } from "./Table";
 
 // Register Fluent UI Web Components
@@ -22,17 +22,23 @@ let viewModel: HeaderModel;
 let table: Table;
 
 function enableSpinner() {
-    $("#response").css("background-image", "url(../Resources/loader.gif)");
-    $("#response").css("background-repeat", "no-repeat");
-    $("#response").css("background-position", "center");
+    const responseElement = document.getElementById("response");
+    if (responseElement) {
+        responseElement.style.backgroundImage = "url(../Resources/loader.gif)";
+        responseElement.style.backgroundRepeat = "no-repeat";
+        responseElement.style.backgroundPosition = "center";
+    }
 }
 
 function disableSpinner() {
-    $("#response").css("background", "none");
+    const responseElement = document.getElementById("response");
+    if (responseElement) {
+        responseElement.style.background = "none";
+    }
 }
 
 function updateStatus(statusText: string) {
-    $("#status").text(statusText);
+    DomUtils.setText("#status", statusText);
     if (viewModel !== null) {
         viewModel.status = statusText;
     }
@@ -43,10 +49,8 @@ function updateStatus(statusText: string) {
 // Do our best at recognizing RFC 2822 headers:
 // http://tools.ietf.org/html/rfc2822
 function analyze() {
-    // Can't do anything without jQuery
-    if (!$) return;
     diagnostics.trackEvent({ name: "analyzeHeaders" });
-    viewModel = new HeaderModel($("#inputHeaders").val() as string);
+    viewModel = new HeaderModel(DomUtils.getValue("#inputHeaders"));
     table.resetArrows();
 
     enableSpinner();
@@ -59,7 +63,7 @@ function analyze() {
 }
 
 function clear() {
-    $("#inputHeaders").val("");
+    DomUtils.setValue("#inputHeaders", "");
 
     viewModel = new HeaderModel();
     table.resetArrows();
@@ -72,16 +76,14 @@ function copy() {
     document.getElementById("copyButton")?.focus();
 }
 
-if ($) {
-    $(function() {
-        diagnostics.set("API used", "standalone");
-        viewModel = new HeaderModel();
-        table = new Table();
-        table.initializeTableUI(viewModel);
-        table.makeResizablePane("inputHeaders", "sectionHeader", mhaStrings.mhaPrompt, () => true);
+document.addEventListener("DOMContentLoaded", function() {
+    diagnostics.set("API used", "standalone");
+    viewModel = new HeaderModel();
+    table = new Table();
+    table.initializeTableUI(viewModel);
+    table.makeResizablePane("inputHeaders", "sectionHeader", mhaStrings.mhaPrompt, () => true);
 
-        (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;
-        (document.querySelector("#clearButton") as HTMLButtonElement).onclick = clear;
-        (document.querySelector("#copyButton") as HTMLButtonElement).onclick = copy;
-    });
-}
+    (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;
+    (document.querySelector("#clearButton") as HTMLButtonElement).onclick = clear;
+    (document.querySelector("#copyButton") as HTMLButtonElement).onclick = copy;
+});
