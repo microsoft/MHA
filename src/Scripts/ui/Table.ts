@@ -1,7 +1,6 @@
-import $ from "jquery";
-
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
+import { DomUtils } from "./domUtils";
 import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
@@ -30,107 +29,112 @@ export class Table {
 
     // Adjusts response under our lineBreak
     private positionResponse(): void {
-        const lineBreak = $("#lineBreak");
-        if (lineBreak && lineBreak[0]) {
-            const responseTop: number = lineBreak[0]?.offsetTop + (lineBreak.height() ?? 0);
-            $("#response").css("top", responseTop + 15);
+        const lineBreak = document.getElementById("lineBreak");
+        if (lineBreak) {
+            const responseTop: number = lineBreak.offsetTop + (lineBreak.offsetHeight ?? 0);
+            const responseElement = document.getElementById("response");
+            if (responseElement) {
+                responseElement.style.top = (responseTop + 15) + "px";
+            }
         }
     }
 
     private toggleCollapse(id: string): void {
-        $("#"+ id).toggleClass("hiddenElement");
+        DomUtils.toggleClass("#" + id, "hiddenElement");
         this.positionResponse();
     }
 
     // Wraps an element into a collapsible pane with a title
     public makeResizablePane(id: string, paneClass: string, title: string, visibility: (table: Table) => boolean): void {
-        const pane = $("#" + id);
-        if (pane.hasClass("collapsibleElement")) {
+        const paneElement = document.getElementById(id);
+        if (!paneElement) return;
+        if (paneElement.classList.contains("collapsibleElement")) {
             return;
         }
-        const hidden = pane.hasClass("hiddenElement");
+        const hidden = paneElement.classList.contains("hiddenElement");
 
-        pane.addClass("collapsibleElement");
-        const wrap = $(document.createElement("div"));
-        wrap.addClass("collapsibleWrapper");
+        paneElement.classList.add("collapsibleElement");
+        const wrapElement = document.createElement("div");
+        wrapElement.classList.add("collapsibleWrapper");
         if (visibility) {
-            wrap.attr("id", id + "Wrapper");
+            wrapElement.setAttribute("id", id + "Wrapper");
             this.visibilityBindings.push({ name: "#" + id + "Wrapper", visible: visibility });
         }
 
         // Fix for Bug 1691235 - Create a hidden h2 element for a11y
-        const hiddenHeading = $(document.createElement("h2"));
-        hiddenHeading.attr("id", "button-heading");
-        hiddenHeading.addClass("header-hidden");
-        hiddenHeading.text(title);
+        const hiddenHeadingElement = document.createElement("h2");
+        hiddenHeadingElement.setAttribute("id", "button-heading");
+        hiddenHeadingElement.classList.add("header-hidden");
+        hiddenHeadingElement.textContent = title;
 
-        const header = $(document.createElement("button"));
-        header.addClass(paneClass);
-        header.on("click", this, function (eventObject) {
-            const table: Table = eventObject.data as Table;
-            if (table) {
-                table.toggleCollapse(id);
-                header.attr("aria-expanded", header.attr("aria-expanded") === "true" ? "false" : "true");
-            }
+        const headerElement = document.createElement("button");
+        headerElement.classList.add(paneClass);
+        headerElement.addEventListener("click", () => {
+            this.toggleCollapse(id);
+            const currentExpanded = headerElement.getAttribute("aria-expanded") === "true";
+            headerElement.setAttribute("aria-expanded", currentExpanded ? "false" : "true");
         });
-        header.text(title);
-        header.attr("tabindex", 0);
-        header.attr("type", "button");
-        header.attr("aria-expanded", !hidden ? "true" : "false");
+        headerElement.textContent = title;
+        headerElement.setAttribute("tabindex", "0");
+        headerElement.setAttribute("type", "button");
+        headerElement.setAttribute("aria-expanded", !hidden ? "true" : "false");
 
-        const switchSpan = $(document.createElement("span"));
-        switchSpan.attr("aria-hidden", "true");
-        switchSpan.addClass("collapsibleSwitch");
+        const switchSpanElement = document.createElement("span");
+        switchSpanElement.setAttribute("aria-hidden", "true");
+        switchSpanElement.classList.add("collapsibleSwitch");
 
         // Now that everything is built, put it together
-        pane.wrap(wrap);
-        pane.before(hiddenHeading);
-        pane.before(header);
-        header.append(switchSpan);
+        const parent = paneElement.parentNode;
+        if (parent) {
+            parent.insertBefore(wrapElement, paneElement);
+            wrapElement.appendChild(paneElement);
+            wrapElement.insertBefore(hiddenHeadingElement, paneElement);
+            wrapElement.insertBefore(headerElement, paneElement);
+        }
+        headerElement.appendChild(switchSpanElement);
     }
 
     private makeVisible(id: string, visible: boolean): void {
-        if (visible) {
-            $(id).removeClass("hiddenElement");
-        } else {
-            $(id).addClass("hiddenElement");
-        }
+        const elements = document.querySelectorAll(id);
+        elements.forEach(element => {
+            if (visible) {
+                element.classList.remove("hiddenElement");
+            } else {
+                element.classList.add("hiddenElement");
+            }
+        });
     }
 
     private addTableAccessibility(section: TableSection): void {
-        const table = $(`#${section.tableName}`);
-        if (table.length) {
-            table.attr("aria-label", section.getAriaLabel());
+        const table = document.getElementById(section.tableName);
+        if (table) {
+            table.setAttribute("aria-label", section.getAriaLabel());
         }
     }
 
     private makeSummaryTable(summaryName: string, rows: Row[], tag: string): void {
-        const summaryList = $(summaryName);
-        if (summaryList) {
-            summaryList.addClass("summaryList");
+        const summaryListElement = document.querySelector(summaryName);
+        if (summaryListElement) {
+            summaryListElement.classList.add("summaryList");
 
             rows.forEach((summaryRow: Row) => {
                 const id = summaryRow.header + tag;
                 const row = document.createElement("tr");
                 if (row !== null) {
                     row.id = id;
-                    summaryList.append(row); // Must happen before we append cells to appease IE7
-                    const headerCell = $(row.insertCell(-1));
-                    if (headerCell) {
-                        if (summaryRow.url) {
-                            headerCell.html(summaryRow.url);
-                        } else {
-                            headerCell.text(summaryRow.label);
-                        }
-                        headerCell.addClass("summaryHeader");
-                        headerCell.attr("id", summaryRow.id);
+                    summaryListElement.appendChild(row); // Must happen before we append cells to appease IE7
+                    const headerCell = row.insertCell(-1);
+                    if (summaryRow.url) {
+                        headerCell.innerHTML = summaryRow.url;
+                    } else {
+                        headerCell.textContent = summaryRow.label;
                     }
+                    headerCell.classList.add("summaryHeader");
+                    headerCell.setAttribute("id", summaryRow.id);
 
-                    const valCell = $(row.insertCell(-1));
-                    if (valCell) {
-                        valCell.attr("id", id + "Val");
-                        valCell.attr("aria-labelledby", summaryRow.id);
-                    }
+                    const valCell = row.insertCell(-1);
+                    valCell.setAttribute("id", id + "Val");
+                    valCell.setAttribute("aria-labelledby", summaryRow.id);
 
                     this.makeVisible("#" + id, false);
                 }
@@ -139,41 +143,50 @@ export class Table {
     }
 
     private setArrows(table: string, colName: string, sortOrder: number): void {
-        $("#" + table + " th button").attr("aria-sort", "none");
-        $("#" + table + " th #" + colName).attr("aria-sort", sortOrder === 1 ? "descending" : "ascending");
+        const buttons = document.querySelectorAll(`#${table} th button`);
+        buttons.forEach(button => button.setAttribute("aria-sort", "none"));
+
+        const targetButton = document.querySelector(`#${table} th #${colName}`);
+        if (targetButton) {
+            targetButton.setAttribute("aria-sort", sortOrder === 1 ? "descending" : "ascending");
+        }
     }
 
     private setRowValue(row: Row, type: string): void {
-        const headerVal = $("#" + row.header + type + "Val");
+        const headerVal = document.getElementById(row.header + type + "Val");
         if (headerVal) {
             if (row.value) {
                 if (row.valueUrl) {
-                    headerVal.html(row.valueUrl);
+                    headerVal.innerHTML = row.valueUrl;
                 } else {
-                    headerVal.text(row.value);
+                    headerVal.textContent = row.value;
                 }
 
                 this.makeVisible("#" + row.header + type, true);
             } else {
-                headerVal.text("");
+                headerVal.textContent = "";
                 this.makeVisible("#" + row.header + type, false);
             }
         }
     }
 
     private appendCell(row: HTMLTableRowElement, text: string | number | null, html: string, cellClass: string, headerId?: string): void {
-        const cell = $(row.insertCell(-1));
-        if (text) { cell.text(text); }
-        if (html) { cell.html(html); }
-        if (cellClass) { cell.addClass(cellClass); }
-        if (headerId) { cell.attr("headers", headerId); }
+        const cell = row.insertCell(-1);
+        if (text) { cell.textContent = text.toString(); }
+        if (html) { cell.innerHTML = html; }
+        if (cellClass) { cell.classList.add(cellClass); }
+        if (headerId) { cell.setAttribute("headers", headerId); }
     }
 
     // Restores table to empty state so we can repopulate it
     private emptyTableUI(id: string): void {
-        $("#" + id + " tr:not(.tableHeader)").remove(); // Remove the rows
-        $("#" + id + " th").removeClass("emptyColumn"); // Restore header visibility
-        $("#" + id + " th").removeClass("hiddenElement"); // Restore header visibility
+        const rowsToRemove = document.querySelectorAll(`#${id} tr:not(.tableHeader)`);
+        rowsToRemove.forEach(row => row.remove()); // Remove the rows
+        const headers = document.querySelectorAll(`#${id} th`);
+        headers.forEach(header => {
+            header.classList.remove("emptyColumn"); // Restore header visibility
+            header.classList.remove("hiddenElement"); // Restore header visibility
+        });
     }
 
     // Recompute visibility with the current viewModel. Does not repopulate.
@@ -186,23 +199,27 @@ export class Table {
     }
 
     private hideEmptyColumns(id: string): void {
-        $("#" + id + " th").each(function (i) {
+        const headers = document.querySelectorAll(`#${id} th`);
+        headers.forEach((header, i) => {
             let keep = 0;
 
             // Find a child cell which has data
-            const children = $(this).parents("table").find("tr td:nth-child(" + (i + 1).toString() + ")");
-            children.each(function () {
-                if (this.innerHTML !== "") {
-                    keep++;
-                }
-            });
+            const table = header.closest("table");
+            if (table) {
+                const children = table.querySelectorAll(`tr td:nth-child(${i + 1})`);
+                children.forEach((cell) => {
+                    if (cell.innerHTML !== "") {
+                        keep++;
+                    }
+                });
 
-            if (keep === 0) {
-                $(this).addClass("emptyColumn");
-                children.addClass("emptyColumn");
-            } else {
-                $(this).removeClass("emptyColumn");
-                children.removeClass("emptyColumn");
+                if (keep === 0) {
+                    header.classList.add("emptyColumn");
+                    children.forEach(cell => cell.classList.add("emptyColumn"));
+                } else {
+                    header.classList.remove("emptyColumn");
+                    children.forEach(cell => cell.classList.remove("emptyColumn"));
+                }
             }
         });
     }
@@ -221,7 +238,10 @@ export class Table {
         this.emptyTableUI("receivedHeaders");
         this.viewModel.receivedHeaders.rows.forEach((receivedRow: ReceivedRow) => {
             const row: HTMLTableRowElement = document.createElement("tr");
-            $("#receivedHeaders").append(row); // Must happen before we append cells to appease IE7
+            const receivedHeadersTable = document.getElementById("receivedHeaders");
+            if (receivedHeadersTable) {
+                receivedHeadersTable.appendChild(row); // Must happen before we append cells to appease IE7
+            }
             this.appendCell(row, receivedRow.hop.value, "", "", "hop");
             this.appendCell(row, receivedRow.from.value, "", "", "from");
             this.appendCell(row, receivedRow.by.value, "", "", "by");
@@ -245,14 +265,19 @@ export class Table {
 
         // Calculate heights for the hotbar cells (progress bars in Delay column)
         // Not clear why we need to do this
-        $(".hotBarCell").each(function () {
-            const height: number | undefined = $(this).height();
+        const hotBarCells = document.querySelectorAll(".hotBarCell");
+        hotBarCells.forEach(cell => {
+            const height = (cell as HTMLElement).offsetHeight;
             if (height) {
-                $(this).find(".hotBarContainer").height(height);
+                const container = cell.querySelector(".hotBarContainer") as HTMLElement;
+                if (container) {
+                    container.style.height = height + "px";
+                }
             }
         });
 
-        $("#receivedHeaders tr:odd").addClass("oddRow");
+        const receivedRows = document.querySelectorAll("#receivedHeaders tr:nth-child(odd)");
+        receivedRows.forEach(row => row.classList.add("oddRow"));
         this.hideEmptyColumns("receivedHeaders");
 
         // Forefront AntiSpam Report
@@ -269,55 +294,56 @@ export class Table {
         this.emptyTableUI("otherHeaders");
         this.viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
             const row: HTMLTableRowElement = document.createElement("tr");
-            $("#otherHeaders").append(row); // Must happen before we append cells to appease IE7
+            const otherHeadersTable = document.getElementById("otherHeaders");
+            if (otherHeadersTable) {
+                otherHeadersTable.appendChild(row); // Must happen before we append cells to appease IE7
+            }
             this.appendCell(row, otherRow.number.toString(), "", "", "number");
             this.appendCell(row, otherRow.header, otherRow.url, "", "header");
             this.appendCell(row, otherRow.value, "", "allowBreak", "value");
         });
 
-        $("#otherHeaders tr:odd").addClass("oddRow");
+        const otherRows = document.querySelectorAll("#otherHeaders tr:nth-child(odd)");
+        otherRows.forEach(row => row.classList.add("oddRow"));
 
         // Original headers
-        $("#originalHeaders").text(this.viewModel.originalHeaders);
+        DomUtils.setText("#originalHeaders", this.viewModel.originalHeaders);
 
         this.recalculateVisibility();
     }
 
-    private makeSortableColumn(tableName: string, column: Column): JQuery<HTMLElement> {
-        const header = $(document.createElement("th"));
+    private makeSortableColumn(tableName: string, column: Column): HTMLTableCellElement {
+        const header = document.createElement("th");
         if (header !== null) {
-            const headerButton = $(document.createElement("button"));
+            const headerButton = document.createElement("button");
             if (headerButton !== null) {
-                headerButton.addClass("tableHeaderButton");
-                headerButton.attr("id", column.id);
-                headerButton.attr("type", "button");
-                headerButton.attr("role", "columnheader");
-                headerButton.attr("aria-sort", "none");
-                headerButton.text(column.label);
+                headerButton.setAttribute("class", "tableHeaderButton");
+                headerButton.setAttribute("id", column.id);
+                headerButton.setAttribute("type", "button");
+                headerButton.setAttribute("role", "columnheader");
+                headerButton.setAttribute("aria-sort", "none");
+                headerButton.innerHTML = column.label;
                 if (column.class !== null) {
-                    headerButton.addClass(column.class);
+                    headerButton.setAttribute("class", "tableHeaderButton " + column.class);
                 }
 
-                headerButton.on("click", this, function (eventObject) {
-                    const table: Table = eventObject.data as Table;
-                    if (table) {
-                        if (table.viewModel[tableName] instanceof DataTable) {
-                            const dataTable = table.viewModel[tableName] as DataTable;
-                            dataTable.doSort(column.id);
-                            table.setArrows(dataTable.tableName, dataTable.sortColumn,
-                                dataTable.sortOrder);
-                            table.rebuildSections(table.viewModel);
-                        }
+                headerButton.addEventListener("click", () => {
+                    if (this.viewModel[tableName] instanceof DataTable) {
+                        const dataTable = this.viewModel[tableName] as DataTable;
+                        dataTable.doSort(column.id);
+                        this.setArrows(dataTable.tableName, dataTable.sortColumn,
+                            dataTable.sortOrder);
+                        this.rebuildSections(this.viewModel);
                     }
                 });
 
-                const arrowSpan = $(document.createElement("span"));
-                arrowSpan.attr("aria-hidden", "true");
-                arrowSpan.addClass("sortArrow");
+                const arrowSpan = document.createElement("span");
+                arrowSpan.setAttribute("aria-hidden", "true");
+                arrowSpan.classList.add("sortArrow");
 
                 // Now that everything is built, put it together
-                headerButton.append(arrowSpan);
-                header.append(headerButton);
+                headerButton.appendChild(arrowSpan);
+                header.appendChild(headerButton);
             }
         }
 
@@ -325,32 +351,34 @@ export class Table {
     }
 
     private addColumns(tableName: string, columns: Column[]): void {
-        const tableHeader = $(document.createElement("thead"));
-        if (tableHeader !== null) {
-            $("#" + tableName).append(tableHeader);
+        const tableHeader = document.createElement("thead");
+        const table = document.getElementById(tableName);
+        if (table) {
+            table.appendChild(tableHeader);
 
-            const headerRow = $(document.createElement("tr"));
-            if (headerRow !== null) {
-                headerRow.addClass("tableHeader");
-                tableHeader.append(headerRow); // Must happen before we append cells to appease IE7
+            const headerRow = document.createElement("tr");
+            headerRow.classList.add("tableHeader");
+            tableHeader.appendChild(headerRow); // Must happen before we append cells to appease IE7
 
-                columns.forEach((column: Column) => {
-                    headerRow.append(this.makeSortableColumn(tableName, column));
-                });
-            }
+            columns.forEach((column: Column) => {
+                const sortableColumn = this.makeSortableColumn(tableName, column);
+                if (sortableColumn) {
+                    headerRow.appendChild(sortableColumn);
+                }
+            });
         }
     }
 
     private hideExtraColumns(): void {
         this.showExtra = false;
-        $("#leftArrow").addClass("hiddenElement");
-        $("#rightArrow").removeClass("hiddenElement");
+        DomUtils.addClass("#leftArrow", "hiddenElement");
+        DomUtils.removeClass("#rightArrow", "hiddenElement");
     }
 
     private showExtraColumns(): void {
         this.showExtra = true;
-        $("#rightArrow").addClass("hiddenElement");
-        $("#leftArrow").removeClass("hiddenElement");
+        DomUtils.addClass("#rightArrow", "hiddenElement");
+        DomUtils.removeClass("#leftArrow", "hiddenElement");
     }
 
     private toggleExtraColumns(): void {
@@ -415,29 +443,29 @@ export class Table {
     }
 
     private setupReceivedHeadersUI(): void {
-        const withColumn = $("#receivedHeaders #with");
+        const withColumn = document.querySelector("#receivedHeaders #with");
         if (withColumn !== null) {
-            const leftSpan = $(document.createElement("span"));
-            leftSpan.attr("id", "leftArrow");
-            leftSpan.addClass("collapsibleArrow");
-            leftSpan.addClass("hiddenElement");
-            leftSpan.html("&lArr;");
+            const leftSpan = document.createElement("span");
+            leftSpan.setAttribute("id", "leftArrow");
+            leftSpan.classList.add("collapsibleArrow");
+            leftSpan.classList.add("hiddenElement");
+            leftSpan.innerHTML = "&lArr;";
 
-            const rightSpan = $(document.createElement("span"));
-            rightSpan.attr("id", "rightArrow");
-            rightSpan.addClass("collapsibleArrow");
-            rightSpan.html("&rArr;");
+            const rightSpan = document.createElement("span");
+            rightSpan.setAttribute("id", "rightArrow");
+            rightSpan.classList.add("collapsibleArrow");
+            rightSpan.innerHTML = "&rArr;";
 
-            withColumn.append(leftSpan);
-            withColumn.append(rightSpan);
+            withColumn.appendChild(leftSpan);
+            withColumn.appendChild(rightSpan);
         }
 
-        $("#receivedHeaders .collapsibleArrow").on("click", this, function (eventObject) {
-            const table: Table = eventObject.data as Table;
-            if (table) {
-                table.toggleExtraColumns();
-                eventObject.stopPropagation();
-            }
+        const arrows = document.querySelectorAll("#receivedHeaders .collapsibleArrow");
+        arrows.forEach(arrow => {
+            arrow.addEventListener("click", (event) => {
+                this.toggleExtraColumns();
+                event.stopPropagation();
+            });
         });
     }
 

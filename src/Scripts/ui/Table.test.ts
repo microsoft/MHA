@@ -1,6 +1,5 @@
-import $ from "jquery";
-
 import { HeaderModel } from "../HeaderModel";
+import { DomUtils } from "./domUtils";
 import { Table } from "./Table";
 import { Row } from "../row/Row";
 import { DataTable } from "../table/DataTable";
@@ -15,7 +14,7 @@ describe("Table", () => {
         // Set up the page as it's set in mhh.html and classicDesktopFrame.html
         // TODO: Actually do this setup for thos pages as part of the table init
         // initializeTableUI should just add all the components to the page
-        $("body").append(`
+        document.body.insertAdjacentHTML("beforeend", `
             <hr id="lineBreak" />
             <div id="response" class="hiddenElement">
                 <div class="responsePane">
@@ -57,34 +56,35 @@ describe("Table", () => {
     it("should recalculate visibility", () => {
         table.recalculateVisibility();
         table["visibilityBindings"].forEach(binding => {
-            const element = $(binding.name);
-            expect(element.hasClass("hiddenElement")).toBe(!binding.visible(table));
+            const element = document.querySelector(binding.name);
+            const hasHiddenClass = element ? element.classList.contains("hiddenElement") : false;
+            expect(hasHiddenClass).toBe(!binding.visible(table));
         });
     });
 
     it("should toggle collapse", () => {
         const id = "testElement";
-        $("body").append(`<div id="${id}" class="hiddenElement"></div>`);
+        document.body.insertAdjacentHTML("beforeend", `<div id="${id}" class="hiddenElement"></div>`);
         table["toggleCollapse"](id);
-        expect($(`#${id}`).hasClass("hiddenElement")).toBe(false);
+        expect(DomUtils.hasClass(`#${id}`, "hiddenElement")).toBe(false);
         table["toggleCollapse"](id);
-        expect($(`#${id}`).hasClass("hiddenElement")).toBe(true);
-        $(`#${id}`).remove();
+        expect(DomUtils.hasClass(`#${id}`, "hiddenElement")).toBe(true);
+        document.getElementById(id)?.remove();
     });
 
     it("should make element visible", () => {
         const id = "#testElement";
-        $("body").append("<div id=\"testElement\" class=\"hiddenElement\"></div>");
+        document.body.insertAdjacentHTML("beforeend", "<div id=\"testElement\" class=\"hiddenElement\"></div>");
         table["makeVisible"](id, true);
-        expect($(id).hasClass("hiddenElement")).toBe(false);
+        expect(DomUtils.hasClass(id, "hiddenElement")).toBe(false);
         table["makeVisible"](id, false);
-        expect($(id).hasClass("hiddenElement")).toBe(true);
-        $(id).remove();
+        expect(DomUtils.hasClass(id, "hiddenElement")).toBe(true);
+        document.querySelector(id)?.remove();
     });
 
     it("should hide empty columns", () => {
         const tableId = "testTable";
-        $("body").append(`
+        document.body.insertAdjacentHTML("beforeend", `
             <table id="${tableId}">
                 <thead>
                     <tr>
@@ -101,24 +101,24 @@ describe("Table", () => {
             </table>
         `);
         table["hideEmptyColumns"](tableId);
-        expect($(`#${tableId} th`).eq(0).hasClass("emptyColumn")).toBe(true);
-        expect($(`#${tableId} th`).eq(1).hasClass("emptyColumn")).toBe(false);
-        $(`#${tableId}`).remove();
+        expect(DomUtils.hasClass(`#${tableId} th:first-child`, "emptyColumn")).toBe(true);
+        expect(DomUtils.hasClass(`#${tableId} th:nth-child(2)`, "emptyColumn")).toBe(false);
+        document.getElementById(tableId)?.remove();
     });
 
     it("should set row value", () => {
         const row: Row = new Row("testHeader", "testValue", "testId");
         row.value = "testValue";
-        $("body").append("<div id=\"testHeaderSUMVal\"></div>");
+        document.body.insertAdjacentHTML("beforeend", "<div id=\"testHeaderSUMVal\"></div>");
         table["setRowValue"](row, "SUM");
-        expect($("#testHeaderSUMVal").text()).toBe("testValue");
-        $("#testHeaderSUMVal").remove();
+        expect(DomUtils.getText("#testHeaderSUMVal")).toBe("testValue");
+        document.getElementById("testHeaderSUMVal")?.remove();
     });
 
     it("should append cell", () => {
         const row = document.createElement("tr");
         table["appendCell"](row, "", "<b>html</b>test", "cellClass");
-        const td = $(row).find("td");
+        const td = row.querySelectorAll("td");
         expect(td[0]?.textContent).toBe("htmltest");
         expect(td[0]?.innerHTML).toBe("<b>html</b>test");
         expect(td[0]?.className).toBe("cellClass");
@@ -126,7 +126,7 @@ describe("Table", () => {
 
     it("should empty table UI", () => {
         const tableId = "testTable";
-        $("body").append(`
+        document.body.insertAdjacentHTML("beforeend", `
             <table id="${tableId}">
                 <thead>
                     <tr class="tableHeader">
@@ -141,10 +141,10 @@ describe("Table", () => {
             </table>
         `);
         table["emptyTableUI"](tableId);
-        expect($(`#${tableId} tbody tr`).length).toBe(0);
-        expect($(`#${tableId} th`).hasClass("emptyColumn")).toBe(false);
-        expect($(`#${tableId} th`).hasClass("hiddenElement")).toBe(false);
-        $(`#${tableId}`).remove();
+        expect(document.querySelectorAll(`#${tableId} tbody tr`).length).toBe(0);
+        expect(DomUtils.hasClass(`#${tableId} th:first-child`, "emptyColumn")).toBe(false);
+        expect(DomUtils.hasClass(`#${tableId} th:first-child`, "hiddenElement")).toBe(false);
+        document.getElementById(tableId)?.remove();
     });
 
     it("should toggle extra columns", () => {
@@ -156,18 +156,18 @@ describe("Table", () => {
     });
 
     it("should reset arrows", () => {
-        const by = $("#receivedHeaders th #by");
-        const hop = $("#receivedHeaders th #hop");
-        const number = $("#otherHeaders th #number");
-        expect(hop.attr("aria-sort")).toBe("descending");
-        expect(by.attr("aria-sort")).toBe("none");
-        expect(number.attr("aria-sort")).toBe("descending");
-        by.trigger("click");
-        expect(hop.attr("aria-sort")).toBe("none");
-        expect(by.attr("aria-sort")).toBe("descending");
+        const by = document.querySelector("#receivedHeaders th #by") as HTMLElement;
+        const hop = document.querySelector("#receivedHeaders th #hop") as HTMLElement;
+        const number = document.querySelector("#otherHeaders th #number") as HTMLElement;
+        expect(hop.getAttribute("aria-sort")).toBe("descending");
+        expect(by.getAttribute("aria-sort")).toBe("none");
+        expect(number.getAttribute("aria-sort")).toBe("descending");
+        by.click();
+        expect(hop.getAttribute("aria-sort")).toBe("none");
+        expect(by.getAttribute("aria-sort")).toBe("descending");
         table.resetArrows();
-        expect(hop.attr("aria-sort")).toBe("descending");
-        expect(by.attr("aria-sort")).toBe("none");
+        expect(hop.getAttribute("aria-sort")).toBe("descending");
+        expect(by.getAttribute("aria-sort")).toBe("none");
     });
 
     describe("TableSection Integration", () => {
@@ -203,17 +203,17 @@ describe("Table", () => {
 
         it("should apply accessibility attributes to tables", () => {
             // Verify aria-label is applied to each table
-            const summaryTable = $("#summary");
-            const receivedTable = $("#receivedHeaders");
-            const antispamTable = $("#antiSpamReport");
-            const forefrontTable = $("#forefrontAntiSpamReport");
-            const otherTable = $("#otherHeaders");
+            const summaryTable = document.getElementById("summary");
+            const receivedTable = document.getElementById("receivedHeaders");
+            const antispamTable = document.getElementById("antiSpamReport");
+            const forefrontTable = document.getElementById("forefrontAntiSpamReport");
+            const otherTable = document.getElementById("otherHeaders");
 
-            expect(summaryTable.attr("aria-label")).toContain("table");
-            expect(receivedTable.attr("aria-label")).toContain("table");
-            expect(antispamTable.attr("aria-label")).toContain("table");
-            expect(forefrontTable.attr("aria-label")).toContain("table");
-            expect(otherTable.attr("aria-label")).toContain("table");
+            expect(summaryTable?.getAttribute("aria-label")).toContain("table");
+            expect(receivedTable?.getAttribute("aria-label")).toContain("table");
+            expect(antispamTable?.getAttribute("aria-label")).toContain("table");
+            expect(forefrontTable?.getAttribute("aria-label")).toContain("table");
+            expect(otherTable?.getAttribute("aria-label")).toContain("table");
         });
 
         it("should handle table section existence properly", () => {

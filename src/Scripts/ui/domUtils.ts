@@ -41,6 +41,16 @@ export class DomUtils {
     }
 
     /**
+     * Get the text content of an element
+     * @param selector CSS selector string
+     * @returns The text content or empty string if not found
+     */
+    static getText(selector: string): string {
+        const element = this.getElement(selector);
+        return element ? element.textContent || "" : "";
+    }
+
+    /**
      * Show an element by setting display to block
      * @param selector CSS selector string
      */
@@ -131,5 +141,113 @@ export class DomUtils {
         if (element) {
             element.setAttribute(attribute, value);
         }
+    }
+
+    /**
+     * Common focusable element selector
+     */
+    static readonly focusableElements = "a, button, input, textarea, select, [tabindex]:not([tabindex=\"-1\"])";
+
+    /**
+     * Make elements non-tabbable by setting tabindex to -1
+     * @param selector CSS selector string
+     */
+    static makeFocusableElementsNonTabbable(selector: string): void {
+        const elements = this.getElements(selector);
+        elements.forEach(container => {
+            const focusableElements = container.querySelectorAll(this.focusableElements);
+            focusableElements.forEach((el) => {
+                (el as HTMLElement).setAttribute("tabindex", "-1");
+            });
+        });
+    }
+
+    /**
+     * Restore tabbing by removing tabindex=-1 from elements
+     * @param selector CSS selector string
+     */
+    static restoreFocusableElements(selector: string): void {
+        const elements = this.getElements(selector);
+        elements.forEach(container => {
+            const focusableElements = container.querySelectorAll("[tabindex=\"-1\"]");
+            focusableElements.forEach((el) => {
+                (el as HTMLElement).removeAttribute("tabindex");
+            });
+        });
+    }
+
+    /**
+     * Set accessibility attributes on elements
+     * @param selector CSS selector string
+     * @param hidden Whether elements should be hidden from screen readers
+     * @param visible Whether elements should be visible
+     */
+    static setAccessibilityState(selector: string, hidden: boolean, visible: boolean): void {
+        const elements = this.getElements(selector);
+        elements.forEach(element => {
+            element.setAttribute("aria-hidden", hidden.toString());
+            element.style.visibility = visible ? "visible" : "hidden";
+        });
+    }
+
+    /**
+     * Get the value of an input element
+     * @param selector CSS selector string
+     * @returns The input value or empty string if not found
+     */
+    static getValue(selector: string): string {
+        const element = this.getElement(selector) as HTMLInputElement;
+        return element ? element.value : "";
+    }
+
+    /**
+     * Set the value of an input element
+     * @param selector CSS selector string
+     * @param value Value to set
+     */
+    static setValue(selector: string, value: string): void {
+        const element = this.getElement(selector) as HTMLInputElement;
+        if (element) element.value = value;
+    }
+
+    /**
+     * Add a CSS class to an element
+     * @param selector CSS selector string
+     * @param className Class name to add
+     */
+    static addClass(selector: string, className: string): void {
+        const element = this.getElement(selector);
+        if (element) element.classList.add(className);
+    }
+
+    /**
+     * Remove a CSS class from an element
+     * @param selector CSS selector string
+     * @param className Class name to remove
+     */
+    static removeClass(selector: string, className: string): void {
+        const element = this.getElement(selector);
+        if (element) element.classList.remove(className);
+    }
+
+    /**
+     * Toggle a CSS class on an element
+     * @param selector CSS selector string
+     * @param className Class name to toggle
+     */
+    static toggleClass(selector: string, className: string): void {
+        const element = this.getElement(selector);
+        if (element) element.classList.toggle(className);
+    }
+
+    /**
+     * Check if an element has a CSS class
+     * @param selector CSS selector string
+     * @param className Class name to check
+     * @returns True if element has the class, false otherwise
+     */
+    static hasClass(selector: string, className: string): boolean {
+        const element = this.getElement(selector);
+        return element ? element.classList.contains(className) : false;
     }
 }

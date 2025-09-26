@@ -146,6 +146,36 @@ describe("DomUtils Class", () => {
         });
     });
 
+    describe("getText", () => {
+        test("gets text content from element", () => {
+            document.body.innerHTML = "<div id=\"test-div\">test content</div>";
+            const text = DomUtils.getText("#test-div");
+            expect(text).toBe("test content");
+        });
+
+        test("returns empty string when element not found", () => {
+            const text = DomUtils.getText("#missing");
+            expect(text).toBe("");
+        });
+
+        test("returns empty string for element with no text", () => {
+            document.body.innerHTML = "<div id=\"test-div\"></div>";
+            const text = DomUtils.getText("#test-div");
+            expect(text).toBe("");
+        });
+
+        test("handles null textContent", () => {
+            document.body.innerHTML = "<div id=\"test-div\">content</div>";
+            const element = document.getElementById("test-div");
+            if (element) {
+                // Simulate null textContent
+                Object.defineProperty(element, "textContent", { value: null });
+                const text = DomUtils.getText("#test-div");
+                expect(text).toBe("");
+            }
+        });
+    });
+
     describe("showElement and hideElement", () => {
         test("shows and hides elements", () => {
             document.body.innerHTML = "<div id=\"toggle\">content</div>";
@@ -452,6 +482,376 @@ describe("DomUtils Class", () => {
             items.forEach(item => {
                 expect((item as HTMLElement).style.display).toBe("none");
             });
+        });
+    });
+
+    describe("Accessibility Methods", () => {
+        describe("focusableElements constant", () => {
+            test("contains expected focusable element selectors", () => {
+                expect(DomUtils.focusableElements).toBe("a, button, input, textarea, select, [tabindex]:not([tabindex=\"-1\"])");
+            });
+        });
+
+        describe("makeFocusableElementsNonTabbable", () => {
+            test("sets tabindex=-1 on focusable elements within containers", () => {
+                document.body.innerHTML = `
+                    <div class="container">
+                        <a href="#" id="link1">Link 1</a>
+                        <button id="btn1">Button 1</button>
+                        <input id="input1" type="text" />
+                        <textarea id="textarea1"></textarea>
+                        <select id="select1"><option>Option</option></select>
+                        <div tabindex="0" id="tabbable1">Tabbable Div</div>
+                    </div>
+                    <div class="other-container">
+                        <a href="#" id="link2">Link 2</a>
+                        <button id="btn2">Button 2</button>
+                    </div>
+                `;
+
+                DomUtils.makeFocusableElementsNonTabbable(".container");
+
+                // Elements in .container should have tabindex=-1
+                expect(document.getElementById("link1")?.getAttribute("tabindex")).toBe("-1");
+                expect(document.getElementById("btn1")?.getAttribute("tabindex")).toBe("-1");
+                expect(document.getElementById("input1")?.getAttribute("tabindex")).toBe("-1");
+                expect(document.getElementById("textarea1")?.getAttribute("tabindex")).toBe("-1");
+                expect(document.getElementById("select1")?.getAttribute("tabindex")).toBe("-1");
+                expect(document.getElementById("tabbable1")?.getAttribute("tabindex")).toBe("-1");
+
+                // Elements in .other-container should not be affected
+                expect(document.getElementById("link2")?.getAttribute("tabindex")).toBeNull();
+                expect(document.getElementById("btn2")?.getAttribute("tabindex")).toBeNull();
+            });
+
+            test("handles elements that already have tabindex=-1", () => {
+                document.body.innerHTML = `
+                    <div class="container">
+                        <a href="#" tabindex="-1" id="already-non-tabbable">Already Non-tabbable</a>
+                        <button id="btn">Button</button>
+                    </div>
+                `;
+
+                DomUtils.makeFocusableElementsNonTabbable(".container");
+
+                expect(document.getElementById("already-non-tabbable")?.getAttribute("tabindex")).toBe("-1");
+                expect(document.getElementById("btn")?.getAttribute("tabindex")).toBe("-1");
+            });
+
+            test("handles multiple containers", () => {
+                document.body.innerHTML = `
+                    <div class="container">
+                        <button id="btn1">Button 1</button>
+                    </div>
+                    <div class="container">
+                        <button id="btn2">Button 2</button>
+                    </div>
+                `;
+
+                DomUtils.makeFocusableElementsNonTabbable(".container");
+
+                expect(document.getElementById("btn1")?.getAttribute("tabindex")).toBe("-1");
+                expect(document.getElementById("btn2")?.getAttribute("tabindex")).toBe("-1");
+            });
+
+            test("does nothing when no containers found", () => {
+                document.body.innerHTML = "<button id=\"btn\">Button</button>";
+
+                expect(() => {
+                    DomUtils.makeFocusableElementsNonTabbable(".nonexistent");
+                }).not.toThrow();
+
+                expect(document.getElementById("btn")?.getAttribute("tabindex")).toBeNull();
+            });
+        });
+
+        describe("restoreFocusableElements", () => {
+            test("removes tabindex=-1 from elements within containers", () => {
+                document.body.innerHTML = `
+                    <div class="container">
+                        <a href="#" tabindex="-1" id="link1">Link 1</a>
+                        <button tabindex="-1" id="btn1">Button 1</button>
+                        <input tabindex="-1" id="input1" type="text" />
+                        <div tabindex="5" id="custom-tabindex">Custom Tabindex</div>
+                    </div>
+                    <div class="other-container">
+                        <a href="#" tabindex="-1" id="link2">Link 2</a>
+                    </div>
+                `;
+
+                DomUtils.restoreFocusableElements(".container");
+
+                // Elements in .container with tabindex=-1 should have it removed
+                expect(document.getElementById("link1")?.hasAttribute("tabindex")).toBe(false);
+                expect(document.getElementById("btn1")?.hasAttribute("tabindex")).toBe(false);
+                expect(document.getElementById("input1")?.hasAttribute("tabindex")).toBe(false);
+
+                // Elements with other tabindex values should not be affected
+                expect(document.getElementById("custom-tabindex")?.getAttribute("tabindex")).toBe("5");
+
+                // Elements in other containers should not be affected
+                expect(document.getElementById("link2")?.getAttribute("tabindex")).toBe("-1");
+            });
+
+            test("handles multiple containers", () => {
+                document.body.innerHTML = `
+                    <div class="container">
+                        <button tabindex="-1" id="btn1">Button 1</button>
+                    </div>
+                    <div class="container">
+                        <button tabindex="-1" id="btn2">Button 2</button>
+                    </div>
+                `;
+
+                DomUtils.restoreFocusableElements(".container");
+
+                expect(document.getElementById("btn1")?.hasAttribute("tabindex")).toBe(false);
+                expect(document.getElementById("btn2")?.hasAttribute("tabindex")).toBe(false);
+            });
+
+            test("does nothing when no containers found", () => {
+                document.body.innerHTML = "<button tabindex=\"-1\" id=\"btn\">Button</button>";
+
+                expect(() => {
+                    DomUtils.restoreFocusableElements(".nonexistent");
+                }).not.toThrow();
+
+                expect(document.getElementById("btn")?.getAttribute("tabindex")).toBe("-1");
+            });
+        });
+
+        describe("setAccessibilityState", () => {
+            test("sets aria-hidden and visibility on elements", () => {
+                document.body.innerHTML = `
+                    <div class="content" id="content1">Content 1</div>
+                    <div class="content" id="content2">Content 2</div>
+                    <div class="other" id="other1">Other Content</div>
+                `;
+
+                DomUtils.setAccessibilityState(".content", true, false);
+
+                // Elements with .content class should be hidden
+                expect(document.getElementById("content1")?.getAttribute("aria-hidden")).toBe("true");
+                expect(document.getElementById("content1")?.style.visibility).toBe("hidden");
+                expect(document.getElementById("content2")?.getAttribute("aria-hidden")).toBe("true");
+                expect(document.getElementById("content2")?.style.visibility).toBe("hidden");
+
+                // Other elements should not be affected
+                expect(document.getElementById("other1")?.getAttribute("aria-hidden")).toBeNull();
+                expect(document.getElementById("other1")?.style.visibility).toBe("");
+            });
+
+            test("sets elements as visible and accessible", () => {
+                document.body.innerHTML = `
+                    <div class="content" id="content1" aria-hidden="true" style="visibility: hidden;">Content 1</div>
+                    <div class="content" id="content2" aria-hidden="true" style="visibility: hidden;">Content 2</div>
+                `;
+
+                DomUtils.setAccessibilityState(".content", false, true);
+
+                expect(document.getElementById("content1")?.getAttribute("aria-hidden")).toBe("false");
+                expect(document.getElementById("content1")?.style.visibility).toBe("visible");
+                expect(document.getElementById("content2")?.getAttribute("aria-hidden")).toBe("false");
+                expect(document.getElementById("content2")?.style.visibility).toBe("visible");
+            });
+
+            test("handles different combinations of hidden and visible states", () => {
+                document.body.innerHTML = `
+                    <div class="test" id="test1">Test 1</div>
+                    <div class="test" id="test2">Test 2</div>
+                `;
+
+                // Hidden from screen readers but visually visible
+                DomUtils.setAccessibilityState(".test", true, true);
+                expect(document.getElementById("test1")?.getAttribute("aria-hidden")).toBe("true");
+                expect(document.getElementById("test1")?.style.visibility).toBe("visible");
+
+                // Accessible to screen readers but visually hidden
+                DomUtils.setAccessibilityState(".test", false, false);
+                expect(document.getElementById("test1")?.getAttribute("aria-hidden")).toBe("false");
+                expect(document.getElementById("test1")?.style.visibility).toBe("hidden");
+            });
+
+            test("does nothing when no elements found", () => {
+                document.body.innerHTML = "<div id=\"test\">Test</div>";
+
+                expect(() => {
+                    DomUtils.setAccessibilityState(".nonexistent", true, false);
+                }).not.toThrow();
+
+                expect(document.getElementById("test")?.getAttribute("aria-hidden")).toBeNull();
+            });
+        });
+
+        describe("Integration tests for accordion accessibility", () => {
+            test("full accordion accessibility workflow", () => {
+                document.body.innerHTML = `
+                    <div class="accordion-item">
+                        <div class="accordion-item-content">
+                            <a href="#" id="link">Link</a>
+                            <button id="button">Button</button>
+                            <input id="input" type="text" />
+                        </div>
+                    </div>
+                    <div class="accordion-item accordion-item-expanded">
+                        <div class="accordion-item-content">
+                            <a href="#" id="expanded-link">Expanded Link</a>
+                            <button id="expanded-button">Expanded Button</button>
+                        </div>
+                    </div>
+                `;
+
+                // Initial state: make collapsed content non-accessible
+                const collapsedSelector = ".accordion-item:not(.accordion-item-expanded) .accordion-item-content";
+                DomUtils.setAccessibilityState(collapsedSelector, true, false);
+                DomUtils.makeFocusableElementsNonTabbable(collapsedSelector);
+
+                // Check collapsed accordion content is properly hidden
+                const collapsedContent = document.querySelector(".accordion-item:not(.accordion-item-expanded) .accordion-item-content") as HTMLElement;
+                expect(collapsedContent.getAttribute("aria-hidden")).toBe("true");
+                expect(collapsedContent.style.visibility).toBe("hidden");
+                expect(document.getElementById("link")?.getAttribute("tabindex")).toBe("-1");
+                expect(document.getElementById("button")?.getAttribute("tabindex")).toBe("-1");
+                expect(document.getElementById("input")?.getAttribute("tabindex")).toBe("-1");
+
+                // Check expanded accordion content is not affected
+                expect(document.getElementById("expanded-link")?.getAttribute("tabindex")).toBeNull();
+                expect(document.getElementById("expanded-button")?.getAttribute("tabindex")).toBeNull();
+
+                // Simulate accordion opening: restore accessibility
+                const expandedContent = document.querySelector(".accordion-item-expanded .accordion-item-content") as HTMLElement;
+                expandedContent.setAttribute("aria-hidden", "false");
+                expandedContent.style.visibility = "visible";
+                DomUtils.restoreFocusableElements(".accordion-item-expanded .accordion-item-content");
+
+                // All elements should still work as expected
+                expect(document.getElementById("expanded-link")?.getAttribute("tabindex")).toBeNull();
+                expect(document.getElementById("expanded-button")?.getAttribute("tabindex")).toBeNull();
+            });
+        });
+    });
+
+    describe("getValue", () => {
+        test("returns value from input element", () => {
+            document.body.innerHTML = "<input id=\"test-input\" value=\"test value\">";
+            const value = DomUtils.getValue("#test-input");
+            expect(value).toBe("test value");
+        });
+
+        test("returns empty string when element not found", () => {
+            const value = DomUtils.getValue("#missing");
+            expect(value).toBe("");
+        });
+
+        test("returns value from textarea", () => {
+            document.body.innerHTML = "<textarea id=\"test-textarea\">textarea content</textarea>";
+            const value = DomUtils.getValue("#test-textarea");
+            expect(value).toBe("textarea content");
+        });
+    });
+
+    describe("setValue", () => {
+        test("sets value on input element", () => {
+            document.body.innerHTML = "<input id=\"test-input\">";
+            DomUtils.setValue("#test-input", "new value");
+            const element = document.getElementById("test-input") as HTMLInputElement;
+            expect(element.value).toBe("new value");
+        });
+
+        test("sets value on textarea", () => {
+            document.body.innerHTML = "<textarea id=\"test-textarea\"></textarea>";
+            DomUtils.setValue("#test-textarea", "new content");
+            const element = document.getElementById("test-textarea") as HTMLTextAreaElement;
+            expect(element.value).toBe("new content");
+        });
+
+        test("does nothing when element not found", () => {
+            // Should not throw
+            expect(() => DomUtils.setValue("#missing", "value")).not.toThrow();
+        });
+    });
+
+    describe("addClass", () => {
+        test("adds class to element", () => {
+            document.body.innerHTML = "<div id=\"test-div\"></div>";
+            DomUtils.addClass("#test-div", "new-class");
+            const element = document.getElementById("test-div");
+            expect(element?.classList.contains("new-class")).toBe(true);
+        });
+
+        test("does nothing when element not found", () => {
+            expect(() => DomUtils.addClass("#missing", "class")).not.toThrow();
+        });
+
+        test("can add multiple classes", () => {
+            document.body.innerHTML = "<div id=\"test-div\"></div>";
+            DomUtils.addClass("#test-div", "class1");
+            DomUtils.addClass("#test-div", "class2");
+            const element = document.getElementById("test-div");
+            expect(element?.classList.contains("class1")).toBe(true);
+            expect(element?.classList.contains("class2")).toBe(true);
+        });
+    });
+
+    describe("removeClass", () => {
+        test("removes class from element", () => {
+            document.body.innerHTML = "<div id=\"test-div\" class=\"remove-me keep-me\"></div>";
+            DomUtils.removeClass("#test-div", "remove-me");
+            const element = document.getElementById("test-div");
+            expect(element?.classList.contains("remove-me")).toBe(false);
+            expect(element?.classList.contains("keep-me")).toBe(true);
+        });
+
+        test("does nothing when element not found", () => {
+            expect(() => DomUtils.removeClass("#missing", "class")).not.toThrow();
+        });
+
+        test("does nothing when class not present", () => {
+            document.body.innerHTML = "<div id=\"test-div\" class=\"existing\"></div>";
+            DomUtils.removeClass("#test-div", "not-there");
+            const element = document.getElementById("test-div");
+            expect(element?.classList.contains("existing")).toBe(true);
+        });
+    });
+
+    describe("toggleClass", () => {
+        test("adds class when not present", () => {
+            document.body.innerHTML = "<div id=\"test-div\"></div>";
+            DomUtils.toggleClass("#test-div", "toggle-me");
+            const element = document.getElementById("test-div");
+            expect(element?.classList.contains("toggle-me")).toBe(true);
+        });
+
+        test("removes class when present", () => {
+            document.body.innerHTML = "<div id=\"test-div\" class=\"toggle-me\"></div>";
+            DomUtils.toggleClass("#test-div", "toggle-me");
+            const element = document.getElementById("test-div");
+            expect(element?.classList.contains("toggle-me")).toBe(false);
+        });
+
+        test("does nothing when element not found", () => {
+            expect(() => DomUtils.toggleClass("#missing", "class")).not.toThrow();
+        });
+    });
+
+    describe("hasClass", () => {
+        test("returns true when class is present", () => {
+            document.body.innerHTML = "<div id=\"test-div\" class=\"has-class other-class\"></div>";
+            expect(DomUtils.hasClass("#test-div", "has-class")).toBe(true);
+        });
+
+        test("returns false when class is not present", () => {
+            document.body.innerHTML = "<div id=\"test-div\" class=\"other-class\"></div>";
+            expect(DomUtils.hasClass("#test-div", "missing-class")).toBe(false);
+        });
+
+        test("returns false when element not found", () => {
+            expect(DomUtils.hasClass("#missing", "any-class")).toBe(false);
+        });
+
+        test("works with elements that have no classes", () => {
+            document.body.innerHTML = "<div id=\"test-div\"></div>";
+            expect(DomUtils.hasClass("#test-div", "any-class")).toBe(false);
         });
     });
 });

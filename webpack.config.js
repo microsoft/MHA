@@ -168,6 +168,26 @@ export default async (env, options) => {
                 __BUILDTIME__: JSON.stringify(buildTime),
             }),
             new ForkTsCheckerWebpackPlugin(),
+            // Custom plugin to log compilation start/end times with timestamps
+            {
+                apply(compiler) {
+                    compiler.hooks.watchRun.tap("TimestampPlugin", () => {
+                        const timestamp = new Date().toISOString().replace("T", " ").substr(0, 19);
+                        console.log(`\n🔄 [${timestamp}] WEBPACK RECOMPILATION STARTED`);
+                    });
+
+                    compiler.hooks.done.tap("TimestampPlugin", (stats) => {
+                        const timestamp = new Date().toISOString().replace("T", " ").substr(0, 19);
+                        const compilationTime = stats.endTime - stats.startTime;
+                        console.log(`✅ [${timestamp}] WEBPACK RECOMPILATION COMPLETED (${compilationTime}ms)\n`);
+                    });
+
+                    compiler.hooks.invalid.tap("TimestampPlugin", (fileName) => {
+                        const timestamp = new Date().toISOString().replace("T", " ").substr(0, 19);
+                        console.log(`📝 [${timestamp}] FILE CHANGED: ${fileName}`);
+                    });
+                }
+            },
             ...generateHtmlWebpackPlugins(),
             // Bundle analyzer (when env.analyze is set)
             ...(env?.analyze ? [new BundleAnalyzerPlugin({
@@ -292,7 +312,12 @@ export default async (env, options) => {
                 "X-XSS-Protection": "1; mode=block", // eslint-disable-line @typescript-eslint/naming-convention
                 "Referrer-Policy": "strict-origin-when-cross-origin", // eslint-disable-line @typescript-eslint/naming-convention
             },
-            static: __dirname,
+            static: {
+                directory: __dirname,
+                watch: false, // Disable watching of static files
+                publicPath: "/",
+                serveIndex: false
+            },
             watchFiles: {
                 paths: [
                     "src/**/*.{ts,js,css}",
@@ -305,6 +330,7 @@ export default async (env, options) => {
                         "**/coverage/**",
                         "**/*.map",
                         "**/*.log",
+                        "**/*.md", // Explicitly ignore markdown files
                         ".gitignore",
                         ".gitattributes"
                     ],
@@ -326,6 +352,8 @@ export default async (env, options) => {
                     warnings: false,
                 },
                 progress: true,
+                logging: "verbose", // Changed from "info" to "verbose" for more details
+                reconnect: 5,
             },
         },
         stats: {
@@ -339,6 +367,12 @@ export default async (env, options) => {
             warnings: true,
             errors: true,
             errorDetails: true,
+            logging: "info",
+            loggingDebug: ["webpack.Progress"],
+        },
+        infrastructureLogging: {
+            level: "info",
+            debug: false,
         },
     };
 

@@ -1,5 +1,3 @@
-import $ from "jquery";
-
 import { diagnostics } from "./Diag";
 
 export class Strings {
@@ -95,7 +93,12 @@ export class Strings {
         ["SFS", "https://docs.microsoft.com/en-us/exchange/monitoring/trace-an-email-message/run-a-message-trace-and-view-results"]
     ];
 
-    public static htmlEncode(value: string): string { return value ? $("<div />").text(value).html() : ""; }
+    public static htmlEncode(value: string): string {
+        if (!value) return "";
+        const div = document.createElement("div");
+        div.textContent = value;
+        return div.innerHTML;
+    }
 
     public static mapHeaderToURL(headerName: string, text?: string): string {
         let url = "";
