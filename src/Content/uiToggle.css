@@ -23,6 +23,35 @@ body, html {
     contain: layout style;
 }
 
+/* Status message overlay for copy feedback */
+.status-overlay {
+    position: fixed;
+    top: 50px; /* Fixed position below header area */
+    right: 20px; /* Safe distance from edge */
+    display: none;
+    color: #107c10; /* Dark green text for contrast */
+    font-size: 14px;
+    padding: 12px 16px;
+    font-weight: 500;
+    background-color: rgba(240, 248, 240, 0.95); /* Pale green background with high opacity */
+    border-radius: 6px;
+    border: 1px solid #107c10; /* Solid green border for contrast */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
+    z-index: 9999; /* Very high z-index to appear above everything */
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none; /* Don't interfere with clicks */
+    max-width: 200px;
+}
+
+.status-overlay.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .frame-row {
     position: absolute;
     top: 0;
