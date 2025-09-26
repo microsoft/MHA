@@ -1,33 +1,38 @@
 ﻿<!DOCTYPE html>
 <html lang="en-US">
+
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Message Header Analyzer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
+
 <body>
-    <div id="SectionHeader">
+    <header id="SectionHeader">
         <div id="floater"></div>
         <h1 id="title">Message Header Analyzer</h1>
-    </div>
-    <div id="SectionContent">
-        <textarea id="inputHeaders" autofocus="autofocus" placeholder="Paste headers here." required="required" rows="15"></textarea>
-        <fluent-button appearance="accent" id="analyzeButton" aria-label="Analyze message headers">
-            <span>Analyze headers</span>
-        </fluent-button>
-        <fluent-button class="hiddenElement" id="clearButton" aria-label="Clear input and results">
-            <span>Clear</span>
-        </fluent-button>
-        <fluent-button class="hiddenElement" id="copyButton" aria-label="Copy analysis results to clipboard">
-            <span class="fluent-icon fluent-icon--copy"></span>
-            <span>Copy</span>
-        </fluent-button>
-        <span id="mhaFooter">
-            <a href="https://github.com/microsoft/MHA" target="_blank" rel="noopener">Submit feedback on github</a>
-        </span>
+    </header>
+    <main id="SectionContent">
+        <section aria-labelledby="inputSection">
+            <h2 id="inputSection" class="sr-only">Input Headers</h2>
+            <textarea id="inputHeaders" autofocus="autofocus" placeholder="Paste headers here." required="required"
+                rows="15"></textarea>
+            <fluent-button appearance="accent" id="analyzeButton" aria-label="Analyze message headers">
+                <span>Analyze headers</span>
+            </fluent-button>
+            <fluent-button class="hiddenElement" id="clearButton" aria-label="Clear input and results">
+                <span>Clear</span>
+            </fluent-button>
+            <fluent-button class="hiddenElement" id="copyButton" aria-label="Copy analysis results to clipboard">
+                <span class="fluent-icon fluent-icon--copy"></span>
+                <span>Copy</span>
+            </fluent-button>
+        </section>
 
         <hr id="lineBreak" />
-        <div id="response" class="hiddenElement">
+
+        <section id="response" class="hiddenElement" aria-labelledby="resultsSection">
+            <h2 id="resultsSection" class="sr-only">Analysis Results</h2>
             <div class="responsePane">
                 <div id="status"></div>
                 <table id="summary"></table>
@@ -36,7 +41,12 @@
                 <table id="antiSpamReport"></table>
                 <table id="otherHeaders"></table>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
+
+    <footer id="mhaFooter">
+        <a href="https://github.com/microsoft/MHA" target="_blank" rel="noopener">Submit feedback on github</a>
+    </footer>
 </body>
+
 </html>
