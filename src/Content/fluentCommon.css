@@ -31,6 +31,11 @@
     --spacing-medium: 12px;
     --focus-outline: 2px solid var(--focus-blue);
     --button-height: 44px;
+    
+    /* Status overlay colors */
+    --success-green: #107c10;
+    --success-green-bg: rgba(240, 248, 240, 0.95);
+    --overlay-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Secondary Button Styling - Default black border, blue highlight */
@@ -267,4 +272,31 @@ fluent-radio:focus-visible {
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+}
+
+/* Common Status Overlay Styles for Copy Feedback */
+/* Used by both uitoggle and standalone MHA pages */
+.status-overlay {
+    display: none;
+    color: var(--success-green); /* Dark green text for contrast */
+    font-size: 14px;
+    font-weight: 500;
+    background-color: var(--success-green-bg); /* Pale green background with high opacity */
+    border-radius: 6px;
+    border: 1px solid var(--success-green); /* Solid green border for contrast */
+    box-shadow: var(--overlay-shadow); /* Subtle shadow for depth */
+    z-index: 9999; /* Very high z-index to appear above everything */
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-8px); /* Slide-in animation from left */
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none; /* Don't interfere with clicks */
+    max-width: 200px;
+    padding: 4px 4px;
+}
+
+.status-overlay.show {
+    display: block;
+    opacity: 1;
+    transform: translateX(0);
 }

@@ -312,3 +312,22 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     font-size: 16px;
     margin-right: 4px;
 }
+
+/* Status message overlay for copy feedback */
+.status-overlay-inline {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 8px); /* Position to the right of the copy button */
+    transform: translateY(-50%) translateX(-8px); /* Center vertically and slide in from left */
+    display: flex;
+    align-items: center; /* Center text vertically within the overlay */
+}
+
+.status-overlay-inline.show {
+    transform: translateY(-50%) translateX(0); /* Stay centered, slide to normal position */
+}
+
+/* Make copy button container relative for absolute positioning */
+#copyButton {
+    position: relative;
+}

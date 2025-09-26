@@ -73,6 +73,18 @@ function clear() {
 
 function copy() {
     Strings.copyToClipboard(viewModel.toString());
+
+    // Show status message overlay for accessibility (same as uitoggle)
+    const statusMessage = document.getElementById("copyStatusMessage");
+    if (statusMessage) {
+        statusMessage.classList.add("show");
+
+        // Hide after 2 seconds
+        setTimeout(() => {
+            statusMessage.classList.remove("show");
+        }, 2000);
+    }
+
     document.getElementById("copyButton")?.focus();
 }
 
