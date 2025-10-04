@@ -21,9 +21,16 @@ export class TabNavigation {
 
     // CSS selectors for common UI elements
     private static readonly selectors = {
-        visibleHeaderView: ".header-view[style*=\"display: block\"]",
-        contentMain: ".content-main"
+        visibleHeaderView: ".header-view[style*=\"display: block\"]"
     } as const;
+
+    // Selectors to try for iframe content area in order of preference
+    private static readonly iframeContentSelectors = [
+        ".content-main",
+        ".page-content",
+        ".view",
+        "body"
+    ] as const;
 
     // Element IDs for common UI components
     private static readonly elementIds = {
@@ -259,11 +266,17 @@ export class TabNavigation {
                 // Insert the settings and copy buttons into the tab order for the ribbon if we have one
                 // This handles tabbing out from these buttons.
                 // Tabbing into these buttons is handled in iframe
-                if (!shiftPressed && focused.id === TabNavigation.elementIds.settingsButton) {
+                if (!shiftPressed && focused.id === TabNavigation.elementIds.copyButton) {
+                    targetResult = TabNavigation.getTabFromCopyButtonTarget();
+                }
+                else if (!shiftPressed && focused.id === TabNavigation.elementIds.settingsButton) {
                     targetResult = TabNavigation.getTabFromSettingsButtonTarget();
                 }
                 else if (shiftPressed && focused.id === TabNavigation.elementIds.copyButton) {
                     targetResult = TabNavigation.getShiftTabFromCopyButtonTarget();
+                }
+                else if (shiftPressed && focused.id === TabNavigation.elementIds.settingsButton) {
+                    targetResult = TabNavigation.getShiftTabFromSettingsButtonTarget();
                 }
 
                 // If we found a target element, log details and set focus
@@ -271,6 +284,7 @@ export class TabNavigation {
                     TabNavigation.logDetailedTabInfo(focused, shiftPressed, "parent", targetResult.element, targetResult.routine);
                     targetResult.element.focus();
                     e.preventDefault();
+                    e.stopPropagation();
                 } else {
                     TabNavigation.logDetailedTabInfo(focused, shiftPressed, "parent");
                 }
@@ -335,7 +349,15 @@ export class TabNavigation {
      */
     private static getTabFromSettingsButtonTarget(): TabTargetResult {
         // Find first header-view which is visible, but skip the tab buttons
-        const view = TabNavigation.iFrame?.document.querySelector(TabNavigation.selectors.contentMain) as HTMLElement | null;
+        let view: HTMLElement | null = null;
+
+        if (TabNavigation.iFrame?.document) {
+            for (const selector of TabNavigation.iframeContentSelectors) {
+                view = TabNavigation.iFrame.document.querySelector(selector) as HTMLElement | null;
+                if (view) break;
+            }
+        }
+
         if (view) {
             const tabStops = TabNavigation.findTabStops(view);
 
@@ -348,6 +370,26 @@ export class TabNavigation {
         return {
             element: null,
             routine: "getTabFromSettingsButtonTarget"
+        };
+    }
+
+    /**
+     * Get target element when shift+tabbing from settings button in parent frame
+     */
+    private static getShiftTabFromSettingsButtonTarget(): TabTargetResult {
+        return {
+            element: document.getElementById(TabNavigation.elementIds.copyButton) || null,
+            routine: "getShiftTabFromSettingsButtonTarget"
+        };
+    }
+
+    /**
+     * Get target element when tabbing from copy button in parent frame
+     */
+    private static getTabFromCopyButtonTarget(): TabTargetResult {
+        return {
+            element: document.getElementById(TabNavigation.elementIds.settingsButton) || null,
+            routine: "getTabFromCopyButtonTarget"
         };
     }
 
