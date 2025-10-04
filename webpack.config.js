@@ -151,8 +151,15 @@ function generateHtmlWebpackPlugins() {
 }
 
 export default async (env, options) => {
-    const isProduction = options.mode === "production";
+    console.log("🚀 Starting webpack config function");
+    console.log("📋 env:", env);
+    console.log("📋 options:", options);
 
+    const isProduction = options.mode === "production";
+    console.log("🏭 isProduction:", isProduction);
+    console.log("Starting webpack.config.js - isProduction:", isProduction);
+
+    console.log("📦 Generating entry points...");
     const config = {
         entry: generateEntry(),
         plugins: [
@@ -303,15 +310,15 @@ export default async (env, options) => {
             headers: {
                 "Access-Control-Allow-Origin": "*", // eslint-disable-line @typescript-eslint/naming-convention
                 "X-Content-Type-Options": "nosniff", // eslint-disable-line @typescript-eslint/naming-convention
-                "X-Frame-Options": "SAMEORIGIN", // eslint-disable-line @typescript-eslint/naming-convention
                 "X-XSS-Protection": "1; mode=block", // eslint-disable-line @typescript-eslint/naming-convention
-                "Referrer-Policy": "strict-origin-when-cross-origin", // eslint-disable-line @typescript-eslint/naming-convention
+                "Referrer-Policy": "no-referrer-when-downgrade", // eslint-disable-line @typescript-eslint/naming-convention
             },
+            allowedHosts: "all", // Allow requests from any host (needed for OWA iframe)
             static: {
                 directory: __dirname,
                 watch: false, // Disable watching of static files
                 publicPath: "/",
-                serveIndex: false
+                serveIndex: true
             },
             watchFiles: {
                 paths: [
@@ -371,8 +378,11 @@ export default async (env, options) => {
         },
     };
 
+    console.log("⚙️ Main config object created successfully");
+
     // Production-specific optimizations
     if (isProduction) {
+        console.log("🏭 Applying production optimizations...");
         // Remove console.log statements in production
         config.optimization.minimizer = [
             "...",
@@ -393,6 +403,7 @@ export default async (env, options) => {
         config.optimization.usedExports = true;
         config.optimization.sideEffects = false;
     } else {
+        console.log("🛠️ Applying development optimizations...");
         // Development-specific optimizations
         config.cache = {
             type: "filesystem",
@@ -409,5 +420,6 @@ export default async (env, options) => {
         });
     }
 
+    console.log("🎯 Webpack config completed successfully");
     return config;
 };
