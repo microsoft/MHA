@@ -11,7 +11,7 @@ interface TabTargetResult {
 
 export class TabNavigation {
     private static iFrame: Window | null = null;
-    private static readonly debugEnabled = false; // Set to false to disable all debug logging
+    private static readonly debugEnabled = true; // Set to false to disable all debug logging
 
     // Comprehensive selector that includes both standard and Fluent UI elements
     private static readonly focusableSelector =
@@ -262,6 +262,10 @@ export class TabNavigation {
                 else if (focused.id === TabNavigation.elementIds.actionsDiagOk) {
                     targetResult = { element: document.getElementById(TabNavigation.elementIds.diagPre), routine: "diagnosticsNavigation" };
                 }
+                else if (!shiftPressed && focused.tagName.toLowerCase() === "a" &&
+                         focused.textContent && focused.textContent.includes("privacy")) {
+                    targetResult = TabNavigation.getTabFromPrivacyLinkTarget();
+                }
 
                 // Insert the settings and copy buttons into the tab order for the ribbon if we have one
                 // This handles tabbing out from these buttons.
@@ -400,6 +404,17 @@ export class TabNavigation {
         return {
             element: TabNavigation.iFrame?.document.getElementById(TabNavigation.elementIds.otherBtn) || null,
             routine: "getShiftTabFromCopyButtonTarget"
+        };
+    }
+
+    /**
+     * Get target element when tabbing from privacy policy link in parent frame
+     */
+    private static getTabFromPrivacyLinkTarget(): TabTargetResult {
+        const diagButton = document.getElementById("actionsSettings-diag");
+        return {
+            element: diagButton || null,
+            routine: "getTabFromPrivacyLinkTarget"
         };
     }
 
