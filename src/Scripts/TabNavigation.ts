@@ -117,8 +117,13 @@ export class TabNavigation {
         }
 
         // Check if element is visible (offsetParent is null for hidden elements)
+        // Exception: dialog elements may have offsetParent null but still be visible
         if (htmlEl.offsetParent === null) {
-            return false;
+            // Special case: elements inside an open dialog should be considered visible
+            const parentDialog = htmlEl.closest("fluent-dialog:not([hidden])");
+            if (!parentDialog) {
+                return false;
+            }
         }
 
         // For fluent components, they are focusable by default unless explicitly disabled
