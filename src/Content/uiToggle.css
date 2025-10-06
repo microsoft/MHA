@@ -211,3 +211,18 @@ fluent-dialog a:focus {
     outline: var(--focus-outline);
     outline-offset: 2px;
 }
+
+/* DEBUG: Red border around currently focused element - only when debug mode is enabled */
+.tab-navigation-debug *:focus {
+    outline: 3px solid red !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 5px rgba(255, 0, 0, 0.3) !important;
+}
+
+/* Make sure the red focus indicator is always visible in debug mode */
+.tab-navigation-debug *:focus-visible {
+    outline: 3px solid red !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 5px rgba(255, 0, 0, 0.3) !important;
+}
+
