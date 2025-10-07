@@ -53,6 +53,15 @@ body {
     display: block;
 }
 
+.tab-link {
+    color: var(--f7-link-color);
+}
+
+.tab-link.tab-link-active,
+.tab-link.active {
+    color: var(--link-active);
+}
+
 .code-box>pre {
     background-color: var(--code-box-bg);
     border: 1px solid var(--border-light-grey);
