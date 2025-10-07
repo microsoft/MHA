@@ -1,22 +1,22 @@
+@import url("themeColors.css");
+
 /* Framework7 specific overrides */
 
 :root {
-    --code-box-bg: #eaeaea;
-    --border-light-grey: #ccc;
-    --text-dark-grey: #444;
-    --text-medium-grey: #555555;
-    --focus-outline-blue: #0072cc;
-    --light-grey-border: #e0e0e0;
-    --f7-block-title-text-color: black;
+    --code-box-bg: var(--background-light-gray);
+    --border-light-grey: var(--border-gray);
+    --focus-outline-blue: var(--focus-blue);
+    --light-grey-border: var(--border-light-gray);
+    --f7-block-title-text-color: var(--text-primary);
     --f7-progressbar-bg-color: #cccccc;
-    --f7-progressbar-progress-color: #007aff;
-    --f7-timeline-item-inner-bg-color: white;
-    --f7-timeline-item-text-color: black;
-    --f7-tabs-bg-color: #f4f4f4;
-    --f7-link-color: black;
+    --f7-progressbar-progress-color: var(--primary-blue);
+    --f7-timeline-item-inner-bg-color: var(--white);
+    --f7-timeline-item-text-color: var(--text-primary);
+    --f7-tabs-bg-color: var(--command-bar-gray);
+    --f7-link-color: var(--link-default);
     --f7-accordion-chevron-icon-down: "chevron_right";
     --f7-accordion-chevron-icon-up: "chevron_down";
-    --f7-timeline-item-inner-bg-color: white;
+    --f7-timeline-item-inner-bg-color: var(--white);
     --f7-page-bg-color: var(-f7-tabs-bg-color);
 }
 

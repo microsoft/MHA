@@ -1,3 +1,5 @@
+@import url("themeColors.css");
+
 /* Shared Fluent UI Web Components Styling */
 /* This file contains common styles used across multiple frames */
 
@@ -10,31 +12,20 @@
  * SPECIAL BUTTONS: Maintain unique styling as needed (e.g., Original Headers)
  */
 
-/* CSS Custom Properties - Design System */
+/* Layout and Typography Variables */
 :root {
-    --primary-blue: #0078d4;
-    --focus-blue: #0072cc;
-    --border-gray: #ccc;
-    --background-gray: #f5f5f5;
-    --text-gray: #e1e1e1;
-    --background-light-gray: #eaeaea;
-    --background-lighter-gray: #f3f2f1;
-    --command-bar-gray: #f4f4f4;
-    --white: #ffffff;
-    --black: #000000;
+    /* Typography */
     --font-monospace: "Consolas", "Monaco", "Courier New", monospace;
     --font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", sans-serif;
-    --hover-blue: color-mix(in srgb, var(--primary-blue) 10%, transparent);
-    --active-blue: color-mix(in srgb, var(--primary-blue) 20%, transparent);
+    
+    /* Layout */
     --border-radius: 4px;
     --spacing-small: 8px;
     --spacing-medium: 12px;
     --focus-outline: 2px solid var(--focus-blue);
     --button-height: 44px;
     
-    /* Status overlay colors */
-    --success-green: #107c10;
-    --success-green-bg: rgba(240, 248, 240, 0.95);
+    /* Shadows */
     --overlay-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -215,9 +206,9 @@ fluent-radio:focus-visible {
 /* Dialog Common Styling */
 .dialog-header {
     padding: 16px 20px 12px 20px;
-    border-bottom: 1px solid var(--primary-blue);
+    border-bottom: 1px solid var(--dialog-header-bg);
     margin: -1px -1px 0 -1px;
-    background: var(--primary-blue);
+    background: var(--dialog-header-bg);
     border-radius: 8px 8px 0 0;
 }
 
@@ -225,7 +216,7 @@ fluent-radio:focus-visible {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
-    color: var(--white); 
+    color: var(--dialog-text-on-primary); 
 }
 
 /* Code Box Styling */
