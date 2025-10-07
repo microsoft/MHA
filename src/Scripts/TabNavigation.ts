@@ -134,9 +134,11 @@ export class TabNavigation {
             return true;
         }
 
-        // For elements with explicit tabindex, they're focusable
+        // For elements with explicit tabindex, check the value
+        // Elements with tabindex="-1" are programmatically focusable but not in tab order
         if (htmlEl.hasAttribute("tabindex")) {
-            return true;
+            const tabIndexValue = parseInt(htmlEl.getAttribute("tabindex") || "0", 10);
+            return tabIndexValue >= 0;
         }
 
         // Standard focusable elements
