@@ -44,6 +44,9 @@
     --hover-blue: color-mix(in srgb, var(--primary-blue) 10%, transparent);
     --active-blue: color-mix(in srgb, var(--primary-blue) 20%, transparent);
     
+    /* Progress Bar Colors */
+    --progress-track-bg: #f3f2f1;        /* Light gray background */
+
     /* Status Colors */
     --success-green: #107c10;
     --success-green-bg: rgba(240, 248, 240, 0.95);

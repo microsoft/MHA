@@ -8,7 +8,7 @@
     --focus-outline-blue: var(--focus-blue);
     --light-grey-border: var(--border-light-gray);
     --f7-block-title-text-color: var(--text-primary);
-    --f7-progressbar-bg-color: #cccccc;
+    --f7-progressbar-bg-color: var(--progress-track-bg);
     --f7-progressbar-progress-color: var(--primary-blue);
     --f7-timeline-item-inner-bg-color: var(--white);
     --f7-timeline-item-text-color: var(--text-primary);
@@ -119,6 +119,10 @@ a.tab-link {
 
 .block-title {
     overflow: visible;
+}
+
+.progressbar {
+    border: 1px solid var(--black) !important;
 }
 
 @media screen and (-ms-high-contrast: active) {
