@@ -109,6 +109,7 @@ export class Table {
         const table = document.getElementById(section.tableName);
         if (table) {
             table.setAttribute("aria-label", section.getAriaLabel());
+            table.setAttribute("role", "table");
         }
     }
 
@@ -143,12 +144,12 @@ export class Table {
     }
 
     private setArrows(table: string, colName: string, sortOrder: number): void {
-        const buttons = document.querySelectorAll(`#${table} th button`);
-        buttons.forEach(button => button.setAttribute("aria-sort", "none"));
+        const headers = document.querySelectorAll(`#${table} th[role="columnheader"]`);
+        headers.forEach(header => header.setAttribute("aria-sort", "none"));
 
         const targetButton = document.querySelector(`#${table} th #${colName}`);
-        if (targetButton) {
-            targetButton.setAttribute("aria-sort", sortOrder === 1 ? "descending" : "ascending");
+        if (targetButton && targetButton.parentElement) {
+            targetButton.parentElement.setAttribute("aria-sort", sortOrder === 1 ? "descending" : "ascending");
         }
     }
 
@@ -315,13 +316,14 @@ export class Table {
     private makeSortableColumn(tableName: string, column: Column): HTMLTableCellElement {
         const header = document.createElement("th");
         if (header !== null) {
+            header.setAttribute("role", "columnheader");
+            header.setAttribute("aria-sort", "none");
+
             const headerButton = document.createElement("button");
             if (headerButton !== null) {
                 headerButton.setAttribute("class", "tableHeaderButton");
                 headerButton.setAttribute("id", column.id);
                 headerButton.setAttribute("type", "button");
-                headerButton.setAttribute("role", "columnheader");
-                headerButton.setAttribute("aria-sort", "none");
                 headerButton.innerHTML = column.label;
                 if (column.class !== null) {
                     headerButton.setAttribute("class", "tableHeaderButton " + column.class);
@@ -358,6 +360,7 @@ export class Table {
 
             const headerRow = document.createElement("tr");
             headerRow.classList.add("tableHeader");
+            headerRow.setAttribute("role", "row");
             tableHeader.appendChild(headerRow); // Must happen before we append cells to appease IE7
 
             columns.forEach((column: Column) => {
