@@ -131,6 +131,21 @@ a.tab-link {
     }
 }
 
+@media (forced-colors: active) {
+    .progressbar span {
+        background: Highlight;
+    }
+
+    .tab-link.active,
+    .tab-link.tab-link-active {
+        color: ButtonText;
+    }
+
+    .tab-link-highlight {
+        background: ButtonText !important;
+    }
+}
+
 #antispam-view .block-title {
     color: var(--text-medium-grey);
 }
