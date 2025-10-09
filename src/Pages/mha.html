@@ -19,6 +19,10 @@
                 rows="15"></textarea>
             <fluent-button appearance="accent" id="analyzeButton" aria-describedby="analyzeButtonDesc">
                 <span>Analyze headers</span>
+                <div class="status-overlay status-overlay-inline" id="analyzeStatusMessage" role="status" aria-live="polite">
+                </div>
+                <div class="status-overlay status-overlay-inline" id="clearStatusMessage" role="status" aria-live="polite">
+                </div>
             </fluent-button>
             <span id="analyzeButtonDesc" class="sr-only">Analyze message headers</span>
             <fluent-button class="hiddenElement" id="clearButton" aria-label="Clear input and results">
@@ -28,9 +32,7 @@
                 <span class="fluent-icon fluent-icon--copy"></span>
                 <span>Copy</span>
                 <span id="copyButtonDesc" class="sr-only">Copy analysis results to clipboard</span>
-                <!-- Status message overlay for accessibility -->
                 <div class="status-overlay status-overlay-inline" id="copyStatusMessage" role="status" aria-live="polite">
-                    Copied to clipboard!
                 </div>
             </fluent-button>
             <footer id="mhaFooter">

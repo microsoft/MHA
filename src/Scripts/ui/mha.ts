@@ -46,11 +46,32 @@ function updateStatus(statusText: string) {
     table.recalculateVisibility();
 }
 
+function showStatusMessage(elementId: string, message: string, duration = 2000) {
+    const statusElement = document.getElementById(elementId);
+    if (statusElement) {
+        // Update the message text
+        statusElement.textContent = message;
+        statusElement.classList.add("show");
+
+        // Hide after specified duration
+        setTimeout(() => {
+            statusElement.classList.remove("show");
+        }, duration);
+    }
+}
+
 // Do our best at recognizing RFC 2822 headers:
 // http://tools.ietf.org/html/rfc2822
 function analyze() {
     diagnostics.trackEvent({ name: "analyzeHeaders" });
-    viewModel = new HeaderModel(DomUtils.getValue("#inputHeaders"));
+    const headerText = DomUtils.getValue("#inputHeaders");
+
+    if (!headerText.trim()) {
+        showStatusMessage("analyzeStatusMessage", mhaStrings.mhaNoHeaders);
+        return;
+    }
+
+    viewModel = new HeaderModel(headerText);
     table.resetArrows();
 
     enableSpinner();
@@ -60,6 +81,8 @@ function analyze() {
     updateStatus("");
 
     disableSpinner();
+
+    showStatusMessage("analyzeStatusMessage", mhaStrings.mhaAnalyzed);
 }
 
 function clear() {
@@ -69,21 +92,20 @@ function clear() {
     table.resetArrows();
     table.rebuildSections(viewModel);
     document.getElementById("inputHeaders")?.focus();
+
+    showStatusMessage("clearStatusMessage", mhaStrings.mhaCleared);
 }
 
 function copy() {
+    if (!viewModel || !viewModel.hasData) {
+        showStatusMessage("copyStatusMessage", mhaStrings.mhaNothingToCopy);
+        return;
+    }
+
     Strings.copyToClipboard(viewModel.toString());
 
-    // Show status message overlay for accessibility (same as uitoggle)
-    const statusMessage = document.getElementById("copyStatusMessage");
-    if (statusMessage) {
-        statusMessage.classList.add("show");
-
-        // Hide after 2 seconds
-        setTimeout(() => {
-            statusMessage.classList.remove("show");
-        }, 2000);
-    }
+    // Show accessible status message
+    showStatusMessage("copyStatusMessage", mhaStrings.mhaCopied);
 
     document.getElementById("copyButton")?.focus();
 }

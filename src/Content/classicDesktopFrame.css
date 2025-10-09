@@ -315,21 +315,26 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     margin-right: 4px;
 }
 
-/* Status message overlay for copy feedback */
+/* Status message overlay for button feedback */
 .status-overlay-inline {
     position: absolute;
-    top: 50%;
-    left: calc(100% + 8px); /* Position to the right of the copy button */
-    transform: translateY(-50%) translateX(-8px); /* Center vertically and slide in from left */
+    top: calc(100% + 8px); /* Position below the button */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%) translateY(-8px); /* Center horizontally and slide in from top */
     display: flex;
     align-items: center; /* Center text vertically within the overlay */
 }
 
 .status-overlay-inline.show {
-    transform: translateY(-50%) translateX(0); /* Stay centered, slide to normal position */
+    transform: translateY(0);
 }
 
-/* Make copy button container relative for absolute positioning */
-#copyButton {
-    position: relative;
+/* Dark mode support for status overlay */
+@media (prefers-color-scheme: dark) {
+    .status-overlay-inline {
+        background: rgba(45, 45, 48, 0.9); /* 90% opacity */
+        border-color: rgba(62, 62, 66, 0.9);
+        color: #cccccc;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
 }
