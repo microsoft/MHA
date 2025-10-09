@@ -131,11 +131,11 @@ export class Table {
                         headerCell.textContent = summaryRow.label;
                     }
                     headerCell.classList.add("summaryHeader");
-                    headerCell.setAttribute("id", summaryRow.id);
+                    headerCell.setAttribute("id", summaryRow.header + "_id" + tag);
 
                     const valCell = row.insertCell(-1);
                     valCell.setAttribute("id", id + "Val");
-                    valCell.setAttribute("aria-labelledby", summaryRow.id);
+                    valCell.setAttribute("aria-labelledby", summaryRow.header + "_id" + tag);
 
                     this.makeVisible("#" + id, false);
                 }
