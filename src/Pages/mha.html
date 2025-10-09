@@ -17,15 +17,17 @@
             <h2 id="inputSection" class="sr-only">Input Headers</h2>
             <textarea id="inputHeaders" autofocus="autofocus" placeholder="Paste headers here." required="required"
                 rows="15"></textarea>
-            <fluent-button appearance="accent" id="analyzeButton" aria-label="Analyze message headers">
+            <fluent-button appearance="accent" id="analyzeButton" aria-describedby="analyzeButtonDesc">
                 <span>Analyze headers</span>
             </fluent-button>
+            <span id="analyzeButtonDesc" class="sr-only">Analyze message headers</span>
             <fluent-button class="hiddenElement" id="clearButton" aria-label="Clear input and results">
                 <span>Clear</span>
             </fluent-button>
-            <fluent-button class="hiddenElement" id="copyButton" aria-label="Copy analysis results to clipboard">
+            <fluent-button class="hiddenElement" id="copyButton" aria-describedby="copyButtonDesc">
                 <span class="fluent-icon fluent-icon--copy"></span>
                 <span>Copy</span>
+                <span id="copyButtonDesc" class="sr-only">Copy analysis results to clipboard</span>
                 <!-- Status message overlay for accessibility -->
                 <div class="status-overlay status-overlay-inline" id="copyStatusMessage" role="status" aria-live="polite">
                     Copied to clipboard!
