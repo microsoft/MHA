@@ -37,6 +37,8 @@ function disableSpinner() {
     }
 }
 
+const statusMessageTimeouts: Map<string, NodeJS.Timeout> = new Map();
+
 function updateStatus(statusText: string) {
     DomUtils.setText("#status", statusText);
     if (viewModel !== null) {
@@ -46,17 +48,36 @@ function updateStatus(statusText: string) {
     table.recalculateVisibility();
 }
 
+function dismissAllStatusMessages() {
+    // Clear all pending timeouts
+    statusMessageTimeouts.forEach(timeoutId => {
+        clearTimeout(timeoutId);
+    });
+    statusMessageTimeouts.clear();
+
+    // Find all status overlay elements and hide them
+    document.querySelectorAll(".status-overlay-inline.show").forEach(element => {
+        element.classList.remove("show");
+    });
+}
+
 function showStatusMessage(elementId: string, message: string, duration = 2000) {
+    // Dismiss any currently showing status messages first
+    dismissAllStatusMessages();
+
     const statusElement = document.getElementById(elementId);
     if (statusElement) {
         // Update the message text
         statusElement.textContent = message;
         statusElement.classList.add("show");
 
-        // Hide after specified duration
-        setTimeout(() => {
+        // Hide after specified duration and track the timeout
+        const timeoutId = setTimeout(() => {
             statusElement.classList.remove("show");
+            statusMessageTimeouts.delete(elementId);
         }, duration);
+
+        statusMessageTimeouts.set(elementId, timeoutId);
     }
 }
 
