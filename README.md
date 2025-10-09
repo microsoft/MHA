@@ -90,6 +90,14 @@ For both IOS and Android click open an email, then press the three dots under th
 
 - Follow the steps given [here](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/debug-desktop-using-edge-chromium#use-the-visual-studio-code-debugger).
 
+### Add-in testing (Outlook Web App)
+
+- Start the dev server: `npm run dev-server`
+- Sideload your add-in here: <https://aka.ms/olksideload>
+- For detailed sideloading instructions, see: <https://learn.microsoft.com/en-us/office/dev/add-ins/outlook/sideload-outlook-add-ins-for-testing?tabs=xmlmanifest#sideload-manually>
+- Upload the `ManifestDebugLocal.xml` file when prompted
+- The add-in will appear as "View Headers Debug Local" in OWA
+
 ### Bundle Analysis
 
 - Start the dev server: `npm run dev-server`

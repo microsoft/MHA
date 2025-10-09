@@ -334,6 +334,20 @@ export class ParentFrame {
         const copyButton = document.getElementById("copyButton");
         copyButton?.addEventListener("click", () => {
             Strings.copyToClipboard(ParentFrame.modelToString);
+
+            // Show status message for accessibility
+            const statusMessage = document.getElementById("statusMessage");
+            if (statusMessage) {
+                statusMessage.classList.add("show");
+
+                // Hide after 2 seconds
+                setTimeout(() => {
+                    statusMessage.classList.remove("show");
+                }, 2000);
+            }
+
+            // Maintain focus on copy button for keyboard users
+            copyButton.focus();
         });
 
         // Initialize tab navigation handling

@@ -21,6 +21,11 @@
             </nav>
         </header>
 
+        <!-- Status message overlay positioned as true overlay -->
+        <div id="statusMessage" class="status-overlay status-overlay-fixed" role="status" aria-live="polite">
+            Copied to clipboard!
+        </div>
+
         <section class="frame-row">
             <iframe id="uiFrame" src="newDesktopFrame.html" title="Message Header Analyzer" sandbox="allow-scripts allow-same-origin"></iframe>
         </section>
@@ -32,15 +37,15 @@
             </header>
             <section class="dialog-content">
                 <fieldset>
-                    <legend>UI style</legend>
-                    <fluent-radio-group orientation="vertical" id="uiChoice" name="uiChoice" aria-label="Choose UI style">
+                    <legend id="Label-Heading">UI style</legend>
+                    <fluent-radio-group orientation="vertical" id="uiChoice" name="uiChoice" aria-label="Choose UI style" aria-labelledby="Label-Heading">
                         <!-- Radio options will be dynamically populated -->
                     </fluent-radio-group>
                     <fluent-checkbox id="telemetryInput">Send telemetry</fluent-checkbox>
                 </fieldset>
                 <div class="privacy-link">
                     <small>
-                        <a href="privacy.html" target="_blank" rel="noopener noreferrer" aria-label="View privacy policy (opens in new tab)">privacy policy</a>
+                        <a href="privacy.html" id="privacy-link" target="_blank" rel="noopener noreferrer" aria-label="View privacy policy (opens in new tab)">privacy policy</a>
                     </small>
                 </div>
             </section>
@@ -65,6 +70,5 @@
             </footer>
         </fluent-dialog>
     </main>
-    <script src="../Scripts/uiToggle.js"></script>
 </body>
 </html>
