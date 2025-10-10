@@ -53,6 +53,49 @@ function updateStatus(message: string): void {
     }
 }
 
+function handleTimelineKeyboardActivation(event: KeyboardEvent): void {
+    if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        const target = event.target as HTMLElement;
+
+        // Check if there's already an open popover
+        const openPopovers = document.querySelectorAll(".popover.modal-in");
+
+        if (openPopovers.length > 0 && myApp) {
+            // If a popover is open, close it
+            openPopovers.forEach(popover => {
+                const popoverInstance = myApp!.popover.get(popover as HTMLElement);
+                if (popoverInstance) {
+                    popoverInstance.close();
+                }
+            });
+        } else {
+            // If no popover is open, simulate a click to trigger Framework7's popover handling
+            target.click();
+        }
+    }
+}
+
+function handlePopoverDismissalKeys(event: KeyboardEvent): void {
+    // Check if any popovers are open
+    const openPopovers = document.querySelectorAll(".popover.modal-in");
+
+    if (event.key === "Escape") {
+        // Escape always closes popovers if they're open
+        if (openPopovers.length > 0 && myApp) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            openPopovers.forEach(popover => {
+                const popoverInstance = myApp!.popover.get(popover as HTMLElement);
+                if (popoverInstance) {
+                    popoverInstance.close();
+                }
+            });
+        }
+    }
+}
+
 function addCalloutEntry(name: string, value: string | number | null, parent: HTMLElement): void {
     if (value) {
         const p = document.createElement("p");
@@ -181,6 +224,10 @@ function buildViews(headers: string): void {
                 const timelineInner = document.createElement("div");
                 timelineInner.className = "timeline-item-inner link popover-open";
                 timelineInner.setAttribute("data-popover", ".popover-" + i);
+                timelineInner.setAttribute("tabindex", "0");
+                timelineInner.setAttribute("role", "button");
+                timelineInner.setAttribute("aria-label", `View details for message received at ${currentTime.format("h:mm:ss")} from ${row.from}`);
+                timelineInner.addEventListener("keydown", handleTimelineKeyboardActivation);
                 currentTimeEntry.appendChild(timelineInner);
 
                 const timelineTime = document.createElement("div");
@@ -229,6 +276,10 @@ function buildViews(headers: string): void {
                 const timelineInner = document.createElement("div");
                 timelineInner.className = "timeline-item-inner link popover-open";
                 timelineInner.setAttribute("data-popover", ".popover-" + i);
+                timelineInner.setAttribute("tabindex", "0");
+                timelineInner.setAttribute("role", "button");
+                timelineInner.setAttribute("aria-label", `View details for message received at ${entryTime.format("h:mm:ss")} to ${row.by}`);
+                timelineInner.addEventListener("keydown", handleTimelineKeyboardActivation);
                 currentTimeEntry.appendChild(timelineInner);
 
                 const timelineTime = document.createElement("div");
@@ -507,6 +558,7 @@ document.addEventListener("DOMContentLoaded", function() {
         initializeFramework7();
         updateStatus(mhaStrings.mhaLoading);
         window.addEventListener("message", eventListener, false);
+        document.addEventListener("keydown", handlePopoverDismissalKeys);
         Poster.postMessageToParent("frameActive");
     }
     catch (e) {
