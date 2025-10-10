@@ -1,3 +1,5 @@
+@import url("themeColors.css");
+
 /* Base
 ***************************************************************/
 html { overflow: hidden; }
@@ -5,23 +7,23 @@ body { margin: 0; padding: 1em; font-size: 62.5%; line-height: 1.4em; }
 
 /* Typography
 ***************************************************************/
-body { font-size:.75em; font-family: "Segoe WP ", "Segoe UI", "Arial", sans-serif; color: #555; }
+body { font-size:.75em; font-family: "Segoe WP ", "Segoe UI", "Arial", sans-serif; color: var(--text-secondary); }
 h1, h2, h3{ font-family:"Segoe WP Light", "Segoe UI", "Arial", Sans-Serif; font-weight: normal; }
 h4, h5, h6, th { font-family:"Segoe WP Semibold", "Segoe UI", "Arial", Sans-Serif; font-weight: normal; }
 h1 { font-size: 1.8em; line-height:.95em; }
 h2 { font-size: 1.4em; line-height: 1.1em; }
 h3 { font-size: 1.1em; }
 h4, h5, h6 { font-size: 1em; }
-form { font-family: "Segoe WP", "Segoe UI", "Arial", sans-serif; color: #555; }
-legend { font-family: "Segoe WP Semibold", "Segoe UI", "Arial", sans-serif; color: #555; }
-input, select, textarea, button { font-family: "Segoe WP Semibold", "Segoe UI", "Arial", sans-serif; color: #444; }
+form { font-family: "Segoe WP", "Segoe UI", "Arial", sans-serif; color: var(--text-secondary); }
+legend { font-family: "Segoe WP Semibold", "Segoe UI", "Arial", sans-serif; color: var(--text-secondary); }
+input, select, textarea, button { font-family: "Segoe WP Semibold", "Segoe UI", "Arial", sans-serif; color: var(--text-primary); }
 blockquote { font-style: italic; margin-left: 1em; }
 
 /* Links
 ***************************************************************/
-a { color: #000000; text-decoration: underline; }
-a:visited { color: #000000; }
-a:hover { color: #444; text-decoration: none; }
+a { color: var(--link-default); text-decoration: underline; }
+a:visited { color: var(--link-visited); }
+a:hover { color: var(--link-hover); text-decoration: none; }
 a:focus {
     outline: #0072cc solid 2px;
     outline-offset: 2px;
@@ -34,7 +36,7 @@ h1 a { text-decoration: none; }
 div { padding-bottom: 1em; }
 ul { margin-left: 1em; padding: 0; }
 p { padding: 0; }
-hr { border: none; height: 1px; color:#ebebeb; background-color:#ebebeb; }
+hr { border: none; height: 1px; color: var(--border-light-gray); background-color: var(--border-light-gray); }
 
 /* Embedded
 ***************************************************************/

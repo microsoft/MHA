@@ -8,6 +8,13 @@ export const mhaStrings = {
     mhaMessageMissing: "Message not located.",
     mhaRequestFailed: "Failed to retrieve headers.",
 
+    // Status Messages for Actions
+    mhaAnalyzed: "Headers analyzed successfully",
+    mhaCleared: "Headers cleared",
+    mhaCopied: "Copied to clipboard!",
+    mhaNoHeaders: "Please enter headers to analyze",
+    mhaNothingToCopy: "No analysis results to copy",
+
     // Headers
     mhaNegative: "-",
     mhaMinute: "minute",

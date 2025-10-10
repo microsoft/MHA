@@ -25,8 +25,6 @@ provideFluentDesignSystem().register(
     fluentToolbar()
 );
 
-/* global Office */
-
 Office.onReady(async (info) => {
     if (info.host === Office.HostType.Outlook) {
         await initializeAuthMethod();

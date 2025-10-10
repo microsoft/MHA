@@ -109,6 +109,7 @@ export class Table {
         const table = document.getElementById(section.tableName);
         if (table) {
             table.setAttribute("aria-label", section.getAriaLabel());
+            table.setAttribute("role", "table");
         }
     }
 
@@ -130,11 +131,11 @@ export class Table {
                         headerCell.textContent = summaryRow.label;
                     }
                     headerCell.classList.add("summaryHeader");
-                    headerCell.setAttribute("id", summaryRow.id);
+                    headerCell.setAttribute("id", summaryRow.header + "_id" + tag);
 
                     const valCell = row.insertCell(-1);
                     valCell.setAttribute("id", id + "Val");
-                    valCell.setAttribute("aria-labelledby", summaryRow.id);
+                    valCell.setAttribute("aria-labelledby", summaryRow.header + "_id" + tag);
 
                     this.makeVisible("#" + id, false);
                 }
@@ -143,12 +144,12 @@ export class Table {
     }
 
     private setArrows(table: string, colName: string, sortOrder: number): void {
-        const buttons = document.querySelectorAll(`#${table} th button`);
-        buttons.forEach(button => button.setAttribute("aria-sort", "none"));
+        const headers = document.querySelectorAll(`#${table} th[role="columnheader"]`);
+        headers.forEach(header => header.setAttribute("aria-sort", "none"));
 
         const targetButton = document.querySelector(`#${table} th #${colName}`);
-        if (targetButton) {
-            targetButton.setAttribute("aria-sort", sortOrder === 1 ? "descending" : "ascending");
+        if (targetButton && targetButton.parentElement) {
+            targetButton.parentElement.setAttribute("aria-sort", sortOrder === 1 ? "descending" : "ascending");
         }
     }
 
@@ -242,10 +243,10 @@ export class Table {
             if (receivedHeadersTable) {
                 receivedHeadersTable.appendChild(row); // Must happen before we append cells to appease IE7
             }
-            this.appendCell(row, receivedRow.hop.value, "", "", "hop");
-            this.appendCell(row, receivedRow.from.value, "", "", "from");
-            this.appendCell(row, receivedRow.by.value, "", "", "by");
-            this.appendCell(row, receivedRow.date.value, "", "", "date");
+            this.appendCell(row, receivedRow.hop.value, "", "", "hop_header");
+            this.appendCell(row, receivedRow.from.value, "", "", "from_header");
+            this.appendCell(row, receivedRow.by.value, "", "", "by_header");
+            this.appendCell(row, receivedRow.date.value, "", "", "date_header");
             let labelClass = "hotBarLabel";
             if (receivedRow.delaySort.value !== null && typeof receivedRow.delaySort.value === "number" && receivedRow.delaySort.value < 0) {
                 labelClass += " negativeCell";
@@ -256,11 +257,11 @@ export class Table {
                 "   <div class='" + labelClass + "'>" + receivedRow.delay + "</div>" +
                 "   <div class='hotBarBar' style='width:" + receivedRow.percent + "%'></div>" +
                 "</div>";
-            this.appendCell(row, "", hotBar, "hotBarCell", "delay");
-            this.appendCell(row, receivedRow.with.value, "", "", "with");
-            this.appendCell(row, receivedRow.id.value, "", "extraCol", "id");
-            this.appendCell(row, receivedRow.for.value, "", "extraCol", "for");
-            this.appendCell(row, receivedRow.via.value, "", "extraCol", "via");
+            this.appendCell(row, "", hotBar, "hotBarCell", "delay_header");
+            this.appendCell(row, receivedRow.with.value, "", "", "with_header");
+            this.appendCell(row, receivedRow.id.value, "", "extraCol", "id_header");
+            this.appendCell(row, receivedRow.for.value, "", "extraCol", "for_header");
+            this.appendCell(row, receivedRow.via.value, "", "extraCol", "via_header");
         });
 
         // Calculate heights for the hotbar cells (progress bars in Delay column)
@@ -298,9 +299,9 @@ export class Table {
             if (otherHeadersTable) {
                 otherHeadersTable.appendChild(row); // Must happen before we append cells to appease IE7
             }
-            this.appendCell(row, otherRow.number.toString(), "", "", "number");
-            this.appendCell(row, otherRow.header, otherRow.url, "", "header");
-            this.appendCell(row, otherRow.value, "", "allowBreak", "value");
+            this.appendCell(row, otherRow.number.toString(), "", "", "number_header");
+            this.appendCell(row, otherRow.header, otherRow.url, "", "header_header");
+            this.appendCell(row, otherRow.value, "", "allowBreak", "value_header");
         });
 
         const otherRows = document.querySelectorAll("#otherHeaders tr:nth-child(odd)");
@@ -315,13 +316,15 @@ export class Table {
     private makeSortableColumn(tableName: string, column: Column): HTMLTableCellElement {
         const header = document.createElement("th");
         if (header !== null) {
+            header.setAttribute("role", "columnheader");
+            header.setAttribute("aria-sort", "none");
+            header.setAttribute("id", column.id + "_header"); // Add unique ID for headers attribute
+
             const headerButton = document.createElement("button");
             if (headerButton !== null) {
                 headerButton.setAttribute("class", "tableHeaderButton");
                 headerButton.setAttribute("id", column.id);
                 headerButton.setAttribute("type", "button");
-                headerButton.setAttribute("role", "columnheader");
-                headerButton.setAttribute("aria-sort", "none");
                 headerButton.innerHTML = column.label;
                 if (column.class !== null) {
                     headerButton.setAttribute("class", "tableHeaderButton " + column.class);
@@ -358,6 +361,7 @@ export class Table {
 
             const headerRow = document.createElement("tr");
             headerRow.classList.add("tableHeader");
+            headerRow.setAttribute("role", "row");
             tableHeader.appendChild(headerRow); // Must happen before we append cells to appease IE7
 
             columns.forEach((column: Column) => {

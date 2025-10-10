@@ -71,6 +71,7 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement) {
         const link = document.createElement("a");
         link.className = "item-content item-link";
         link.setAttribute("role", "button"); // Fix for the Bug 1691252- To announce link item as role button
+        link.setAttribute("aria-expanded", "false"); // Fix for accessibility - initial state is collapsed
         link.setAttribute("href", "#");
         item.appendChild(link);
 
@@ -420,20 +421,35 @@ function setupAccordionAccessibility(): void {
     DomUtils.setAccessibilityState(collapsedContentSelector, true, false);
     DomUtils.makeFocusableElementsNonTabbable(collapsedContentSelector);
 
+    // Set initial aria-expanded state for all accordion buttons
+    const accordionButtons = document.querySelectorAll(".accordion-item .item-link[role='button']");
+    accordionButtons.forEach((button) => {
+        (button as HTMLElement).setAttribute("aria-expanded", "false");
+    });
+
     document.addEventListener("accordion:opened", (event) => {
         const target = event.target as HTMLElement;
         const content = target.querySelector(".accordion-item-content");
+        const button = target.querySelector(".item-link[role='button']");
+
         if (content) {
             const contentElement = content as HTMLElement;
             contentElement.setAttribute("aria-hidden", "false");
             contentElement.style.visibility = "visible";
             DomUtils.restoreFocusableElements(".accordion-item-content");
         }
+
+        // Update aria-expanded to true when accordion opens
+        if (button) {
+            (button as HTMLElement).setAttribute("aria-expanded", "true");
+        }
     });
 
     document.addEventListener("accordion:closed", (event) => {
         const target = event.target as HTMLElement;
         const content = target.querySelector(".accordion-item-content");
+        const button = target.querySelector(".item-link[role='button']");
+
         if (content) {
             const contentElement = content as HTMLElement;
             contentElement.setAttribute("aria-hidden", "true");
@@ -444,6 +460,11 @@ function setupAccordionAccessibility(): void {
             focusableElements.forEach((el) => {
                 (el as HTMLElement).setAttribute("tabindex", "-1");
             });
+        }
+
+        // Update aria-expanded to false when accordion closes
+        if (button) {
+            (button as HTMLElement).setAttribute("aria-expanded", "false");
         }
     });
 }

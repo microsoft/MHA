@@ -159,15 +159,21 @@ describe("Table", () => {
         const by = document.querySelector("#receivedHeaders th #by") as HTMLElement;
         const hop = document.querySelector("#receivedHeaders th #hop") as HTMLElement;
         const number = document.querySelector("#otherHeaders th #number") as HTMLElement;
-        expect(hop.getAttribute("aria-sort")).toBe("descending");
-        expect(by.getAttribute("aria-sort")).toBe("none");
-        expect(number.getAttribute("aria-sort")).toBe("descending");
+
+        // Check aria-sort on the parent th elements instead of buttons
+        const byTh = by?.parentElement as HTMLElement;
+        const hopTh = hop?.parentElement as HTMLElement;
+        const numberTh = number?.parentElement as HTMLElement;
+
+        expect(hopTh.getAttribute("aria-sort")).toBe("descending");
+        expect(byTh.getAttribute("aria-sort")).toBe("none");
+        expect(numberTh.getAttribute("aria-sort")).toBe("descending");
         by.click();
-        expect(hop.getAttribute("aria-sort")).toBe("none");
-        expect(by.getAttribute("aria-sort")).toBe("descending");
+        expect(hopTh.getAttribute("aria-sort")).toBe("none");
+        expect(byTh.getAttribute("aria-sort")).toBe("descending");
         table.resetArrows();
-        expect(hop.getAttribute("aria-sort")).toBe("descending");
-        expect(by.getAttribute("aria-sort")).toBe("none");
+        expect(hopTh.getAttribute("aria-sort")).toBe("descending");
+        expect(byTh.getAttribute("aria-sort")).toBe("none");
     });
 
     describe("TableSection Integration", () => {

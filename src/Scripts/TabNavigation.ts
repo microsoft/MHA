@@ -21,21 +21,30 @@ export class TabNavigation {
 
     // CSS selectors for common UI elements
     private static readonly selectors = {
-        visibleHeaderView: ".header-view[style*=\"display: block\"]",
-        contentMain: ".content-main"
+        visibleHeaderView: ".header-view[style*=\"display: block\"]"
     } as const;
+
+    // Selectors to try for iframe content area in order of preference
+    private static readonly iframeContentSelectors = [
+        ".content-main",
+        ".page-content",
+        ".view",
+        "body"
+    ] as const;
 
     // Element IDs for common UI components
     private static readonly elementIds = {
         uiChoice: "uiChoice",
-        actionsSettingsOk: "actionsSettings-OK",
-        actionsDiagOk: "actionsDiag-OK",
+        settingsDiagButton: "actionsSettings-diag",
+        settingsOkButton: "actionsSettings-OK",
+        diagOkButton: "actionsDiag-OK",
         diagPre: "diagpre",
         copyButton: "copyButton",
         settingsButton: "settingsButton",
         summaryBtn: "summary-btn",
         otherBtn: "other-btn",
-        telemetryInput: "telemetryInput"
+        telemetryInput: "telemetryInput",
+        privacyLink: "privacy-link"
     } as const;
 
     /**
@@ -110,8 +119,13 @@ export class TabNavigation {
         }
 
         // Check if element is visible (offsetParent is null for hidden elements)
+        // Exception: dialog elements may have offsetParent null but still be visible
         if (htmlEl.offsetParent === null) {
-            return false;
+            // Special case: elements inside an open dialog should be considered visible
+            const parentDialog = htmlEl.closest("fluent-dialog:not([hidden])");
+            if (!parentDialog) {
+                return false;
+            }
         }
 
         // For fluent components, they are focusable by default unless explicitly disabled
@@ -120,14 +134,11 @@ export class TabNavigation {
             return true;
         }
 
-        // For standard HTML elements, check tabIndex
-        if (htmlEl.tabIndex < 0) {
-            return false;
-        }
-
-        // For elements with explicit tabindex, they're focusable
+        // For elements with explicit tabindex, check the value
+        // Elements with tabindex="-1" are programmatically focusable but not in tab order
         if (htmlEl.hasAttribute("tabindex")) {
-            return true;
+            const tabIndexValue = parseInt(htmlEl.getAttribute("tabindex") || "0", 10);
+            return tabIndexValue >= 0;
         }
 
         // Standard focusable elements
@@ -163,6 +174,11 @@ export class TabNavigation {
      * Sets up all keyboard event handling for cross-frame tab navigation
      */
     public static initialize(): void {
+        // Add debug CSS class to enable visual focus indicators when debugging
+        if (TabNavigation.debugEnabled) {
+            document.body.classList.add("tab-navigation-debug");
+        }
+
         TabNavigation.initializeParentFrameTabHandling();
     }
 
@@ -227,43 +243,105 @@ export class TabNavigation {
      * and cross-frame communication with iframe content
      */
     public static initializeParentFrameTabHandling(): void {
+        let lastFocusedBeforeTab: HTMLElement | null = null;
+
+        // Capture the focused element BEFORE tab processing
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Tab") {
+                lastFocusedBeforeTab = document.activeElement as HTMLElement;
+            }
+        }, true); // Use capture phase to run BEFORE other handlers
+
         // Tabbing into the radio buttons doesn't do what we want by default, so watch for tabbing and handle all the cases
         document.addEventListener("keydown", function (e) {
             if (e.key === "Tab") {
                 const shiftPressed = e.shiftKey;
-                const focused: HTMLElement = document.activeElement as HTMLElement;
+                const focused: HTMLElement = lastFocusedBeforeTab || (document.activeElement as HTMLElement);
 
-                // Get the currently checked radio button in Fluent UI
-                const radioGroup = document.getElementById(TabNavigation.elementIds.uiChoice) as FluentRadioGroup;
-                const checkedRadio = radioGroup?.querySelector("fluent-radio[checked]") as HTMLElement;
-
+                // Determine the target element for this tab operation
                 let targetResult: TabTargetResult | null = null;
 
-                // Tab forward from body, or OK should go to radio buttons
-                // Tab backwards from telemetry checkbox should go to radio buttons
-                if ((!shiftPressed && focused === document.body) ||
-                    (!shiftPressed && focused.id === TabNavigation.elementIds.actionsSettingsOk) ||
-                    (shiftPressed && focused.id === TabNavigation.elementIds.telemetryInput)) {
-                    targetResult = { element: checkedRadio, routine: "radioButtonNavigation" };
-                }
-                // Shift tab from radio buttons or body should go to OK
-                else if ((shiftPressed && focused.tagName.toLowerCase() === "fluent-radio") ||
-                    (shiftPressed && focused === document.body)) {
-                    targetResult = { element: document.getElementById(TabNavigation.elementIds.actionsSettingsOk), routine: "toOKButton" };
-                }
-                // Tab or shift tab from diagnostics OK should go to code
-                else if (focused.id === TabNavigation.elementIds.actionsDiagOk) {
-                    targetResult = { element: document.getElementById(TabNavigation.elementIds.diagPre), routine: "diagnosticsNavigation" };
-                }
+                // Check if we're in a dialog - if so, implement circular tab navigation
+                const openDialog = document.querySelector("fluent-dialog:not([hidden])") as HTMLElement;
+                if (openDialog && openDialog.contains(focused)) {
 
+                    // Define the dialog tab order
+                    const radioGroup = document.getElementById(TabNavigation.elementIds.uiChoice) as FluentRadioGroup;
+                    let checkedRadio = radioGroup?.querySelector("fluent-radio[checked]") as HTMLElement;
+
+                    // Find the correct current radio button using Fluent UI Web Components attributes
+                    if (!checkedRadio && radioGroup) {
+                        const allRadios = radioGroup.querySelectorAll("fluent-radio");
+
+                        // Try to find the actually selected radio button
+                        checkedRadio = Array.from(allRadios).find(r =>
+                            r.getAttribute("current-checked") === "true" ||
+                            r.getAttribute("aria-checked") === "true" ||
+                            r.hasAttribute("checked")
+                        ) as HTMLElement;
+
+                        // If still not found, use the radio group value to find it
+                        if (!checkedRadio && radioGroup.value) {
+                            checkedRadio = radioGroup.querySelector(`fluent-radio[current-value="${radioGroup.value}"]`) as HTMLElement;
+                        }
+                    }
+
+                    const telemetryCheckbox = document.getElementById(TabNavigation.elementIds.telemetryInput);
+                    const privacyLink = document.getElementById(TabNavigation.elementIds.privacyLink) as HTMLElement;
+                    const settingsDiagButton = document.getElementById(TabNavigation.elementIds.settingsDiagButton);
+                    const settingsOkButton = document.getElementById(TabNavigation.elementIds.settingsOkButton);
+                    // Cheat and handle both dialogs as one - missing elements doesn't break our logic
+                    const diagPre = document.getElementById(TabNavigation.elementIds.diagPre);
+                    const diagOkButton = document.getElementById(TabNavigation.elementIds.diagOkButton);
+
+                    const dialogTabOrder = [
+                        checkedRadio,
+                        telemetryCheckbox,
+                        privacyLink,
+                        settingsDiagButton,
+                        settingsOkButton,
+                        diagPre,
+                        diagOkButton
+                    ].filter(el => el) as HTMLElement[];
+
+                    const currentIndex = dialogTabOrder.indexOf(focused);
+
+                    if (currentIndex !== -1) {
+                        // Calculate next/previous index with circular wrap-around
+                        let targetIndex;
+                        if (shiftPressed) {
+                            // Shift+Tab: go to previous element, wrap to last if at first
+                            targetIndex = currentIndex === 0 ? dialogTabOrder.length - 1 : currentIndex - 1;
+                        } else {
+                            // Tab: go to next element, wrap to first if at last
+                            targetIndex = currentIndex === dialogTabOrder.length - 1 ? 0 : currentIndex + 1;
+                        }
+
+                        const targetElement = dialogTabOrder[targetIndex];
+                        if (targetElement) {
+                            targetResult = { element: targetElement, routine: "dialogCircularNavigation" };
+                        }
+                    } else {
+                        // Focus is outside the tab order but in dialog - force to first element
+                        if (dialogTabOrder.length > 0 && dialogTabOrder[0]) {
+                            targetResult = { element: dialogTabOrder[0], routine: "dialogRecovery" };
+                        }
+                    }
+                }
                 // Insert the settings and copy buttons into the tab order for the ribbon if we have one
                 // This handles tabbing out from these buttons.
                 // Tabbing into these buttons is handled in iframe
-                if (!shiftPressed && focused.id === TabNavigation.elementIds.settingsButton) {
+                else if (!shiftPressed && focused.id === TabNavigation.elementIds.copyButton) {
+                    targetResult = TabNavigation.getTabFromCopyButtonTarget();
+                }
+                else if (!shiftPressed && focused.id === TabNavigation.elementIds.settingsButton) {
                     targetResult = TabNavigation.getTabFromSettingsButtonTarget();
                 }
                 else if (shiftPressed && focused.id === TabNavigation.elementIds.copyButton) {
                     targetResult = TabNavigation.getShiftTabFromCopyButtonTarget();
+                }
+                else if (shiftPressed && focused.id === TabNavigation.elementIds.settingsButton) {
+                    targetResult = TabNavigation.getShiftTabFromSettingsButtonTarget();
                 }
 
                 // If we found a target element, log details and set focus
@@ -271,6 +349,7 @@ export class TabNavigation {
                     TabNavigation.logDetailedTabInfo(focused, shiftPressed, "parent", targetResult.element, targetResult.routine);
                     targetResult.element.focus();
                     e.preventDefault();
+                    e.stopPropagation();
                 } else {
                     TabNavigation.logDetailedTabInfo(focused, shiftPressed, "parent");
                 }
@@ -335,7 +414,15 @@ export class TabNavigation {
      */
     private static getTabFromSettingsButtonTarget(): TabTargetResult {
         // Find first header-view which is visible, but skip the tab buttons
-        const view = TabNavigation.iFrame?.document.querySelector(TabNavigation.selectors.contentMain) as HTMLElement | null;
+        let view: HTMLElement | null = null;
+
+        if (TabNavigation.iFrame?.document) {
+            for (const selector of TabNavigation.iframeContentSelectors) {
+                view = TabNavigation.iFrame.document.querySelector(selector) as HTMLElement | null;
+                if (view) break;
+            }
+        }
+
         if (view) {
             const tabStops = TabNavigation.findTabStops(view);
 
@@ -348,6 +435,26 @@ export class TabNavigation {
         return {
             element: null,
             routine: "getTabFromSettingsButtonTarget"
+        };
+    }
+
+    /**
+     * Get target element when shift+tabbing from settings button in parent frame
+     */
+    private static getShiftTabFromSettingsButtonTarget(): TabTargetResult {
+        return {
+            element: document.getElementById(TabNavigation.elementIds.copyButton) || null,
+            routine: "getShiftTabFromSettingsButtonTarget"
+        };
+    }
+
+    /**
+     * Get target element when tabbing from copy button in parent frame
+     */
+    private static getTabFromCopyButtonTarget(): TabTargetResult {
+        return {
+            element: document.getElementById(TabNavigation.elementIds.settingsButton) || null,
+            routine: "getTabFromCopyButtonTarget"
         };
     }
 

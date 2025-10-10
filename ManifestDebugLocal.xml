@@ -12,8 +12,8 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Message Header Analyzer Debug Local" />
   <Description DefaultValue="Microsoft Message Header Analyzer Debug Local" />
-  <IconUrl DefaultValue="https://localhost:44336/Resources/mhaLogo64.jpg" />
-  <HighResolutionIconUrl DefaultValue="https://localhost:44336/Resources/mhaLogo128.jpg" />
+  <IconUrl DefaultValue="https://localhost:44336/src/Resources/mhaLogo64.jpg" />
+  <HighResolutionIconUrl DefaultValue="https://localhost:44336/src/Resources/mhaLogo128.jpg" />
   <SupportUrl DefaultValue="https://github.com/microsoft/MHA/issues" />
   <Hosts>
     <Host Name="Mailbox" />
@@ -93,9 +93,9 @@
     <Resources>
       <bt:Images>
         <!-- MHA icon -->
-        <bt:Image id="mha-icon-16" DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg"/>
-        <bt:Image id="mha-icon-32" DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg"/>
-        <bt:Image id="mha-icon-80" DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-16" DefaultValue="https://localhost:44336/src/Resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-32" DefaultValue="https://localhost:44336/src/Resources/mhaLogo.jpg"/>
+        <bt:Image id="mha-icon-80" DefaultValue="https://localhost:44336/src/Resources/mhaLogo.jpg"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="functionFile" DefaultValue="https://localhost:44336/Pages/Functions.html"/>
@@ -187,14 +187,14 @@
       <Resources>
         <bt:Images>
           <!-- MHA icon -->
-          <bt:Image id="mha-icon-16" DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg"/>
-          <bt:Image id="mha-icon-32" DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg"/>
-          <bt:Image id="mha-icon-80" DefaultValue="https://localhost:44336/Resources/mhaLogo.jpg"/>
+          <bt:Image id="mha-icon-16" DefaultValue="https://localhost:44336/src/Resources/mhaLogo.jpg"/>
+          <bt:Image id="mha-icon-32" DefaultValue="https://localhost:44336/src/Resources/mhaLogo.jpg"/>
+          <bt:Image id="mha-icon-80" DefaultValue="https://localhost:44336/src/Resources/mhaLogo.jpg"/>
         </bt:Images>
         <bt:Urls>
           <bt:Url id="functionFile" DefaultValue="https://localhost:44336/Pages/Functions.html"/>
           <bt:Url id="mhaDesktopPaneUrl" DefaultValue="https://localhost:44336/Pages/DesktopPane.html"/>
-<bt:Url id="mhaMobilePaneUrl" DefaultValue="https://localhost:44336/Pages/MobilePane.html"/>
+          <bt:Url id="mhaMobilePaneUrl" DefaultValue="https://localhost:44336/Pages/MobilePane.html"/>
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="groupLabel" DefaultValue=" "/>
