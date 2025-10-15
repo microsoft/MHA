@@ -8,10 +8,10 @@ import "../../Content/DesktopPane.css";
 // Import required modules
 import $ from "jquery";
 
+import { RuleStore } from "../rules/loaders/GetRules";
+import { AndValidationRuleClass } from "../rules/types/AndValidationRule";
 import { ImportedStrings } from "../Strings";
 import { AddRuleFlagged, FlagRuleViolations, HeaderModel, mapHeaderToURL } from "../table/Headers";
-import { AndValidationRuleClass } from "../utils/AndValidationRule";
-import { RuleStore } from "../utils/GetRules";
 
 // Module-level variables
 let overlay = null;

@@ -1,7 +1,7 @@
-﻿// This class allows for And'ing of rules together to make a more complex rule.  This rule is flagged
+// This class allows for And'ing of rules together to make a more complex rule.  This rule is flagged
 // if all of the Rules to And are flagged.
 
-import { FindSectionSubSection } from "./HeaderValidationRules";
+import { FindSectionSubSection } from "../engine/HeaderValidationRules";
 
 // Construct an AndValidationRuleClass instance
 // errorMessage - error message to show if rule is flagged

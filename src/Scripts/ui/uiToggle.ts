@@ -7,8 +7,8 @@ import "../../Content/uiToggle.css";
 import $ from "jquery";
 
 import { isError, joinArray, parseError } from "../Errors";
-import { AndRuleSet, GetRules, SimpleRuleSet } from "../utils/GetRules";
 import { sendHeadersRequest } from "./getHeaders/GetHeaders";
+import { AndRuleSet, GetRules, SimpleRuleSet } from "../rules/loaders/GetRules";
 
 export let viewModel = null;
 export const UiModel = function () {

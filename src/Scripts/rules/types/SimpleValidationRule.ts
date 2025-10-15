@@ -1,10 +1,8 @@
-﻿// A validation to verify that a header section exists.  The rule is of the format:
+// A validation rule is a single, simple rule.  The rule is of the format:
 //
 //  IF regularExpression exists in section
 //    then display error message on UI for section
 //
-
-import { FindSectionSubSection } from "./HeaderValidationRules";
 
 // rule counter to assign unique rule numbers to each rule (internal number only)
 export let UniqueRuleNumber = 0;
@@ -15,9 +13,10 @@ export let UniqueRuleNumber = 0;
 // errorMessage - Message to show when regular expression is found
 // reportSection - Where on the UI to show the error message
 // cssEntryPrefix - prefix (appended with 'Text') to define the Text format in the CSS to use when showing message
-export const HeaderSectionMissingRule = function ( checkSection, errorMessage, reportSection, cssEntryPrefix )
+export const SimpleValidationRule = function ( checkSection, errorPattern, errorMessage, reportSection, cssEntryPrefix )
 {
     this.checkSection = checkSection;
+    this.errorPattern = errorPattern;
     this.errorMessage = errorMessage || "";
 
     // Make sure reporting section is an array
@@ -42,14 +41,24 @@ export const HeaderSectionMissingRule = function ( checkSection, errorMessage, r
     this.primaryRule = true;
 };
 
-// Determine if the rule is violated by the header sections passed in.
-// setOfSections - set of sections being displayed.  An array of sections that are displayed on the UI,
-// where each entry in the array is an array of the portions of the header that are displayed in on that
-// section within the UI.
-HeaderSectionMissingRule.prototype.ViolatesComplexRule = function (setOfSections) {
+/// Test this rule to see if it 'matches'
+/// section - Section in the header that contains this text
+/// sectionText - Text of the section within the email header
+///
+/// returns : null if no match, otherwise the text that matched the errorPattern Regular Expression
+SimpleValidationRule.prototype.ViolatesRule = function ( section, sectionText )
+{
 
-    // FOREACH section find instance of section to look for in that group of sections
-    const sectionDefinition = FindSectionSubSection(setOfSections, this.checkSection);
+    if ( section === this.checkSection )
+    {
 
-    return sectionDefinition.length == 0;
+        const matches = sectionText.match( this.errorPattern );
+
+        if ( matches && matches.length > 0 )
+        {
+            return matches[0];
+        }
+    }
+
+    return null;
 };

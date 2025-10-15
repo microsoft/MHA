@@ -4,8 +4,8 @@ import { AntiSpamReport } from "../row/Antispam";
 import { ForefrontAntiSpamReport } from "../row/ForefrontAntispam";
 import { Other } from "../row/Other";
 import { Received } from "../row/Received";
-import { AndRuleSet, SimpleRuleSet } from "../utils/GetRules";
-import { HeaderValidationRules } from "../utils/HeaderValidationRules";
+import { HeaderValidationRules } from "../rules/engine/HeaderValidationRules";
+import { AndRuleSet, SimpleRuleSet } from "../rules/loaders/GetRules";
 
 export const HeaderModel = function (headers) {
     // Initialize defaults

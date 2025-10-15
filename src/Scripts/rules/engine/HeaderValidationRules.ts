@@ -1,7 +1,7 @@
-﻿import { AndValidationRuleClass } from "./AndValidationRule";
-import { HeaderSectionMissingRule } from "./HeaderSectionMissingRule";
-import { SimpleValidationRule } from "./SimpleValidationRule";
-import { AddRuleFlagged } from "../table/Headers";
+import { AddRuleFlagged } from "../../table/Headers";
+import { AndValidationRuleClass } from "../types/AndValidationRule";
+import { HeaderSectionMissingRule } from "../types/HeaderSectionMissingRule";
+import { SimpleValidationRule } from "../types/SimpleValidationRule";
 
 // Create instance of the HeaderValidationRules.
 // overrideCreateRuleSetFunction - function to define the rules to put into header validation rules.  If undefined

@@ -1,4 +1,4 @@
-﻿export let AlreadyRetrievedRules = false;
+export let AlreadyRetrievedRules = false;
 
 // Use objects to avoid binding issues with let exports
 export const RuleStore = {
@@ -43,7 +43,7 @@ export function GetRules(doOnCompletion?, doWhileStillRunning?) {
         try {
             console.log("🔍 GetRules: loadLocalRules - Loading from local JSON file");
 
-            // Import the rules data (webpack will handle this at build time)
+            // Fetch the rules data (webpack will handle this at build time)
             const response = await fetch("/Pages/data/rules.json");
 
             if (!response.ok) {
