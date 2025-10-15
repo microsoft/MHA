@@ -1,8 +1,6 @@
 import { GetHeaders } from "./GetHeaders";
-import { diagnostics } from "../../Diag";
-import { Errors } from "../../Errors";
-import { mhaStrings } from "../../mhaStrings";
-import { ParentFrame } from "../../ParentFrame";
+import { ImportedStrings } from "../../Strings";
+import { LogError, ShowError, UpdateStatus } from "../uiToggle";
 
 /*
  * GetHeadersAPI.js
@@ -25,8 +23,7 @@ export class GetHeadersAPI {
                 if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
                     resolve(asyncResult.value);
                 } else {
-                    diagnostics.set("getAllInternetHeadersAsyncFailure", JSON.stringify(asyncResult));
-                    Errors.log(asyncResult.error, "getAllInternetHeadersAsync failed.\nFallback to Rest.\n" + JSON.stringify(asyncResult, null, 2), true);
+                    LogError(asyncResult.error, "getAllInternetHeadersAsync failed.\nFallback to Rest.\n" + JSON.stringify(asyncResult, null, 2), true);
                     resolve("");
                 }
             });
@@ -35,7 +32,7 @@ export class GetHeadersAPI {
 
     public static async send(): Promise<string> {
         if (!GetHeaders.validItem() || !Office.context.mailbox.item) {
-            Errors.logMessage("No item selected (API)");
+            LogError(null, "No item selected (API)", true);
             return "";
         }
 
@@ -43,14 +40,14 @@ export class GetHeadersAPI {
             return "";
         }
 
-        ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
+        UpdateStatus(ImportedStrings.mha_RequestSent);
 
         try {
             const headers = await GetHeadersAPI.getAllInternetHeaders(Office.context.mailbox.item);
             return headers;
         }
         catch (e) {
-            Errors.log(e, "Failed in getAllInternetHeadersAsync");
+            LogError(e, "Failed in getAllInternetHeadersAsync", false);
         }
 
         return "";

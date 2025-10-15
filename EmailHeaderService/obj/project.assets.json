@@ -1,0 +1,599 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v4.7.2": {
+      "Microsoft.AspNet.Cors/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net45/System.Web.Cors.dll": {}
+        },
+        "runtime": {
+          "lib/net45/System.Web.Cors.dll": {}
+        }
+      },
+      "Microsoft.AspNet.Razor/1.0.20105.408": {
+        "type": "package",
+        "compile": {
+          "lib/net40/System.Web.Razor.dll": {}
+        },
+        "runtime": {
+          "lib/net40/System.Web.Razor.dll": {}
+        }
+      },
+      "Microsoft.AspNet.WebApi.Client/4.0.20505": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Net.Http": "2.0.20505",
+          "Newtonsoft.Json": "4.5.1"
+        },
+        "compile": {
+          "lib/net40/System.Net.Http.Formatting.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net40/System.Net.Http.Formatting.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.AspNet.WebApi.Core/4.0.20505": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "4.0.20505"
+        },
+        "compile": {
+          "lib/net40/System.Web.Http.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net40/System.Web.Http.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.AspNet.WebApi.Cors/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNet.Cors": "5.0.0",
+          "Microsoft.AspNet.WebApi.Core": "5.0.0"
+        },
+        "compile": {
+          "lib/net45/System.Web.Http.Cors.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net45/System.Web.Http.Cors.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.AspNet.WebApi.WebHost/4.0.20505": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Core": "4.0.20505",
+          "Microsoft.Web.Infrastructure": "1.0.0"
+        },
+        "compile": {
+          "lib/net40/System.Web.Http.WebHost.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net40/System.Web.Http.WebHost.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.AspNet.WebPages/1.0.20105.408": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNet.Razor": "1.0.20105.408",
+          "Microsoft.Web.Infrastructure": "1.0.0"
+        },
+        "compile": {
+          "lib/net40/System.Web.Helpers.dll": {},
+          "lib/net40/System.Web.WebPages.Deployment.dll": {},
+          "lib/net40/System.Web.WebPages.Razor.dll": {},
+          "lib/net40/System.Web.WebPages.dll": {}
+        },
+        "runtime": {
+          "lib/net40/System.Web.Helpers.dll": {},
+          "lib/net40/System.Web.WebPages.Deployment.dll": {},
+          "lib/net40/System.Web.WebPages.Razor.dll": {},
+          "lib/net40/System.Web.WebPages.dll": {}
+        }
+      },
+      "Microsoft.IdentityModel.Logging/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net451/Microsoft.IdentityModel.Logging.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net451/Microsoft.IdentityModel.Logging.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Tokens/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Logging": "1.0.0",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "frameworkAssemblies": [
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net451/Microsoft.IdentityModel.Tokens.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net451/Microsoft.IdentityModel.Tokens.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.Net.Http/2.0.20505": {
+        "type": "package",
+        "compile": {
+          "lib/net40/System.Net.Http.WebRequest.dll": {
+            "related": ".xml"
+          },
+          "lib/net40/System.Net.Http.dll": {
+            "related": ".WebRequest.xml;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net40/System.Net.Http.WebRequest.dll": {
+            "related": ".xml"
+          },
+          "lib/net40/System.Net.Http.dll": {
+            "related": ".WebRequest.xml;.xml"
+          }
+        }
+      },
+      "Microsoft.Web.Infrastructure/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net40/Microsoft.Web.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Microsoft.Web.Infrastructure.dll": {}
+        }
+      },
+      "newtonsoft.json/1.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/Newtonsoft.Json.dll": {}
+        }
+      },
+      "System.IdentityModel.Tokens.Jwt/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net45/System.IdentityModel.Tokens.Jwt.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net45/System.IdentityModel.Tokens.Jwt.dll": {
+            "related": ".xml"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft.AspNet.Cors/5.0.0": {
+      "sha512": "jNwFhEnm0jRlaRCgHEk52hJQltVoM2Bllysv2NtPYrgsVWyS3r5BOtCXkM/lEZ5AdUUBOvha+4QAVcVp1MZp5g==",
+      "type": "package",
+      "path": "microsoft.aspnet.cors/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/System.Web.Cors.dll",
+        "microsoft.aspnet.cors.5.0.0.nupkg.sha512",
+        "microsoft.aspnet.cors.nuspec"
+      ]
+    },
+    "Microsoft.AspNet.Razor/1.0.20105.408": {
+      "sha512": "vRmwL/G31Xc9DusVQUJXmDpTYEVB7xUoIjKqCyuOHrCyG9kzM66MadNjdPLzplSsDoWqiae35US8XiiI3e6SBw==",
+      "type": "package",
+      "path": "microsoft.aspnet.razor/1.0.20105.408",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/System.Web.Razor.dll",
+        "microsoft.aspnet.razor.1.0.20105.408.nupkg.sha512",
+        "microsoft.aspnet.razor.nuspec"
+      ]
+    },
+    "Microsoft.AspNet.WebApi.Client/4.0.20505": {
+      "sha512": "A7/s69xXpCZiqX+FfFJ4srEmZfLEutIMwSfZxD4jJI76/gTbfyl2RUvdFeQTuJuJAN2sBqfeym5ihlPch6JwyQ==",
+      "type": "package",
+      "path": "microsoft.aspnet.webapi.client/4.0.20505",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/System.Net.Http.Formatting.dll",
+        "lib/net40/System.Net.Http.Formatting.xml",
+        "microsoft.aspnet.webapi.client.4.0.20505.nupkg.sha512",
+        "microsoft.aspnet.webapi.client.nuspec"
+      ]
+    },
+    "Microsoft.AspNet.WebApi.Core/4.0.20505": {
+      "sha512": "zlqFwTELr/vlOFuSkSevh4Fufyke9QPswQ3aCWivjAt45NKnj/pSkqE9KCHNOhFcJPQyXW2cFS4YAZBcXGXPQQ==",
+      "type": "package",
+      "path": "microsoft.aspnet.webapi.core/4.0.20505",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/System.Web.Http.dll",
+        "lib/net40/System.Web.Http.xml",
+        "microsoft.aspnet.webapi.core.4.0.20505.nupkg.sha512",
+        "microsoft.aspnet.webapi.core.nuspec"
+      ]
+    },
+    "Microsoft.AspNet.WebApi.Cors/5.0.0": {
+      "sha512": "kZjW7SpXqLHPtnzMzJ+mDZEfoYDUpCNGfWmdp6f7hLt5ncN5fbSF3xCfX4NN71DmcIZJX2MIEubisXyjtpu3aA==",
+      "type": "package",
+      "path": "microsoft.aspnet.webapi.cors/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/System.Web.Http.Cors.dll",
+        "lib/net45/System.Web.Http.Cors.xml",
+        "microsoft.aspnet.webapi.cors.5.0.0.nupkg.sha512",
+        "microsoft.aspnet.webapi.cors.nuspec"
+      ]
+    },
+    "Microsoft.AspNet.WebApi.WebHost/4.0.20505": {
+      "sha512": "urmSpBDl4lbtbTP+DRemT6tGiBZdnsE/erx+GFenSKK6ItKa8v6Ni04YFFh6Os4Ldd1DMelZ9QQIIJSyHuC+dw==",
+      "type": "package",
+      "path": "microsoft.aspnet.webapi.webhost/4.0.20505",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/System.Web.Http.WebHost.dll",
+        "lib/net40/System.Web.Http.WebHost.xml",
+        "microsoft.aspnet.webapi.webhost.4.0.20505.nupkg.sha512",
+        "microsoft.aspnet.webapi.webhost.nuspec"
+      ]
+    },
+    "Microsoft.AspNet.WebPages/1.0.20105.408": {
+      "sha512": "da1//kx0b6GXJG6V8vGl7PmvhPJE/aNs2mK0QJ9bojgy059BDdYhmAwpTT1ucDgbImbFDdmNGi/XJj2SU0QJeA==",
+      "type": "package",
+      "path": "microsoft.aspnet.webpages/1.0.20105.408",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/System.Web.Helpers.dll",
+        "lib/net40/System.Web.WebPages.Deployment.dll",
+        "lib/net40/System.Web.WebPages.Razor.dll",
+        "lib/net40/System.Web.WebPages.dll",
+        "microsoft.aspnet.webpages.1.0.20105.408.nupkg.sha512",
+        "microsoft.aspnet.webpages.nuspec"
+      ]
+    },
+    "Microsoft.IdentityModel.Logging/1.0.0": {
+      "sha512": "Ol7aYJKsY1UDDTnCjXai17G3bJ0Q7Xj97Ao4nCoSU3+sc1/uMaWhCs3RjsZnrapYbdBPtt1xTPbhC8R6M1MqWQ==",
+      "type": "package",
+      "path": "microsoft.identitymodel.logging/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net451/Microsoft.IdentityModel.Logging.dll",
+        "lib/net451/Microsoft.IdentityModel.Logging.xml",
+        "lib/netstandard1.4/Microsoft.IdentityModel.Logging.dll",
+        "lib/netstandard1.4/Microsoft.IdentityModel.Logging.xml",
+        "microsoft.identitymodel.logging.1.0.0.nupkg.sha512",
+        "microsoft.identitymodel.logging.nuspec"
+      ]
+    },
+    "Microsoft.IdentityModel.Tokens/5.0.0": {
+      "sha512": "EINdydCekJeyG+IyaB/3GbIfEeaOIU5GJiMmpCI+G+o1g9RvRHkS1hpG4KCp3J5nOLzr31k+rRtNrEQcJJEGOQ==",
+      "type": "package",
+      "path": "microsoft.identitymodel.tokens/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net451/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net451/Microsoft.IdentityModel.Tokens.xml",
+        "lib/netstandard1.4/Microsoft.IdentityModel.Tokens.dll",
+        "lib/netstandard1.4/Microsoft.IdentityModel.Tokens.xml",
+        "microsoft.identitymodel.tokens.5.0.0.nupkg.sha512",
+        "microsoft.identitymodel.tokens.nuspec"
+      ]
+    },
+    "Microsoft.Net.Http/2.0.20505": {
+      "sha512": "XRsKQP2XEd/DGLerVsU+T2pKQGTFc9ctWsIVbRblL/y+jT/BUo28aJ5mWN40oAeUwwbpXshAc8uO/LRscWav9A==",
+      "type": "package",
+      "path": "microsoft.net.http/2.0.20505",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/System.Net.Http.WebRequest.dll",
+        "lib/net40/System.Net.Http.WebRequest.xml",
+        "lib/net40/System.Net.Http.dll",
+        "lib/net40/System.Net.Http.xml",
+        "microsoft.net.http.2.0.20505.nupkg.sha512",
+        "microsoft.net.http.nuspec"
+      ]
+    },
+    "Microsoft.Web.Infrastructure/1.0.0": {
+      "sha512": "FNmvLn5m2LTU/Rs2KWVo0SIIh9Ek+U0ojex7xeDaSHw/zgEP77A8vY5cVWgUtBGS8MJfDGNn8rpXJWEIQaPwTg==",
+      "type": "package",
+      "path": "microsoft.web.infrastructure/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/Microsoft.Web.Infrastructure.dll",
+        "microsoft.web.infrastructure.1.0.0.nupkg.sha512",
+        "microsoft.web.infrastructure.nuspec"
+      ]
+    },
+    "newtonsoft.json/1.0.1": {
+      "sha512": "MaxSmx0eFPTSFgehzk0mlsKq5qgrlVD4gSMvYUfUeQDE1iM0R1ss2xw4etyr+fsn7T0gvVMwnDPMPXSt0p4ZXg==",
+      "type": "package",
+      "path": "newtonsoft.json/1.0.1",
+      "files": [
+        ".nupkg.metadata",
+        "lib/Newtonsoft.Json.dll",
+        "newtonsoft.json.1.0.1.nupkg.sha512",
+        "newtonsoft.json.nuspec",
+        "newtonsoft.json.psd1",
+        "newtonsoft.json.psm1"
+      ]
+    },
+    "System.IdentityModel.Tokens.Jwt/1.0.0": {
+      "sha512": "Z5pHOvIGFbyID9j4te1kpJD0Km/botsFvf++IemZqQsMwKeCa5O25dS20XzIK5rbW04gtv03ObCxitrxK3vfMQ==",
+      "type": "package",
+      "path": "system.identitymodel.tokens.jwt/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net45/System.IdentityModel.Tokens.Jwt.xml",
+        "system.identitymodel.tokens.jwt.1.0.0.nupkg.sha512",
+        "system.identitymodel.tokens.jwt.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.7.2": [
+      "Microsoft.AspNet.WebApi.Client",
+      "Microsoft.AspNet.WebApi.Core",
+      "Microsoft.AspNet.WebApi.Cors",
+      "Microsoft.AspNet.WebApi.WebHost",
+      "Microsoft.AspNet.WebPages",
+      "Microsoft.IdentityModel.Tokens",
+      "Microsoft.M365.Core.Diagnostics",
+      "Microsoft.M365.Core.Time",
+      "Newtonsoft.Json",
+      "System.IdentityModel.Tokens.Jwt"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\sgriffin\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\src\\maplugin\\EmailHeaderService\\EmailHeaderService.csproj",
+      "projectName": "EmailHeaderService",
+      "projectPath": "C:\\src\\maplugin\\EmailHeaderService\\EmailHeaderService.csproj",
+      "packagesPath": "C:\\Users\\sgriffin\\.nuget\\packages\\",
+      "outputPath": "C:\\src\\maplugin\\EmailHeaderService\\obj\\",
+      "projectStyle": "PackageReference",
+      "crossTargeting": true,
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\sgriffin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net472"
+      ],
+      "sources": {
+        "https://pkgs.dev.azure.com/msazuredev/Azure2/_packaging/MHA_PublicPackages/nuget/v3/index.json": {}
+      },
+      "frameworks": {
+        "net472": {
+          "targetAlias": "net472",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.300"
+    },
+    "frameworks": {
+      "net472": {
+        "targetAlias": "net472",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": {
+            "target": "Package",
+            "version": "(, )"
+          },
+          "Microsoft.AspNet.WebApi.Core": {
+            "target": "Package",
+            "version": "(, )"
+          },
+          "Microsoft.AspNet.WebApi.Cors": {
+            "target": "Package",
+            "version": "(, )"
+          },
+          "Microsoft.AspNet.WebApi.WebHost": {
+            "target": "Package",
+            "version": "(, )"
+          },
+          "Microsoft.AspNet.WebPages": {
+            "target": "Package",
+            "version": "(, )"
+          },
+          "Microsoft.IdentityModel.Tokens": {
+            "target": "Package",
+            "version": "(, )"
+          },
+          "Microsoft.M365.Core.Diagnostics": {
+            "target": "Package",
+            "version": "(, )"
+          },
+          "Microsoft.M365.Core.Time": {
+            "target": "Package",
+            "version": "(, )"
+          },
+          "Newtonsoft.Json": {
+            "target": "Package",
+            "version": "(, )"
+          },
+          "System.IdentityModel.Tokens.Jwt": {
+            "target": "Package",
+            "version": "(, )"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306\\RuntimeIdentifierGraph.json"
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1604",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Project dependency Microsoft.AspNet.WebApi.Client does not contain an inclusive lower bound. Include a lower bound in the dependency version to ensure consistent restore results.",
+      "libraryId": "Microsoft.AspNet.WebApi.Client",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2"
+      ]
+    },
+    {
+      "code": "NU1604",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Project dependency Microsoft.AspNet.WebApi.Core does not contain an inclusive lower bound. Include a lower bound in the dependency version to ensure consistent restore results.",
+      "libraryId": "Microsoft.AspNet.WebApi.Core",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2"
+      ]
+    },
+    {
+      "code": "NU1604",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Project dependency Microsoft.AspNet.WebApi.Cors does not contain an inclusive lower bound. Include a lower bound in the dependency version to ensure consistent restore results.",
+      "libraryId": "Microsoft.AspNet.WebApi.Cors",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2"
+      ]
+    },
+    {
+      "code": "NU1604",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Project dependency Microsoft.AspNet.WebApi.WebHost does not contain an inclusive lower bound. Include a lower bound in the dependency version to ensure consistent restore results.",
+      "libraryId": "Microsoft.AspNet.WebApi.WebHost",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2"
+      ]
+    },
+    {
+      "code": "NU1604",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Project dependency Microsoft.AspNet.WebPages does not contain an inclusive lower bound. Include a lower bound in the dependency version to ensure consistent restore results.",
+      "libraryId": "Microsoft.AspNet.WebPages",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2"
+      ]
+    },
+    {
+      "code": "NU1604",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Project dependency Microsoft.IdentityModel.Tokens does not contain an inclusive lower bound. Include a lower bound in the dependency version to ensure consistent restore results.",
+      "libraryId": "Microsoft.IdentityModel.Tokens",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2"
+      ]
+    },
+    {
+      "code": "NU1604",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Project dependency Microsoft.M365.Core.Diagnostics does not contain an inclusive lower bound. Include a lower bound in the dependency version to ensure consistent restore results.",
+      "libraryId": "Microsoft.M365.Core.Diagnostics",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2"
+      ]
+    },
+    {
+      "code": "NU1604",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Project dependency Microsoft.M365.Core.Time does not contain an inclusive lower bound. Include a lower bound in the dependency version to ensure consistent restore results.",
+      "libraryId": "Microsoft.M365.Core.Time",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2"
+      ]
+    },
+    {
+      "code": "NU1604",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Project dependency Newtonsoft.Json does not contain an inclusive lower bound. Include a lower bound in the dependency version to ensure consistent restore results.",
+      "libraryId": "Newtonsoft.Json",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2"
+      ]
+    },
+    {
+      "code": "NU1604",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Project dependency System.IdentityModel.Tokens.Jwt does not contain an inclusive lower bound. Include a lower bound in the dependency version to ensure consistent restore results.",
+      "libraryId": "System.IdentityModel.Tokens.Jwt",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Microsoft.M365.Core.Diagnostics. No packages exist with this id in source(s): MHA_PublicPackages",
+      "libraryId": "Microsoft.M365.Core.Diagnostics",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Microsoft.M365.Core.Time. No packages exist with this id in source(s): MHA_PublicPackages",
+      "libraryId": "Microsoft.M365.Core.Time",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2"
+      ]
+    }
+  ]
+}

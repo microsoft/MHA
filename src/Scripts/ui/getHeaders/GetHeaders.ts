@@ -1,9 +1,7 @@
 import { GetHeadersAPI } from "./GetHeadersAPI";
 import { GetHeadersEWS } from "./GetHeadersEWS";
 import { GetHeadersRest } from "./GetHeadersRest";
-import { diagnostics } from "../../Diag";
-import { Errors } from "../../Errors";
-import { ParentFrame } from "../../ParentFrame";
+import { LogError, ShowError } from "../uiToggle";
 
 /*
  * GetHeaders.js
@@ -41,14 +39,14 @@ export class GetHeaders {
     public static canUseAPI(apiType: string, minset: string): boolean {
         // if (apiType === "API") { return false; }
         // if (apiType === "Rest") { return false; }
-        if (typeof (Office) === "undefined") { diagnostics.set(`no${apiType}reason`, "Office undefined"); return false; }
-        if (!Office) { diagnostics.set(`no${apiType}reason`, "Office false"); return false; }
-        if (!Office.context) { diagnostics.set("noUseRestReason", "context false"); return false; }
-        if (!Office.context.requirements) { diagnostics.set("noUseRestReason", "requirements false"); return false; }
-        if (!Office.context.requirements.isSetSupported("Mailbox", minset)) { diagnostics.set(`no${apiType}reason`, "requirements too low"); return false; }
-        if (!GetHeaders.sufficientPermission(true)) { diagnostics.set(`no${apiType}reason`, "sufficientPermission false"); return false; }
-        if (!Office.context.mailbox) { diagnostics.set(`no${apiType}reason`, "mailbox false"); return false; }
-        if (!Office.context.mailbox.getCallbackTokenAsync) { diagnostics.set(`no${apiType}reason`, "getCallbackTokenAsync false"); return false; }
+        if (typeof (Office) === "undefined") { return false; }
+        if (!Office) { return false; }
+        if (!Office.context) { return false; }
+        if (!Office.context.requirements) { return false; }
+        if (!Office.context.requirements.isSetSupported("Mailbox", minset)) { return false; }
+        if (!GetHeaders.sufficientPermission(true)) { return false; }
+        if (!Office.context.mailbox) { return false; }
+        if (!Office.context.mailbox.getCallbackTokenAsync) { return false; }
         return true;
     }
 
@@ -64,12 +62,12 @@ export class GetHeaders {
 
     public static async send(headersLoadedCallback: (_headers: string, apiUsed: string) => void) {
         if (!GetHeaders.validItem()) {
-            ParentFrame.showError(null, "No item selected", true);
+            ShowError(null, "No item selected", true);
             return;
         }
 
         if (!GetHeaders.sufficientPermission(false)) {
-            ParentFrame.showError(null, "Insufficient permissions to request headers", false);
+            ShowError(null, "Insufficient permissions to request headers", false);
             return;
         }
 
@@ -80,21 +78,26 @@ export class GetHeaders {
                 return;
             }
 
-            Errors.logMessage("API failed, trying REST");
+            LogError(null, "API failed, trying REST", true);
             headers = await GetHeadersRest.send();
             if (headers !== "") {
                 headersLoadedCallback(headers, "REST");
                 return;
             }
 
-            Errors.logMessage("REST failed, trying EWS");
+            LogError(null, "REST failed, trying EWS", true);
             headers = await GetHeadersEWS.send();
             if (headers !== "") {
                 headersLoadedCallback(headers, "EWS");
                 return;
             }
         } catch (e) {
-            ParentFrame.showError(e, "Could not send header request");
+            ShowError(e, "Could not send header request", false);
         }
     }
+}
+
+// Legacy compatibility wrapper - maintains old interface for existing code
+export function sendHeadersRequest(headersLoadedCallback: (_headers: string, apiUsed: string) => void): void {
+    GetHeaders.send(headersLoadedCallback);
 }

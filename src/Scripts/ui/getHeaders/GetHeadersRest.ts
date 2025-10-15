@@ -1,10 +1,8 @@
 import { jwtDecode } from "jwt-decode";
 
 import { GetHeaders } from "./GetHeaders";
-import { diagnostics } from "../../Diag";
-import { Errors } from "../../Errors";
-import { mhaStrings } from "../../mhaStrings";
-import { ParentFrame } from "../../ParentFrame";
+import { ImportedStrings } from "../../Strings";
+import { LogError, ShowError, UpdateStatus } from "../uiToggle";
 
 /*
  * GetHeadersRest.js
@@ -79,17 +77,17 @@ export class GetHeadersRest {
 
     private static async getHeaders(accessToken: string): Promise<string> {
         if (!accessToken || accessToken === "") {
-            Errors.logMessage("No access token?");
+            LogError(null, "No access token?", true);
             return "";
         }
 
         if (!Office.context.mailbox.item) {
-            Errors.logMessage("No item");
+            LogError(null, "No item", true);
             return "";
         }
 
         if (!Office.context.mailbox.item.itemId) {
-            Errors.logMessage("No itemId");
+            LogError(null, "No itemId", true);
             return "";
         }
 
@@ -111,11 +109,10 @@ export class GetHeadersRest {
             });
 
             if (!response.ok) {
-                diagnostics.set("getHeadersFailure", JSON.stringify(response));
                 if (response.status === 0) {
                     // Fallback to EWS now
                 } else if (response.status === 404) {
-                    ParentFrame.showError(null, mhaStrings.mhaMessageMissing, true);
+                    ShowError(null, ImportedStrings.mha_messageMissing, true);
                 }
 
                 return "";
@@ -126,12 +123,12 @@ export class GetHeadersRest {
             if (item.SingleValueExtendedProperties !== undefined) {
                 return item.SingleValueExtendedProperties[0].Value;
             } else {
-                ParentFrame.showError(null, mhaStrings.mhaHeadersMissing, true);
+                ShowError(null, ImportedStrings.mha_headersMissing, true);
                 return "";
             }
         }
         catch (e) {
-            ParentFrame.showError(e, "Failed parsing headers");
+            ShowError(e, "Failed parsing headers", false);
         }
 
         return "";
@@ -143,8 +140,7 @@ export class GetHeadersRest {
                 if (result.status === Office.AsyncResultStatus.Succeeded) {
                     resolve(result.value);
                 } else {
-                    diagnostics.set("callbackTokenFailure", JSON.stringify(result));
-                    Errors.log(result.error, "Unable to obtain callback token.\nFallback to EWS.\n" + JSON.stringify(result, null, 2), true);
+                    LogError(result.error, "Unable to obtain callback token.\nFallback to EWS.\n" + JSON.stringify(result, null, 2), true);
                     resolve("");
                 }
             });
@@ -153,7 +149,7 @@ export class GetHeadersRest {
 
     public static async send(): Promise<string> {
         if (!GetHeaders.validItem()) {
-            Errors.logMessage("No item selected (REST)");
+            LogError(null, "No item selected (REST)", true);
             return "";
         }
 
@@ -161,7 +157,7 @@ export class GetHeadersRest {
             return "";
         }
 
-        ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
+        UpdateStatus(ImportedStrings.mha_RequestSent);
 
         try {
             const accessToken= await GetHeadersRest.getCallbackToken();
@@ -170,7 +166,7 @@ export class GetHeadersRest {
             return headers;
         }
         catch (e) {
-            ParentFrame.showError(e, "Failed using getCallbackTokenAsync");
+            ShowError(e, "Failed using getCallbackTokenAsync", false);
         }
 
         return "";

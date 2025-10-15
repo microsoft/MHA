@@ -1,7 +1,6 @@
 import { GetHeaders } from "./GetHeaders";
-import { Errors } from "../../Errors";
-import { mhaStrings } from "../../mhaStrings";
-import { ParentFrame } from "../../ParentFrame";
+import { ImportedStrings } from "../../Strings";
+import { LogError, ShowError, UpdateStatus } from "../uiToggle";
 
 /*
  * GetHeadersEWS.js
@@ -75,7 +74,7 @@ export class GetHeadersEWS {
                 // We might not have a prop and also no error. This is OK if the prop is just missing.
                 if (!header.prop) {
                     if (header.responseCode === "NoError") {
-                        ParentFrame.showError(null, mhaStrings.mhaHeadersMissing, true);
+                        ShowError(null, ImportedStrings.mha_headersMissing, true);
                         return "";
                     }
                 }
@@ -85,15 +84,15 @@ export class GetHeadersEWS {
                 return header.prop;
             }
             else {
-                throw new Error(mhaStrings.mhaRequestFailed);
+                throw new Error(ImportedStrings.mha_requestFailed);
             }
         }
         catch (e) {
             if (asyncResult) {
-                Errors.log(asyncResult.error, "Async Response\n" + GetHeadersEWS.stripHeaderFromXml(JSON.stringify(asyncResult, null, 2)));
+                LogError(asyncResult.error, "Async Response\n" + GetHeadersEWS.stripHeaderFromXml(JSON.stringify(asyncResult, null, 2)), false);
             }
 
-            ParentFrame.showError(e, "EWS callback failed");
+            ShowError(e, "EWS callback failed", false);
         }
 
         return "";
@@ -138,12 +137,12 @@ export class GetHeadersEWS {
 
     public static async send(): Promise<string> {
         if (!GetHeaders.validItem()) {
-            Errors.logMessage("No item selected (EWS)");
+            LogError(null, "No item selected (EWS)", true);
             return "";
         }
 
         try {
-            ParentFrame.updateStatus(mhaStrings.mhaRequestSent);
+            UpdateStatus(ImportedStrings.mha_RequestSent);
             const mailbox = Office.context.mailbox;
             if (mailbox && mailbox.item) {
                 const request = GetHeadersEWS.getHeadersRequest(mailbox.item.itemId);
@@ -152,7 +151,7 @@ export class GetHeadersEWS {
                 return headers;
             }
         } catch (e2) {
-            ParentFrame.showError(e2, mhaStrings.mhaRequestFailed);
+            ShowError(e2, ImportedStrings.mha_requestFailed, false);
         }
 
         return "";

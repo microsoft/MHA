@@ -1,144 +1,150 @@
-import {
-    fluentButton,
-    provideFluentDesignSystem
-} from "@fluentui/web-components";
-import "../../Content/fluentCommon.css";
-import "../../Content/Office.css";
-import "../../Content/classicDesktopFrame.css";
+// Import CSS files
+import "@styles/Office.css";
+import "@styles/App.css";
 
-import { diagnostics } from "../Diag";
-import { HeaderModel } from "../HeaderModel";
-import { mhaStrings } from "../mhaStrings";
-import { Strings } from "../Strings";
-import { DomUtils } from "./domUtils";
-import { Table } from "./Table";
+// 🎯 PAGE IDENTIFICATION LOGGING
+console.log("🎯 SCRIPT LOADED: mha.ts (mha.html)");
+console.log("🎯 PAGE TYPE: Main MHA Analysis Page");
+console.log("🎯 DESCRIPTION: Email header analysis and display");
 
-// Register Fluent UI Web Components
-provideFluentDesignSystem().register(
-    fluentButton()
-);
+// Import image assets
 
-let viewModel: HeaderModel;
-let table: Table;
+// Import JavaScript dependencies
+import * as cptable from "codepage";
+import $ from "jquery";
 
-function enableSpinner() {
-    const responseElement = document.getElementById("response");
-    if (responseElement) {
-        responseElement.style.backgroundImage = "url(../Resources/loader.gif)";
-        responseElement.style.backgroundRepeat = "no-repeat";
-        responseElement.style.backgroundPosition = "center";
+import loaderGif from "../../Resources/loader.gif";
+
+// Import application modules
+import { ImportedStrings } from "../Strings";
+import { HeaderModel } from "../table/Headers";
+import { initializeTableUI, makeResizablePane, onResize, rebuildSections, rebuildTables, recalculateVisibility, setArrows } from "../table/Table";
+
+// Make dependencies available globally (for compatibility with existing code)
+declare global {
+    interface Window {
+        jQuery: typeof $;
+        $: typeof $;
+        cptable: typeof cptable;
+        // Add other globals that might be needed
+        HeaderModel: any;
+        ImportedStrings: any;
+        viewModel: any;
+        initializeTableUI: () => void;
+        makeResizablePane: (id: string, title: string, visibility: any) => void;
+        onResize: () => void;
+        rebuildTables: () => void;
+        rebuildSections: () => void;
+        recalculateVisibility: () => void;
+        setArrows: (table: string, colName: string, sortOrder: number) => void;
+        updateStatus: (status: string) => void;
+        enableSpinner: () => void;
+        disableSpinner: () => void;
     }
+}
+
+// Assign to window for global access
+window.jQuery = window.$ = $;
+window.cptable = cptable;
+window.HeaderModel = HeaderModel;
+window.ImportedStrings = ImportedStrings;
+window.initializeTableUI = initializeTableUI;
+window.onResize = onResize;
+window.rebuildTables = rebuildTables;
+window.rebuildSections = rebuildSections;
+window.makeResizablePane = makeResizablePane;
+
+// Define utility functions
+function enableSpinner() {
+    $("#response").css("background-image", `url(${loaderGif})`);
+    $("#response").css("background-repeat", "no-repeat");
+    $("#response").css("background-position", "center");
 }
 
 function disableSpinner() {
-    const responseElement = document.getElementById("response");
-    if (responseElement) {
-        responseElement.style.background = "none";
-    }
+    $("#response").css("background", "none");
 }
 
-const statusMessageTimeouts: Map<string, NodeJS.Timeout> = new Map();
-
-function updateStatus(statusText: string) {
-    DomUtils.setText("#status", statusText);
+function updateStatus(statusText) {
+    $("#status").text(statusText);
     if (viewModel !== null) {
         viewModel.status = statusText;
     }
 
-    table.recalculateVisibility();
+    recalculateVisibility();
 }
 
-function dismissAllStatusMessages() {
-    // Clear all pending timeouts
-    statusMessageTimeouts.forEach(timeoutId => {
-        clearTimeout(timeoutId);
-    });
-    statusMessageTimeouts.clear();
+// Make utility functions globally available
+window.updateStatus = updateStatus;
+window.enableSpinner = enableSpinner;
+window.disableSpinner = disableSpinner;
 
-    // Find all status overlay elements and hide them
-    document.querySelectorAll(".status-overlay-inline.show").forEach(element => {
-        element.classList.remove("show");
-    });
-}
+let viewModel = null;
 
-function showStatusMessage(elementId: string, message: string, duration = 2000) {
-    // Dismiss any currently showing status messages first
-    dismissAllStatusMessages();
-
-    const statusElement = document.getElementById(elementId);
-    if (statusElement) {
-        // Update the message text
-        statusElement.textContent = message;
-        statusElement.classList.add("show");
-
-        // Hide after specified duration and track the timeout
-        const timeoutId = setTimeout(() => {
-            statusElement.classList.remove("show");
-            statusMessageTimeouts.delete(elementId);
-        }, duration);
-
-        statusMessageTimeouts.set(elementId, timeoutId);
-    }
-}
+// Initialize when DOM is ready (jQuery is now imported directly)
+$(document).ready(function () {
+    $(window).resize(onResize);
+    viewModel = new HeaderModel(null);
+    window.viewModel = viewModel; // Make viewModel globally accessible
+    initializeTableUI();
+    makeResizablePane("inputHeaders", ImportedStrings.mha_prompt, null);
+});
 
 // Do our best at recognizing RFC 2822 headers:
 // http://tools.ietf.org/html/rfc2822
-function analyze() {
-    diagnostics.trackEvent({ name: "analyzeHeaders" });
-    const headerText = DomUtils.getValue("#inputHeaders");
-
-    if (!headerText.trim()) {
-        showStatusMessage("analyzeStatusMessage", mhaStrings.mhaNoHeaders);
-        return;
-    }
-
-    viewModel = new HeaderModel(headerText);
-    table.resetArrows();
+export function analyzeHeaders() {
+    viewModel = new HeaderModel($("#inputHeaders").val());
+    window.viewModel = viewModel; // Update global reference
+    setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
+    setArrows(viewModel.otherHeaders.tableName, "number", 1);
 
     enableSpinner();
-    updateStatus(mhaStrings.mhaLoading);
+    updateStatus(ImportedStrings.mha_loading);
 
-    table.rebuildTables(viewModel);
-    updateStatus("");
+    rebuildTables();
 
     disableSpinner();
-
-    showStatusMessage("analyzeStatusMessage", mhaStrings.mhaAnalyzed);
 }
 
-function clear() {
-    DomUtils.setValue("#inputHeaders", "");
+export function clearHeaders() {
+    $("#inputHeaders").val("");
 
-    viewModel = new HeaderModel();
-    table.resetArrows();
-    table.rebuildSections(viewModel);
-    document.getElementById("inputHeaders")?.focus();
-
-    showStatusMessage("clearStatusMessage", mhaStrings.mhaCleared);
+    viewModel = new HeaderModel(null);
+    window.viewModel = viewModel; // Update global reference
+    setArrows(viewModel.receivedHeaders.tableName, "hop", 1);
+    setArrows(viewModel.otherHeaders.tableName, "number", 1);
+    recalculateVisibility();
 }
 
-function copy() {
-    if (!viewModel || !viewModel.hasData) {
-        showStatusMessage("copyStatusMessage", mhaStrings.mhaNothingToCopy);
-        return;
-    }
+// Ensure global functions are available immediately when module loads
+window.analyzeHeaders = analyzeHeaders;
+window.clearHeaders = clearHeaders;
 
-    Strings.copyToClipboard(viewModel.toString());
-
-    // Show accessible status message
-    showStatusMessage("copyStatusMessage", mhaStrings.mhaCopied);
-
-    document.getElementById("copyButton")?.focus();
-}
-
+// Also ensure they're available when DOM is ready
 document.addEventListener("DOMContentLoaded", function() {
-    diagnostics.set("API used", "standalone");
-    viewModel = new HeaderModel();
-    table = new Table();
-    table.initializeTableUI(viewModel);
-    table.makeResizablePane("inputHeaders", "sectionHeader", mhaStrings.mhaPrompt, () => true);
+    window.analyzeHeaders = analyzeHeaders;
+    window.clearHeaders = clearHeaders;
 
-    (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;
-    (document.querySelector("#clearButton") as HTMLButtonElement).onclick = clear;
-    (document.querySelector("#copyButton") as HTMLButtonElement).onclick = copy;
+    console.log("✅ Global functions assigned on DOMContentLoaded:", {
+        analyzeHeaders: typeof window.analyzeHeaders,
+        clearHeaders: typeof window.clearHeaders
+    });
 });
+
+// Ensure global functions are available immediately
+(function() {
+    // Runtime validation (development only)
+    if (typeof window !== "undefined") {
+        if (typeof window.analyzeHeaders !== "function") {
+            console.error("analyzeHeaders is not available globally - HTML onclick handlers will fail");
+        }
+        if (typeof window.clearHeaders !== "function") {
+            console.error("clearHeaders is not available globally - HTML onclick handlers will fail");
+        } else {
+            console.log("✅ Global functions successfully assigned:", {
+                analyzeHeaders: typeof window.analyzeHeaders,
+                clearHeaders: typeof window.clearHeaders
+            });
+        }
+    }
+})();

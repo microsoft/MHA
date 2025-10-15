@@ -76,8 +76,12 @@ For both IOS and Android click open an email, then press the three dots under th
 ### Live site testing
 
 - Start the dev server: `npm run dev-server`
+  - This runs both the webpack dev server (https://localhost:44336) and mock API server (http://localhost:3001)
+  - Mock API provides development endpoints for rules and attachment services
 - Run website locally: <https://localhost:44336/Pages/mha.html>
 - Changes made to source should live compile and reload page. Ctrl+R/refresh as needed.
+- For webpack only (no mock API): `npm run dev-server:webpack-only`
+- For mock API only: `npm run mock-server`
 
 ### Add-in testing (Command line)
 
@@ -113,4 +117,4 @@ For both IOS and Android click open an email, then press the three dots under th
 
 ### Clean
 
-- Clean build artifacts: `npm clean`
+- Clean build artifacts: `npm run clean`

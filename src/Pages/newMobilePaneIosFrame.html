@@ -1,68 +1,137 @@
 ﻿<!DOCTYPE html>
-<html lang="en-US">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>New Mobile Pane iOS Frame</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.6.5/css/framework7.ios.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.6.5/css/framework7.ios.colors.min.css" />
+    <link rel="stylesheet" href="https://cdn.framework7.io/css/framework7-icons.css" />
+
+    <link rel="stylesheet" href="/Content/MobilePane-ios.css" />
+
+    <!-- Application Insights disabled -->
+    <!--
+    <script type="text/javascript">
+        var appInsights = window.appInsights || function (a) {
+            function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement("script"); b.crossOrigin = 'anonymous'; b.src = a.url || "https://az416426.vo.msecnd.net/scripts/a/ai.0.js", d.getElementsByTagName("script")[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ["Event", "Exception", "Metric", "PageView", "Trace", "Dependency"]; f.length;)b("track" + f.pop()); if (b("setAuthenticatedUserContext"), b("clearAuthenticatedUserContext"), b("startTrackEvent"), b("stopTrackEvent"), b("startTrackPage"), b("stopTrackPage"), b("flush"), !a.disableExceptionTracking) { f = "onerror", b("_" + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c["_" + f](a, b, d, e, h), i } } return c
+        }({
+            instrumentationKey: "2f12afed-6139-456e-9de3-49003d3a1fb1"
+        });
+
+        window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length && appInsights.trackPageView();
+    </script>
+    -->
+
+    <script crossorigin="anonymous" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script>
+        // Fallback to load jQuery from a local path if the CDN is unavailable.
+        (window.jQuery || document.write('<script src="/node_modules/jquery/dist/jquery.min.js"><\/script>'));
+    </script>
+
+    <script crossorigin="anonymous" src="https://unpkg.com/codepage@1.13.1/dist/sbcs.full.js"></script>
+    <script>
+        (window.cptable || document.write('<script src="/node_modules/codepage/dist/sbcs.full.js"><\/script>'));
+    </script>
+
+    <script crossorigin="anonymous" src="https://unpkg.com/codepage@1.13.1/bits/936.js"></script>
+    <script>
+        (window.cptable || document.write('<script src="/node_modules/codepage/bits/936.js"><\/script>'));
+    </script>
+
+    <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/framework7/1.6.5/js/framework7.min.js" type="text/javascript"></script>
+    <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+
+    <script src="/Scripts/MobilePane-ios.js"></script>
+    <script src="/Scripts/GetRules.js"></script>
+    <script src="/Scripts/Headers.js"></script>
+    <script src="/Scripts/Strings.js"></script>
+    <script src="/Scripts/Received.js"></script>
+    <script src="/Scripts/Other.js"></script>
+    <script src="/Scripts/ForefrontAntispam.js"></script>
+    <script src="/Scripts/Antispam.js"></script>
+    <script src="/Scripts/Summary.js"></script>
+    <script src="/Scripts/2047.js"></script>
+    <script src="/Scripts/SimpleValidationRule.js"></script>
+    <script src="/Scripts/AndValidationRule.js"></script>
+    <script src="/Scripts/HeaderSectionMissingRule.js"></script>
+    <script src="/Scripts/HeaderValidationRules.js"></script>
 </head>
-<body>
-    <div id="app" class="framework7-root">
-        <div class="view view-main view-init" data-master-detail-breakpoint="800">
-            <div class="top-spacer"></div>
-            <div class="page" data-name="home">
-                <div class="page-content">
-                    <div class="tabs">
-                        <div id="summary-view" class="tab tab-active">
-                            <div id="summary-content"></div>
-                            <div id="orig-headers-ui" class="list">
-                                <ul>
-                                    <li class="accordion-item">
-                                        <a href="#" class="item-content item-link" role="button" aria-expanded="false">
-                                            <div class="item-inner">
-                                                <div class="item-title">Original Headers</div>
-                                            </div>
-                                        </a>
-                                        <div class="accordion-item-content">
-                                            <div class="code-box">
-                                                <pre><code id="original-headers"></code></pre>
-                                            </div>
+<body class="framework7-root">
+    <div class="views tabs toolbar-through">
+        <div id="summary-view" class="view view-main tab active" data-page="summary">
+            <div class="pages">
+                <div data-page="summary" class="page">
+                    <div class="page-content">
+                        <div align="center" class="displayedItemTitle" id="displayItemTitle"></div>
+                        <div id="summary-content"></div>
+                        <hr />
+                        <div class="ms-font-l">Diagnostics Report</div>
+                        <hr />
+                        <div class="ui-diagnostics-report-section"></div>
+                        <div id="orig-headers-ui" class="list-block">
+                            <ul>
+                                <li class="accordion-item">
+                                    <a href="#" class="item-content item-link">
+                                        <div class="item-inner">
+                                            <div class="item-title">Original Headers</div>
                                         </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div id="received-view" class="tab">
-                            <div id="received-content"></div>
-                        </div>
-                        <div id="antispam-view" class="tab">
-                            <div id="antispam-content"></div>
-                        </div>
-                        <div id="other-view" class="tab">
-                            <div id="other-content"></div>
+                                    </a>
+                                    <div class="accordion-item-content">
+                                        <div class="code-box">
+                                            <pre><code id="original-headers"></code></pre>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div id="bottom-toolbar" class="toolbar toolbar-bottom tabbar">
-                <div class="toolbar-inner">
-                    <a href="#summary-view" class="tab-link tab-link-active" id="summary-btn">
-                        <i class="f7-icons">info</i>
-                        <span class="tabbar-label">Summary</span>
-                    </a>
-                    <a href="#received-view" class="tab-link">
-                        <i class="f7-icons">graph_square</i>
-                        <span class="tabbar-label">Received</span>
-                    </a>
-                    <a href="#antispam-view" class="tab-link">
-                        <i class="f7-icons">trash</i>
-                        <span class="tabbar-label">Antispam</span>
-                    </a>
-                    <a href="#other-view" class="tab-link">
-                        <i class="f7-icons">data</i>
-                        <span class="tabbar-label">Other</span>
-                    </a>
+        </div>
+        <div id="received-view" class="view tab" data-page="received">
+            <div class="pages">
+                <div data-page="received" class="page">
+                    <div id="received-content" class="page-content"></div>
                 </div>
+            </div>
+        </div>
+        <div id="antispam-view" class="view tab" data-page="antispam">
+            <div class="pages">
+                <div data-page="antispam" class="page">
+                    <div class="page-content">
+                        <div id="antispam-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="other-view" class="view tab" data-page="other">
+            <div class="pages">
+                <div data-page="other" class="page">
+                    <div class="page-content">
+                        <div id="other-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="toolbar tabbar tabbar-labels">
+            <div class="toolbar-inner">
+                <a href="#summary-view" class="tab-link active">
+                    <i class="f7-icons">info</i>
+                    <span class="tabbar-label">Summary</span>
+                </a>
+                <a href="#received-view" class="tab-link">
+                    <i class="f7-icons">graph_square</i>
+                    <span class="tabbar-label">Received</span>
+                </a>
+                <a href="#antispam-view" class="tab-link">
+                    <i class="f7-icons">trash</i>
+                    <span class="tabbar-label">Antispam</span>
+                </a>
+                <a href="#other-view" class="tab-link">
+                    <i class="f7-icons">data</i>
+                    <span class="tabbar-label">Other</span>
+                </a>
             </div>
         </div>
     </div>

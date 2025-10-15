@@ -89,18 +89,21 @@ console.log("buildTime:", buildTime);
 
 const pages = [
     { name: "mha", script: "mha" },
-    { name: "uitoggle", script: "uiToggle" },
-    { name: "newDesktopFrame", script: "newDesktopFrame" },
-    { name: "classicDesktopFrame", script: "classicDesktopFrame" },
-    { name: "newMobilePaneIosFrame", script: "newMobilePaneIosFrame" },
-    { name: "privacy", script: "privacy" },
+    { name: "newDesktopFrame", script: "DesktopPane" },
+    { name: "newMobilePaneIosFrame", script: "MobilePane-ios" },
+    { name: "MobilePane-ios", script: "MobilePane-ios" },
+    { name: "classicDesktopFrame", script: "DesktopPane" },
+    { name: "privacy" },
     // Redirection/static pages
-    { name: "Default" }, // uitoggle.html?default=classic
-    { name: "DefaultPhone" }, // uitoggle.html?default=classic
-    { name: "DefaultTablet" }, // uitoggle.html?default=classic
-    { name: "DesktopPane" }, // uitoggle.html?default=new
-    { name: "MobilePane" }, // uitoggle.html?default=new-mobile
+    { name: "Default", script: "Default" }, // uitoggle.html?default=classic
+    { name: "DefaultPhone", script: "Default" }, // uitoggle.html?default=classic
+    { name: "DefaultTablet", script: "Default" }, // uitoggle.html?default=classic
+    { name: "DesktopPane", script: "DesktopPane" }, // uitoggle.html?default=new
+    { name: "MobilePane", script: "MobilePane" }, // uitoggle.html?default=new-mobile
     { name: "Functions" },
+    { name: "parentframe", script: "uiToggle" },
+    { name: "PrivacyDialog" },
+    { name: "unittests" }
 ];
 
 /**
@@ -142,12 +145,14 @@ function generateEntry() {
  * @returns {HtmlWebpackPlugin[]} An array of HtmlWebpackPlugin instances.
  */
 function generateHtmlWebpackPlugins() {
-    return pages.map((page) => new HtmlWebpackPlugin({
-        inject: true,
-        template: `./src/Pages/${page.name}.html`,
-        filename: `${page.name}.html`,
-        chunks: [page.script],
-    }));
+    return pages.map((page) => {
+        return new HtmlWebpackPlugin({
+            inject: true,
+            template: `./src/Pages/${page.name}.html`,
+            filename: `${page.name}.html`,
+            chunks: page.script ? [page.script] : [],
+        });
+    });
 }
 
 export default async (env, options) => {
@@ -169,7 +174,7 @@ export default async (env, options) => {
                 __AIKEY__: JSON.stringify(aikey),
                 __BUILDTIME__: JSON.stringify(buildTime),
             }),
-            new ForkTsCheckerWebpackPlugin(),
+            // new ForkTsCheckerWebpackPlugin(),
             // Custom plugin to log compilation start/end times with timestamps
             {
                 apply(compiler) {

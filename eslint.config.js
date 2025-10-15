@@ -63,6 +63,8 @@ export default [{
         "no-inner-declarations": "error",
         "no-unmodified-loop-condition": "error",
         "block-scoped-var": "error",
+        "no-undef": "error",  // Catch undefined variables/functions
+        "no-global-assign": "error",  // Prevent accidental global overwrites
 
         camelcase: ["error", {
             properties: "always",

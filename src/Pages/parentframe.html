@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title>MessageHeaderAnalyzer</title>
+
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.5.0/css/fabric.min.css">
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.5.0/css/fabric.components.min.css">
+    <!-- CSS will be injected by webpack HtmlWebpackPlugin -->
+
+    <!-- Application Insights disabled -->
+    <!--
+    <script type="text/javascript">
+        var appInsights = window.appInsights || function (a) {
+            function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement("script"); b.crossOrigin = 'anonymous'; b.src = a.url || "https://az416426.vo.msecnd.net/scripts/a/ai.0.js", d.getElementsByTagName("script")[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ["Event", "Exception", "Metric", "PageView", "Trace", "Dependency"]; f.length;)b("track" + f.pop()); if (b("setAuthenticatedUserContext"), b("clearAuthenticatedUserContext"), b("startTrackEvent"), b("stopTrackEvent"), b("startTrackPage"), b("stopTrackPage"), b("flush"), !a.disableExceptionTracking) { f = "onerror", b("_" + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c["_" + f](a, b, d, e, h), i } } return c
+        }({
+            instrumentationKey: "2f12afed-6139-456e-9de3-49003d3a1fb1"
+        });
+
+        window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length && appInsights.trackPageView();
+    </script>
+    -->
+
+    <script crossorigin="anonymous" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script>
+        // Fallback to load jQuery from a local path if the CDN is unavailable.
+        (window.jQuery || document.write('<script src="/node_modules/jquery/dist/jquery.min.js"><\/script>'));
+    </script>
+
+    <script crossorigin="anonymous" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+    <script>
+        (window.Office || document.write('<script src="/node_modules/@microsoft/office-js/dist/office.js"><\/script>'));
+    </script>
+
+    <script crossorigin="anonymous" src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.5.0/js/fabric.min.js"></script>
+    <script>
+        (window.fabric || document.write('<script src="/node_modules/office-ui-fabric-js/dist/js/fabric.min.js"><\/script>'));
+    </script>
+
+    <script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/stacktrace.js/2.0.0/stacktrace-with-promises-and-json-polyfills.min.js"></script>
+    <script>
+        (window.StackTrace || document.write('<script src="/node_modules/stacktrace-js/dist/stacktrace-with-promises-and-json-polyfills.min.js"><\/script>'));
+    </script>
+
+    <!-- IE support: add promises polyfill before msal.js  -->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js" class="pre"></script>-->
+    <!-- FOR USING MSAL -->
+    <script src="https://secure.aadcdn.microsoftonline-p.com/lib/0.2.3/js/msal.js"></script>
+
+    <!-- Scripts will be injected by webpack HtmlWebpackPlugin -->
+</head>
+<body class="ms-Fabric">
+    <div id="uiToggleFrame">
+        <div class="header-row">
+            <div class="ms-Style-button">
+                <button class="ms-Button ms-Button--hero dialog-button gear-button">
+                    <span class="ms-Button-label">
+                        <i class="ms-Icon ms-Icon--Settings" aria-hidden="true"></i>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Settings Dialog-->
+            <div class="ms-Dialog ms-Dialog--lgHeader" id="dialog-Settings">
+                <div class="ms-Dialog-title">Settings</div>
+                <div class="ms-Dialog-content">
+                    <div class="ms-Dialog-content">
+                        <p class="ms-Dialog--lgHeader">Show:</p>
+                        <div class="ms-ChoiceFieldGroup" id="showChoice" role="radiogroup">
+                            <ul class="ms-ChoiceFieldGroup-list" id="showChoice-list"></ul>
+                        </div>
+                    </div>
+                    <p class="ms-Dialog--lgHeader">UI style</p>
+                    <div class="ms-ChoiceFieldGroup" id="uiChoice" role="radiogroup">
+                        <ul class="ms-ChoiceFieldGroup-list" id="uiChoice-list"></ul>
+                    </div>
+                </div>
+                <div align="right">
+                    <strong>
+                        <small>
+                            <!--<a target="popup" rel="noopener noreferrer" href="https://msdpn.azurewebsites.net/default?LID=62">Microsoft Global Data Protection Notice</a>-->
+                            <a onclick="ShowPrivacy();return false;"><u>Microsoft Global Data Protection Notice</u></a>
+                        </small>
+                    </strong>
+                </div>
+                <div class="ms-Dialog-actions">
+                    <button class="ms-Button ms-Dialog-action" id="actionsSettings-diag">
+                        <span class="ms-Button-label">diagnostics</span>
+                    </button>
+                    <button class="ms-Button ms-Button--primary ms-Dialog-action" id="actionsSettings-OK">
+                        <span class="ms-Button-label">OK</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Diagnostics dialog-->
+            <div class="ms-Dialog ms-Dialog--lgHeader" id="dialog-Diagnostics">
+                <div class="ms-Dialog-title">Diagnostics</div>
+                <div class="ms-Dialog-content">
+                    <div class="code-box"><pre><code id="diagnostics"></code></pre></div>
+                </div>
+                <div class="ms-Dialog-actions">
+                    <button class="ms-Button ms-Button--primary ms-Dialog-action" id="actionsDiag-OK">
+                        <span class="ms-Button-label">OK</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="frame-row">
+            <iframe id="uiFrame" src="newDesktopFrame.html"></iframe>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,179 +1,132 @@
 ﻿<!DOCTYPE html>
-<html lang="en-US">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>New Desktop Frame</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="module" src="https://unpkg.com/@fluentui/web-components"></script>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.5.0/css/fabric.min.css">
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.5.0/css/fabric.components.min.css">
+    <!-- CSS will be injected by webpack HtmlWebpackPlugin -->
+
+    <!-- Application Insights disabled -->
+    <!--
+    <script type="text/javascript">
+        var appInsights = window.appInsights || function (a) {
+            function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement("script"); b.crossOrigin = 'anonymous'; b.src = a.url || "https://az416426.vo.msecnd.net/scripts/a/ai.0.js", d.getElementsByTagName("script")[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ["Event", "Exception", "Metric", "PageView", "Trace", "Dependency"]; f.length;)b("track" + f.pop()); if (b("setAuthenticatedUserContext"), b("clearAuthenticatedUserContext"), b("startTrackEvent"), b("stopTrackEvent"), b("startTrackPage"), b("stopTrackPage"), b("flush"), !a.disableExceptionTracking) { f = "onerror", b("_" + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c["_" + f](a, b, d, e, h), i } } return c
+        }({
+            instrumentationKey: "2f12afed-6139-456e-9de3-49003d3a1fb1"
+        });
+
+        window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length && appInsights.trackPageView();
+    </script>
+    -->
+
+    <script crossorigin="anonymous" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script>
+        // Fallback to load jQuery from a local path if the CDN is unavailable.
+        (window.jQuery || document.write('<script src="/node_modules/jquery/dist/jquery.min.js"><\/script>'));
+    </script>
+
+    <script crossorigin="anonymous" src="https://unpkg.com/codepage@1.13.1/dist/sbcs.full.js"></script>
+    <script>
+        (window.cptable || document.write('<script src="/node_modules/codepage/dist/sbcs.full.js"><\/script>'));
+    </script>
+
+    <script crossorigin="anonymous" src="https://unpkg.com/codepage@1.13.1/bits/936.js"></script>
+    <script>
+        (window.cptable || document.write('<script src="/node_modules/codepage/bits/936.js"><\/script>'));
+    </script>
+
+    <script crossorigin="anonymous" src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.5.0/js/fabric.min.js"></script>
+    <script>
+        (window.fabric || document.write('<script src="/node_modules/office-ui-fabric-js/dist/js/fabric.min.js"><\/script>'));
+    </script>
+
+    <!-- Scripts will be injected by webpack HtmlWebpackPlugin -->
 </head>
 <body>
     <div class="content-wrap">
         <div class="content-header">
-            <nav class="toolbar nav-bar" id="nav-bar" role="toolbar" aria-label="Navigation">
-                <fluent-button appearance="subtle" class="nav-button is-active" data-content="summary-view" id="summary-btn" title="Summary" aria-label="Summary Selected">
-                    <span slot="start" aria-hidden="true"><i class="fluent-icon fluent-icon--info"></i></span>
-                    <span class="button-label">Summary</span>
-                </fluent-button>
-                <fluent-button appearance="subtle" class="nav-button" data-content="received-view" id="received-btn" title="Received" aria-label="Received">
-                    <span slot="start" aria-hidden="true"><i class="fluent-icon fluent-icon--stopwatch"></i></span>
-                    <span class="button-label">Received</span>
-                </fluent-button>
-                <fluent-button appearance="subtle" class="nav-button" data-content="antispam-view" id="antispam-btn" title="Antispam" aria-label="Antispam">
-                    <span slot="start" aria-hidden="true"><i class="fluent-icon fluent-icon--mail-alert"></i></span>
-                    <span class="button-label">Antispam</span>
-                </fluent-button>
-                <fluent-button appearance="subtle" class="nav-button" data-content="other-view" id="other-btn" title="Other" aria-label="Other">
-                    <span slot="start" aria-hidden="true"><i class="fluent-icon fluent-icon--cake"></i></span>
-                    <span class="button-label">Other</span>
-                </fluent-button>
-            </nav>
-        </div>
-        <div class="content-main">
-            <div class="overlay" id="loading-overlay">
-                <div class="status-display">
-                    <div id="status-message"></div>
-                    <fluent-progress-ring class="status-spinner"></fluent-progress-ring>
+            <div class="ms-CommandBar" id="nav-bar">
+                <div class="ms-CommandBar-mainArea">
+                    <div class="ms-CommandButton ms-CommandButton--pivot is-active" data-content="summary-view">
+                        <button class="ms-CommandButton-button">
+                            <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Info"></i></span>
+                            <span class="ms-CommandButton-label">Summary</span>
+                        </button>
+                    </div>
+                    <div class="ms-CommandButton ms-CommandButton--pivot" data-content="received-view">
+                        <button class="ms-CommandButton-button">
+                            <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Timer"></i></span>
+                            <span class="ms-CommandButton-label">Received</span>
+                        </button>
+                    </div>
+                    <div class="ms-CommandButton ms-CommandButton--pivot" data-content="antispam-view">
+                        <button class="ms-CommandButton-button">
+                            <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--MailAlert"></i></span>
+                            <span class="ms-CommandButton-label">Antispam</span>
+                        </button>
+                    </div>
+                    <div class="ms-CommandButton ms-CommandButton--pivot" data-content="other-view">
+                        <button class="ms-CommandButton-button">
+                            <span class="ms-CommandButton-icon ms-fontColor-themePrimary"><i class="ms-Icon ms-Icon--Cake"></i></span>
+                            <span class="ms-CommandButton-label">Other</span>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div id="error-display" class="error-message" hidden>
-                <fluent-card class="error-card">
-                    <div class="error-content">
-                        <span class="error-icon" aria-hidden="true">❌</span>
-                        <div class="error-text"></div>
+        </div>
+        <div align="center" class="displayedItemTitle"></div>
+        <div class="content-main">
+            <div class="ms-Overlay">
+                <div class="status-display">
+                    <div class="status-message ms-font-xl"></div>
+                    <div class="status-spinner ms-Spinner ms-Spinner--large"></div>
+                </div>
+            </div>
+            <div id="error-display" class="ms-MessageBar ms-MessageBar--error">
+                <div class="ms-MessageBar-content">
+                    <div class="ms-MessageBar-icon">
+                        <i class="ms-Icon ms-Icon--ErrorBadge"></i>
                     </div>
-                </fluent-card>
+                    <div class="ms-MessageBar-text"></div>
+                </div>
             </div>
             <div class="header-view" data-content="summary-view">
-                <div class="page-title">Summary</div>
-                <hr />
+                <div class="ms-font-l">Summary</div>
                 <div class="summary-list"></div>
+                <hr />
+                <hr />
+                <div class="ms-font-l">Diagnostics Report</div>
+                <hr />
+                <div class="ui-diagnostics-report-section"></div>
+                <hr />
+                <hr />
                 <div class="orig-header-ui">
-                    <fluent-button id="orig-header-btn" appearance="accent" aria-expanded="false" aria-label="Toggle original headers display">
-                        <span slot="start" class="fluent-icon fluent-icon--add" aria-hidden="true"></span>
-                        Original Headers
-                    </fluent-button>
+                    <button id="orig-header-btn" class="ms-Button ms-Button--hero">
+                        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--Add"></i></span>
+                        <span class="ms-Button-label">Original Headers</span>
+                    </button>
                     <div id="original-headers" class="code-box">
-                        <textarea readonly aria-label="Original email headers" title="Original email headers"></textarea>
+                        <pre><code></code></pre>
                     </div>
                 </div>
             </div>
             <div class="header-view" data-content="received-view">
-                <div class="page-title">Received</div>
+                <div class="ms-font-l">Received</div>
                 <hr />
                 <div class="received-list"></div>
             </div>
             <div class="header-view" data-content="antispam-view">
-                <div class="page-title">Antispam</div>
+                <div class="ms-font-l">Antispam</div>
                 <hr />
                 <div class="antispam-list"></div>
             </div>
             <div class="header-view" data-content="other-view">
-                <div class="page-title">Other</div>
+                <div class="ms-font-l">Other</div>
                 <hr />
                 <div class="other-list"></div>
             </div>
         </div>
     </div>
-
-    <!-- Static HTML Templates -->
-    <template id="summary-row-template">
-        <div class="section-header"></div>
-        <div class="code-box">
-            <pre><code></code></pre>
-        </div>
-    </template>
-
-    <template id="hop-header-template">
-        <div class="hop-details-close" style="display:none"></div>
-        <div class="hop-details-header">
-            <h2 class="hop-title">Hop Details</h2>
-        </div>
-    </template>
-
-    <template id="antispam-table-template">
-        <table class="fluent-table">
-            <tbody></tbody>
-        </table>
-    </template>
-
-    <template id="forefront-header-template">
-        <div class="section-header">Forefront Antispam Report</div>
-        <hr/>
-    </template>
-
-    <template id="microsoft-header-template">
-        <div class="section-header">Microsoft Antispam Report</div>
-        <hr/>
-    </template>
-
-    <template id="table-row-template">
-        <tr>
-            <td></td>
-            <td></td>
-        </tr>
-    </template>
-
-    <template id="selection-target-template">
-        <div class="hop-list-selection"></div>
-    </template>
-
-    <template id="other-row-template">
-        <div class="section-header"></div>
-        <div class="code-box">
-            <pre><code></code></pre>
-        </div>
-    </template>
-
-    <template id="hop-entry-template">
-        <p class="hop-details-entry">
-            <span class="hop-label"></span>
-            <span class="hop-value"></span>
-        </p>
-    </template>
-
-    <template id="first-row-template">
-        <span class="hop-primary-text">
-            <span class="hop-label">From: </span>
-            <span class="from-value"></span>
-        </span>
-        <span class="hop-secondary-text">
-            <span class="hop-label">To: </span>
-            <span class="to-value"></span>
-        </span>
-    </template>
-
-    <template id="secondary-text-template">
-        <span class="hop-secondary-text">
-            <span class="hop-label">To: </span>
-            <span class="to-value"></span>
-        </span>
-    </template>
-
-    <template id="received-list-template">
-        <ul class="hop-list"></ul>
-    </template>
-
-    <template id="list-item-template">
-        <li class="hop-list-item" tabindex="0"></li>
-    </template>
-
-    <template id="progress-icon-template">
-        <div class="progress-icon">
-            <div class="down-icon">
-                <i class="fluent-icon fluent-icon--arrow-circle-down"></i>
-            </div>
-            <div class="progress-container">
-                <fluent-progress class="hop-progress"></fluent-progress>
-                <div class="progress-description"></div>
-            </div>
-        </div>
-    </template>
-
-    <template id="hop-template">
-        <div class="hop-details-overlay is-hidden">
-            <div class="hop-details-content"></div>
-        </div>
-    </template>
-
 </body>
 </html>

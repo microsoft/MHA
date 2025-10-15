@@ -1,106 +1,73 @@
-import { diagnostics } from "./Diag";
-import { Stack } from "./stacks";
-import { Strings } from "./Strings";
+export function getErrorMessage(error) {
+    if (!error) return "";
+    if (Object.prototype.toString.call(error) === "[object String]") return error;
+    if (Object.prototype.toString.call(error) === "[object Number]") return error.toString();
+    if ("message" in error) return error.message;
+    if ("description" in error) return error.description;
+    return JSON.stringify(error, null, 2);
+}
 
-let errorArray: string[] = [];
+export function getErrorStack(error) {
+    if (!error) return "";
+    if (Object.prototype.toString.call(error) === "[object String]") return "string thrown as error";
+    if (!isError(error)) return "";
+    if ("stack" in error) return error.stack;
+    return "";
+}
 
-export class Errors {
-    public static clear(): void { errorArray = []; }
+export function isError(error) {
+    if (Object.prototype.toString.call(error) === "[object Error]") {
+        if ("stack" in error) return true;
+    }
+    return false;
+}
 
-    public static get() { return errorArray; }
+// error - an exception object
+// message - a string describing the error
+// errorHandler - function to call with parsed error
+export function parseError(exception, message, errorHandler) {
+    let stack;
+    const exceptionMessage = getErrorMessage(exception);
 
-    public static add(eventName: string, stack: string[], suppressTracking: boolean): void {
-        if (eventName || stack) {
-            const stackString = Strings.joinArray(stack, "\n");
-            errorArray.push(Strings.joinArray([eventName, stackString], "\n"));
-
-            if (!suppressTracking) {
-                diagnostics.trackEvent({ name: eventName },
-                    {
-                        stack: stackString,
-                        source: "Errors.add"
-                    });
-            }
-        }
+    let eventName = joinArray([message, exceptionMessage], " : ");
+    if (!eventName) {
+        eventName = "Unknown exception";
     }
 
-    public static isError(error: unknown): boolean {
-        if (!error) return false;
-
-        // We can't afford to throw while checking if we're processing an error
-        // So just swallow any exception and fail.
-        try {
-            if (typeof (error) === "string") return false;
-            if (typeof (error) === "number") return false;
-            if (typeof error === "object" && "stack" in error) return true;
-        } catch (e) {
-            diagnostics.trackEvent({ name: "isError exception with error", properties: { error: JSON.stringify(e) } });
-        }
-
-        return false;
-    }
-
-    // error - an exception object
-    // message - a string describing the error
-    // suppressTracking - boolean indicating if we should suppress tracking
-    public static log(error: unknown, message: string, suppressTracking?: boolean): void {
-        if (error && !suppressTracking) {
-            const event = { name: "Errors.log" };
-            const props = {
-                message: message,
-                error: JSON.stringify(error, null, 2),
-                source: "",
-                stack: "",
-                description: "",
-                errorMessage: ""
-            };
-
-            if (Errors.isError(error) && (error as { exception?: unknown }).exception) {
-                props.source = "Error.log Exception";
-                event.name = "Exception";
-            }
-            else {
-                props.source = "Error.log Event";
-                if (typeof error === "object" && "description" in error) props.description = (error as { description: string }).description;
-                if (typeof error === "object" && "message" in error) props.errorMessage = (error as { message: string }).message;
-                if (typeof error === "object" && "stack" in error) props.stack = (error as { stack: string }).stack;
-                if (typeof error === "object" && "description" in error) {
-                    event.name = (error as { description: string }).description;
-                } else if (typeof error === "object" && "message" in error) {
-                    event.name = (error as { message: string }).message;
-                } else if (props.message) {
-                    event.name = props.message;
-                } else {
-                    event.name = "Unknown error object";
-                }
-            }
-
-            diagnostics.trackException(event, props);
-        }
-
-        Stack.parse(error, message, function (eventName: string, stack: string[]): void {
-            Errors.add(eventName, stack, suppressTracking ?? false);
+    const callback = function (stackframes) {
+        stack = FilterStack(stackframes).map(function (sf) {
+            return sf.toString();
         });
-    }
+        errorHandler(eventName, stack);
+    };
 
-    public static logMessage(message:string): void {
-        Errors.add(message, [], true);
-    }
+    const errback = function (err) {
+        stack = [JSON.stringify(exception, null, 2), "Parsing error:", JSON.stringify(err, null, 2)];
+        errorHandler(eventName, stack);
+    };
 
-    public static getErrorMessage(error: unknown): string {
-        if (!error) return "";
-        if (typeof (error) === "string") return error;
-        if (typeof (error) === "number") return error.toString();
-        if (typeof error === "object" && error !== null && "message" in error) return (error as Error).message;
-        return JSON.stringify(error, null, 2);
+    if (!isError(exception)) {
+        StackTrace.get().then(callback).catch(errback);
+    } else {
+        StackTrace.fromError(exception).then(callback).catch(errback);
     }
+}
 
-    public static getErrorStack(error: unknown): string {
-        if (!error) return "";
-        if (typeof (error) === "string") return "string thrown as error";
-        if (typeof (error) === "number") return "number thrown as error";
-        if (!Errors.isError(error)) return "";
-        if (typeof error === "object" && error !== null && "stack" in error) return (error as Error).stack ?? "";
-        return "";
-    }
+// Join an array with char, dropping empty/missing entries
+export function joinArray(array, char) {
+    if (!array) return null;
+    return (array.filter(function (item) { return item; })).join(char);
+}
+
+export function FilterStack(stack) {
+    return stack.filter(function (item) {
+        if (!item.fileName) return true;
+        if (item.fileName.indexOf("stacktrace") !== -1) return false;
+        if (item.functionName === "ShowError") return false;
+        if (item.functionName === "showError") return false;
+        if (item.functionName === "LogError") return false;
+        if (item.functionName === "GetStack") return false;
+        if (item.functionName === "parseError") return false;
+        return true;
+    });
 }

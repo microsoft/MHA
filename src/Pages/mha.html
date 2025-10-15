@@ -1,59 +1,69 @@
 ﻿<!DOCTYPE html>
-<html lang="en-US">
-
+<html>
 <head>
     <meta charset="UTF-8" />
-    <title>Message Header Analyzer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title>MessageHeaderAnalyzer</title>
 
+    <!-- Application Insights disabled -->
+    <!--
+    <script type="text/javascript">
+        var appInsights = window.appInsights || function ( a )
+        {
+            function b( a ) { c[a] = function () { var b = arguments; c.queue.push( function () { c[a].apply( c, b ) } ) } } var c = { config: a }, d = document, e = window; setTimeout( function () { var b = d.createElement( "script" ); b.crossOrigin = 'anonymous'; b.src = a.url || "https://az416426.vo.msecnd.net/scripts/a/ai.0.js", d.getElementsByTagName( "script" )[0].parentNode.appendChild( b ) } ); try { c.cookie = d.cookie } catch ( a ) { } c.queue = []; for ( var f = ["Event", "Exception", "Metric", "PageView", "Trace", "Dependency"]; f.length; )b( "track" + f.pop() ); if ( b( "setAuthenticatedUserContext" ), b( "clearAuthenticatedUserContext" ), b( "startTrackEvent" ), b( "stopTrackEvent" ), b( "startTrackPage" ), b( "stopTrackPage" ), b( "flush" ), !a.disableExceptionTracking ) { f = "onerror", b( "_" + f ); var g = e[f]; e[f] = function ( a, b, d, e, h ) { var i = g && g( a, b, d, e, h ); return !0 !== i && c["_" + f]( a, b, d, e, h ), i } } return c
+        }( {
+            instrumentationKey: "2f12afed-6139-456e-9de3-49003d3a1fb1"
+        } );
+
+        window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length && appInsights.trackPageView();
+    </script>
+    -->
+
+    <script crossorigin="anonymous" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script>
+        // Fallback to load jQuery from a local path if the CDN is unavailable.
+        ( window.jQuery || document.write( '<script src="/node_modules/jquery/dist/jquery.min.js"><\/script>' ) );
+    </script>
+
+    <script crossorigin="anonymous" src="https://unpkg.com/codepage@1.13.1/dist/sbcs.full.js"></script>
+    <script>
+        ( window.cptable || document.write( '<script src="/node_modules/codepage/dist/sbcs.full.js"><\/script>' ) );
+    </script>
+
+    <script crossorigin="anonymous" src="https://unpkg.com/codepage@1.13.1/bits/936.js"></script>
+    <script>
+        ( window.cptable || document.write( '<script src="/node_modules/codepage/bits/936.js"><\/script>' ) );
+    </script>
+
+    <!-- Individual script tags replaced by webpack bundle injection -->
+</head>
 <body>
-    <header id="SectionHeader">
+    <div id="SectionHeader">
         <div id="floater"></div>
         <h1 id="title">Message Header Analyzer</h1>
-    </header>
-    <main id="SectionContent">
-        <section aria-labelledby="inputSection">
-            <h2 id="inputSection" class="sr-only">Input Headers</h2>
-            <textarea id="inputHeaders" autofocus="autofocus" placeholder="Paste headers here." required="required"
-                rows="15"></textarea>
-            <fluent-button appearance="accent" id="analyzeButton" aria-describedby="analyzeButtonDesc">
-                <span>Analyze headers</span>
-                <div class="status-overlay status-overlay-inline" id="analyzeStatusMessage" role="status" aria-live="polite">
-                </div>
-                <div class="status-overlay status-overlay-inline" id="clearStatusMessage" role="status" aria-live="polite">
-                </div>
-            </fluent-button>
-            <span id="analyzeButtonDesc" class="sr-only">Analyze message headers</span>
-            <fluent-button class="hiddenElement" id="clearButton" aria-label="Clear input and results">
-                <span>Clear</span>
-            </fluent-button>
-            <fluent-button class="hiddenElement" id="copyButton" aria-describedby="copyButtonDesc">
-                <span class="fluent-icon fluent-icon--copy"></span>
-                <span>Copy</span>
-                <span id="copyButtonDesc" class="sr-only">Copy analysis results to clipboard</span>
-                <div class="status-overlay status-overlay-inline" id="copyStatusMessage" role="status" aria-live="polite">
-                </div>
-            </fluent-button>
-            <footer id="mhaFooter">
-                <a href="https://github.com/microsoft/MHA" target="_blank" rel="noopener">Submit feedback on github</a>
-            </footer>
-        </section>
+    </div>
+    <div id="SectionContent">
+        <textarea id="inputHeaders" autofocus="autofocus" placeholder="Paste headers here." required="required" rows="15"></textarea>
+        <input onclick="analyzeHeaders()" type="button" value="Analyze headers" />
+        <input id="clearButton" class="hiddenElement" onclick="clearHeaders()" type="button" value="Clear" />
+        <!--<span id="mhaFooter">
+            <a href="https://testconnectivity.microsoft.com/?tabid=mha" target="_blank">Try ExRCA</a>
+        </span>-->
 
         <hr id="lineBreak" />
-
-        <section id="response" class="hiddenElement" aria-labelledby="resultsSection">
-            <h2 id="resultsSection" class="sr-only">Analysis Results</h2>
+        <div id="response" class="hiddenElement">
             <div class="responsePane">
                 <div id="status"></div>
                 <table id="summary"></table>
+                <div id="diagnosticsReport">
+                    <div class="ui-diagnostics-report-section"></div>
+                </div>
                 <table id="receivedHeaders"></table>
                 <table id="forefrontAntiSpamReport"></table>
                 <table id="antiSpamReport"></table>
                 <table id="otherHeaders"></table>
             </div>
-        </section>
-    </main>
+        </div>
+    </div>
 </body>
-
 </html>
