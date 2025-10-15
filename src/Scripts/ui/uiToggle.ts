@@ -1,7 +1,5 @@
 // Controller for Settings screen which controls what is being displayed
 // and which UI to use.
-//
-// RBB (Dec 2018)  Added support for selecting attachment to show
 
 // Import CSS
 import "../../Content/uiToggle.css";
@@ -9,16 +7,12 @@ import "../../Content/uiToggle.css";
 import $ from "jquery";
 
 import { isError, joinArray, parseError } from "../Errors";
-import { ImportedStrings } from "../Strings";
-import { GetAttachments } from "../utils/GetAttachments";
 import { AndRuleSet, GetRules, SimpleRuleSet } from "../utils/GetRules";
-import { ClearHeaderSources, HeaderSourceChoice, SetDefaultHeaderSource, UpdateShowChoices } from "../utils/HeaderSource";
 import { sendHeadersRequest } from "./getHeaders/GetHeaders";
 
 export let viewModel = null;
 export const UiModel = function () {
     this.currentChoice = {};
-    this.currentHeaderSource = [];
     this.errors = [];
     this.deferredErrors = [];
     this.deferredStatus = [];
@@ -27,7 +21,6 @@ export const UiModel = function () {
 };
 
 UiModel.prototype.currentChoice = {};
-UiModel.prototype.currentHeaderSource = {};
 UiModel.prototype.errors = [];
 UiModel.prototype.deferredErrors = [];
 UiModel.prototype.deferredStatus = [];
@@ -167,7 +160,7 @@ function registerItemChangeEvent() {
 function loadNewItem() {
     if (Office.context.mailbox.item) {
         // 🚀 KICK OFF RULES DOWNLOAD FIRST - async in background
-        GetRules(DoGetAttachments, function() {
+        GetRules(completeRulesLoading, function() {
             // Rules download still in progress
         });
 
@@ -175,11 +168,6 @@ function loadNewItem() {
         sendHeadersRequest(function (headers, apiUsed) {
             viewModel.headers = headers;
             viewModel.apiUsed = apiUsed;
-
-            viewModel.currentHeaderSource = new HeaderSourceChoice( ImportedStrings.mha_thisEmail, viewModel.headers, true);
-            SetDefaultHeaderSource (viewModel.currentHeaderSource);
-            window.viewModel = viewModel; // Ensure window.viewModel is updated with currentHeaderSource
-            ClearHeaderSources();
 
             if (SimpleRuleSet?.length > 0 || AndRuleSet?.length > 0) {
                 if (iFrame) {
@@ -194,58 +182,48 @@ function loadNewItem() {
     }
 }
 
-function DoGetAttachments(guid)
-{
-    console.log("🔍 DoGetAttachments: ✅ Rules download COMPLETED!");
-    console.log("🔍 DoGetAttachments: SimpleRuleSet length:", SimpleRuleSet?.length || 0);
-    console.log("🔍 DoGetAttachments: AndRuleSet length:", AndRuleSet?.length || 0);
+function completeRulesLoading(guid) {
+    console.log("🔍 completeRulesLoading: ✅ Rules download COMPLETED!");
+    console.log("🔍 completeRulesLoading: SimpleRuleSet length:", SimpleRuleSet?.length || 0);
+    console.log("🔍 completeRulesLoading: AndRuleSet length:", AndRuleSet?.length || 0);
 
     // Now that rules are downloaded, trigger rule validation in the mobile pane
     if (iFrame && (SimpleRuleSet?.length > 0 || AndRuleSet?.length > 0)) {
-        console.log("🔍 DoGetAttachments: 🎯 Triggering rule validation with downloaded rules");
+        console.log("🔍 completeRulesLoading: 🎯 Triggering rule validation with downloaded rules");
         postMessageToFrame("validateRules", { SimpleRuleSet, AndRuleSet });
     }
 
-    // Get the attachments from the EmailHeaderService.  Upon completion
-    // call the CompleteInitialization to finalize screen initialization
-    GetAttachments(guid, CompleteInitialization);
+    // Complete initialization without attachment processing
+    completeInitialization();
 }
 
-// Function called upon completion of GetAttachments to finalize initialization
-export function CompleteInitialization()
-{
-    console.log("🔍 CompleteInitialization: ✅ All initialization steps completed!");
-    console.log("🔍 CompleteInitialization: SimpleRuleSet length:", SimpleRuleSet?.length || 0);
-    console.log("🔍 CompleteInitialization: AndRuleSet length:", AndRuleSet?.length || 0);
+// Function called upon completion to finalize initialization
+export function completeInitialization() {
+    console.log("🔍 completeInitialization: ✅ All initialization steps completed!");
+    console.log("🔍 completeInitialization: SimpleRuleSet length:", SimpleRuleSet?.length || 0);
+    console.log("🔍 completeInitialization: AndRuleSet length:", AndRuleSet?.length || 0);
 
     if (SimpleRuleSet?.length > 0 || AndRuleSet?.length > 0) {
-        console.log("🔍 CompleteInitialization: ✅ Rules are now available! Will update view with rules");
+        console.log("🔍 completeInitialization: ✅ Rules are now available! Will update view with rules");
     } else {
-        console.log("🔍 CompleteInitialization: ⚠️  Still no rules available after initialization");
+        console.log("🔍 completeInitialization: ⚠️  Still no rules available after initialization");
     }
 
-    // Set up list of items that we could show (this email and attachments)
-    UpdateShowChoices();
     initFabric();
 
-    try
-    {
-        const choice = Office.context.roamingSettings.get( getSettingsKey() );
-        const input = $( "#uiToggle" + choice.label );
-        input.prop( "checked", true );
-        const headerChoice = $( "#showChoice input:checked" );
-        headerChoice.prop( "checked", true );
-        go( choice );
-    }
-    catch ( e )
-    {
-        goDefaultChoice( uiChoices );
+    try {
+        const choice = Office.context.roamingSettings.get(getSettingsKey());
+        const input = $("#uiToggle" + choice.label);
+        input.prop("checked", true);
+        go(choice);
+    } catch (e) {
+        goDefaultChoice(uiChoices);
     }
 
     registerItemChangeEvent();
 
     // Now that rules are loaded, send renderItem with headers and rules
-    console.log("🔍 CompleteInitialization: Calling SendRenderItemWithRules to update view with rules");
+    console.log("🔍 completeInitialization: Calling SendRenderItemWithRules to update view with rules");
     SendRenderItemWithRules();
 }
 
@@ -460,31 +438,14 @@ function initFabric() {
     button.onclick = function () {
         try {
             // Set the current choice in the UI.
-            $("#uiChoice input").attr("checked", false);
-            let labels = $("#uiChoice label");
+            $("#uiChoice input").attr("checked", "false");
+            const labels = $("#uiChoice label");
             labels.removeClass("is-checked");
             labels.attr("aria-checked", "false");
-            let currentSelected = $("#uiChoice label[value=" + viewModel.currentChoice.label + "]");
+            const currentSelected = $("#uiChoice label[value=" + viewModel.currentChoice.label + "]");
             currentSelected.addClass("is-checked");
             currentSelected.attr("aria-checked", "true");
-            let input = currentSelected.prevAll("input:first");
-            input.prop("checked", "true");
-
-            // Set the current choice for the item to get the header from (email or attachment)
-
-            // Set all labels to unchecked
-            $("#showChoice input").attr("checked", false);
-            labels = $("#showChoice label");
-            labels.removeClass("is-checked");
-            labels.attr("aria-checked", "false");
-
-            // Set the currently selected (according to the viewModel) to checked
-            // Following line of code throws an exception on some email titles.  Attempted to put a try-catch around
-            // it but try-catch causes this file not to load into Outlook.exe as an add-on.
-            currentSelected = $("#showChoice label[value='" + EscapeCharacters (viewModel.currentHeaderSource.label) + "']");
-            currentSelected.addClass("is-checked");
-            currentSelected.attr("aria-checked", "true");
-            input = currentSelected.prevAll("input:first");
+            const input = currentSelected.prevAll("input:first");
             input.prop("checked", "true");
 
             dialogSettingsComponent.open();
@@ -493,51 +454,17 @@ function initFabric() {
         }
     };
 
-    // Escape the special characters
-    function EscapeCharacters(input) {
-        const results = input.replace("'", "\\'");
-
-        return results;
-    }
-
     // Perform a user initiated action
     function actionHandler() {
         const action = this.id;
 
         switch (action) {
             case "actionsSettings-OK": {
-
-                // What did the user select to show (email or attachment)
-
-                const itemChecked = $( "#showChoice input:checked" )[0];
-                let headerChoice;
-
-                if ( itemChecked )
-                {
-                    const headerSourceIndex = itemChecked.value;
-                    headerChoice = HeaderSourceChoices[headerSourceIndex];
-
-                    if ( headerChoice )
-                    {
-                        headerChoice.SetChecked();
-                    }
-                }
-                else
-                {
-                    headerChoice = viewModel.currentHeaderSource;
-                }
-
                 // How did the user say to display it (UI to display)
-
                 const iChoice = $("#uiChoice input:checked")[0].value;
                 const choice = uiChoices[iChoice];
 
-                if ( ( choice.label !== viewModel.currentChoice.label ) || ( headerChoice.label !== viewModel.currentHeaderSource.label ) )
-                {
-                    // Set up header to show
-                    viewModel.currentHeaderSource = headerChoice;
-                    viewModel.headers = headerChoice.header;
-
+                if (choice.label !== viewModel.currentChoice.label) {
                     // Update UI
                     go(choice);
                 }

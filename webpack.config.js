@@ -235,6 +235,13 @@ export default async (env, options) => {
                     generator: {
                         filename: "fonts/[name][ext]"
                     }
+                },
+                {
+                    test: /\.json$/i,
+                    type: "asset/resource",
+                    generator: {
+                        filename: "data/[name][ext]"
+                    }
                 }
             ],
         },

@@ -14,6 +14,15 @@ Message Header Analyzer mail app.
 This is the source for the Message Header Analyzer. Install the app from the store here:
 <https://appsource.microsoft.com/en-us/product/office/WA104005406>
 
+## Architecture
+
+MHA is now a **fully client-side application** that requires no server components:
+
+- **Local Rules Engine**: All validation rules are loaded from a local JSON file (`src/data/rules.json`)
+- **Client-Side Processing**: All email header analysis happens in the browser
+- **No Backend Required**: No server APIs, databases, or authentication needed
+- **Simplified Deployment**: Deploy as static files to any web server or CDN
+
 ## Installation Procedure
 
 Because MHA requires the ReadWriteMailbox permission it can only be installed by the Administrator through the Exchange admin center or by a user as a custom addon. Here are some steps I put together:
@@ -76,12 +85,10 @@ For both IOS and Android click open an email, then press the three dots under th
 ### Live site testing
 
 - Start the dev server: `npm run dev-server`
-  - This runs both the webpack dev server (https://localhost:44336) and mock API server (http://localhost:3001)
-  - Mock API provides development endpoints for rules and attachment services
+  - This runs the webpack dev server (<https://localhost:44336>)
+  - All functionality is client-side only - no backend API required
 - Run website locally: <https://localhost:44336/Pages/mha.html>
 - Changes made to source should live compile and reload page. Ctrl+R/refresh as needed.
-- For webpack only (no mock API): `npm run dev-server:webpack-only`
-- For mock API only: `npm run mock-server`
 
 ### Add-in testing (Command line)
 
