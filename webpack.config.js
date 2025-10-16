@@ -102,8 +102,7 @@ const pages = [
     { name: "MobilePane", script: "MobilePane" }, // uitoggle.html?default=new-mobile
     { name: "Functions" },
     { name: "parentframe", script: "uiToggle" },
-    { name: "PrivacyDialog" },
-    { name: "unittests" }
+    { name: "PrivacyDialog" }
 ];
 
 /**
