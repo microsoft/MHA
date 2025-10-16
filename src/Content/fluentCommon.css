@@ -1,0 +1,293 @@
+@import url("themeColors.css");
+
+/* Shared Fluent UI Web Components Styling */
+/* This file contains common styles used across multiple frames */
+
+/*
+ * MHA Button System Documentation:
+ * 
+ * PRIMARY BUTTONS: Use appearance="accent" - Blue background, white text
+ * SECONDARY BUTTONS: Use default (no appearance) - White background, black border, blue hover
+ * TOOLBAR BUTTONS: Use appearance="subtle" - Transparent, square, content-aware labels
+ * SPECIAL BUTTONS: Maintain unique styling as needed (e.g., Original Headers)
+ */
+
+/* Layout and Typography Variables */
+:root {
+    /* Typography */
+    --font-monospace: "Consolas", "Monaco", "Courier New", monospace;
+    --font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", sans-serif;
+    
+    /* Layout */
+    --border-radius: 4px;
+    --spacing-small: 8px;
+    --spacing-medium: 12px;
+    --focus-outline: 2px solid var(--focus-blue);
+    --button-height: 44px;
+    
+    /* Shadows */
+    --overlay-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Secondary Button Styling - Default black border, blue highlight */
+fluent-button:is(:not([appearance]), [appearance="neutral"]):not([disabled]),
+fluent-button:is(:not([appearance]), [appearance="neutral"])::part(control) {
+    border: 1px solid var(--black);
+}
+
+fluent-button:is(:not([appearance]), [appearance="neutral"]):hover {
+    background-color: var(--hover-blue);
+}
+
+fluent-button:is(:not([appearance]), [appearance="neutral"]):focus,
+fluent-button:is(:not([appearance]), [appearance="neutral"])::part(control):focus {
+    border: 1px solid var(--primary-blue);
+    outline: none;
+}
+
+.toolbar {
+    display: flex;
+    gap: 0;
+    align-items: flex-start;
+}
+
+fluent-button[appearance="subtle"] {
+    width: var(--button-height);
+    height: var(--button-height);
+    min-width: var(--button-height);
+    min-height: var(--button-height);
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+    color: var(--primary-blue);
+    cursor: pointer;
+    outline: none;
+    display: inline-flex;
+    font-family: var(--font-family);
+}
+
+fluent-button[appearance="subtle"]::part(control) {
+    background: transparent;
+    padding: 6px;
+    height: 100%;
+    display: flex;
+}
+
+fluent-button[appearance="subtle"]::part(control):focus {
+    outline: var(--focus-outline);
+    outline-offset: -2px;
+}
+
+fluent-button[appearance="subtle"]:is(:hover, :active, .is-active) {
+    background: var(--hover-blue);
+}
+
+fluent-button[appearance="subtle"]:is(:active, .is-active) {
+    background: transparent;
+    border-bottom: 3px solid var(--primary-blue);
+}
+
+/* Navigation buttons with labels need flexible width when label shows */
+fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label:not([style*="display: none"])) {
+    width: auto;
+    min-width: var(--button-height);
+    padding-inline: var(--spacing-small);
+}
+
+/* Modern Fluent Icon Styling */
+.fluent-icon {
+    font-size: 20px;
+    font-style: normal;
+    color: var(--primary-blue);
+}
+
+/* Modern Fluent Icon Classes */
+.fluent-icon--info::before {
+    content: "\24D8"; /* Unicode ⓘ icon */
+}
+
+.fluent-icon--stopwatch::before {
+    content: "\23F1"; /* Unicode stopwatch ⏱ */
+}
+
+.fluent-icon--mail-alert {
+    position: relative;
+    display: inline-block;
+}
+
+.fluent-icon--mail-alert::before {
+    content: "\2709"; /* Unicode Mail icon ✉ */
+    position: relative;
+    z-index: 1;
+}
+
+.fluent-icon--mail-alert::after {
+    content: "\24D8"; /* Unicode Info icon ⓘ */
+    position: absolute;
+    bottom: -2px;
+    right: -4px;
+    font-size: 8px;
+    color: var(--primary-blue);
+    background: white;
+    border-radius: 50%;
+    z-index: 2;
+    width: 10px;
+    height: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.fluent-icon--cake::before {
+    content: "\1F370\FE0E"; /* Unicode cake slice with text presentation */
+}
+
+.fluent-icon--add::before {
+    content: "\2295"; /* Unicode circled plus ⊕ */
+}
+
+.fluent-icon--remove::before {
+    content: "\2296"; /* Unicode circled minus ⊖ */
+}
+
+.fluent-icon--copy::before {
+    content: "\1F5D0"; /* Unicode 🗐 icon */
+}
+
+.fluent-icon--settings::before {
+    content: "\2699"; /* Unicode ⚙ gear icon */
+    font-weight: bolder;
+}
+
+.fluent-icon--arrow-circle-down::before {
+    content: "\2B07"; /* Unicode ⬇ down arrow */
+}
+
+/* High contrast mode support - modern and legacy combined */
+@media (prefers-contrast: high), (forced-colors: active), screen and (-ms-high-contrast: active) {
+    .fluent-icon {
+        color: ButtonText;
+        forced-color-adjust: none;
+    }
+    
+    fluent-button {
+        border: 1px solid ButtonText !important;
+        forced-color-adjust: none;
+    }
+    
+    fluent-button:focus,
+    fluent-button:focus-visible {
+        outline: 2px solid ButtonText !important;
+        outline-offset: 2px;
+    }
+    
+    fluent-button[appearance="accent"] {
+        background-color: ButtonFace !important;
+        color: ButtonText !important;
+        border: 2px solid ButtonText !important;
+    }
+}
+
+/* Focus styles for accessibility */
+fluent-button:focus-visible,
+fluent-checkbox:focus-visible,
+fluent-radio:focus-visible {
+    outline: var(--focus-outline);
+    outline-offset: 2px;
+}
+
+/* Enhanced focus with modern CSS */
+@supports (outline-style: auto) {
+    fluent-button:focus-visible {
+        outline: 2px auto Highlight;
+        outline-offset: 2px;
+    }
+}
+
+/* Dialog Common Styling */
+.dialog-header {
+    padding: 16px 20px 12px 20px;
+    border-bottom: 1px solid var(--dialog-header-bg);
+    margin: -1px -1px 0 -1px;
+    background: var(--dialog-header-bg);
+    border-radius: 8px 8px 0 0;
+}
+
+.dialog-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dialog-text-on-primary); 
+}
+
+/* Code Box Styling */
+.code-box > pre,
+.code-box > textarea {
+    background-color: var(--background-gray);
+    border: 1px solid var(--border-gray);
+    border-radius: var(--border-radius);
+    padding: 5px;
+    font-size: 10.4px;
+    line-height: 1.4;
+    font-family: var(--font-monospace);
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    color: var(--black);
+    text-align: left;
+}
+
+/* Pre-specific styles */
+.code-box > pre {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    min-height: 0;
+    max-height: none;
+}
+
+/* Textarea-specific styles */
+.code-box > textarea {
+    resize: vertical;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: pre;
+    height: 400px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Common Status Overlay Styles for Copy Feedback */
+/* Used by both uitoggle and standalone MHA pages */
+.status-overlay {
+    display: none;
+    color: var(--success-green); /* Dark green text for contrast */
+    font-size: 14px;
+    font-weight: 500;
+    background-color: var(--success-green-bg); /* Pale green background with high opacity */
+    border-radius: 6px;
+    border: 1px solid var(--success-green); /* Solid green border for contrast */
+    box-shadow: var(--overlay-shadow); /* Subtle shadow for depth */
+    z-index: 9999; /* Very high z-index to appear above everything */
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-8px); /* Slide-in animation from left */
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none; /* Don't interfere with clicks */
+    max-width: 200px;
+    padding: 4px 4px;
+}
+
+.status-overlay.show {
+    display: block;
+    opacity: 1;
+    transform: translateX(0);
+}

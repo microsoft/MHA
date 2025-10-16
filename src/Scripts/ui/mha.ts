@@ -1,6 +1,5 @@
 // Import CSS files
 import "@styles/Office.css";
-import "@styles/App.css";
 
 // 🎯 PAGE IDENTIFICATION LOGGING
 console.log("🎯 SCRIPT LOADED: mha.ts (mha.html)");

@@ -2,8 +2,6 @@
 
 // Import CSS - Include base styles needed for both classic and new frames
 import "../../Content/Office.css";
-import "../../Content/App.css";
-import "../../Content/DesktopPane.css";
 
 // Import required modules
 import $ from "jquery";

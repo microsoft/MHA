@@ -1,0 +1,340 @@
+@import url("themeColors.css");
+
+body {
+    padding: 0;
+    background-color: canvas;
+}
+
+.aspNetHidden {
+    padding: 0;
+}
+
+textarea {
+    font-size: 1em;
+    resize: none;
+}
+
+input {
+    margin-bottom: 1px;
+}
+
+#SectionHeader {
+    height: 40px;
+    text-align: center;
+    margin: 0 auto;
+    padding-bottom: 0;
+}
+
+#SectionContent {
+    padding-bottom: 0;
+}
+
+#floater {
+    float: left;
+    height: 50%;
+    margin-top: -15px;
+    padding-bottom: 0;
+}
+
+#title {
+    clear: both;
+    height: 30px;
+}
+
+#response {
+    overflow: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding-bottom: 0;
+}
+
+table {
+    color: var(--text-primary);
+    border-collapse: collapse;
+    margin-bottom: 0;
+}
+
+#response th {
+    padding: 0;
+}
+
+td {
+    border: 1px solid black;
+    padding-left: 2px;
+}
+
+.allowBreak {
+    word-break: break-all;
+}
+
+.summaryList {
+    border-width: 0;
+    margin-bottom: 20px;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.summaryList td {
+    border-width: 0;
+    padding-bottom: 0;
+}
+
+.summaryHeader {
+    text-align: right;
+    font-weight: bold;
+    width: 150px;
+}
+
+.responsePane {
+    margin-left: 1em;
+    margin-right: 1em;
+    padding-bottom: 0;
+}
+
+.oddRow {
+    background-color: #CDE6F7; /* 2013 light background color */
+}
+
+.tableHeaderButton {
+    background-color: #0072C6; /*2013 hero color*/
+    color: #FFFFFF;
+    border: 0;
+    font-weight: bold;
+    width: 100%;
+    cursor: pointer;
+    padding: 1em 1.2em 1em 1.2em;
+}
+
+th[aria-sort="descending"] .tableHeaderButton .sortArrow::after {
+    content: "\2193"; /* Down arrow */
+}
+
+th[aria-sort="ascending"] .tableHeaderButton .sortArrow::after {
+    content: "\2191"; /* Up arrow */
+}
+
+.tableHeader td + td,
+.tableHeader th + th { border-left: 1px solid white; }
+.tableHeader tr + tr { border-top: 1px solid black; }
+
+#inputHeaders {
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.sectionHeader {
+    background-color: #0072C6; /*2013 hero color*/
+    color: #FFFFFF;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+    border: none;
+}
+
+.tableCaption {
+    background-color: rgb(234, 236, 238);
+    color: #000000;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+    border: none;
+}
+
+.sectionHeader:focus,
+.sectionHeader:hover {
+    outline: black solid 2px;
+    outline-offset: -2px;
+}
+
+.tableCaption:focus, 
+.tableCaption:hover {
+    outline: #0072cc solid 2px;
+    outline-offset: -2px;
+}
+@media screen and (-ms-high-contrast:active) {
+    .sectionHeader:focus,
+    .sectionHeader:hover,
+    .tableCaption:focus
+    .tableCaption:hover {
+        background-color: buttonface;
+    }
+}
+
+.collapsibleArrow {
+    float: right;
+    cursor: pointer;
+    font-size: smaller;
+}
+
+.collapsibleSwitch {
+    float: left;
+    font-size: xx-large;
+    line-height: 8px;
+    display: block;
+    width: 38px;
+    text-align: center;
+    padding-left: 8px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.header-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+button[aria-expanded="true"] .collapsibleSwitch::after {
+    content: "\2013"; /* Minus (ndash) */
+}
+
+button[aria-expanded="false"] .collapsibleSwitch::after {
+    content: "+"; /* Plus */
+}
+
+.collapsibleWrapper {
+    padding-bottom: 0;
+    margin-bottom: 1em;
+    overflow-x: auto;
+    overflow-y: hidden;
+    word-wrap: break-word;
+}
+
+.hiddenElement {
+    display: none;
+    border:0;
+}
+
+.emptyColumn {
+    display: none;
+}
+
+.hotBarCell {
+    padding: 0;
+}
+
+.hotBarContainer {
+    padding-bottom: 1px;
+}
+
+.hotBarBar {
+    height: 8px;
+    background-color: #E44D4D; /* A nice red */
+    padding-bottom: 0;
+    border-radius: 3px;
+}
+
+@media screen and (-ms-high-contrast:active) {
+    .hotBarBar {
+        background-color: highlight;
+    }
+}
+
+.hotBarLabel {
+    padding: 0.4em 1.2em 2px 0;
+    white-space: nowrap;
+}
+
+.negativeCell {
+    color: #E44D4D; /* A nice red */
+}
+
+/* High contrast support for error styling - modern and legacy combined */
+@media (prefers-contrast: high), (forced-colors: active), screen and (-ms-high-contrast: active) {
+    .negativeCell {
+        color: CanvasText !important;
+        background-color: Canvas !important;
+        border: 1px solid CanvasText !important;
+        font-weight: bold;
+        forced-color-adjust: none;
+    }
+}
+
+#hop {
+    min-width: 3em;
+}
+
+#number {
+    min-width: 2em;
+}
+
+#originalHeadersContainer {
+    margin-left: 1em;
+}
+
+#originalHeaders {
+    white-space: pre-wrap;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#mhaFooter {
+    float: right;
+}
+
+.commandBar {
+    height: 44px;
+    background-color: #f4f4f4;
+    padding: 0;
+}
+
+@media screen and (-ms-high-contrast:active) {
+    .tableHeaderButton .sortArrow::after { color: buttontext; }
+    button .collapsibleSwitch::after { color: buttontext; }
+}
+
+#SectionContent button.hiddenElement,
+#SectionContent fluent-button.hiddenElement {
+    display: none;
+    border: 0;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#SectionContent .fluent-icon--copy {
+    font-size: 16px;
+    margin-right: 4px;
+}
+
+/* Status message overlay for button feedback */
+.status-overlay-inline {
+    position: absolute;
+    top: calc(100% + 8px); /* Position below the button */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%) translateY(-8px); /* Center horizontally and slide in from top */
+    display: flex;
+    align-items: center; /* Center text vertically within the overlay */
+}
+
+.status-overlay-inline.show {
+    transform: translateY(0);
+}
+
+/* Dark mode support for status overlay */
+@media (prefers-color-scheme: dark) {
+    .status-overlay-inline {
+        background: rgba(45, 45, 48, 0.9); /* 90% opacity */
+        border-color: rgba(62, 62, 66, 0.9);
+        color: #cccccc;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+}
