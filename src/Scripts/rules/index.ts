@@ -1,13 +1,25 @@
-// Main rules engine exports
-export { HeaderValidationRules, ClassHeaderValidationRules, findSectionSubSection } from "./engine/HeaderValidationRules";
+// =============================================================================
+// RULES ENGINE API
+// =============================================================================
 
-// Rule types (new TypeScript classes)
+export { RulesService, IRulesService, ValidationResult } from "./RulesService";
+
+// =============================================================================
+// ADVANCED TYPES (for extending the rules engine)
+// =============================================================================
+
+// Rule type classes
 export { SimpleValidationRule } from "./types/SimpleValidationRule";
 export { AndValidationRule } from "./types/AndValidationRule";
 export { HeaderSectionMissingRule } from "./types/HeaderSectionMissingRule";
 
-// Type interfaces
-export type { ISimpleValidationRule, IComplexValidationRule, IAndValidationRule, IRulesResponse, IRuleData, IAndRuleData, HeaderSection } from "./types/interfaces";
-
-// Rule loaders
-export { GetRules, SimpleRuleSet, AndRuleSet, RuleStore, AlreadyRetrievedRules } from "./loaders/GetRules";
+// Type interfaces for advanced usage
+export type {
+    ISimpleValidationRule,
+    IComplexValidationRule,
+    IAndValidationRule,
+    IRulesResponse,
+    IRuleData,
+    IAndRuleData,
+    HeaderSection
+} from "./types/interfaces";

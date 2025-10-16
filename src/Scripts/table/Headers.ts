@@ -4,8 +4,15 @@ import { AntiSpamReport } from "../row/Antispam";
 import { ForefrontAntiSpamReport } from "../row/ForefrontAntispam";
 import { Other } from "../row/Other";
 import { Received } from "../row/Received";
-import { HeaderValidationRules } from "../rules/engine/HeaderValidationRules";
-import { AndRuleSet, SimpleRuleSet } from "../rules/loaders/GetRules";
+import { RulesService, ValidationResult } from "../rules/RulesService";
+
+// Simple interface for header model to avoid type issues
+interface IHeaderModel {
+    summary: { summaryRows: any[] };
+    forefrontAntiSpamReport: { forefrontAntiSpamRows: any[] };
+    antiSpamReport: { antiSpamRows: any[] };
+    otherHeaders: { otherRows: any[] };
+}
 
 export const HeaderModel = function (headers) {
     // Initialize defaults
@@ -68,66 +75,56 @@ HeaderModel.prototype.parseHeaders = function (headers) {
     }
 
     this.summary.totalTime = this.receivedHeaders.computeDeltas();
-
-    // Note: FlagRuleViolations is now called manually after rules are downloaded
-    // instead of automatically here to avoid timing issues
 };
 
-export function FlagRuleViolations(header) {
-    console.log("🔍 FlagRuleViolations: Starting rule validation");
-    console.log("🔍 FlagRuleViolations: SimpleRuleSet:", SimpleRuleSet?.length || 0, "rules");
-    console.log("🔍 FlagRuleViolations: AndRuleSet:", AndRuleSet?.length || 0, "rules");
-    console.log("🔍 FlagRuleViolations: HeaderValidationRules exists:", !!HeaderValidationRules);
+export async function flagRuleViolations(header: IHeaderModel): Promise<ValidationResult> {
+    console.log("🔍 flagRuleViolations: Starting simplified rule validation");
 
-    HeaderValidationRules.setRules(SimpleRuleSet, AndRuleSet);
+    try {
+        // Load rules once (safe to call multiple times)
+        await RulesService.loadRules();
 
-    // Create set of all sections where errors could be reported
-    const setOfAllSections = [header.summary.summaryRows,
-        header.forefrontAntiSpamReport.forefrontAntiSpamRows,
-        header.antiSpamReport.antiSpamRows,
-        header.otherHeaders.otherRows];
+        // Create sections array for validation
+        const headerSections = [
+            header.summary.summaryRows,
+            header.forefrontAntiSpamReport.forefrontAntiSpamRows,
+            header.antiSpamReport.antiSpamRows,
+            header.otherHeaders.otherRows
+        ];
 
-    console.log("🔍 FlagRuleViolations: Sections for validation:");
-    console.log("🔍 FlagRuleViolations: Summary rows:", header.summary.summaryRows?.length || 0);
-    console.log("🔍 FlagRuleViolations: Forefront rows:", header.forefrontAntiSpamReport.forefrontAntiSpamRows?.length || 0);
-    console.log("🔍 FlagRuleViolations: AntiSpam rows:", header.antiSpamReport.antiSpamRows?.length || 0);
-    console.log("🔍 FlagRuleViolations: Other rows:", header.otherHeaders.otherRows?.length || 0);
+        console.log("🔍 flagRuleViolations: Sections for validation:");
+        console.log("🔍 flagRuleViolations: Summary rows:", header.summary.summaryRows?.length || 0);
+        console.log("🔍 flagRuleViolations: Forefront rows:", header.forefrontAntiSpamReport.forefrontAntiSpamRows?.length || 0);
+        console.log("🔍 flagRuleViolations: AntiSpam rows:", header.antiSpamReport.antiSpamRows?.length || 0);
+        console.log("🔍 flagRuleViolations: Other rows:", header.otherHeaders.otherRows?.length || 0);
 
-    // Check all the header sections for rules that need to be flagged
-    if (HeaderValidationRules) {
-        console.log("🔍 FlagRuleViolations: Starting flagAllRowsWithViolations for each section");
+        // Single call validates all sections and returns structured results
+        const result = RulesService.validateHeaders(headerSections);
 
-        // Flag Simple Validation Rules
-        console.log("🔍 FlagRuleViolations: Flagging summary rows");
-        HeaderValidationRules.flagAllRowsWithViolations(header.summary.summaryRows, setOfAllSections);
+        console.log("🔍 flagRuleViolations: Validation complete");
+        console.log("🔍 flagRuleViolations: Has violations:", result.hasViolations);
+        console.log("🔍 flagRuleViolations: Violated sections:", result.violatedSections.length);
+        console.log("🔍 flagRuleViolations: Rule errors:", result.ruleErrors.length);
 
-        console.log("🔍 FlagRuleViolations: Flagging forefront antispam rows");
-        HeaderValidationRules.flagAllRowsWithViolations(header.forefrontAntiSpamReport.forefrontAntiSpamRows, setOfAllSections);
+        // Log detailed results
+        if (result.hasViolations) {
+            result.ruleErrors.forEach(({ section, rules }) => {
+                console.log(`🔍 flagRuleViolations: Section "${section.header}" has ${rules.length} rule violations:`,
+                    rules.map(r => r.message));
+            });
+        }
 
-        console.log("🔍 FlagRuleViolations: Flagging antispam rows");
-        HeaderValidationRules.flagAllRowsWithViolations(header.antiSpamReport.antiSpamRows, setOfAllSections);
-
-        console.log("🔍 FlagRuleViolations: Flagging other rows");
-        HeaderValidationRules.flagAllRowsWithViolations(header.otherHeaders.otherRows, setOfAllSections);
-
-        console.log("🔍 FlagRuleViolations: Starting findComplexViolations");
-        // Flag Complex (more than one rule) Rules
-        HeaderValidationRules.findComplexViolations(setOfAllSections);
-
-        console.log("🔍 FlagRuleViolations: Rule validation complete - checking results:");
-        setOfAllSections.forEach((section, sectionIndex) => {
-            if (Array.isArray(section)) {
-                section.forEach((row, rowIndex) => {
-                    if (row?.rulesFlagged?.length > 0) {
-                        console.log(`🔍 FlagRuleViolations: Section ${sectionIndex} Row ${rowIndex} (${row.header}) has ${row.rulesFlagged.length} rules flagged:`, row.rulesFlagged.map(r => r.name));
-                    }
-                });
-            }
-        });
-    } else {
-        console.log("🔍 FlagRuleViolations: HeaderValidationRules is null/undefined - no rules will be applied");
+        return result;
+    } catch (error) {
+        console.error("🔍 flagRuleViolations: Validation failed:", error);
+        // Return empty result on error
+        return {
+            hasViolations: false,
+            violatedSections: [],
+            ruleErrors: []
+        };
     }
-};
+}
 
 function GetHeaderList(headers) {
     // First, break up out input by lines.

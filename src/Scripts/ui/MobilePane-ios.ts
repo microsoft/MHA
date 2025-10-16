@@ -11,7 +11,7 @@ console.log("🎯 SCRIPT LOADED: MobilePane-ios.ts (MobilePane-ios.html, newMobi
 console.log("🎯 PAGE TYPE: iOS Mobile Frame Handler");
 console.log("🎯 DESCRIPTION: Mobile UI for iOS devices - email header analysis");
 
-import { AddRuleFlagged, FlagRuleViolations } from "../table/Headers";
+import { AddRuleFlagged, flagRuleViolations } from "../table/Headers";
 
 // Framework7 app object
 let myApp = null;
@@ -135,12 +135,16 @@ function eventListener(event) {
 
                     // Trigger rule validation on the current viewModel if it exists
                     if (viewModel) {
-                        console.log("🔍 eventListener validateRules: 🎯 Calling FlagRuleViolations on current viewModel");
-                        FlagRuleViolations(viewModel);
-
-                        // Re-render the tables to show the rule violations
-                        console.log("🔍 eventListener validateRules: 🔄 Re-rendering tables with rule violations");
-                        buildViews();
+                        console.log("🔍 eventListener validateRules: 🎯 Calling flagRuleViolations on current viewModel");
+                        flagRuleViolations(viewModel).then(() => {
+                            // Re-render the tables to show the rule violations
+                            console.log("🔍 eventListener validateRules: 🔄 Re-rendering tables with rule violations");
+                            buildViews();
+                        }).catch(error => {
+                            console.error("🔍 eventListener validateRules: Rules validation failed:", error);
+                            // Still re-render even if validation fails
+                            buildViews();
+                        });
                     } else {
                         console.log("🔍 eventListener validateRules: ⚠️ No viewModel available for rule validation");
                     }

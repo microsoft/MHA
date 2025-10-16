@@ -11,7 +11,7 @@ import $ from "jquery";
 import { RuleStore } from "../rules/loaders/GetRules";
 import { AndValidationRule } from "../rules/types/AndValidationRule";
 import { ImportedStrings } from "../Strings";
-import { AddRuleFlagged, FlagRuleViolations, HeaderModel, mapHeaderToURL } from "../table/Headers";
+import { AddRuleFlagged, HeaderModel, flagRuleViolations, mapHeaderToURL } from "../table/Headers";
 
 // Module-level variables
 let overlay = null;
@@ -59,8 +59,13 @@ function eventListener(event) {
                     AndRuleSet = event.data.data.AndRuleSet;
 
                     if (viewModel) {
-                        FlagRuleViolations(viewModel);
-                        buildViews();
+                        // Use new async rules validation
+                        flagRuleViolations(viewModel).then(() => {
+                            buildViews();
+                        }).catch(error => {
+                            console.error("🔍 DesktopPane: Rules validation failed:", error);
+                            buildViews(); // Still build views even if validation fails
+                        });
                     }
                 }
                 break;
@@ -179,7 +184,7 @@ function initializeFabric() {
     }
 }
 
-function renderItem(headers) {
+async function renderItem(headers) {
     // Empty data
     $( ".displayedItemTitle" ).empty(); // title of item whose header is being displayed (unless it is the current email)
     $(".summary-list").empty();
@@ -199,18 +204,19 @@ function renderItem(headers) {
     try {
         viewModel = new HeaderModel(headers);
 
-        // Apply rules if we have them
+        // Apply rules if we have them - WAIT for validation to complete before building views
         if (SimpleRuleSet && SimpleRuleSet.length > 0) {
-            FlagRuleViolations(viewModel);
+            console.log("🔍 DesktopPane: Starting rules validation before building views");
+            // Use new async rules validation and wait for it to complete
+            await flagRuleViolations(viewModel);
+            console.log("🔍 DesktopPane: Rules validation complete, now building views");
         }
-    } catch (error) {
-        return;
-    }
 
-    try {
+        // Build views after validation is complete
         buildViews();
     } catch (error) {
-        // Handle error silently
+        console.error("🔍 DesktopPane: Error in header processing:", error);
+        return;
     }
 
     hideStatus();
