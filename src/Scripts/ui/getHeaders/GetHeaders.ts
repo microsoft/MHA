@@ -1,7 +1,7 @@
 import { GetHeadersAPI } from "./GetHeadersAPI";
 import { GetHeadersEWS } from "./GetHeadersEWS";
 import { GetHeadersRest } from "./GetHeadersRest";
-import { LogError, ShowError } from "../uiToggle";
+import { LogError, ShowError } from "../uiToggleCompat";
 
 /*
  * GetHeaders.js

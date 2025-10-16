@@ -47,6 +47,7 @@
     "@eslint/compat": "^1.4.0",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.37.0",
+    "@fluentui/web-components": "^2.6.1",
     "@jest/globals": "^30.2.0",
     "@stylistic/eslint-plugin": "^5.4.0",
     "@types/jest": "^30.0.0",
@@ -84,7 +85,6 @@
     "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
-    "@fluentui/web-components": "^2.6.1",
     "@microsoft/applicationinsights-web": "^3.3.10",
     "@microsoft/office-js": "^1.1.110",
     "codepage": "^1.15.0",

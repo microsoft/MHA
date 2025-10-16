@@ -70,7 +70,24 @@ function eventListener(event) {
                 }
                 break;
             case "renderItem":
-                this.currentHeaderSource = event.source.viewModel.currentHeaderSource;
+                // Fix: Get currentHeaderSource from the data, not from event.source.viewModel
+                // which doesn't exist in the modern ParentFrame structure
+                if (event.data.data && typeof event.data.data === "object" && !Array.isArray(event.data.data)) {
+                    this.currentHeaderSource = event.data.data.currentHeaderSource;
+                    // If the data has both headers and currentHeaderSource, extract the headers
+                    if (event.data.data.headers) {
+                        viewModel = event.data.data.headers;
+                    } else {
+                        viewModel = event.data.data;
+                    }
+                } else if (typeof event.data.data === "string") {
+                    // Simple string headers data
+                    viewModel = event.data.data;
+                    this.currentHeaderSource = { label: ImportedStrings.mha_thisEmail || "This Email" };
+                } else {
+                    // Default value if not provided
+                    this.currentHeaderSource = { label: ImportedStrings.mha_thisEmail || "This Email" };
+                }
 
                 if (Array.isArray(event.data.data)) {
                     // Update local variables
@@ -89,7 +106,8 @@ function eventListener(event) {
                 {
                     SimpleRuleSet = [];
                     AndRuleSet = [];
-                    renderItem(event.data.data);
+                    // Use viewModel which contains the extracted headers string
+                    renderItem(viewModel);
                 }
                 break;
             default:

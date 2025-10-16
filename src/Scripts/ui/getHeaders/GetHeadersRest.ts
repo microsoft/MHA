@@ -2,7 +2,7 @@ import { jwtDecode } from "jwt-decode";
 
 import { GetHeaders } from "./GetHeaders";
 import { ImportedStrings } from "../../Strings";
-import { LogError, ShowError, UpdateStatus } from "../uiToggle";
+import { LogError, ShowError, UpdateStatus } from "../uiToggleCompat";
 
 /*
  * GetHeadersRest.js

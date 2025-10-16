@@ -1,6 +1,6 @@
 import { GetHeaders } from "./GetHeaders";
 import { ImportedStrings } from "../../Strings";
-import { LogError, ShowError, UpdateStatus } from "../uiToggle";
+import { LogError, ShowError, UpdateStatus } from "../uiToggleCompat";
 
 /*
  * GetHeadersAPI.js
