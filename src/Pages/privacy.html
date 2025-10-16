@@ -1,29 +1,31 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en-US" class="privacy-policy">
 <head>
-    <meta charset="UTF-8" />
-    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+    <meta charset="UTF-8">
     <title>Message Header Analyzer Privacy Policy</title>
-
-    <link href="/Content/Office.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
+<body class="privacy-policy">
+    <button id="close-button" class="close-button" aria-label="Go back to Message Header Analyzer">×</button>
     <h1>Message Header Analyzer</h1>
     <h2>Privacy Policy</h2>
     <h3>TL;DR</h3>
     This add-in does not intentionally collect or transmit any personal data. All processing occurs client side.
 
     <h3>Microsoft Privacy Statement</h3>
-    This add-in adheres to the <a href="https://privacy.microsoft.com/en-us/privacystatement" target="_blank">Microsoft Privacy Statement</a>.
-    
+    This add-in adheres to the <a href="https://privacy.microsoft.com/en-us/privacystatement" target="_blank" rel="noopener noreferrer">Microsoft Privacy Statement</a>.
+
     <h3>Telemetry</h3>
-    This add-in uses <a href="https://docs.microsoft.com/en-us/azure/application-insights/app-insights-data-retention-privacy" target="_blank">Application Insights</a>
+    This add-in uses <a href="https://docs.microsoft.com/en-us/azure/application-insights/app-insights-data-retention-privacy" target="_blank" rel="noopener noreferrer">Application Insights</a>
     to collect telemetry necessary for maintainence and improvement of the add-in. No personal information is intentionally gathered. All information
     gathered is deleted after 90 days.
 
+    <h3>Questions</h3>
+    Please refer any questions to the MHA <a href="https://github.com/microsoft/MHA/issues/" target="_blank" rel="noopener noreferrer">project</a> on GitHub.<br />
+    <br />
     <h2>A Note from the Developer on Permissions</h2>
     In order to get the transport message headers I have to use the EWS makeEwsRequestAsync method, which requires the ReadWriteMailbox permission level. See the article
-    <a href="https://dev.office.com/docs/add-ins/outlook/understanding-outlook-add-in-permissions" target="_blank">Understanding Outlook add-in permissions</a>
+    <a href="https://dev.office.com/docs/add-ins/outlook/understanding-outlook-add-in-permissions" target="_blank" rel="noopener noreferrer">Understanding Outlook add-in permissions</a>
     for more on this. If I could request fewer permissions I would, since I only ever read the one property, but I have no choice in the matter.<br />
     <br />
     When REST is more widely available, and a few REST specific bugs are fixed, I'll be able to switch to REST and request a lower permission level.<br />

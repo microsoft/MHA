@@ -89,6 +89,7 @@ console.log("buildTime:", buildTime);
 
 const pages = [
     { name: "mha", script: "mha" },
+    { name: "uitoggle", script: "uiToggle" },
     { name: "newDesktopFrame", script: "DesktopPane" },
     { name: "newMobilePaneIosFrame", script: "MobilePane-ios" },
     { name: "MobilePane-ios", script: "MobilePane-ios" },
@@ -101,7 +102,6 @@ const pages = [
     { name: "DesktopPane", script: "DesktopPane" }, // uitoggle.html?default=new
     { name: "MobilePane", script: "MobilePane" }, // uitoggle.html?default=new-mobile
     { name: "Functions" },
-    { name: "parentframe", script: "uiToggle" },
     { name: "PrivacyDialog" }
 ];
 
