@@ -1,55 +1,69 @@
 // A validation to verify that a header section exists.  The rule is of the format:
 //
-//  IF regularExpression exists in section
+//  IF section is missing
 //    then display error message on UI for section
 //
 
-import { FindSectionSubSection } from "../engine/HeaderValidationRules";
+import { HeaderSection, IComplexValidationRule } from "./interfaces";
+import { findSectionSubSection } from "../engine/HeaderValidationRules";
 
 // rule counter to assign unique rule numbers to each rule (internal number only)
-export let UniqueRuleNumber = 0;
+let uniqueRuleNumber = 0;
 
-// Create a new Validation Rule
-// checkSection - section in the header to look for the pattern
-// errorPattern - Regular Expression that is the pattern to look for in the section
-// errorMessage - Message to show when regular expression is found
-// reportSection - Where on the UI to show the error message
-// cssEntryPrefix - prefix (appended with 'Text') to define the Text format in the CSS to use when showing message
-export const HeaderSectionMissingRule = function ( checkSection, errorMessage, reportSection, cssEntryPrefix )
-{
-    this.checkSection = checkSection;
-    this.errorMessage = errorMessage || "";
+export class HeaderSectionMissingRule implements IComplexValidationRule {
+    public checkSection: string;
+    public errorMessage: string;
+    public errorReportingSection: string[];
+    public cssEntryPrefix: string;
+    public ruleNumber: number;
+    public primaryRule: boolean;
 
-    // Make sure reporting section is an array
-    if ( Array.isArray( reportSection ) )
-    {
-        this.errorReportingSection = reportSection;
-    }
-    else
-    {
-        if ( reportSection )
-        {
-            this.errorReportingSection = [reportSection];
+    constructor(
+        checkSection: string,
+        errorMessage: string,
+        reportSection: string | string[],
+        cssEntryPrefix?: string
+    ) {
+        this.checkSection = checkSection;
+        this.errorMessage = errorMessage || "";
+
+        // Make sure reporting section is an array
+        if (Array.isArray(reportSection)) {
+            this.errorReportingSection = reportSection;
+        } else {
+            if (reportSection) {
+                this.errorReportingSection = [reportSection];
+            } else {
+                this.errorReportingSection = [];
+            }
         }
-        else
-        {
-            this.errorReportingSection = [];
-        }
+
+        this.cssEntryPrefix = cssEntryPrefix || "error";
+        this.ruleNumber = ++uniqueRuleNumber;
+        this.primaryRule = true;
     }
 
-    this.cssEntryPrefix = cssEntryPrefix || "error";
-    this.ruleNumber = ++UniqueRuleNumber;
-    this.primaryRule = true;
-};
+    /**
+     * Determine if the rule is violated by the header sections passed in.
+     * @param setOfSections - set of sections being displayed. An array of sections that are displayed on the UI,
+     * where each entry in the array is an array of the portions of the header that are displayed in on that
+     * section within the UI.
+     * @returns true if the rule is violated (section is missing)
+     */
+    public violatesComplexRule(setOfSections: HeaderSection[][]): boolean {
+        // FOREACH section find instance of section to look for in that group of sections
+        const sectionDefinition = findSectionSubSection(setOfSections, this.checkSection);
 
-// Determine if the rule is violated by the header sections passed in.
-// setOfSections - set of sections being displayed.  An array of sections that are displayed on the UI,
-// where each entry in the array is an array of the portions of the header that are displayed in on that
-// section within the UI.
-HeaderSectionMissingRule.prototype.ViolatesComplexRule = function (setOfSections) {
+        return sectionDefinition.length === 0;
+    }
+}
 
-    // FOREACH section find instance of section to look for in that group of sections
-    const sectionDefinition = FindSectionSubSection(setOfSections, this.checkSection);
-
-    return sectionDefinition.length == 0;
+// Export function constructor for backward compatibility
+export const HeaderSectionMissingRuleFunction = function (
+    checkSection: string,
+    errorMessage: string,
+    reportSection: string | string[],
+    cssEntryPrefix?: string
+): HeaderSectionMissingRule {
+    return new HeaderSectionMissingRule(checkSection, errorMessage, reportSection, cssEntryPrefix);
 };

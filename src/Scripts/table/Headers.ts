@@ -79,7 +79,7 @@ export function FlagRuleViolations(header) {
     console.log("🔍 FlagRuleViolations: AndRuleSet:", AndRuleSet?.length || 0, "rules");
     console.log("🔍 FlagRuleViolations: HeaderValidationRules exists:", !!HeaderValidationRules);
 
-    HeaderValidationRules.SetRules(SimpleRuleSet, AndRuleSet);
+    HeaderValidationRules.setRules(SimpleRuleSet, AndRuleSet);
 
     // Create set of all sections where errors could be reported
     const setOfAllSections = [header.summary.summaryRows,
@@ -95,24 +95,24 @@ export function FlagRuleViolations(header) {
 
     // Check all the header sections for rules that need to be flagged
     if (HeaderValidationRules) {
-        console.log("🔍 FlagRuleViolations: Starting FlagAllRowsWithViolations for each section");
+        console.log("🔍 FlagRuleViolations: Starting flagAllRowsWithViolations for each section");
 
         // Flag Simple Validation Rules
         console.log("🔍 FlagRuleViolations: Flagging summary rows");
-        HeaderValidationRules.FlagAllRowsWithViolations(header.summary.summaryRows, setOfAllSections);
+        HeaderValidationRules.flagAllRowsWithViolations(header.summary.summaryRows, setOfAllSections);
 
         console.log("🔍 FlagRuleViolations: Flagging forefront antispam rows");
-        HeaderValidationRules.FlagAllRowsWithViolations(header.forefrontAntiSpamReport.forefrontAntiSpamRows, setOfAllSections);
+        HeaderValidationRules.flagAllRowsWithViolations(header.forefrontAntiSpamReport.forefrontAntiSpamRows, setOfAllSections);
 
         console.log("🔍 FlagRuleViolations: Flagging antispam rows");
-        HeaderValidationRules.FlagAllRowsWithViolations(header.antiSpamReport.antiSpamRows, setOfAllSections);
+        HeaderValidationRules.flagAllRowsWithViolations(header.antiSpamReport.antiSpamRows, setOfAllSections);
 
         console.log("🔍 FlagRuleViolations: Flagging other rows");
-        HeaderValidationRules.FlagAllRowsWithViolations(header.otherHeaders.otherRows, setOfAllSections);
+        HeaderValidationRules.flagAllRowsWithViolations(header.otherHeaders.otherRows, setOfAllSections);
 
-        console.log("🔍 FlagRuleViolations: Starting FindComplexViolations");
+        console.log("🔍 FlagRuleViolations: Starting findComplexViolations");
         // Flag Complex (more than one rule) Rules
-        HeaderValidationRules.FindComplexViolations(setOfAllSections);
+        HeaderValidationRules.findComplexViolations(setOfAllSections);
 
         console.log("🔍 FlagRuleViolations: Rule validation complete - checking results:");
         setOfAllSections.forEach((section, sectionIndex) => {

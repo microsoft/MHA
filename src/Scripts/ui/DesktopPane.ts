@@ -9,7 +9,7 @@ import "../../Content/DesktopPane.css";
 import $ from "jquery";
 
 import { RuleStore } from "../rules/loaders/GetRules";
-import { AndValidationRuleClass } from "../rules/types/AndValidationRule";
+import { AndValidationRule } from "../rules/types/AndValidationRule";
 import { ImportedStrings } from "../Strings";
 import { AddRuleFlagged, FlagRuleViolations, HeaderModel, mapHeaderToURL } from "../table/Headers";
 
@@ -73,10 +73,10 @@ function eventListener(event) {
                     AndRuleSet = event.data.data[2];
 
                     // CRITICAL: Update the global RuleStore so FlagRuleViolations can access the rules
-                    RuleStore.SimpleRuleSet.length = 0; // Clear existing
-                    RuleStore.SimpleRuleSet.push(...event.data.data[1]);
-                    RuleStore.AndRuleSet.length = 0; // Clear existing
-                    RuleStore.AndRuleSet.push(...event.data.data[2]);
+                    RuleStore.simpleRuleSet.length = 0; // Clear existing
+                    RuleStore.simpleRuleSet.push(...event.data.data[1]);
+                    RuleStore.andRuleSet.length = 0; // Clear existing
+                    RuleStore.andRuleSet.push(...event.data.data[2]);
 
                     renderItem(event.data.data[0]);
                 }
@@ -649,7 +649,7 @@ function buildDiagnosticsReport()
         fieldTitle.appendTo(diagnosticsReportSection);
         BlankLine();
 
-        if (rule instanceof AndValidationRuleClass)
+        if (rule instanceof AndValidationRule)
         {
             // Complex rule, show all the sections that caused the rule to be flagged
             rule.rulesToAndArray.forEach(ShowRule);
