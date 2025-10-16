@@ -50,7 +50,7 @@
     "@jest/globals": "^30.2.0",
     "@stylistic/eslint-plugin": "^5.4.0",
     "@types/jest": "^30.0.0",
-    "@types/office-js": "^1.0.547",
+    "@types/office-js": "^1.0.549",
     "@typescript-eslint/eslint-plugin": "^8.46.1",
     "@typescript-eslint/parser": "^8.32.1",
     "css-loader": "^7.1.2",
