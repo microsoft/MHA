@@ -57,13 +57,3 @@ export class HeaderSectionMissingRule implements IComplexValidationRule {
         return sectionDefinition.length === 0;
     }
 }
-
-// Export function constructor for backward compatibility
-export const HeaderSectionMissingRuleFunction = function (
-    checkSection: string,
-    errorMessage: string,
-    reportSection: string | string[],
-    cssEntryPrefix?: string
-): HeaderSectionMissingRule {
-    return new HeaderSectionMissingRule(checkSection, errorMessage, reportSection, cssEntryPrefix);
-};

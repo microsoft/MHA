@@ -1,17 +1,17 @@
 import { Decoder } from "./2047";
 import { Poster } from "./Poster";
+import { AntiSpamReport } from "./row/AntiSpamReport";
+import { ForefrontAntiSpamReport } from "./row/ForefrontAntiSpamReportModern";
 import { Header } from "./row/Header";
 
 // Modern components
 import { Summary } from "./SummaryModern";
+import { OtherLegacyCompat } from "./table/OtherLegacyCompat";
 import { Other } from "./table/OtherModern";
 import { Received } from "./table/ReceivedModern";
-import { ForefrontAntiSpamReport } from "./row/ForefrontAntiSpamReportModern";
-import { AntiSpamReport } from "./row/AntiSpamReport";
 
 // Legacy compatibility components (fallback if needed)
 import { SummaryLegacyCompat } from "./table/SummaryLegacyCompat";
-import { OtherLegacyCompat } from "./table/OtherLegacyCompat";
 
 /**
  * Modern HeaderModel that bridges between legacy and modern architectures
@@ -33,9 +33,9 @@ export class HeaderModelBridge {
     public set status(value) { this.statusInternal = value; }
     [index: string]: unknown;
 
-    constructor(headers?: string, useModern: boolean = true) {
+    constructor(headers?: string, useModern = true) {
         this.useModernComponents = useModern;
-        
+
         // Initialize components based on compatibility mode
         if (this.useModernComponents) {
             this.summary = new Summary();
@@ -44,16 +44,16 @@ export class HeaderModelBridge {
             this.summary = new SummaryLegacyCompat();
             this.otherHeaders = new OtherLegacyCompat();
         }
-        
+
         // These are always modern as they have good backward compatibility
         this.receivedHeaders = new Received();
         this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
         this.antiSpamReport = new AntiSpamReport();
-        
+
         this.originalHeaders = "";
         this.statusInternal = "";
         this.hasDataInternal = false;
-        
+
         if (headers) {
             this.parseHeaders(headers);
             Poster.postMessageToParent("modelToString", this.toString());
@@ -127,6 +127,10 @@ export class HeaderModelBridge {
             // Strip nulls
             // Strip trailing carriage returns
             header.value = Decoder.clean2047Encoding(header.value).replace(/\0/g, "").replace(/[\n\r]+$/, "");
+            // Debug final parsed headers
+            if (header.header.toUpperCase().includes("FOREFRONT") || header.header.toUpperCase().includes("ANTISPAM")) {
+                console.log(`🔍 HeaderModelBridge: Final parsed header "${header.header}" = "${header.value}"`);
+            }
         });
 
         return headerList;

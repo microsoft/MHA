@@ -8,10 +8,11 @@ import "../../Content/DesktopPane.css";
 // Import required modules
 import $ from "jquery";
 
+import { HeaderModelBridge as HeaderModel } from "../HeaderModelBridge";
 import { RuleStore } from "../rules/loaders/GetRules";
 import { AndValidationRule } from "../rules/types/AndValidationRule";
 import { ImportedStrings } from "../Strings";
-import { AddRuleFlagged, HeaderModel, flagRuleViolations, mapHeaderToURL } from "../table/Headers";
+import { AddRuleFlagged, flagRuleViolations, mapHeaderToURL } from "../table/Headers";
 
 // Module-level variables
 let overlay = null;
@@ -303,8 +304,10 @@ function buildViews() {
 
     function createSummaryTabView()
     {
+        console.log("🔍 DesktopPane createSummaryTabView: Building summary section");
         buildSummarySection();
 
+        console.log("🔍 DesktopPane createSummaryTabView: Building diagnostics report");
         // Build the Diagnostics Report
         buildDiagnosticsReport();
 
@@ -552,7 +555,8 @@ function buildViews() {
 
             function addAntiSpamReportRow( table, antiSpamRow )
             {
-                if ( antiSpamRow.get() )
+                const value = antiSpamRow.get();
+                if ( value !== null && value !== undefined && value !== "" )
                 {
                     const row = $( "<tr/>" ).appendTo( table );
 
@@ -563,7 +567,7 @@ function buildViews() {
                     const linkVal = mapHeaderToURL( antiSpamRow.url, antiSpamRow.get() );
 
                     $( "<td/>" )
-                        .html( linkVal )
+                        .html( linkVal || antiSpamRow.get() || "" )
                         .appendTo( row );
 
                     // Add messages to display

@@ -20,5 +20,9 @@ export class Row {
     get valueUrl(): string { return this.onGetUrl ? this.onGetUrl(this.headerName, this.valueInternal) : ""; }
     get id(): string { return this.header + "_id"; }
 
+    // Legacy compatibility methods
+    get(): string { return this.value; }
+    set(value: string): void { this.value = value; }
+
     toString(): string { return this.label + ": " + this.value; }
 }

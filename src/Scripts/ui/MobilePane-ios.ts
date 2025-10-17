@@ -11,6 +11,8 @@ console.log("🎯 SCRIPT LOADED: MobilePane-ios.ts (MobilePane-ios.html, newMobi
 console.log("🎯 PAGE TYPE: iOS Mobile Frame Handler");
 console.log("🎯 DESCRIPTION: Mobile UI for iOS devices - email header analysis");
 
+import { HeaderModelBridge as HeaderModel } from "../HeaderModelBridge";
+import { ImportedStrings } from "../Strings";
 import { AddRuleFlagged, flagRuleViolations } from "../table/Headers";
 
 // Framework7 app object
