@@ -8,7 +8,7 @@ import "../../Content/DesktopPane.css";
 // Import required modules
 import $ from "jquery";
 
-import { HeaderModelBridge as HeaderModel } from "../HeaderModelBridge";
+import { HeaderModel } from "../HeaderModel";
 import { RuleStore } from "../rules/loaders/GetRules";
 import { AndValidationRule } from "../rules/types/AndValidationRule";
 import { ImportedStrings } from "../Strings";
