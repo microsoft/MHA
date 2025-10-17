@@ -5,11 +5,13 @@ console.log("🎯 DESCRIPTION: Classic table-based email header analysis");
 
 import $ from "jquery";
 
-import { ImportedStrings } from "../Strings";
-import { HeaderModel } from "../table/Headers";
-import { initializeTableUI, onResize, rebuildTables } from "../table/Table";
+import { HeaderModel } from "../HeaderModel";
+import { mhaStrings } from "../mhaStrings";
+import { initializeTableUI, onResize, rebuildSections, rebuildTables, recalculateVisibility } from "../table/Table";
 
-export let viewModel = null;
+export let viewModel: HeaderModel | null = null;
+let simpleRuleSet: unknown[] = [];
+let andRuleSet: unknown[] = [];
 
 // This function is run when the app is ready to start interacting with the host application.
 // It ensures the DOM is ready before updating the span elements with values from the current message.
@@ -18,23 +20,23 @@ $(document).ready(function () {
         $(window).resize(onResize);
         viewModel = new HeaderModel();
         initializeTableUI();
-        updateStatus(ImportedStrings.mha_loading);
+        updateStatus(mhaStrings.mhaLoading);
         window.addEventListener("message", eventListener, false);
-        postMessageToParent("frameActive");
+        postMessageToParent("frameActive", undefined);
     }
     catch (e) {
-        LogError(e, "Failed initializing frame");
+        logError(e, "Failed initializing frame");
         showError(e, "Failed initializing frame");
     }
 });
 
 function site() { return window.location.protocol + "//" + window.location.host; }
 
-export function postMessageToParent(eventName, data) {
+export function postMessageToParent(eventName: string, data?: unknown) {
     window.parent.postMessage({ eventName: eventName, data: data }, site());
 }
 
-function eventListener(event) {
+function eventListener(event: MessageEvent) {
     if (!event || event.origin !== site()) return;
 
     if (event.data) {
@@ -48,13 +50,13 @@ function eventListener(event) {
             case "renderItem":
 
                 if (Array.isArray(event.data.data)) {
-                    SimpleRuleSet = event.data.data[1];
-                    AndRuleSet = event.data.data[2];
+                    simpleRuleSet = event.data.data[1];
+                    andRuleSet = event.data.data[2];
                     renderItem(event.data.data[0]);
                 }
                 else {
-                    SimpleRuleSet = [];
-                    AndRuleSet = [];
+                    simpleRuleSet = [];
+                    andRuleSet = [];
                     renderItem(event.data.data);
                 }
                 break;
@@ -62,7 +64,7 @@ function eventListener(event) {
     }
 }
 
-function LogError(error, message) {
+function logError(error: unknown, message: string) {
     postMessageToParent("LogError", { error: JSON.stringify(error), message: message });
 }
 
@@ -80,7 +82,7 @@ function hideStatus() {
     disableSpinner();
 }
 
-function updateStatus(statusText) {
+function updateStatus(statusText: string) {
     enableSpinner();
     $("#status").text(statusText);
     if (viewModel !== null) {
@@ -90,8 +92,8 @@ function updateStatus(statusText) {
     recalculateVisibility();
 }
 
-function renderItem(headers) {
-    updateStatus(ImportedStrings.mha_foundHeaders);
+function renderItem(headers: string) {
+    updateStatus(mhaStrings.mhaFoundHeaders);
     $("#originalHeaders").text(headers);
     viewModel = new HeaderModel(headers);
     rebuildTables();
@@ -100,7 +102,7 @@ function renderItem(headers) {
 
 // Handles rendering of an error.
 // Does not log the error - caller is responsible for calling LogError
-function showError(error, message) {
+function showError(error: unknown, message: string) {
     updateStatus(message);
     disableSpinner();
     rebuildSections();
