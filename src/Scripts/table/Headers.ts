@@ -1,5 +1,5 @@
 import { Summary } from "./Summary";
-import { clean2047Encoding } from "../2047";
+import { Decoder } from "../2047";
 import { AntiSpamReport } from "../row/Antispam";
 import { ForefrontAntiSpamReport } from "../row/ForefrontAntispam";
 import { Other } from "../row/Other";
@@ -178,7 +178,7 @@ function GetHeaderList(headers) {
         // Clean 2047 encoding
         // Strip nulls
         // Strip trailing carriage returns
-        const headerValue = clean2047Encoding(headerList[iHeader].value).replace(/\0/g, "").replace(/[\n\r]+$/, "");
+        const headerValue = Decoder.clean2047Encoding(headerList[iHeader].value).replace(/\0/g, "").replace(/[\n\r]+$/, "");
         headerList[iHeader].value = headerValue;
     }
 
