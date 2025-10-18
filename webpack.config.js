@@ -176,7 +176,7 @@ export default async (env, options) => {
                 __AIKEY__: JSON.stringify(aikey),
                 __BUILDTIME__: JSON.stringify(buildTime),
             }),
-            // new ForkTsCheckerWebpackPlugin(),
+            // new ForkTsCheckerWebpackPlugin(), // TODO: Re-enable after fixing type issues
             // Custom plugin to log compilation start/end times with timestamps
             {
                 apply(compiler) {
