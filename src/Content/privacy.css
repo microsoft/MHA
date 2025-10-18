@@ -1,0 +1,38 @@
+/* Privacy Policy Page Specific Styles */
+
+/* Make privacy policy page always scrollable */
+body.privacy-policy {
+    overflow-y: auto;
+    max-height: 100vh;
+}
+
+.close-button {
+    position: fixed;
+    top: 8px;
+    right: 10px;
+    background-color: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 1000;
+    min-width: auto;
+    height: auto;
+}
+
+.close-button:hover {
+    background-color: #106ebe;
+}
+
+.close-button:focus {
+    outline: 2px solid #0072cc;
+    outline-offset: 2px;
+}
+
+.close-button:active {
+    background-color: #005a9e;
+}

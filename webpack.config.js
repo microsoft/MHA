@@ -90,19 +90,17 @@ console.log("buildTime:", buildTime);
 const pages = [
     { name: "mha", script: "mha" },
     { name: "uitoggle", script: "uiToggle" },
-    { name: "newDesktopFrame", script: "DesktopPane" },
-    { name: "newMobilePaneIosFrame", script: "MobilePane-ios" },
-    { name: "MobilePane-ios", script: "MobilePane-ios" },
-    { name: "classicDesktopFrame", script: "DesktopPane" },
-    { name: "privacy" },
+    { name: "newDesktopFrame", script: "newDesktopFrame" },
+    { name: "classicDesktopFrame", script: "classicDesktopFrame" },
+    { name: "newMobilePaneIosFrame", script: "newMobilePaneIosFrame" },
+    { name: "privacy", script: "privacy" },
     // Redirection/static pages
-    { name: "Default", script: "Default" }, // uitoggle.html?default=classic
-    { name: "DefaultPhone", script: "Default" }, // uitoggle.html?default=classic
-    { name: "DefaultTablet", script: "Default" }, // uitoggle.html?default=classic
-    { name: "DesktopPane", script: "DesktopPane" }, // uitoggle.html?default=new
-    { name: "MobilePane", script: "MobilePane" }, // uitoggle.html?default=new-mobile
+    { name: "Default" }, // uitoggle.html?default=classic
+    { name: "DefaultPhone" }, // uitoggle.html?default=classic
+    { name: "DefaultTablet" }, // uitoggle.html?default=classic
+    { name: "DesktopPane" }, // uitoggle.html?default=new
+    { name: "MobilePane" }, // uitoggle.html?default=new-mobile
     { name: "Functions" },
-    { name: "PrivacyDialog" }
 ];
 
 /**
