@@ -12,8 +12,8 @@ console.log("🎯 PAGE TYPE: iOS Mobile Frame Handler");
 console.log("🎯 DESCRIPTION: Mobile UI for iOS devices - email header analysis");
 
 import { HeaderModel } from "../HeaderModel";
+import { AddRuleFlagged, flagRuleViolations } from "../rules/RulesUtils";
 import { ImportedStrings } from "../Strings";
-import { AddRuleFlagged, flagRuleViolations } from "../table/Headers";
 
 // Framework7 app object
 let myApp = null;

@@ -16,8 +16,8 @@ import $ from "jquery";
 import loaderGif from "../../Resources/loader.gif";
 
 // Import application modules
+import { HeaderModel } from "../HeaderModel";
 import { ImportedStrings } from "../Strings";
-import { HeaderModel } from "../table/Headers";
 import { initializeTableUI, makeResizablePane, onResize, rebuildSections, rebuildTables, recalculateVisibility, setArrows } from "../table/Table";
 
 // Make dependencies available globally (for compatibility with existing code)

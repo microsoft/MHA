@@ -1,4 +1,4 @@
-import { AddRuleFlagged } from "../../table/Headers";
+import { AddRuleFlagged } from "../../rules/RulesUtils";
 import { AndValidationRule } from "../types/AndValidationRule";
 import { HeaderSectionMissingRule } from "../types/HeaderSectionMissingRule";
 import { HeaderSection, IAndRuleData, IComplexValidationRule, IRuleData, ISimpleValidationRule, IValidationRule } from "../types/interfaces";

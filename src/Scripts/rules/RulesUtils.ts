@@ -1,81 +1,12 @@
-import { Decoder } from "../2047";
-import { Other } from "./Other";
-import { Received } from "./Received";
-import { AntiSpamReport } from "../row/Antispam";
-import { ForefrontAntiSpamReport } from "../row/ForefrontAntispam";
-import { RulesService, ValidationResult } from "../rules/RulesService";
-import { Summary } from "../Summary";
+import { RulesService, ValidationResult } from "./RulesService";
 
 // Simple interface for header model to avoid type issues
 interface IHeaderModel {
-    summary: { summaryRows: any[] };
-    forefrontAntiSpamReport: { forefrontAntiSpamRows: any[] };
-    antiSpamReport: { antiSpamRows: any[] };
-    otherHeaders: { otherRows: any[] };
+    summary: { rows: any[] };
+    forefrontAntiSpamReport: { rows: any[] };
+    antiSpamReport: { rows: any[] };
+    otherHeaders: { rows: any[] };
 }
-
-export const HeaderModel = function (headers) {
-    // Initialize defaults
-    this.summary = new Summary();
-    this.receivedHeaders = new Received();
-    this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
-    this.antiSpamReport = new AntiSpamReport();
-    this.otherHeaders = new Other();
-
-    if (headers) {
-        this.parseHeaders(headers);
-    }
-};
-
-HeaderModel.prototype.status = "";
-HeaderModel.prototype.summary = {};
-HeaderModel.prototype.receivedHeaders = {};
-HeaderModel.prototype.otherHeaders = {};
-HeaderModel.prototype.forefrontAntiSpamReport = {};
-HeaderModel.prototype.antiSpamReport = {};
-HeaderModel.prototype.originalHeaders = "";
-HeaderModel.prototype.hasData = false;
-
-export const Header = function (header, value) {
-    this.header = header;
-    this.value = value;
-};
-
-Header.prototype.header = "";
-Header.prototype.value = "";
-
-HeaderModel.prototype.parseHeaders = function (headers) {
-    // Initialize originalHeaders in case we have parsing problems
-    this.originalHeaders = headers;
-    const headerList = GetHeaderList(headers);
-
-    if (headerList.length > 0) {
-        this.hasData = true;
-    }
-
-    for (let i = 0; i < headerList.length; i++) {
-        // Grab values for our summary pane
-        this.summary.init(headerList[i]);
-
-        // Properties with special parsing
-        switch (headerList[i].header) {
-            case "X-Forefront-Antispam-Report":
-                this.forefrontAntiSpamReport.init(headerList[i].value);
-                break;
-            case "X-Microsoft-Antispam":
-                this.antiSpamReport.init(headerList[i].value);
-                break;
-        }
-
-        if (headerList[i].header === "Received") {
-            this.receivedHeaders.init(headerList[i].value);
-        } else if (headerList[i].header || headerList[i].value) {
-            this.otherHeaders.init(headerList[i]);
-        }
-    }
-
-    this.summary.totalTime = this.receivedHeaders.computeDeltas();
-};
 
 export async function flagRuleViolations(header: IHeaderModel): Promise<ValidationResult> {
     console.log("🔍 flagRuleViolations: Starting simplified rule validation");
@@ -86,17 +17,17 @@ export async function flagRuleViolations(header: IHeaderModel): Promise<Validati
 
         // Create sections array for validation
         const headerSections = [
-            header.summary.summaryRows,
-            header.forefrontAntiSpamReport.forefrontAntiSpamRows,
-            header.antiSpamReport.antiSpamRows,
-            header.otherHeaders.otherRows
+            header.summary.rows,
+            header.forefrontAntiSpamReport.rows,
+            header.antiSpamReport.rows,
+            header.otherHeaders.rows
         ];
 
         console.log("🔍 flagRuleViolations: Sections for validation:");
-        console.log("🔍 flagRuleViolations: Summary rows:", header.summary.summaryRows?.length || 0);
-        console.log("🔍 flagRuleViolations: Forefront rows:", header.forefrontAntiSpamReport.forefrontAntiSpamRows?.length || 0);
-        console.log("🔍 flagRuleViolations: AntiSpam rows:", header.antiSpamReport.antiSpamRows?.length || 0);
-        console.log("🔍 flagRuleViolations: Other rows:", header.otherHeaders.otherRows?.length || 0);
+        console.log("🔍 flagRuleViolations: Summary rows:", header.summary.rows?.length || 0);
+        console.log("🔍 flagRuleViolations: Forefront rows:", header.forefrontAntiSpamReport.rows?.length || 0);
+        console.log("🔍 flagRuleViolations: AntiSpam rows:", header.antiSpamReport.rows?.length || 0);
+        console.log("🔍 flagRuleViolations: Other rows:", header.otherHeaders.rows?.length || 0);
 
         // Single call validates all sections and returns structured results
         const result = RulesService.validateHeaders(headerSections);
@@ -126,66 +57,7 @@ export async function flagRuleViolations(header: IHeaderModel): Promise<Validati
     }
 }
 
-function GetHeaderList(headers) {
-    // First, break up out input by lines.
-    const lines = headers.split(/[\n\r]+/);
-
-    const headerList = [];
-    let iNextHeader = 0;
-    // Unfold lines
-    for (let iLine = 0; iLine < lines.length; iLine++) {
-        let line = lines[iLine];
-        // Skip empty lines
-        if (line === "") continue;
-
-        // Recognizing a header:
-        // - First colon comes before first white space.
-        // - We're not strictly honoring white space folding because initial white space
-        // - is commonly lost. Instead, we heuristically assume that space before a colon must have been folded.
-        // This expression will give us:
-        // match[1] - everything before the first colon, assuming no spaces (header).
-        // match[2] - everything after the first colon (value).
-        const match = line.match(/(^[\w-.]*?): ?(.*)/);
-
-        // There's one false positive we might get: if the time in a Received header has been
-        // folded to the next line, the line might start with something like "16:20:05 -0400".
-        // This matches our regular expression. The RFC does not preclude such a header, but I've
-        // never seen one in practice, so we check for and exclude 'headers' that
-        // consist only of 1 or 2 digits.
-        if (match && match[1] && !match[1].match(/^\d{1,2}$/)) {
-            headerList[iNextHeader] = new Header(match[1], match[2]);
-            iNextHeader++;
-        } else {
-            if (iNextHeader > 0) {
-                // Tack this line to the previous line
-                // All folding whitespace should collapse to a single space
-                line = line.replace(/^[\s]+/, "");
-                if (!line) continue;
-                const separator = headerList[iNextHeader - 1].value ? " " : "";
-                headerList[iNextHeader - 1].value += separator + line;
-            } else {
-                // If we didn't have a previous line, go ahead and use this line
-                if (line.match(/\S/g)) {
-                    headerList[iNextHeader] = new Header("", line);
-                    iNextHeader++;
-                }
-            }
-        }
-    }
-
-    // 2047 decode our headers now
-    for (let iHeader = 0; iHeader < headerList.length; iHeader++) {
-        // Clean 2047 encoding
-        // Strip nulls
-        // Strip trailing carriage returns
-        const headerValue = Decoder.clean2047Encoding(headerList[iHeader].value).replace(/\0/g, "").replace(/[\n\r]+$/, "");
-        headerList[iHeader].value = headerValue;
-    }
-
-    return headerList;
-}
-
-export function mapHeaderToURL(headerName, text) {
+export function mapHeaderToURL(headerName: string, text?: string): string | null {
     for (let i = 0; i < HeaderToURLMap.length; i++) {
         if (headerName.toLowerCase() === HeaderToURLMap[i][0].toLowerCase()) {
             return ["<a href = '", HeaderToURLMap[i][1], "' target = '_blank'>", text || headerName, "</a>"].join("");
@@ -197,40 +69,32 @@ export function mapHeaderToURL(headerName, text) {
 
 // Add the rule to the rulesFlagged component of the toObject.  This is used
 // to flag sub-sections within a tab with a rule that they have violated.
-export function AddRuleFlagged( toObject, rule )
-{
-    if ( !toObject.rulesFlagged )
-    {
+export function AddRuleFlagged(toObject: any, rule: any): void {
+    if (!toObject.rulesFlagged) {
         toObject.rulesFlagged = [];
     }
 
-    if ( Array.isArray( rule ) )
-    {
-        rule.forEach( function ( oneRule ) { AddRuleFlagged( toObject, oneRule ); } );
+    if (Array.isArray(rule)) {
+        rule.forEach(function (oneRule) { AddRuleFlagged(toObject, oneRule); });
     }
-    else
-    {
-        pushUniqueRule( toObject.rulesFlagged, rule );
+    else {
+        pushUniqueRule(toObject.rulesFlagged, rule);
     }
 
-    function pushUniqueRule(ruleArray, rule) {
-
-        if (!arrayContains(ruleArray, rule))
-        {
+    function pushUniqueRule(ruleArray: any[], rule: any): void {
+        if (!arrayContains(ruleArray, rule)) {
             ruleArray.push(rule);
         }
 
-        function arrayContains(array, value)
-        {
+        function arrayContains(array: any[], value: any): boolean {
             for (let index = 0; index < array.length; index++) {
                 const entry = array[index];
-
                 if (entry === value) {
                     return true;
-                };
-            };
+                }
+            }
             return false;
-        };
+        }
     }
 }
 

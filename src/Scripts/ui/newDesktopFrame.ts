@@ -10,9 +10,9 @@ import $ from "jquery";
 
 import { HeaderModel } from "../HeaderModel";
 import { RuleStore } from "../rules/loaders/GetRules";
+import { AddRuleFlagged, flagRuleViolations, mapHeaderToURL } from "../rules/RulesUtils";
 import { AndValidationRule } from "../rules/types/AndValidationRule";
 import { ImportedStrings } from "../Strings";
-import { AddRuleFlagged, flagRuleViolations, mapHeaderToURL } from "../table/Headers";
 
 // Module-level variables
 let overlay = null;
