@@ -1,10 +1,10 @@
-import { Summary } from "./Summary";
 import { Decoder } from "../2047";
+import { Other } from "./Other";
+import { Received } from "./Received";
 import { AntiSpamReport } from "../row/Antispam";
 import { ForefrontAntiSpamReport } from "../row/ForefrontAntispam";
-import { Other } from "../row/Other";
-import { Received } from "../row/Received";
 import { RulesService, ValidationResult } from "../rules/RulesService";
+import { Summary } from "../Summary";
 
 // Simple interface for header model to avoid type issues
 interface IHeaderModel {

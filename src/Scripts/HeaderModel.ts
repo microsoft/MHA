@@ -1,15 +1,12 @@
 import { Decoder } from "./2047";
 import { Poster } from "./Poster";
-import { AntiSpamReport } from "./row/AntiSpamReport";
-import { ForefrontAntiSpamReport } from "./row/ForefrontAntiSpamReport";
+import { AntiSpamReport } from "./row/Antispam";
+import { ForefrontAntiSpamReport } from "./row/ForefrontAntispam";
 import { Header } from "./row/Header";
 import { Summary } from "./Summary";
 import { Other } from "./table/Other";
 import { Received } from "./table/Received";
 
-/**
- * HeaderModel for parsing and managing email headers
- */
 export class HeaderModel {
     public originalHeaders: string;
     public summary: Summary;
@@ -26,17 +23,14 @@ export class HeaderModel {
     [index: string]: unknown;
 
     constructor(headers?: string) {
-        // Initialize modern components
         this.summary = new Summary();
-        this.otherHeaders = new Other();
         this.receivedHeaders = new Received();
         this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
         this.antiSpamReport = new AntiSpamReport();
-
+        this.otherHeaders = new Other();
         this.originalHeaders = "";
         this.statusInternal = "";
         this.hasDataInternal = false;
-
         if (headers) {
             this.parseHeaders(headers);
             Poster.postMessageToParent("modelToString", this.toString());
@@ -110,10 +104,6 @@ export class HeaderModel {
             // Strip nulls
             // Strip trailing carriage returns
             header.value = Decoder.clean2047Encoding(header.value).replace(/\0/g, "").replace(/[\n\r]+$/, "");
-            // Debug final parsed headers
-            if (header.header.toUpperCase().includes("FOREFRONT") || header.header.toUpperCase().includes("ANTISPAM")) {
-                console.log(`🔍 HeaderModel: Final parsed header "${header.header}" = "${header.value}"`);
-            }
         });
 
         return headerList;

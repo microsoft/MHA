@@ -22,7 +22,6 @@ export class Row {
 
     // Legacy compatibility methods
     get(): string { return this.value; }
-    set(value: string): void { this.value = value; }
 
     toString(): string { return this.label + ": " + this.value; }
 }
