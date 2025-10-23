@@ -641,9 +641,66 @@ function createDiagnosticViolationItem(violation: RuleViolation): DocumentFragme
  * Create popover table row for inline diagnostics
  */
 // Define interface for Fluent UI popover component
+
 interface FluentPopover extends HTMLElement {
     anchor: string;
     hidden: boolean;
+}
+
+/**
+ * Shared utility to setup diagnostics popover button and popover
+ */
+function setupDiagnosticsPopover({
+    popoverBtn,
+    popover,
+    diagnosticsList,
+    closeBtn,
+    effectiveViolations,
+    id,
+    label
+}: {
+    popoverBtn: HTMLElement;
+    popover: FluentPopover;
+    diagnosticsList: HTMLElement;
+    closeBtn: HTMLElement;
+    effectiveViolations: RuleViolation[];
+    id: string;
+    label: string;
+}) {
+    if (effectiveViolations.length > 0) {
+        popoverBtn.style.display = "flex";
+        const severities = effectiveViolations.map(v => v.rule.severity);
+        const highestSeverity = severities.includes("error") ? "error" : severities.includes("warning") ? "warning" : "info";
+        popoverBtn.setAttribute("data-severity", highestSeverity);
+        const buttonId = `popover-btn-${id}`;
+        const popoverId = `popover-${id}`;
+        popoverBtn.id = buttonId;
+        popover.id = popoverId;
+        popover.anchor = buttonId;
+        popover.hidden = true;
+        popoverBtn.setAttribute("aria-describedby", popoverId);
+        effectiveViolations.forEach(v => diagnosticsList.appendChild(createDiagnosticViolationItem(v)));
+        popoverBtn.addEventListener("click", e => {
+            e.preventDefault();
+            e.stopPropagation();
+            document.querySelectorAll(".diagnostics-popover").forEach(other => {
+                const fluentPopover = other as FluentPopover;
+                if (fluentPopover !== popover && !fluentPopover.hidden) fluentPopover.hidden = true;
+            });
+            popover.hidden = !popover.hidden;
+        });
+        closeBtn.addEventListener("click", e => {
+            e.preventDefault();
+            e.stopPropagation();
+            popover.hidden = true;
+        });
+        document.addEventListener("click", e => {
+            if (!popover.hidden && !popover.contains(e.target as Node) && !popoverBtn.contains(e.target as Node)) popover.hidden = true;
+        });
+        popoverBtn.setAttribute("aria-label", `Show rule violations for ${label}`);
+    } else {
+        popoverBtn.style.display = "none";
+    }
 }
 
 function createPopoverTableRow(row: Row, violationGroups: ViolationGroup[]): DocumentFragment {
@@ -658,50 +715,21 @@ function createPopoverTableRow(row: Row, violationGroups: ViolationGroup[]): Doc
     DomUtils.setTemplateAttribute(clone, ".cell-main-content", "aria-labelledby", row.id);
 
     const effectiveViolations = getViolationsForRow(row, violationGroups);
-    if (effectiveViolations.length > 0) {
-        const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
-        const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
-        const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
-        const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
-        if (popoverBtn && popover && diagnosticsList && closeBtn) {
-            popoverBtn.style.display = "flex";
-            const severities = effectiveViolations.map(v => v.rule.severity);
-            const highestSeverity = severities.includes("error") ? "error" : severities.includes("warning") ? "warning" : "info";
-            popoverBtn.setAttribute("data-severity", highestSeverity);
-            const buttonId = `popover-btn-${row.id}`;
-            const popoverId = `popover-${row.id}`;
-            popoverBtn.id = buttonId;
-            popover.id = popoverId;
-            popover.anchor = buttonId;
-            popover.hidden = true;
-            popoverBtn.setAttribute("aria-describedby", popoverId);
-            effectiveViolations.forEach(v => diagnosticsList.appendChild(createDiagnosticViolationItem(v)));
-            popoverBtn.addEventListener("click", e => {
-                e.preventDefault();
-                e.stopPropagation();
-                document.querySelectorAll(".diagnostics-popover").forEach(other => {
-                    const fluentPopover = other as FluentPopover;
-                    if (fluentPopover !== popover && !fluentPopover.hidden) fluentPopover.hidden = true;
-                });
-                popover.hidden = !popover.hidden;
-            });
-
-            closeBtn.addEventListener("click", e => {
-                e.preventDefault();
-                e.stopPropagation();
-                popover.hidden = true;
-            });
-
-            document.addEventListener("click", e => {
-                if (!popover.hidden && !popover.contains(e.target as Node) && !popoverBtn.contains(e.target as Node)) popover.hidden = true;
-            });
-
-            popoverBtn.setAttribute("aria-label", `Show rule violations for ${row.label}`);
-        }
-    } else {
-        DomUtils.hideElement(".show-diagnostics-popover-btn");
+    const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
+    const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
+    const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
+    const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
+    if (popoverBtn && popover && diagnosticsList && closeBtn) {
+        setupDiagnosticsPopover({
+            popoverBtn,
+            popover,
+            diagnosticsList,
+            closeBtn,
+            effectiveViolations,
+            id: row.id,
+            label: row.label
+        });
     }
-
     return clone;
 }
 
@@ -721,90 +749,20 @@ function createOtherRowWithPopover(row: OtherRow, violationGroups: ViolationGrou
 
     // Find violations that apply to this row using the proper architecture
     const effectiveViolations = getViolationsForRow(row, violationGroups);
-
-    if (effectiveViolations.length > 0) {
-        // Set up popover button
-        const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
-        const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
-        const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
-        const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
-
-        if (popoverBtn && popover && diagnosticsList && closeBtn) {
-            // Show the popover button since we have violations
-            popoverBtn.style.display = "flex";
-
-            // Determine highest severity for button icon
-            const severities = effectiveViolations.map((violation: RuleViolation) => {
-                return violation.rule.severity;
-            });
-
-            const highestSeverity = severities.includes("error") ? "error" :
-                severities.includes("warning") ? "warning" : "info";
-
-            // Set severity data attribute for CSS styling
-            popoverBtn.setAttribute("data-severity", highestSeverity);
-
-            // Generate unique IDs for proper popover anchoring
-            const buttonId = `other-popover-btn-${row.header}`;
-            const popoverId = `other-popover-${row.header}`;
-
-            popoverBtn.id = buttonId;
-            popover.id = popoverId;
-
-            // Set up proper anchor relationship for Fluent UI popover
-            popover.anchor = buttonId;
-            popover.hidden = true; // Ensure popover starts hidden
-
-            // Set ARIA relationship
-            popoverBtn.setAttribute("aria-describedby", popoverId);
-
-            // Populate diagnostics list
-            effectiveViolations.forEach((violation: RuleViolation) => {
-                const violationItem = createDiagnosticViolationItem(violation);
-                diagnosticsList.appendChild(violationItem);
-            });
-
-            // Set up popover functionality using Fluent UI methods
-            popoverBtn.addEventListener("click", function(e: Event) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                // Close other popovers first
-                document.querySelectorAll(".diagnostics-popover").forEach(otherPopover => {
-                    const fluentPopover = otherPopover as FluentPopover;
-                    if (fluentPopover !== popover && !fluentPopover.hidden) {
-                        fluentPopover.hidden = true;
-                    }
-                });
-
-                // Toggle this popover using Fluent UI properties
-                popover.hidden = !popover.hidden;
-            });
-
-            // Close popover
-            closeBtn.addEventListener("click", function(e: Event) {
-                e.preventDefault();
-                e.stopPropagation();
-                popover.hidden = true;
-            });
-
-            // Close popover when clicking outside
-            document.addEventListener("click", function(e: Event) {
-                if (!popover.hidden && !popover.contains(e.target as Node) && !popoverBtn.contains(e.target as Node)) {
-                    popover.hidden = true;
-                }
-            });
-
-            // Set ARIA labels
-            popoverBtn.setAttribute("aria-label", `Show rule violations for ${row.header}`);
-        }
-    } else {
-        // Remove popover button if no violations
-        const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
-        if (popoverBtn) {
-            popoverBtn.style.display = "none";
-        }
+    const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
+    const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
+    const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
+    const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
+    if (popoverBtn && popover && diagnosticsList && closeBtn) {
+        setupDiagnosticsPopover({
+            popoverBtn,
+            popover,
+            diagnosticsList,
+            closeBtn,
+            effectiveViolations,
+            id: row.header,
+            label: row.header
+        });
     }
-
     return clone;
 }
