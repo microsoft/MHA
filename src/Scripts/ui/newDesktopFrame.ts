@@ -370,14 +370,11 @@ async function buildViews(headers: string) {
             listItem.setAttribute("tabindex", "0");
         });
 
-        // Build antispam view with both expandable and popover patterns
+        // Build antispam view
         const antispamList = document.querySelector(".antispam-list") as HTMLElement;
 
-        const forefrontRows = viewModel.forefrontAntiSpamReport.rows;
-        const antiSpamRows = viewModel.antiSpamReport.rows;
-
         // Forefront
-        if (forefrontRows.length > 0) {
+        if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
             // Use HTML template for section header
             DomUtils.appendTemplate("forefront-header-template", antispamList);
 
@@ -388,14 +385,14 @@ async function buildViews(headers: string) {
             antispamTable.appendChild(antispamTbody);
             antispamList.appendChild(antispamTable);
 
-            forefrontRows.forEach((antispamrow: Row) => {
+            viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
                 const popoverRow = createPopoverTableRow(antispamrow, violationGroups);
                 antispamTbody.appendChild(popoverRow);
             });
         }
 
         // Microsoft
-        if (antiSpamRows.length > 0) {
+        if (viewModel.antiSpamReport.rows.length > 0) {
             // Use HTML template for section header
             DomUtils.appendTemplate("microsoft-header-template", antispamList);
 
@@ -406,7 +403,7 @@ async function buildViews(headers: string) {
             antispamTable.appendChild(antispamTbody);
             antispamList.appendChild(antispamTable);
 
-            antiSpamRows.forEach((antispamrow: Row) => {
+            viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
                 const popoverRow = createPopoverTableRow(antispamrow, violationGroups);
                 antispamTbody.appendChild(popoverRow);
             });
@@ -416,9 +413,7 @@ async function buildViews(headers: string) {
     // Build other view
     const otherList = document.querySelector(".other-list") as HTMLElement;
 
-    const otherRows = viewModel.otherHeaders.rows;
-
-    otherRows.forEach((otherRow: OtherRow) => {
+    viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
             // Use HTML template for other headers with popover support
             const clone = createOtherRowWithPopover(otherRow, violationGroups);
