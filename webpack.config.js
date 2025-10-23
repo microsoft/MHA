@@ -30,6 +30,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 
+import CopyWebpackPlugin from "copy-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
@@ -190,6 +191,11 @@ export default async (env, options) => {
                     });
                 }
             },
+            new CopyWebpackPlugin({
+                patterns: [
+                    { from: "src/Resources/*", to: path.resolve(__dirname, "Resources/[name][ext]") }
+                ]
+            }),
             ...generateHtmlWebpackPlugins(),
             // Bundle analyzer (when env.analyze is set)
             ...(env?.analyze ? [new BundleAnalyzerPlugin({
