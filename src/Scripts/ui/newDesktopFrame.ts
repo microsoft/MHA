@@ -606,35 +606,17 @@ function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFrag
  * Build diagnostics report showing rule violations grouped by parent rule
  */
 function buildDiagnosticsReport(violationGroups: ViolationGroup[]): void {
-    const diagnosticsSections = document.querySelectorAll(".ui-diagnostics-report-section");
-    if (!diagnosticsSections || diagnosticsSections.length === 0) {
-        return;
-    }
-
-    // Update all diagnostic sections
-    diagnosticsSections.forEach((diagnosticsSection) => {
-        const section = diagnosticsSection as HTMLElement;
-        // Clear existing content
-        section.innerHTML = "";
-
-        if (!violationGroups || violationGroups.length === 0) {
-            const nothingMessage = document.createElement("div");
-            nothingMessage.className = "ms-font-l ms-fontWeight-semibold";
-            nothingMessage.textContent = "Nothing to display";
-            section.appendChild(nothingMessage);
-        } else {
-            // Create accordion container for grouped rule violations
-            const accordion = document.createElement("fluent-accordion");
-            accordion.className = "diagnostics-accordion";
-
-            violationGroups.forEach((ruleGroup) => {
-                const accordionItem = createGroupedRuleAccordionItem(ruleGroup);
-                accordion.appendChild(accordionItem);
-            });
-
-            section.appendChild(accordion);
-        }
+    if (!violationGroups || violationGroups.length === 0) return;
+    const diagnosticsSection = document.querySelector(".ui-diagnostics-report-section");
+    const section = diagnosticsSection as HTMLElement;
+    const accordion = document.createElement("fluent-accordion");
+    accordion.className = "diagnostics-accordion";
+    violationGroups.forEach((ruleGroup) => {
+        const accordionItem = createGroupedRuleAccordionItem(ruleGroup);
+        accordion.appendChild(accordionItem);
     });
+
+    section.appendChild(accordion);
 }
 
 /**
