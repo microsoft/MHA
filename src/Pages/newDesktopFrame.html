@@ -47,6 +47,7 @@
                 <div class="page-title">Summary</div>
                 <hr />
                 <div class="summary-list"></div>
+                <div class="ui-diagnostics-report-section"></div>
                 <div class="orig-header-ui">
                     <fluent-button id="orig-header-btn" appearance="accent" aria-expanded="false" aria-label="Toggle original headers display">
                         <span slot="start" class="fluent-icon fluent-icon--add" aria-hidden="true"></span>
@@ -118,10 +119,23 @@
     </template>
 
     <template id="other-row-template">
-        <div class="section-header"></div>
+        <div class="other-header-wrapper">
+            <div class="section-header"></div>
+            <fluent-button appearance="subtle" size="small" class="show-diagnostics-popover-btn" style="display: none;" id="">
+                <span class="severity-icon" aria-hidden="true"></span>
+            </fluent-button>
+        </div>
         <div class="code-box">
             <pre><code></code></pre>
         </div>
+        <fluent-popover class="diagnostics-popover" placement="bottom-start" hidden>
+            <div class="popover-content">
+                <div class="diagnostics-list"></div>
+                <fluent-button appearance="subtle" size="small" class="close-popover-btn" aria-label="Close violations" style="align-self: flex-end; margin-top: 8px;">
+                    <span class="fluent-icon fluent-icon--dismiss" aria-hidden="true"></span>
+                </fluent-button>
+            </div>
+        </fluent-popover>
     </template>
 
     <template id="hop-entry-template">
@@ -172,6 +186,58 @@
     <template id="hop-template">
         <div class="hop-details-overlay is-hidden">
             <div class="hop-details-content"></div>
+        </div>
+    </template>
+
+    <!-- Diagnostic Display Template -->
+    <template id="diagnostic-accordion-item-template">
+        <fluent-accordion-item>
+            <div slot="heading" class="accordion-heading">
+                <fluent-badge class="severity-badge"></fluent-badge>
+                <span class="diagnostic-title"></span>
+            </div>
+            <div class="diagnostic-content"></div>
+        </fluent-accordion-item>
+    </template>
+
+    <template id="diagnostic-message-bar-template">
+        <fluent-message-bar class="section-violation-summary">
+            <fluent-badge class="violation-count-badge"></fluent-badge>
+            <span class="violation-summary-text"></span>
+        </fluent-message-bar>
+    </template>
+
+    <!-- Popover table row template for inline diagnostics -->
+    <template id="popover-table-row-template">
+        <tr class="popover-row">
+            <td class="popover-cell"></td>
+            <td class="popover-cell">
+                <div class="cell-content-wrapper">
+                    <div class="cell-main-content"></div>
+                    <fluent-button appearance="subtle" size="small" class="show-diagnostics-popover-btn" style="display: none;" id="">
+                        <span class="severity-icon" aria-hidden="true"></span>
+                    </fluent-button>
+                </div>
+                <fluent-popover class="diagnostics-popover" placement="bottom-start" hidden>
+                    <div class="popover-content">
+                        <div class="diagnostics-list"></div>
+                        <fluent-button appearance="subtle" size="small" class="close-popover-btn" aria-label="Close violations" style="align-self: flex-end; margin-top: 8px;">
+                            <span class="fluent-icon fluent-icon--dismiss" aria-hidden="true"></span>
+                        </fluent-button>
+                    </div>
+                </fluent-popover>
+            </td>
+        </tr>
+    </template>
+
+    <!-- Diagnostic violation item template -->
+    <template id="diagnostic-violation-item-template">
+        <div class="diagnostic-violation-item">
+            <fluent-badge class="severity-badge"></fluent-badge>
+            <div class="violation-details">
+                <div class="violation-message"></div>
+                <div class="violation-parent-message" hidden></div>
+            </div>
         </div>
     </template>
 

@@ -20,7 +20,6 @@ interface MockOfficeContext {
 
 // Extend global with Office property (optional)
 interface Global {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     Office?: MockOfficeContext;
 }
 
@@ -100,7 +99,7 @@ describe("ParentFrameUtils", () => {
 
         test("returns default key when Office context throws error", () => {
             // Make Office.context.mailbox.diagnostics.hostName throw
-            // eslint-disable-next-line @typescript-eslint/naming-convention
+
             (global as unknown as { Office: MockOfficeContext }).Office = {
                 context: {
                     mailbox: {
@@ -117,7 +116,7 @@ describe("ParentFrameUtils", () => {
         });
 
         test("returns default key when Office context is undefined", () => {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
+
             delete (global as unknown as { Office?: MockOfficeContext }).Office;
             expect(ParentFrameUtils.getSettingsKey()).toBe("frame");
         });

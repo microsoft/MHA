@@ -10,6 +10,10 @@ import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
 import { TabNavigation } from "../TabNavigation";
 import { DomUtils } from "./domUtils";
+import { rulesService } from "../rules";
+import { RuleViolation, ViolationGroup } from "../rules/types/AnalysisTypes";
+import { ISimpleValidationRule } from "../rules/types/interfaces";
+import { getSeverityDisplay, getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -119,7 +123,7 @@ function initializeFluentUI(): void {
     TabNavigation.initializeIFrameTabHandling();
 }
 
-// Add document-level click handler to close callouts when clicking outside
+// Add document-level click handler to close callouts and popovers when clicking outside
 document.addEventListener("click", function(event: Event) {
     const target = event.target as HTMLElement;
 
@@ -128,22 +132,34 @@ document.addEventListener("click", function(event: Event) {
         return;
     }
 
-    // Close all open callouts
+    // Don't close popovers if clicking inside them or their trigger buttons
+    if (target.closest(".diagnostics-popover") || target.closest(".show-diagnostics-popover-btn")) {
+        return;
+    }
+
+    closeAllPopups();
+});
+
+// Add escape key handler to close callouts and popovers
+document.addEventListener("keydown", function(event: KeyboardEvent) {
+    if (event.key === "Escape") {
+        closeAllPopups();
+    }
+});
+
+function closeAllPopups()
+{
     document.querySelectorAll(".hop-details-overlay.is-shown").forEach(callout => {
         callout.classList.remove("is-shown");
         callout.classList.add("is-hidden");
     });
-});
 
-// Add escape key handler to close callouts
-document.addEventListener("keydown", function(event: KeyboardEvent) {
-    if (event.key === "Escape") {
-        document.querySelectorAll(".hop-details-overlay.is-shown").forEach(callout => {
-            callout.classList.remove("is-shown");
-            callout.classList.add("is-hidden");
-        });
-    }
-});
+    // Close all open popovers
+    document.querySelectorAll(".diagnostics-popover").forEach(popover => {
+        const fluentPopover = popover as FluentPopover;
+        fluentPopover.hidden = true;
+    });
+}
 
 function updateStatus(message: string) {
     DomUtils.setText("#status-message", message);
@@ -161,15 +177,42 @@ function addCalloutEntry(name: string, value: string | number | null, parent: HT
     }
 }
 
-function buildViews(headers: string) {
-    const viewModel: HeaderModel = new HeaderModel(headers);
+async function buildViews(headers: string) {
+    let viewModel: HeaderModel = new HeaderModel(headers);
+    const validationResult = await rulesService.analyzeHeaders(viewModel);
+    const violationGroups = validationResult.violationGroups;
+    viewModel = validationResult.enrichedHeaders;
+
     // Build summary view
     const summaryList = document.querySelector(".summary-list") as HTMLElement;
+
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
             const clone = DomUtils.cloneTemplate("summary-row-template");
             DomUtils.setTemplateText(clone, ".section-header", row.label);
-            DomUtils.setTemplateText(clone, "code", row.value);
+
+            // Apply content highlighting if violations exist
+            const highlightedContent = highlightContent(row.value, violationGroups);
+            if (highlightedContent !== row.value) {
+                DomUtils.setTemplateHTML(clone, "code", highlightedContent);
+            } else {
+                DomUtils.setTemplateText(clone, "code", row.value);
+            }
+
+            // Add rule violation display in summary section
+            const sectionHeader = clone.querySelector(".section-header") as HTMLElement;
+            const rowViolations = getViolationsForRow(row, violationGroups);
+
+            if (sectionHeader && rowViolations.length > 0) {
+                rowViolations.forEach((violation: RuleViolation) => {
+                    const severityInfo = getSeverityDisplay(violation.rule.severity);
+                    const warning = document.createElement("div");
+                    warning.className = severityInfo.cssClass;
+                    warning.textContent = `${severityInfo.label}: ${violation.rule.errorMessage}`;
+                    sectionHeader.appendChild(warning);
+                });
+            }
+
             summaryList.appendChild(clone);
         }
     });
@@ -327,85 +370,64 @@ function buildViews(headers: string) {
             listItem.setAttribute("tabindex", "0");
         });
 
-        // Build antispam view
+        // Build antispam view with both expandable and popover patterns
         const antispamList = document.querySelector(".antispam-list") as HTMLElement;
 
+        const forefrontRows = viewModel.forefrontAntiSpamReport.rows;
+        const antiSpamRows = viewModel.antiSpamReport.rows;
+
         // Forefront
-        if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
+        if (forefrontRows.length > 0) {
             // Use HTML template for section header
             DomUtils.appendTemplate("forefront-header-template", antispamList);
 
-            // Create table using HTML template
-            DomUtils.appendTemplate("antispam-table-template", antispamList);
+            // Create table for antispam data
+            const antispamTable = document.createElement("table");
+            antispamTable.className = "fluent-table";
+            const antispamTbody = document.createElement("tbody");
+            antispamTable.appendChild(antispamTbody);
+            antispamList.appendChild(antispamTable);
 
-            const tbodyElement = antispamList.querySelector("table:last-child tbody");
-            if (tbodyElement) {
-                viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
-                    // Use HTML template for table rows
-                    const rowClone = DomUtils.cloneTemplate("table-row-template");
-
-                    // Set first cell content and id
-                    const cells = rowClone.querySelectorAll("td");
-                    if (cells.length >= 2) {
-                        const cell0 = cells[0] as HTMLElement;
-                        cell0.id = antispamrow.id;
-                        cell0.textContent = antispamrow.label;
-                    }
-
-                    // Use helper for setting aria-labelledby attribute
-                    DomUtils.setTemplateAttribute(rowClone, "td:nth-child(2)", "aria-labelledby", antispamrow.id);
-                    DomUtils.setTemplateHTML(rowClone, "td:nth-child(2)", antispamrow.valueUrl); // Note: valueUrl may contain HTML
-
-                    tbodyElement.appendChild(rowClone);
-                });
-            }
+            forefrontRows.forEach((antispamrow: Row) => {
+                const popoverRow = createPopoverTableRow(antispamrow, violationGroups);
+                antispamTbody.appendChild(popoverRow);
+            });
         }
 
         // Microsoft
-        if (viewModel.antiSpamReport.rows.length > 0) {
+        if (antiSpamRows.length > 0) {
             // Use HTML template for section header
             DomUtils.appendTemplate("microsoft-header-template", antispamList);
 
-            // Create table using HTML template
-            DomUtils.appendTemplate("antispam-table-template", antispamList);
+            // Create table for antispam data
+            const antispamTable = document.createElement("table");
+            antispamTable.className = "fluent-table";
+            const antispamTbody = document.createElement("tbody");
+            antispamTable.appendChild(antispamTbody);
+            antispamList.appendChild(antispamTable);
 
-            const tbodyElement2 = antispamList.querySelector("table:last-child tbody");
-            if (tbodyElement2) {
-                viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
-                    // Use HTML template for table rows
-                    const rowClone = DomUtils.cloneTemplate("table-row-template");
-
-                    // Set first cell content and id
-                    const cells = rowClone.querySelectorAll("td");
-                    if (cells.length >= 2) {
-                        const cell0 = cells[0] as HTMLElement;
-                        cell0.id = antispamrow.id;
-                        cell0.textContent = antispamrow.label;
-                    }
-
-                    // Use helper for setting aria-labelledby attribute
-                    DomUtils.setTemplateAttribute(rowClone, "td:nth-child(2)", "aria-labelledby", antispamrow.id);
-                    DomUtils.setTemplateHTML(rowClone, "td:nth-child(2)", antispamrow.valueUrl); // Note: valueUrl may contain HTML
-
-                    tbodyElement2.appendChild(rowClone);
-                });
-            }
+            antiSpamRows.forEach((antispamrow: Row) => {
+                const popoverRow = createPopoverTableRow(antispamrow, violationGroups);
+                antispamTbody.appendChild(popoverRow);
+            });
         }
     }
 
     // Build other view
     const otherList = document.querySelector(".other-list") as HTMLElement;
 
-    viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
+    const otherRows = viewModel.otherHeaders.rows;
+
+    otherRows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
-            // Use HTML template for other headers
-            const clone = DomUtils.cloneTemplate("other-row-template");
-            const headerContent = otherRow.url ? otherRow.url : otherRow.header;
-            DomUtils.setTemplateHTML(clone, ".section-header", headerContent); // May contain HTML (url)
-            DomUtils.setTemplateText(clone, "code", otherRow.value);
+            // Use HTML template for other headers with popover support
+            const clone = createOtherRowWithPopover(otherRow, violationGroups);
             otherList.appendChild(clone);
         }
     });
+
+    // Build diagnostics report
+    buildDiagnosticsReport(violationGroups);
 
     // Fluent UI Web Components handle their own initialization
     // Lists and callouts work with standard DOM interactions
@@ -417,7 +439,7 @@ function hideStatus(): void {
     }
 }
 
-function renderItem(headers: string): void {
+async function renderItem(headers: string): Promise<void> {
     // Hide loading status as soon as we start rendering
     hideStatus();
 
@@ -454,9 +476,12 @@ function eventListener(event: MessageEvent): void {
             case "updateStatus":
                 updateStatus(event.data.data);
                 break;
-            case "renderItem":
-                renderItem(event.data.data);
+            case "renderItem": {
+                // data is always [headers, SimpleRuleSet, AndRuleSet]
+                const headersString = event.data.data[0];
+                renderItem(headersString);
                 break;
+            }
         }
     }
 }
@@ -474,3 +499,430 @@ document.addEventListener("DOMContentLoaded", function() {
         showError(e, "Failed initializing frame");
     }
 });
+
+/**
+ * Apply content highlighting to show rule violation patterns
+ * @param content - The text content to highlight
+ * @param violationGroups - Array of violation groups with highlight patterns
+ * @returns The content with HTML highlighting spans applied
+ */
+
+/**
+ * Create a grouped rule accordion item
+ */
+function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFragment {
+    const severityInfo = getSeverityDisplay(ruleGroup.severity);
+
+    const clone = DomUtils.cloneTemplate("diagnostic-accordion-item-template");
+
+    // Set up the title - show rule name
+    const title = clone.querySelector(".diagnostic-title") as HTMLElement;
+    if (title) {
+        title.textContent = `${severityInfo.label}: ${ruleGroup.displayName}`;
+    }
+
+    // Set up the content - show violation count and details
+    const content = clone.querySelector(".diagnostic-content") as HTMLElement;
+    if (content) {
+        const violationCount = ruleGroup.violations.length;
+
+        if (violationCount > 1 || ruleGroup.isAndRule) {
+            // Multiple violations or AND rule - show count and list
+            const countDiv = document.createElement("div");
+            countDiv.className = "rule-violation-count";
+            countDiv.innerHTML = `<strong>${violationCount} violation${violationCount !== 1 ? "s" : ""} found in headers</strong>`;
+            content.appendChild(countDiv);
+
+            // Add spacing
+            const spacer = document.createElement("div");
+            spacer.style.marginBottom = "12px";
+            content.appendChild(spacer);
+
+            // List each violation with bullet points
+            ruleGroup.violations.forEach((violation: RuleViolation) => {
+                const violationDiv = document.createElement("div");
+                violationDiv.className = "rule-violation-item";
+
+                // Get the violation message from the rule's error message
+                const violationMessage = violation.rule.errorMessage;
+
+                violationDiv.innerHTML = `
+                    <div class="violation-message">• ${violationMessage}</div>
+                `;
+
+                // Add technical details
+                const detailsDiv = document.createElement("div");
+                detailsDiv.className = "violation-details";
+
+                // Handle section content
+                const sectionContent = violation.section.header;
+
+                detailsDiv.innerHTML = `
+                    <div style="margin-left: 16px; font-size: 0.9em; color: #666;">
+                        ℹ️ Section: ${sectionContent}
+                        ${violation.highlightPattern ? `<br>ℹ️ Highlight Pattern: ${violation.highlightPattern}` : ""}
+                    </div>
+                `;
+
+                violationDiv.appendChild(detailsDiv);
+                content.appendChild(violationDiv);
+
+                // Add spacing between violations
+                const itemSpacer = document.createElement("div");
+                itemSpacer.style.marginBottom = "8px";
+                content.appendChild(itemSpacer);
+            });
+        } else {
+            // Single violation or standalone rule
+            const violation = ruleGroup.violations[0];
+            if (!violation) return clone; // Safety check
+
+            // Get the violation message from the rule's error message
+            const violationMessage = violation.rule.errorMessage;
+
+            const messageDiv = document.createElement("div");
+            messageDiv.className = "single-violation-message";
+            messageDiv.textContent = violationMessage;
+            content.appendChild(messageDiv);
+
+            // Add technical details
+            const detailsList = document.createElement("div");
+            detailsList.className = "diagnostic-technical-details";
+            detailsList.style.marginTop = "12px";
+
+            // Handle section content - section is a HeaderSection object in the new type
+            const sectionContent = violation.section.header;
+            const sectionDetail = document.createElement("div");
+            sectionDetail.innerHTML = `<strong>Section:</strong> ${sectionContent}`;
+            detailsList.appendChild(sectionDetail);
+
+            if (violation.highlightPattern) {
+                const highlightDetail = document.createElement("div");
+                highlightDetail.innerHTML = `<strong>Highlight Pattern:</strong> ${violation.highlightPattern}`;
+                detailsList.appendChild(highlightDetail);
+            }
+
+            // Add rule details if available
+            // Check if this is a simple validation rule with errorPattern
+            const simpleRule = violation.rule as ISimpleValidationRule;
+            if (simpleRule.errorPattern) {
+                const patternDetail = document.createElement("div");
+                patternDetail.innerHTML = `<strong>Error Pattern:</strong> ${simpleRule.errorPattern}`;
+                detailsList.appendChild(patternDetail);
+            }
+
+            content.appendChild(detailsList);
+        }
+    }
+
+    return clone;
+}
+
+/**
+ * Build diagnostics report showing rule violations grouped by parent rule
+ */
+function buildDiagnosticsReport(violationGroups: ViolationGroup[]): void {
+    const diagnosticsSections = document.querySelectorAll(".ui-diagnostics-report-section");
+    if (!diagnosticsSections || diagnosticsSections.length === 0) {
+        return;
+    }
+
+    // Update all diagnostic sections
+    diagnosticsSections.forEach((diagnosticsSection) => {
+        const section = diagnosticsSection as HTMLElement;
+        // Clear existing content
+        section.innerHTML = "";
+
+        if (!violationGroups || violationGroups.length === 0) {
+            const nothingMessage = document.createElement("div");
+            nothingMessage.className = "ms-font-l ms-fontWeight-semibold";
+            nothingMessage.textContent = "Nothing to display";
+            section.appendChild(nothingMessage);
+        } else {
+            // Create accordion container for grouped rule violations
+            const accordion = document.createElement("fluent-accordion");
+            accordion.className = "diagnostics-accordion";
+
+            violationGroups.forEach((ruleGroup) => {
+                const accordionItem = createGroupedRuleAccordionItem(ruleGroup);
+                accordion.appendChild(accordionItem);
+            });
+
+            section.appendChild(accordion);
+        }
+    });
+}
+
+/**
+ * Map severity to label, and CSS class
+ */
+
+/**
+ * Create diagnostic violation item element for inline display
+ */
+function createDiagnosticViolationItem(violation: RuleViolation): DocumentFragment {
+    const clone = DomUtils.cloneTemplate("diagnostic-violation-item-template");
+    const violationItem = clone.querySelector(".diagnostic-violation-item") as HTMLElement;
+
+    const severity = violation.rule.severity;
+    const severityInfo = getSeverityDisplay(severity);
+
+    // Add severity class
+    violationItem.classList.add(`severity-${severity}`);
+    violationItem.setAttribute("data-severity", severity);
+
+    // Set severity badge
+    const severityBadge = clone.querySelector(".severity-badge") as HTMLElement;
+    if (severityBadge) {
+        severityBadge.textContent = severityInfo.label;
+        severityBadge.setAttribute("appearance", severity === "error" ? "important" : "accent");
+    }
+
+    // Set violation message using the rule's error message
+    const violationMessage = clone.querySelector(".violation-message") as HTMLElement;
+    if (violationMessage) {
+        violationMessage.textContent = violation.rule.errorMessage;
+    }
+
+    // Set parent message if exists
+    const parentMessage = clone.querySelector(".violation-parent-message") as HTMLElement;
+    if (parentMessage) {
+        const parentMsg = violation.parentMessage;
+        if (parentMsg) {
+            parentMessage.textContent = `Part of: ${parentMsg}`;
+            parentMessage.removeAttribute("hidden");
+        }
+    }
+
+    return clone;
+}
+
+/**
+ * Create popover table row for inline diagnostics
+ */
+// Define interface for Fluent UI popover component
+interface FluentPopover extends HTMLElement {
+    anchor: string;
+    hidden: boolean;
+}
+
+function createPopoverTableRow(row: Row, violationGroups: ViolationGroup[]): DocumentFragment {
+    const clone = DomUtils.cloneTemplate("popover-table-row-template");
+
+    // Set row ID and label in first cell
+    const cells = clone.querySelectorAll("td");
+    if (cells.length >= 2) {
+        const cell0 = cells[0] as HTMLElement;
+        cell0.id = row.id;
+        cell0.textContent = row.label;
+    }
+
+    // Set main content in second cell
+    const mainContent = clone.querySelector(".cell-main-content") as HTMLElement;
+    if (mainContent) {
+        const highlightedValue = highlightContent(row.valueUrl, violationGroups);
+        mainContent.innerHTML = highlightedValue;
+        mainContent.setAttribute("aria-labelledby", row.id);
+    }
+
+    // Find violations that apply to this row using the proper architecture
+    const effectiveViolations = getViolationsForRow(row, violationGroups);
+
+    if (effectiveViolations.length > 0) {
+        // Set up popover button
+        const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
+        const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
+        const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
+        const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
+
+        if (popoverBtn && popover && diagnosticsList && closeBtn) {
+            // Show the popover button since we have violations
+            popoverBtn.style.display = "flex";
+
+            // Determine highest severity for button icon
+            const severities = effectiveViolations.map((violation: RuleViolation) => {
+                return violation.rule.severity;
+            });
+
+            const highestSeverity = severities.includes("error") ? "error" :
+                severities.includes("warning") ? "warning" : "info";            // Set severity data attribute for CSS styling
+            popoverBtn.setAttribute("data-severity", highestSeverity);
+
+            // Generate unique IDs for proper popover anchoring
+            const buttonId = `popover-btn-${row.id}`;
+            const popoverId = `popover-${row.id}`;
+
+            popoverBtn.id = buttonId;
+            popover.id = popoverId;
+
+            // Set up proper anchor relationship for Fluent UI popover
+            popover.anchor = buttonId;
+            popover.hidden = true; // Ensure popover starts hidden
+
+            // Set ARIA relationship
+            popoverBtn.setAttribute("aria-describedby", popoverId);
+
+            // Populate diagnostics list
+            effectiveViolations.forEach((violation: RuleViolation) => {
+                const violationItem = createDiagnosticViolationItem(violation);
+                diagnosticsList.appendChild(violationItem);
+            });
+
+            // Set up popover functionality using Fluent UI methods
+            popoverBtn.addEventListener("click", function(e: Event) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Close other popovers first
+                document.querySelectorAll(".diagnostics-popover").forEach(otherPopover => {
+                    const fluentPopover = otherPopover as FluentPopover;
+                    if (fluentPopover !== popover && !fluentPopover.hidden) {
+                        fluentPopover.hidden = true;
+                    }
+                });
+
+                // Toggle this popover using Fluent UI properties
+                popover.hidden = !popover.hidden;
+            });
+
+            // Close popover
+            closeBtn.addEventListener("click", function(e: Event) {
+                e.preventDefault();
+                e.stopPropagation();
+                popover.hidden = true;
+            });
+
+            // Close popover when clicking outside
+            document.addEventListener("click", function(e: Event) {
+                if (!popover.hidden && !popover.contains(e.target as Node) && !popoverBtn.contains(e.target as Node)) {
+                    popover.hidden = true;
+                }
+            });
+
+            // Set ARIA labels
+            popoverBtn.setAttribute("aria-label", `Show rule violations for ${row.label}`);
+        }
+    } else {
+        // Remove popover button if no violations
+        const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
+        if (popoverBtn) {
+            popoverBtn.style.display = "none";
+        }
+    }
+
+    return clone;
+}
+
+/**
+ * Create other row with popover support for inline diagnostics
+ */
+function createOtherRowWithPopover(row: OtherRow, violationGroups: ViolationGroup[]): DocumentFragment {
+    const clone = DomUtils.cloneTemplate("other-row-template");
+
+    // Set header content
+    const sectionHeader = clone.querySelector(".section-header") as HTMLElement;
+    if (sectionHeader) {
+        const headerContent = row.url ? row.url : row.header;
+        sectionHeader.innerHTML = headerContent; // May contain HTML (url)
+    }
+
+    // Set code content with highlighting
+    const codeElement = clone.querySelector("code") as HTMLElement;
+    if (codeElement) {
+        const highlightedContent = highlightContent(row.value, violationGroups);
+        if (highlightedContent !== row.value) {
+            codeElement.innerHTML = highlightedContent;
+        } else {
+            codeElement.textContent = row.value;
+        }
+    }
+
+    // Find violations that apply to this row using the proper architecture
+    const effectiveViolations = getViolationsForRow(row, violationGroups);
+
+    if (effectiveViolations.length > 0) {
+        // Set up popover button
+        const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
+        const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
+        const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
+        const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
+
+        if (popoverBtn && popover && diagnosticsList && closeBtn) {
+            // Show the popover button since we have violations
+            popoverBtn.style.display = "flex";
+
+            // Determine highest severity for button icon
+            const severities = effectiveViolations.map((violation: RuleViolation) => {
+                return violation.rule.severity;
+            });
+
+            const highestSeverity = severities.includes("error") ? "error" :
+                severities.includes("warning") ? "warning" : "info";
+
+            // Set severity data attribute for CSS styling
+            popoverBtn.setAttribute("data-severity", highestSeverity);
+
+            // Generate unique IDs for proper popover anchoring
+            const buttonId = `other-popover-btn-${row.header}`;
+            const popoverId = `other-popover-${row.header}`;
+
+            popoverBtn.id = buttonId;
+            popover.id = popoverId;
+
+            // Set up proper anchor relationship for Fluent UI popover
+            popover.anchor = buttonId;
+            popover.hidden = true; // Ensure popover starts hidden
+
+            // Set ARIA relationship
+            popoverBtn.setAttribute("aria-describedby", popoverId);
+
+            // Populate diagnostics list
+            effectiveViolations.forEach((violation: RuleViolation) => {
+                const violationItem = createDiagnosticViolationItem(violation);
+                diagnosticsList.appendChild(violationItem);
+            });
+
+            // Set up popover functionality using Fluent UI methods
+            popoverBtn.addEventListener("click", function(e: Event) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Close other popovers first
+                document.querySelectorAll(".diagnostics-popover").forEach(otherPopover => {
+                    const fluentPopover = otherPopover as FluentPopover;
+                    if (fluentPopover !== popover && !fluentPopover.hidden) {
+                        fluentPopover.hidden = true;
+                    }
+                });
+
+                // Toggle this popover using Fluent UI properties
+                popover.hidden = !popover.hidden;
+            });
+
+            // Close popover
+            closeBtn.addEventListener("click", function(e: Event) {
+                e.preventDefault();
+                e.stopPropagation();
+                popover.hidden = true;
+            });
+
+            // Close popover when clicking outside
+            document.addEventListener("click", function(e: Event) {
+                if (!popover.hidden && !popover.contains(e.target as Node) && !popoverBtn.contains(e.target as Node)) {
+                    popover.hidden = true;
+                }
+            });
+
+            // Set ARIA labels
+            popoverBtn.setAttribute("aria-label", `Show rule violations for ${row.header}`);
+        }
+    } else {
+        // Remove popover button if no violations
+        const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
+        if (popoverBtn) {
+            popoverBtn.style.display = "none";
+        }
+    }
+
+    return clone;
+}

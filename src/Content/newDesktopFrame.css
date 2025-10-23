@@ -345,3 +345,503 @@
     font-size: 12px;
     font-family: var(--font-family);
 }
+
+/* Rule Violation Diagnostic System */
+.rule-violation-highlight {
+    background-color: var(--highlight-warning-bg) !important;
+    color: var(--highlight-warning-text) !important;
+    font-weight: 600 !important;
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+.diagnostic-box {
+    border-radius: 6px;
+    padding: 12px;
+    margin: 8px 0 16px 0;
+    border-width: 1px;
+    border-style: solid;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.diagnostic-box--warning {
+    background-color: var(--diagnostic-warning-bg);
+    border-color: var(--diagnostic-warning-border);
+}
+
+.diagnostic-box__header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    margin-bottom: 6px;
+    color: var(--diagnostic-warning-text);
+}
+
+.diagnostic-box__message {
+    color: var(--text-secondary);
+    font-size: 0.6875rem;
+    margin-bottom: 6px;
+}
+
+.rule-violation-warning {
+    color: var(--diagnostic-warning-text);
+    font-size: 0.75rem;
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+.rule-violation-error {
+    color: var(--diagnostic-error-text);
+    font-size: 0.75rem;
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+.rule-violation-info {
+    color: var(--diagnostic-info-text);
+    font-size: 0.75rem;
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+.antispam-diagnostic-cell {
+    border-top: 0 !important;
+    background-color: var(--diagnostic-warning-bg) !important;
+    padding: 8px !important;
+}
+
+.summary-violation-header {
+    color: var(--diagnostic-warning-text);
+    margin-bottom: 8px;
+}
+
+.summary-violation-message {
+    color: var(--text-secondary);
+    margin-left: 16px;
+    margin-bottom: 4px;
+}
+
+.summary-violation-pattern {
+    color: var(--text-tertiary);
+    font-style: italic;
+    margin-left: 16px;
+    margin-bottom: 8px;
+}
+
+/* Diagnostic View Controls */
+.diagnostic-view-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+#diagnostic-view-toggle {
+    font-size: 12px;
+    gap: 4px;
+}
+
+/* Fluent Diagnostic Components */
+.diagnostics-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    font-family: var(--font-family);
+}
+
+.diagnostics-header-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #201f1e;
+}
+
+.diagnostics-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.diagnostic-card {
+    border-radius: 6px;
+    border: 1px solid var(--border-gray);
+    font-family: var(--font-family);
+}
+
+.diagnostic-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.diagnostic-content {
+    padding: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.diagnostic-message-list {
+    margin: 0;
+    padding-left: 16px;
+}
+
+.diagnostic-message-list li {
+    margin-bottom: 4px;
+}
+
+.diagnostics-accordion {
+    border-radius: 6px;
+    border: 1px solid var(--border-gray);
+}
+
+.accordion-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Severity Badge Styling */
+fluent-badge.severity-badge {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+fluent-badge.violation-count-badge {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Grouped Rule Display Styles */
+.rule-violation-count {
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 8px;
+}
+
+.rule-violation-item {
+    margin-bottom: 12px;
+    padding: 8px;
+    background-color: var(--background-subtle);
+    border-radius: 4px;
+    border-left: 3px solid var(--border-accent);
+}
+
+.violation-message {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.violation-details {
+    font-size: 12px;
+    line-height: 1.3;
+    color: var(--text-secondary);
+}
+
+.single-violation-message {
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.diagnostic-technical-details {
+    font-size: 12px;
+    line-height: 1.3;
+    color: var(--text-secondary);
+}
+
+.diagnostic-technical-details > div {
+    margin-bottom: 4px;
+}
+
+.diagnostic-technical-details strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Enhanced Message Bar Styling */
+fluent-message-bar.section-violation-summary {
+    margin-bottom: 12px;
+    font-family: var(--font-family);
+}
+
+/* Technical Details Styling */
+.diagnostic-technical-details {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-gray);
+    font-size: 12px;
+    color: #605e5c;
+}
+
+.diagnostic-technical-details div {
+    margin-bottom: 4px;
+}
+
+.diagnostic-technical-details strong {
+    color: #323130;
+    font-weight: 600;
+}
+
+/* Popover table row styles for inline diagnostics */
+.popover-row .cell-content-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    position: relative;
+}
+
+.popover-row .cell-main-content {
+    flex: 1;
+    line-height: 1.4;
+}
+
+.popover-row .show-diagnostics-popover-btn {
+    flex-shrink: 0;
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    padding: 0;
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.popover-row .show-diagnostics-popover-btn:hover {
+    transform: scale(1.1);
+}
+
+.popover-row .show-diagnostics-popover-btn .severity-icon {
+    font-size: 16px;
+    line-height: 1;
+}
+
+/* Severity-based icon styling */
+.popover-row .show-diagnostics-popover-btn[data-severity="error"] .severity-icon::before {
+    content: "🔴";
+}
+
+.popover-row .show-diagnostics-popover-btn[data-severity="warning"] .severity-icon::before {
+    content: "⚠️";
+}
+
+.popover-row .show-diagnostics-popover-btn[data-severity="info"] .severity-icon::before {
+    content: "ℹ️";
+}
+
+/* Other tab header with inline popover button */
+.other-header-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    min-height: 20px; /* Match existing header height */
+}
+
+.other-header-wrapper .section-header {
+    margin: 0; /* Remove any existing margins */
+}
+
+.other-header-wrapper .show-diagnostics-popover-btn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    padding: 0;
+    margin-left: 6px; /* Small gap right after the header text */
+    background: transparent;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.other-header-wrapper .show-diagnostics-popover-btn:hover {
+    transform: scale(1.1);
+}
+
+.other-header-wrapper .show-diagnostics-popover-btn .severity-icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+/* Severity-based icon styling for other headers */
+.other-header-wrapper .show-diagnostics-popover-btn[data-severity="error"] .severity-icon::before {
+    content: "🔴";
+}
+
+.other-header-wrapper .show-diagnostics-popover-btn[data-severity="warning"] .severity-icon::before {
+    content: "⚠️";
+}
+
+.other-header-wrapper .show-diagnostics-popover-btn[data-severity="info"] .severity-icon::before {
+    content: "ℹ️";
+}
+
+.diagnostics-popover {
+    max-width: 420px;
+    min-width: 320px;
+    z-index: 1000;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: white;
+    margin-top: 8px;
+}
+
+/* Ensure popover is hidden by default */
+.diagnostics-popover[hidden] {
+    display: none !important;
+}
+
+.diagnostics-popover .popover-content {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.diagnostics-popover .close-popover-btn {
+    padding: 6px;
+    align-self: flex-end;
+    margin-top: 12px;
+    border-radius: 4px;
+    background: rgba(239, 246, 255, 0.6);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    transition: all 0.2s ease;
+}
+
+.diagnostics-popover .close-popover-btn:hover {
+    background: rgba(239, 246, 255, 1);
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+/* Shared diagnostic violation item styles */
+.diagnostic-violation-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, rgba(248, 250, 252, 0.8), rgba(241, 245, 249, 0.6));
+    border-radius: 8px;
+    border-left: 4px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.diagnostic-violation-item:hover {
+    background: linear-gradient(135deg, rgba(248, 250, 252, 1), rgba(241, 245, 249, 0.8));
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.diagnostic-violation-item:last-child {
+    margin-bottom: 0;
+}
+
+.diagnostic-violation-item .severity-badge {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.diagnostic-violation-item .violation-details {
+    flex: 1;
+    line-height: 1.5;
+    font-size: 13px;
+    color: #374151;
+}
+
+.diagnostic-violation-item .violation-details .violation-message {
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #111827;
+}
+
+.diagnostic-violation-item .violation-details .violation-rule {
+    font-size: 12px;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Severity-specific styling */
+.diagnostic-violation-item[data-severity="high"] {
+    border-left-color: #dc2626;
+}
+
+.diagnostic-violation-item[data-severity="high"] .severity-badge {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: white;
+}
+
+.diagnostic-violation-item[data-severity="medium"] {
+    border-left-color: #f59e0b;
+}
+
+.diagnostic-violation-item[data-severity="medium"] .severity-badge {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.diagnostic-violation-item[data-severity="low"] {
+    border-left-color: #10b981;
+}
+
+.diagnostic-violation-item[data-severity="low"] .severity-badge {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+
+
+/* Severity-specific styling for violation items */
+.diagnostic-violation-item.severity-error {
+    border-left-color: var(--error-color);
+    background-color: #fef7f7;
+}
+
+.diagnostic-violation-item.severity-warning {
+    border-left-color: var(--warning-color);
+    background-color: #fffdf5;
+}
+
+.diagnostic-violation-item.severity-info {
+    border-left-color: var(--info-color);
+    background-color: #f7f9fc;
+}
+
+/* Badge count styling */
+.diagnostics-count-badge {
+    font-size: 10px;
+    min-width: 16px;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 8px;
+}
+
+/* Accessibility improvements */
+.popover-row .show-diagnostics-popover-btn:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}

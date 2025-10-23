@@ -15,10 +15,10 @@ export class DomUtils {
     /**
      * Get multiple elements by CSS selector
      * @param selector CSS selector string
-     * @returns NodeList of HTMLElements
+     * @returns Array of HTMLElements
      */
-    static getElements(selector: string): NodeListOf<HTMLElement> {
-        return document.querySelectorAll(selector) as NodeListOf<HTMLElement>;
+    static getElements(selector: string): HTMLElement[] {
+        return Array.from(document.querySelectorAll(selector)) as HTMLElement[];
     }
 
     /**

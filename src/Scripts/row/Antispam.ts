@@ -14,7 +14,9 @@ export class AntiSpamReport extends SummaryTable {
         new Row("BCL", mhaStrings.mhaBcl, "X-Microsoft-Antispam"),
         new Row("PCL", mhaStrings.mhaPcl, "X-Microsoft-Antispam"),
         new Row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
-        new Row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam")
+        new Row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam"),
+        // Add the header name itself as a section for rules validation compatibility
+        new Row("X-Microsoft-Antispam", mhaStrings.mhaAntiSpamReport, "X-Microsoft-Antispam")
     ];
 
     public get rows(): Row[] { return this.antiSpamRows; }
@@ -81,6 +83,13 @@ export class AntiSpamReport extends SummaryTable {
     public add(header: Header): boolean {
         if (header.header.toUpperCase() === "X-Microsoft-Antispam".toUpperCase()) {
             this.parse(header.value);
+
+            // Set the header name row for rules validation compatibility
+            const headerNameRow = this.antiSpamRows.find(row => row.header === "X-Microsoft-Antispam");
+            if (headerNameRow) {
+                headerNameRow.value = header.value;
+            }
+
             return true;
         }
 

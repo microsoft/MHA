@@ -3,6 +3,8 @@ import { DeferredError } from "./DeferredError";
 import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
 import { Poster } from "./Poster";
+import { getRules, ruleStore } from "./rules/loaders/GetRules";
+import { IAndRuleData, IRuleData } from "./rules/types/interfaces";
 import { Strings } from "./Strings";
 import { TabNavigation } from "./TabNavigation";
 import { GetHeaders } from "./ui/getHeaders/GetHeaders";
@@ -52,15 +54,19 @@ export class ParentFrame {
         ParentFrameUtils.setDefaultChoice(ParentFrame.choices, uiDefault);
     }
 
-    private static postMessageToFrame(eventName: string, data: string | { error: string, message: string }): void {
+    private static postMessageToFrame(eventName: string, data: string | { error: string, message: string } | { headers: string, currentHeaderSource: { label: string } } | (string | IRuleData[] | IAndRuleData[])[]): void {
         if (ParentFrame.iFrame) {
             Poster.postMessageToFrame(ParentFrame.iFrame, eventName, data);
         }
+
     }
 
     private static render(): void {
-        if (ParentFrame.headers) diagnostics.trackEvent({ name: "analyzeHeaders" });
-        ParentFrame.postMessageToFrame("renderItem", ParentFrame.headers);
+        if (ParentFrame.headers) {
+            diagnostics.trackEvent({ name: "analyzeHeaders" });
+            // Send headers with rules data to DesktopPane
+            ParentFrame.postMessageToFrame("renderItem", [ParentFrame.headers, ruleStore.simpleRuleSet, ruleStore.andRuleSet]);
+        }
     }
 
     private static setFrame(frame: Window): void {
@@ -229,6 +235,7 @@ export class ParentFrame {
                 if (!dialogSettings.hidden) {
                     dialogSettings.hidden = true;
                 }
+
                 if (!dialogDiagnostics.hidden) {
                     dialogDiagnostics.hidden = true;
                 }
@@ -239,7 +246,7 @@ export class ParentFrame {
                 const activeElement = document.activeElement;
                 const isRadioOrCheckbox = activeElement &&
                     (activeElement.tagName.toLowerCase() === "fluent-radio" ||
-                     activeElement.tagName.toLowerCase() === "fluent-checkbox");
+                        activeElement.tagName.toLowerCase() === "fluent-checkbox");
 
                 if (isRadioOrCheckbox) {
                     // Trigger the same action as the OK button
@@ -328,6 +335,7 @@ export class ParentFrame {
                     radioGroup.value = currentIndex.toString();
                 }
             }
+
             dialogSettings.hidden = false;
         });
 
@@ -378,6 +386,10 @@ export class ParentFrame {
         ParentFrame.registerItemChangedEvent();
 
         window.addEventListener("message", ParentFrame.eventListener, false);
+        // Load rules before loading the item
+        getRules(() => {
+            console.log("🔍 ParentFrame: Rules loaded, proceeding to load item");
+        });
         await ParentFrame.loadNewItem();
     }
 

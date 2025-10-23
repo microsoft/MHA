@@ -34,6 +34,13 @@ describe("antiSpam Tests", () => {
             "label": "Unknown fields",
             "value": unparsed,
             "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>X-Microsoft-Antispam</a>"
+        },
+        {
+            "header": "X-Microsoft-Antispam",
+            "headerName": "X-Microsoft-Antispam",
+            "label": "Microsoft Antispam Header",
+            "value": "",
+            "valueUrl": ""
         }
     ];
 
@@ -81,6 +88,13 @@ describe("antiSpam nulls", () => {
             "label": "Unknown fields",
             "value": unparsed,
             "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>UIP:;SFV:SKI;</a>"
+        },
+        {
+            "header": "X-Microsoft-Antispam",
+            "headerName": "X-Microsoft-Antispam",
+            "label": "Microsoft Antispam Header",
+            "value": "",
+            "valueUrl": ""
         }
     ];
 

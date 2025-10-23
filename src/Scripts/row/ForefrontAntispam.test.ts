@@ -127,6 +127,13 @@ describe("forefront antiSpam Tests", () => {
             "label": "Unknown fields",
             "value": unparsed,
             "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>DIR:INB;SFP:;</a>"
+        },
+        {
+            "header": "X-Forefront-Antispam-Report",
+            "headerName": "X-Forefront-Antispam-Report",
+            "label": "Forefront Antispam Report Header",
+            "value": "",
+            "valueUrl": ""
         }
     ];
 
@@ -265,6 +272,13 @@ describe("forefront antiSpam spam", () => {
             "label": "Unknown fields",
             "value": unparsed,
             "valueUrl": "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>EFV:NLI;DIR:INB;SFP:;SRVR:DM5PR1501MB1992;FPR:;SPF:Pass;A:1;MX:1;</a>"
+        },
+        {
+            "header": "X-Forefront-Antispam-Report",
+            "headerName": "X-Forefront-Antispam-Report",
+            "label": "Forefront Antispam Report Header",
+            "value": "",
+            "valueUrl": ""
         }
     ];
 
@@ -313,7 +327,8 @@ describe("ForefrontAntiSpamReport add method", () => {
             "ForefrontAntiSpamReport\n" +
             "Country/Region: US\n" +
             "Connecting IP Address: 208.75.123.162\n" +
-            "Source header: " + value
+            "Source header: " + value + "\n" +
+            "Forefront Antispam Report Header: " + value
         );
     });
 
