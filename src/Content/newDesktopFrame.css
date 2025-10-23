@@ -594,7 +594,6 @@ fluent-message-bar.section-violation-summary {
     font-weight: 600;
 }
 
-/* Popover table row styles for inline diagnostics */
 .popover-row .cell-content-wrapper {
     display: flex;
     align-items: flex-start;

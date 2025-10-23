@@ -191,13 +191,8 @@ async function buildViews(headers: string) {
             const clone = DomUtils.cloneTemplate("summary-row-template");
             DomUtils.setTemplateText(clone, ".section-header", row.label);
 
-            // Apply content highlighting if violations exist
             const highlightedContent = highlightContent(row.value, violationGroups);
-            if (highlightedContent !== row.value) {
-                DomUtils.setTemplateHTML(clone, "code", highlightedContent);
-            } else {
-                DomUtils.setTemplateText(clone, "code", row.value);
-            }
+            DomUtils.setTemplateHTML(clone, "code", highlightedContent);
 
             // Add rule violation display in summary section
             const sectionHeader = clone.querySelector(".section-header") as HTMLElement;
@@ -649,10 +644,6 @@ function buildDiagnosticsReport(violationGroups: ViolationGroup[]): void {
 }
 
 /**
- * Map severity to label, and CSS class
- */
-
-/**
  * Create diagnostic violation item element for inline display
  */
 function createDiagnosticViolationItem(violation: RuleViolation): DocumentFragment {
@@ -702,7 +693,7 @@ interface FluentPopover extends HTMLElement {
 }
 
 function createPopoverTableRow(row: Row, violationGroups: ViolationGroup[]): DocumentFragment {
-    const clone = DomUtils.cloneTemplate("popover-table-row-template");
+    const clone = DomUtils.cloneTemplate("table-row-template");
 
     // Set row ID and label in first cell
     const cells = clone.querySelectorAll("td");
