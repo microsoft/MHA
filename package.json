@@ -53,6 +53,7 @@
     "@types/office-js": "^1.0.550",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.32.1",
+    "copy-webpack-plugin": "^13.0.1",
     "css-loader": "^7.1.2",
     "eslint": "^9.38.0",
     "eslint-import-resolver-typescript": "^4.4.4",
