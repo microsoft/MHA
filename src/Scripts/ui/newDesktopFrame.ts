@@ -666,106 +666,58 @@ interface FluentPopover extends HTMLElement {
 
 function createPopoverTableRow(row: Row, violationGroups: ViolationGroup[]): DocumentFragment {
     const clone = DomUtils.cloneTemplate("table-row-template");
-
-    // Set row ID and label in first cell
     const cells = clone.querySelectorAll("td");
-    if (cells.length >= 2) {
-        const cell0 = cells[0] as HTMLElement;
-        cell0.id = row.id;
-        cell0.textContent = row.label;
+    if (cells.length >= 2 && cells[0]) {
+        (cells[0] as HTMLElement).textContent = row.label;
+        (cells[0] as HTMLElement).id = row.id;
     }
 
-    // Set main content in second cell
-    const mainContent = clone.querySelector(".cell-main-content") as HTMLElement;
-    if (mainContent) {
-        const highlightedValue = highlightContent(row.valueUrl, violationGroups);
-        mainContent.innerHTML = highlightedValue;
-        mainContent.setAttribute("aria-labelledby", row.id);
-    }
+    DomUtils.setTemplateHTML(clone, ".cell-main-content", highlightContent(row.valueUrl, violationGroups));
+    DomUtils.setTemplateAttribute(clone, ".cell-main-content", "aria-labelledby", row.id);
 
-    // Find violations that apply to this row using the proper architecture
     const effectiveViolations = getViolationsForRow(row, violationGroups);
-
     if (effectiveViolations.length > 0) {
-        // Set up popover button
         const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
         const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
         const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
         const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
-
         if (popoverBtn && popover && diagnosticsList && closeBtn) {
-            // Show the popover button since we have violations
             popoverBtn.style.display = "flex";
-
-            // Determine highest severity for button icon
-            const severities = effectiveViolations.map((violation: RuleViolation) => {
-                return violation.rule.severity;
-            });
-
-            const highestSeverity = severities.includes("error") ? "error" :
-                severities.includes("warning") ? "warning" : "info";            // Set severity data attribute for CSS styling
+            const severities = effectiveViolations.map(v => v.rule.severity);
+            const highestSeverity = severities.includes("error") ? "error" : severities.includes("warning") ? "warning" : "info";
             popoverBtn.setAttribute("data-severity", highestSeverity);
-
-            // Generate unique IDs for proper popover anchoring
             const buttonId = `popover-btn-${row.id}`;
             const popoverId = `popover-${row.id}`;
-
             popoverBtn.id = buttonId;
             popover.id = popoverId;
-
-            // Set up proper anchor relationship for Fluent UI popover
             popover.anchor = buttonId;
-            popover.hidden = true; // Ensure popover starts hidden
-
-            // Set ARIA relationship
+            popover.hidden = true;
             popoverBtn.setAttribute("aria-describedby", popoverId);
-
-            // Populate diagnostics list
-            effectiveViolations.forEach((violation: RuleViolation) => {
-                const violationItem = createDiagnosticViolationItem(violation);
-                diagnosticsList.appendChild(violationItem);
-            });
-
-            // Set up popover functionality using Fluent UI methods
-            popoverBtn.addEventListener("click", function(e: Event) {
+            effectiveViolations.forEach(v => diagnosticsList.appendChild(createDiagnosticViolationItem(v)));
+            popoverBtn.addEventListener("click", e => {
                 e.preventDefault();
                 e.stopPropagation();
-
-                // Close other popovers first
-                document.querySelectorAll(".diagnostics-popover").forEach(otherPopover => {
-                    const fluentPopover = otherPopover as FluentPopover;
-                    if (fluentPopover !== popover && !fluentPopover.hidden) {
-                        fluentPopover.hidden = true;
-                    }
+                document.querySelectorAll(".diagnostics-popover").forEach(other => {
+                    const fluentPopover = other as FluentPopover;
+                    if (fluentPopover !== popover && !fluentPopover.hidden) fluentPopover.hidden = true;
                 });
-
-                // Toggle this popover using Fluent UI properties
                 popover.hidden = !popover.hidden;
             });
 
-            // Close popover
-            closeBtn.addEventListener("click", function(e: Event) {
+            closeBtn.addEventListener("click", e => {
                 e.preventDefault();
                 e.stopPropagation();
                 popover.hidden = true;
             });
 
-            // Close popover when clicking outside
-            document.addEventListener("click", function(e: Event) {
-                if (!popover.hidden && !popover.contains(e.target as Node) && !popoverBtn.contains(e.target as Node)) {
-                    popover.hidden = true;
-                }
+            document.addEventListener("click", e => {
+                if (!popover.hidden && !popover.contains(e.target as Node) && !popoverBtn.contains(e.target as Node)) popover.hidden = true;
             });
 
-            // Set ARIA labels
             popoverBtn.setAttribute("aria-label", `Show rule violations for ${row.label}`);
         }
     } else {
-        // Remove popover button if no violations
-        const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
-        if (popoverBtn) {
-            popoverBtn.style.display = "none";
-        }
+        DomUtils.hideElement(".show-diagnostics-popover-btn");
     }
 
     return clone;
@@ -776,23 +728,13 @@ function createPopoverTableRow(row: Row, violationGroups: ViolationGroup[]): Doc
  */
 function createOtherRowWithPopover(row: OtherRow, violationGroups: ViolationGroup[]): DocumentFragment {
     const clone = DomUtils.cloneTemplate("other-row-template");
+    DomUtils.setTemplateHTML(clone, ".section-header", row.url ? row.url : row.header);
 
-    // Set header content
-    const sectionHeader = clone.querySelector(".section-header") as HTMLElement;
-    if (sectionHeader) {
-        const headerContent = row.url ? row.url : row.header;
-        sectionHeader.innerHTML = headerContent; // May contain HTML (url)
-    }
-
-    // Set code content with highlighting
-    const codeElement = clone.querySelector("code") as HTMLElement;
-    if (codeElement) {
-        const highlightedContent = highlightContent(row.value, violationGroups);
-        if (highlightedContent !== row.value) {
-            codeElement.innerHTML = highlightedContent;
-        } else {
-            codeElement.textContent = row.value;
-        }
+    const highlightedContent = highlightContent(row.value, violationGroups);
+    if (highlightedContent !== row.value) {
+        DomUtils.setTemplateHTML(clone, "code", highlightedContent);
+    } else {
+        DomUtils.setTemplateHTML(clone, "code", row.value);
     }
 
     // Find violations that apply to this row using the proper architecture
