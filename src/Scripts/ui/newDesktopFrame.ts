@@ -501,17 +501,11 @@ document.addEventListener("DOMContentLoaded", function() {
  * Create a grouped rule accordion item
  */
 function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFragment {
-    const severityInfo = getSeverityDisplay(ruleGroup.severity);
-
     const clone = DomUtils.cloneTemplate("diagnostic-accordion-item-template");
 
-    // Set up the title - show rule name
-    const title = clone.querySelector(".diagnostic-title") as HTMLElement;
-    if (title) {
-        title.textContent = `${severityInfo.label}: ${ruleGroup.displayName}`;
-    }
+    const severityInfo = getSeverityDisplay(ruleGroup.severity);
+    DomUtils.setTemplateText(clone, ".diagnostic-title", `${severityInfo.label}: ${ruleGroup.displayName}`);
 
-    // Set up the content - show violation count and details
     const content = clone.querySelector(".diagnostic-content") as HTMLElement;
     if (content) {
         const violationCount = ruleGroup.violations.length;
@@ -648,36 +642,14 @@ function buildDiagnosticsReport(violationGroups: ViolationGroup[]): void {
  */
 function createDiagnosticViolationItem(violation: RuleViolation): DocumentFragment {
     const clone = DomUtils.cloneTemplate("diagnostic-violation-item-template");
-    const violationItem = clone.querySelector(".diagnostic-violation-item") as HTMLElement;
-
-    const severity = violation.rule.severity;
-    const severityInfo = getSeverityDisplay(severity);
-
-    // Add severity class
-    violationItem.classList.add(`severity-${severity}`);
-    violationItem.setAttribute("data-severity", severity);
-
-    // Set severity badge
-    const severityBadge = clone.querySelector(".severity-badge") as HTMLElement;
-    if (severityBadge) {
-        severityBadge.textContent = severityInfo.label;
-        severityBadge.setAttribute("appearance", severity === "error" ? "important" : "accent");
-    }
-
-    // Set violation message using the rule's error message
-    const violationMessage = clone.querySelector(".violation-message") as HTMLElement;
-    if (violationMessage) {
-        violationMessage.textContent = violation.rule.errorMessage;
-    }
-
-    // Set parent message if exists
-    const parentMessage = clone.querySelector(".violation-parent-message") as HTMLElement;
-    if (parentMessage) {
-        const parentMsg = violation.parentMessage;
-        if (parentMsg) {
-            parentMessage.textContent = `Part of: ${parentMsg}`;
-            parentMessage.removeAttribute("hidden");
-        }
+    DomUtils.addClass(".diagnostic-violation-item", `severity-${violation.rule.severity}`);
+    DomUtils.setTemplateAttribute(clone, ".diagnostic-violation-item", "data-severity", violation.rule.severity);
+    DomUtils.setTemplateText(clone, ".severity-badge", getSeverityDisplay(violation.rule.severity).label);
+    DomUtils.setTemplateAttribute(clone, ".severity-badge", "appearance", violation.rule.severity === "error" ? "important" : "accent");
+    DomUtils.setTemplateText(clone, ".violation-message", violation.rule.errorMessage);
+    if (violation.parentMessage){
+        DomUtils.setTemplateText(clone, ".violation-parent-message", `Part of: ${violation.parentMessage}`);
+        DomUtils.showElement(".violation-parent-message");
     }
 
     return clone;
