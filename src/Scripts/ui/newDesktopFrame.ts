@@ -651,13 +651,17 @@ interface FluentPopover extends HTMLElement {
  * Shared utility to setup diagnostics popover button and popover
  */
 function setupDiagnosticsPopover(
-    popoverBtn: HTMLElement,
-    popover: FluentPopover,
-    diagnosticsList: HTMLElement,
-    closeBtn: HTMLElement,
-    effectiveViolations: RuleViolation[],
+    clone: DocumentFragment,
+    row: Row,
+    violationGroups: ViolationGroup[],
     id: string,
     label: string) {
+    const effectiveViolations = getViolationsForRow(row, violationGroups);
+    const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
+    const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
+    const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
+    const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
+
     if (effectiveViolations.length > 0) {
         popoverBtn.style.display = "flex";
         const severities = effectiveViolations.map(v => v.rule.severity);
@@ -705,21 +709,13 @@ function createPopoverTableRow(row: Row, violationGroups: ViolationGroup[]): Doc
     DomUtils.setTemplateHTML(clone, ".cell-main-content", highlightContent(row.valueUrl, violationGroups));
     DomUtils.setTemplateAttribute(clone, ".cell-main-content", "aria-labelledby", row.id);
 
-    const effectiveViolations = getViolationsForRow(row, violationGroups);
-    const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
-    const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
-    const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
-    const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
-    if (popoverBtn && popover && diagnosticsList && closeBtn) {
-        setupDiagnosticsPopover(
-            popoverBtn,
-            popover,
-            diagnosticsList,
-            closeBtn,
-            effectiveViolations,
-            row.id,
-            row.label);
-    }
+    setupDiagnosticsPopover(
+        clone,
+        row,
+        violationGroups,
+        row.id,
+        row.label);
+
     return clone;
 }
 
@@ -738,20 +734,12 @@ function createOtherRowWithPopover(row: OtherRow, violationGroups: ViolationGrou
     }
 
     // Find violations that apply to this row using the proper architecture
-    const effectiveViolations = getViolationsForRow(row, violationGroups);
-    const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
-    const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
-    const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
-    const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
-    if (popoverBtn && popover && diagnosticsList && closeBtn) {
-        setupDiagnosticsPopover(
-            popoverBtn,
-            popover,
-            diagnosticsList,
-            closeBtn,
-            effectiveViolations,
-            row.header,
-            row.header);
-    }
+    setupDiagnosticsPopover(
+        clone,
+        row,
+        violationGroups,
+        row.header,
+        row.header);
+
     return clone;
 }
