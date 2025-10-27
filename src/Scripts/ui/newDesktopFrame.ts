@@ -651,11 +651,23 @@ interface FluentPopover extends HTMLElement {
  * Shared utility to setup diagnostics popover button and popover
  */
 function setupDiagnosticsPopover(
-    clone: DocumentFragment,
+    template: string,
     row: Row,
     violationGroups: ViolationGroup[],
     id: string,
     label: string) {
+    const clone = DomUtils.cloneTemplate(template);
+    DomUtils.setTemplateHTML(clone, ".row-header", row.url ? row.url : row.header);
+    DomUtils.setTemplateAttribute(clone, ".row-header", "id", row.id);
+
+    const highlightedContent = highlightContent(row.value, violationGroups);
+    if (highlightedContent !== row.value) {
+        DomUtils.setTemplateHTML(clone, ".cell-main-content", highlightedContent);
+    } else {
+        DomUtils.setTemplateHTML(clone, ".cell-main-content", row.value);
+    }
+    DomUtils.setTemplateAttribute(clone, ".cell-main-content", "aria-labelledby", row.id);
+
     const effectiveViolations = getViolationsForRow(row, violationGroups);
     const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
     const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
@@ -696,50 +708,27 @@ function setupDiagnosticsPopover(
     } else {
         popoverBtn.style.display = "none";
     }
+
+    return clone;
 }
 
 function createPopoverTableRow(row: Row, violationGroups: ViolationGroup[]): DocumentFragment {
-    const clone = DomUtils.cloneTemplate("table-row-template");
-    const cells = clone.querySelectorAll("td");
-    if (cells.length >= 2 && cells[0]) {
-        (cells[0] as HTMLElement).textContent = row.label;
-        (cells[0] as HTMLElement).id = row.id;
-    }
-
-    DomUtils.setTemplateHTML(clone, ".cell-main-content", highlightContent(row.valueUrl, violationGroups));
-    DomUtils.setTemplateAttribute(clone, ".cell-main-content", "aria-labelledby", row.id);
-
-    setupDiagnosticsPopover(
-        clone,
+    return setupDiagnosticsPopover(
+        "table-row-template",
         row,
         violationGroups,
         row.id,
         row.label);
-
-    return clone;
 }
 
 /**
  * Create other row with popover support for inline diagnostics
  */
 function createOtherRowWithPopover(row: OtherRow, violationGroups: ViolationGroup[]): DocumentFragment {
-    const clone = DomUtils.cloneTemplate("other-row-template");
-    DomUtils.setTemplateHTML(clone, ".section-header", row.url ? row.url : row.header);
-
-    const highlightedContent = highlightContent(row.value, violationGroups);
-    if (highlightedContent !== row.value) {
-        DomUtils.setTemplateHTML(clone, "code", highlightedContent);
-    } else {
-        DomUtils.setTemplateHTML(clone, "code", row.value);
-    }
-
-    // Find violations that apply to this row using the proper architecture
-    setupDiagnosticsPopover(
-        clone,
+    return setupDiagnosticsPopover(
+        "other-row-template",
         row,
         violationGroups,
         row.header,
         row.header);
-
-    return clone;
 }

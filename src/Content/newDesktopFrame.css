@@ -140,12 +140,12 @@
 }
 
 /* Other view spacing */
-.other-list .section-header {
+.other-list .row-header {
     margin-top: 16px;
     margin-bottom: 4px;
 }
 
-.other-list .section-header:first-child {
+.other-list .row-header:first-child {
     margin-top: 8px;
 }
 
@@ -652,7 +652,7 @@ fluent-message-bar.section-violation-summary {
     min-height: 20px; /* Match existing header height */
 }
 
-.other-header-wrapper .section-header {
+.other-header-wrapper .row-header {
     margin: 0; /* Remove any existing margins */
 }
 
