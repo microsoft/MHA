@@ -381,8 +381,7 @@ async function buildViews(headers: string) {
             antispamList.appendChild(antispamTable);
 
             viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
-                const popoverRow = createPopoverTableRow(antispamrow, violationGroups);
-                antispamTbody.appendChild(popoverRow);
+                antispamTbody.appendChild(createRow("table-row-template",antispamrow, violationGroups));
             });
         }
 
@@ -399,8 +398,7 @@ async function buildViews(headers: string) {
             antispamList.appendChild(antispamTable);
 
             viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
-                const popoverRow = createPopoverTableRow(antispamrow, violationGroups);
-                antispamTbody.appendChild(popoverRow);
+                antispamTbody.appendChild(createRow("table-row-template", antispamrow, violationGroups));
             });
         }
     }
@@ -411,8 +409,7 @@ async function buildViews(headers: string) {
     viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
             // Use HTML template for other headers with popover support
-            const clone = createOtherRowWithPopover(otherRow, violationGroups);
-            otherList.appendChild(clone);
+            otherList.appendChild(createRow("other-row-template", otherRow, violationGroups));
         }
     });
 
@@ -650,7 +647,7 @@ interface FluentPopover extends HTMLElement {
 /**
  * Shared utility to setup diagnostics popover button and popover
  */
-function setupDiagnosticsPopover(
+function createRow(
     template: string,
     row: Row,
     violationGroups: ViolationGroup[]) {
@@ -708,21 +705,4 @@ function setupDiagnosticsPopover(
     }
 
     return clone;
-}
-
-function createPopoverTableRow(row: Row, violationGroups: ViolationGroup[]): DocumentFragment {
-    return setupDiagnosticsPopover(
-        "table-row-template",
-        row,
-        violationGroups);
-}
-
-/**
- * Create other row with popover support for inline diagnostics
- */
-function createOtherRowWithPopover(row: OtherRow, violationGroups: ViolationGroup[]): DocumentFragment {
-    return setupDiagnosticsPopover(
-        "other-row-template",
-        row,
-        violationGroups);
 }
