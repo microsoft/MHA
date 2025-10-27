@@ -622,6 +622,11 @@ fluent-message-bar.section-violation-summary {
     transition: all 0.2s ease;
 }
 
+.show-diagnostics-popover-btn:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
 show-diagnostics-popover-btn:hover {
     transform: scale(1.1);
 }
@@ -642,6 +647,7 @@ show-diagnostics-popover-btn:hover {
 .show-diagnostics-popover-btn[data-severity="info"] .severity-icon::before {
     content: "ℹ️";
 }
+
 
 /* Other tab header with inline popover button */
 .other-header-wrapper {
@@ -814,10 +820,4 @@ show-diagnostics-popover-btn:hover {
     height: 16px;
     line-height: 16px;
     border-radius: 8px;
-}
-
-/* Accessibility improvements */
-.popover-row .show-diagnostics-popover-btn:focus-visible {
-    outline: 2px solid var(--accent-color);
-    outline-offset: 2px;
 }
