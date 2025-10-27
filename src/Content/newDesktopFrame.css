@@ -666,7 +666,7 @@ show-diagnostics-popover-btn:hover {
     overflow-y: auto;
 }
 
-.diagnostics-popover .close-popover-btn {
+.close-popover-btn {
     padding: 6px;
     align-self: flex-end;
     margin-top: 12px;
@@ -676,7 +676,7 @@ show-diagnostics-popover-btn:hover {
     transition: all 0.2s ease;
 }
 
-.diagnostics-popover .close-popover-btn:hover {
+.close-popover-btn:hover {
     background: rgba(239, 246, 255, 1);
     border-color: rgba(59, 130, 246, 0.4);
 }

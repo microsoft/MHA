@@ -85,7 +85,6 @@
     </template>
 
     <template id="hop-header-template">
-        <div class="hop-details-close" style="display:none"></div>
         <div class="hop-details-header">
             <h2 class="hop-title">Hop Details</h2>
         </div>
@@ -113,14 +112,14 @@
             <td class="popover-cell">
                 <div class="cell-content-wrapper">
                     <div class="cell-main-content"></div>
-                    <fluent-button appearance="subtle" size="small" class="show-diagnostics-popover-btn" style="display: none;" id="">
+                        <fluent-button appearance="subtle" size="small" class="show-diagnostics-popover-btn" id="">
                         <span class="severity-icon" aria-hidden="true"></span>
                     </fluent-button>
                 </div>
                 <fluent-popover class="diagnostics-popover" placement="bottom-start" hidden>
                     <div class="popover-content">
                         <div class="diagnostics-list"></div>
-                        <fluent-button appearance="subtle" size="small" class="close-popover-btn" aria-label="Close violations" style="align-self: flex-end; margin-top: 8px;">
+                        <fluent-button appearance="subtle" size="small" class="close-popover-btn" aria-label="Close violations">
                             <span class="fluent-icon fluent-icon--dismiss" aria-hidden="true"></span>
                         </fluent-button>
                     </div>
@@ -136,7 +135,7 @@
     <template id="other-row-template">
         <div class="other-header-wrapper">
             <div class="row-header"></div>
-            <fluent-button appearance="subtle" size="small" class="show-diagnostics-popover-btn" style="display: none;" id="">
+            <fluent-button appearance="subtle" size="small" class="show-diagnostics-popover-btn" id="">
                 <span class="severity-icon" aria-hidden="true"></span>
             </fluent-button>
         </div>
@@ -146,7 +145,7 @@
         <fluent-popover class="diagnostics-popover" placement="bottom-start" hidden>
             <div class="popover-content">
                 <div class="diagnostics-list"></div>
-                <fluent-button appearance="subtle" size="small" class="close-popover-btn" aria-label="Close violations" style="align-self: flex-end; margin-top: 8px;">
+                <fluent-button appearance="subtle" size="small" class="close-popover-btn" aria-label="Close violations">
                     <span class="fluent-icon fluent-icon--dismiss" aria-hidden="true"></span>
                 </fluent-button>
             </div>
