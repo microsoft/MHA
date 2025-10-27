@@ -606,20 +606,8 @@ fluent-message-bar.section-violation-summary {
     line-height: 1.4;
 }
 
-.popover-row .show-diagnostics-popover-btn {
-    flex-shrink: 0;
-    align-self: flex-start;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    padding: 0;
-    margin-left: auto;
-    background: transparent;
-    border: none;
-    transition: all 0.2s ease;
+.show-diagnostics-popover-btn {
+    border-radius: 50% !important;
 }
 
 .show-diagnostics-popover-btn:focus-visible {
@@ -648,32 +636,10 @@ show-diagnostics-popover-btn:hover {
     content: "ℹ️";
 }
 
-
 /* Other tab header with inline popover button */
 .other-header-wrapper {
     display: flex;
     align-items: center;
-    margin-bottom: 4px;
-    min-height: 20px; /* Match existing header height */
-}
-
-.other-header-wrapper .row-header {
-    margin: 0; /* Remove any existing margins */
-}
-
-.other-header-wrapper .show-diagnostics-popover-btn {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    padding: 0;
-    margin-left: 6px; /* Small gap right after the header text */
-    background: transparent;
-    border: none;
-    transition: all 0.2s ease;
 }
 
 .diagnostics-popover {
