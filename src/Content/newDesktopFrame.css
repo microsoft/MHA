@@ -111,7 +111,7 @@
     display: block;
     font-size: 16px;
     line-height: 1.3;
-    color: #201f1e;
+    color: var(--text-primary);
     margin-bottom: 4px;
 }
 
@@ -119,7 +119,7 @@
     display: block;
     font-size: 12px;
     line-height: 1.3;
-    color: #323130;
+    color: var(--text-primary);
 }
 
 .hop-list-selection {
@@ -134,7 +134,7 @@
 .section-header {
     font-size: 12px;
     font-weight: 600;
-    color: #201f1e;
+    color: var(--text-primary);
     font-family: var(--font-family);
     margin-bottom: 8px;
 }
