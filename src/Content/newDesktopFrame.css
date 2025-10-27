@@ -631,16 +631,15 @@ fluent-message-bar.section-violation-summary {
     line-height: 1;
 }
 
-/* Severity-based icon styling */
-.popover-row .show-diagnostics-popover-btn[data-severity="error"] .severity-icon::before {
+.show-diagnostics-popover-btn[data-severity="error"] .severity-icon::before {
     content: "🔴";
 }
 
-.popover-row .show-diagnostics-popover-btn[data-severity="warning"] .severity-icon::before {
+.show-diagnostics-popover-btn[data-severity="warning"] .severity-icon::before {
     content: "⚠️";
 }
 
-.popover-row .show-diagnostics-popover-btn[data-severity="info"] .severity-icon::before {
+.show-diagnostics-popover-btn[data-severity="info"] .severity-icon::before {
     content: "ℹ️";
 }
 
@@ -678,19 +677,6 @@ fluent-message-bar.section-violation-summary {
 .other-header-wrapper .show-diagnostics-popover-btn .severity-icon {
     font-size: 14px;
     line-height: 1;
-}
-
-/* Severity-based icon styling for other headers */
-.other-header-wrapper .show-diagnostics-popover-btn[data-severity="error"] .severity-icon::before {
-    content: "🔴";
-}
-
-.other-header-wrapper .show-diagnostics-popover-btn[data-severity="warning"] .severity-icon::before {
-    content: "⚠️";
-}
-
-.other-header-wrapper .show-diagnostics-popover-btn[data-severity="info"] .severity-icon::before {
-    content: "ℹ️";
 }
 
 .diagnostics-popover {
