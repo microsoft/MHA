@@ -622,7 +622,7 @@ fluent-message-bar.section-violation-summary {
     transition: all 0.2s ease;
 }
 
-.popover-row .show-diagnostics-popover-btn:hover {
+show-diagnostics-popover-btn:hover {
     transform: scale(1.1);
 }
 
@@ -668,10 +668,6 @@ fluent-message-bar.section-violation-summary {
     background: transparent;
     border: none;
     transition: all 0.2s ease;
-}
-
-.other-header-wrapper .show-diagnostics-popover-btn:hover {
-    transform: scale(1.1);
 }
 
 .diagnostics-popover {
