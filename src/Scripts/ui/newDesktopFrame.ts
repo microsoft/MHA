@@ -650,23 +650,14 @@ interface FluentPopover extends HTMLElement {
 /**
  * Shared utility to setup diagnostics popover button and popover
  */
-function setupDiagnosticsPopover({
-    popoverBtn,
-    popover,
-    diagnosticsList,
-    closeBtn,
-    effectiveViolations,
-    id,
-    label
-}: {
-    popoverBtn: HTMLElement;
-    popover: FluentPopover;
-    diagnosticsList: HTMLElement;
-    closeBtn: HTMLElement;
-    effectiveViolations: RuleViolation[];
-    id: string;
-    label: string;
-}) {
+function setupDiagnosticsPopover(
+    popoverBtn: HTMLElement,
+    popover: FluentPopover,
+    diagnosticsList: HTMLElement,
+    closeBtn: HTMLElement,
+    effectiveViolations: RuleViolation[],
+    id: string,
+    label: string) {
     if (effectiveViolations.length > 0) {
         popoverBtn.style.display = "flex";
         const severities = effectiveViolations.map(v => v.rule.severity);
@@ -720,15 +711,14 @@ function createPopoverTableRow(row: Row, violationGroups: ViolationGroup[]): Doc
     const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
     const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
     if (popoverBtn && popover && diagnosticsList && closeBtn) {
-        setupDiagnosticsPopover({
+        setupDiagnosticsPopover(
             popoverBtn,
             popover,
             diagnosticsList,
             closeBtn,
             effectiveViolations,
-            id: row.id,
-            label: row.label
-        });
+            row.id,
+            row.label);
     }
     return clone;
 }
@@ -754,15 +744,14 @@ function createOtherRowWithPopover(row: OtherRow, violationGroups: ViolationGrou
     const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
     const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
     if (popoverBtn && popover && diagnosticsList && closeBtn) {
-        setupDiagnosticsPopover({
+        setupDiagnosticsPopover(
             popoverBtn,
             popover,
             diagnosticsList,
             closeBtn,
             effectiveViolations,
-            id: row.header,
-            label: row.header
-        });
+            row.header,
+            row.header);
     }
     return clone;
 }
