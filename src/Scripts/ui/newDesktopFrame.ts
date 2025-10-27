@@ -653,11 +653,9 @@ interface FluentPopover extends HTMLElement {
 function setupDiagnosticsPopover(
     template: string,
     row: Row,
-    violationGroups: ViolationGroup[],
-    id: string,
-    label: string) {
+    violationGroups: ViolationGroup[]) {
     const clone = DomUtils.cloneTemplate(template);
-    DomUtils.setTemplateHTML(clone, ".row-header", row.url ? row.url : row.header);
+    DomUtils.setTemplateHTML(clone, ".row-header", row.url || row.label || row.header);
     DomUtils.setTemplateAttribute(clone, ".row-header", "id", row.id);
 
     const highlightedContent = highlightContent(row.value, violationGroups);
@@ -679,8 +677,8 @@ function setupDiagnosticsPopover(
         const severities = effectiveViolations.map(v => v.rule.severity);
         const highestSeverity = severities.includes("error") ? "error" : severities.includes("warning") ? "warning" : "info";
         popoverBtn.setAttribute("data-severity", highestSeverity);
-        const buttonId = `popover-btn-${id}`;
-        const popoverId = `popover-${id}`;
+        const buttonId = `popover-btn-${row.id}`;
+        const popoverId = `popover-${row.id}`;
         popoverBtn.id = buttonId;
         popover.id = popoverId;
         popover.anchor = buttonId;
@@ -704,7 +702,7 @@ function setupDiagnosticsPopover(
         document.addEventListener("click", e => {
             if (!popover.hidden && !popover.contains(e.target as Node) && !popoverBtn.contains(e.target as Node)) popover.hidden = true;
         });
-        popoverBtn.setAttribute("aria-label", `Show rule violations for ${label}`);
+        popoverBtn.setAttribute("aria-label", `Show rule violations for ${row.label || row.header}`);
     } else {
         popoverBtn.style.display = "none";
     }
@@ -716,9 +714,7 @@ function createPopoverTableRow(row: Row, violationGroups: ViolationGroup[]): Doc
     return setupDiagnosticsPopover(
         "table-row-template",
         row,
-        violationGroups,
-        row.id,
-        row.label);
+        violationGroups);
 }
 
 /**
@@ -728,7 +724,5 @@ function createOtherRowWithPopover(row: OtherRow, violationGroups: ViolationGrou
     return setupDiagnosticsPopover(
         "other-row-template",
         row,
-        violationGroups,
-        row.header,
-        row.header);
+        violationGroups);
 }
