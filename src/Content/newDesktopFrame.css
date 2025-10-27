@@ -626,8 +626,8 @@ fluent-message-bar.section-violation-summary {
     transform: scale(1.1);
 }
 
-.popover-row .show-diagnostics-popover-btn .severity-icon {
-    font-size: 16px;
+.show-diagnostics-popover-btn .severity-icon {
+    font-size: 14px;
     line-height: 1;
 }
 
@@ -672,11 +672,6 @@ fluent-message-bar.section-violation-summary {
 
 .other-header-wrapper .show-diagnostics-popover-btn:hover {
     transform: scale(1.1);
-}
-
-.other-header-wrapper .show-diagnostics-popover-btn .severity-icon {
-    font-size: 14px;
-    line-height: 1;
 }
 
 .diagnostics-popover {
