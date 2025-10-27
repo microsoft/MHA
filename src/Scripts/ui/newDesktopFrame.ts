@@ -645,7 +645,7 @@ interface FluentPopover extends HTMLElement {
 }
 
 /**
- * Shared utility to setup diagnostics popover button and popover
+ * Set up table row with optional popover buttons
  */
 function createRow(
     template: string,
