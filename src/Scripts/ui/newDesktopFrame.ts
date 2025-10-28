@@ -667,7 +667,6 @@ function createRow(
     const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
     const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
     const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
-    const closeBtn = clone.querySelector(".close-popover-btn") as HTMLElement;
 
     if (effectiveViolations.length > 0) {
         popoverBtn.style.display = "flex";
@@ -691,14 +690,11 @@ function createRow(
             });
             popover.hidden = !popover.hidden;
         });
-        closeBtn.addEventListener("click", e => {
-            e.preventDefault();
-            e.stopPropagation();
-            popover.hidden = true;
-        });
+
         document.addEventListener("click", e => {
             if (!popover.hidden && !popover.contains(e.target as Node) && !popoverBtn.contains(e.target as Node)) popover.hidden = true;
         });
+
         popoverBtn.setAttribute("aria-label", `Show rule violations for ${row.label || row.header}`);
     } else {
         popoverBtn.style.display = "none";
