@@ -517,50 +517,10 @@ fluent-badge.violation-count-badge {
     color: var(--text-secondary);
 }
 
-.single-violation-message {
-    font-size: 13px;
-    line-height: 1.4;
-    color: var(--text-primary);
-    margin-bottom: 8px;
-}
-
-.diagnostic-technical-details {
-    font-size: 12px;
-    line-height: 1.3;
-    color: var(--text-secondary);
-}
-
-.diagnostic-technical-details > div {
-    margin-bottom: 4px;
-}
-
-.diagnostic-technical-details strong {
-    color: var(--text-primary);
-    font-weight: 600;
-}
-
 /* Enhanced Message Bar Styling */
 fluent-message-bar.section-violation-summary {
     margin-bottom: 12px;
     font-family: var(--font-family);
-}
-
-/* Technical Details Styling */
-.diagnostic-technical-details {
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid var(--border-gray);
-    font-size: 12px;
-    color: #605e5c;
-}
-
-.diagnostic-technical-details div {
-    margin-bottom: 4px;
-}
-
-.diagnostic-technical-details strong {
-    color: #323130;
-    font-weight: 600;
 }
 
 .popover-row .cell-content-wrapper {

@@ -12,7 +12,6 @@ import { TabNavigation } from "../TabNavigation";
 import { DomUtils } from "./domUtils";
 import { rulesService } from "../rules";
 import { RuleViolation, ViolationGroup } from "../rules/types/AnalysisTypes";
-import { ISimpleValidationRule } from "../rules/types/interfaces";
 import { getSeverityDisplay, getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
 
 // This is the "new" UI rendered in newDesktopFrame.html
@@ -499,9 +498,10 @@ document.addEventListener("DOMContentLoaded", function() {
  */
 function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFragment {
     const clone = DomUtils.cloneTemplate("diagnostic-accordion-item-template");
-
     const severityInfo = getSeverityDisplay(ruleGroup.severity);
     DomUtils.setTemplateText(clone, ".diagnostic-title", `${severityInfo.label}: ${ruleGroup.displayName}`);
+    DomUtils.setTemplateAttribute(clone, ".severity-badge", "appearance", ruleGroup.severity === "error" ? "important" : "accent");
+    DomUtils.setTemplateText(clone, ".severity-badge", severityInfo.label);
 
     const content = clone.querySelector(".diagnostic-content") as HTMLElement;
     if (content) {
@@ -521,81 +521,17 @@ function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFrag
 
             // List each violation with bullet points
             ruleGroup.violations.forEach((violation: RuleViolation) => {
-                const violationDiv = document.createElement("div");
-                violationDiv.className = "rule-violation-item";
-
-                // Get the violation message from the rule's error message
-                const violationMessage = violation.rule.errorMessage;
-
-                violationDiv.innerHTML = `
-                    <div class="violation-message">• ${violationMessage}</div>
-                `;
-
-                // Add technical details
-                const detailsDiv = document.createElement("div");
-                detailsDiv.className = "violation-details";
-
-                // Handle section content
-                const sectionContent = violation.section.header;
-
-                detailsDiv.innerHTML = `
-                    <div style="margin-left: 16px; font-size: 0.9em; color: #666;">
-                        ℹ️ Section: ${sectionContent}
-                        ${violation.highlightPattern ? `<br>ℹ️ Highlight Pattern: ${violation.highlightPattern}` : ""}
-                    </div>
-                `;
-
-                violationDiv.appendChild(detailsDiv);
-                content.appendChild(violationDiv);
-
-                // Add spacing between violations
-                const itemSpacer = document.createElement("div");
-                itemSpacer.style.marginBottom = "8px";
-                content.appendChild(itemSpacer);
+                const violationItem = createDiagnosticViolationItem(violation);
+                content.appendChild(violationItem);
             });
         } else {
             // Single violation or standalone rule
             const violation = ruleGroup.violations[0];
             if (!violation) return clone; // Safety check
-
-            // Get the violation message from the rule's error message
-            const violationMessage = violation.rule.errorMessage;
-
-            const messageDiv = document.createElement("div");
-            messageDiv.className = "single-violation-message";
-            messageDiv.textContent = violationMessage;
-            content.appendChild(messageDiv);
-
-            // Add technical details
-            const detailsList = document.createElement("div");
-            detailsList.className = "diagnostic-technical-details";
-            detailsList.style.marginTop = "12px";
-
-            // Handle section content - section is a HeaderSection object in the new type
-            const sectionContent = violation.section.header;
-            const sectionDetail = document.createElement("div");
-            sectionDetail.innerHTML = `<strong>Section:</strong> ${sectionContent}`;
-            detailsList.appendChild(sectionDetail);
-
-            if (violation.highlightPattern) {
-                const highlightDetail = document.createElement("div");
-                highlightDetail.innerHTML = `<strong>Highlight Pattern:</strong> ${violation.highlightPattern}`;
-                detailsList.appendChild(highlightDetail);
-            }
-
-            // Add rule details if available
-            // Check if this is a simple validation rule with errorPattern
-            const simpleRule = violation.rule as ISimpleValidationRule;
-            if (simpleRule.errorPattern) {
-                const patternDetail = document.createElement("div");
-                patternDetail.innerHTML = `<strong>Error Pattern:</strong> ${simpleRule.errorPattern}`;
-                detailsList.appendChild(patternDetail);
-            }
-
-            content.appendChild(detailsList);
+            const violationItem = createDiagnosticViolationItem(violation);
+            content.appendChild(violationItem);
         }
     }
-
     return clone;
 }
 
