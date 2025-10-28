@@ -508,24 +508,16 @@ function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFrag
         const violationCount = ruleGroup.violations.length;
 
         if (violationCount > 1 || ruleGroup.isAndRule) {
-            // Multiple violations or AND rule - show count and list
             const countDiv = document.createElement("div");
             countDiv.className = "rule-violation-count";
             countDiv.innerHTML = `<strong>${violationCount} violation${violationCount !== 1 ? "s" : ""} found in headers</strong>`;
             content.appendChild(countDiv);
 
-            // Add spacing
-            const spacer = document.createElement("div");
-            spacer.style.marginBottom = "12px";
-            content.appendChild(spacer);
-
-            // List each violation with bullet points
             ruleGroup.violations.forEach((violation: RuleViolation) => {
                 const violationItem = createDiagnosticViolationItem(violation);
                 content.appendChild(violationItem);
             });
         } else {
-            // Single violation or standalone rule
             const violation = ruleGroup.violations[0];
             if (!violation) return clone; // Safety check
             const violationItem = createDiagnosticViolationItem(violation);
