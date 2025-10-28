@@ -346,44 +346,13 @@
     font-family: var(--font-family);
 }
 
-/* Rule Violation Diagnostic System */
+/* Highlighting for rule violations */
 .rule-violation-highlight {
     background-color: var(--highlight-warning-bg) !important;
     color: var(--highlight-warning-text) !important;
     font-weight: 600 !important;
     padding: 1px 2px;
     border-radius: 2px;
-}
-
-.diagnostic-box {
-    border-radius: 6px;
-    padding: 12px;
-    margin: 8px 0 16px 0;
-    border-width: 1px;
-    border-style: solid;
-    font-size: 0.875rem;
-    line-height: 1.4;
-}
-
-.diagnostic-box--warning {
-    background-color: var(--diagnostic-warning-bg);
-    border-color: var(--diagnostic-warning-border);
-}
-
-.diagnostic-box__header {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 600;
-    font-size: 0.75rem;
-    margin-bottom: 6px;
-    color: var(--diagnostic-warning-text);
-}
-
-.diagnostic-box__message {
-    color: var(--text-secondary);
-    font-size: 0.6875rem;
-    margin-bottom: 6px;
 }
 
 .rule-violation-warning {
