@@ -183,7 +183,13 @@ async function buildViews(headers: string) {
     const violationGroups = validationResult.violationGroups;
     viewModel = validationResult.enrichedHeaders;
 
-    // Build summary view
+    buildSummaryTab(viewModel, violationGroups);
+    buildReceivedTab(viewModel);
+    buildAntispamTab(viewModel, violationGroups);
+    buildOtherTab(viewModel, violationGroups);
+}
+
+function buildSummaryTab(viewModel: HeaderModel, violationGroups: ViolationGroup[]) {
     const summaryList = document.querySelector(".summary-list") as HTMLElement;
 
     viewModel.summary.rows.forEach((row: SummaryRow) => {
@@ -218,7 +224,10 @@ async function buildViews(headers: string) {
         DomUtils.showElement(".orig-header-ui");
     }
 
-    // Build received view
+    buildDiagnosticsReport(violationGroups);
+}
+
+function buildReceivedTab(viewModel: HeaderModel) {
     const receivedList = document.querySelector(".received-list") as HTMLElement;
 
     if (viewModel.receivedHeaders.rows.length > 0) {
@@ -364,46 +373,48 @@ async function buildViews(headers: string) {
             // Make list item focusable for keyboard navigation
             listItem.setAttribute("tabindex", "0");
         });
+    }
+}
 
-        // Build antispam view
-        const antispamList = document.querySelector(".antispam-list") as HTMLElement;
+function buildAntispamTab(viewModel: HeaderModel, violationGroups: ViolationGroup[]) {
+    const antispamList = document.querySelector(".antispam-list") as HTMLElement;
 
-        // Forefront
-        if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
-            // Use HTML template for section header
-            DomUtils.appendTemplate("forefront-header-template", antispamList);
+    // Forefront
+    if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
+        // Use HTML template for section header
+        DomUtils.appendTemplate("forefront-header-template", antispamList);
 
-            // Create table for antispam data
-            const antispamTable = document.createElement("table");
-            antispamTable.className = "fluent-table";
-            const antispamTbody = document.createElement("tbody");
-            antispamTable.appendChild(antispamTbody);
-            antispamList.appendChild(antispamTable);
+        // Create table for antispam data
+        const antispamTable = document.createElement("table");
+        antispamTable.className = "fluent-table";
+        const antispamTbody = document.createElement("tbody");
+        antispamTable.appendChild(antispamTbody);
+        antispamList.appendChild(antispamTable);
 
-            viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
-                antispamTbody.appendChild(createRow("table-row-template",antispamrow, violationGroups));
-            });
-        }
-
-        // Microsoft
-        if (viewModel.antiSpamReport.rows.length > 0) {
-            // Use HTML template for section header
-            DomUtils.appendTemplate("microsoft-header-template", antispamList);
-
-            // Create table for antispam data
-            const antispamTable = document.createElement("table");
-            antispamTable.className = "fluent-table";
-            const antispamTbody = document.createElement("tbody");
-            antispamTable.appendChild(antispamTbody);
-            antispamList.appendChild(antispamTable);
-
-            viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
-                antispamTbody.appendChild(createRow("table-row-template", antispamrow, violationGroups));
-            });
-        }
+        viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
+            antispamTbody.appendChild(createRow("table-row-template",antispamrow, violationGroups));
+        });
     }
 
-    // Build other view
+    // Microsoft
+    if (viewModel.antiSpamReport.rows.length > 0) {
+        // Use HTML template for section header
+        DomUtils.appendTemplate("microsoft-header-template", antispamList);
+
+        // Create table for antispam data
+        const antispamTable = document.createElement("table");
+        antispamTable.className = "fluent-table";
+        const antispamTbody = document.createElement("tbody");
+        antispamTable.appendChild(antispamTbody);
+        antispamList.appendChild(antispamTable);
+
+        viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
+            antispamTbody.appendChild(createRow("table-row-template", antispamrow, violationGroups));
+        });
+    }
+}
+
+function buildOtherTab(viewModel: HeaderModel, violationGroups: ViolationGroup[]) {
     const otherList = document.querySelector(".other-list") as HTMLElement;
 
     viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
@@ -412,12 +423,6 @@ async function buildViews(headers: string) {
             otherList.appendChild(createRow("other-row-template", otherRow, violationGroups));
         }
     });
-
-    // Build diagnostics report
-    buildDiagnosticsReport(violationGroups);
-
-    // Fluent UI Web Components handle their own initialization
-    // Lists and callouts work with standard DOM interactions
 }
 
 function hideStatus(): void {
