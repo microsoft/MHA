@@ -133,7 +133,7 @@ document.addEventListener("click", function(event: Event) {
     }
 
     // Don't close popovers if clicking inside them or their trigger buttons
-    if (target.closest(".diagnostics-popover") || target.closest(".show-diagnostics-popover-btn")) {
+    if (target.closest(".details-overlay-popup") || target.closest(".show-diagnostics-popover-btn")) {
         return;
     }
 
@@ -152,11 +152,6 @@ function closeAllPopups()
     document.querySelectorAll(".details-overlay-popup.is-shown").forEach(callout => {
         callout.classList.remove("is-shown");
         callout.classList.add("is-hidden");
-    });
-
-    document.querySelectorAll(".diagnostics-popover.is-shown").forEach(popover => {
-        popover.classList.remove("is-shown");
-        popover.classList.add("is-hidden");
     });
 }
 
@@ -660,7 +655,7 @@ function createRow(
 
     const effectiveViolations = getViolationsForRow(row, violationGroups);
     const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
-    const popover = clone.querySelector(".diagnostics-popover") as HTMLElement;
+    const popover = clone.querySelector(".details-overlay-popup") as HTMLElement;
     const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
 
     if (effectiveViolations.length > 0) {

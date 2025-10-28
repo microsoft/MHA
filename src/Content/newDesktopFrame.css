@@ -316,38 +316,6 @@
     filter: drop-shadow(0 -1px 1px rgba(0,0,0,0.1));
 }
 
-.diagnostics-popover.is-hidden {
-    display: none !important;
-}
-
-.diagnostics-popover.is-shown {
-    display: block;
-    position: fixed;
-    z-index: 1000;
-    background: var(--white);
-    border: 1px solid var(--border-gray);
-    border-radius: var(--border-radius);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-    padding: 24px 28px 12px 28px;
-    width: 90vw;
-    max-width: 500px;
-    font-family: var(--font-family);
-}
-
-.diagnostics-popover.is-shown::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: -10px;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid var(--white);
-    filter: drop-shadow(0 -1px 1px rgba(0,0,0,0.1));
-}
-
 .hop-title {
     margin: 0 0 12px 0;
     font-size: 21px;
@@ -672,30 +640,6 @@ show-diagnostics-popover-btn:hover {
 .other-header-wrapper {
     display: flex;
     align-items: center;
-}
-
-.diagnostics-popover {
-    max-width: 420px;
-    min-width: 320px;
-    z-index: 1000;
-    border-radius: 8px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    background: white;
-    margin-top: 8px;
-}
-
-/* Ensure popover is hidden by default */
-.diagnostics-popover[hidden] {
-    display: none !important;
-}
-
-.diagnostics-popover .popover-content {
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-    max-height: 300px;
-    overflow-y: auto;
 }
 
 /* Shared diagnostic violation item styles */
