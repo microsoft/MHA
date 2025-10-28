@@ -154,10 +154,9 @@ function closeAllPopups()
         callout.classList.add("is-hidden");
     });
 
-    // Close all open popovers
-    document.querySelectorAll(".diagnostics-popover").forEach(popover => {
-        const fluentPopover = popover as FluentPopover;
-        fluentPopover.hidden = true;
+    document.querySelectorAll(".diagnostics-popover.is-shown").forEach(popover => {
+        popover.classList.remove("is-shown");
+        popover.classList.add("is-hidden");
     });
 }
 
@@ -645,16 +644,6 @@ function createDiagnosticViolationItem(violation: RuleViolation): DocumentFragme
 }
 
 /**
- * Create popover table row for inline diagnostics
- */
-// Define interface for Fluent UI popover component
-
-interface FluentPopover extends HTMLElement {
-    anchor: string;
-    hidden: boolean;
-}
-
-/**
  * Set up table row with optional popover buttons
  */
 function createRow(
@@ -675,7 +664,7 @@ function createRow(
 
     const effectiveViolations = getViolationsForRow(row, violationGroups);
     const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
-    const popover = clone.querySelector(".diagnostics-popover") as FluentPopover;
+    const popover = clone.querySelector(".diagnostics-popover") as HTMLElement;
     const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
 
     if (effectiveViolations.length > 0) {
@@ -687,25 +676,12 @@ function createRow(
         const popoverId = `popover-${row.id}`;
         popoverBtn.id = buttonId;
         popover.id = popoverId;
-        popover.anchor = buttonId;
-        popover.hidden = true;
         popoverBtn.setAttribute("aria-describedby", popoverId);
         effectiveViolations.forEach(v => diagnosticsList.appendChild(createDiagnosticViolationItem(v)));
-        popoverBtn.addEventListener("click", e => {
-            e.preventDefault();
-            e.stopPropagation();
-            document.querySelectorAll(".diagnostics-popover").forEach(other => {
-                const fluentPopover = other as FluentPopover;
-                if (fluentPopover !== popover && !fluentPopover.hidden) fluentPopover.hidden = true;
-            });
-            popover.hidden = !popover.hidden;
-        });
-
-        document.addEventListener("click", e => {
-            if (!popover.hidden && !popover.contains(e.target as Node) && !popoverBtn.contains(e.target as Node)) popover.hidden = true;
-        });
-
         popoverBtn.setAttribute("aria-label", `Show rule violations for ${row.label || row.header}`);
+        if (popoverBtn && popover) {
+            attachOverlayPopup(popoverBtn, popover as HTMLElement);
+        }
     } else {
         popoverBtn.style.display = "none";
     }
