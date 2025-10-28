@@ -307,73 +307,78 @@ function buildReceivedTab(viewModel: HeaderModel) {
             addCalloutEntry("For", row.for.value, calloutContent);
             addCalloutEntry("Via", row.via.value, calloutContent);
 
-            function toggleCallout(listItem: HTMLElement) {
-                const calloutElement = listItem.querySelector(".hop-details-overlay") as HTMLElement;
-
-                // Check if this callout is currently shown BEFORE hiding others
-                const isCurrentlyShown = calloutElement && calloutElement.classList.contains("is-shown");
-
-                // Hide all callouts first
-                document.querySelectorAll(".hop-details-overlay").forEach(callout => {
-                    callout.classList.remove("is-shown");
-                    callout.classList.add("is-hidden");
-                });
-
-                // If this callout was NOT currently shown, show it
-                // If it WAS currently shown, leave it hidden (toggle behavior)
-                if (calloutElement && !isCurrentlyShown) {
-                    calloutElement.classList.remove("is-hidden");
-                    calloutElement.classList.add("is-shown");
-
-                    // Position the callout relative to the list item
-                    const listItemRect = listItem.getBoundingClientRect();
-                    const viewportWidth = window.innerWidth;
-                    const viewportHeight = window.innerHeight;
-
-                    // Center the callout horizontally relative to the viewport
-                    const leftPosition = (viewportWidth - calloutElement.offsetWidth) / 2;
-
-                    // Position below the list item so arrow points up to it
-                    let topPosition = listItemRect.bottom + 15; // 15px gap for arrow
-
-                    // Ensure callout stays within viewport
-                    if (topPosition + calloutElement.offsetHeight > viewportHeight - 10) {
-                        topPosition = viewportHeight - calloutElement.offsetHeight - 10;
-                    }
-                    if (topPosition < 10) {
-                        topPosition = 10;
-                    }
-
-                    calloutElement.style.left = `${leftPosition}px`;
-                    calloutElement.style.top = `${topPosition}px`;
-                }
+            // Attach generic overlay popup logic
+            const overlay = listItem.querySelector(".hop-details-overlay") as HTMLElement;
+            if (overlay) {
+                attachOverlayPopup(listItem, overlay);
             }
-
-            // Add click handler to show/hide callout
-            listItem.addEventListener("click", function(event: Event) {
-                const target = event.target as HTMLElement;
-
-                // Don't handle the click if it was inside the callout content
-                if (target.closest(".hop-details-overlay")) {
-                    return;
-                }
-
-                event.preventDefault();
-                toggleCallout(this);
-            });
-
-            // Add keyboard handler for accessibility (Enter/Space to show hop details)
-            listItem.addEventListener("keydown", function(event: KeyboardEvent) {
-                if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    toggleCallout(this);
-                }
-            });
-
-            // Make list item focusable for keyboard navigation
-            listItem.setAttribute("tabindex", "0");
         });
     }
+}
+
+/**
+ * Generic function to attach an overlay popup to a trigger element.
+ * @param trigger - The element that triggers the popup (e.g., listItem).
+ * @param overlay - The overlay element to show/hide.
+ */
+function attachOverlayPopup(trigger: HTMLElement, overlay: HTMLElement): void {
+    function showOverlay(): void {
+        // Hide all overlays first
+        document.querySelectorAll(".hop-details-overlay").forEach((callout: Element) => {
+            (callout as HTMLElement).classList.remove("is-shown");
+            (callout as HTMLElement).classList.add("is-hidden");
+        });
+        // Show this overlay
+        overlay.classList.remove("is-hidden");
+        overlay.classList.add("is-shown");
+
+        // Position the overlay relative to the trigger
+        const triggerRect: DOMRect = trigger.getBoundingClientRect();
+        const viewportWidth: number = window.innerWidth;
+        const viewportHeight: number = window.innerHeight;
+        const leftPosition: number = (viewportWidth - overlay.offsetWidth) / 2;
+        let topPosition: number = triggerRect.bottom + 15; // 15px gap for arrow
+        if (topPosition + overlay.offsetHeight > viewportHeight - 10) {
+            topPosition = viewportHeight - overlay.offsetHeight - 10;
+        }
+        if (topPosition < 10) {
+            topPosition = 10;
+        }
+        overlay.style.left = `${leftPosition}px`;
+        overlay.style.top = `${topPosition}px`;
+    }
+
+    function hideOverlay(): void {
+        overlay.classList.remove("is-shown");
+        overlay.classList.add("is-hidden");
+    }
+
+    // Click handler
+    trigger.addEventListener("click", function(event: MouseEvent): void {
+        const target = event.target as HTMLElement;
+        if (target.closest(".hop-details-overlay")) return;
+        event.preventDefault();
+        if (overlay.classList.contains("is-shown")) {
+            hideOverlay();
+        } else {
+            showOverlay();
+        }
+    });
+
+    // Keyboard handler
+    trigger.addEventListener("keydown", function(event: KeyboardEvent): void {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            if (overlay.classList.contains("is-shown")) {
+                hideOverlay();
+            } else {
+                showOverlay();
+            }
+        }
+    });
+
+    // Make trigger focusable
+    trigger.setAttribute("tabindex", "0");
 }
 
 function buildAntispamTab(viewModel: HeaderModel, violationGroups: ViolationGroup[]) {
