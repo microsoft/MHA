@@ -322,11 +322,7 @@ function buildReceivedTab(viewModel: HeaderModel) {
  */
 function attachOverlayPopup(trigger: HTMLElement, overlay: HTMLElement): void {
     function showOverlay(): void {
-        // Hide all overlays first
-        document.querySelectorAll(".details-overlay-popup").forEach((callout: Element) => {
-            (callout as HTMLElement).classList.remove("is-shown");
-            (callout as HTMLElement).classList.add("is-hidden");
-        });
+        closeAllPopups();
         // Show this overlay
         overlay.classList.remove("is-hidden");
         overlay.classList.add("is-shown");

@@ -698,21 +698,6 @@ show-diagnostics-popover-btn:hover {
     overflow-y: auto;
 }
 
-.close-popover-btn {
-    padding: 6px;
-    align-self: flex-end;
-    margin-top: 12px;
-    border-radius: 4px;
-    background: rgba(239, 246, 255, 0.6);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    transition: all 0.2s ease;
-}
-
-.close-popover-btn:hover {
-    background: rgba(239, 246, 255, 1);
-    border-color: rgba(59, 130, 246, 0.4);
-}
-
 /* Shared diagnostic violation item styles */
 .diagnostic-violation-item {
     display: flex;
