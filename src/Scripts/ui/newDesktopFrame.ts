@@ -508,9 +508,8 @@ function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFrag
         const violationCount = ruleGroup.violations.length;
 
         if (violationCount > 1 || ruleGroup.isAndRule) {
-            const countDiv = document.createElement("div");
-            countDiv.className = "rule-violation-count";
-            countDiv.innerHTML = `<strong>${violationCount} violation${violationCount !== 1 ? "s" : ""} found in headers</strong>`;
+            const countDiv = DomUtils.cloneTemplate("rule-violation-count-template");
+            DomUtils.setTemplateText(countDiv, ".violation-count-value", `${violationCount}`);
             content.appendChild(countDiv);
 
             ruleGroup.violations.forEach((violation: RuleViolation) => {
@@ -519,7 +518,7 @@ function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFrag
             });
         } else {
             const violation = ruleGroup.violations[0];
-            if (!violation) return clone; // Safety check
+            if (!violation) return clone;
             const violationItem = createDiagnosticViolationItem(violation);
             content.appendChild(violationItem);
         }
