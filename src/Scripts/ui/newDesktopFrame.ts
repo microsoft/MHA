@@ -149,7 +149,7 @@ document.addEventListener("keydown", function(event: KeyboardEvent) {
 
 function closeAllPopups()
 {
-    document.querySelectorAll(".hop-details-overlay.is-shown").forEach(callout => {
+    document.querySelectorAll(".details-overlay-popup.is-shown").forEach(callout => {
         callout.classList.remove("is-shown");
         callout.classList.add("is-hidden");
     });
@@ -308,7 +308,7 @@ function buildReceivedTab(viewModel: HeaderModel) {
             addCalloutEntry("Via", row.via.value, calloutContent);
 
             // Attach generic overlay popup logic
-            const overlay = listItem.querySelector(".hop-details-overlay") as HTMLElement;
+            const overlay = listItem.querySelector(".details-overlay-popup") as HTMLElement;
             if (overlay) {
                 attachOverlayPopup(listItem, overlay);
             }
@@ -324,7 +324,7 @@ function buildReceivedTab(viewModel: HeaderModel) {
 function attachOverlayPopup(trigger: HTMLElement, overlay: HTMLElement): void {
     function showOverlay(): void {
         // Hide all overlays first
-        document.querySelectorAll(".hop-details-overlay").forEach((callout: Element) => {
+        document.querySelectorAll(".details-overlay-popup").forEach((callout: Element) => {
             (callout as HTMLElement).classList.remove("is-shown");
             (callout as HTMLElement).classList.add("is-hidden");
         });
@@ -356,7 +356,7 @@ function attachOverlayPopup(trigger: HTMLElement, overlay: HTMLElement): void {
     // Click handler
     trigger.addEventListener("click", function(event: MouseEvent): void {
         const target = event.target as HTMLElement;
-        if (target.closest(".hop-details-overlay")) return;
+        if (target.closest(".details-overlay-popup")) return;
         event.preventDefault();
         if (overlay.classList.contains("is-shown")) {
             hideOverlay();

@@ -283,11 +283,11 @@
     display: none;
 }
 
-.hop-details-overlay.is-hidden {
+.details-overlay-popup.is-hidden {
     display: none !important;
 }
 
-.hop-details-overlay.is-shown {
+.details-overlay-popup.is-shown {
     display: block;
     position: fixed;
     z-index: 1000;
@@ -302,7 +302,7 @@
 }
 
 /* Arrow pointing upward at the top of the pane */
-.hop-details-overlay.is-shown::before {
+.details-overlay-popup.is-shown::before {
     content: '';
     position: absolute;
     left: 50%;
