@@ -92,17 +92,12 @@ class RulesService {
                         const rulesFlagged = headerSection.rulesFlagged;
                         if (rulesFlagged && rulesFlagged.length > 0) {
                             rulesFlagged.forEach((rule: IValidationRule) => {
-                                // Type-safe access to errorPattern property
-                                const hasErrorPattern = (rule: IValidationRule): rule is IValidationRule & { errorPattern: string } => {
-                                    return "errorPattern" in rule && typeof (rule as unknown as { errorPattern?: string }).errorPattern === "string";
-                                };
-
                                 const parentAndRule = rule.parentAndRule;
 
                                 const violation: RuleViolation = {
                                     rule: rule,
                                     section: headerSection,
-                                    highlightPattern: hasErrorPattern(rule) ? rule.errorPattern : undefined,
+                                    highlightPattern: rule.errorPattern,
                                     ...(parentAndRule?.message && { parentMessage: parentAndRule.message })
                                 };
 

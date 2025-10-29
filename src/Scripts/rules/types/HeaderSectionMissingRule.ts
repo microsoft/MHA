@@ -17,6 +17,7 @@ export class HeaderSectionMissingRule implements IComplexValidationRule {
     public ruleNumber: number;
     public primaryRule: boolean;
     public severity: "error" | "warning" | "info";
+    public errorPattern: string;
 
     constructor(
         checkSection: string,
@@ -41,6 +42,7 @@ export class HeaderSectionMissingRule implements IComplexValidationRule {
         this.ruleNumber = ++uniqueRuleNumber;
         this.primaryRule = true;
         this.severity = severity;
+        this.errorPattern = "";
     }
 
     /**

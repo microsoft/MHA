@@ -23,10 +23,10 @@ export interface IValidationRule {
         message: string;
         severity: "error" | "warning" | "info";
     };
+    errorPattern: string;
 }
 
 export interface ISimpleValidationRule extends IValidationRule {
-    errorPattern: string;
     violatesRule(section: string, sectionText: string): string | null;
 }
 
@@ -36,7 +36,6 @@ export interface IComplexValidationRule extends IValidationRule {
 
 export interface IAndValidationRule extends IComplexValidationRule {
     rulesToAndArray: ISimpleValidationRule[];
-    errorPattern: string;
 }
 
 // JSON data interfaces (matching the actual JSON structure)

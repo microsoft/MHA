@@ -57,7 +57,7 @@ export interface RuleViolation {
     section: HeaderSection;
 
     /** Pattern to highlight in the section content (if applicable) */
-    highlightPattern: string | undefined;
+    highlightPattern: string;
 
     /** Parent AND rule message if this violation is part of an AND rule */
     parentMessage?: string;
