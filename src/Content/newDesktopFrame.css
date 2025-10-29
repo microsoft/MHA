@@ -535,8 +535,6 @@ show-diagnostics-popover-btn:hover {
     color: white;
 }
 
-
-
 /* Severity-specific styling for violation items */
 .diagnostic-violation-item.severity-error {
     border-left-color: var(--error-color);
