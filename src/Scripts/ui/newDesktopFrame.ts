@@ -35,9 +35,6 @@ function initializeFluentUI(): void {
         });
     }
 
-    // Fluent UI Web Components don't need JavaScript initialization for most components
-    // Navigation and button behavior is handled with standard DOM events
-
     // Set up original headers toggle button
     const buttonElement = DomUtils.getElement("#orig-header-btn");
     if (buttonElement) {
