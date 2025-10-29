@@ -147,13 +147,6 @@ class RulesService {
             };
         }
     }
-
-    /**
-     * Check if rules are loaded and service is ready
-     */
-    public isReady(): boolean {
-        return this.rulesLoaded;
-    }
 }
 
 // Export singleton instance
