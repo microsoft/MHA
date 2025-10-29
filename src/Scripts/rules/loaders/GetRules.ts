@@ -14,14 +14,13 @@ export const ruleStore: RuleStore = {
 };
 
 type CompletionCallback = () => void;
-type ProgressCallback = () => void;
 
 /**
  * Get Rules function loads validation rules from local JSON file
  * This replaces the previous server-based approach with a simple local file load
  * All rule processing logic remains the same, only the source has changed
  */
-export function getRules(doOnCompletion?: CompletionCallback, doWhileStillRunning?: ProgressCallback): void {
+export function getRules(doOnCompletion?: CompletionCallback): void {
     console.log("🔍 getRules: ⚡ Starting rules loading from local file");
     console.log("🔍 getRules: 📁 Loading rules from src/data/rules.json");
     console.log("🔍 getRules: AlreadyRetrievedRules:", alreadyRetrievedRules);
@@ -29,12 +28,6 @@ export function getRules(doOnCompletion?: CompletionCallback, doWhileStillRunnin
     if (alreadyRetrievedRules === false) {
         console.log("🔍 getRules: First time loading rules from local file");
         alreadyRetrievedRules = true;
-
-        // Call progress callback if provided
-        if (doWhileStillRunning) {
-            console.log("🔍 GetRules: Calling progress callback");
-            doWhileStillRunning();
-        }
 
         // Load rules from local JSON file
         loadLocalRules();

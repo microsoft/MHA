@@ -35,9 +35,6 @@ class RulesService {
                         headerValidationRules.setRules(ruleStore.simpleRuleSet, ruleStore.andRuleSet);
                         this.rulesLoaded = true;
                         resolve();
-                    },
-                    () => {
-                        console.log("🔍 RulesService: Loading rules...");
                     }
                 );
             } catch (error) {
