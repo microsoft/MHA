@@ -546,12 +546,9 @@ function eventListener(event: MessageEvent): void {
             case "updateStatus":
                 updateStatus(event.data.data);
                 break;
-            case "renderItem": {
-                // data is always [headers, SimpleRuleSet, AndRuleSet]
-                const headersString = event.data.data[0];
-                renderItem(headersString);
+            case "renderItem":
+                renderItem(event.data.data);
                 break;
-            }
         }
     }
 }

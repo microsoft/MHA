@@ -3,8 +3,6 @@ import { DeferredError } from "./DeferredError";
 import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
 import { Poster } from "./Poster";
-import { getRules, ruleStore } from "./rules/loaders/GetRules";
-import { IAndRuleData, IRuleData } from "./rules/types/interfaces";
 import { Strings } from "./Strings";
 import { TabNavigation } from "./TabNavigation";
 import { GetHeaders } from "./ui/getHeaders/GetHeaders";
@@ -54,19 +52,15 @@ export class ParentFrame {
         ParentFrameUtils.setDefaultChoice(ParentFrame.choices, uiDefault);
     }
 
-    private static postMessageToFrame(eventName: string, data: string | { error: string, message: string } | { headers: string, currentHeaderSource: { label: string } } | (string | IRuleData[] | IAndRuleData[])[]): void {
+    private static postMessageToFrame(eventName: string, data: string | { error: string, message: string }): void {
         if (ParentFrame.iFrame) {
             Poster.postMessageToFrame(ParentFrame.iFrame, eventName, data);
         }
-
     }
 
     private static render(): void {
-        if (ParentFrame.headers) {
-            diagnostics.trackEvent({ name: "analyzeHeaders" });
-            // Send headers with rules data to DesktopPane
-            ParentFrame.postMessageToFrame("renderItem", [ParentFrame.headers, ruleStore.simpleRuleSet, ruleStore.andRuleSet]);
-        }
+        if (ParentFrame.headers) diagnostics.trackEvent({ name: "analyzeHeaders" });
+        ParentFrame.postMessageToFrame("renderItem", ParentFrame.headers);
     }
 
     private static setFrame(frame: Window): void {
@@ -386,10 +380,6 @@ export class ParentFrame {
         ParentFrame.registerItemChangedEvent();
 
         window.addEventListener("message", ParentFrame.eventListener, false);
-        // Load rules before loading the item
-        getRules(() => {
-            console.log("🔍 ParentFrame: Rules loaded, proceeding to load item");
-        });
         await ParentFrame.loadNewItem();
     }
 

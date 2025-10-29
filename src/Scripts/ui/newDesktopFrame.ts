@@ -460,9 +460,7 @@ function eventListener(event: MessageEvent): void {
                 updateStatus(event.data.data);
                 break;
             case "renderItem": {
-                // data is always [headers, SimpleRuleSet, AndRuleSet]
-                const headersString = event.data.data[0];
-                renderItem(headersString);
+                renderItem(event.data.data);
                 break;
             }
         }
