@@ -46,16 +46,6 @@ type ValidationRule = ISimpleValidationRule | IComplexValidationRule;
 
 export class HeaderValidationRulesEngine {
     private validationRuleSet: ValidationRule[] = [];
-
-    constructor(overrideCreateRuleSetFunction?: (engine: HeaderValidationRulesEngine) => void) {
-        if (overrideCreateRuleSetFunction) {
-            overrideCreateRuleSetFunction(this);
-        } else {
-            // Create Default rule set (currently empty)
-            this.createRuleSet();
-        }
-    }
-
     /**
      * Find all the Violations that exist in the section. This only tests for violations of simple rules
      * (rules that implement 'violatesRule') as complex rules apply across multiple sections.
@@ -131,13 +121,6 @@ export class HeaderValidationRulesEngine {
      */
     public addRule(newRule: ValidationRule): void {
         this.validationRuleSet.push(newRule);
-    }
-
-    /**
-     * Create the Rule Set to test the header for
-     */
-    private createRuleSet(): void {
-        // Currently empty - rules are loaded dynamically via setRules
     }
 
     /**
@@ -236,13 +219,6 @@ export class HeaderValidationRulesEngine {
 
 // Create the only instance of the rules list
 export const headerValidationRules = new HeaderValidationRulesEngine();
-
-/**
- * Does the object implement the function?
- */
-export function objectImplmentsFunction(obj: Record<string, unknown>, doThis: string): boolean {
-    return typeof obj[doThis] === "function";
-}
 
 /**
  * In the set of sections (array of array of sections) find all of them with particular name
