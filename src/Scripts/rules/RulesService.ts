@@ -1,5 +1,4 @@
 // Rules service - the main rules engine for processing headers
-// This facade wraps the complex rules engine and provides a clean interface
 
 import { HeaderModel } from "../HeaderModel";
 import { headerValidationRules } from "./engine/HeaderValidationRules";
@@ -69,9 +68,7 @@ class RulesService {
                 if (Array.isArray(section)) {
                     // Clear existing flags
                     section.forEach((headerSection: HeaderSection) => {
-                        if (headerSection && typeof headerSection === "object") {
-                            delete headerSection.rulesFlagged;
-                        }
+                        delete headerSection.rulesFlagged;
                     });
 
                     // Run simple rules on this section
