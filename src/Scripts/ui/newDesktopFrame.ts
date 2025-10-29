@@ -487,11 +487,22 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 /**
- * Apply content highlighting to show rule violation patterns
- * @param content - The text content to highlight
- * @param violationGroups - Array of violation groups with highlight patterns
- * @returns The content with HTML highlighting spans applied
+ * Create diagnostic violation item element for inline display
  */
+function createDiagnosticViolationItem(violation: RuleViolation): DocumentFragment {
+    const clone = DomUtils.cloneTemplate("diagnostic-violation-item-template");
+    DomUtils.addClass(".diagnostic-violation-item", `severity-${violation.rule.severity}`);
+    DomUtils.setTemplateAttribute(clone, ".diagnostic-violation-item", "data-severity", violation.rule.severity);
+    DomUtils.setTemplateText(clone, ".severity-badge", getSeverityDisplay(violation.rule.severity).label);
+    DomUtils.setTemplateAttribute(clone, ".severity-badge", "appearance", violation.rule.severity === "error" ? "important" : "accent");
+    DomUtils.setTemplateText(clone, ".violation-message", violation.rule.errorMessage);
+    if (violation.parentMessage){
+        DomUtils.setTemplateText(clone, ".violation-parent-message", `Part of: ${violation.parentMessage}`);
+        DomUtils.showElement(".violation-parent-message");
+    }
+
+    return clone;
+}
 
 /**
  * Create a grouped rule accordion item
@@ -531,34 +542,14 @@ function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFrag
  */
 function buildDiagnosticsReport(violationGroups: ViolationGroup[]): void {
     if (!violationGroups || violationGroups.length === 0) return;
-    const diagnosticsSection = document.querySelector(".ui-diagnostics-report-section");
-    const section = diagnosticsSection as HTMLElement;
-    const accordion = document.createElement("fluent-accordion");
-    accordion.className = "diagnostics-accordion";
+    const diagnosticsSection = document.querySelector(".ui-diagnostics-report-section") as HTMLElement;
+    const accordion = DomUtils.cloneTemplate("diagnostics-accordion-template");
     violationGroups.forEach((ruleGroup) => {
         const accordionItem = createGroupedRuleAccordionItem(ruleGroup);
         accordion.appendChild(accordionItem);
     });
 
-    section.appendChild(accordion);
-}
-
-/**
- * Create diagnostic violation item element for inline display
- */
-function createDiagnosticViolationItem(violation: RuleViolation): DocumentFragment {
-    const clone = DomUtils.cloneTemplate("diagnostic-violation-item-template");
-    DomUtils.addClass(".diagnostic-violation-item", `severity-${violation.rule.severity}`);
-    DomUtils.setTemplateAttribute(clone, ".diagnostic-violation-item", "data-severity", violation.rule.severity);
-    DomUtils.setTemplateText(clone, ".severity-badge", getSeverityDisplay(violation.rule.severity).label);
-    DomUtils.setTemplateAttribute(clone, ".severity-badge", "appearance", violation.rule.severity === "error" ? "important" : "accent");
-    DomUtils.setTemplateText(clone, ".violation-message", violation.rule.errorMessage);
-    if (violation.parentMessage){
-        DomUtils.setTemplateText(clone, ".violation-parent-message", `Part of: ${violation.parentMessage}`);
-        DomUtils.showElement(".violation-parent-message");
-    }
-
-    return clone;
+    diagnosticsSection.appendChild(accordion);
 }
 
 /**
