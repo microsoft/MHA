@@ -459,10 +459,9 @@ function eventListener(event: MessageEvent): void {
             case "updateStatus":
                 updateStatus(event.data.data);
                 break;
-            case "renderItem": {
+            case "renderItem":
                 renderItem(event.data.data);
                 break;
-            }
         }
     }
 }
@@ -567,12 +566,11 @@ function createRow(
     DomUtils.setTemplateAttribute(clone, ".cell-main-content", "aria-labelledby", row.id);
 
     const effectiveViolations = getViolationsForRow(row, violationGroups);
-    const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
-    const popover = clone.querySelector(".details-overlay-popup") as HTMLElement;
-    const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
 
     if (effectiveViolations.length > 0) {
-        popoverBtn.style.display = "flex";
+        const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
+        const popover = clone.querySelector(".details-overlay-popup") as HTMLElement;
+        const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
         const severities = effectiveViolations.map(v => v.rule.severity);
         const highestSeverity = severities.includes("error") ? "error" : severities.includes("warning") ? "warning" : "info";
         popoverBtn.setAttribute("data-severity", highestSeverity);
@@ -586,8 +584,6 @@ function createRow(
         if (popoverBtn && popover) {
             attachOverlayPopup(popoverBtn, popover as HTMLElement);
         }
-    } else {
-        popoverBtn.style.display = "none";
     }
 
     return clone;
