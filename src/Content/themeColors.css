@@ -32,7 +32,7 @@
     --border-light-gray: #e1e1e1;
     
     /* Dialog Colors - WCAG AA Compliant */
-    --dialog-header-bg: #006FCC;    /* 4.51:1 contrast for white text */
+    --dialog-header-bg: var(--primary-blue);    /* 4.53:1 contrast for white text */
     --dialog-text-on-primary: var(--white);
     
     /* Framework7 Overrides - WCAG AA Compliant */
