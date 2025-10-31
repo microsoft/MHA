@@ -506,16 +506,15 @@ function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFrag
     DomUtils.setTemplateAttribute(clone, ".severity-badge", "data-severity", ruleGroup.severity);
     DomUtils.setTemplateText(clone, ".severity-badge", ruleGroup.severity);
 
+    if (ruleGroup.violations.length > 1) {
+        DomUtils.setTemplateText(clone, ".violation-count-value", `${ruleGroup.violations.length}`);
+    }
+    else {
+        DomUtils.hideTemplateElement(clone, ".rule-violation-count");
+    }
+
     const content = clone.querySelector(".diagnostic-content") as HTMLElement;
     if (content) {
-        const violationCount = ruleGroup.violations.length;
-        if (violationCount > 1) {
-            DomUtils.setTemplateText(clone, ".violation-count-value", `${violationCount}`);
-        }
-        else {
-            DomUtils.hideTemplateElement(clone, ".rule-violation-count");
-        }
-
         ruleGroup.violations.forEach((violation: RuleViolation) => {
             const violationItem = createDiagnosticViolationItem(violation);
             content.appendChild(violationItem);
