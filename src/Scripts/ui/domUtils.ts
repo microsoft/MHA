@@ -144,6 +144,18 @@ export class DomUtils {
     }
 
     /**
+     * Hide an element within a DocumentFragment
+     * @param clone DocumentFragment to search within
+     * @param selector CSS selector string
+     */
+    static hideTemplateElement(clone: DocumentFragment, selector: string): void {
+        const element = clone.querySelector(selector) as HTMLElement;
+        if (element) {
+            element.style.display = "none";
+        }
+    }
+
+    /**
      * Common focusable element selector
      */
     static readonly focusableElements = "a, button, input, textarea, select, [tabindex]:not([tabindex=\"-1\"])";

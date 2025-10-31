@@ -2,22 +2,6 @@ import { RuleViolation, ViolationGroup } from "./types/AnalysisTypes";
 import { HeaderSection } from "./types/interfaces";
 
 /**
- * Map severity to label, and CSS class
- */
-export function getSeverityDisplay(severity?: string): { label: string; cssClass: string } {
-    switch (severity) {
-        case "warning":
-            return { label: "⚠️ Warning", cssClass: "rule-violation-warning" };
-        case "info":
-            return { label: "ℹ️ Info", cssClass: "rule-violation-info" };
-        case "error":
-            return { label: "❌ Error", cssClass: "rule-violation-error" };
-        default:
-            return { label: "❌ Error", cssClass: "rule-violation-error" };
-    }
-}
-
-/**
  * Apply content highlighting to show rule violation patterns
  * @param content - The text content to highlight
  * @param violationGroups - Array of violation groups with highlight patterns

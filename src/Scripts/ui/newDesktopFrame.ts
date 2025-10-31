@@ -12,7 +12,7 @@ import { TabNavigation } from "../TabNavigation";
 import { DomUtils } from "./domUtils";
 import { rulesService } from "../rules";
 import { RuleViolation, ViolationGroup } from "../rules/types/AnalysisTypes";
-import { getSeverityDisplay, getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
+import { getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -196,10 +196,12 @@ function buildSummaryTab(viewModel: HeaderModel, violationGroups: ViolationGroup
 
             if (sectionHeader && rowViolations.length > 0) {
                 rowViolations.forEach((violation: RuleViolation) => {
-                    const severityInfo = getSeverityDisplay(violation.rule.severity);
-                    const warning = document.createElement("div");
-                    warning.className = severityInfo.cssClass;
-                    warning.textContent = `${severityInfo.label}: ${violation.rule.errorMessage}`;
+                    const warning = DomUtils.cloneTemplate("rule-violation-template");
+                    DomUtils.setTemplateText(warning, ".violation-message", violation.rule.errorMessage);
+                    DomUtils.setTemplateAttribute(warning, ".violation-message", "data-severity", violation.rule.severity);
+                    DomUtils.setTemplateAttribute(warning, ".severity-badge", "data-severity", violation.rule.severity);
+                    DomUtils.setTemplateText(warning, ".severity-badge", violation.rule.severity);
+
                     sectionHeader.appendChild(warning);
                 });
             }
@@ -485,14 +487,20 @@ document.addEventListener("DOMContentLoaded", function() {
  */
 function createDiagnosticViolationItem(violation: RuleViolation): DocumentFragment {
     const clone = DomUtils.cloneTemplate("diagnostic-violation-item-template");
-    DomUtils.addClass(".diagnostic-violation-item", `severity-${violation.rule.severity}`);
     DomUtils.setTemplateAttribute(clone, ".diagnostic-violation-item", "data-severity", violation.rule.severity);
-    DomUtils.setTemplateText(clone, ".severity-badge", getSeverityDisplay(violation.rule.severity).label);
-    DomUtils.setTemplateAttribute(clone, ".severity-badge", "appearance", violation.rule.severity === "error" ? "important" : "accent");
+    DomUtils.setTemplateText(clone, ".severity-badge", `${violation.rule.severity}`);
+    DomUtils.setTemplateAttribute(clone, ".severity-badge", "data-severity", violation.rule.severity);
+
     DomUtils.setTemplateText(clone, ".violation-message", violation.rule.errorMessage);
+    DomUtils.setTemplateAttribute(clone, ".violation-message", "data-severity", violation.rule.severity);
+    DomUtils.setTemplateText(clone, ".violation-rule", `${violation.rule.checkSection || ""} / ${violation.rule.errorPattern || ""}`);
+
     if (violation.parentMessage){
         DomUtils.setTemplateText(clone, ".violation-parent-message", `Part of: ${violation.parentMessage}`);
         DomUtils.showElement(".violation-parent-message");
+    }
+    else{
+        DomUtils.hideElement(".violation-parent-message");
     }
 
     return clone;
@@ -503,31 +511,26 @@ function createDiagnosticViolationItem(violation: RuleViolation): DocumentFragme
  */
 function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFragment {
     const clone = DomUtils.cloneTemplate("diagnostic-accordion-item-template");
-    const severityInfo = getSeverityDisplay(ruleGroup.severity);
-    DomUtils.setTemplateText(clone, ".diagnostic-title", `${severityInfo.label}: ${ruleGroup.displayName}`);
-    DomUtils.setTemplateAttribute(clone, ".severity-badge", "appearance", ruleGroup.severity === "error" ? "important" : "accent");
-    DomUtils.setTemplateText(clone, ".severity-badge", severityInfo.label);
+    DomUtils.setTemplateText(clone, ".diagnostic-title", `${ruleGroup.displayName}`);
+    DomUtils.setTemplateAttribute(clone, ".severity-badge", "data-severity", ruleGroup.severity);
+    DomUtils.setTemplateText(clone, ".severity-badge", ruleGroup.severity);
 
     const content = clone.querySelector(".diagnostic-content") as HTMLElement;
     if (content) {
         const violationCount = ruleGroup.violations.length;
+        if (violationCount > 1) {
+            DomUtils.setTemplateText(clone, ".violation-count-value", `${violationCount}`);
+        }
+        else {
+            DomUtils.hideTemplateElement(clone, ".rule-violation-count");
+        }
 
-        if (violationCount > 1 || ruleGroup.isAndRule) {
-            const countDiv = DomUtils.cloneTemplate("rule-violation-count-template");
-            DomUtils.setTemplateText(countDiv, ".violation-count-value", `${violationCount}`);
-            content.appendChild(countDiv);
-
-            ruleGroup.violations.forEach((violation: RuleViolation) => {
-                const violationItem = createDiagnosticViolationItem(violation);
-                content.appendChild(violationItem);
-            });
-        } else {
-            const violation = ruleGroup.violations[0];
-            if (!violation) return clone;
+        ruleGroup.violations.forEach((violation: RuleViolation) => {
             const violationItem = createDiagnosticViolationItem(violation);
             content.appendChild(violationItem);
-        }
+        });
     }
+
     return clone;
 }
 

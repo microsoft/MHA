@@ -64,11 +64,6 @@
     --highlight-warning-bg: #fff176;        /* Softer yellow - complements primary blue */
     --highlight-warning-text: #1b1b1b;      /* Near black - 14.3:1 contrast */
 
-    /* Success/OK State (extends existing success-green) */
-    --diagnostic-success-bg: var(--success-green-bg);  /* Reuse existing */
-    --diagnostic-success-border: var(--success-green); /* Reuse existing */
-    --diagnostic-success-text: #2e7d32;     /* Darker green - 4.5:1 contrast */
-
     /* Info/Neutral State */
     --diagnostic-info-bg: #e3f2fd;          /* Light blue - complements primary */
     --diagnostic-info-border: var(--primary-blue);
@@ -78,4 +73,18 @@
     --diagnostic-error-bg: #ffebee;         /* Light red - complements existing palette */
     --diagnostic-error-border: #d32f2f;     /* Red - accessible border */
     --diagnostic-error-text: #c62828;       /* Dark red - 4.5:1 contrast */
+}
+
+/* TODO: Remove this debug overlay style before production release */
+.debug-overlay {
+  top: 8px;
+  left: 8px;
+  z-index: 9999;
+  background: #000;
+  color: #fff;
+  font-size: 0.7em;
+  font-weight: bold;
+  padding: 0;
+  border-radius: 4px;
+  pointer-events: none;
 }

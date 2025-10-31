@@ -198,31 +198,41 @@
     </template>
 
     <template id="diagnostics-accordion-template">
+        <div class="debug-overlay">diagnostics-accordion-template</div>
         <fluent-accordion class="diagnostics-accordion"></fluent-accordion>
     </template>
 
     <template id="diagnostic-accordion-item-template">
         <fluent-accordion-item>
+            <div class="debug-overlay">diagnostic-accordion-item-template</div>
             <div slot="heading" class="accordion-heading">
                 <fluent-badge class="severity-badge"></fluent-badge>
                 <span class="diagnostic-title"></span>
             </div>
-            <div class="diagnostic-content"></div>
+            <div class="diagnostic-content">
+                <div class="rule-violation-count"><strong><span class="violation-count-value"></span> violations found in headers</strong></div>
+            </div>
         </fluent-accordion-item>
     </template>
 
     <template id="diagnostic-violation-item-template">
+        <div class="debug-overlay">diagnostic-violation-item-template</div>
         <div class="diagnostic-violation-item">
-            <fluent-badge class="severity-badge"></fluent-badge>
-            <div class="violation-details">
+            <div class="violation-title">
+                <fluent-badge class="severity-badge"></fluent-badge>
                 <div class="violation-message"></div>
-                <div class="violation-parent-message" hidden></div>
             </div>
+            <div class="violation-rule"></div>
+            <div class="violation-parent-message"></div>
         </div>
     </template>
 
-    <template id="rule-violation-count-template">
-        <div class="rule-violation-count"><strong><span class="violation-count-value"></span> violations found in headers</strong></div>
+    <template id="rule-violation-template">
+        <div class="debug-overlay">rule-violation-template</div>
+        <div class="rule-violation">
+            <fluent-badge class="severity-badge"></fluent-badge>
+            <div class="violation-message"></div>
+        </div>
     </template>
 </body>
 </html>
