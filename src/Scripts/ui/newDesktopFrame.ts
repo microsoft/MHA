@@ -480,13 +480,15 @@ type ViolationDisplayMode = "inline" | "card";
  * @returns DocumentFragment containing the violation display element
  */
 function createViolationDisplay(violation: RuleViolation, mode: ViolationDisplayMode): DocumentFragment {
-    const templateId = mode === "inline" ? "rule-violation-template" : "diagnostic-violation-item-template";
-    const clone = DomUtils.cloneTemplate(templateId);
+    const clone = DomUtils.cloneTemplate("violation-display-template");
     const severity = violation.rule.severity;
 
-    // Set severity on container
-    const containerSelector = mode === "inline" ? ".rule-violation" : ".diagnostic-violation-item";
-    DomUtils.setTemplateAttribute(clone, containerSelector, "data-severity", severity);
+    // Add mode class and set severity
+    const container = clone.querySelector(".violation-display") as HTMLElement;
+    if (container) {
+        container.classList.add(`violation-display--${mode}`);
+        container.setAttribute("data-severity", severity);
+    }
 
     // Set badge
     DomUtils.setTemplateAttribute(clone, ".severity-badge", "data-severity", severity);
@@ -496,7 +498,7 @@ function createViolationDisplay(violation: RuleViolation, mode: ViolationDisplay
     DomUtils.setTemplateText(clone, ".violation-message", violation.rule.errorMessage);
     DomUtils.setTemplateAttribute(clone, ".violation-message", "data-severity", severity);
 
-    // Set optional details (only in card mode)
+    // Set optional details (only visible in card mode via CSS)
     if (mode === "card") {
         const ruleInfo = `${violation.rule.checkSection || ""} / ${violation.rule.errorPattern || ""}`;
         DomUtils.setTemplateText(clone, ".violation-rule", ruleInfo);

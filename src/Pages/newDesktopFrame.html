@@ -215,24 +215,18 @@
         </fluent-accordion-item>
     </template>
 
-    <template id="diagnostic-violation-item-template">
-        <div class="debug-overlay">diagnostic-violation-item-template</div>
-        <div class="diagnostic-violation-item">
-            <div class="violation-title">
+    <template id="violation-display-template">
+        <div class="violation-display">
+            <div class="violation-display__header">
                 <fluent-badge class="severity-badge"></fluent-badge>
                 <div class="violation-message"></div>
             </div>
-            <div class="violation-rule"></div>
-            <div class="violation-parent-message"></div>
-        </div>
-    </template>
-
-    <template id="rule-violation-template">
-        <div class="debug-overlay">rule-violation-template</div>
-        <div class="rule-violation">
-            <fluent-badge class="severity-badge"></fluent-badge>
-            <div class="violation-message"></div>
+            <div class="violation-display__details">
+                <div class="violation-rule"></div>
+                <div class="violation-parent-message"></div>
+            </div>
         </div>
     </template>
 </body>
 </html>
+
