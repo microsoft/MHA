@@ -162,6 +162,10 @@ fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label:not(
     content: "\2B07"; /* Unicode ⬇ down arrow */
 }
 
+.fluent-icon--error::before {
+    content: "\2715"; /* Unicode ✕ multiplication X */
+}
+
 /* High contrast mode support - modern and legacy combined */
 @media (prefers-contrast: high), (forced-colors: active), screen and (-ms-high-contrast: active) {
     .fluent-icon {
