@@ -321,13 +321,35 @@
     font-family: var(--font-family);
 }
 
-/* Highlighting for rule violations */
+/* Rule Violations */
 .rule-violation-highlight {
     background-color: var(--highlight-warning-bg) !important;
     color: var(--highlight-warning-text) !important;
     font-weight: 600 !important;
     padding: 1px 2px;
     border-radius: 2px;
+}
+
+/* Severity system - applies to all [data-severity] elements */
+[data-severity="error"] {
+    --severity-bg: var(--diagnostic-error-bg);
+    --severity-color: var(--diagnostic-error-text);
+    --severity-border: var(--diagnostic-error-border);
+    --severity-icon: "🔴";
+}
+
+[data-severity="warning"] {
+    --severity-bg: var(--diagnostic-warning-bg);
+    --severity-color: var(--diagnostic-warning-text);
+    --severity-border: var(--diagnostic-warning-border);
+    --severity-icon: "⚠️";
+}
+
+[data-severity="info"] {
+    --severity-bg: var(--diagnostic-info-bg);
+    --severity-color: var(--diagnostic-info-text);
+    --severity-border: var(--diagnostic-info-border);
+    --severity-icon: "ℹ️";
 }
 
 .rule-violation {
@@ -337,18 +359,9 @@
     margin-top: 4px;
 }
 
-.violation-message{
+.violation-message {
     padding: 4px;
-}
-
-.violation-message[data-severity="error"] {
-    color: var(--diagnostic-error-text);
-}
-.violation-message[data-severity="warning"] {
-    color: var(--diagnostic-warning-text);
-}
-.violation-message[data-severity="info"] {
-    color: var(--diagnostic-info-text);
+    color: var(--severity-color);
 }
 
 .diagnostic-content {
@@ -400,16 +413,8 @@ show-diagnostics-popover-btn:hover {
     line-height: 1;
 }
 
-.show-diagnostics-popover-btn[data-severity="error"] .severity-icon::before {
-    content: "🔴";
-}
-
-.show-diagnostics-popover-btn[data-severity="warning"] .severity-icon::before {
-    content: "⚠️";
-}
-
-.show-diagnostics-popover-btn[data-severity="info"] .severity-icon::before {
-    content: "ℹ️";
+.show-diagnostics-popover-btn .severity-icon::before {
+    content: var(--severity-icon);
 }
 
 /* Other tab header with inline popover button */
@@ -442,7 +447,7 @@ show-diagnostics-popover-btn:hover {
     display: flex;
 }
 
-/* Severity Badge Styling */
+/* Severity Badges */
 fluent-badge.severity-badge {
     display: flex;
     flex-shrink: 0;
@@ -452,28 +457,10 @@ fluent-badge.severity-badge {
     border-radius: 4px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    background: var(--severity-bg);
+    color: var(--severity-color);
 }
 
-fluent-badge.severity-badge[data-severity="error"]::before {
-    content: "🔴";
-}
-fluent-badge.severity-badge[data-severity="error"] {
-    background: var(--diagnostic-error-bg);
-    color: var(--diagnostic-error-text);
-}
-
-fluent-badge.severity-badge[data-severity="warning"]::before {
-    content: "⚠️";
-}
-fluent-badge.severity-badge[data-severity="warning"] {
-    background: var(--diagnostic-warning-bg);
-    color: var(--diagnostic-warning-text);
-}
-
-fluent-badge.severity-badge[data-severity="info"]::before {
-    content: "ℹ️";
-}
-fluent-badge.severity-badge[data-severity="info"] {
-    background: var(--diagnostic-info-bg);
-    color: var(--diagnostic-info-text);
+fluent-badge.severity-badge::before {
+    content: var(--severity-icon);
 }
