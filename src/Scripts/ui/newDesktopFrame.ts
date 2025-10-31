@@ -196,12 +196,7 @@ function buildSummaryTab(viewModel: HeaderModel, violationGroups: ViolationGroup
 
             if (sectionHeader && rowViolations.length > 0) {
                 rowViolations.forEach((violation: RuleViolation) => {
-                    const warning = DomUtils.cloneTemplate("rule-violation-template");
-                    DomUtils.setTemplateText(warning, ".violation-message", violation.rule.errorMessage);
-                    DomUtils.setTemplateAttribute(warning, ".violation-message", "data-severity", violation.rule.severity);
-                    DomUtils.setTemplateAttribute(warning, ".severity-badge", "data-severity", violation.rule.severity);
-                    DomUtils.setTemplateText(warning, ".severity-badge", violation.rule.severity);
-
+                    const warning = createViolationDisplay(violation, "inline");
                     sectionHeader.appendChild(warning);
                 });
             }
@@ -474,24 +469,45 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 /**
- * Create diagnostic violation item element for inline display
+ * Display modes for violation UI components
  */
-function createDiagnosticViolationItem(violation: RuleViolation): DocumentFragment {
-    const clone = DomUtils.cloneTemplate("diagnostic-violation-item-template");
-    DomUtils.setTemplateAttribute(clone, ".diagnostic-violation-item", "data-severity", violation.rule.severity);
-    DomUtils.setTemplateText(clone, ".severity-badge", `${violation.rule.severity}`);
-    DomUtils.setTemplateAttribute(clone, ".severity-badge", "data-severity", violation.rule.severity);
+type ViolationDisplayMode = "inline" | "card";
 
+/**
+ * Factory function to create violation display elements with consistent styling
+ * @param violation - The rule violation to display
+ * @param mode - Display mode: "inline" for summary headers, "card" for popovers/accordions
+ * @returns DocumentFragment containing the violation display element
+ */
+function createViolationDisplay(violation: RuleViolation, mode: ViolationDisplayMode): DocumentFragment {
+    const templateId = mode === "inline" ? "rule-violation-template" : "diagnostic-violation-item-template";
+    const clone = DomUtils.cloneTemplate(templateId);
+    const severity = violation.rule.severity;
+
+    // Set severity on container
+    const containerSelector = mode === "inline" ? ".rule-violation" : ".diagnostic-violation-item";
+    DomUtils.setTemplateAttribute(clone, containerSelector, "data-severity", severity);
+
+    // Set badge
+    DomUtils.setTemplateAttribute(clone, ".severity-badge", "data-severity", severity);
+    DomUtils.setTemplateText(clone, ".severity-badge", severity);
+
+    // Set message
     DomUtils.setTemplateText(clone, ".violation-message", violation.rule.errorMessage);
-    DomUtils.setTemplateAttribute(clone, ".violation-message", "data-severity", violation.rule.severity);
-    DomUtils.setTemplateText(clone, ".violation-rule", `${violation.rule.checkSection || ""} / ${violation.rule.errorPattern || ""}`);
+    DomUtils.setTemplateAttribute(clone, ".violation-message", "data-severity", severity);
 
-    if (violation.parentMessage){
-        DomUtils.setTemplateText(clone, ".violation-parent-message", `Part of: ${violation.parentMessage}`);
-        DomUtils.showElement(".violation-parent-message");
-    }
-    else{
-        DomUtils.hideElement(".violation-parent-message");
+    // Set optional details (only in card mode)
+    if (mode === "card") {
+        const ruleInfo = `${violation.rule.checkSection || ""} / ${violation.rule.errorPattern || ""}`;
+        DomUtils.setTemplateText(clone, ".violation-rule", ruleInfo);
+
+        const parentMessageEl = clone.querySelector(".violation-parent-message") as HTMLElement;
+        if (violation.parentMessage && parentMessageEl) {
+            DomUtils.setTemplateText(clone, ".violation-parent-message", `Part of: ${violation.parentMessage}`);
+            parentMessageEl.style.display = "";
+        } else if (parentMessageEl) {
+            parentMessageEl.style.display = "none";
+        }
     }
 
     return clone;
@@ -516,7 +532,7 @@ function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFrag
     const content = clone.querySelector(".diagnostic-content") as HTMLElement;
     if (content) {
         ruleGroup.violations.forEach((violation: RuleViolation) => {
-            const violationItem = createDiagnosticViolationItem(violation);
+            const violationItem = createViolationDisplay(violation, "card");
             content.appendChild(violationItem);
         });
     }
@@ -561,7 +577,7 @@ function createRow(
     const effectiveViolations = getViolationsForRow(row, violationGroups);
     if (effectiveViolations.length > 0) {
         const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
-        effectiveViolations.forEach(v => diagnosticsList.appendChild(createDiagnosticViolationItem(v)));
+        effectiveViolations.forEach(v => diagnosticsList.appendChild(createViolationDisplay(v, "card")));
 
         const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
         const popover = clone.querySelector(".details-overlay-popup") as HTMLElement;
