@@ -549,6 +549,7 @@ function createRow(
     const clone = DomUtils.cloneTemplate(template);
     DomUtils.setTemplateHTML(clone, ".row-header", row.url || row.label || row.header);
     DomUtils.setTemplateAttribute(clone, ".row-header", "id", row.id);
+    DomUtils.setTemplateAttribute(clone, ".cell-main-content", "aria-labelledby", row.id);
 
     const highlightedContent = highlightContent(row.value, violationGroups);
     if (highlightedContent !== row.value) {
@@ -556,25 +557,24 @@ function createRow(
     } else {
         DomUtils.setTemplateHTML(clone, ".cell-main-content", row.value);
     }
-    DomUtils.setTemplateAttribute(clone, ".cell-main-content", "aria-labelledby", row.id);
 
     const effectiveViolations = getViolationsForRow(row, violationGroups);
-
     if (effectiveViolations.length > 0) {
+        const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
+        effectiveViolations.forEach(v => diagnosticsList.appendChild(createDiagnosticViolationItem(v)));
+
         const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
         const popover = clone.querySelector(".details-overlay-popup") as HTMLElement;
-        const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
-        const severities = effectiveViolations.map(v => v.rule.severity);
-        const highestSeverity = severities.includes("error") ? "error" : severities.includes("warning") ? "warning" : "info";
-        popoverBtn.setAttribute("data-severity", highestSeverity);
-        const buttonId = `popover-btn-${row.id}`;
-        const popoverId = `popover-${row.id}`;
-        popoverBtn.id = buttonId;
-        popover.id = popoverId;
-        popoverBtn.setAttribute("aria-describedby", popoverId);
-        effectiveViolations.forEach(v => diagnosticsList.appendChild(createDiagnosticViolationItem(v)));
-        popoverBtn.setAttribute("aria-label", `Show rule violations for ${row.label || row.header}`);
         if (popoverBtn && popover) {
+            popover.id = `popover-${row.id}`;
+
+            const severities = effectiveViolations.map(v => v.rule.severity);
+            const highestSeverity = severities.includes("error") ? "error" : severities.includes("warning") ? "warning" : "info";
+            popoverBtn.setAttribute("data-severity", highestSeverity);
+            popoverBtn.id = `popover-btn-${row.id}`;
+            popoverBtn.setAttribute("aria-describedby", popoverBtn.id );
+            popoverBtn.setAttribute("aria-label", `Show rule violations for ${row.label || row.header}`);
+
             attachOverlayPopup(popoverBtn, popover as HTMLElement);
         }
     }
