@@ -391,7 +391,6 @@
 
 .violation-display--card:hover {
     background: linear-gradient(135deg, rgba(248, 250, 252, 1), rgba(241, 245, 249, 0.8));
-    transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
@@ -428,6 +427,10 @@
 
 .show-diagnostics-popover-btn {
     border-radius: 50% !important;
+}
+
+.show-diagnostics-popover-btn:not([data-severity]) {
+    display: none;
 }
 
 .show-diagnostics-popover-btn:focus-visible {

@@ -570,11 +570,15 @@ function createRow(
     DomUtils.setTemplateAttribute(clone, ".row-header", "id", row.id);
     DomUtils.setTemplateAttribute(clone, ".cell-main-content", "aria-labelledby", row.id);
 
-    const highlightedContent = highlightContent(row.value, violationGroups);
-    if (highlightedContent !== row.value) {
-        DomUtils.setTemplateHTML(clone, ".cell-main-content", highlightedContent);
+    if (row.valueUrl) {
+        DomUtils.setTemplateHTML(clone, ".cell-main-content", row.valueUrl);
     } else {
-        DomUtils.setTemplateHTML(clone, ".cell-main-content", row.value);
+        const highlightedContent = highlightContent(row.value, violationGroups);
+        if (highlightedContent !== row.value) {
+            DomUtils.setTemplateHTML(clone, ".cell-main-content", highlightedContent);
+        } else {
+            DomUtils.setTemplateHTML(clone, ".cell-main-content", row.value);
+        }
     }
 
     const effectiveViolations = getViolationsForRow(row, violationGroups);
