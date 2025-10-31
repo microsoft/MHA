@@ -66,17 +66,3 @@
     --diagnostic-error-bg: #ffebee;         /* Light red - complements existing palette */
     --diagnostic-error-text: #c62828;       /* Dark red - 4.5:1 contrast */
 }
-
-/* TODO: Remove this debug overlay style before production release */
-.debug-overlay {
-  top: 8px;
-  left: 8px;
-  z-index: 9999;
-  background: #000;
-  color: #fff;
-  font-size: 0.7em;
-  font-weight: bold;
-  padding: 0;
-  border-radius: 4px;
-  pointer-events: none;
-}
