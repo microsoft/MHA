@@ -520,7 +520,8 @@ function createViolationDisplay(violation: RuleViolation, mode: ViolationDisplay
  */
 function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFragment {
     const clone = DomUtils.cloneTemplate("diagnostic-accordion-item-template");
-    DomUtils.setTemplateText(clone, ".diagnostic-title", `${ruleGroup.displayName}`);
+    DomUtils.setTemplateText(clone, ".violation-message", `${ruleGroup.displayName}`);
+    DomUtils.setTemplateAttribute(clone, ".violation-message", "data-severity", ruleGroup.severity);
     DomUtils.setTemplateAttribute(clone, ".severity-badge", "data-severity", ruleGroup.severity);
     DomUtils.setTemplateText(clone, ".severity-badge", ruleGroup.severity);
 

@@ -205,9 +205,9 @@
     <template id="diagnostic-accordion-item-template">
         <fluent-accordion-item>
             <div class="debug-overlay">diagnostic-accordion-item-template</div>
-            <div slot="heading" class="accordion-heading">
+            <div slot="heading" class="violation-display__header">
                 <fluent-badge class="severity-badge"></fluent-badge>
-                <span class="diagnostic-title"></span>
+                <div class="violation-message"></div>
             </div>
             <div class="diagnostic-content">
                 <div class="rule-violation-count"><strong><span class="violation-count-value"></span> violations found in headers</strong></div>
@@ -216,6 +216,7 @@
     </template>
 
     <template id="violation-display-template">
+        <div class="debug-overlay">violation-display-template</div>
         <div class="violation-display">
             <div class="violation-display__header">
                 <fluent-badge class="severity-badge"></fluent-badge>

@@ -414,14 +414,6 @@
     border: 1px solid var(--border-gray);
 }
 
-.accordion-heading {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    font-size: 14px;
-}
-
 .popover-row .cell-content-wrapper {
     display: flex;
     align-items: flex-start;
