@@ -18,6 +18,10 @@
     --f7-accordion-chevron-icon-up: "chevron_down";
     --f7-timeline-item-inner-bg-color: var(--white);
     --f7-page-bg-color: var(-f7-tabs-bg-color);
+    --f7-toolbar-bg-color: var(--background-light-blue);
+    --f7-toolbar-text-color: var(--text-primary);
+    --f7-tabbar-link-inactive-color: var(--text-secondary);
+    --f7-tabbar-link-active-color: var(--link-active);
 }
 
 /* Reserve space for parent frame toolbar overlay */
@@ -57,11 +61,6 @@ body {
     color: var(--f7-link-color);
 }
 
-.tab-link.tab-link-active,
-.tab-link.active {
-    color: var(--link-active);
-}
-
 .code-box>pre {
     background-color: var(--code-box-bg);
     border: 1px solid var(--border-light-grey);
@@ -96,18 +95,17 @@ body {
     word-wrap: break-word;
 }
 
-a,
-a:visited {
+a {
     text-decoration: underline;
 }
 
-a:hover {
-    color: var(--text-dark-grey);
+.tab-link:hover{
+    color: var(--link-hover);
 }
 
 a:focus,
 div:focus {
-    outline: var(--focus-outline-blue) solid 2px;
+    outline: var(--focus-blue) solid 2px;
     outline-offset: 2px;
 }
 
