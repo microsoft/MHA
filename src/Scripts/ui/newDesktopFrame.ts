@@ -223,7 +223,6 @@ function buildReceivedTab(viewModel: HeaderModel) {
     const receivedList = document.querySelector(".received-list") as HTMLElement;
 
     if (viewModel.receivedHeaders.rows.length > 0) {
-        // Use HTML template for list creation
         const listClone = DomUtils.cloneTemplate("received-list-template");
         receivedList.appendChild(listClone);
         const list = receivedList.querySelector("ul") as HTMLElement;
@@ -231,14 +230,12 @@ function buildReceivedTab(viewModel: HeaderModel) {
         let firstRow = true;
         viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, index) => {
             // Fix for Bug 1846002 - Added attr ID to set focus for the first element in the list
-            // Use HTML template for list item creation
             const itemClone = DomUtils.cloneTemplate("list-item-template");
             const listItem = itemClone.querySelector("li") as HTMLElement;
             listItem.id = "received" + index;
             list.appendChild(itemClone);
 
             if (firstRow) {
-                // Use HTML template for first row content
                 const listItemElement = listItem;
                 if (listItemElement) {
                     const clone = DomUtils.cloneTemplate("first-row-template");
@@ -248,7 +245,6 @@ function buildReceivedTab(viewModel: HeaderModel) {
                 }
                 firstRow = false;
             } else {
-                // Use HTML template for progress icon
                 const progressClone = DomUtils.cloneTemplate("progress-icon-template");
 
                 // Set the progress value for fluent-progress
@@ -265,7 +261,6 @@ function buildReceivedTab(viewModel: HeaderModel) {
 
                 listItem.appendChild(progressClone);
 
-                // Use HTML template for secondary text
                 const listItemElement = listItem;
                 if (listItemElement) {
                     const clone = DomUtils.cloneTemplate("secondary-text-template");
@@ -278,7 +273,6 @@ function buildReceivedTab(viewModel: HeaderModel) {
             const selectionClone = DomUtils.cloneTemplate("selection-target-template");
             listItem.appendChild(selectionClone);
 
-            // Callout - Use HTML template for callout structure
             const calloutClone = DomUtils.cloneTemplate("hop-template");
 
             // Add callout header to the tooltip content
@@ -374,7 +368,6 @@ function buildAntispamTab(viewModel: HeaderModel, violationGroups: ViolationGrou
 
     // Forefront
     if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
-        // Use HTML template for section header
         DomUtils.appendTemplate("forefront-header-template", antispamList);
 
         // Create table for antispam data
@@ -391,7 +384,6 @@ function buildAntispamTab(viewModel: HeaderModel, violationGroups: ViolationGrou
 
     // Microsoft
     if (viewModel.antiSpamReport.rows.length > 0) {
-        // Use HTML template for section header
         DomUtils.appendTemplate("microsoft-header-template", antispamList);
 
         // Create table for antispam data
@@ -412,7 +404,6 @@ function buildOtherTab(viewModel: HeaderModel, violationGroups: ViolationGroup[]
 
     viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
-            // Use HTML template for other headers with popover support
             otherList.appendChild(createRow("other-row-template", otherRow, violationGroups));
         }
     });
