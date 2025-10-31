@@ -16,7 +16,7 @@
       "PatternToCheckFor": ".+",
       "MessageWhenPatternFails": "Subject is non-empty (show in From and To)",
       "SectionsInHeaderToShowError": ["From", "To"],
-      "Severity": "warning"
+      "Severity": "error"
     },
     {
       "RuleType": "SimpleRule",

@@ -55,10 +55,8 @@
     /* Built on existing color palette with complementary diagnostics */
 
     /* Rule Violation Colors */
-    --diagnostic-warning-bg: #fff8e1;      /* Warm cream - complements existing grays */
-    --diagnostic-warning-border: #ff8f00;   /* Amber - accessible on light bg (3.4:1) */
+    --diagnostic-warning-bg: #fff8e1;       /* Warm cream - complements existing grays */
     --diagnostic-warning-text: #e65100;     /* Deep orange - 4.5:1 contrast */
-    --diagnostic-warning-icon: #f57c00;     /* Medium orange - visible but not harsh */
 
     /* Rule Violation Highlight */
     --highlight-warning-bg: #fff176;        /* Softer yellow - complements primary blue */
@@ -66,12 +64,10 @@
 
     /* Info/Neutral State */
     --diagnostic-info-bg: #e3f2fd;          /* Light blue - complements primary */
-    --diagnostic-info-border: var(--primary-blue);
     --diagnostic-info-text: #01579b;        /* Dark blue - 4.6:1 contrast */
 
     /* Error State */
     --diagnostic-error-bg: #ffebee;         /* Light red - complements existing palette */
-    --diagnostic-error-border: #d32f2f;     /* Red - accessible border */
     --diagnostic-error-text: #c62828;       /* Dark red - 4.5:1 contrast */
 }
 
