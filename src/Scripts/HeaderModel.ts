@@ -24,7 +24,7 @@ export class HeaderModel {
     public set status(value) { this.statusInternal = value; }
     [index: string]: unknown;
 
-    private constructor(headers?: string) {
+    private constructor() {
         this.summary = new Summary();
         this.receivedHeaders = new Received();
         this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
@@ -34,17 +34,15 @@ export class HeaderModel {
         this.statusInternal = "";
         this.hasDataInternal = false;
         this.violationGroups = [];
-        if (headers) {
-            this.parseHeaders(headers);
-            Poster.postMessageToParent("modelToString", this.toString());
-        }
     }
 
     public static async create(headers?: string): Promise<HeaderModel> {
-        const model = new HeaderModel(headers);
+        const model = new HeaderModel();
 
         if (headers) {
+            model.parseHeaders(headers);
             await model.analyzeRules();
+            Poster.postMessageToParent("modelToString", model.toString());
         }
 
         return model;
