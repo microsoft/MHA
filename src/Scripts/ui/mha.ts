@@ -83,7 +83,7 @@ function showStatusMessage(elementId: string, message: string, duration = 2000) 
 
 // Do our best at recognizing RFC 2822 headers:
 // http://tools.ietf.org/html/rfc2822
-function analyze() {
+async function analyze() {
     diagnostics.trackEvent({ name: "analyzeHeaders" });
     const headerText = DomUtils.getValue("#inputHeaders");
 
@@ -92,13 +92,13 @@ function analyze() {
         return;
     }
 
-    viewModel = new HeaderModel(headerText);
+    viewModel = await HeaderModel.create(headerText);
     table.resetArrows();
 
     enableSpinner();
     updateStatus(mhaStrings.mhaLoading);
 
-    table.rebuildTables(viewModel);
+    table.initializeTableUI(viewModel);
     updateStatus("");
 
     disableSpinner();
@@ -109,9 +109,7 @@ function analyze() {
 function clear() {
     DomUtils.setValue("#inputHeaders", "");
 
-    viewModel = new HeaderModel();
-    table.resetArrows();
-    table.rebuildSections(viewModel);
+    table.rebuildSections(null);
     document.getElementById("inputHeaders")?.focus();
 
     showStatusMessage("clearStatusMessage", mhaStrings.mhaCleared);
@@ -133,9 +131,8 @@ function copy() {
 
 document.addEventListener("DOMContentLoaded", function() {
     diagnostics.set("API used", "standalone");
-    viewModel = new HeaderModel();
     table = new Table();
-    table.initializeTableUI(viewModel);
+    table.initializeTableUI();
     table.makeResizablePane("inputHeaders", "sectionHeader", mhaStrings.mhaPrompt, () => true);
 
     (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;

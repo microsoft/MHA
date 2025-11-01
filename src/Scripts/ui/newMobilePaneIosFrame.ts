@@ -20,6 +20,7 @@ import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
+import { getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
@@ -105,7 +106,8 @@ function addCalloutEntry(name: string, value: string | number | null, parent: HT
     }
 }
 
-function addSpamReportRow(spamRow: Row, parent: HTMLElement) {
+function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderModel) {
+    console.log("addSpamReportRow violations:", viewModel.violationGroups.length);
     if (spamRow.value) {
         const item = document.createElement("li");
         item.className = "accordion-item";
@@ -153,10 +155,24 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement) {
     }
 }
 
-function buildViews(headers: string): void {
-    const viewModel = new HeaderModel(headers);
+async function buildViews(headers: string): Promise<void> {
+    const viewModel = await HeaderModel.create(headers);
 
-    // Build summary view
+    console.log("🔍 Rules Analysis:", {
+        violationCount: viewModel.violationGroups.reduce((sum, g) => sum + g.violations.length, 0),
+        groups: viewModel.violationGroups.length,
+        violations: viewModel.violationGroups,
+        utils: { getViolationsForRow, highlightContent }
+    });
+
+    buildSummaryTab(viewModel);
+    buildReceivedTab(viewModel);
+    buildAntispamTab(viewModel);
+    buildOtherTab(viewModel);
+}
+
+function buildSummaryTab(viewModel: HeaderModel): void {
+    console.log("buildSummaryTab violations:", viewModel.violationGroups.length);
     const summaryContent = document.getElementById("summary-content")!;
 
     viewModel.summary.rows.forEach((row: SummaryRow) => {
@@ -187,8 +203,9 @@ function buildViews(headers: string): void {
         DomUtils.setText("#original-headers", viewModel.originalHeaders);
         DomUtils.showElement("#orig-headers-ui");
     }
+}
 
-    // Build received view
+function buildReceivedTab(viewModel: HeaderModel): void {
     const receivedContent = document.getElementById("received-content")!;
 
     if (viewModel.receivedHeaders.rows.length > 0) {
@@ -359,8 +376,9 @@ function buildViews(headers: string): void {
         endTimelineDivider.className = "timeline-item-divider";
         endTimelineItem.appendChild(endTimelineDivider);
     }
+}
 
-    // Build antispam view
+function buildAntispamTab(viewModel: HeaderModel): void {
     const antispamContent = document.getElementById("antispam-content")!;
 
     // Forefront
@@ -378,7 +396,7 @@ function buildViews(headers: string): void {
         list.appendChild(ul);
 
         viewModel.forefrontAntiSpamReport.rows.forEach((row: Row) => {
-            addSpamReportRow(row, ul);
+            addSpamReportRow(row, ul, viewModel);
         });
     }
 
@@ -397,11 +415,13 @@ function buildViews(headers: string): void {
         list.appendChild(ul);
 
         viewModel.antiSpamReport.rows.forEach((row: Row) => {
-            addSpamReportRow(row, ul);
+            addSpamReportRow(row, ul, viewModel);
         });
     }
+}
 
-    // Build other view
+function buildOtherTab(viewModel: HeaderModel): void {
+    console.log("buildOtherTab violations:", viewModel.violationGroups.length);
     const otherContent = document.getElementById("other-content")!;
 
     viewModel.otherHeaders.rows.forEach((row: OtherRow) => {
@@ -447,7 +467,7 @@ function buildViews(headers: string): void {
     });
 }
 
-function renderItem(headers: string): void {
+async function renderItem(headers: string): Promise<void> {
     // Empty data
     DomUtils.clearElement("#summary-content");
     DomUtils.clearElement("#received-content");
@@ -457,7 +477,7 @@ function renderItem(headers: string): void {
 
     updateStatus(mhaStrings.mhaLoading);
 
-    buildViews(headers);
+    await buildViews(headers);
 
     setupAccordionAccessibility();
 

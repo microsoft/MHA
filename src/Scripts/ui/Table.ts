@@ -15,16 +15,16 @@ type Binding = {
 }
 
 export class Table {
-    private viewModel: HeaderModel = <HeaderModel>{};
+    private viewModel: HeaderModel | null = null;
     private showExtra = false;
 
     private visibilityBindings: Binding[] = [
-        { name: "#lineBreak", visible: function (table: Table) { return table.viewModel.hasData; } },
-        { name: "#response", visible: function (table: Table) { return table.viewModel.hasData; } },
-        { name: "#status", visible: function (table: Table) { return !!table.viewModel.status; } },
+        { name: "#lineBreak", visible: function (table: Table) { return !!table.viewModel?.hasData; } },
+        { name: "#response", visible: function (table: Table) { return !!table.viewModel?.hasData; } },
+        { name: "#status", visible: function (table: Table) { return !!table.viewModel?.status; } },
         { name: ".extraCol", visible: function (table: Table) { return table.showExtra; } },
-        { name: "#clearButton", visible: function (table: Table) { return table.viewModel.hasData; } },
-        { name: "#copyButton", visible: function (table: Table) { return table.viewModel.hasData; } }
+        { name: "#clearButton", visible: function (table: Table) { return !!table.viewModel?.hasData; } },
+        { name: "#copyButton", visible: function (table: Table) { return !!table.viewModel?.hasData; } }
     ];
 
     // Adjusts response under our lineBreak
@@ -227,17 +227,22 @@ export class Table {
 
     // Rebuilds content and recalculates what sections should be displayed
     // Repopulate the UI with the current viewModel
-    public rebuildSections(viewModel: HeaderModel): void {
+    public rebuildSections(viewModel: HeaderModel | null): void {
         this.viewModel = viewModel;
 
+        if (!viewModel) {
+            this.recalculateVisibility();
+            return;
+        }
+
         // Summary
-        this.viewModel.summary.rows.forEach((row: Row) => {
+        viewModel.summary.rows.forEach((row: Row) => {
             this.setRowValue(row, "SUM");
         });
 
         // Received
         this.emptyTableUI("receivedHeaders");
-        this.viewModel.receivedHeaders.rows.forEach((receivedRow: ReceivedRow) => {
+        viewModel.receivedHeaders.rows.forEach((receivedRow: ReceivedRow) => {
             const row: HTMLTableRowElement = document.createElement("tr");
             const receivedHeadersTable = document.getElementById("receivedHeaders");
             if (receivedHeadersTable) {
@@ -282,18 +287,18 @@ export class Table {
         this.hideEmptyColumns("receivedHeaders");
 
         // Forefront AntiSpam Report
-        this.viewModel.forefrontAntiSpamReport.rows.forEach((row: Row) => {
+        viewModel.forefrontAntiSpamReport.rows.forEach((row: Row) => {
             this.setRowValue(row, "FFAS");
         });
 
         // AntiSpam Report
-        this.viewModel.antiSpamReport.rows.forEach((row: Row) => {
+        viewModel.antiSpamReport.rows.forEach((row: Row) => {
             this.setRowValue(row, "AS");
         });
 
         // Other
         this.emptyTableUI("otherHeaders");
-        this.viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
+        viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
             const row: HTMLTableRowElement = document.createElement("tr");
             const otherHeadersTable = document.getElementById("otherHeaders");
             if (otherHeadersTable) {
@@ -308,7 +313,7 @@ export class Table {
         otherRows.forEach(row => row.classList.add("oddRow"));
 
         // Original headers
-        DomUtils.setText("#originalHeaders", this.viewModel.originalHeaders);
+        DomUtils.setText("#originalHeaders", viewModel.originalHeaders);
 
         this.recalculateVisibility();
     }
@@ -331,7 +336,7 @@ export class Table {
                 }
 
                 headerButton.addEventListener("click", () => {
-                    if (this.viewModel[tableName] instanceof DataTable) {
+                    if (this.viewModel && this.viewModel[tableName] instanceof DataTable) {
                         const dataTable = this.viewModel[tableName] as DataTable;
                         dataTable.doSort(column.id);
                         this.setArrows(dataTable.tableName, dataTable.sortColumn,
@@ -400,6 +405,7 @@ export class Table {
         // Create resizable pane using TableSection properties, but with proper closure
         this.makeResizablePane(section.tableName, section.paneClass, section.displayName, (table: Table) => {
             // Use table.viewModel[sectionProperty] to get the current section with data
+            if (!table.viewModel) return false;
             const currentSection = table.viewModel[sectionProperty] as TableSection;
             return currentSection.exists();
         });
@@ -479,24 +485,29 @@ export class Table {
     }
 
     // Initialize UI with an empty viewModel using unified TableSection approach
-    public initializeTableUI(viewModel: HeaderModel): void {
+    public initializeTableUI(viewModel: HeaderModel | null = null): void {
         this.viewModel = viewModel;
 
         // Original headers (not a TableSection, handle separately)
         this.makeResizablePane("originalHeaders", "sectionHeader", mhaStrings.mhaOriginalHeaders, (table: Table) => {
-            return table.viewModel.originalHeaders.length > 0;
+            return !!table.viewModel && table.viewModel.originalHeaders.length > 0;
         });
         this.toggleCollapse("originalHeaders"); // start this section hidden
 
+        if (!viewModel) {
+            this.recalculateVisibility();
+            return;
+        }
+
         // Initialize all TableSection-based tables using unified approach
-        this.initializeTableSection(this.viewModel.summary, "summary");
-        this.initializeTableSection(this.viewModel.receivedHeaders, "receivedHeaders");
-        this.initializeTableSection(this.viewModel.forefrontAntiSpamReport, "forefrontAntiSpamReport");
-        this.initializeTableSection(this.viewModel.antiSpamReport, "antiSpamReport");
-        this.initializeTableSection(this.viewModel.otherHeaders, "otherHeaders");
+        this.initializeTableSection(viewModel.summary, "summary");
+        this.initializeTableSection(viewModel.receivedHeaders, "receivedHeaders");
+        this.initializeTableSection(viewModel.forefrontAntiSpamReport, "forefrontAntiSpamReport");
+        this.initializeTableSection(viewModel.antiSpamReport, "antiSpamReport");
+        this.initializeTableSection(viewModel.otherHeaders, "otherHeaders");
 
         this.resetArrows();
-        this.rebuildSections(this.viewModel);
+        this.rebuildSections(viewModel);
     }
 
     // Rebuilds the UI with a new viewModel

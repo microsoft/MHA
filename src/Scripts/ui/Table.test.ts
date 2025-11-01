@@ -10,7 +10,7 @@ describe("Table", () => {
     let table: Table;
     let viewModel: HeaderModel;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         // Set up the page as it's set in mhh.html and classicDesktopFrame.html
         // TODO: Actually do this setup for thos pages as part of the table init
         // initializeTableUI should just add all the components to the page
@@ -28,7 +28,7 @@ describe("Table", () => {
             </div>
           `);
         table = new Table();
-        viewModel = new HeaderModel(
+        viewModel = await HeaderModel.create(
             "Received: from example.com (::1) by" +
             " example2.com with HTTPS; Mon, 14 Oct 2024 18:24:33" +
             " +0000" +
@@ -179,11 +179,15 @@ describe("Table", () => {
     describe("TableSection Integration", () => {
         it("should initialize table sections with proper accessibility", () => {
             // Check that table sections exist on viewModel (some may be undefined if no data)
-            const summary = table["viewModel"]["summary"] as TableSection | undefined;
-            const received = table["viewModel"]["received"] as TableSection | undefined;
-            const antispam = table["viewModel"]["antispam"] as TableSection | undefined;
-            const forefrontAntispam = table["viewModel"]["forefrontAntispam"] as TableSection | undefined;
-            const other = table["viewModel"]["other"] as TableSection | undefined;
+            const vm = table["viewModel"];
+            expect(vm).not.toBeNull();
+            if (!vm) return;
+
+            const summary = vm["summary"] as TableSection | undefined;
+            const received = vm["received"] as TableSection | undefined;
+            const antispam = vm["antispam"] as TableSection | undefined;
+            const forefrontAntispam = vm["forefrontAntispam"] as TableSection | undefined;
+            const other = vm["other"] as TableSection | undefined;
 
             // At least summary should exist
             expect(summary).toBeDefined();
@@ -224,11 +228,14 @@ describe("Table", () => {
 
         it("should handle table section existence properly", () => {
             // Each table section should implement exists() method
-            const summary = table["viewModel"]["summary"] as TableSection | undefined;
-            const received = table["viewModel"]["received"] as TableSection | undefined;
-            const antispam = table["viewModel"]["antispam"] as TableSection | undefined;
-            const forefrontAntispam = table["viewModel"]["forefrontAntispam"] as TableSection | undefined;
-            const other = table["viewModel"]["other"] as TableSection | undefined;
+            const vm = table["viewModel"];
+            if (!vm) return;
+
+            const summary = vm["summary"] as TableSection | undefined;
+            const received = vm["received"] as TableSection | undefined;
+            const antispam = vm["antispam"] as TableSection | undefined;
+            const forefrontAntispam = vm["forefrontAntispam"] as TableSection | undefined;
+            const other = vm["other"] as TableSection | undefined;
 
             if (summary) expect(typeof summary.exists).toBe("function");
             if (received) expect(typeof received.exists).toBe("function");
@@ -238,7 +245,10 @@ describe("Table", () => {
         });
 
         it("should provide consistent accessibility methods", () => {
-            const summary = table["viewModel"]["summary"] as TableSection | undefined;
+            const vm = table["viewModel"];
+            if (!vm) return;
+
+            const summary = vm["summary"] as TableSection | undefined;
 
             if (summary) {
                 expect(typeof summary.getTableCaption).toBe("function");
@@ -254,8 +264,11 @@ describe("Table", () => {
         });
 
         it("should handle DataTable sorting interface", () => {
-            const received = table["viewModel"]["received"] as DataTable | undefined;
-            const other = table["viewModel"]["other"] as DataTable | undefined;
+            const vm = table["viewModel"];
+            if (!vm) return;
+
+            const received = vm["received"] as DataTable | undefined;
+            const other = vm["other"] as DataTable | undefined;
 
             if (received) {
                 // DataTable instances should have sorting properties
@@ -272,9 +285,12 @@ describe("Table", () => {
         });
 
         it("should handle SummaryTable tag interface", () => {
-            const summary = table["viewModel"]["summary"] as SummaryTable | undefined;
-            const antispam = table["viewModel"]["antispam"] as SummaryTable | undefined;
-            const forefrontAntispam = table["viewModel"]["forefrontAntispam"] as SummaryTable | undefined;
+            const vm = table["viewModel"];
+            if (!vm) return;
+
+            const summary = vm["summary"] as SummaryTable | undefined;
+            const antispam = vm["antispam"] as SummaryTable | undefined;
+            const forefrontAntispam = vm["forefrontAntispam"] as SummaryTable | undefined;
 
             if (summary) {
                 // SummaryTable instances should have tag property
@@ -292,10 +308,13 @@ describe("Table", () => {
         });
 
         it("should properly distinguish DataTable vs SummaryTable", () => {
-            const received = table["viewModel"]["received"] as TableSection | undefined;
-            const other = table["viewModel"]["other"] as TableSection | undefined;
-            const summary = table["viewModel"]["summary"] as TableSection | undefined;
-            const antispam = table["viewModel"]["antispam"] as TableSection | undefined;
+            const vm = table["viewModel"];
+            if (!vm) return;
+
+            const received = vm["received"] as TableSection | undefined;
+            const other = vm["other"] as TableSection | undefined;
+            const summary = vm["summary"] as TableSection | undefined;
+            const antispam = vm["antispam"] as TableSection | undefined;
 
             if (received && other) {
                 // DataTables should have tableCaption paneClass

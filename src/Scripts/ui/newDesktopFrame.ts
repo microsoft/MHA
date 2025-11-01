@@ -10,7 +10,6 @@ import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
 import { TabNavigation } from "../TabNavigation";
 import { DomUtils } from "./domUtils";
-import { rulesService } from "../rules";
 import { RuleViolation, ViolationGroup } from "../rules/types/AnalysisTypes";
 import { getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
 
@@ -168,18 +167,15 @@ function addCalloutEntry(name: string, value: string | number | null, parent: HT
 }
 
 async function buildViews(headers: string) {
-    let viewModel: HeaderModel = new HeaderModel(headers);
-    const validationResult = await rulesService.analyzeHeaders(viewModel);
-    const violationGroups = validationResult.violationGroups;
-    viewModel = validationResult.enrichedHeaders;
+    const viewModel = await HeaderModel.create(headers);
 
-    buildSummaryTab(viewModel, violationGroups);
+    buildSummaryTab(viewModel);
     buildReceivedTab(viewModel);
-    buildAntispamTab(viewModel, violationGroups);
-    buildOtherTab(viewModel, violationGroups);
+    buildAntispamTab(viewModel);
+    buildOtherTab(viewModel);
 }
 
-function buildSummaryTab(viewModel: HeaderModel, violationGroups: ViolationGroup[]) {
+function buildSummaryTab(viewModel: HeaderModel) {
     const summaryList = document.querySelector(".summary-list") as HTMLElement;
 
     viewModel.summary.rows.forEach((row: SummaryRow) => {
@@ -187,12 +183,12 @@ function buildSummaryTab(viewModel: HeaderModel, violationGroups: ViolationGroup
             const clone = DomUtils.cloneTemplate("summary-row-template");
             DomUtils.setTemplateText(clone, ".section-header", row.label);
 
-            const highlightedContent = highlightContent(row.value, violationGroups);
+            const highlightedContent = highlightContent(row.value, viewModel.violationGroups);
             DomUtils.setTemplateHTML(clone, "code", highlightedContent);
 
             // Add rule violation display in summary section
             const sectionHeader = clone.querySelector(".section-header") as HTMLElement;
-            const rowViolations = getViolationsForRow(row, violationGroups);
+            const rowViolations = getViolationsForRow(row, viewModel.violationGroups);
 
             if (sectionHeader && rowViolations.length > 0) {
                 rowViolations.forEach((violation: RuleViolation) => {
@@ -211,7 +207,7 @@ function buildSummaryTab(viewModel: HeaderModel, violationGroups: ViolationGroup
         DomUtils.showElement(".orig-header-ui");
     }
 
-    buildDiagnosticsReport(violationGroups);
+    buildDiagnosticsReport(viewModel.violationGroups);
 }
 
 function buildReceivedTab(viewModel: HeaderModel) {
@@ -358,7 +354,7 @@ function attachOverlayPopup(trigger: HTMLElement, overlay: HTMLElement): void {
     trigger.setAttribute("tabindex", "0");
 }
 
-function buildAntispamTab(viewModel: HeaderModel, violationGroups: ViolationGroup[]) {
+function buildAntispamTab(viewModel: HeaderModel) {
     const antispamList = document.querySelector(".antispam-list") as HTMLElement;
 
     // Forefront
@@ -373,7 +369,7 @@ function buildAntispamTab(viewModel: HeaderModel, violationGroups: ViolationGrou
         antispamList.appendChild(antispamTable);
 
         viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
-            antispamTbody.appendChild(createRow("table-row-template",antispamrow, violationGroups));
+            antispamTbody.appendChild(createRow("table-row-template",antispamrow, viewModel.violationGroups));
         });
     }
 
@@ -389,17 +385,17 @@ function buildAntispamTab(viewModel: HeaderModel, violationGroups: ViolationGrou
         antispamList.appendChild(antispamTable);
 
         viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
-            antispamTbody.appendChild(createRow("table-row-template", antispamrow, violationGroups));
+            antispamTbody.appendChild(createRow("table-row-template", antispamrow, viewModel.violationGroups));
         });
     }
 }
 
-function buildOtherTab(viewModel: HeaderModel, violationGroups: ViolationGroup[]) {
+function buildOtherTab(viewModel: HeaderModel) {
     const otherList = document.querySelector(".other-list") as HTMLElement;
 
     viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
-            otherList.appendChild(createRow("other-row-template", otherRow, violationGroups));
+            otherList.appendChild(createRow("other-row-template", otherRow, viewModel.violationGroups));
         }
     });
 }
@@ -425,7 +421,7 @@ async function renderItem(headers: string): Promise<void> {
     DomUtils.hideElement("#error-display");
 
     // Build views with the loaded data
-    buildViews(headers);
+    await buildViews(headers);
 }
 
 // Handles rendering of an error.
