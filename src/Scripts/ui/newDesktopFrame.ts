@@ -194,7 +194,7 @@ function buildSummaryTab(viewModel: HeaderModel) {
             if (sectionHeader && rowViolations.length > 0) {
                 rowViolations.forEach((violation: RuleViolation) => {
                     sectionHeader.appendChild(document.createTextNode(" "));
-                    sectionHeader.appendChild(ViolationUI.createViolationBadge(violation));
+                    sectionHeader.appendChild(ViolationUI.createInlineViolation(violation));
                 });
             }
 

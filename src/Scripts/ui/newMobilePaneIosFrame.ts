@@ -159,7 +159,7 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderMo
         if (rowViolations.length > 0) {
             rowViolations.forEach((violation) => {
                 itemTitle.appendChild(document.createTextNode(" "));
-                itemTitle.appendChild(ViolationUI.createViolationBadge(violation));
+                itemTitle.appendChild(ViolationUI.createInlineViolation(violation));
             });
         }
 
@@ -212,7 +212,7 @@ function buildSummaryTab(viewModel: HeaderModel): void {
             if (rowViolations.length > 0) {
                 rowViolations.forEach((violation) => {
                     blockTitle.appendChild(document.createTextNode(" "));
-                    blockTitle.appendChild(ViolationUI.createViolationBadge(violation));
+                    blockTitle.appendChild(ViolationUI.createInlineViolation(violation));
                 });
             }
 

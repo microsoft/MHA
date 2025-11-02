@@ -1,12 +1,23 @@
 import { RuleViolation, ViolationGroup } from "../rules/types/AnalysisTypes";
 
 export class ViolationUI {
-    static createViolationBadge(violation: RuleViolation): HTMLElement {
-        const span = document.createElement("span");
-        span.className = "severity-badge";
-        span.setAttribute("data-severity", violation.rule.severity);
-        span.textContent = violation.rule.severity.toUpperCase();
-        return span;
+    static createInlineViolation(violation: RuleViolation): HTMLElement {
+        const container = document.createElement("span");
+        container.className = "violation-inline";
+
+        const badge = document.createElement("span");
+        badge.className = "severity-badge";
+        badge.setAttribute("data-severity", violation.rule.severity);
+        badge.textContent = violation.rule.severity.toUpperCase();
+        container.appendChild(badge);
+
+        const message = document.createElement("span");
+        message.className = "violation-message";
+        message.setAttribute("data-severity", violation.rule.severity);
+        message.textContent = " " + violation.rule.errorMessage;
+        container.appendChild(message);
+
+        return container;
     }
 
     static createViolationCard(violation: RuleViolation): HTMLElement {
@@ -17,7 +28,10 @@ export class ViolationUI {
         const header = document.createElement("div");
         header.className = "violation-card-header";
 
-        const badge = this.createViolationBadge(violation);
+        const badge = document.createElement("span");
+        badge.className = "severity-badge";
+        badge.setAttribute("data-severity", violation.rule.severity);
+        badge.textContent = violation.rule.severity.toUpperCase();
         header.appendChild(badge);
 
         const message = document.createElement("span");

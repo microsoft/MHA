@@ -172,7 +172,7 @@ export class Table {
                 if (rowViolations.length > 0) {
                     rowViolations.forEach((violation: RuleViolation) => {
                         headerVal.appendChild(document.createTextNode(" "));
-                        headerVal.appendChild(ViolationUI.createViolationBadge(violation));
+                        headerVal.appendChild(ViolationUI.createInlineViolation(violation));
                     });
                 }
 
@@ -339,7 +339,7 @@ export class Table {
             if (rowViolations.length > 0) {
                 rowViolations.forEach((violation: RuleViolation) => {
                     headerCell.appendChild(document.createTextNode(" "));
-                    headerCell.appendChild(ViolationUI.createViolationBadge(violation));
+                    headerCell.appendChild(ViolationUI.createInlineViolation(violation));
                 });
             }
 
