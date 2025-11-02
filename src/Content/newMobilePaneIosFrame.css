@@ -185,3 +185,22 @@ a.tab-link {
     word-wrap: break-word;
     width: 100%;
 }
+
+#summary-view .block-title {
+    margin: 0px;
+    padding: 0px;
+    padding-bottom: 3px;
+}
+
+#summary-view .block {
+    margin: 5px 0;
+}
+
+.diagnostics-section {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.diagnostics-section .list {
+    margin-bottom: 0;
+}
