@@ -100,10 +100,11 @@ function handlePopoverDismissalKeys(event: KeyboardEvent): void {
 
 function addCalloutEntry(name: string, value: string | number | null, parent: HTMLElement): void {
     if (value) {
-        const p = document.createElement("p");
-        p.className = "wrap-line";
+        const template = document.getElementById("popover-entry-template") as HTMLTemplateElement;
+        const clone = template.content.cloneNode(true) as DocumentFragment;
+        const p = clone.querySelector("p") as HTMLElement;
         p.innerHTML = "<strong>" + name + ": </strong>" + value;
-        parent.appendChild(p);
+        parent.appendChild(clone);
     }
 }
 
@@ -190,23 +191,10 @@ function buildDiagnosticsReport(viewModel: HeaderModel): void {
 
 function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderModel) {
     if (spamRow.value) {
-        const item = document.createElement("li");
-        item.className = "accordion-item";
-        parent.appendChild(item);
+        const template = document.getElementById("spam-report-accordion-item-template") as HTMLTemplateElement;
+        const clone = template.content.cloneNode(true) as DocumentFragment;
 
-        const link = document.createElement("a");
-        link.className = "item-content item-link";
-        link.setAttribute("role", "button");
-        link.setAttribute("aria-expanded", "false");
-        link.setAttribute("href", "#");
-        item.appendChild(link);
-
-        const innerItem = document.createElement("div");
-        innerItem.className = "item-inner";
-        link.appendChild(innerItem);
-
-        const itemTitle = document.createElement("div");
-        itemTitle.className = "item-title";
+        const itemTitle = clone.querySelector(".item-title") as HTMLElement;
         itemTitle.textContent = spamRow.label;
         itemTitle.setAttribute("id", spamRow.id);
 
@@ -218,25 +206,15 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderMo
             });
         }
 
-        innerItem.appendChild(itemTitle);
-
-        const itemContent = document.createElement("div");
-        itemContent.className = "accordion-item-content";
-        item.appendChild(itemContent);
-
-        const contentBlock = document.createElement("div");
-        contentBlock.className = "block";
-        itemContent.appendChild(contentBlock);
-
+        const violationsContainer = clone.querySelector(".violations-container") as HTMLElement;
         if (rowViolations.length > 0) {
             rowViolations.forEach((violation) => {
-                contentBlock.appendChild(createViolationCard(violation));
+                violationsContainer.appendChild(createViolationCard(violation));
             });
         }
 
-        const linkWrap = document.createElement("p");
+        const linkWrap = clone.querySelector(".link-wrap") as HTMLElement;
         linkWrap.setAttribute("aria-labelledby", spamRow.id);
-        contentBlock.appendChild(linkWrap);
 
         const tempDiv = document.createElement("div");
         const highlightedContent = highlightContent(spamRow.valueUrl, viewModel.violationGroups);
@@ -248,6 +226,8 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderMo
             }
             linkWrap.appendChild(child);
         }
+
+        parent.appendChild(clone);
     }
 }
 
@@ -265,8 +245,10 @@ function buildSummaryTab(viewModel: HeaderModel): void {
 
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
-            const blockTitle = document.createElement("div");
-            blockTitle.className = "block-title";
+            const template = document.getElementById("summary-header-block-template") as HTMLTemplateElement;
+            const clone = template.content.cloneNode(true) as DocumentFragment;
+
+            const blockTitle = clone.querySelector(".block-title") as HTMLElement;
             blockTitle.textContent = row.label;
 
             const rowViolations = getViolationsForRow(row, viewModel.violationGroups);
@@ -277,23 +259,11 @@ function buildSummaryTab(viewModel: HeaderModel): void {
                 });
             }
 
-            summaryContent.appendChild(blockTitle);
-
-            const contentBlock = document.createElement("div");
-            contentBlock.className = "block";
-            summaryContent.appendChild(contentBlock);
-
-            const headerVal = document.createElement("div");
-            headerVal.className = "code-box";
-            contentBlock.appendChild(headerVal);
-
-            const pre = document.createElement("pre");
-            headerVal.appendChild(pre);
-
-            const code = document.createElement("code");
+            const code = clone.querySelector("code") as HTMLElement;
             const highlightedContent = highlightContent(row.value, viewModel.violationGroups);
             code.innerHTML = highlightedContent;
-            pre.appendChild(code);
+
+            summaryContent.appendChild(clone);
         }
     });
 
@@ -318,49 +288,36 @@ function buildReceivedTab(viewModel: HeaderModel): void {
 
         viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, i: number) => {
             if (i === 0) {
-                const timelineItem = document.createElement("div");
-                timelineItem.className = "timeline-item";
-                timeline.appendChild(timelineItem);
+                // Create timeline item
+                const timelineTemplate = document.getElementById("timeline-item-template") as HTMLTemplateElement;
+                const timelineClone = timelineTemplate.content.cloneNode(true) as DocumentFragment;
 
                 const timelineDate: string = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
-
-                const timelineDateEl = document.createElement("div");
-                timelineDateEl.className = "timeline-item-date";
+                const timelineDateEl = timelineClone.querySelector(".timeline-item-date") as HTMLElement;
                 timelineDateEl.innerHTML = timelineDate;
-                timelineItem.appendChild(timelineDateEl);
 
-                const timelineDivider = document.createElement("div");
-                timelineDivider.className = "timeline-item-divider";
-                timelineItem.appendChild(timelineDivider);
+                currentTimeEntry = timelineClone.querySelector(".timeline-item-content") as HTMLElement;
+                timeline.appendChild(timelineClone);
 
-                currentTimeEntry = document.createElement("div");
-                currentTimeEntry.className = "timeline-item-content";
-                timelineItem.appendChild(currentTimeEntry);
+                // Add initial timeline inner
+                const innerTemplate = document.getElementById("timeline-inner-first-template") as HTMLTemplateElement;
+                const innerClone = innerTemplate.content.cloneNode(true) as DocumentFragment;
 
-                // Add initial other rows
-                const timelineInner = document.createElement("div");
-                timelineInner.className = "timeline-item-inner link popover-open";
+                const timelineInner = innerClone.querySelector(".timeline-item-inner") as HTMLElement;
                 timelineInner.setAttribute("data-popover", ".popover-" + i);
-                timelineInner.setAttribute("tabindex", "0");
-                timelineInner.setAttribute("role", "button");
                 timelineInner.setAttribute("aria-label", `View details for message received at ${currentTime.format("h:mm:ss")} from ${row.from}`);
                 timelineInner.addEventListener("keydown", handleTimelineKeyboardActivation);
-                currentTimeEntry.appendChild(timelineInner);
 
-                const timelineTime = document.createElement("div");
-                timelineTime.className = "timeline-item-time";
+                const timelineTime = innerClone.querySelector(".timeline-item-time") as HTMLElement;
                 timelineTime.textContent = currentTime.format("h:mm:ss");
-                timelineInner.appendChild(timelineTime);
 
-                const timelineSubtitle = document.createElement("div");
-                timelineSubtitle.className = "timeline-item-subtitle";
+                const timelineSubtitle = innerClone.querySelector(".timeline-item-subtitle") as HTMLElement;
                 timelineSubtitle.innerHTML = "<strong>From: </strong>" + row.from;
-                timelineInner.appendChild(timelineSubtitle);
 
-                const timelineText = document.createElement("div");
-                timelineText.className = "timeline-item-text";
+                const timelineText = innerClone.querySelector(".timeline-item-text") as HTMLElement;
                 timelineText.innerHTML = "<strong>To: </strong>" + row.by;
-                timelineInner.appendChild(timelineText);
+
+                currentTimeEntry.appendChild(innerClone);
             } else {
                 // Determine if new timeline item is needed
                 const entryTime = dayjs(row.dateNum.value).local();
@@ -369,57 +326,37 @@ function buildReceivedTab(viewModel: HeaderModel): void {
                     // Into a new minute, create a new timeline item
                     currentTime = entryTime;
 
-                    const timelineItem = document.createElement("div");
-                    timelineItem.className = "timeline-item";
-                    timeline.appendChild(timelineItem);
+                    const timelineTemplate = document.getElementById("timeline-item-template") as HTMLTemplateElement;
+                    const timelineClone = timelineTemplate.content.cloneNode(true) as DocumentFragment;
 
                     const timelineDate: string = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
-                    const timelineDateEl = document.createElement("div");
-                    timelineDateEl.className = "timeline-item-date";
+                    const timelineDateEl = timelineClone.querySelector(".timeline-item-date") as HTMLElement;
                     timelineDateEl.innerHTML = timelineDate;
-                    timelineItem.appendChild(timelineDateEl);
 
-                    const timelineDivider = document.createElement("div");
-                    timelineDivider.className = "timeline-item-divider";
-                    timelineItem.appendChild(timelineDivider);
-
-                    currentTimeEntry = document.createElement("div");
-                    currentTimeEntry.className = "timeline-item-content";
-                    timelineItem.appendChild(currentTimeEntry);
-
+                    currentTimeEntry = timelineClone.querySelector(".timeline-item-content") as HTMLElement;
+                    timeline.appendChild(timelineClone);
                 }
 
                 // Add additional rows
-                const timelineInner = document.createElement("div");
-                timelineInner.className = "timeline-item-inner link popover-open";
+                const innerTemplate = document.getElementById("timeline-inner-subsequent-template") as HTMLTemplateElement;
+                const innerClone = innerTemplate.content.cloneNode(true) as DocumentFragment;
+
+                const timelineInner = innerClone.querySelector(".timeline-item-inner") as HTMLElement;
                 timelineInner.setAttribute("data-popover", ".popover-" + i);
-                timelineInner.setAttribute("tabindex", "0");
-                timelineInner.setAttribute("role", "button");
                 timelineInner.setAttribute("aria-label", `View details for message received at ${entryTime.format("h:mm:ss")} to ${row.by}`);
                 timelineInner.addEventListener("keydown", handleTimelineKeyboardActivation);
-                currentTimeEntry.appendChild(timelineInner);
 
-                const timelineTime = document.createElement("div");
-                timelineTime.className = "timeline-item-time";
+                const timelineTime = innerClone.querySelector(".timeline-item-time") as HTMLElement;
                 timelineTime.textContent = entryTime.format("h:mm:ss");
-                timelineInner.appendChild(timelineTime);
 
-                const timelineSubtitle = document.createElement("div");
-                timelineSubtitle.className = "timeline-item-subtitle";
+                const timelineSubtitle = innerClone.querySelector(".timeline-item-subtitle") as HTMLElement;
                 timelineSubtitle.innerHTML = "<strong>To: </strong>" + row.by;
-                timelineInner.appendChild(timelineSubtitle);
 
-                const progress = document.createElement("div");
-                progress.className = "timeline-item-text";
-                timelineInner.appendChild(progress);
-
-                const delayText = document.createElement("p");
+                const delayText = innerClone.querySelector(".delay-text") as HTMLElement;
                 delayText.textContent = row.delay.value !== null ? String(row.delay.value) : "";
-                progress.appendChild(delayText);
 
-                const progressWrap = document.createElement("p");
-                progressWrap.className = "progress-wrap-" + i;
-                progress.appendChild(progressWrap);
+                const progressWrap = innerClone.querySelector(".progress-wrap") as HTMLElement;
+                progressWrap.className = "progress-wrap progress-wrap-" + i;
 
                 try {
                     if (myApp && row.percent.value !== null) {
@@ -429,25 +366,18 @@ function buildReceivedTab(viewModel: HeaderModel): void {
                     DomUtils.setText("#original-headers", JSON.stringify(e));
                     return;
                 }
+
+                currentTimeEntry.appendChild(innerClone);
             }
 
-            // popover
-            const receivedContentEl = document.getElementById("received-content")!;
-            const popover = document.createElement("div");
-            popover.className = "popover popover-" + i;
-            receivedContentEl.appendChild(popover);
+            // Create popover
+            const popoverTemplate = document.getElementById("popover-template") as HTMLTemplateElement;
+            const popoverClone = popoverTemplate.content.cloneNode(true) as DocumentFragment;
 
-            const popoverAngle = document.createElement("div");
-            popoverAngle.className = "popover-angle";
-            popover.appendChild(popoverAngle);
+            const popover = popoverClone.querySelector(".popover") as HTMLElement;
+            popover.classList.add("popover-" + i);
 
-            const popoverInner = document.createElement("div");
-            popoverInner.className = "popover-inner";
-            popover.appendChild(popoverInner);
-
-            const popoverContent = document.createElement("div");
-            popoverContent.className = "block";
-            popoverInner.appendChild(popoverContent);
+            const popoverContent = popoverClone.querySelector(".popover-content") as HTMLElement;
 
             addCalloutEntry("From", row.from.value, popoverContent);
             addCalloutEntry("To", row.by.value, popoverContent);
@@ -457,24 +387,19 @@ function buildReceivedTab(viewModel: HeaderModel): void {
             addCalloutEntry("For", row.for.value, popoverContent);
             addCalloutEntry("Via", row.via.value, popoverContent);
 
+            receivedContent.appendChild(popoverClone);
         });
 
-        // Add a final empty timeline item to extend
-        // timeline
-        const endTimelineItem = document.createElement("div");
-        endTimelineItem.className = "timeline-item";
-        timeline.appendChild(endTimelineItem);
+        // Add a final empty timeline item to extend timeline
+        const endTimelineTemplate = document.getElementById("timeline-item-template") as HTMLTemplateElement;
+        const endTimelineClone = endTimelineTemplate.content.cloneNode(true) as DocumentFragment;
 
-        currentTime.add(1, "m");
+        currentTime = currentTime.add(1, "m");
         const endTimelineDate = currentTime.format("h:mm") + "<small>" + currentTime.format("A") + "</small>";
-        const endTimelineDateEl = document.createElement("div");
-        endTimelineDateEl.className = "timeline-item-date";
+        const endTimelineDateEl = endTimelineClone.querySelector(".timeline-item-date") as HTMLElement;
         endTimelineDateEl.innerHTML = endTimelineDate;
-        endTimelineItem.appendChild(endTimelineDateEl);
 
-        const endTimelineDivider = document.createElement("div");
-        endTimelineDivider.className = "timeline-item-divider";
-        endTimelineItem.appendChild(endTimelineDivider);
+        timeline.appendChild(endTimelineClone);
     }
 }
 
@@ -483,40 +408,34 @@ function buildAntispamTab(viewModel: HeaderModel): void {
 
     // Forefront
     if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
-        const blockTitle = document.createElement("div");
-        blockTitle.className = "block-title";
+        const template = document.getElementById("antispam-section-template") as HTMLTemplateElement;
+        const clone = template.content.cloneNode(true) as DocumentFragment;
+
+        const blockTitle = clone.querySelector(".block-title") as HTMLElement;
         blockTitle.textContent = "Forefront Antispam Report";
-        antispamContent.appendChild(blockTitle);
 
-        const list = document.createElement("div");
-        list.className = "list accordion-list";
-        antispamContent.appendChild(list);
-
-        const ul = document.createElement("ul");
-        list.appendChild(ul);
-
+        const ul = clone.querySelector("ul") as HTMLElement;
         viewModel.forefrontAntiSpamReport.rows.forEach((row: Row) => {
             addSpamReportRow(row, ul, viewModel);
         });
+
+        antispamContent.appendChild(clone);
     }
 
     // Microsoft
     if (viewModel.antiSpamReport.rows.length > 0) {
-        const blockTitle = document.createElement("div");
-        blockTitle.className = "block-title";
+        const template = document.getElementById("antispam-section-template") as HTMLTemplateElement;
+        const clone = template.content.cloneNode(true) as DocumentFragment;
+
+        const blockTitle = clone.querySelector(".block-title") as HTMLElement;
         blockTitle.textContent = "Microsoft Antispam Report";
-        antispamContent.appendChild(blockTitle);
 
-        const list = document.createElement("div");
-        list.className = "list accordion-list";
-        antispamContent.appendChild(list);
-
-        const ul = document.createElement("ul");
-        list.appendChild(ul);
-
+        const ul = clone.querySelector("ul") as HTMLElement;
         viewModel.antiSpamReport.rows.forEach((row: Row) => {
             addSpamReportRow(row, ul, viewModel);
         });
+
+        antispamContent.appendChild(clone);
     }
 }
 
@@ -525,9 +444,10 @@ function buildOtherTab(viewModel: HeaderModel): void {
 
     viewModel.otherHeaders.rows.forEach((row: OtherRow) => {
         if (row.value) {
-            const headerName = document.createElement("div");
-            headerName.className = "block-title";
+            const template = document.getElementById("other-header-block-template") as HTMLTemplateElement;
+            const clone = template.content.cloneNode(true) as DocumentFragment;
 
+            const headerName = clone.querySelector(".block-title") as HTMLElement;
             const rowViolations = getViolationsForRow(row, viewModel.violationGroups);
 
             if (row.url) {
@@ -545,29 +465,18 @@ function buildOtherTab(viewModel: HeaderModel): void {
                 headerName.setAttribute("tabindex", "0");
             }
 
-            otherContent.appendChild(headerName);
-
-            const contentBlock = document.createElement("div");
-            contentBlock.className = "block";
-            otherContent.appendChild(contentBlock);
-
-            const headerVal = document.createElement("div");
-            headerVal.className = "code-box";
-            contentBlock.appendChild(headerVal);
-
-            const pre = document.createElement("pre");
-            headerVal.appendChild(pre);
-
-            const code = document.createElement("code");
+            const code = clone.querySelector("code") as HTMLElement;
             const highlightedContent = highlightContent(row.value, viewModel.violationGroups);
             code.innerHTML = highlightedContent;
-            pre.appendChild(code);
 
+            const violationsContainer = clone.querySelector(".violations-container") as HTMLElement;
             if (rowViolations.length > 0) {
                 rowViolations.forEach((violation) => {
-                    contentBlock.appendChild(createViolationCard(violation));
+                    violationsContainer.appendChild(createViolationCard(violation));
                 });
             }
+
+            otherContent.appendChild(clone);
         }
     });
 }
