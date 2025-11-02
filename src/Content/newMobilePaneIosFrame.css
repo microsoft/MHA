@@ -233,6 +233,12 @@ a.tab-link {
     margin-bottom: 0;
 }
 
+.diagnostics-accordion .item-title {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+}
+
 #orig-headers-ui {
     margin-top: 0;
 }
