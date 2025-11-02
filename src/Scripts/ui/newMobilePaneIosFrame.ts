@@ -16,11 +16,11 @@ import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Poster } from "../Poster";
 import { DomUtils } from "./domUtils";
+import { ViolationUI } from "./ViolationUI";
 import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
-import { RuleViolation } from "../rules/types/AnalysisTypes";
 import { getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
@@ -108,49 +108,6 @@ function addCalloutEntry(name: string, value: string | number | null, parent: HT
     }
 }
 
-function createViolationBadge(violation: RuleViolation): HTMLElement {
-    const template = document.getElementById("violation-badge-template") as HTMLTemplateElement;
-    const clone = template.content.cloneNode(true) as DocumentFragment;
-
-    const badge = clone.querySelector(".severity-badge") as HTMLElement;
-    badge.setAttribute("data-severity", violation.rule.severity);
-    badge.textContent = violation.rule.severity.toUpperCase();
-
-    const message = clone.querySelector(".violation-message") as HTMLElement;
-    message.textContent = violation.rule.errorMessage;
-    message.setAttribute("data-severity", violation.rule.severity);
-
-    const container = clone.querySelector(".violation-inline") as HTMLElement;
-    return container;
-}
-
-function createViolationCard(violation: RuleViolation): HTMLElement {
-    const template = document.getElementById("violation-card-template") as HTMLTemplateElement;
-    const clone = template.content.cloneNode(true) as DocumentFragment;
-
-    const badge = clone.querySelector(".severity-badge") as HTMLElement;
-    badge.setAttribute("data-severity", violation.rule.severity);
-    badge.textContent = violation.rule.severity.toUpperCase();
-
-    const message = clone.querySelector(".violation-message") as HTMLElement;
-    message.textContent = violation.rule.errorMessage;
-    message.setAttribute("data-severity", violation.rule.severity);
-
-    const rule = clone.querySelector(".violation-rule") as HTMLElement;
-    const ruleInfo = `${violation.rule.checkSection || ""} / ${violation.rule.errorPattern || ""}`.trim();
-    rule.textContent = ruleInfo;
-
-    const parentMsg = clone.querySelector(".violation-parent-message") as HTMLElement;
-    if (violation.parentMessage) {
-        parentMsg.textContent = `Part of: ${violation.parentMessage}`;
-    } else {
-        parentMsg.classList.add("hidden");
-    }
-
-    const card = clone.querySelector(".violation-card") as HTMLElement;
-    return card;
-}
-
 function buildDiagnosticsReport(viewModel: HeaderModel): void {
     if (!viewModel.violationGroups || viewModel.violationGroups.length === 0) return;
 
@@ -180,7 +137,7 @@ function buildDiagnosticsReport(viewModel: HeaderModel): void {
 
         const content = itemClone.querySelector(".diagnostic-content") as HTMLElement;
         group.violations.forEach((violation) => {
-            content.appendChild(createViolationCard(violation));
+            content.appendChild(ViolationUI.createViolationCard(violation));
         });
 
         accordion.appendChild(itemClone);
@@ -202,14 +159,14 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderMo
         if (rowViolations.length > 0) {
             rowViolations.forEach((violation) => {
                 itemTitle.appendChild(document.createTextNode(" "));
-                itemTitle.appendChild(createViolationBadge(violation));
+                itemTitle.appendChild(ViolationUI.createViolationBadge(violation));
             });
         }
 
         const violationsContainer = clone.querySelector(".violations-container") as HTMLElement;
         if (rowViolations.length > 0) {
             rowViolations.forEach((violation) => {
-                violationsContainer.appendChild(createViolationCard(violation));
+                violationsContainer.appendChild(ViolationUI.createViolationCard(violation));
             });
         }
 
@@ -255,7 +212,7 @@ function buildSummaryTab(viewModel: HeaderModel): void {
             if (rowViolations.length > 0) {
                 rowViolations.forEach((violation) => {
                     blockTitle.appendChild(document.createTextNode(" "));
-                    blockTitle.appendChild(createViolationBadge(violation));
+                    blockTitle.appendChild(ViolationUI.createViolationBadge(violation));
                 });
             }
 
@@ -472,7 +429,7 @@ function buildOtherTab(viewModel: HeaderModel): void {
             const violationsContainer = clone.querySelector(".violations-container") as HTMLElement;
             if (rowViolations.length > 0) {
                 rowViolations.forEach((violation) => {
-                    violationsContainer.appendChild(createViolationCard(violation));
+                    violationsContainer.appendChild(ViolationUI.createViolationCard(violation));
                 });
             }
 

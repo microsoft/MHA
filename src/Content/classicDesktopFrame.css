@@ -403,7 +403,7 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     color: #666666;
 }
 
-.violation-section {
+.violation-rule {
     font-family: monospace;
     font-size: 12px;
     margin-bottom: 4px;

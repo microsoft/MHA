@@ -10,6 +10,7 @@ import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
 import { TabNavigation } from "../TabNavigation";
 import { DomUtils } from "./domUtils";
+import { ViolationUI } from "./ViolationUI";
 import { RuleViolation, ViolationGroup } from "../rules/types/AnalysisTypes";
 import { getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
 
@@ -192,8 +193,8 @@ function buildSummaryTab(viewModel: HeaderModel) {
 
             if (sectionHeader && rowViolations.length > 0) {
                 rowViolations.forEach((violation: RuleViolation) => {
-                    const warning = createViolationDisplay(violation, "inline");
-                    sectionHeader.appendChild(warning);
+                    sectionHeader.appendChild(document.createTextNode(" "));
+                    sectionHeader.appendChild(ViolationUI.createViolationBadge(violation));
                 });
             }
 
@@ -467,50 +468,6 @@ document.addEventListener("DOMContentLoaded", function() {
 /**
  * Display modes for violation UI components
  */
-type ViolationDisplayMode = "inline" | "card";
-
-/**
- * Factory function to create violation display elements with consistent styling
- * @param violation - The rule violation to display
- * @param mode - Display mode: "inline" for summary headers, "card" for popovers/accordions
- * @returns DocumentFragment containing the violation display element
- */
-function createViolationDisplay(violation: RuleViolation, mode: ViolationDisplayMode): DocumentFragment {
-    const clone = DomUtils.cloneTemplate("violation-display-template");
-    const severity = violation.rule.severity;
-
-    // Add mode class and set severity
-    const container = clone.querySelector(".violation-display") as HTMLElement;
-    if (container) {
-        container.classList.add(`violation-display--${mode}`);
-        container.setAttribute("data-severity", severity);
-    }
-
-    // Set badge
-    DomUtils.setTemplateAttribute(clone, ".severity-badge", "data-severity", severity);
-    DomUtils.setTemplateText(clone, ".severity-badge", severity);
-
-    // Set message
-    DomUtils.setTemplateText(clone, ".violation-message", violation.rule.errorMessage);
-    DomUtils.setTemplateAttribute(clone, ".violation-message", "data-severity", severity);
-
-    // Set optional details (only visible in card mode via CSS)
-    if (mode === "card") {
-        const ruleInfo = `${violation.rule.checkSection || ""} / ${violation.rule.errorPattern || ""}`;
-        DomUtils.setTemplateText(clone, ".violation-rule", ruleInfo);
-
-        const parentMessageEl = clone.querySelector(".violation-parent-message") as HTMLElement;
-        if (violation.parentMessage && parentMessageEl) {
-            DomUtils.setTemplateText(clone, ".violation-parent-message", `Part of: ${violation.parentMessage}`);
-            parentMessageEl.style.display = "";
-        } else if (parentMessageEl) {
-            parentMessageEl.style.display = "none";
-        }
-    }
-
-    return clone;
-}
-
 /**
  * Create a grouped rule accordion item
  */
@@ -531,8 +488,7 @@ function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFrag
     const content = clone.querySelector(".diagnostic-content") as HTMLElement;
     if (content) {
         ruleGroup.violations.forEach((violation: RuleViolation) => {
-            const violationItem = createViolationDisplay(violation, "card");
-            content.appendChild(violationItem);
+            content.appendChild(ViolationUI.createViolationCard(violation));
         });
     }
 
@@ -580,7 +536,7 @@ function createRow(
     const effectiveViolations = getViolationsForRow(row, violationGroups);
     if (effectiveViolations.length > 0) {
         const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
-        effectiveViolations.forEach(v => diagnosticsList.appendChild(createViolationDisplay(v, "card")));
+        effectiveViolations.forEach(v => diagnosticsList.appendChild(ViolationUI.createViolationCard(v)));
 
         const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
         const popover = clone.querySelector(".details-overlay-popup") as HTMLElement;

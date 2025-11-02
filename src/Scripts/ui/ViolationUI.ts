@@ -31,21 +31,16 @@ export class ViolationUI {
         const details = document.createElement("div");
         details.className = "violation-details";
 
-        if (violation.section && violation.section.header) {
-            const sectionInfo = document.createElement("div");
-            sectionInfo.className = "violation-section";
-            let sectionText = violation.section.header;
-            if (violation.highlightPattern) {
-                sectionText += " / " + violation.highlightPattern;
-            }
-            sectionInfo.textContent = sectionText;
-            details.appendChild(sectionInfo);
-        }
+        const sectionInfo = document.createElement("div");
+        sectionInfo.className = "violation-rule";
+        const ruleInfo = `${violation.rule.checkSection || ""} / ${violation.rule.errorPattern || ""}`.trim();
+        sectionInfo.textContent = ruleInfo;
+        details.appendChild(sectionInfo);
 
         if (violation.parentMessage) {
             const parent = document.createElement("div");
             parent.className = "violation-parent-message";
-            parent.textContent = violation.parentMessage;
+            parent.textContent = `Part of: ${violation.parentMessage}`;
             details.appendChild(parent);
         }
 
