@@ -258,3 +258,15 @@ a.tab-link {
 #orig-headers-ui {
     margin-top: 0;
 }
+
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    visibility: visible !important;
+}
+
+.invisible {
+    visibility: hidden !important;
+}

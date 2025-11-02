@@ -144,7 +144,7 @@ function createViolationCard(violation: RuleViolation): HTMLElement {
     if (violation.parentMessage) {
         parentMsg.textContent = `Part of: ${violation.parentMessage}`;
     } else {
-        parentMsg.style.display = "none";
+        parentMsg.classList.add("hidden");
     }
 
     const card = clone.querySelector(".violation-card") as HTMLElement;
@@ -175,7 +175,7 @@ function buildDiagnosticsReport(viewModel: HeaderModel): void {
         if (group.violations.length > 1) {
             count.textContent = ` (${group.violations.length})`;
         } else {
-            count.style.display = "none";
+            count.classList.add("hidden");
         }
 
         const content = itemClone.querySelector(".diagnostic-content") as HTMLElement;
@@ -520,7 +520,8 @@ function setupAccordionAccessibility(): void {
         if (content) {
             const contentElement = content as HTMLElement;
             contentElement.setAttribute("aria-hidden", "false");
-            contentElement.style.visibility = "visible";
+            contentElement.classList.remove("invisible");
+            contentElement.classList.add("visible");
             DomUtils.restoreFocusableElements(".accordion-item-content");
         }
 
@@ -538,7 +539,8 @@ function setupAccordionAccessibility(): void {
         if (content) {
             const contentElement = content as HTMLElement;
             contentElement.setAttribute("aria-hidden", "true");
-            contentElement.style.visibility = "hidden";
+            contentElement.classList.remove("visible");
+            contentElement.classList.add("invisible");
 
             // Make focusable elements within this specific content non-tabbable
             const focusableElements = contentElement.querySelectorAll(DomUtils.focusableElements);
