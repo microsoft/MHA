@@ -158,6 +158,9 @@ a.tab-link {
 #antispam-view .accordion-item .item-title {
     font-size: 17px;
     background: var(--white);
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 #received-view .timeline-item-inner {
