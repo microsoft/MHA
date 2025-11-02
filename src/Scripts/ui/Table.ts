@@ -172,7 +172,7 @@ export class Table {
                 if (rowViolations.length > 0) {
                     rowViolations.forEach((violation: RuleViolation) => {
                         headerVal.appendChild(document.createTextNode(" "));
-                        headerVal.appendChild(ViolationUI.createInlineViolation(violation, "violation-inline-template"));
+                        headerVal.appendChild(ViolationUI.createInlineViolation(violation));
                     });
                 }
 
@@ -257,7 +257,7 @@ export class Table {
         const diagnosticsContainer = document.getElementById("diagnosticsContent");
         if (diagnosticsContainer) {
             diagnosticsContainer.innerHTML = "";
-            const diagnosticsSection = ViolationUI.buildDiagnosticsSection(viewModel.violationGroups, "violation-card-template");
+            const diagnosticsSection = ViolationUI.buildDiagnosticsSection(viewModel.violationGroups);
             if (diagnosticsSection) {
                 diagnosticsContainer.appendChild(diagnosticsSection);
             }
@@ -339,7 +339,7 @@ export class Table {
             if (rowViolations.length > 0) {
                 rowViolations.forEach((violation: RuleViolation) => {
                     headerCell.appendChild(document.createTextNode(" "));
-                    headerCell.appendChild(ViolationUI.createInlineViolation(violation, "violation-inline-template"));
+                    headerCell.appendChild(ViolationUI.createInlineViolation(violation));
                 });
             }
 

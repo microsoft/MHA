@@ -1,10 +1,10 @@
 import { RuleViolation, ViolationGroup } from "../rules/types/AnalysisTypes";
 
 export class ViolationUI {
-    static createInlineViolation(violation: RuleViolation, templateId: string): HTMLElement {
-        const template = document.getElementById(templateId) as HTMLTemplateElement;
+    static createInlineViolation(violation: RuleViolation): HTMLElement {
+        const template = document.getElementById("violation-inline-template") as HTMLTemplateElement;
         if (!template) {
-            throw new Error(`Template not found: ${templateId}`);
+            throw new Error("Template not found: violation-inline-template");
         }
 
         const container = template.content.cloneNode(true) as DocumentFragment;
@@ -21,10 +21,10 @@ export class ViolationUI {
         return element;
     }
 
-    static createViolationCard(violation: RuleViolation, templateId: string): HTMLElement {
-        const template = document.getElementById(templateId) as HTMLTemplateElement;
+    static createViolationCard(violation: RuleViolation): HTMLElement {
+        const template = document.getElementById("violation-card-template") as HTMLTemplateElement;
         if (!template) {
-            throw new Error(`Template not found: ${templateId}`);
+            throw new Error("Template not found: violation-card-template");
         }
 
         const container = template.content.cloneNode(true) as DocumentFragment;
@@ -53,7 +53,7 @@ export class ViolationUI {
         return card;
     }
 
-    static buildDiagnosticsSection(violationGroups: ViolationGroup[], cardTemplateId: string): HTMLElement | null {
+    static buildDiagnosticsSection(violationGroups: ViolationGroup[]): HTMLElement | null {
         if (!violationGroups || violationGroups.length === 0) return null;
 
         const content = document.createElement("div");
@@ -90,7 +90,7 @@ export class ViolationUI {
             violations.className = "diagnostic-violations";
 
             group.violations.forEach(violation => {
-                violations.appendChild(this.createViolationCard(violation, cardTemplateId));
+                violations.appendChild(this.createViolationCard(violation));
             });
 
             groupDiv.appendChild(violations);
