@@ -1,69 +1,59 @@
 import { RuleViolation, ViolationGroup } from "../rules/types/AnalysisTypes";
 
 export class ViolationUI {
-    static createInlineViolation(violation: RuleViolation): HTMLElement {
-        const container = document.createElement("span");
-        container.className = "violation-inline";
-
-        const badge = document.createElement("span");
-        badge.className = "severity-badge";
-        badge.setAttribute("data-severity", violation.rule.severity);
-        badge.textContent = violation.rule.severity.toUpperCase();
-        container.appendChild(badge);
-
-        const message = document.createElement("span");
-        message.className = "violation-message";
-        message.setAttribute("data-severity", violation.rule.severity);
-        message.textContent = " " + violation.rule.errorMessage;
-        container.appendChild(message);
-
-        return container;
-    }
-
-    static createViolationCard(violation: RuleViolation): HTMLElement {
-        const card = document.createElement("div");
-        card.className = "violation-card";
-        card.setAttribute("data-severity", violation.rule.severity);
-
-        const header = document.createElement("div");
-        header.className = "violation-card-header";
-
-        const badge = document.createElement("span");
-        badge.className = "severity-badge";
-        badge.setAttribute("data-severity", violation.rule.severity);
-        badge.textContent = violation.rule.severity.toUpperCase();
-        header.appendChild(badge);
-
-        const message = document.createElement("span");
-        message.className = "violation-message";
-        message.setAttribute("data-severity", violation.rule.severity);
-        message.textContent = " " + violation.rule.errorMessage;
-        header.appendChild(message);
-
-        card.appendChild(header);
-
-        const details = document.createElement("div");
-        details.className = "violation-details";
-
-        const sectionInfo = document.createElement("div");
-        sectionInfo.className = "violation-rule";
-        const ruleInfo = `${violation.rule.checkSection || ""} / ${violation.rule.errorPattern || ""}`.trim();
-        sectionInfo.textContent = ruleInfo;
-        details.appendChild(sectionInfo);
-
-        if (violation.parentMessage) {
-            const parent = document.createElement("div");
-            parent.className = "violation-parent-message";
-            parent.textContent = `Part of: ${violation.parentMessage}`;
-            details.appendChild(parent);
+    static createInlineViolation(violation: RuleViolation, templateId: string): HTMLElement {
+        const template = document.getElementById(templateId) as HTMLTemplateElement;
+        if (!template) {
+            throw new Error(`Template not found: ${templateId}`);
         }
 
-        card.appendChild(details);
+        const container = template.content.cloneNode(true) as DocumentFragment;
+        const element = container.firstElementChild as HTMLElement;
+
+        const badge = element.querySelector(".severity-badge") as HTMLElement;
+        badge.setAttribute("data-severity", violation.rule.severity);
+        badge.textContent = violation.rule.severity.toUpperCase();
+
+        const message = element.querySelector(".violation-message") as HTMLElement;
+        message.setAttribute("data-severity", violation.rule.severity);
+        message.textContent = " " + violation.rule.errorMessage;
+
+        return element;
+    }
+
+    static createViolationCard(violation: RuleViolation, templateId: string): HTMLElement {
+        const template = document.getElementById(templateId) as HTMLTemplateElement;
+        if (!template) {
+            throw new Error(`Template not found: ${templateId}`);
+        }
+
+        const container = template.content.cloneNode(true) as DocumentFragment;
+        const card = container.firstElementChild as HTMLElement;
+        card.setAttribute("data-severity", violation.rule.severity);
+
+        const badge = card.querySelector(".severity-badge") as HTMLElement;
+        badge.setAttribute("data-severity", violation.rule.severity);
+        badge.textContent = violation.rule.severity.toUpperCase();
+
+        const message = card.querySelector(".violation-message") as HTMLElement;
+        message.setAttribute("data-severity", violation.rule.severity);
+        message.textContent = " " + violation.rule.errorMessage;
+
+        const sectionInfo = card.querySelector(".violation-rule") as HTMLElement;
+        const ruleInfo = `${violation.rule.checkSection || ""} / ${violation.rule.errorPattern || ""}`.trim();
+        sectionInfo.textContent = ruleInfo;
+
+        const parent = card.querySelector(".violation-parent-message") as HTMLElement;
+        if (violation.parentMessage) {
+            parent.textContent = `Part of: ${violation.parentMessage}`;
+        } else {
+            parent.remove();
+        }
 
         return card;
     }
 
-    static buildDiagnosticsSection(violationGroups: ViolationGroup[]): HTMLElement | null {
+    static buildDiagnosticsSection(violationGroups: ViolationGroup[], cardTemplateId: string): HTMLElement | null {
         if (!violationGroups || violationGroups.length === 0) return null;
 
         const content = document.createElement("div");
@@ -100,7 +90,7 @@ export class ViolationUI {
             violations.className = "diagnostic-violations";
 
             group.violations.forEach(violation => {
-                violations.appendChild(this.createViolationCard(violation));
+                violations.appendChild(this.createViolationCard(violation, cardTemplateId));
             });
 
             groupDiv.appendChild(violations);

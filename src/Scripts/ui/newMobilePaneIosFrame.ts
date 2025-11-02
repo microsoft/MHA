@@ -137,7 +137,7 @@ function buildDiagnosticsReport(viewModel: HeaderModel): void {
 
         const content = itemClone.querySelector(".diagnostic-content") as HTMLElement;
         group.violations.forEach((violation) => {
-            content.appendChild(ViolationUI.createViolationCard(violation));
+            content.appendChild(ViolationUI.createViolationCard(violation, "violation-card-template"));
         });
 
         accordion.appendChild(itemClone);
@@ -159,14 +159,14 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderMo
         if (rowViolations.length > 0) {
             rowViolations.forEach((violation) => {
                 itemTitle.appendChild(document.createTextNode(" "));
-                itemTitle.appendChild(ViolationUI.createInlineViolation(violation));
+                itemTitle.appendChild(ViolationUI.createInlineViolation(violation, "violation-inline-template"));
             });
         }
 
         const violationsContainer = clone.querySelector(".violations-container") as HTMLElement;
         if (rowViolations.length > 0) {
             rowViolations.forEach((violation) => {
-                violationsContainer.appendChild(ViolationUI.createViolationCard(violation));
+                violationsContainer.appendChild(ViolationUI.createViolationCard(violation, "violation-card-template"));
             });
         }
 
@@ -212,7 +212,7 @@ function buildSummaryTab(viewModel: HeaderModel): void {
             if (rowViolations.length > 0) {
                 rowViolations.forEach((violation) => {
                     blockTitle.appendChild(document.createTextNode(" "));
-                    blockTitle.appendChild(ViolationUI.createInlineViolation(violation));
+                    blockTitle.appendChild(ViolationUI.createInlineViolation(violation, "violation-inline-template"));
                 });
             }
 
@@ -429,7 +429,7 @@ function buildOtherTab(viewModel: HeaderModel): void {
             const violationsContainer = clone.querySelector(".violations-container") as HTMLElement;
             if (rowViolations.length > 0) {
                 rowViolations.forEach((violation) => {
-                    violationsContainer.appendChild(ViolationUI.createViolationCard(violation));
+                    violationsContainer.appendChild(ViolationUI.createViolationCard(violation, "violation-card-template"));
                 });
             }
 

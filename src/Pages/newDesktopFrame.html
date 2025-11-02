@@ -213,7 +213,14 @@
         </fluent-accordion-item>
     </template>
 
-    <template id="violation-display-template">
+    <template id="violation-inline-template">
+        <span class="violation-inline">
+            <fluent-badge class="severity-badge"></fluent-badge>
+            <span class="violation-message"></span>
+        </span>
+    </template>
+
+    <template id="violation-card-template">
         <div class="violation-display">
             <div class="violation-display__header">
                 <fluent-badge class="severity-badge"></fluent-badge>

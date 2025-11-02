@@ -194,7 +194,7 @@ function buildSummaryTab(viewModel: HeaderModel) {
             if (sectionHeader && rowViolations.length > 0) {
                 rowViolations.forEach((violation: RuleViolation) => {
                     sectionHeader.appendChild(document.createTextNode(" "));
-                    sectionHeader.appendChild(ViolationUI.createInlineViolation(violation));
+                    sectionHeader.appendChild(ViolationUI.createInlineViolation(violation, "violation-inline-template"));
                 });
             }
 
@@ -488,7 +488,7 @@ function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFrag
     const content = clone.querySelector(".diagnostic-content") as HTMLElement;
     if (content) {
         ruleGroup.violations.forEach((violation: RuleViolation) => {
-            content.appendChild(ViolationUI.createViolationCard(violation));
+            content.appendChild(ViolationUI.createViolationCard(violation, "violation-card-template"));
         });
     }
 
@@ -536,7 +536,7 @@ function createRow(
     const effectiveViolations = getViolationsForRow(row, violationGroups);
     if (effectiveViolations.length > 0) {
         const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
-        effectiveViolations.forEach(v => diagnosticsList.appendChild(ViolationUI.createViolationCard(v)));
+        effectiveViolations.forEach(v => diagnosticsList.appendChild(ViolationUI.createViolationCard(v, "violation-card-template")));
 
         const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
         const popover = clone.querySelector(".details-overlay-popup") as HTMLElement;
