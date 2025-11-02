@@ -163,6 +163,20 @@ a.tab-link {
     overflow-wrap: break-word;
 }
 
+#antispam-view .accordion-item-content .violation-card .violation-parent-message {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+#antispam-view .accordion-item-content .violation-card .violation-details {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+#antispam-view .accordion-item-content p {
+    margin-top: 0 !important;
+}
+
 #received-view .timeline-item-inner {
     padding: 10px;
     margin: 5px 0;
