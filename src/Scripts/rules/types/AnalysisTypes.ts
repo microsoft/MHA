@@ -53,8 +53,8 @@ export interface RuleViolation {
     /** The rule that was violated */
     rule: IValidationRule;
 
-    /** The header section where the violation occurred */
-    section: HeaderSection;
+    /** All header sections affected by this violation (for display/highlighting) */
+    affectedSections: HeaderSection[];
 
     /** Pattern to highlight in the section content (if applicable) */
     highlightPattern: string;

@@ -80,7 +80,8 @@ class RulesService {
             headerValidationRules.findComplexViolations(headerSections);
 
             // Extract violations and build groups directly during evaluation
-            const violations: RuleViolation[] = [];
+            // Use a Map to ensure each rule only creates one violation
+            const violationMap = new Map<IValidationRule, RuleViolation>();
             const groupMap = new Map<string, ViolationGroup>();
 
             headerSections.forEach(section => {
@@ -89,39 +90,55 @@ class RulesService {
                         const rulesFlagged = headerSection.rulesFlagged;
                         if (rulesFlagged && rulesFlagged.length > 0) {
                             rulesFlagged.forEach((rule: IValidationRule) => {
-                                const parentAndRule = rule.parentAndRule;
+                                // Check if we've already created a violation for this rule
+                                if (!violationMap.has(rule)) {
+                                    // First time seeing this rule - create the violation
+                                    const parentAndRule = rule.parentAndRule;
 
-                                const violation: RuleViolation = {
-                                    rule: rule,
-                                    section: headerSection,
-                                    highlightPattern: rule.errorPattern,
-                                    ...(parentAndRule?.message && { parentMessage: parentAndRule.message })
-                                };
+                                    const violation: RuleViolation = {
+                                        rule: rule,
+                                        affectedSections: [headerSection],
+                                        highlightPattern: rule.errorPattern
+                                    };
 
-                                violations.push(violation);
+                                    if (parentAndRule?.message) {
+                                        violation.parentMessage = parentAndRule.message;
+                                    }
 
-                                // Use explicit AND rule information
-                                const isAndRule = !!rule.parentAndRule;
-                                const displayName = isAndRule ? rule.parentAndRule!.message : rule.errorMessage;
-                                const severity = isAndRule ? rule.parentAndRule!.severity : rule.severity;
-                                const groupKey = displayName;
-
-                                if (!groupMap.has(groupKey)) {
-                                    groupMap.set(groupKey, {
-                                        groupId: `group-${groupKey.replace(/\s+/g, "-").toLowerCase()}`,
-                                        displayName,
-                                        severity,
-                                        isAndRule,
-                                        violations: []
-                                    });
+                                    violationMap.set(rule, violation);
+                                } else {
+                                    // We've seen this rule - add this section to affected sections
+                                    const existing = violationMap.get(rule)!;
+                                    existing.affectedSections.push(headerSection);
                                 }
-
-                                const group = groupMap.get(groupKey)!;
-                                group.violations.push(violation);
                             });
                         }
                     });
                 }
+            });
+
+            // Convert violation map to array and build groups
+            const violations = Array.from(violationMap.values());
+
+            violations.forEach((violation) => {
+                const rule = violation.rule;
+                const isAndRule = !!rule.parentAndRule;
+                const displayName = isAndRule ? rule.parentAndRule!.message : rule.errorMessage;
+                const severity = isAndRule ? rule.parentAndRule!.severity : rule.severity;
+                const groupKey = displayName;
+
+                if (!groupMap.has(groupKey)) {
+                    groupMap.set(groupKey, {
+                        groupId: `group-${groupKey.replace(/\s+/g, "-").toLowerCase()}`,
+                        displayName,
+                        severity,
+                        isAndRule,
+                        violations: []
+                    });
+                }
+
+                const group = groupMap.get(groupKey)!;
+                group.violations.push(violation);
             });
 
             const violationGroups = Array.from(groupMap.values());

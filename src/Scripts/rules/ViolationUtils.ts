@@ -53,15 +53,16 @@ export function getViolationsForRow(
 
     violationGroups.forEach(group => {
         group.violations.forEach(violation => {
-            // Check if violation section matches this row
-            if (violation.section) {
-                const section = violation.section as HeaderSection;
-
+            // Check if violation applies to this row via any of its affected sections
+            const matchesSection = violation.affectedSections.some(section => {
+                const headerSection = section as HeaderSection;
                 // Match by section header/name
-                if (section.header === row.label || section.header === row.header) {
-                    matchingViolations.push(violation);
-                    return;
-                }
+                return headerSection.header === row.label || headerSection.header === row.header;
+            });
+
+            if (matchesSection) {
+                matchingViolations.push(violation);
+                return;
             }
 
             // Check if violation pattern matches row content
