@@ -545,24 +545,11 @@ function buildOtherTab(viewModel: HeaderModel): void {
                 headerName.setAttribute("tabindex", "0");
             }
 
-            if (rowViolations.length > 0) {
-                rowViolations.forEach((violation) => {
-                    headerName.appendChild(document.createTextNode(" "));
-                    headerName.appendChild(createViolationBadge(violation));
-                });
-            }
-
             otherContent.appendChild(headerName);
 
             const contentBlock = document.createElement("div");
             contentBlock.className = "block";
             otherContent.appendChild(contentBlock);
-
-            if (rowViolations.length > 0) {
-                rowViolations.forEach((violation) => {
-                    contentBlock.appendChild(createViolationCard(violation));
-                });
-            }
 
             const headerVal = document.createElement("div");
             headerVal.className = "code-box";
@@ -575,6 +562,12 @@ function buildOtherTab(viewModel: HeaderModel): void {
             const highlightedContent = highlightContent(row.value, viewModel.violationGroups);
             code.innerHTML = highlightedContent;
             pre.appendChild(code);
+
+            if (rowViolations.length > 0) {
+                rowViolations.forEach((violation) => {
+                    contentBlock.appendChild(createViolationCard(violation));
+                });
+            }
         }
     });
 }
