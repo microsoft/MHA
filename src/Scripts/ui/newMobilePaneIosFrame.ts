@@ -20,6 +20,7 @@ import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
+import { RuleViolation } from "../rules/types/AnalysisTypes";
 import { getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
@@ -106,8 +107,88 @@ function addCalloutEntry(name: string, value: string | number | null, parent: HT
     }
 }
 
+function createViolationBadge(violation: RuleViolation): HTMLElement {
+    const template = document.getElementById("violation-badge-template") as HTMLTemplateElement;
+    const clone = template.content.cloneNode(true) as DocumentFragment;
+
+    const badge = clone.querySelector(".severity-badge") as HTMLElement;
+    badge.setAttribute("data-severity", violation.rule.severity);
+    badge.textContent = violation.rule.severity.toUpperCase();
+
+    const message = clone.querySelector(".violation-message") as HTMLElement;
+    message.textContent = violation.rule.errorMessage;
+    message.setAttribute("data-severity", violation.rule.severity);
+
+    const container = clone.querySelector(".violation-inline") as HTMLElement;
+    return container;
+}
+
+function createViolationCard(violation: RuleViolation): HTMLElement {
+    const template = document.getElementById("violation-card-template") as HTMLTemplateElement;
+    const clone = template.content.cloneNode(true) as DocumentFragment;
+
+    const badge = clone.querySelector(".severity-badge") as HTMLElement;
+    badge.setAttribute("data-severity", violation.rule.severity);
+    badge.textContent = violation.rule.severity.toUpperCase();
+
+    const message = clone.querySelector(".violation-message") as HTMLElement;
+    message.textContent = violation.rule.errorMessage;
+    message.setAttribute("data-severity", violation.rule.severity);
+
+    const rule = clone.querySelector(".violation-rule") as HTMLElement;
+    const ruleInfo = `${violation.rule.checkSection || ""} / ${violation.rule.errorPattern || ""}`.trim();
+    rule.textContent = ruleInfo;
+
+    const parentMsg = clone.querySelector(".violation-parent-message") as HTMLElement;
+    if (violation.parentMessage) {
+        parentMsg.textContent = `Part of: ${violation.parentMessage}`;
+    } else {
+        parentMsg.style.display = "none";
+    }
+
+    const card = clone.querySelector(".violation-card") as HTMLElement;
+    return card;
+}
+
+function buildDiagnosticsReport(viewModel: HeaderModel): void {
+    if (!viewModel.violationGroups || viewModel.violationGroups.length === 0) return;
+
+    const summaryContent = document.getElementById("summary-content")!;
+    const template = document.getElementById("diagnostics-section-template") as HTMLTemplateElement;
+    const clone = template.content.cloneNode(true) as DocumentFragment;
+    const accordion = clone.querySelector(".diagnostics-accordion") as HTMLElement;
+
+    viewModel.violationGroups.forEach((group) => {
+        const itemTemplate = document.getElementById("diagnostic-accordion-item-template") as HTMLTemplateElement;
+        const itemClone = itemTemplate.content.cloneNode(true) as DocumentFragment;
+
+        const badge = itemClone.querySelector(".severity-badge") as HTMLElement;
+        badge.setAttribute("data-severity", group.severity);
+        badge.textContent = group.severity.toUpperCase();
+
+        const message = itemClone.querySelector(".violation-message") as HTMLElement;
+        message.setAttribute("data-severity", group.severity);
+        message.textContent = group.displayName;
+
+        const count = itemClone.querySelector(".violation-count") as HTMLElement;
+        if (group.violations.length > 1) {
+            count.textContent = ` (${group.violations.length})`;
+        } else {
+            count.style.display = "none";
+        }
+
+        const content = itemClone.querySelector(".diagnostic-content") as HTMLElement;
+        group.violations.forEach((violation) => {
+            content.appendChild(createViolationCard(violation));
+        });
+
+        accordion.appendChild(itemClone);
+    });
+
+    summaryContent.appendChild(clone);
+}
+
 function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderModel) {
-    console.log("addSpamReportRow violations:", viewModel.violationGroups.length);
     if (spamRow.value) {
         const item = document.createElement("li");
         item.className = "accordion-item";
@@ -115,8 +196,8 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderMo
 
         const link = document.createElement("a");
         link.className = "item-content item-link";
-        link.setAttribute("role", "button"); // Fix for the Bug 1691252- To announce link item as role button
-        link.setAttribute("aria-expanded", "false"); // Fix for accessibility - initial state is collapsed
+        link.setAttribute("role", "button");
+        link.setAttribute("aria-expanded", "false");
         link.setAttribute("href", "#");
         item.appendChild(link);
 
@@ -128,6 +209,15 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderMo
         itemTitle.className = "item-title";
         itemTitle.textContent = spamRow.label;
         itemTitle.setAttribute("id", spamRow.id);
+
+        const rowViolations = getViolationsForRow(spamRow, viewModel.violationGroups);
+        if (rowViolations.length > 0) {
+            rowViolations.forEach((violation) => {
+                itemTitle.appendChild(document.createTextNode(" "));
+                itemTitle.appendChild(createViolationBadge(violation));
+            });
+        }
+
         innerItem.appendChild(itemTitle);
 
         const itemContent = document.createElement("div");
@@ -138,13 +228,19 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderMo
         contentBlock.className = "block";
         itemContent.appendChild(contentBlock);
 
+        if (rowViolations.length > 0) {
+            rowViolations.forEach((violation) => {
+                contentBlock.appendChild(createViolationCard(violation));
+            });
+        }
+
         const linkWrap = document.createElement("p");
         linkWrap.setAttribute("aria-labelledby", spamRow.id);
         contentBlock.appendChild(linkWrap);
 
-        // Parse HTML string and add to linkWrap
         const tempDiv = document.createElement("div");
-        tempDiv.innerHTML = spamRow.valueUrl;
+        const highlightedContent = highlightContent(spamRow.valueUrl, viewModel.violationGroups);
+        tempDiv.innerHTML = highlightedContent;
         while (tempDiv.firstChild) {
             const child = tempDiv.firstChild as HTMLElement;
             if (child.nodeType === Node.ELEMENT_NODE) {
@@ -158,13 +254,6 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderMo
 async function buildViews(headers: string): Promise<void> {
     const viewModel = await HeaderModel.create(headers);
 
-    console.log("🔍 Rules Analysis:", {
-        violationCount: viewModel.violationGroups.reduce((sum, g) => sum + g.violations.length, 0),
-        groups: viewModel.violationGroups.length,
-        violations: viewModel.violationGroups,
-        utils: { getViolationsForRow, highlightContent }
-    });
-
     buildSummaryTab(viewModel);
     buildReceivedTab(viewModel);
     buildAntispamTab(viewModel);
@@ -172,7 +261,6 @@ async function buildViews(headers: string): Promise<void> {
 }
 
 function buildSummaryTab(viewModel: HeaderModel): void {
-    console.log("buildSummaryTab violations:", viewModel.violationGroups.length);
     const summaryContent = document.getElementById("summary-content")!;
 
     viewModel.summary.rows.forEach((row: SummaryRow) => {
@@ -180,6 +268,15 @@ function buildSummaryTab(viewModel: HeaderModel): void {
             const blockTitle = document.createElement("div");
             blockTitle.className = "block-title";
             blockTitle.textContent = row.label;
+
+            const rowViolations = getViolationsForRow(row, viewModel.violationGroups);
+            if (rowViolations.length > 0) {
+                rowViolations.forEach((violation) => {
+                    blockTitle.appendChild(document.createTextNode(" "));
+                    blockTitle.appendChild(createViolationBadge(violation));
+                });
+            }
+
             summaryContent.appendChild(blockTitle);
 
             const contentBlock = document.createElement("div");
@@ -194,7 +291,8 @@ function buildSummaryTab(viewModel: HeaderModel): void {
             headerVal.appendChild(pre);
 
             const code = document.createElement("code");
-            code.textContent = row.value;
+            const highlightedContent = highlightContent(row.value, viewModel.violationGroups);
+            code.innerHTML = highlightedContent;
             pre.appendChild(code);
         }
     });
@@ -203,6 +301,8 @@ function buildSummaryTab(viewModel: HeaderModel): void {
         DomUtils.setText("#original-headers", viewModel.originalHeaders);
         DomUtils.showElement("#orig-headers-ui");
     }
+
+    buildDiagnosticsReport(viewModel);
 }
 
 function buildReceivedTab(viewModel: HeaderModel): void {
@@ -421,20 +521,16 @@ function buildAntispamTab(viewModel: HeaderModel): void {
 }
 
 function buildOtherTab(viewModel: HeaderModel): void {
-    console.log("buildOtherTab violations:", viewModel.violationGroups.length);
     const otherContent = document.getElementById("other-content")!;
 
     viewModel.otherHeaders.rows.forEach((row: OtherRow) => {
         if (row.value) {
             const headerName = document.createElement("div");
             headerName.className = "block-title";
-            headerName.textContent = row.header;
-            otherContent.appendChild(headerName);
+
+            const rowViolations = getViolationsForRow(row, viewModel.violationGroups);
 
             if (row.url) {
-                headerName.innerHTML = "";
-
-                // Parse HTML string and add to headerName
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = row.url;
                 while (tempDiv.firstChild) {
@@ -444,14 +540,29 @@ function buildOtherTab(viewModel: HeaderModel): void {
                     }
                     headerName.appendChild(child);
                 }
-            }
-            else {
+            } else {
+                headerName.textContent = row.header;
                 headerName.setAttribute("tabindex", "0");
             }
+
+            if (rowViolations.length > 0) {
+                rowViolations.forEach((violation) => {
+                    headerName.appendChild(document.createTextNode(" "));
+                    headerName.appendChild(createViolationBadge(violation));
+                });
+            }
+
+            otherContent.appendChild(headerName);
 
             const contentBlock = document.createElement("div");
             contentBlock.className = "block";
             otherContent.appendChild(contentBlock);
+
+            if (rowViolations.length > 0) {
+                rowViolations.forEach((violation) => {
+                    contentBlock.appendChild(createViolationCard(violation));
+                });
+            }
 
             const headerVal = document.createElement("div");
             headerVal.className = "code-box";
@@ -461,7 +572,8 @@ function buildOtherTab(viewModel: HeaderModel): void {
             headerVal.appendChild(pre);
 
             const code = document.createElement("code");
-            code.textContent = row.value;
+            const highlightedContent = highlightContent(row.value, viewModel.violationGroups);
+            code.innerHTML = highlightedContent;
             pre.appendChild(code);
         }
     });

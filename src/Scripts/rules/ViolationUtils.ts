@@ -28,7 +28,7 @@ export function highlightContent(content: string, violationGroups: ViolationGrou
                         try {
                             const regex = new RegExp(`(${escapedPattern})`, "gi");
                             highlightedContent = highlightedContent.replace(regex,
-                                "<span class=\"rule-violation-highlight\">$1</span>");
+                                "<span class=\"highlight-violation\">$1</span>");
                         } catch (error) {
 
                             console.warn("Invalid regex pattern:", pattern, error);

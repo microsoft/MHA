@@ -1,5 +1,6 @@
 /* Import shared Fluent UI styles */
 @import url("fluentCommon.css");
+@import url("rulesCommon.css");
 
 .content-wrap {
     background: var(--white);
@@ -321,37 +322,6 @@
     font-family: var(--font-family);
 }
 
-/* Rule Violations */
-.rule-violation-highlight {
-    background-color: var(--highlight-warning-bg) !important;
-    color: var(--highlight-warning-text) !important;
-    font-weight: 600 !important;
-    padding: 1px 2px;
-    border-radius: 2px;
-}
-
-/* Severity system - applies to all [data-severity] elements */
-[data-severity="error"] {
-    --severity-bg: var(--diagnostic-error-bg);
-    --severity-color: var(--diagnostic-error-text);
-    --severity-border: var(--diagnostic-error-border);
-    --severity-icon: "🔴";
-}
-
-[data-severity="warning"] {
-    --severity-bg: var(--diagnostic-warning-bg);
-    --severity-color: var(--diagnostic-warning-text);
-    --severity-border: var(--diagnostic-warning-border);
-    --severity-icon: "⚠️";
-}
-
-[data-severity="info"] {
-    --severity-bg: var(--diagnostic-info-bg);
-    --severity-color: var(--diagnostic-info-text);
-    --severity-border: var(--diagnostic-info-border);
-    --severity-icon: "ℹ️";
-}
-
 /* Unified violation display component */
 .violation-display {
     display: flex;
@@ -370,7 +340,6 @@
 
 .violation-message {
     padding: 4px;
-    color: var(--severity-color);
 }
 
 /* Inline mode - compact display for Summary headers */
@@ -457,20 +426,11 @@ show-diagnostics-popover-btn:hover {
     align-items: center;
 }
 
-/* Severity Badges */
+/* Severity Badges - Fluent UI overrides */
 fluent-badge.severity-badge {
     display: flex;
     flex-shrink: 0;
-    font-size: 11px;
-    font-weight: 600;
     padding: 4px 8px;
     border-radius: 4px;
-    text-transform: uppercase;
     letter-spacing: 0.5px;
-    background: var(--severity-bg);
-    color: var(--severity-color);
-}
-
-fluent-badge.severity-badge::before {
-    content: var(--severity-icon);
 }

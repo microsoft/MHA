@@ -66,5 +66,51 @@
             </div>
         </div>
     </div>
+
+    <template id="violation-badge-template">
+        <span class="violation-inline">
+            <span class="severity-badge"></span>
+            <span class="violation-message"></span>
+        </span>
+    </template>
+
+    <template id="violation-card-template">
+        <div class="violation-card">
+            <div class="violation-card-header">
+                <span class="severity-badge"></span>
+                <span class="violation-message"></span>
+            </div>
+            <div class="violation-details">
+                <div class="violation-rule"></div>
+                <div class="violation-parent-message"></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="diagnostics-section-template">
+        <div class="diagnostics-section">
+            <div class="block-title">Diagnostics Report</div>
+            <div class="list accordion-list">
+                <ul class="diagnostics-accordion"></ul>
+            </div>
+        </div>
+    </template>
+
+    <template id="diagnostic-accordion-item-template">
+        <li class="accordion-item">
+            <a href="#" class="item-content item-link" role="button" aria-expanded="false">
+                <div class="item-inner">
+                    <div class="item-title">
+                        <span class="severity-badge"></span>
+                        <span class="violation-message"></span>
+                        <span class="violation-count"></span>
+                    </div>
+                </div>
+            </a>
+            <div class="accordion-item-content">
+                <div class="block diagnostic-content"></div>
+            </div>
+        </li>
+    </template>
 </body>
 </html>
