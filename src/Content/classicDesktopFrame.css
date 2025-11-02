@@ -1,4 +1,5 @@
 @import url("themeColors.css");
+@import url("rulesCommon.css");
 
 body {
     padding: 0;
@@ -337,4 +338,96 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
         color: #cccccc;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
+}
+
+/* Diagnostics section - matches classic table style */
+#diagnosticsContent {
+    border: 1px solid black;
+    background-color: #FFFFFF;
+    margin-bottom: 20px;
+}
+
+.diagnostic-group {
+    border-bottom: 1px solid #CDE6F7;
+    padding: 8px 12px;
+}
+
+.diagnostic-group:last-child {
+    border-bottom: none;
+}
+
+.diagnostic-group-header {
+    padding: 4px 0;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.diagnostic-violations {
+    margin-top: 8px;
+    padding-left: 20px;
+}
+
+.violation-card {
+    padding: 6px 0;
+    margin-bottom: 6px;
+    border-left: 3px solid transparent;
+    padding-left: 8px;
+}
+
+.violation-card[data-severity="error"] {
+    border-left-color: var(--diagnostic-error-border);
+    background-color: var(--diagnostic-error-bg);
+}
+
+.violation-card[data-severity="warning"] {
+    border-left-color: var(--diagnostic-warning-border);
+    background-color: var(--diagnostic-warning-bg);
+}
+
+.violation-card[data-severity="info"] {
+    border-left-color: var(--diagnostic-info-border);
+    background-color: var(--diagnostic-info-bg);
+}
+
+.violation-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.violation-details {
+    margin-top: 4px;
+    padding-left: 20px;
+    font-size: 12px;
+    color: #666666;
+}
+
+.violation-section {
+    font-family: monospace;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.violation-count {
+    margin-left: 6px;
+    font-size: 12px;
+    color: #666666;
+    font-weight: normal;
+}
+
+/* Classic-specific badge styling - smaller and more subtle */
+#summary .severity-badge,
+#forefrontAntiSpamReport .severity-badge,
+#antiSpamReport .severity-badge,
+#otherHeaders .severity-badge {
+    font-size: 9px;
+    padding: 1px 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+/* Ensure summary table values work well with inline violations */
+.summaryList td {
+    line-height: 1.4;
 }
