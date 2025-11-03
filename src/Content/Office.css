@@ -14,10 +14,7 @@ h1 { font-size: 1.8em; line-height:.95em; }
 h2 { font-size: 1.4em; line-height: 1.1em; }
 h3 { font-size: 1.1em; }
 h4, h5, h6 { font-size: 1em; }
-form { font-family: "Segoe WP", "Segoe UI", "Arial", sans-serif; color: var(--text-secondary); }
-legend { font-family: "Segoe WP Semibold", "Segoe UI", "Arial", sans-serif; color: var(--text-secondary); }
-input, select, textarea, button { font-family: "Segoe WP Semibold", "Segoe UI", "Arial", sans-serif; color: var(--text-primary); }
-blockquote { font-style: italic; margin-left: 1em; }
+textarea, button { font-family: "Segoe WP Semibold", "Segoe UI", "Arial", sans-serif; color: var(--text-primary); }
 
 /* Links
 ***************************************************************/
@@ -38,22 +35,6 @@ ul { margin-left: 1em; padding: 0; }
 p { padding: 0; }
 hr { border: none; height: 1px; color: var(--border-light-gray); background-color: var(--border-light-gray); }
 
-/* Embedded
-***************************************************************/
-img { border: none; display: block; }
-
-/* Forms
-***************************************************************/
-legend { margin-left:-.2em; }
-fieldset { margin: 0 0 1.4em 0; padding: 0; border: none; }
-input[type="text"], input[type="password"] { display: block; width: 85%; }
-textarea { width: 85%; }
-
 /* Tables
 ***************************************************************/
 th, td { text-align: left; vertical-align: top; padding: .4em 1.2em 1em 0; line-height: 1.3em; }
-
-/* Tiles
-***************************************************************/
-div.tiles div { width: 150px; height: 110px; float: left; margin: 0 1em 1em 0; overflow: hidden; }
-div.tiles div p { padding:.5em; margin: 0; }
