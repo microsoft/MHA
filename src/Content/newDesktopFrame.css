@@ -270,7 +270,6 @@
     background: var(--white);
     border: 1px solid var(--border-gray);
     border-radius: var(--border-radius);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
     padding: 24px 28px 12px 28px;
     width: 90vw;
     max-width: 500px;
@@ -289,7 +288,6 @@
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-bottom: 10px solid var(--white);
-    filter: drop-shadow(0 -1px 1px rgba(0,0,0,0.1));
 }
 
 .hop-title {

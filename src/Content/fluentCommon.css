@@ -24,9 +24,6 @@
     --spacing-medium: 12px;
     --focus-outline: 2px solid var(--focus-blue);
     --button-height: 44px;
-    
-    /* Shadows */
-    --overlay-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Secondary Button Styling - Default black border, blue highlight */
