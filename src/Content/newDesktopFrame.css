@@ -245,7 +245,7 @@
 
 .progress-description {
     font-size: 12px;
-    color: #323130;
+    color: var(--text-primary);
     margin-top: 4px;
     text-align: left;
     font-family: var(--font-family);
