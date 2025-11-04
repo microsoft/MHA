@@ -136,8 +136,9 @@ function buildDiagnosticsReport(viewModel: HeaderModel): void {
         }
 
         const content = itemClone.querySelector(".diagnostic-content") as HTMLElement;
+        const includeCardHeaders = group.violations.length > 1;
         group.violations.forEach((violation) => {
-            content.appendChild(ViolationUI.createViolationCard(violation));
+            content.appendChild(ViolationUI.createViolationCard(violation, includeCardHeaders));
         });
 
         accordion.appendChild(itemClone);

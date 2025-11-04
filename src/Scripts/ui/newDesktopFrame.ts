@@ -487,8 +487,9 @@ function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFrag
 
     const content = clone.querySelector(".diagnostic-content") as HTMLElement;
     if (content) {
+        const includeCardHeaders = ruleGroup.violations.length > 1;
         ruleGroup.violations.forEach((violation: RuleViolation) => {
-            content.appendChild(ViolationUI.createViolationCard(violation));
+            content.appendChild(ViolationUI.createViolationCard(violation, includeCardHeaders));
         });
     }
 

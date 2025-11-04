@@ -21,7 +21,7 @@ export class ViolationUI {
         return element;
     }
 
-    static createViolationCard(violation: RuleViolation): HTMLElement {
+    static createViolationCard(violation: RuleViolation, includeHeader = true): HTMLElement {
         const template = document.getElementById("violation-card-template") as HTMLTemplateElement;
         if (!template) {
             throw new Error("Template not found: violation-card-template");
@@ -31,13 +31,20 @@ export class ViolationUI {
         const card = container.firstElementChild as HTMLElement;
         card.setAttribute("data-severity", violation.rule.severity);
 
-        const badge = card.querySelector(".severity-badge") as HTMLElement;
-        badge.setAttribute("data-severity", violation.rule.severity);
-        badge.textContent = violation.rule.severity.toUpperCase();
+        const header = card.querySelector(".violation-card-header") as HTMLElement;
+        if (!includeHeader && header) {
+            // Remove the header with badge and message for single violations
+            header.remove();
+        } else if (header) {
+            // Populate the header for multiple violations
+            const badge = header.querySelector(".severity-badge") as HTMLElement;
+            badge.setAttribute("data-severity", violation.rule.severity);
+            badge.textContent = violation.rule.severity.toUpperCase();
 
-        const message = card.querySelector(".violation-message") as HTMLElement;
-        message.setAttribute("data-severity", violation.rule.severity);
-        message.textContent = " " + violation.rule.errorMessage;
+            const message = header.querySelector(".violation-message") as HTMLElement;
+            message.setAttribute("data-severity", violation.rule.severity);
+            message.textContent = " " + violation.rule.errorMessage;
+        }
 
         const sectionInfo = card.querySelector(".violation-rule") as HTMLElement;
         const ruleInfo = `${violation.rule.checkSection || ""} / ${violation.rule.errorPattern || ""}`.trim();
@@ -89,8 +96,9 @@ export class ViolationUI {
             const violations = document.createElement("div");
             violations.className = "diagnostic-violations";
 
+            const includeCardHeaders = group.violations.length > 1;
             group.violations.forEach(violation => {
-                violations.appendChild(this.createViolationCard(violation));
+                violations.appendChild(this.createViolationCard(violation, includeCardHeaders));
             });
 
             groupDiv.appendChild(violations);
