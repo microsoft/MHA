@@ -63,83 +63,62 @@ export class ViolationUI {
     static buildDiagnosticsSection(violationGroups: ViolationGroup[]): HTMLElement | null {
         if (!violationGroups || violationGroups.length === 0) return null;
 
-        // Try to use templates if available
         const sectionTemplate = document.getElementById("diagnostics-section-template") as HTMLTemplateElement;
         const accordionTemplate = document.getElementById("diagnostics-accordion-template") as HTMLTemplateElement;
         const itemTemplate = document.getElementById("diagnostic-accordion-item-template") as HTMLTemplateElement;
 
         if (!itemTemplate) return null;
 
-        // Build the container - use section template if available, otherwise accordion template, otherwise create container
+        // Build container: section template (mobile), accordion template (desktop), or plain div (classic)
         let container: HTMLElement;
         let accordion: HTMLElement;
 
         if (sectionTemplate) {
-            // Framework7 style with section wrapper
             const section = sectionTemplate.content.cloneNode(true) as DocumentFragment;
-            accordion = section.querySelector(".diagnostics-accordion") as HTMLElement;
+            accordion = section.querySelector(".diagnostics-accordion")!;
             container = section.firstElementChild as HTMLElement;
         } else if (accordionTemplate) {
-            // Fluent UI style with accordion template
             const accordionClone = accordionTemplate.content.cloneNode(true) as DocumentFragment;
-            accordion = accordionClone.querySelector("fluent-accordion") as HTMLElement;
+            accordion = accordionClone.querySelector("fluent-accordion")!;
             container = accordion;
         } else {
-            // Classic style - no container template, create wrapper div
             accordion = document.createElement("div");
             container = accordion;
         }
 
-        if (!accordion) return null;
-
-        // Build each accordion item using the template
+        // Build each accordion item
         violationGroups.forEach((group) => {
             const itemClone = itemTemplate.content.cloneNode(true) as DocumentFragment;
 
             // Set badge
-            const badge = itemClone.querySelector(".severity-badge") as HTMLElement;
-            if (badge) {
-                badge.setAttribute("data-severity", group.severity);
-                badge.textContent = group.severity.toUpperCase();
-            }
+            const badge = itemClone.querySelector(".severity-badge")!;
+            badge.setAttribute("data-severity", group.severity);
+            badge.textContent = group.severity.toUpperCase();
 
             // Set message
-            const message = itemClone.querySelector(".violation-message") as HTMLElement;
-            if (message) {
-                message.setAttribute("data-severity", group.severity);
-                message.textContent = group.displayName;
-            }
+            const message = itemClone.querySelector(".violation-message")!;
+            message.setAttribute("data-severity", group.severity);
+            message.textContent = group.displayName;
 
-            // Set count - check for both naming conventions
+            // Set count
             const count = itemClone.querySelector(".violation-count") as HTMLElement;
-            const countValue = itemClone.querySelector(".violation-count-value") as HTMLElement;
-            const countContainer = itemClone.querySelector(".rule-violation-count") as HTMLElement;
-
             if (group.violations.length > 1) {
+                const countValue = count.querySelector(".violation-count-value");
                 if (countValue) {
-                    // Desktop style: separate count value and container
                     countValue.textContent = `${group.violations.length}`;
-                } else if (count) {
-                    // Mobile/Classic style: count with text
+                } else {
                     count.textContent = ` (${group.violations.length})`;
                 }
             } else {
-                // Hide count for single violations
-                if (countContainer) {
-                    countContainer.style.display = "none";
-                } else if (count) {
-                    count.classList.add("hidden");
-                }
+                count.style.display = "none";
             }
 
-            // Add violation cards to content area
-            const content = itemClone.querySelector(".diagnostic-content") as HTMLElement;
-            if (content) {
-                const includeCardHeaders = group.violations.length > 1;
-                group.violations.forEach((violation) => {
-                    content.appendChild(this.createViolationCard(violation, includeCardHeaders));
-                });
-            }
+            // Add violation cards
+            const content = itemClone.querySelector(".diagnostic-content")!;
+            const includeCardHeaders = group.violations.length > 1;
+            group.violations.forEach((violation) => {
+                content.appendChild(this.createViolationCard(violation, includeCardHeaders));
+            });
 
             accordion.appendChild(itemClone);
         });
