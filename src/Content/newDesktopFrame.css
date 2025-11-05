@@ -320,13 +320,6 @@
     font-family: var(--font-family);
 }
 
-/* Unified violation display component */
-.violation-display {
-    display: flex;
-    font-size: 0.75rem;
-    font-weight: 400;
-}
-
 .violation-card-header {
     display: flex;
     align-items: flex-start;
@@ -341,15 +334,19 @@
 }
 
 /* Inline mode - compact display for Summary headers */
-.violation-display--inline {
+.violation-inline {
+    display: flex;
+    font-size: 0.75rem;
+    font-weight: 400;
     margin-top: 4px;
 }
 
 /* Card mode - full display for popovers and accordions */
-.violation-display--card {
+.violation-card {
+    display: flex;
+    font-size: 0.75rem;
+    font-weight: 400;
     gap: 12px;
-    /* margin-bottom: 12px; */
-    /* padding: 12px 16px; */
     background: transparent;
     border-radius: 8px;
     transition: all 0.2s ease;
@@ -357,16 +354,15 @@
     border: 1px solid var(--border-light-gray);
 }
 
-.violation-display--card:hover {
+.violation-card:hover {
     border-color: var(--border-gray);
-   
 }
 
-.violation-display--card:last-child {
+.violation-card:last-child {
     margin-bottom: 0;
 }
 
-.violation-display--card .violation-details {
+.violation-card .violation-details {
     display: block;
     padding: 0px;
 }
