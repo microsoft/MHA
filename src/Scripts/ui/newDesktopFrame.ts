@@ -208,7 +208,11 @@ function buildSummaryTab(viewModel: HeaderModel) {
         DomUtils.showElement(".orig-header-ui");
     }
 
-    buildDiagnosticsReport(viewModel.violationGroups);
+    const diagnosticsSection = document.querySelector(".ui-diagnostics-report-section") as HTMLElement;
+    const diagnosticsContent = ViolationUI.buildDiagnosticsSection(viewModel.violationGroups);
+    if (diagnosticsContent) {
+        diagnosticsSection.appendChild(diagnosticsContent);
+    }
 }
 
 function buildReceivedTab(viewModel: HeaderModel) {
@@ -468,48 +472,6 @@ document.addEventListener("DOMContentLoaded", function() {
 /**
  * Display modes for violation UI components
  */
-/**
- * Create a grouped rule accordion item
- */
-function createGroupedRuleAccordionItem(ruleGroup: ViolationGroup): DocumentFragment {
-    const clone = DomUtils.cloneTemplate("diagnostic-accordion-item-template");
-    DomUtils.setTemplateText(clone, ".violation-message", `${ruleGroup.displayName}`);
-    DomUtils.setTemplateAttribute(clone, ".violation-message", "data-severity", ruleGroup.severity);
-    DomUtils.setTemplateAttribute(clone, ".severity-badge", "data-severity", ruleGroup.severity);
-    DomUtils.setTemplateText(clone, ".severity-badge", ruleGroup.severity);
-
-    if (ruleGroup.violations.length > 1) {
-        DomUtils.setTemplateText(clone, ".violation-count-value", `${ruleGroup.violations.length}`);
-    }
-    else {
-        DomUtils.hideTemplateElement(clone, ".rule-violation-count");
-    }
-
-    const content = clone.querySelector(".diagnostic-content") as HTMLElement;
-    if (content) {
-        const includeCardHeaders = ruleGroup.violations.length > 1;
-        ruleGroup.violations.forEach((violation: RuleViolation) => {
-            content.appendChild(ViolationUI.createViolationCard(violation, includeCardHeaders));
-        });
-    }
-
-    return clone;
-}
-
-/**
- * Build diagnostics report showing rule violations grouped by parent rule
- */
-function buildDiagnosticsReport(violationGroups: ViolationGroup[]): void {
-    if (!violationGroups || violationGroups.length === 0) return;
-    const diagnosticsSection = document.querySelector(".ui-diagnostics-report-section") as HTMLElement;
-    const accordion = DomUtils.cloneTemplate("diagnostics-accordion-template");
-    violationGroups.forEach((ruleGroup) => {
-        const accordionItem = createGroupedRuleAccordionItem(ruleGroup);
-        accordion.appendChild(accordionItem);
-    });
-
-    diagnosticsSection.appendChild(accordion);
-}
 
 /**
  * Set up table row with optional popover buttons

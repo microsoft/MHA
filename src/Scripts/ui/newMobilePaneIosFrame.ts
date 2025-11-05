@@ -108,45 +108,6 @@ function addCalloutEntry(name: string, value: string | number | null, parent: HT
     }
 }
 
-function buildDiagnosticsReport(viewModel: HeaderModel): void {
-    if (!viewModel.violationGroups || viewModel.violationGroups.length === 0) return;
-
-    const summaryContent = document.getElementById("summary-content")!;
-    const template = document.getElementById("diagnostics-section-template") as HTMLTemplateElement;
-    const clone = template.content.cloneNode(true) as DocumentFragment;
-    const accordion = clone.querySelector(".diagnostics-accordion") as HTMLElement;
-
-    viewModel.violationGroups.forEach((group) => {
-        const itemTemplate = document.getElementById("diagnostic-accordion-item-template") as HTMLTemplateElement;
-        const itemClone = itemTemplate.content.cloneNode(true) as DocumentFragment;
-
-        const badge = itemClone.querySelector(".severity-badge") as HTMLElement;
-        badge.setAttribute("data-severity", group.severity);
-        badge.textContent = group.severity.toUpperCase();
-
-        const message = itemClone.querySelector(".violation-message") as HTMLElement;
-        message.setAttribute("data-severity", group.severity);
-        message.textContent = group.displayName;
-
-        const count = itemClone.querySelector(".violation-count") as HTMLElement;
-        if (group.violations.length > 1) {
-            count.textContent = ` (${group.violations.length})`;
-        } else {
-            count.classList.add("hidden");
-        }
-
-        const content = itemClone.querySelector(".diagnostic-content") as HTMLElement;
-        const includeCardHeaders = group.violations.length > 1;
-        group.violations.forEach((violation) => {
-            content.appendChild(ViolationUI.createViolationCard(violation, includeCardHeaders));
-        });
-
-        accordion.appendChild(itemClone);
-    });
-
-    summaryContent.appendChild(clone);
-}
-
 function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderModel) {
     if (spamRow.value) {
         const template = document.getElementById("spam-report-accordion-item-template") as HTMLTemplateElement;
@@ -230,7 +191,10 @@ function buildSummaryTab(viewModel: HeaderModel): void {
         DomUtils.showElement("#orig-headers-ui");
     }
 
-    buildDiagnosticsReport(viewModel);
+    const diagnosticsSection = ViolationUI.buildDiagnosticsSection(viewModel.violationGroups);
+    if (diagnosticsSection) {
+        summaryContent.appendChild(diagnosticsSection);
+    }
 }
 
 function buildReceivedTab(viewModel: HeaderModel): void {
