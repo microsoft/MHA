@@ -150,7 +150,7 @@ a.tab-link {
 }
 
 #antispam-view .accordion-item {
-    background: white;
+    background: var(--white);
     border-top: 1px solid var(--light-grey-border);
     border-bottom: 1px solid var(--light-grey-border);
 }
