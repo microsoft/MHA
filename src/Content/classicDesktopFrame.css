@@ -356,11 +356,10 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     border-bottom: none;
 }
 
+/* Classic-specific overrides for violation card header */
 .violation-card-header {
     padding: 4px 0;
     font-weight: bold;
-    display: flex;
-    align-items: center;
 }
 
 .diagnostic-violations {
@@ -376,24 +375,14 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     background-color: var(--severity-bg);
 }
 
-.violation-card-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 4px;
-}
-
+/* Classic-specific overrides for violation details */
 .violation-details {
     margin-top: 4px;
     padding-left: 20px;
     padding-bottom: 0px;
-    font-size: 12px;
-    color: var(--text-secondary);
 }
 
 .violation-rule {
-    font-family: monospace;
-    font-size: 12px;
-    margin-bottom: 4px;
     padding-bottom: 0px;
 }
 

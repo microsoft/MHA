@@ -320,13 +320,9 @@
     font-family: var(--font-family);
 }
 
+/* Desktop-specific overrides for violation card header */
 .violation-card-header {
-    display: flex;
     align-items: flex-start;
-}
-
-.violation-details {
-    display: none;
 }
 
 .violation-message {
@@ -362,6 +358,7 @@
     margin-bottom: 0;
 }
 
+/* Desktop-specific: show violation details in cards */
 .violation-card .violation-details {
     display: block;
     padding: 0px;

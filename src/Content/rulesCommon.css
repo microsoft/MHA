@@ -68,6 +68,17 @@
     color: var(--diagnostic-info-text);
 }
 
+/* Violation Card Components */
+.violation-card-header {
+    display: flex;
+    align-items: center;
+}
+
+.violation-details {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
 /* Violation Details */
 .violation-rule {
     font-family: monospace;
