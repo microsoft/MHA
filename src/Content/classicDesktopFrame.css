@@ -367,12 +367,11 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     padding-left: 20px;
 }
 
+/* Classic-specific overrides for violation card */
 .violation-card {
     padding: 6px 0;
     margin-bottom: 6px;
-    border-left: 3px solid var(--severity-border);
     padding-left: 8px;
-    background-color: var(--severity-bg);
 }
 
 /* Classic-specific overrides for violation details */

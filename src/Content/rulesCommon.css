@@ -74,6 +74,11 @@
     align-items: center;
 }
 
+.violation-card {
+    border-left: 3px solid var(--severity-border);
+    background-color: var(--severity-bg);
+}
+
 .violation-details {
     font-size: 12px;
     color: var(--text-secondary);

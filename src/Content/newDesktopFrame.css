@@ -343,7 +343,6 @@
     font-size: 0.75rem;
     font-weight: 400;
     gap: 12px;
-    background: transparent;
     border-radius: 8px;
     transition: all 0.2s ease;
     flex-direction: column;
