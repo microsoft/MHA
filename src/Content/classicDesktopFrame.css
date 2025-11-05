@@ -356,7 +356,7 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     border-bottom: none;
 }
 
-.diagnostic-group-header {
+.violation-card-header {
     padding: 4px 0;
     font-weight: bold;
     display: flex;
