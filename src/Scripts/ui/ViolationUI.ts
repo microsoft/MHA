@@ -100,19 +100,6 @@ export class ViolationUI {
             message.setAttribute("data-severity", group.severity);
             message.textContent = group.displayName;
 
-            // Set count
-            const count = itemClone.querySelector(".violation-count") as HTMLElement;
-            if (group.violations.length > 1) {
-                const countValue = count.querySelector(".violation-count-value");
-                if (countValue) {
-                    countValue.textContent = `${group.violations.length}`;
-                } else {
-                    count.textContent = ` (${group.violations.length})`;
-                }
-            } else {
-                count.style.display = "none";
-            }
-
             // Add violation cards
             const content = itemClone.querySelector(".diagnostic-content")!;
             const includeCardHeaders = group.violations.length > 1;

@@ -397,13 +397,6 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     padding-bottom: 0px;
 }
 
-.violation-count {
-    margin-left: 6px;
-    font-size: 12px;
-    color: var(--text-secondary);
-    font-weight: normal;
-}
-
 .violation-parent-message {
     padding-top: 4px;
 }
