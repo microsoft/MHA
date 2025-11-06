@@ -147,6 +147,11 @@ describe("GetRules", () => {
         });
 
         test("should handle multiple calls (memoization)", async () => {
+            // This test verifies the singleton pattern: getRules() loads from the server
+            // only once, then subsequent calls reuse the cached rules without re-fetching.
+            // This is critical for performance - we don't want to reload rules.json on every
+            // header analysis.
+
             /* eslint-disable @typescript-eslint/naming-convention */
             const mockRulesResponse = {
                 IsError: false,
@@ -165,17 +170,23 @@ describe("GetRules", () => {
             const callback1 = jest.fn();
             const callback2 = jest.fn();
 
-            // First call
+            // First call - should load from server
             await getRules(callback1);
 
-            // Second call (should use cached rules)
+            // Second call - should NOT reload, uses cached rules
             await getRules(callback2);
 
-            // Fetch should only be called once
+            // Verify memoization: fetch called only once (not twice)
             expect(mockFetch).toHaveBeenCalledTimes(1);
-            // Both callbacks should be called
-            expect(callback1).toHaveBeenCalled();
-            expect(callback2).toHaveBeenCalled();
+            expect(mockFetch).toHaveBeenCalledWith("/Pages/data/rules.json");
+
+            // Both callbacks should still be invoked (even on cached path)
+            expect(callback1).toHaveBeenCalledTimes(1);
+            expect(callback2).toHaveBeenCalledTimes(1);
+
+            // Verify the rules are available in the singleton store
+            expect(ruleStore.simpleRuleSet).toBeDefined();
+            expect(ruleStore.andRuleSet).toBeDefined();
         });
     });
 });
