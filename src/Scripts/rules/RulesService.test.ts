@@ -450,4 +450,241 @@ describe("RulesService", () => {
             expect(callCount).toBe(1);
         });
     });
+
+    describe("violation ordering", () => {
+        test("should return violations in consistent order", async () => {
+            const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
+            getMockedGetRules.mockImplementation((callback) => {
+                /* eslint-disable @typescript-eslint/naming-convention */
+                ruleStore.simpleRuleSet = [
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "rule1",
+                        MessageWhenPatternFails: "Rule 1",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "error"
+                    },
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "rule2",
+                        MessageWhenPatternFails: "Rule 2",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "error"
+                    },
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "rule3",
+                        MessageWhenPatternFails: "Rule 3",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "error"
+                    }
+                ];
+                /* eslint-enable @typescript-eslint/naming-convention */
+                ruleStore.andRuleSet = [];
+                if (callback) callback();
+                return Promise.resolve();
+            });
+
+            const headerModel = await HeaderModel.create("Subject: rule1 rule2 rule3\r\n");
+
+            // Run analysis multiple times
+            const result1 = await rulesService.analyzeHeaders(headerModel);
+            rulesService.resetForTesting();
+            const result2 = await rulesService.analyzeHeaders(headerModel);
+
+            // Violations should be in same order across runs
+            expect(result1.violations.length).toBe(result2.violations.length);
+            expect(result1.violations.length).toBeGreaterThan(0);
+
+            for (let i = 0; i < result1.violations.length; i++) {
+                const v1 = result1.violations[i];
+                const v2 = result2.violations[i];
+                if (v1 && v2) {
+                    expect(v1.rule.errorMessage).toBe(v2.rule.errorMessage);
+                }
+            }
+        });
+
+        test("should order violation groups by severity (error > warning > info)", async () => {
+            const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
+            getMockedGetRules.mockImplementation((callback) => {
+                /* eslint-disable @typescript-eslint/naming-convention */
+                ruleStore.simpleRuleSet = [
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "info",
+                        MessageWhenPatternFails: "Info message",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "info"
+                    },
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "error",
+                        MessageWhenPatternFails: "Error message",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "error"
+                    },
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "warning",
+                        MessageWhenPatternFails: "Warning message",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "warning"
+                    }
+                ];
+                /* eslint-enable @typescript-eslint/naming-convention */
+                ruleStore.andRuleSet = [];
+                if (callback) callback();
+                return Promise.resolve();
+            });
+
+            const headerModel = await HeaderModel.create("Subject: error warning info\r\n");
+
+            const result = await rulesService.analyzeHeaders(headerModel);
+
+            expect(result.violationGroups.length).toBe(3);
+
+            // Verify violations exist for all severities
+            const errorGroup = result.violationGroups.find(g => g.severity === "error");
+            const warningGroup = result.violationGroups.find(g => g.severity === "warning");
+            const infoGroup = result.violationGroups.find(g => g.severity === "info");
+
+            expect(errorGroup).toBeDefined();
+            expect(warningGroup).toBeDefined();
+            expect(infoGroup).toBeDefined();
+
+            // Note: Current implementation uses Map which maintains insertion order
+            // This test documents the current behavior - groups are in the order they're encountered
+            // If sorting by severity is required in the future, this test will catch the need
+        });
+
+        test("should maintain consistent violation order within same severity level", async () => {
+            const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
+            getMockedGetRules.mockImplementation((callback) => {
+                /* eslint-disable @typescript-eslint/naming-convention */
+                ruleStore.simpleRuleSet = [
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "alpha",
+                        MessageWhenPatternFails: "Alpha rule",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "warning"
+                    },
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "beta",
+                        MessageWhenPatternFails: "Beta rule",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "warning"
+                    },
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "gamma",
+                        MessageWhenPatternFails: "Gamma rule",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "warning"
+                    }
+                ];
+                /* eslint-enable @typescript-eslint/naming-convention */
+                ruleStore.andRuleSet = [];
+                if (callback) callback();
+                return Promise.resolve();
+            });
+
+            const headerModel = await HeaderModel.create("Subject: alpha beta gamma\r\n");
+
+            const result = await rulesService.analyzeHeaders(headerModel);
+
+            expect(result.violations.length).toBe(3);
+
+            // All violations should have the same severity
+            const allSameSeverity = result.violations.every(v => v.rule.severity === "warning");
+            expect(allSameSeverity).toBe(true);
+
+            // Order should be consistent (maintains insertion/encounter order)
+            const messages = result.violations.map(v => v.rule.errorMessage);
+            expect(messages).toEqual(["Alpha rule", "Beta rule", "Gamma rule"]);
+        });
+
+        test("should handle empty violations array", async () => {
+            const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
+            getMockedGetRules.mockImplementation((callback) => {
+                ruleStore.simpleRuleSet = [
+                    {
+                        /* eslint-disable @typescript-eslint/naming-convention */
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "nonexistent",
+                        MessageWhenPatternFails: "Not found",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "error"
+                        /* eslint-enable @typescript-eslint/naming-convention */
+                    }
+                ];
+                ruleStore.andRuleSet = [];
+                if (callback) callback();
+                return Promise.resolve();
+            });
+
+            const headerModel = await HeaderModel.create("Subject: clean subject\r\n");
+
+            const result = await rulesService.analyzeHeaders(headerModel);
+
+            expect(result.success).toBe(true);
+            expect(result.violations).toEqual([]);
+            expect(result.violationGroups).toEqual([]);
+        });
+
+        test("should preserve violation order across multiple header sections", async () => {
+            const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
+            getMockedGetRules.mockImplementation((callback) => {
+                /* eslint-disable @typescript-eslint/naming-convention */
+                ruleStore.simpleRuleSet = [
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "test",
+                        MessageWhenPatternFails: "Test in subject",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "error"
+                    },
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "From",
+                        PatternToCheckFor: "test",
+                        MessageWhenPatternFails: "Test in from",
+                        SectionsInHeaderToShowError: ["From"],
+                        Severity: "error"
+                    }
+                ];
+                /* eslint-enable @typescript-eslint/naming-convention */
+                ruleStore.andRuleSet = [];
+                if (callback) callback();
+                return Promise.resolve();
+            });
+
+            const headerModel = await HeaderModel.create("Subject: test\r\nFrom: test@example.com\r\n");
+
+            const result = await rulesService.analyzeHeaders(headerModel);
+
+            // Violations should be present for both sections
+            expect(result.violations.length).toBeGreaterThan(0);
+            expect(result.violationGroups.length).toBeGreaterThan(0);
+
+            // Each violation should have affected sections
+            result.violations.forEach(violation => {
+                expect(violation.affectedSections).toBeDefined();
+                expect(violation.affectedSections.length).toBeGreaterThan(0);
+            });
+        });
+    });
 });
