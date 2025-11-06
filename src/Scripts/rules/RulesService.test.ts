@@ -28,7 +28,7 @@ describe("RulesService", () => {
         ruleStore.andRuleSet = [];
     });
 
-    describe("analyzeHeaders", () => {
+    describe("rule loading", () => {
         test("should load rules on first call", async () => {
             const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
             getMockedGetRules.mockImplementation((callback) => {
@@ -42,6 +42,23 @@ describe("RulesService", () => {
 
             expect(getMockedGetRules).toHaveBeenCalled();
             expect(result.success).toBe(true);
+        });
+
+        test("should only call getRules once for multiple analyses (memoization)", async () => {
+            const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
+            getMockedGetRules.mockImplementation((callback) => {
+                if (callback) callback();
+                return Promise.resolve();
+            });
+
+            const headerModel1 = await HeaderModel.create();
+            const headerModel2 = await HeaderModel.create();
+
+            await rulesService.analyzeHeaders(headerModel1);
+            await rulesService.analyzeHeaders(headerModel2);
+
+            // getRules should only be called once (memoized)
+            expect(getMockedGetRules).toHaveBeenCalledTimes(1);
         });
 
         test("should return success with empty violations when no rules", async () => {
@@ -60,7 +77,9 @@ describe("RulesService", () => {
             expect(result.violationGroups).toHaveLength(0);
             expect(result.enrichedHeaders).toBe(headerModel);
         });
+    });
 
+    describe("simple rule processing", () => {
         test("should process simple rules and find violations", async () => {
             const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
             getMockedGetRules.mockImplementation((callback) => {
@@ -88,57 +107,6 @@ describe("RulesService", () => {
             expect(result.success).toBe(true);
             expect(result.violations.length).toBeGreaterThan(0);
             expect(result.violationGroups.length).toBeGreaterThan(0);
-        });
-
-        test("should process AND rules when all conditions met", async () => {
-            const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
-            getMockedGetRules.mockImplementation((callback) => {
-                /* eslint-disable @typescript-eslint/naming-convention */
-                ruleStore.simpleRuleSet = [];
-                ruleStore.andRuleSet = [
-                    {
-                        Message: "Spam sent to inbox",
-                        SectionsInHeaderToShowError: ["SFV"],
-                        Severity: "error",
-                        RulesToAnd: [
-                            {
-                                RuleType: "SimpleRule",
-                                SectionToCheck: "X-Forefront-Antispam-Report",
-                                PatternToCheckFor: "SFV:SPM",
-                                MessageWhenPatternFails: "Spam",
-                                SectionsInHeaderToShowError: ["SFV"],
-                                Severity: "info"
-                            },
-                            {
-                                RuleType: "SimpleRule",
-                                SectionToCheck: "X-Microsoft-Antispam-Mailbox-Delivery",
-                                PatternToCheckFor: "dest:I",
-                                MessageWhenPatternFails: "Inbox",
-                                SectionsInHeaderToShowError: ["X-Microsoft-Antispam-Mailbox-Delivery"],
-                                Severity: "info"
-                            }
-                        ]
-                    }
-                ];
-                /* eslint-enable @typescript-eslint/naming-convention */
-                if (callback) callback();
-                return Promise.resolve();
-            });
-
-            const headers =
-                "X-Forefront-Antispam-Report: SFV:SPM;CIP:1.2.3.4\r\n" +
-                "X-Microsoft-Antispam-Mailbox-Delivery: dest:I;auth:1\r\n";
-
-            const headerModel = await HeaderModel.create(headers);
-
-            const result = await rulesService.analyzeHeaders(headerModel);
-
-            expect(result.success).toBe(true);
-            expect(result.violations.length).toBeGreaterThan(0);
-
-            // Check that violations have parent AND rule context
-            const hasParentMessage = result.violations.some(v => v.parentMessage === "Spam sent to inbox");
-            expect(hasParentMessage).toBe(true);
         });
 
         test("should not find violations when patterns don't match", async () => {
@@ -194,23 +162,62 @@ describe("RulesService", () => {
             // Missing header rules might not create violations in the same way
             // but the analysis should complete successfully
         });
+    });
 
-        test("should handle errors gracefully", async () => {
+    describe("AND rule processing", () => {
+        test("should process AND rules when all conditions met", async () => {
             const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
-            getMockedGetRules.mockImplementation(() => {
-                throw new Error("Failed to load rules");
+            getMockedGetRules.mockImplementation((callback) => {
+                /* eslint-disable @typescript-eslint/naming-convention */
+                ruleStore.simpleRuleSet = [];
+                ruleStore.andRuleSet = [
+                    {
+                        Message: "Spam sent to inbox",
+                        SectionsInHeaderToShowError: ["SFV"],
+                        Severity: "error",
+                        RulesToAnd: [
+                            {
+                                RuleType: "SimpleRule",
+                                SectionToCheck: "X-Forefront-Antispam-Report",
+                                PatternToCheckFor: "SFV:SPM",
+                                MessageWhenPatternFails: "Spam",
+                                SectionsInHeaderToShowError: ["SFV"],
+                                Severity: "info"
+                            },
+                            {
+                                RuleType: "SimpleRule",
+                                SectionToCheck: "X-Microsoft-Antispam-Mailbox-Delivery",
+                                PatternToCheckFor: "dest:I",
+                                MessageWhenPatternFails: "Inbox",
+                                SectionsInHeaderToShowError: ["X-Microsoft-Antispam-Mailbox-Delivery"],
+                                Severity: "info"
+                            }
+                        ]
+                    }
+                ];
+                /* eslint-enable @typescript-eslint/naming-convention */
+                if (callback) callback();
+                return Promise.resolve();
             });
 
-            const headerModel = await HeaderModel.create();
+            const headers =
+                "X-Forefront-Antispam-Report: SFV:SPM;CIP:1.2.3.4\r\n" +
+                "X-Microsoft-Antispam-Mailbox-Delivery: dest:I;auth:1\r\n";
+
+            const headerModel = await HeaderModel.create(headers);
 
             const result = await rulesService.analyzeHeaders(headerModel);
 
-            expect(result.success).toBe(false);
-            expect(result.error).toBeDefined();
-            expect(result.violations).toHaveLength(0);
-            expect(result.violationGroups).toHaveLength(0);
-        });
+            expect(result.success).toBe(true);
+            expect(result.violations.length).toBeGreaterThan(0);
 
+            // Check that violations have parent AND rule context
+            const hasParentMessage = result.violations.some(v => v.parentMessage === "Spam sent to inbox");
+            expect(hasParentMessage).toBe(true);
+        });
+    });
+
+    describe("violation grouping", () => {
         test("should group violations by rule message", async () => {
             const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
             getMockedGetRules.mockImplementation((callback) => {
@@ -281,22 +288,23 @@ describe("RulesService", () => {
             if (errorGroup) expect(errorGroup.severity).toBe("error");
             if (warningGroup) expect(warningGroup.severity).toBe("warning");
         });
+    });
 
-        test("should only call getRules once for multiple analyses", async () => {
+    describe("error handling", () => {
+        test("should handle errors gracefully", async () => {
             const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
-            getMockedGetRules.mockImplementation((callback) => {
-                if (callback) callback();
-                return Promise.resolve();
+            getMockedGetRules.mockImplementation(() => {
+                throw new Error("Failed to load rules");
             });
 
-            const headerModel1 = await HeaderModel.create();
-            const headerModel2 = await HeaderModel.create();
+            const headerModel = await HeaderModel.create();
 
-            await rulesService.analyzeHeaders(headerModel1);
-            await rulesService.analyzeHeaders(headerModel2);
+            const result = await rulesService.analyzeHeaders(headerModel);
 
-            // getRules should only be called once (memoized)
-            expect(getMockedGetRules).toHaveBeenCalledTimes(1);
+            expect(result.success).toBe(false);
+            expect(result.error).toBeDefined();
+            expect(result.violations).toHaveLength(0);
+            expect(result.violationGroups).toHaveLength(0);
         });
     });
 });
