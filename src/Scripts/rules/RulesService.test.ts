@@ -33,6 +33,7 @@ describe("RulesService", () => {
             const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
             getMockedGetRules.mockImplementation((callback) => {
                 if (callback) callback();
+                return Promise.resolve();
             });
 
             const headerModel = await HeaderModel.create();
@@ -47,6 +48,7 @@ describe("RulesService", () => {
             const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
             getMockedGetRules.mockImplementation((callback) => {
                 if (callback) callback();
+                return Promise.resolve();
             });
 
             const headerModel = await HeaderModel.create();
@@ -76,6 +78,7 @@ describe("RulesService", () => {
                 ];
                 /* eslint-enable @typescript-eslint/naming-convention */
                 if (callback) callback();
+                return Promise.resolve();
             });
 
             const headerModel = await HeaderModel.create("Subject: urgent: Please respond\r\n"); // lowercase to match
@@ -119,6 +122,7 @@ describe("RulesService", () => {
                 ];
                 /* eslint-enable @typescript-eslint/naming-convention */
                 if (callback) callback();
+                return Promise.resolve();
             });
 
             const headers =
@@ -153,6 +157,7 @@ describe("RulesService", () => {
                 ];
                 /* eslint-enable @typescript-eslint/naming-convention */
                 if (callback) callback();
+                return Promise.resolve();
             });
 
             const headerModel = await HeaderModel.create("Subject: Clean email\r\n");
@@ -178,6 +183,7 @@ describe("RulesService", () => {
                 ];
                 /* eslint-enable @typescript-eslint/naming-convention */
                 if (callback) callback();
+                return Promise.resolve();
             });
 
             const headerModel = await HeaderModel.create("Subject: Test\r\n");
@@ -221,6 +227,7 @@ describe("RulesService", () => {
                 ];
                 /* eslint-enable @typescript-eslint/naming-convention */
                 if (callback) callback();
+                return Promise.resolve();
             });
 
             const headerModel = await HeaderModel.create("From: test@example.com\r\nTo: recipient@test.com\r\n");
@@ -259,6 +266,7 @@ describe("RulesService", () => {
                 ];
                 /* eslint-enable @typescript-eslint/naming-convention */
                 if (callback) callback();
+                return Promise.resolve();
             });
 
             const headerModel = await HeaderModel.create("Subject: error warning\r\n");
@@ -278,6 +286,7 @@ describe("RulesService", () => {
             const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
             getMockedGetRules.mockImplementation((callback) => {
                 if (callback) callback();
+                return Promise.resolve();
             });
 
             const headerModel1 = await HeaderModel.create();

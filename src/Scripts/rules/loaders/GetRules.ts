@@ -19,8 +19,9 @@ type CompletionCallback = () => void;
  * Get Rules function loads validation rules from local JSON file
  * This replaces the previous server-based approach with a simple local file load
  * All rule processing logic remains the same, only the source has changed
+ * @returns Promise that resolves when rules are loaded
  */
-export function getRules(doOnCompletion?: CompletionCallback): void {
+export function getRules(doOnCompletion?: CompletionCallback): Promise<void> {
     console.log("🔍 getRules: ⚡ Starting rules loading from local file");
     console.log("🔍 getRules: 📁 Loading rules from src/data/rules.json");
     console.log("🔍 getRules: AlreadyRetrievedRules:", alreadyRetrievedRules);
@@ -29,13 +30,14 @@ export function getRules(doOnCompletion?: CompletionCallback): void {
         console.log("🔍 getRules: First time loading rules from local file");
         alreadyRetrievedRules = true;
 
-        // Load rules from local JSON file
-        loadLocalRules();
+        // Load rules from local JSON file and return the promise
+        return loadLocalRules();
     } else {
         console.log("🔍 GetRules: Rules already loaded, calling completion handler");
         if (doOnCompletion) {
             doOnCompletion();
         }
+        return Promise.resolve();
     }
 
     // Load rules from local JSON file

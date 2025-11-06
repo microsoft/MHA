@@ -23,9 +23,9 @@ class RulesService {
             return this.loadingPromise;
         }
 
-        this.loadingPromise = new Promise<void>((resolve, reject) => {
+        this.loadingPromise = (async () => {
             try {
-                getRules(
+                await getRules(
                     () => {
                         console.log("🔍 RulesService: Rules loaded successfully");
                         console.log("🔍 RulesService: SimpleRules:", ruleStore.simpleRuleSet?.length || 0);
@@ -33,14 +33,13 @@ class RulesService {
 
                         headerValidationRules.setRules(ruleStore.simpleRuleSet, ruleStore.andRuleSet);
                         this.rulesLoaded = true;
-                        resolve();
                     }
                 );
             } catch (error) {
                 console.error("🔍 RulesService: Failed to load rules:", error);
-                reject(error);
+                throw error;
             }
-        });
+        })();
 
         return this.loadingPromise;
     }

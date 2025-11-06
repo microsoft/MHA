@@ -40,10 +40,7 @@ describe("GetRules", () => {
             } as Response);
 
             const completionCallback = jest.fn();
-            getRules(completionCallback);
-
-            // Wait for async operations
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await getRules(completionCallback);
 
             expect(mockFetch).toHaveBeenCalledWith("/Pages/data/rules.json");
             expect(ruleStore.simpleRuleSet).toHaveLength(1);
@@ -82,9 +79,7 @@ describe("GetRules", () => {
             } as Response);
 
             const completionCallback = jest.fn();
-            getRules(completionCallback);
-
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await getRules(completionCallback);
 
             expect(ruleStore.andRuleSet).toHaveLength(1);
             expect(ruleStore.andRuleSet[0]!.Message).toBe("Spam to inbox");
@@ -105,9 +100,7 @@ describe("GetRules", () => {
                 json: async () => mockRulesResponse,
             } as Response);
 
-            getRules(); // No callback provided
-
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await getRules(); // No callback provided
 
             // Should not throw error
         });
@@ -147,9 +140,7 @@ describe("GetRules", () => {
                 json: async () => mockRulesResponse,
             } as Response);
 
-            getRules();
-
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await getRules();
 
             expect(ruleStore.simpleRuleSet).toHaveLength(1);
             expect(ruleStore.simpleRuleSet[0]!.SectionToCheck).toBe("New");
@@ -175,12 +166,10 @@ describe("GetRules", () => {
             const callback2 = jest.fn();
 
             // First call
-            getRules(callback1);
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await getRules(callback1);
 
             // Second call (should use cached rules)
-            getRules(callback2);
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await getRules(callback2);
 
             // Fetch should only be called once
             expect(mockFetch).toHaveBeenCalledTimes(1);
