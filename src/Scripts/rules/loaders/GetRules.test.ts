@@ -189,4 +189,119 @@ describe("GetRules", () => {
             expect(ruleStore.andRuleSet).toBeDefined();
         });
     });
+
+    describe("error handling", () => {
+        test("should handle network fetch failures gracefully", async () => {
+            const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
+            mockFetch.mockRejectedValueOnce(new Error("Network error"));
+
+            const completionCallback = jest.fn();
+
+            await getRules(completionCallback);
+
+            // Callback should still be invoked (graceful degradation)
+            expect(completionCallback).toHaveBeenCalled();
+
+            // Rules should remain empty after error
+            expect(ruleStore.simpleRuleSet).toHaveLength(0);
+            expect(ruleStore.andRuleSet).toHaveLength(0);
+        });
+
+        test("should handle HTTP error responses (404, 500, etc.)", async () => {
+            const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
+            mockFetch.mockResolvedValueOnce({
+                ok: false,
+                status: 404,
+                statusText: "Not Found"
+            } as Response);
+
+            const completionCallback = jest.fn();
+
+            await getRules(completionCallback);
+
+            // Callback should still be invoked
+            expect(completionCallback).toHaveBeenCalled();
+
+            // Rules should remain empty
+            expect(ruleStore.simpleRuleSet).toHaveLength(0);
+            expect(ruleStore.andRuleSet).toHaveLength(0);
+        });
+
+        test("should handle invalid JSON responses", async () => {
+            const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => {
+                    throw new Error("Unexpected token < in JSON at position 0");
+                }
+            } as unknown as Response);
+
+            const completionCallback = jest.fn();
+
+            await getRules(completionCallback);
+
+            // Callback should still be invoked
+            expect(completionCallback).toHaveBeenCalled();
+
+            // Rules should remain empty
+            expect(ruleStore.simpleRuleSet).toHaveLength(0);
+            expect(ruleStore.andRuleSet).toHaveLength(0);
+        });
+
+        test("should handle IsError response from server", async () => {
+            /* eslint-disable @typescript-eslint/naming-convention */
+            const mockErrorResponse = {
+                IsError: true,
+                Message: "Server-side validation failed",
+                SimpleRules: [],
+                AndRules: []
+            };
+            /* eslint-enable @typescript-eslint/naming-convention */
+
+            const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => mockErrorResponse,
+            } as Response);
+
+            const completionCallback = jest.fn();
+
+            await getRules(completionCallback);
+
+            // Callback should still be invoked (graceful degradation)
+            expect(completionCallback).toHaveBeenCalled();
+
+            // Rules should NOT be loaded when IsError is true
+            expect(ruleStore.simpleRuleSet).toHaveLength(0);
+            expect(ruleStore.andRuleSet).toHaveLength(0);
+        });
+
+        test("should handle missing Message field in error response", async () => {
+            /* eslint-disable @typescript-eslint/naming-convention */
+            const mockErrorResponse = {
+                IsError: true,
+                // Message field is missing
+                SimpleRules: [],
+                AndRules: []
+            };
+            /* eslint-enable @typescript-eslint/naming-convention */
+
+            const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => mockErrorResponse,
+            } as Response);
+
+            const completionCallback = jest.fn();
+
+            await getRules(completionCallback);
+
+            // Callback should still be invoked
+            expect(completionCallback).toHaveBeenCalled();
+
+            // Rules should remain empty
+            expect(ruleStore.simpleRuleSet).toHaveLength(0);
+            expect(ruleStore.andRuleSet).toHaveLength(0);
+        });
+    });
 });
