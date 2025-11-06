@@ -4,22 +4,6 @@
   "SimpleRules": [
     {
       "RuleType": "SimpleRule",
-      "SectionToCheck": "Subject",
-      "PatternToCheckFor": ".+",
-      "MessageWhenPatternFails": "Subject is non-empty (debug warning)",
-      "SectionsInHeaderToShowError": ["Subject"],
-      "Severity": "warning"
-    },
-    {
-      "RuleType": "SimpleRule",
-      "SectionToCheck": "Subject",
-      "PatternToCheckFor": ".+",
-      "MessageWhenPatternFails": "Subject is non-empty (show in From and To)",
-      "SectionsInHeaderToShowError": ["From", "To"],
-      "Severity": "error"
-    },
-    {
-      "RuleType": "SimpleRule",
       "SectionToCheck": "Authentication-Results",
       "PatternToCheckFor": "spf=fail",
       "MessageWhenPatternFails": "Sender failed validation",

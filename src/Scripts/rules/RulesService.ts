@@ -164,6 +164,14 @@ class RulesService {
             };
         }
     }
+
+    /**
+     * Reset service state for testing
+     */
+    public resetForTesting(): void {
+        this.rulesLoaded = false;
+        this.loadingPromise = null;
+    }
 }
 
 // Export singleton instance

@@ -97,3 +97,13 @@ export function getRules(doOnCompletion?: CompletionCallback): void {
         console.log(text);
     }
 }
+
+/**
+ * Reset function for testing - clears the singleton state
+ * Only exported for test purposes
+ */
+export function resetRulesState(): void {
+    alreadyRetrievedRules = false;
+    ruleStore.simpleRuleSet = [];
+    ruleStore.andRuleSet = [];
+}
