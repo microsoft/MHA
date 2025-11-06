@@ -291,7 +291,10 @@ describe("RulesService", () => {
     });
 
     describe("error handling", () => {
-        test("should handle errors gracefully", async () => {
+        test("should handle getRules errors gracefully", async () => {
+            // Suppress expected console.error output in this test
+            const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => { });
+
             const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
             getMockedGetRules.mockImplementation(() => {
                 throw new Error("Failed to load rules");
@@ -303,8 +306,148 @@ describe("RulesService", () => {
 
             expect(result.success).toBe(false);
             expect(result.error).toBeDefined();
+            expect(result.error).toContain("Failed to load rules");
             expect(result.violations).toHaveLength(0);
             expect(result.violationGroups).toHaveLength(0);
+
+            consoleErrorSpy.mockRestore();
+        });
+
+        test("should handle sections with malformed data", async () => {
+            const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
+            getMockedGetRules.mockImplementation((callback) => {
+                /* eslint-disable @typescript-eslint/naming-convention */
+                ruleStore.simpleRuleSet = [
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "test",
+                        MessageWhenPatternFails: "Test error",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "error"
+                    }
+                ];
+                /* eslint-enable @typescript-eslint/naming-convention */
+                ruleStore.andRuleSet = [];
+                if (callback) callback();
+                return Promise.resolve();
+            });
+
+            const headerModel = await HeaderModel.create();
+            // Add malformed items to sections (missing required properties)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (headerModel.summary.rows as any).push({ invalid: "data" });
+
+            const result = await rulesService.analyzeHeaders(headerModel);
+
+            // Should still succeed despite malformed data
+            expect(result.success).toBe(true);
+        });
+
+        test("should handle missing rule properties", async () => {
+            const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
+            getMockedGetRules.mockImplementation((callback) => {
+                /* eslint-disable @typescript-eslint/naming-convention */
+                // Create a rule with missing MessageWhenPatternFails
+                ruleStore.simpleRuleSet = [
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "test",
+                        MessageWhenPatternFails: "", // Empty message
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "error"
+                    }
+                ];
+                /* eslint-enable @typescript-eslint/naming-convention */
+                ruleStore.andRuleSet = [];
+                if (callback) callback();
+                return Promise.resolve();
+            });
+
+            const headerModel = await HeaderModel.create("Subject: test\r\n");
+
+            const result = await rulesService.analyzeHeaders(headerModel);
+
+            // Should succeed but handle the empty message gracefully
+            expect(result.success).toBe(true);
+            // Violations might still be created with empty messages
+            if (result.violationGroups.length > 0) {
+                const group = result.violationGroups[0];
+                if (group) {
+                    expect(group.displayName).toBeDefined();
+                }
+            }
+        });
+
+        test("should handle errors during rule evaluation", async () => {
+            // Suppress expected console.error output in this test
+            const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => { });
+
+            const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
+            getMockedGetRules.mockImplementation((callback) => {
+                // Create a rule that might cause evaluation issues
+                /* eslint-disable @typescript-eslint/naming-convention */
+                ruleStore.simpleRuleSet = [
+                    {
+                        RuleType: "SimpleRule",
+                        SectionToCheck: "Subject",
+                        PatternToCheckFor: "(?:invalid", // Potentially problematic pattern
+                        MessageWhenPatternFails: "Test error",
+                        SectionsInHeaderToShowError: ["Subject"],
+                        Severity: "error"
+                    }
+                ];
+                /* eslint-enable @typescript-eslint/naming-convention */
+                ruleStore.andRuleSet = [];
+                if (callback) callback();
+                return Promise.resolve();
+            });
+
+            const headerModel = await HeaderModel.create();
+
+            const result = await rulesService.analyzeHeaders(headerModel);
+
+            // Should handle gracefully - either succeed with no violations or fail gracefully
+            expect(result).toBeDefined();
+            expect(result.violations).toBeInstanceOf(Array);
+            expect(result.violationGroups).toBeInstanceOf(Array);
+
+            consoleErrorSpy.mockRestore();
+        });
+
+        test("should handle concurrent analysis requests", async () => {
+            const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
+            let callCount = 0;
+            getMockedGetRules.mockImplementation((callback) => {
+                callCount++;
+                ruleStore.simpleRuleSet = [];
+                ruleStore.andRuleSet = [];
+                if (callback) callback();
+                return Promise.resolve();
+            });
+
+            // Reset and run multiple analyses concurrently
+            rulesService.resetForTesting();
+
+            const headerModel1 = await HeaderModel.create();
+            const headerModel2 = await HeaderModel.create();
+            const headerModel3 = await HeaderModel.create();
+
+            const results = await Promise.all([
+                rulesService.analyzeHeaders(headerModel1),
+                rulesService.analyzeHeaders(headerModel2),
+                rulesService.analyzeHeaders(headerModel3)
+            ]);
+
+            // All should succeed
+            expect(results).toHaveLength(3);
+            results.forEach(result => {
+                expect(result.success).toBe(true);
+            });
+
+            // getRules should only be called once due to memoization
+            expect(callCount).toBe(1);
         });
     });
 });
