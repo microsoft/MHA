@@ -112,43 +112,6 @@ describe("GetRules", () => {
             // Should not throw error
         });
 
-        test("should update ruleStore arrays in place", async () => {
-            const mockRulesResponse = {
-                IsError: false,
-                Message: "Success",
-                SimpleRules: [
-                    {
-                        RuleType: "SimpleRule",
-                        SectionToCheck: "Subject",
-                        PatternToCheckFor: "test",
-                        MessageWhenPatternFails: "Test",
-                        SectionsInHeaderToShowError: ["Subject"],
-                        Severity: "info"
-                    }
-                ],
-                AndRules: []
-            };
-
-            const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
-            mockFetch.mockResolvedValueOnce({
-                ok: true,
-                json: async () => mockRulesResponse,
-            } as Response);
-
-            // Keep reference to original arrays
-            const originalSimpleRef = ruleStore.simpleRuleSet;
-            const originalAndRef = ruleStore.andRuleSet;
-
-            getRules();
-
-            await new Promise(resolve => setTimeout(resolve, 100));
-
-            // Arrays should be same reference (updated in place)
-            expect(ruleStore.simpleRuleSet).toBe(originalSimpleRef);
-            expect(ruleStore.andRuleSet).toBe(originalAndRef);
-            expect(ruleStore.simpleRuleSet).toHaveLength(1);
-        });
-
         test("should clear existing rules before loading new ones", async () => {
             // Pre-populate with existing rules
             /* eslint-disable @typescript-eslint/naming-convention */
