@@ -68,6 +68,7 @@ body {
     padding: 5px 10px;
     word-wrap: break-word;
     white-space: pre-wrap;
+    margin: 0;
 }
 
 #orig-headers-ui {
@@ -86,6 +87,7 @@ body {
 .block-title {
     text-transform: none;
     white-space: normal;
+    margin-bottom: 0;
 }
 
 .tab .block-title:first-child {
@@ -94,6 +96,7 @@ body {
 
 .block {
     word-wrap: break-word;
+    margin-top: 0;
 }
 
 a {
