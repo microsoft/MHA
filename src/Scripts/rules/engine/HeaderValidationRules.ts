@@ -238,6 +238,26 @@ export class HeaderValidationRulesEngine {
                 });
             }
         });
+
+        // If this is a simple rule with a KEY:VALUE pattern, also flag the broken-out KEY row
+        // (e.g., X-Forefront-Antispam-Report with pattern "SFV:SPM" also flags the "SFV" row)
+        const simpleRule = rule as ISimpleValidationRule;
+        if ("violatesRule" in simpleRule) {
+            // Check if pattern matches KEY:VALUE format
+            const match = simpleRule.errorPattern.match(/^([A-Z]+):(.+)$/);
+
+            if (match && match[1]) {
+                const breakoutSectionName = match[1];
+
+                // Find the broken-out row section (e.g., "SFV", "IPV", "BCL", etc.)
+                const breakoutSections = findSectionSubSection(setOfSections, breakoutSectionName);
+
+                // Flag the broken-out section with this same rule
+                breakoutSections.forEach((breakoutSection) => {
+                    addRuleFlagged(breakoutSection, rule);
+                });
+            }
+        }
     }
 }
 
