@@ -1,3 +1,4 @@
+import { OtherRow } from "../../row/OtherRow";
 import { AndValidationRule } from "../types/AndValidationRule";
 import { HeaderSectionMissingRule } from "../types/HeaderSectionMissingRule";
 import { HeaderSection, IAndRuleData, IComplexValidationRule, IRuleData, ISimpleValidationRule, IValidationRule } from "../types/interfaces";
@@ -209,10 +210,33 @@ export class HeaderValidationRulesEngine {
             // Find all occurrences of the section the rule says to flag
             const sectionsToFlag = findSectionSubSection(setOfSections, sectionRuleSaysToFlag);
 
-            // For each of the sections that are to be flagged, associate the rule with the section
-            sectionsToFlag.forEach((sectionToFlag) => {
-                addRuleFlagged(sectionToFlag, rule);
-            });
+            if (sectionsToFlag.length === 0) {
+                // If no sections exist to flag, create a placeholder section
+                // This allows the violation to appear in the diagnostic report
+                // This is essential for HeaderSectionMissingRule (which checks for absent headers)
+                // and also handles edge cases like misconfigured rules or typos in section names
+
+                // Add the placeholder to the last section array (typically "Other" headers)
+                if (setOfSections.length > 0) {
+                    const lastSectionArray = setOfSections[setOfSections.length - 1];
+                    if (lastSectionArray) {
+                        // Create a proper OtherRow instance with appropriate number
+                        const rowNumber = lastSectionArray.length + 1;
+                        // Use a non-empty value so the row appears in new UI (which filters out empty values)
+                        const placeholderSection = new OtherRow(rowNumber, sectionRuleSaysToFlag, "(missing)");
+
+                        lastSectionArray.push(placeholderSection);
+
+                        // Flag the placeholder section
+                        addRuleFlagged(placeholderSection, rule);
+                    }
+                }
+            } else {
+                // For each of the sections that are to be flagged, associate the rule with the section
+                sectionsToFlag.forEach((sectionToFlag) => {
+                    addRuleFlagged(sectionToFlag, rule);
+                });
+            }
         });
     }
 }

@@ -250,11 +250,16 @@ describe("HeaderValidationRulesEngine", () => {
             // The X-Forefront-Antispam-Report section is missing
             engine.findComplexViolations(sections);
 
-            // Since the section is truly missing, we need to check that the rule was triggered
-            // The rule should be added to the rulesFlagged of the reporting section
-            // But since the section doesn't exist, we can't check rulesFlagged
-            // Instead, let's verify the rule itself can detect the violation
-            expect(rule.violatesComplexRule(sections)).toBe(true);
+            // After processing, a placeholder section should be created with the violation flagged
+            // The placeholder is added to the last section array
+            const lastSection = sections[sections.length - 1];
+            const placeholderSection = lastSection?.find(s => s.header === "X-Forefront-Antispam-Report");
+
+            expect(placeholderSection).toBeDefined();
+            expect(placeholderSection?.value).toBe("(missing)");
+            expect(placeholderSection?.rulesFlagged).toBeDefined();
+            expect(placeholderSection?.rulesFlagged).toHaveLength(1);
+            expect(placeholderSection?.rulesFlagged?.[0]).toBe(rule);
         });
 
         test("should detect AND rule violations", () => {
