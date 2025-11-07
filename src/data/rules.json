@@ -15,7 +15,7 @@
       "SectionToCheck": "Authentication-Results",
       "PatternToCheckFor": "dkim=fail.*",
       "MessageWhenPatternFails": "Sender failed validation",
-      "SectionsInHeaderToShowError": ["From"],
+      "SectionsInHeaderToShowError": ["From", "Authentication-Results"],
       "Severity": "error"
     },
     {
@@ -23,7 +23,7 @@
       "SectionToCheck": "Authentication-Results",
       "PatternToCheckFor": "dmarc=fail",
       "MessageWhenPatternFails": "Sender failed validation",
-      "SectionsInHeaderToShowError": ["From"],
+      "SectionsInHeaderToShowError": ["From", "Authentication-Results"],
       "Severity": "error"
     },
     {
@@ -39,7 +39,7 @@
       "SectionToCheck": "X-Forefront-Antispam-Report",
       "PatternToCheckFor": "IPV:CAL",
       "MessageWhenPatternFails": "IP is in customer allow list",
-      "SectionsInHeaderToShowError": ["Connecting IP Address"],
+      "SectionsInHeaderToShowError": ["Connecting IP Address", "X-Forefront-Antispam-Report"],
       "Severity": "info"
     },
     {
@@ -71,7 +71,7 @@
       "SectionToCheck": "X-Forefront-Antispam-Report",
       "PatternToCheckFor": "SFV:DMS",
       "MessageWhenPatternFails": "Spam verdict ignored due to tenant settings",
-      "SectionsInHeaderToShowError": ["SFV"],
+      "SectionsInHeaderToShowError": ["SFV", "X-Forefront-Antispam-Report"],
       "Severity": "error"
     },
     {
@@ -87,7 +87,7 @@
       "SectionToCheck": "X-MS-Exchange-Organization-ExtractionTags",
       "PatternToCheckFor": "CTRY:NG",
       "MessageWhenPatternFails": "IP Originating from Nigeria",
-      "SectionsInHeaderToShowError": ["X-MS-Exchange-Organization-ExtractionTags"],
+      "SectionsInHeaderToShowError": ["X-MS-Exchange-Organization-ExtractionTags", "Connecting IP Address"],
       "Severity": "error"
     },
     {
@@ -95,7 +95,7 @@
       "SectionToCheck": "X-Forefront-Antispam-Report",
       "PatternToCheckFor": "CTRY:NG",
       "MessageWhenPatternFails": "IP Originating from Nigeria",
-      "SectionsInHeaderToShowError": ["X-Forefront-Antispam-Report"],
+      "SectionsInHeaderToShowError": ["X-Forefront-Antispam-Report", "Connecting IP Address"],
       "Severity": "error"
     },
     {
