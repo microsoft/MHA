@@ -22,7 +22,7 @@ export class ForefrontAntiSpamReport extends AntiSpamReport {
         new Row("SFTY", mhaStrings.mhaSfty, "X-Forefront-Antispam-Report"),
         new Row("SRV", mhaStrings.mhaSrv, "X-Forefront-Antispam-Report"),
         new Row("X-CustomSpam", mhaStrings.mhaCustomSpam, "X-Forefront-Antispam-Report"),
-        new Row("SFS", mhaStrings.mhaSfs, "SFS"),
+        new Row("SFS", mhaStrings.mhaSfs, "X-Forefront-Antispam-Report"),
         new Row("source", mhaStrings.mhaSource, "X-Microsoft-Antispam"),
         new Row("unparsed", mhaStrings.mhaUnparsed, "X-Microsoft-Antispam"),
         // Add the header name itself as a section for rules validation compatibility
