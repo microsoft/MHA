@@ -1,5 +1,5 @@
 import { HeaderModel } from "../HeaderModel";
-import { getRules, ruleStore } from "./loaders/GetRules";
+import { getRules, resetRulesState, ruleStore } from "./loaders/GetRules";
 import { rulesService } from "./RulesService";
 
 // Mock the getRules function
@@ -7,25 +7,26 @@ jest.mock("./loaders/GetRules", () => {
     const actualModule = jest.requireActual("./loaders/GetRules");
     return {
         ...actualModule,
-        getRules: jest.fn(),
-        ruleStore: {
-            simpleRuleSet: [],
-            andRuleSet: []
-        }
+        getRules: jest.fn()
     };
 });
 
 describe("RulesService", () => {
     beforeEach(() => {
-        // Reset mocks before each test
-        jest.clearAllMocks();
+        // Reset mocks before each test - use mockReset to clear implementations too
+        const getMockedGetRules = getRules as jest.MockedFunction<typeof getRules>;
+        getMockedGetRules.mockReset();
+
+        // Set up a default mock implementation
+        getMockedGetRules.mockImplementation((callback) => {
+            if (callback) callback();
+            return Promise.resolve();
+        });
 
         // Reset the RulesService singleton state
         rulesService.resetForTesting();
 
-        // Reset rule store
-        ruleStore.simpleRuleSet = [];
-        ruleStore.andRuleSet = [];
+        resetRulesState();
     });
 
     describe("rule loading", () => {

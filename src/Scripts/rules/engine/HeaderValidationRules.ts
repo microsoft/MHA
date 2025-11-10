@@ -51,12 +51,12 @@ export class HeaderValidationRulesEngine {
      * Find all the Violations that exist in the section. This only tests for violations of simple rules
      * (rules that implement 'violatesRule') as complex rules apply across multiple sections.
      */
-    public findViolations(section: string, sectionText: string): ISimpleValidationRule[] {
+    public findViolations(section: HeaderSection): ISimpleValidationRule[] {
         const rulesViolated: ISimpleValidationRule[] = [];
 
         this.validationRuleSet.forEach((rule) => {
             if (this.isSimpleRule(rule)) {
-                const flaggedText = rule.violatesRule(section, sectionText);
+                const flaggedText = rule.violatesRule(section);
 
                 if (flaggedText) {
                     rulesViolated.push(rule);
@@ -74,7 +74,7 @@ export class HeaderValidationRulesEngine {
         // for each section in the set of data displayed on one tab
         tabData.forEach((tabDataSection) => {
             // Find any violations of rules for that section
-            const newItemsFlagged = this.findViolations(tabDataSection.header, tabDataSection.value);
+            const newItemsFlagged = this.findViolations(tabDataSection);
 
             // For each rule that was violated
             newItemsFlagged.forEach((ruleFlagged) => {
@@ -207,6 +207,12 @@ export class HeaderValidationRulesEngine {
 
         // For each section the rule says to flag
         rule.errorReportingSection.forEach((sectionRuleSaysToFlag) => {
+            // If this rule has a specific matched section (from an AND rule), only flag that section
+            if (rule.matchedSection) {
+                addRuleFlagged(rule.matchedSection, rule);
+                return;
+            }
+
             // Find all occurrences of the section the rule says to flag
             const sectionsToFlag = findSectionSubSection(setOfSections, sectionRuleSaysToFlag);
 
@@ -272,7 +278,7 @@ export function findSectionSubSection(setOfSections: HeaderSection[][], subSecti
 
     setOfSections.forEach((section) => {
         section.forEach((subSection) => {
-            if (subSection.header === subSectionLookingFor) {
+            if (subSection.header === subSectionLookingFor || subSection.headerName === subSectionLookingFor) {
                 results.push(subSection);
             }
         });

@@ -70,14 +70,23 @@ export class AndValidationRule implements IAndValidationRule {
 
                 // IF there are sections to examine to see if this part of the AND statement is true
                 if (sectionsToExamine && sectionsToExamine.length > 0) {
+                    // Check if ANY of the sections match this rule
+                    let foundMatch = false;
                     sectionsToExamine.forEach((section) => {
-                        if (allTrue) {
-                            // IF fails rule, then fails this test
-                            if (rule.violatesRule(section.header, section.value) === null) {
-                                allTrue = false;
+                        if (!foundMatch) {
+                            // IF passes rule, then this sub-rule is satisfied
+                            const result = rule.violatesRule(section);
+                            if (result !== null) {
+                                foundMatch = true;
+                                // Store the specific section that matched so it can be flagged later
+                                rule.matchedSection = section;
                             }
                         }
                     });
+
+                    if (!foundMatch) {
+                        allTrue = false;
+                    }
                 } else {
                     // IF nothing to prove this rule true, then it must be false.
                     allTrue = false;

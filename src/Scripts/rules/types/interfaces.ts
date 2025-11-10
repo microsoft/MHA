@@ -5,6 +5,7 @@ export interface HeaderSection {
     value: string;
     label?: string;
     url?: string;
+    headerName?: string;
     rulesFlagged?: IValidationRule[];
     // Properties specific to ReceivedRow
     from?: string;
@@ -24,10 +25,11 @@ export interface IValidationRule {
         severity: "error" | "warning" | "info";
     };
     errorPattern: string;
+    matchedSection?: HeaderSection; // Specific section that matched this rule (used in AND rules)
 }
 
 export interface ISimpleValidationRule extends IValidationRule {
-    violatesRule(section: string, sectionText: string): string | null;
+    violatesRule(section: HeaderSection): string | null;
 }
 
 export interface IComplexValidationRule extends IValidationRule {

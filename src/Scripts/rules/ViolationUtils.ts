@@ -46,7 +46,7 @@ export function highlightContent(content: string, violationGroups: ViolationGrou
  * Find violations that apply to a specific row by matching section and content
  */
 export function getViolationsForRow(
-    row: { id?: string; label?: string; valueUrl?: string; value?: string; header?: string },
+    row: { id?: string; label?: string; valueUrl?: string; value?: string; header?: string; headerName?: string },
     violationGroups: ViolationGroup[]
 ): RuleViolation[] {
     const matchingViolations: RuleViolation[] = [];
@@ -56,8 +56,10 @@ export function getViolationsForRow(
             // Check if violation applies to this row via any of its affected sections
             const matchesSection = violation.affectedSections.some(section => {
                 const headerSection = section as HeaderSection;
-                // Match by section header/name
-                return headerSection.header === row.label || headerSection.header === row.header;
+                // Match by section header/name or headerName property
+                return headerSection.header === row.label ||
+                       headerSection.header === row.header ||
+                       headerSection.header === row.headerName;
             });
 
             if (matchesSection) {

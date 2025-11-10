@@ -78,7 +78,7 @@ describe("SimpleValidationRule", () => {
                 "error"
             );
 
-            const result = rule.violatesRule("Subject", "This is a spam email");
+            const result = rule.violatesRule({ header: "Subject", value: "This is a spam email" });
             expect(result).toBe("spam");
         });
 
@@ -91,10 +91,10 @@ describe("SimpleValidationRule", () => {
                 "error"
             );
 
-            const result = rule.violatesRule(
-                "Authentication-Results",
-                "spf=fail action=quarantine"
-            );
+            const result = rule.violatesRule({
+                header: "Authentication-Results",
+                value: "spf=fail action=quarantine"
+            });
             expect(result).toBe("spf=fail");
         });
 
@@ -107,7 +107,7 @@ describe("SimpleValidationRule", () => {
                 "error"
             );
 
-            const result = rule.violatesRule("From", "This contains spam");
+            const result = rule.violatesRule({ header: "From", value: "This contains spam" });
             expect(result).toBeNull();
         });
 
@@ -120,7 +120,7 @@ describe("SimpleValidationRule", () => {
                 "error"
             );
 
-            const result = rule.violatesRule("Subject", "This is a clean email");
+            const result = rule.violatesRule({ header: "Subject", value: "This is a clean email" });
             expect(result).toBeNull();
         });
 
@@ -133,9 +133,9 @@ describe("SimpleValidationRule", () => {
                 "error"
             );
 
-            expect(rule.violatesRule("X-Microsoft-Antispam", "BCL:7")).toBe("BCL:7");
-            expect(rule.violatesRule("X-Microsoft-Antispam", "BCL:9")).toBe("BCL:9");
-            expect(rule.violatesRule("X-Microsoft-Antispam", "BCL:5")).toBeNull();
+            expect(rule.violatesRule({ header: "X-Microsoft-Antispam", value: "BCL:7" })).toBe("BCL:7");
+            expect(rule.violatesRule({ header: "X-Microsoft-Antispam", value: "BCL:9" })).toBe("BCL:9");
+            expect(rule.violatesRule({ header: "X-Microsoft-Antispam", value: "BCL:5" })).toBeNull();
         });
 
         test("should handle alternation patterns", () => {
@@ -147,10 +147,10 @@ describe("SimpleValidationRule", () => {
                 "info"
             );
 
-            expect(rule.violatesRule("X-Forefront-Antispam-Report", "SFV:SPM;other:data")).toBe("SFV:SPM");
-            expect(rule.violatesRule("X-Forefront-Antispam-Report", "SFV:BLK;other:data")).toBe("SFV:BLK");
-            expect(rule.violatesRule("X-Forefront-Antispam-Report", "SFV:SKI;other:data")).toBe("SFV:SKI");
-            expect(rule.violatesRule("X-Forefront-Antispam-Report", "SFV:NSPM")).toBeNull();
+            expect(rule.violatesRule({ header: "X-Forefront-Antispam-Report", value: "SFV:SPM;other:data" })).toBe("SFV:SPM");
+            expect(rule.violatesRule({ header: "X-Forefront-Antispam-Report", value: "SFV:BLK;other:data" })).toBe("SFV:BLK");
+            expect(rule.violatesRule({ header: "X-Forefront-Antispam-Report", value: "SFV:SKI;other:data" })).toBe("SFV:SKI");
+            expect(rule.violatesRule({ header: "X-Forefront-Antispam-Report", value: "SFV:NSPM" })).toBeNull();
         });
 
         test("should handle wildcard patterns", () => {
@@ -162,10 +162,10 @@ describe("SimpleValidationRule", () => {
                 "error"
             );
 
-            const result = rule.violatesRule(
-                "Authentication-Results",
-                "dkim=fail reason=signature_invalid"
-            );
+            const result = rule.violatesRule({
+                header: "Authentication-Results",
+                value: "dkim=fail reason=signature_invalid"
+            });
             expect(result).toBeTruthy();
             expect(result).toContain("dkim=fail");
         });
@@ -180,7 +180,7 @@ describe("SimpleValidationRule", () => {
             );
 
             // Empty pattern should match empty string
-            expect(rule.violatesRule("Subject", "")).toBe("");
+            expect(rule.violatesRule({ header: "Subject", value: "" })).toBe("");
         });
 
         test("should be case-sensitive by default", () => {
@@ -193,8 +193,8 @@ describe("SimpleValidationRule", () => {
             );
 
             // Default regex is case-sensitive
-            expect(rule.violatesRule("Subject", "spam")).toBeNull();
-            expect(rule.violatesRule("Subject", "SPAM")).toBe("SPAM");
+            expect(rule.violatesRule({ header: "Subject", value: "spam" })).toBeNull();
+            expect(rule.violatesRule({ header: "Subject", value: "SPAM" })).toBe("SPAM");
         });
 
         test("should handle country code patterns", () => {
@@ -206,10 +206,10 @@ describe("SimpleValidationRule", () => {
                 "error"
             );
 
-            expect(rule.violatesRule(
-                "X-Forefront-Antispam-Report",
-                "CIP:255.255.255.0;CTRY:NG;LANG:en"
-            )).toBe("CTRY:NG");
+            expect(rule.violatesRule({
+                header: "X-Forefront-Antispam-Report",
+                value: "CIP:255.255.255.0;CTRY:NG;LANG:en"
+            })).toBe("CTRY:NG");
         });
 
         test("should return first match of pattern", () => {
@@ -221,8 +221,26 @@ describe("SimpleValidationRule", () => {
                 "error"
             );
 
-            const result = rule.violatesRule("Subject", "test test test");
+            const result = rule.violatesRule({ header: "Subject", value: "test test test" });
             expect(result).toBe("test");
+        });
+
+        test("should match by headerName when header doesn't match", () => {
+            const rule = new SimpleValidationRule(
+                "X-Forefront-Antispam-Report",
+                "SFV:SPM",
+                "Spam detected",
+                "SFV",
+                "error"
+            );
+
+            // Row with header="source" but headerName="X-Forefront-Antispam-Report"
+            const result = rule.violatesRule({
+                header: "source",
+                value: "SFV:SPM;CIP:1.2.3.4",
+                headerName: "X-Forefront-Antispam-Report"
+            });
+            expect(result).toBe("SFV:SPM");
         });
     });
 

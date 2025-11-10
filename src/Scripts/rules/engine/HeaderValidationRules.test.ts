@@ -16,7 +16,7 @@ describe("HeaderValidationRulesEngine", () => {
             const rule = new SimpleValidationRule("Subject", "spam", "Spam detected", "Subject", "error");
             engine.addRule(rule);
 
-            const violations = engine.findViolations("Subject", "This is spam");
+            const violations = engine.findViolations({ header: "Subject", value: "This is spam" });
             expect(violations).toHaveLength(1);
             expect(violations[0]).toBe(rule);
         });
@@ -28,7 +28,7 @@ describe("HeaderValidationRulesEngine", () => {
             engine.addRule(rule1);
             engine.addRule(rule2);
 
-            const violations = engine.findViolations("Subject", "spam urgent");
+            const violations = engine.findViolations({ header: "Subject", value: "spam urgent" });
             expect(violations).toHaveLength(2);
         });
 
@@ -53,10 +53,10 @@ describe("HeaderValidationRulesEngine", () => {
             );
             engine.addRule(rule);
 
-            const violations = engine.findViolations(
-                "Authentication-Results",
-                "spf=fail action=quarantine"
-            );
+            const violations = engine.findViolations({
+                header: "Authentication-Results",
+                value: "spf=fail action=quarantine"
+            });
 
             expect(violations).toHaveLength(1);
             expect(violations[0]).toBe(rule);
@@ -66,7 +66,7 @@ describe("HeaderValidationRulesEngine", () => {
             const rule = new SimpleValidationRule("Subject", "spam", "Spam", "Subject", "error");
             engine.addRule(rule);
 
-            const violations = engine.findViolations("Subject", "Clean email");
+            const violations = engine.findViolations({ header: "Subject", value: "Clean email" });
             expect(violations).toHaveLength(0);
         });
 
@@ -77,10 +77,10 @@ describe("HeaderValidationRulesEngine", () => {
             engine.addRule(rule1);
             engine.addRule(rule2);
 
-            const violations = engine.findViolations(
-                "X-Forefront-Antispam-Report",
-                "SFV:SPM;CTRY:NG;CIP:1.2.3.4"
-            );
+            const violations = engine.findViolations({
+                header: "X-Forefront-Antispam-Report",
+                value: "SFV:SPM;CTRY:NG;CIP:1.2.3.4"
+            });
 
             expect(violations).toHaveLength(2);
         });
@@ -92,7 +92,7 @@ describe("HeaderValidationRulesEngine", () => {
             engine.addRule(simpleRule);
             engine.addRule(complexRule);
 
-            const violations = engine.findViolations("Subject", "test content");
+            const violations = engine.findViolations({ header: "Subject", value: "test content" });
             expect(violations).toHaveLength(1);
             expect(violations[0]).toBe(simpleRule);
         });
@@ -101,7 +101,7 @@ describe("HeaderValidationRulesEngine", () => {
             const rule = new SimpleValidationRule("Subject", "pattern", "Error", "Subject", "error");
             engine.addRule(rule);
 
-            const violations = engine.findViolations("From", "pattern");
+            const violations = engine.findViolations({ header: "From", value: "pattern" });
             expect(violations).toHaveLength(0);
         });
     });
@@ -387,7 +387,7 @@ describe("HeaderValidationRulesEngine", () => {
 
             engine.setRules(simpleRuleData, []);
 
-            const violations = engine.findViolations("Subject", "This is spam");
+            const violations = engine.findViolations({ header: "Subject", value: "This is spam" });
             expect(violations).toHaveLength(1);
             expect(violations[0]!.errorMessage).toBe("Spam detected");
         });
@@ -477,11 +477,11 @@ describe("HeaderValidationRulesEngine", () => {
             engine.setRules(newRuleData, []);
 
             // Old rule should be gone
-            const violations1 = engine.findViolations("A", "p");
+            const violations1 = engine.findViolations({ header: "A", value: "p" });
             expect(violations1).toHaveLength(0);
 
             // New rule should work
-            const violations2 = engine.findViolations("B", "q");
+            const violations2 = engine.findViolations({ header: "B", value: "q" });
             expect(violations2).toHaveLength(1);
         });
 
@@ -525,7 +525,7 @@ describe("HeaderValidationRulesEngine", () => {
 
             engine.setRules(ruleData, []);
 
-            const violations = engine.findViolations("Subject", "pattern");
+            const violations = engine.findViolations({ header: "Subject", value: "pattern" });
             expect(violations).toHaveLength(0);
         });
         /* eslint-enable @typescript-eslint/naming-convention */

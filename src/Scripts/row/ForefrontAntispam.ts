@@ -24,21 +24,12 @@ export class ForefrontAntiSpamReport extends AntiSpamReport {
         new Row("X-CustomSpam", mhaStrings.mhaCustomSpam, "X-Forefront-Antispam-Report"),
         new Row("SFS", mhaStrings.mhaSfs, "X-Forefront-Antispam-Report"),
         new Row("source", mhaStrings.mhaSource, "X-Forefront-Antispam-Report"),
-        new Row("unparsed", mhaStrings.mhaUnparsed, "X-Forefront-Antispam-Report"),
-        // Add the header name itself as a section for rules validation compatibility
-        new Row("X-Forefront-Antispam-Report", mhaStrings.mhaForefrontAntiSpamReport, "X-Forefront-Antispam-Report")
+        new Row("unparsed", mhaStrings.mhaUnparsed, "X-Forefront-Antispam-Report")
     ];
 
     public override add(header: Header): boolean {
         if (header.header.toUpperCase() === "X-Forefront-Antispam-Report".toUpperCase()) {
             this.parse(header.value);
-
-            // Set the header name row for rules validation compatibility
-            const headerNameRow = this.forefrontAntiSpamRows.find(row => row.header === "X-Forefront-Antispam-Report");
-            if (headerNameRow) {
-                headerNameRow.value = header.value;
-            }
-
             return true;
         }
 

@@ -4,7 +4,7 @@
 //    then display error message on UI for section
 //
 
-import { ISimpleValidationRule } from "./interfaces";
+import { HeaderSection, ISimpleValidationRule } from "./interfaces";
 
 // rule counter to assign unique rule numbers to each rule (internal number only)
 let uniqueRuleNumber = 0;
@@ -47,13 +47,19 @@ export class SimpleValidationRule implements ISimpleValidationRule {
 
     /**
      * Test this rule to see if it 'matches'
-     * @param section - Section in the header that contains this text
-     * @param sectionText - Text of the section within the email header
+     * @param section - Section object containing header, value, and headerName
      * @returns null if no match, otherwise the text that matched the errorPattern Regular Expression
      */
-    public violatesRule(section: string, sectionText: string): string | null {
-        if (section === this.checkSection) {
-            const matches = sectionText.match(this.errorPattern);
+    public violatesRule(section: HeaderSection): string | null {
+        // Check if the header directly matches
+        const headerMatches = section.header === this.checkSection;
+
+        // OR check if this is a broken-out row from the header we're looking for
+        // AND it's the "source" row which contains the full original value
+        const isSourceRow = section.headerName === this.checkSection && section.header === "source";
+
+        if (headerMatches || isSourceRow) {
+            const matches = section.value.match(this.errorPattern);
 
             if (matches && matches.length > 0) {
                 return matches[0];
