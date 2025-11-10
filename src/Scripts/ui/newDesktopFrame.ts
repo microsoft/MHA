@@ -510,7 +510,7 @@ function createRow(
             const highestSeverity = severities.includes("error") ? "error" : severities.includes("warning") ? "warning" : "info";
             popoverBtn.setAttribute("data-severity", highestSeverity);
             popoverBtn.id = `popover-btn-${row.id}`;
-            popoverBtn.setAttribute("aria-describedby", popoverBtn.id );
+            popoverBtn.setAttribute("aria-describedby", popover.id);
             popoverBtn.setAttribute("aria-label", `Show rule violations for ${row.label || row.header}`);
 
             attachOverlayPopup(popoverBtn, popover as HTMLElement);

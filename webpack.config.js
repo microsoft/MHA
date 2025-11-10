@@ -120,14 +120,12 @@ const pages = [
  * @returns {Object} An object representing the entry points for webpack.
  */
 function generateEntry() {
-    const entries = pages.reduce((config, page) => {
+    return pages.reduce((config, page) => {
         if (page.script) {
             config[page.script] = `./src/Scripts/ui/${page.script}.ts`;
         }
         return config;
     }, {});
-
-    return entries;
 }
 
 /**

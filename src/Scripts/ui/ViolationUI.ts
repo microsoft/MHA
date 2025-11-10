@@ -21,7 +21,7 @@ export class ViolationUI {
         return element;
     }
 
-    static createViolationCard(violation: RuleViolation, includeHeader = true): HTMLElement {
+    static createViolationCard(violation: RuleViolation, isGrouped = false): HTMLElement {
         const template = document.getElementById("violation-card-template") as HTMLTemplateElement;
         if (!template) {
             throw new Error("Template not found: violation-card-template");
@@ -32,11 +32,11 @@ export class ViolationUI {
         card.setAttribute("data-severity", violation.rule.severity);
 
         const header = card.querySelector(".violation-card-header") as HTMLElement;
-        if (!includeHeader && header) {
-            // Remove the header with badge and message for single violations
+        if (isGrouped && header) {
+            // Remove the header with badge and message when displayed in a group
             header.remove();
         } else if (header) {
-            // Populate the header for multiple violations
+            // Populate the header for individual violations
             const badge = header.querySelector(".severity-badge") as HTMLElement;
             badge.setAttribute("data-severity", violation.rule.severity);
             badge.textContent = violation.rule.severity.toUpperCase();
@@ -102,9 +102,9 @@ export class ViolationUI {
 
             // Add violation cards
             const content = itemClone.querySelector(".diagnostic-content")!;
-            const includeCardHeaders = group.violations.length > 1;
+            const isGrouped = group.violations.length > 1;
             group.violations.forEach((violation) => {
-                content.appendChild(this.createViolationCard(violation, includeCardHeaders));
+                content.appendChild(this.createViolationCard(violation, isGrouped));
             });
 
             accordion.appendChild(itemClone);
