@@ -1,4 +1,4 @@
-﻿import { DataTable } from "./DataTable";
+import { DataTable } from "./DataTable";
 import { DateWithNum } from "../DateWithNum";
 import { MHADates } from "../MHADates";
 import { mhaStrings } from "../mhaStrings";

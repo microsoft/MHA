@@ -21,7 +21,7 @@ export class HeaderModel {
     public set status(value) { this.statusInternal = value; }
     [index: string]: unknown;
 
-    constructor(headers?: string) {
+    private constructor() {
         this.summary = new Summary();
         this.receivedHeaders = new Received();
         this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
@@ -30,13 +30,20 @@ export class HeaderModel {
         this.originalHeaders = "";
         this.statusInternal = "";
         this.hasDataInternal = false;
-        if (headers) {
-            this.parseHeaders(headers);
-            Poster.postMessageToParent("modelToString", this.toString());
-        }
     }
 
-    public getHeaderList(headers: string): Header[] {
+    public static async create(headers?: string): Promise<HeaderModel> {
+        const model = new HeaderModel();
+
+        if (headers) {
+            model.parseHeaders(headers);
+            Poster.postMessageToParent("modelToString", model.toString());
+        }
+
+        return model;
+    }
+
+    public static getHeaderList(headers: string): Header[] {
         // First, break up out input by lines.
         // Keep empty lines for recognizing the boundary between the header section & the body.
         const lines: string[] = headers.split(/\r\n|\r|\n/);
@@ -112,7 +119,7 @@ export class HeaderModel {
         // Initialize originalHeaders in case we have parsing problems
         // Flatten CRLF to LF to avoid extra blank lines
         this.originalHeaders = headers.replace(/(?:\r\n|\r|\n)/g, "\n");
-        const headerList: Header[] = this.getHeaderList(headers);
+        const headerList: Header[] = HeaderModel.getHeaderList(headers);
 
         if (headerList.length > 0) {
             this.hasDataInternal = true;

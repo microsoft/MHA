@@ -38,7 +38,7 @@
             <div id="error-display" class="error-message" hidden>
                 <fluent-card class="error-card">
                     <div class="error-content">
-                        <span class="error-icon" aria-hidden="true">❌</span>
+                        <span class="fluent-icon fluent-icon--error" aria-hidden="true"></span>
                         <div class="error-text"></div>
                     </div>
                 </fluent-card>
@@ -84,7 +84,6 @@
     </template>
 
     <template id="hop-header-template">
-        <div class="hop-details-close" style="display:none"></div>
         <div class="hop-details-header">
             <h2 class="hop-title">Hop Details</h2>
         </div>
@@ -108,8 +107,10 @@
 
     <template id="table-row-template">
         <tr>
-            <td></td>
-            <td></td>
+            <td class="row-header"></td>
+            <td>
+                <div class="cell-main-content"></div>
+            </td>
         </tr>
     </template>
 
@@ -118,9 +119,11 @@
     </template>
 
     <template id="other-row-template">
-        <div class="section-header"></div>
+        <div class="other-header-wrapper">
+            <div class="row-header"></div>
+        </div>
         <div class="code-box">
-            <pre><code></code></pre>
+            <pre><code class="cell-main-content"></code></pre>
         </div>
     </template>
 
@@ -170,10 +173,10 @@
     </template>
 
     <template id="hop-template">
-        <div class="hop-details-overlay is-hidden">
+        <div class="details-overlay-popup is-hidden">
             <div class="hop-details-content"></div>
         </div>
     </template>
-
 </body>
 </html>
+

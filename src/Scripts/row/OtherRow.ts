@@ -3,7 +3,7 @@ import { Row } from "./Row";
 
 export class OtherRow extends Row {
     constructor(number: number, header: string, value: string) {
-        super(header, "", "");
+        super(header, "", header);  // headerName is same as header for OtherRow
         this.number = number;
         this.value = value;
         this.url = Strings.mapHeaderToURL(header);

@@ -229,6 +229,7 @@ export class ParentFrame {
                 if (!dialogSettings.hidden) {
                     dialogSettings.hidden = true;
                 }
+
                 if (!dialogDiagnostics.hidden) {
                     dialogDiagnostics.hidden = true;
                 }
@@ -239,7 +240,7 @@ export class ParentFrame {
                 const activeElement = document.activeElement;
                 const isRadioOrCheckbox = activeElement &&
                     (activeElement.tagName.toLowerCase() === "fluent-radio" ||
-                     activeElement.tagName.toLowerCase() === "fluent-checkbox");
+                        activeElement.tagName.toLowerCase() === "fluent-checkbox");
 
                 if (isRadioOrCheckbox) {
                     // Trigger the same action as the OK button
@@ -328,6 +329,7 @@ export class ParentFrame {
                     radioGroup.value = currentIndex.toString();
                 }
             }
+
             dialogSettings.hidden = false;
         });
 
