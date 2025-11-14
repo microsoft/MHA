@@ -88,7 +88,7 @@
     "@microsoft/applicationinsights-web": "^3.3.10",
     "@microsoft/office-js": "^1.1.110",
     "codepage": "^1.15.0",
-    "dayjs": "^1.11.18",
+    "dayjs": "^1.11.19",
     "framework7": "^8.3.4",
     "framework7-icons": "^5.0.5",
     "jwt-decode": "^4.0.0",
