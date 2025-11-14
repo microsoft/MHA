@@ -18,25 +18,6 @@
     height: calc(100% - var(--button-height) - 20px); /* nav bar height + padding */
 }
 
-.summary-table {
-    width: 100%;
-}
-
-    .summary-table td {
-        vertical-align: top;
-        word-wrap: break-word;
-        word-break: break-all;
-        padding: 8px 0;
-    }
-
-    .summary-table tr:first-child td {
-        padding-top: 4px;
-    }
-
-    .summary-table tr:last-child td {
-        padding-bottom: 4px;
-    }
-
 /* Spacing for summary list items */
 .summary-list .section-header {
     margin-top: 16px;
@@ -111,7 +92,7 @@
     display: block;
     font-size: 16px;
     line-height: 1.3;
-    color: #201f1e;
+    color: var(--text-primary);
     margin-bottom: 4px;
 }
 
@@ -119,7 +100,7 @@
     display: block;
     font-size: 12px;
     line-height: 1.3;
-    color: #323130;
+    color: var(--text-primary);
 }
 
 .hop-list-selection {
@@ -134,29 +115,23 @@
 .section-header {
     font-size: 12px;
     font-weight: 600;
-    color: #201f1e;
+    color: var(--text-primary);
     font-family: var(--font-family);
     margin-bottom: 8px;
 }
 
 /* Other view spacing */
-.other-list .section-header {
+.other-list .row-header {
     margin-top: 16px;
     margin-bottom: 4px;
 }
 
-.other-list .section-header:first-child {
+.other-list .row-header:first-child {
     margin-top: 8px;
 }
 
 .other-list .code-box {
     margin-bottom: 8px;
-}
-
-.field-name {
-    width: 15ch;
-    min-width: 15ch;
-    text-align: right;
 }
 
 /* Navigation button label management */
@@ -269,7 +244,7 @@
 
 .progress-description {
     font-size: 12px;
-    color: #323130;
+    color: var(--text-primary);
     margin-top: 4px;
     text-align: left;
     font-family: var(--font-family);
@@ -283,18 +258,17 @@
     display: none;
 }
 
-.hop-details-overlay.is-hidden {
+.details-overlay-popup.is-hidden {
     display: none !important;
 }
 
-.hop-details-overlay.is-shown {
+.details-overlay-popup.is-shown {
     display: block;
     position: fixed;
     z-index: 1000;
     background: var(--white);
     border: 1px solid var(--border-gray);
     border-radius: var(--border-radius);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
     padding: 24px 28px 12px 28px;
     width: 90vw;
     max-width: 500px;
@@ -302,7 +276,7 @@
 }
 
 /* Arrow pointing upward at the top of the pane */
-.hop-details-overlay.is-shown::before {
+.details-overlay-popup.is-shown::before {
     content: '';
     position: absolute;
     left: 50%;
@@ -313,7 +287,6 @@
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-bottom: 10px solid var(--white);
-    filter: drop-shadow(0 -1px 1px rgba(0,0,0,0.1));
 }
 
 .hop-title {

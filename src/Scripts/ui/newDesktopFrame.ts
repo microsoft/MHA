@@ -32,9 +32,6 @@ function initializeFluentUI(): void {
         });
     }
 
-    // Fluent UI Web Components don't need JavaScript initialization for most components
-    // Navigation and button behavior is handled with standard DOM events
-
     // Set up original headers toggle button
     const buttonElement = DomUtils.getElement("#orig-header-btn");
     if (buttonElement) {
@@ -119,7 +116,7 @@ function initializeFluentUI(): void {
     TabNavigation.initializeIFrameTabHandling();
 }
 
-// Add document-level click handler to close callouts when clicking outside
+// Add document-level click handler to close callouts and popovers when clicking outside
 document.addEventListener("click", function(event: Event) {
     const target = event.target as HTMLElement;
 
@@ -128,22 +125,28 @@ document.addEventListener("click", function(event: Event) {
         return;
     }
 
-    // Close all open callouts
-    document.querySelectorAll(".hop-details-overlay.is-shown").forEach(callout => {
+    // Don't close popovers if clicking inside them or their trigger buttons
+    if (target.closest(".details-overlay-popup") || target.closest(".show-diagnostics-popover-btn")) {
+        return;
+    }
+
+    closeAllPopups();
+});
+
+// Add escape key handler to close callouts and popovers
+document.addEventListener("keydown", function(event: KeyboardEvent) {
+    if (event.key === "Escape") {
+        closeAllPopups();
+    }
+});
+
+function closeAllPopups()
+{
+    document.querySelectorAll(".details-overlay-popup.is-shown").forEach(callout => {
         callout.classList.remove("is-shown");
         callout.classList.add("is-hidden");
     });
-});
-
-// Add escape key handler to close callouts
-document.addEventListener("keydown", function(event: KeyboardEvent) {
-    if (event.key === "Escape") {
-        document.querySelectorAll(".hop-details-overlay.is-shown").forEach(callout => {
-            callout.classList.remove("is-shown");
-            callout.classList.add("is-hidden");
-        });
-    }
-});
+}
 
 function updateStatus(message: string) {
     DomUtils.setText("#status-message", message);
@@ -161,15 +164,25 @@ function addCalloutEntry(name: string, value: string | number | null, parent: HT
     }
 }
 
-function buildViews(headers: string) {
-    const viewModel: HeaderModel = new HeaderModel(headers);
-    // Build summary view
+async function buildViews(headers: string) {
+    const viewModel = await HeaderModel.create(headers);
+
+    buildSummaryTab(viewModel);
+    buildReceivedTab(viewModel);
+    buildAntispamTab(viewModel);
+    buildOtherTab(viewModel);
+}
+
+function buildSummaryTab(viewModel: HeaderModel) {
     const summaryList = document.querySelector(".summary-list") as HTMLElement;
+
     viewModel.summary.rows.forEach((row: SummaryRow) => {
         if (row.value) {
             const clone = DomUtils.cloneTemplate("summary-row-template");
             DomUtils.setTemplateText(clone, ".section-header", row.label);
-            DomUtils.setTemplateText(clone, "code", row.value);
+
+            DomUtils.setTemplateHTML(clone, "code", row.value);
+
             summaryList.appendChild(clone);
         }
     });
@@ -179,12 +192,12 @@ function buildViews(headers: string) {
     if (viewModel.originalHeaders) {
         DomUtils.showElement(".orig-header-ui");
     }
+}
 
-    // Build received view
+function buildReceivedTab(viewModel: HeaderModel) {
     const receivedList = document.querySelector(".received-list") as HTMLElement;
 
     if (viewModel.receivedHeaders.rows.length > 0) {
-        // Use HTML template for list creation
         const listClone = DomUtils.cloneTemplate("received-list-template");
         receivedList.appendChild(listClone);
         const list = receivedList.querySelector("ul") as HTMLElement;
@@ -192,14 +205,12 @@ function buildViews(headers: string) {
         let firstRow = true;
         viewModel.receivedHeaders.rows.forEach((row: ReceivedRow, index) => {
             // Fix for Bug 1846002 - Added attr ID to set focus for the first element in the list
-            // Use HTML template for list item creation
             const itemClone = DomUtils.cloneTemplate("list-item-template");
             const listItem = itemClone.querySelector("li") as HTMLElement;
             listItem.id = "received" + index;
             list.appendChild(itemClone);
 
             if (firstRow) {
-                // Use HTML template for first row content
                 const listItemElement = listItem;
                 if (listItemElement) {
                     const clone = DomUtils.cloneTemplate("first-row-template");
@@ -209,7 +220,6 @@ function buildViews(headers: string) {
                 }
                 firstRow = false;
             } else {
-                // Use HTML template for progress icon
                 const progressClone = DomUtils.cloneTemplate("progress-icon-template");
 
                 // Set the progress value for fluent-progress
@@ -226,7 +236,6 @@ function buildViews(headers: string) {
 
                 listItem.appendChild(progressClone);
 
-                // Use HTML template for secondary text
                 const listItemElement = listItem;
                 if (listItemElement) {
                     const clone = DomUtils.cloneTemplate("secondary-text-template");
@@ -239,7 +248,6 @@ function buildViews(headers: string) {
             const selectionClone = DomUtils.cloneTemplate("selection-target-template");
             listItem.appendChild(selectionClone);
 
-            // Callout - Use HTML template for callout structure
             const calloutClone = DomUtils.cloneTemplate("hop-template");
 
             // Add callout header to the tooltip content
@@ -260,155 +268,120 @@ function buildViews(headers: string) {
             addCalloutEntry("For", row.for.value, calloutContent);
             addCalloutEntry("Via", row.via.value, calloutContent);
 
-            function toggleCallout(listItem: HTMLElement) {
-                const calloutElement = listItem.querySelector(".hop-details-overlay") as HTMLElement;
-
-                // Check if this callout is currently shown BEFORE hiding others
-                const isCurrentlyShown = calloutElement && calloutElement.classList.contains("is-shown");
-
-                // Hide all callouts first
-                document.querySelectorAll(".hop-details-overlay").forEach(callout => {
-                    callout.classList.remove("is-shown");
-                    callout.classList.add("is-hidden");
-                });
-
-                // If this callout was NOT currently shown, show it
-                // If it WAS currently shown, leave it hidden (toggle behavior)
-                if (calloutElement && !isCurrentlyShown) {
-                    calloutElement.classList.remove("is-hidden");
-                    calloutElement.classList.add("is-shown");
-
-                    // Position the callout relative to the list item
-                    const listItemRect = listItem.getBoundingClientRect();
-                    const viewportWidth = window.innerWidth;
-                    const viewportHeight = window.innerHeight;
-
-                    // Center the callout horizontally relative to the viewport
-                    const leftPosition = (viewportWidth - calloutElement.offsetWidth) / 2;
-
-                    // Position below the list item so arrow points up to it
-                    let topPosition = listItemRect.bottom + 15; // 15px gap for arrow
-
-                    // Ensure callout stays within viewport
-                    if (topPosition + calloutElement.offsetHeight > viewportHeight - 10) {
-                        topPosition = viewportHeight - calloutElement.offsetHeight - 10;
-                    }
-                    if (topPosition < 10) {
-                        topPosition = 10;
-                    }
-
-                    calloutElement.style.left = `${leftPosition}px`;
-                    calloutElement.style.top = `${topPosition}px`;
-                }
+            // Attach generic overlay popup logic
+            const overlay = listItem.querySelector(".details-overlay-popup") as HTMLElement;
+            if (overlay) {
+                attachOverlayPopup(listItem, overlay);
             }
-
-            // Add click handler to show/hide callout
-            listItem.addEventListener("click", function(event: Event) {
-                const target = event.target as HTMLElement;
-
-                // Don't handle the click if it was inside the callout content
-                if (target.closest(".hop-details-overlay")) {
-                    return;
-                }
-
-                event.preventDefault();
-                toggleCallout(this);
-            });
-
-            // Add keyboard handler for accessibility (Enter/Space to show hop details)
-            listItem.addEventListener("keydown", function(event: KeyboardEvent) {
-                if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    toggleCallout(this);
-                }
-            });
-
-            // Make list item focusable for keyboard navigation
-            listItem.setAttribute("tabindex", "0");
         });
+    }
+}
 
-        // Build antispam view
-        const antispamList = document.querySelector(".antispam-list") as HTMLElement;
+/**
+ * Generic function to attach an overlay popup to a trigger element.
+ * @param trigger - The element that triggers the popup (e.g., listItem).
+ * @param overlay - The overlay element to show/hide.
+ */
+function attachOverlayPopup(trigger: HTMLElement, overlay: HTMLElement): void {
+    function showOverlay(): void {
+        closeAllPopups();
+        // Show this overlay
+        overlay.classList.remove("is-hidden");
+        overlay.classList.add("is-shown");
 
-        // Forefront
-        if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
-            // Use HTML template for section header
-            DomUtils.appendTemplate("forefront-header-template", antispamList);
-
-            // Create table using HTML template
-            DomUtils.appendTemplate("antispam-table-template", antispamList);
-
-            const tbodyElement = antispamList.querySelector("table:last-child tbody");
-            if (tbodyElement) {
-                viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
-                    // Use HTML template for table rows
-                    const rowClone = DomUtils.cloneTemplate("table-row-template");
-
-                    // Set first cell content and id
-                    const cells = rowClone.querySelectorAll("td");
-                    if (cells.length >= 2) {
-                        const cell0 = cells[0] as HTMLElement;
-                        cell0.id = antispamrow.id;
-                        cell0.textContent = antispamrow.label;
-                    }
-
-                    // Use helper for setting aria-labelledby attribute
-                    DomUtils.setTemplateAttribute(rowClone, "td:nth-child(2)", "aria-labelledby", antispamrow.id);
-                    DomUtils.setTemplateHTML(rowClone, "td:nth-child(2)", antispamrow.valueUrl); // Note: valueUrl may contain HTML
-
-                    tbodyElement.appendChild(rowClone);
-                });
-            }
+        // Position the overlay relative to the trigger
+        const triggerRect: DOMRect = trigger.getBoundingClientRect();
+        const viewportWidth: number = window.innerWidth;
+        const viewportHeight: number = window.innerHeight;
+        const leftPosition: number = (viewportWidth - overlay.offsetWidth) / 2;
+        let topPosition: number = triggerRect.bottom + 15; // 15px gap for arrow
+        if (topPosition + overlay.offsetHeight > viewportHeight - 10) {
+            topPosition = viewportHeight - overlay.offsetHeight - 10;
         }
-
-        // Microsoft
-        if (viewModel.antiSpamReport.rows.length > 0) {
-            // Use HTML template for section header
-            DomUtils.appendTemplate("microsoft-header-template", antispamList);
-
-            // Create table using HTML template
-            DomUtils.appendTemplate("antispam-table-template", antispamList);
-
-            const tbodyElement2 = antispamList.querySelector("table:last-child tbody");
-            if (tbodyElement2) {
-                viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
-                    // Use HTML template for table rows
-                    const rowClone = DomUtils.cloneTemplate("table-row-template");
-
-                    // Set first cell content and id
-                    const cells = rowClone.querySelectorAll("td");
-                    if (cells.length >= 2) {
-                        const cell0 = cells[0] as HTMLElement;
-                        cell0.id = antispamrow.id;
-                        cell0.textContent = antispamrow.label;
-                    }
-
-                    // Use helper for setting aria-labelledby attribute
-                    DomUtils.setTemplateAttribute(rowClone, "td:nth-child(2)", "aria-labelledby", antispamrow.id);
-                    DomUtils.setTemplateHTML(rowClone, "td:nth-child(2)", antispamrow.valueUrl); // Note: valueUrl may contain HTML
-
-                    tbodyElement2.appendChild(rowClone);
-                });
-            }
+        if (topPosition < 10) {
+            topPosition = 10;
         }
+        overlay.style.left = `${leftPosition}px`;
+        overlay.style.top = `${topPosition}px`;
     }
 
-    // Build other view
+    function hideOverlay(): void {
+        overlay.classList.remove("is-shown");
+        overlay.classList.add("is-hidden");
+    }
+
+    // Click handler
+    trigger.addEventListener("click", function(event: MouseEvent): void {
+        const target = event.target as HTMLElement;
+        if (target.closest(".details-overlay-popup")) return;
+        event.preventDefault();
+        if (overlay.classList.contains("is-shown")) {
+            hideOverlay();
+        } else {
+            showOverlay();
+        }
+    });
+
+    // Keyboard handler
+    trigger.addEventListener("keydown", function(event: KeyboardEvent): void {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            if (overlay.classList.contains("is-shown")) {
+                hideOverlay();
+            } else {
+                showOverlay();
+            }
+        }
+    });
+
+    // Make trigger focusable
+    trigger.setAttribute("tabindex", "0");
+}
+
+function buildAntispamTab(viewModel: HeaderModel) {
+    const antispamList = document.querySelector(".antispam-list") as HTMLElement;
+
+    // Forefront
+    if (viewModel.forefrontAntiSpamReport.rows.length > 0) {
+        DomUtils.appendTemplate("forefront-header-template", antispamList);
+
+        // Create table for antispam data
+        const antispamTable = document.createElement("table");
+        antispamTable.className = "fluent-table";
+        const antispamTbody = document.createElement("tbody");
+        antispamTable.appendChild(antispamTbody);
+        antispamList.appendChild(antispamTable);
+
+        viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
+            antispamTbody.appendChild(createRow("table-row-template", antispamrow));
+        });
+    }
+
+    // Microsoft
+    if (viewModel.antiSpamReport.rows.length > 0) {
+        DomUtils.appendTemplate("microsoft-header-template", antispamList);
+
+        // Create table for antispam data
+        const antispamTable = document.createElement("table");
+        antispamTable.className = "fluent-table";
+        const antispamTbody = document.createElement("tbody");
+        antispamTable.appendChild(antispamTbody);
+        antispamList.appendChild(antispamTable);
+
+        viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
+            antispamTbody.appendChild(createRow("table-row-template", antispamrow));
+        });
+    }
+}
+
+function buildOtherTab(viewModel: HeaderModel) {
     const otherList = document.querySelector(".other-list") as HTMLElement;
 
     viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
-            // Use HTML template for other headers
-            const clone = DomUtils.cloneTemplate("other-row-template");
-            const headerContent = otherRow.url ? otherRow.url : otherRow.header;
-            DomUtils.setTemplateHTML(clone, ".section-header", headerContent); // May contain HTML (url)
-            DomUtils.setTemplateText(clone, "code", otherRow.value);
-            otherList.appendChild(clone);
+            otherList.appendChild(createRow("other-row-template", otherRow));
         }
     });
-
-    // Fluent UI Web Components handle their own initialization
-    // Lists and callouts work with standard DOM interactions
 }
 
 function hideStatus(): void {
@@ -417,7 +390,7 @@ function hideStatus(): void {
     }
 }
 
-function renderItem(headers: string): void {
+async function renderItem(headers: string): Promise<void> {
     // Hide loading status as soon as we start rendering
     hideStatus();
 
@@ -432,7 +405,7 @@ function renderItem(headers: string): void {
     DomUtils.hideElement("#error-display");
 
     // Build views with the loaded data
-    buildViews(headers);
+    await buildViews(headers);
 }
 
 // Handles rendering of an error.
@@ -474,3 +447,23 @@ document.addEventListener("DOMContentLoaded", function() {
         showError(e, "Failed initializing frame");
     }
 });
+
+/**
+ * Set up table row
+ */
+function createRow(
+    template: string,
+    row: Row) {
+    const clone = DomUtils.cloneTemplate(template);
+    DomUtils.setTemplateHTML(clone, ".row-header", row.url || row.label || row.header);
+    DomUtils.setTemplateAttribute(clone, ".row-header", "id", row.id);
+    DomUtils.setTemplateAttribute(clone, ".cell-main-content", "aria-labelledby", row.id);
+
+    if (row.valueUrl) {
+        DomUtils.setTemplateHTML(clone, ".cell-main-content", row.valueUrl);
+    } else {
+        DomUtils.setTemplateText(clone, ".cell-main-content", row.value);
+    }
+
+    return clone;
+}

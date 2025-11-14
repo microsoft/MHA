@@ -1,4 +1,4 @@
-﻿import "../../Content/Office.css";
+import "../../Content/Office.css";
 import "../../Content/classicDesktopFrame.css";
 
 import { HeaderModel } from "../HeaderModel";
@@ -9,7 +9,7 @@ import { Table } from "./Table";
 
 // This is the "classic" UI rendered in classicDesktopFrame.html
 
-let viewModel: HeaderModel;
+let viewModel: HeaderModel | null = null;
 let table: Table;
 
 function postError(error: unknown, message: string): void {
@@ -42,11 +42,11 @@ function updateStatus(statusText: string): void {
     table.recalculateVisibility();
 }
 
-function renderItem(headers: string) {
+async function renderItem(headers: string) {
     updateStatus(mhaStrings.mhaFoundHeaders);
     DomUtils.setText("#originalHeaders", headers);
-    viewModel = new HeaderModel(headers);
-    table.rebuildTables(viewModel);
+    viewModel = await HeaderModel.create(headers);
+    table.initializeTableUI(viewModel);
     updateStatus("");
     disableSpinner();
 }
@@ -82,9 +82,8 @@ function eventListener(event: MessageEvent): void {
 // It ensures the DOM is ready before updating the span elements with values from the current message.
 document.addEventListener("DOMContentLoaded", function() {
     try {
-        viewModel = new HeaderModel();
         table = new Table();
-        table.initializeTableUI(viewModel);
+        table.initializeTableUI();
         updateStatus(mhaStrings.mhaLoading);
         window.addEventListener("message", eventListener, false);
         Poster.postMessageToParent("frameActive");

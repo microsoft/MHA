@@ -18,6 +18,10 @@
     --f7-accordion-chevron-icon-up: "chevron_down";
     --f7-timeline-item-inner-bg-color: var(--white);
     --f7-page-bg-color: var(-f7-tabs-bg-color);
+    --f7-toolbar-bg-color: var(--background-light-blue);
+    --f7-toolbar-text-color: var(--text-primary);
+    --f7-tabbar-link-inactive-color: var(--text-secondary);
+    --f7-tabbar-link-active-color: var(--link-active);
 }
 
 /* Reserve space for parent frame toolbar overlay */
@@ -57,17 +61,13 @@ body {
     color: var(--f7-link-color);
 }
 
-.tab-link.tab-link-active,
-.tab-link.active {
-    color: var(--link-active);
-}
-
 .code-box>pre {
     background-color: var(--code-box-bg);
     border: 1px solid var(--border-light-grey);
     padding: 5px 10px;
     word-wrap: break-word;
     white-space: pre-wrap;
+    margin: 0;
 }
 
 #orig-headers-ui {
@@ -86,6 +86,7 @@ body {
 .block-title {
     text-transform: none;
     white-space: normal;
+    margin-bottom: 0;
 }
 
 .tab .block-title:first-child {
@@ -94,20 +95,20 @@ body {
 
 .block {
     word-wrap: break-word;
+    margin-top: 0;
 }
 
-a,
-a:visited {
+a {
     text-decoration: underline;
 }
 
-a:hover {
-    color: var(--text-dark-grey);
+.tab-link:hover{
+    color: var(--link-hover);
 }
 
 a:focus,
 div:focus {
-    outline: var(--focus-outline-blue) solid 2px;
+    outline: var(--focus-blue) solid 2px;
     outline-offset: 2px;
 }
 
@@ -151,7 +152,7 @@ a.tab-link {
 }
 
 #antispam-view .accordion-item {
-    background: white;
+    background: var(--white);
     border-top: 1px solid var(--light-grey-border);
     border-bottom: 1px solid var(--light-grey-border);
 }
@@ -159,6 +160,13 @@ a.tab-link {
 #antispam-view .accordion-item .item-title {
     font-size: 17px;
     background: var(--white);
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+#antispam-view .accordion-item-content p {
+    margin-top: 0 !important;
 }
 
 #received-view .timeline-item-inner {
@@ -185,4 +193,29 @@ a.tab-link {
 #received-view .timeline-item-text {
     word-wrap: break-word;
     width: 100%;
+}
+
+#summary-view .block-title {
+    margin: 0px;
+    padding: 3px 0px;
+}
+
+#summary-view .block {
+    margin: 5px 0;
+}
+
+#orig-headers-ui {
+    margin-top: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    visibility: visible !important;
+}
+
+.invisible {
+    visibility: hidden !important;
 }

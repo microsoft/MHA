@@ -24,9 +24,6 @@
     --spacing-medium: 12px;
     --focus-outline: 2px solid var(--focus-blue);
     --button-height: 44px;
-    
-    /* Shadows */
-    --overlay-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Secondary Button Styling - Default black border, blue highlight */
@@ -160,6 +157,10 @@ fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label:not(
 
 .fluent-icon--arrow-circle-down::before {
     content: "\2B07"; /* Unicode ⬇ down arrow */
+}
+
+.fluent-icon--error::before {
+    content: "\2715"; /* Unicode ✕ multiplication X */
 }
 
 /* High contrast mode support - modern and legacy combined */
