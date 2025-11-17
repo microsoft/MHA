@@ -470,10 +470,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 /**
- * Display modes for violation UI components
- */
-
-/**
  * Set up table row with optional popover buttons
  */
 function createRow(
