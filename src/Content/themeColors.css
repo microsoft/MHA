@@ -57,12 +57,15 @@
     /* Warning State */
     --diagnostic-warning-bg: #fff8e1;       /* Warm cream - complements existing grays */
     --diagnostic-warning-text: #e65100;     /* Deep orange - 4.5:1 contrast */
+    --diagnostic-warning-border: var(--diagnostic-warning-text);
 
     /* Info/Neutral State */
     --diagnostic-info-bg: #e3f2fd;             /* Light blue - complements primary */
     --diagnostic-info-text: var(--primary-blue); /* Brand blue #0078d4 - 4.53:1 contrast */
+    --diagnostic-info-border: var(--primary-blue);
 
     /* Error State */
     --diagnostic-error-bg: #ffebee;         /* Light red - complements existing palette */
     --diagnostic-error-text: #c62828;       /* Dark red - 4.5:1 contrast */
+    --diagnostic-error-border: var(--diagnostic-error-text);
 }
