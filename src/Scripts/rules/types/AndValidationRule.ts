@@ -97,13 +97,3 @@ export class AndValidationRule implements IAndValidationRule {
         return allTrue;
     }
 }
-
-// Export function constructor for backward compatibility
-export const andValidationRuleClassFunction = function (
-    errorMessage: string,
-    reportSection: string | string[],
-    severity: "error" | "warning" | "info",
-    rulesToAndArray: ISimpleValidationRule[]
-): AndValidationRule {
-    return new AndValidationRule(errorMessage, reportSection, severity, rulesToAndArray);
-};

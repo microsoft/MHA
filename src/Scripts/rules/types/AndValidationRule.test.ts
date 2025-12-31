@@ -1,4 +1,4 @@
-import { AndValidationRule, andValidationRuleClassFunction } from "./AndValidationRule";
+import { AndValidationRule } from "./AndValidationRule";
 import { HeaderSection } from "./interfaces";
 import { SimpleValidationRule } from "./SimpleValidationRule";
 
@@ -382,16 +382,5 @@ describe("AndValidationRule", () => {
 
             expect(rule.violatesComplexRule(spamToJunk)).toBe(false);
         });
-    });
-});
-
-describe("andValidationRuleClassFunction", () => {
-    test("should create AndValidationRule instance", () => {
-        const subRule = new SimpleValidationRule("A", "p", "m", "A", "info");
-
-        const rule = andValidationRuleClassFunction("Message", "A", "error", [subRule]);
-
-        expect(rule).toBeInstanceOf(AndValidationRule);
-        expect(rule.errorMessage).toBe("Message");
     });
 });
