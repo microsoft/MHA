@@ -256,7 +256,7 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     color: #E44D4D; /* A nice red */
 }
 
-/* High contrast support for error styling - modern and legacy combined */
+/* High contrast support for error styling */
 @media (prefers-contrast: high), (forced-colors: active), screen and (-ms-high-contrast: active) {
     .negativeCell {
         color: CanvasText !important;
