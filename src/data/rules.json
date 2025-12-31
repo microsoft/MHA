@@ -6,7 +6,7 @@
       "RuleType": "SimpleRule",
       "SectionToCheck": "Authentication-Results",
       "PatternToCheckFor": "spf=fail",
-      "MessageWhenPatternFails": "Sender failed validation",
+      "MessageWhenPatternFails": "Sender failed SPF validation",
       "SectionsInHeaderToShowError": ["From", "Connecting IP Address"],
       "Severity": "error"
     },
@@ -14,7 +14,7 @@
       "RuleType": "SimpleRule",
       "SectionToCheck": "Authentication-Results",
       "PatternToCheckFor": "dkim=fail.*",
-      "MessageWhenPatternFails": "Sender failed validation",
+      "MessageWhenPatternFails": "Sender failed DKIM validation",
       "SectionsInHeaderToShowError": ["From", "Authentication-Results"],
       "Severity": "error"
     },
@@ -22,7 +22,7 @@
       "RuleType": "SimpleRule",
       "SectionToCheck": "Authentication-Results",
       "PatternToCheckFor": "dmarc=fail",
-      "MessageWhenPatternFails": "Sender failed validation",
+      "MessageWhenPatternFails": "Sender failed DMARC validation",
       "SectionsInHeaderToShowError": ["From", "Authentication-Results"],
       "Severity": "error"
     },
