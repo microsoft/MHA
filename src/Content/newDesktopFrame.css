@@ -399,7 +399,7 @@
     outline-offset: 2px;
 }
 
-show-diagnostics-popover-btn:hover {
+.show-diagnostics-popover-btn:hover {
     transform: scale(1.1);
 }
 
