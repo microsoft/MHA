@@ -12,25 +12,35 @@ export function highlightContent(content: string, violationGroups: ViolationGrou
         return content;
     }
 
-    let highlightedContent = content;
+    interface Match {
+        start: number;
+        end: number;
+        text: string;
+    }
+
+    // Collect all matches first without modifying content
+    const allMatches: Match[] = [];
 
     violationGroups.forEach(group => {
         group.violations.forEach(violation => {
             if (violation.highlightPattern) {
-                // Split multiple patterns by |
                 const patterns = violation.highlightPattern.split("|");
 
                 patterns.forEach(pattern => {
                     if (pattern && pattern.trim()) {
-                        // Escape special regex characters except for basic wildcards
                         const escapedPattern = pattern.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
                         try {
-                            const regex = new RegExp(`(${escapedPattern})`, "gi");
-                            highlightedContent = highlightedContent.replace(regex,
-                                "<span class=\"highlight-violation\">$1</span>");
+                            const regex = new RegExp(escapedPattern, "gi");
+                            let match;
+                            while ((match = regex.exec(content)) !== null) {
+                                allMatches.push({
+                                    start: match.index,
+                                    end: match.index + match[0].length,
+                                    text: match[0]
+                                });
+                            }
                         } catch (error) {
-
                             console.warn("Invalid regex pattern:", pattern, error);
                         }
                     }
@@ -39,7 +49,47 @@ export function highlightContent(content: string, violationGroups: ViolationGrou
         });
     });
 
-    return highlightedContent;
+    if (allMatches.length === 0) {
+        return content;
+    }
+
+    // Sort by position and merge overlapping matches
+    allMatches.sort((a, b) => a.start - b.start);
+
+    const mergedMatches: Match[] = [];
+    let current = allMatches[0]!;
+
+    for (let i = 1; i < allMatches.length; i++) {
+        const next = allMatches[i]!;
+
+        if (next.start < current.end) {
+            // Overlapping - extend current if needed
+            if (next.end > current.end) {
+                current = {
+                    start: current.start,
+                    end: next.end,
+                    text: content.slice(current.start, next.end)
+                };
+            }
+        } else {
+            // Non-overlapping - save current and move to next
+            mergedMatches.push(current);
+            current = next;
+        }
+    }
+    mergedMatches.push(current);
+
+    // Build result by inserting spans from end to start (preserves positions)
+    let result = content;
+    for (let i = mergedMatches.length - 1; i >= 0; i--) {
+        const match = mergedMatches[i]!;
+        result =
+            result.slice(0, match.start) +
+            `<span class="highlight-violation">${match.text}</span>` +
+            result.slice(match.end);
+    }
+
+    return result;
 }
 
 /**

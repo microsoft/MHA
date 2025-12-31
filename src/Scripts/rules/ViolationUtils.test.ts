@@ -233,6 +233,48 @@ describe("highlightContent", () => {
         expect(result).toContain("<span class=\"highlight-violation\">test.</span>");
         expect(result).not.toContain("<span class=\"highlight-violation\">testing</span>");
     });
+
+    test("should prevent nested spans when patterns match already-highlighted content", () => {
+        // This test demonstrates the bug: if first pattern adds "<span class='highlight-violation'>test</span>"
+        // and second pattern matches "class", it will corrupt the HTML by matching inside the span tag
+        const rule1 = new SimpleValidationRule("Subject", "test", "Test", "Subject", "error");
+        const rule2 = new SimpleValidationRule("Subject", "class", "Class", "Subject", "error");
+
+        const violation1: RuleViolation = {
+            rule: rule1,
+            affectedSections: [],
+            highlightPattern: "test"
+        };
+        const violation2: RuleViolation = {
+            rule: rule2,
+            affectedSections: [],
+            highlightPattern: "class"
+        };
+
+        const group: ViolationGroup = {
+            groupId: "group-1",
+            displayName: "Multiple patterns",
+            severity: "error",
+            isAndRule: false,
+            violations: [violation1, violation2]
+        };
+
+        const content = "This is a test message";
+        const result = highlightContent(content, [group]);
+
+        // Should NOT have nested spans or broken HTML
+        const nestedSpanPattern = /<span[^>]*><span[^>]*>/;
+        expect(result).not.toMatch(nestedSpanPattern);
+
+        // Should NOT have highlighted content inside HTML attributes
+        // Old buggy version creates: <span <span class="highlight-violation">class</span>="highlight-violation">test</span>
+        const brokenHtmlPattern = /<span\s+<span/;
+        expect(result).not.toMatch(brokenHtmlPattern);
+
+        // Should have only "test" highlighted, not "class" from the HTML attribute
+        // Correct result: <span class="highlight-violation">test</span> message
+        expect(result).toBe("This is a <span class=\"highlight-violation\">test</span> message");
+    });
 });
 
 describe("getViolationsForRow", () => {
