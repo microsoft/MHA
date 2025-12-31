@@ -480,6 +480,43 @@ describe("getViolationsForRow", () => {
         expect(result).toHaveLength(2);
     });
 
+    test("should find all matching violations in group even after first section match", () => {
+        // This test verifies the bug: early return should not prevent checking other violations
+        const section1: HeaderSection = { header: "Subject", value: "Test" };
+        const section2: HeaderSection = { header: "From", value: "Test" };
+
+        const rule1 = new SimpleValidationRule("A", "urgent", "Urgent", "Subject", "error");
+        const rule2 = new SimpleValidationRule("B", "spam", "Spam", "From", "error");
+
+        const violation1: RuleViolation = {
+            rule: rule1,
+            affectedSections: [section1],
+            highlightPattern: "urgent"
+        };
+        const violation2: RuleViolation = {
+            rule: rule2,
+            affectedSections: [section2],
+            highlightPattern: "spam"
+        };
+
+        const group: ViolationGroup = {
+            groupId: "group-1",
+            displayName: "Multiple",
+            severity: "error",
+            isAndRule: false,
+            violations: [violation1, violation2]
+        };
+
+        // Row that matches BOTH violations: first by section (Subject), second by pattern (spam in value)
+        const row = { label: "Subject", value: "This is spam" };
+        const result = getViolationsForRow(row, [group]);
+
+        // Should find both violations: violation1 matches by section, violation2 matches by pattern
+        expect(result).toHaveLength(2);
+        expect(result).toContain(violation1);
+        expect(result).toContain(violation2);
+    });
+
     test("should handle invalid regex patterns gracefully", () => {
         const section: HeaderSection = { header: "Subject", value: "Test" };
         const rule = new SimpleValidationRule("A", "[invalid", "Invalid", "A", "error");

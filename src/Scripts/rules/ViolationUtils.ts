@@ -114,11 +114,8 @@ export function getViolationsForRow(
 
             if (matchesSection) {
                 matchingViolations.push(violation);
-                return;
-            }
-
-            // Check if violation pattern matches row content
-            if (violation.highlightPattern) {
+            } else if (violation.highlightPattern) {
+                // Check if violation pattern matches row content
                 const content = row.valueUrl || row.value;
                 if (content) {
                     const patterns = violation.highlightPattern.split("|");

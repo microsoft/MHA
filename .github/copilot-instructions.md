@@ -82,6 +82,21 @@ async function legitimatelyComplexFunction() { }
 - Run `npm test` after any code changes
 - Run `npm run lint` to verify no ESLint errors
 
+### TDD Approach for Bug Fixes
+
+When fixing bugs identified in code reviews or reported issues:
+
+1. **Write failing test first**: Create a test that demonstrates the bug - it MUST FAIL with the current buggy code
+2. **Apply the fix**: Implement the code changes to address the bug
+3. **Verify test passes**: Run the test again - it should now PASS with the fixed code
+4. **If test still fails**: Reconsider whether the fix is incorrect OR the test is incorrect
+5. **If test was incorrect**: Fix the test, then retest with OLD buggy code to verify it fails there, then retest with NEW fixed code to verify it passes
+
+This approach ensures:
+- The bug actually exists and is reproducible
+- The fix actually solves the problem
+- We have regression protection going forward
+
 ## Workflow for Changes
 
 **Development:**
