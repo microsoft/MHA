@@ -1,0 +1,124 @@
+@import url("themeColors.css");
+
+/* Shared Rule Violation Styles */
+/* This file contains common violation display styles used across all UI implementations */
+/* Uses color variables from themeColors.css for consistency */
+
+/* Violation Badges - Compact severity indicators */
+.severity-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-left: 4px;
+}
+
+/* Severity system - applies to all [data-severity] elements */
+[data-severity="error"] {
+    --severity-bg: var(--diagnostic-error-bg);
+    --severity-color: var(--diagnostic-error-text);
+    --severity-border: var(--diagnostic-error-border);
+    --severity-icon: "🔴";
+}
+
+[data-severity="warning"] {
+    --severity-bg: var(--diagnostic-warning-bg);
+    --severity-color: var(--diagnostic-warning-text);
+    --severity-border: var(--diagnostic-warning-border);
+    --severity-icon: "⚠️";
+}
+
+[data-severity="info"] {
+    --severity-bg: var(--diagnostic-info-bg);
+    --severity-color: var(--diagnostic-info-text);
+    --severity-border: var(--diagnostic-info-border);
+    --severity-icon: "ℹ️";
+}
+
+/* Apply severity colors to badges */
+.severity-badge[data-severity] {
+    background: var(--severity-bg);
+    color: var(--text-primary);
+}
+
+/* Severity icons in badges */
+.severity-badge[data-severity]::before {
+    content: var(--severity-icon);
+    margin-right: 4px;
+}
+
+/* Violation Messages */
+.violation-message {
+    font-weight: 600;
+}
+
+.violation-message[data-severity="error"] {
+    color: var(--diagnostic-error-text);
+}
+
+.violation-message[data-severity="warning"] {
+    color: var(--diagnostic-warning-text);
+}
+
+.violation-message[data-severity="info"] {
+    color: var(--diagnostic-info-text);
+}
+
+/* Violation Card Components */
+.violation-card-header {
+    display: flex;
+    align-items: center;
+}
+
+.violation-card {
+    border-left: 3px solid var(--severity-border);
+    background-color: var(--severity-bg);
+}
+
+.violation-details {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* Violation Details */
+.violation-rule {
+    font-family: monospace;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.violation-parent-message {
+    font-style: italic;
+    font-size: 12px;
+}
+
+/* Content Highlighting */
+.highlight-violation {
+    background-color: var(--highlight-warning-bg);
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-weight: 600;
+}
+
+/* Accessibility - Forced Colors Mode */
+@media (forced-colors: active) {
+    .severity-badge {
+        border: 1px solid ButtonText;
+    }
+
+    .severity-badge[data-severity="error"],
+    .severity-badge[data-severity="warning"],
+    .severity-badge[data-severity="info"] {
+        background: ButtonFace;
+        color: ButtonText;
+    }
+
+    .highlight-violation {
+        background: Highlight;
+        color: HighlightText;
+    }
+}

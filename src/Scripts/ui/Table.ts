@@ -1,9 +1,12 @@
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { DomUtils } from "./domUtils";
+import { ViolationUI } from "./ViolationUI";
 import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
+import { RuleViolation } from "../rules/types/AnalysisTypes";
+import { getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
 import { Column } from "../table/Column";
 import { DataTable } from "../table/DataTable";
 import { SummaryTable } from "../table/SummaryTable";
@@ -157,12 +160,20 @@ export class Table {
         const headerVal = document.getElementById(row.header + type + "Val");
         if (headerVal) {
             if (row.value) {
-                const content = row.valueUrl || row.value;
+                const rowViolations = this.viewModel ? getViolationsForRow(row, this.viewModel.violationGroups) : [];
+                const highlightedContent = this.viewModel ? highlightContent(row.valueUrl || row.value, this.viewModel.violationGroups) : (row.valueUrl || row.value);
 
                 if (row.valueUrl) {
-                    headerVal.innerHTML = content;
+                    headerVal.innerHTML = highlightedContent;
                 } else {
-                    headerVal.innerHTML = content;
+                    headerVal.innerHTML = highlightedContent;
+                }
+
+                if (rowViolations.length > 0) {
+                    rowViolations.forEach((violation: RuleViolation) => {
+                        headerVal.appendChild(document.createTextNode(" "));
+                        headerVal.appendChild(ViolationUI.createInlineViolation(violation));
+                    });
                 }
 
                 this.makeVisible("#" + row.header + type, true);
@@ -242,6 +253,16 @@ export class Table {
             this.setRowValue(row, "SUM");
         });
 
+        // Diagnostics
+        const diagnosticsContainer = document.getElementById("diagnosticsContent");
+        if (diagnosticsContainer) {
+            diagnosticsContainer.innerHTML = "";
+            const diagnosticsSection = ViolationUI.buildDiagnosticsSection(viewModel.violationGroups);
+            if (diagnosticsSection) {
+                diagnosticsContainer.appendChild(diagnosticsSection);
+            }
+        }
+
         // Received
         this.emptyTableUI("receivedHeaders");
         viewModel.receivedHeaders.rows.forEach((receivedRow: ReceivedRow) => {
@@ -308,13 +329,22 @@ export class Table {
             }
             this.appendCell(row, otherRow.number.toString(), "", "", "number_header");
 
-            const headerContent = otherRow.url || otherRow.header;
+            const rowViolations = getViolationsForRow(otherRow, viewModel.violationGroups);
+            const highlightedHeader = highlightContent(otherRow.url || otherRow.header, viewModel.violationGroups);
 
             const headerCell = row.insertCell(-1);
-            headerCell.innerHTML = headerContent;
+            headerCell.innerHTML = highlightedHeader;
             headerCell.setAttribute("headers", "header_header");
 
-            this.appendCell(row, "", otherRow.value, "allowBreak", "value_header");
+            if (rowViolations.length > 0) {
+                rowViolations.forEach((violation: RuleViolation) => {
+                    headerCell.appendChild(document.createTextNode(" "));
+                    headerCell.appendChild(ViolationUI.createInlineViolation(violation));
+                });
+            }
+
+            const highlightedValue = highlightContent(otherRow.value, viewModel.violationGroups);
+            this.appendCell(row, "", highlightedValue, "allowBreak", "value_header");
         });
 
         const otherRows = document.querySelectorAll("#otherHeaders tr:nth-child(odd)");
@@ -501,6 +531,11 @@ export class Table {
             return !!table.viewModel && table.viewModel.originalHeaders.length > 0;
         });
         this.toggleCollapse("originalHeaders");
+
+        // Diagnostics (collapsible, starts collapsed)
+        this.makeResizablePane("diagnosticsContent", "sectionHeader", "Diagnostics Report", (table: Table) => {
+            return !!table.viewModel && table.viewModel.violationGroups && table.viewModel.violationGroups.length > 0;
+        });
 
         if (!viewModel) {
             this.recalculateVisibility();

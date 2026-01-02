@@ -51,6 +51,13 @@ body, html {
     height: auto;
 }
 
+/* Diagnostics dialog code-box sizing */
+fluent-dialog[aria-label="Diagnostics"] .code-box > pre {
+    background-color: var(--background-light-gray);
+    font-size: .8em;
+    line-height: 1.2;
+}
+
 /* Fluent UI Dialog customization */
 fluent-dialog {
     --dialog-width: 400px;
@@ -60,6 +67,12 @@ fluent-dialog {
 
 fluent-dialog[hidden] {
     display: none !important;
+}
+
+fluent-dialog[aria-label="Diagnostics"] {
+    --dialog-width: calc(100% - 24px);
+    --dialog-max-width: 600px;
+    --dialog-height: auto;
 }
 
 .dialog-content {
@@ -112,6 +125,30 @@ fieldset fluent-checkbox {
 
 .dialog-actions fluent-button {
     min-width: 80px;
+}
+
+/* Specific styling for diagnostics dialog actions */
+fluent-dialog[aria-label="Diagnostics"] .dialog-actions {
+    margin-bottom: 0;
+    border-top: none;
+}
+
+/* Override general dialog spacing for diagnostics */
+fluent-dialog[aria-label="Diagnostics"] > div {
+    margin: 0;
+}
+
+fluent-dialog[aria-label="Diagnostics"] .dialog-content {
+    margin: 0;
+    height: auto;
+    overflow: visible;
+    padding: var(--spacing-medium);
+}
+
+fluent-dialog[aria-label="Diagnostics"] .code-box {
+    height: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Dialog content spacing */

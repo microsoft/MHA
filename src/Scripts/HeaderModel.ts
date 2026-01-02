@@ -3,6 +3,8 @@ import { Poster } from "./Poster";
 import { AntiSpamReport } from "./row/Antispam";
 import { ForefrontAntiSpamReport } from "./row/ForefrontAntispam";
 import { Header } from "./row/Header";
+import { rulesService } from "./rules";
+import { ViolationGroup } from "./rules/types/AnalysisTypes";
 import { Summary } from "./Summary";
 import { Other } from "./table/Other";
 import { Received } from "./table/Received";
@@ -14,6 +16,7 @@ export class HeaderModel {
     public forefrontAntiSpamReport: ForefrontAntiSpamReport;
     public antiSpamReport: AntiSpamReport;
     public otherHeaders: Other;
+    public violationGroups: ViolationGroup[];
     private hasDataInternal: boolean;
     private statusInternal: string;
     public get hasData(): boolean { return this.hasDataInternal || !!this.statusInternal; }
@@ -30,6 +33,7 @@ export class HeaderModel {
         this.originalHeaders = "";
         this.statusInternal = "";
         this.hasDataInternal = false;
+        this.violationGroups = [];
     }
 
     public static async create(headers?: string): Promise<HeaderModel> {
@@ -37,10 +41,16 @@ export class HeaderModel {
 
         if (headers) {
             model.parseHeaders(headers);
+            await model.analyzeRules();
             Poster.postMessageToParent("modelToString", model.toString());
         }
 
         return model;
+    }
+
+    private async analyzeRules(): Promise<void> {
+        const validationResult = await rulesService.analyzeHeaders(this);
+        this.violationGroups = validationResult.violationGroups;
     }
 
     public static getHeaderList(headers: string): Header[] {

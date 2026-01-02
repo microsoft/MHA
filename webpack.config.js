@@ -193,7 +193,8 @@ export default async (env, options) => {
             },
             new CopyWebpackPlugin({
                 patterns: [
-                    { from: "src/Resources/*", to: path.resolve(__dirname, "Resources/[name][ext]") }
+                    { from: "src/Resources/*", to: path.resolve(__dirname, "Resources/[name][ext]") },
+                    { from: "src/data/rules.json", to: path.resolve(__dirname, "Pages/data/[name][ext]") }
                 ]
             }),
             ...generateHtmlWebpackPlugins(),
@@ -336,7 +337,8 @@ export default async (env, options) => {
             watchFiles: {
                 paths: [
                     "src/**/*.{ts,js,css}",
-                    "src/Pages/*.html"
+                    "src/Pages/*.html",
+                    "src/data/rules.json"
                 ],
                 options: {
                     ignored: [

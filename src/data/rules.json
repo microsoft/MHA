@@ -1,0 +1,231 @@
+{
+  "IsError": false,
+  "Message": "Rules loaded successfully from local file",
+  "SimpleRules": [
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "Authentication-Results",
+      "PatternToCheckFor": "spf=fail",
+      "MessageWhenPatternFails": "Sender failed SPF validation",
+      "SectionsInHeaderToShowError": ["From", "Connecting IP Address"],
+      "Severity": "error"
+    },
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "Authentication-Results",
+      "PatternToCheckFor": "dkim=fail.*",
+      "MessageWhenPatternFails": "Sender failed DKIM validation",
+      "SectionsInHeaderToShowError": ["From", "Authentication-Results"],
+      "Severity": "error"
+    },
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "Authentication-Results",
+      "PatternToCheckFor": "dmarc=fail",
+      "MessageWhenPatternFails": "Sender failed DMARC validation",
+      "SectionsInHeaderToShowError": ["From", "Authentication-Results"],
+      "Severity": "error"
+    },
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "X-Forefront-Antispam-Report",
+      "PatternToCheckFor": "SFV:SPM",
+      "MessageWhenPatternFails": "Message was marked as spam",
+      "SectionsInHeaderToShowError": ["SFV", "X-Forefront-Antispam-Report"],
+      "Severity": "error"
+    },
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "X-Forefront-Antispam-Report",
+      "PatternToCheckFor": "IPV:CAL",
+      "MessageWhenPatternFails": "IP is in customer allow list",
+      "SectionsInHeaderToShowError": ["Connecting IP Address", "X-Forefront-Antispam-Report"],
+      "Severity": "info"
+    },
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "X-Forefront-Antispam-Report",
+      "PatternToCheckFor": "SFV:SKI",
+      "MessageWhenPatternFails": "Message not filtered because it originates inside the same tenant",
+      "SectionsInHeaderToShowError": ["From"],
+      "Severity": "info"
+    },
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "X-Forefront-Antispam-Report",
+      "PatternToCheckFor": "SFV:BLK",
+      "MessageWhenPatternFails": "Sender address is blocked by user rule",
+      "SectionsInHeaderToShowError": ["From"],
+      "Severity": "info"
+    },
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "X-Forefront-Antispam-Report",
+      "PatternToCheckFor": "SFV:SFE",
+      "MessageWhenPatternFails": "Sender address is in users safe senders list",
+      "SectionsInHeaderToShowError": ["From"],
+      "Severity": "info"
+    },
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "X-Forefront-Antispam-Report",
+      "PatternToCheckFor": "SFV:DMS",
+      "MessageWhenPatternFails": "Spam verdict ignored due to tenant settings",
+      "SectionsInHeaderToShowError": ["SFV", "X-Forefront-Antispam-Report"],
+      "Severity": "error"
+    },
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "X-Forefront-Antispam-Report",
+      "PatternToCheckFor": "SFV:SKQ",
+      "MessageWhenPatternFails": "Message released from users quarantine",
+      "SectionsInHeaderToShowError": ["X-Forefront-Antispam-Report"],
+      "Severity": "info"
+    },
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "X-MS-Exchange-Organization-ExtractionTags",
+      "PatternToCheckFor": "CTRY:NG",
+      "MessageWhenPatternFails": "IP Originating from Nigeria",
+      "SectionsInHeaderToShowError": ["X-MS-Exchange-Organization-ExtractionTags", "Connecting IP Address"],
+      "Severity": "error"
+    },
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "X-Forefront-Antispam-Report",
+      "PatternToCheckFor": "CTRY:NG",
+      "MessageWhenPatternFails": "IP Originating from Nigeria",
+      "SectionsInHeaderToShowError": ["X-Forefront-Antispam-Report", "Connecting IP Address"],
+      "Severity": "error"
+    },
+    {
+      "RuleType": "SimpleRule",
+      "SectionToCheck": "X-Microsoft-Antispam",
+      "PatternToCheckFor": "BCL:[6789]",
+      "MessageWhenPatternFails": "Bulk Sender Reputation is bad",
+      "SectionsInHeaderToShowError": ["X-Microsoft-Antispam", "BCL"],
+      "Severity": "error"
+    },
+    {
+      "RuleType": "HeaderMissingRule",
+      "SectionToCheck": "X-Forefront-Antispam-Report",
+      "MessageWhenPatternFails": "Section 'X-Forefront-Antispam-Report' missing from email header",
+      "SectionsInHeaderToShowError": ["X-Forefront-Antispam-Report"],
+      "Severity": "error"
+    },
+    {
+      "RuleType": "HeaderMissingRule",
+      "SectionToCheck": "X-Microsoft-Antispam-Mailbox-Delivery",
+      "MessageWhenPatternFails": "Section 'X-Microsoft-Antispam-Mailbox-Delivery' missing from email header",
+      "SectionsInHeaderToShowError": ["X-Microsoft-Antispam-Mailbox-Delivery"],
+      "Severity": "error"
+    }
+  ],
+  "AndRules": [
+    {
+      "Message": "Email filtered as spam but sent to inbox",
+      "SectionsInHeaderToShowError": ["SFV"],
+      "RulesToAnd": [
+        {
+          "SectionToCheck": "X-Forefront-Antispam-Report",
+          "PatternToCheckFor": "SFV:SPM",
+          "MessageWhenPatternFails": "Email Spam",
+          "SectionsInHeaderToShowError": ["X-Forefront-Antispam-Report"],
+          "Severity": "info"
+        },
+        {
+          "SectionToCheck": "X-Microsoft-Antispam-Mailbox-Delivery",
+          "PatternToCheckFor": "dest:I",
+          "MessageWhenPatternFails": "Email sent to Inbox",
+          "SectionsInHeaderToShowError": ["X-Microsoft-Antispam-Mailbox-Delivery"],
+          "Severity": "info"
+        }
+      ],
+      "Severity": "error"
+    },
+    {
+      "Message": "Email was not marked as spam but was sent to junk folder",
+      "SectionsInHeaderToShowError": ["SFV"],
+      "RulesToAnd": [
+        {
+          "SectionToCheck": "X-Forefront-Antispam-Report",
+          "PatternToCheckFor": "SFV:NSPM",
+          "MessageWhenPatternFails": "Email Not Spam",
+          "SectionsInHeaderToShowError": ["X-Forefront-Antispam-Report"],
+          "Severity": "info"
+        },
+        {
+          "SectionToCheck": "X-Microsoft-Antispam-Mailbox-Delivery",
+          "PatternToCheckFor": "dest:J",
+          "MessageWhenPatternFails": "Email sent to Spam Folder",
+          "SectionsInHeaderToShowError": ["X-Microsoft-Antispam-Mailbox-Delivery"],
+          "Severity": "info"
+        }
+      ],
+      "Severity": "error"
+    },
+    {
+      "Message": "Email was filtered as spam but sent to custom folder due to user settings",
+      "SectionsInHeaderToShowError": ["SFV"],
+      "RulesToAnd": [
+        {
+          "SectionToCheck": "X-Forefront-Antispam-Report",
+          "PatternToCheckFor": "SFV:SPM",
+          "MessageWhenPatternFails": "Email Spam",
+          "SectionsInHeaderToShowError": ["X-Forefront-Antispam-Report"],
+          "Severity": "info"
+        },
+        {
+          "SectionToCheck": "X-Microsoft-Antispam-Mailbox-Delivery",
+          "PatternToCheckFor": "dest:C",
+          "MessageWhenPatternFails": "Email sent to Custom Folder",
+          "SectionsInHeaderToShowError": ["X-Microsoft-Antispam-Mailbox-Delivery"],
+          "Severity": "info"
+        }
+      ],
+      "Severity": "error"
+    },
+    {
+      "Message": "Email was not marked as spam, but was sent to custom folder due to user settings",
+      "SectionsInHeaderToShowError": ["SFV"],
+      "RulesToAnd": [
+        {
+          "SectionToCheck": "X-Forefront-Antispam-Report",
+          "PatternToCheckFor": "SFV:NSPM",
+          "MessageWhenPatternFails": "Email Not Spam",
+          "SectionsInHeaderToShowError": ["X-Forefront-Antispam-Report"],
+          "Severity": "info"
+        },
+        {
+          "SectionToCheck": "X-Microsoft-Antispam-Mailbox-Delivery",
+          "PatternToCheckFor": "dest:C",
+          "MessageWhenPatternFails": "Email sent to Custom Folder",
+          "SectionsInHeaderToShowError": ["X-Microsoft-Antispam-Mailbox-Delivery"],
+          "Severity": "info"
+        }
+      ],
+      "Severity": "info"
+    },
+    {
+      "Message": "Email not spam and sent to inbox",
+      "SectionsInHeaderToShowError": ["SFV"],
+      "RulesToAnd": [
+        {
+          "SectionToCheck": "X-Forefront-Antispam-Report",
+          "PatternToCheckFor": "SFV:NSPM",
+          "MessageWhenPatternFails": "Email Not Spam",
+          "SectionsInHeaderToShowError": [],
+          "Severity": "info"
+        },
+        {
+          "SectionToCheck": "X-Microsoft-Antispam-Mailbox-Delivery",
+          "PatternToCheckFor": "dest:I",
+          "MessageWhenPatternFails": "Email sent to Inbox",
+          "SectionsInHeaderToShowError": [],
+          "Severity": "info"
+        }
+      ],
+      "Severity": "info"
+    }
+  ]
+}

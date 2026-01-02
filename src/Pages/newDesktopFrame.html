@@ -47,6 +47,7 @@
                 <div class="page-title">Summary</div>
                 <hr />
                 <div class="summary-list"></div>
+                <div class="ui-diagnostics-report-section"></div>
                 <div class="orig-header-ui">
                     <fluent-button id="orig-header-btn" appearance="accent" aria-expanded="false" aria-label="Toggle original headers display">
                         <span slot="start" class="fluent-icon fluent-icon--add" aria-hidden="true"></span>
@@ -106,10 +107,20 @@
     </template>
 
     <template id="table-row-template">
-        <tr>
-            <td class="row-header"></td>
-            <td>
-                <div class="cell-main-content"></div>
+        <tr class="popover-row">
+            <td class="popover-cell row-header"></td>
+            <td class="popover-cell">
+                <div class="cell-content-wrapper">
+                    <div class="cell-main-content"></div>
+                        <fluent-button appearance="subtle" size="small" class="show-diagnostics-popover-btn">
+                        <span class="severity-icon" aria-hidden="true"></span>
+                    </fluent-button>
+                </div>
+                <div class="details-overlay-popup is-hidden">
+                    <div class="popover-content">
+                        <div class="diagnostics-list"></div>
+                    </div>
+                </div>
             </td>
         </tr>
     </template>
@@ -121,9 +132,17 @@
     <template id="other-row-template">
         <div class="other-header-wrapper">
             <div class="row-header"></div>
+            <fluent-button appearance="subtle" size="small" class="show-diagnostics-popover-btn">
+                <span class="severity-icon" aria-hidden="true"></span>
+            </fluent-button>
         </div>
         <div class="code-box">
             <pre><code class="cell-main-content"></code></pre>
+        </div>
+        <div class="details-overlay-popup is-hidden">
+            <div class="popover-content">
+                <div class="diagnostics-list"></div>
+            </div>
         </div>
     </template>
 
@@ -175,6 +194,40 @@
     <template id="hop-template">
         <div class="details-overlay-popup is-hidden">
             <div class="hop-details-content"></div>
+        </div>
+    </template>
+
+    <template id="diagnostics-accordion-template">
+        <fluent-accordion class="diagnostics-accordion"></fluent-accordion>
+    </template>
+
+    <template id="diagnostic-accordion-item-template">
+        <fluent-accordion-item>
+            <div slot="heading" class="violation-card-header">
+                <fluent-badge class="severity-badge"></fluent-badge>
+                <div class="violation-message"></div>
+            </div>
+            <div class="diagnostic-content"></div>
+        </fluent-accordion-item>
+    </template>
+
+    <template id="violation-inline-template">
+        <span class="violation-inline">
+            <fluent-badge class="severity-badge"></fluent-badge>
+            <span class="violation-message"></span>
+        </span>
+    </template>
+
+    <template id="violation-card-template">
+        <div class="violation-card">
+            <div class="violation-card-header">
+                <fluent-badge class="severity-badge"></fluent-badge>
+                <span class="violation-message"></span>
+            </div>
+            <div class="violation-details">
+                <div class="violation-rule"></div>
+                <div class="violation-parent-message"></div>
+            </div>
         </div>
     </template>
 </body>

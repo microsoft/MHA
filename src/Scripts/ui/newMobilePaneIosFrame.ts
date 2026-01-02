@@ -16,10 +16,12 @@ import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Poster } from "../Poster";
 import { DomUtils } from "./domUtils";
+import { ViolationUI } from "./ViolationUI";
 import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
+import { getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
@@ -106,7 +108,7 @@ function addCalloutEntry(name: string, value: string | number | null, parent: HT
     }
 }
 
-function addSpamReportRow(spamRow: Row, parent: HTMLElement) {
+function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderModel) {
     if (spamRow.value) {
         const template = document.getElementById("spam-report-accordion-item-template") as HTMLTemplateElement;
         const clone = template.content.cloneNode(true) as DocumentFragment;
@@ -115,11 +117,27 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement) {
         itemTitle.textContent = spamRow.label;
         itemTitle.setAttribute("id", spamRow.id);
 
+        const rowViolations = getViolationsForRow(spamRow, viewModel.violationGroups);
+        if (rowViolations.length > 0) {
+            rowViolations.forEach((violation) => {
+                itemTitle.appendChild(document.createTextNode(" "));
+                itemTitle.appendChild(ViolationUI.createInlineViolation(violation));
+            });
+        }
+
+        const violationsContainer = clone.querySelector(".violations-container") as HTMLElement;
+        if (rowViolations.length > 0) {
+            rowViolations.forEach((violation) => {
+                violationsContainer.appendChild(ViolationUI.createViolationCard(violation));
+            });
+        }
+
         const linkWrap = clone.querySelector(".link-wrap") as HTMLElement;
         linkWrap.setAttribute("aria-labelledby", spamRow.id);
 
         const tempDiv = document.createElement("div");
-        tempDiv.innerHTML = spamRow.valueUrl;
+        const highlightedContent = highlightContent(spamRow.valueUrl, viewModel.violationGroups);
+        tempDiv.innerHTML = highlightedContent;
         while (tempDiv.firstChild) {
             const child = tempDiv.firstChild as HTMLElement;
             if (child.nodeType === Node.ELEMENT_NODE) {
@@ -152,8 +170,17 @@ function buildSummaryTab(viewModel: HeaderModel): void {
             const blockTitle = clone.querySelector(".block-title") as HTMLElement;
             blockTitle.textContent = row.label;
 
+            const rowViolations = getViolationsForRow(row, viewModel.violationGroups);
+            if (rowViolations.length > 0) {
+                rowViolations.forEach((violation) => {
+                    blockTitle.appendChild(document.createTextNode(" "));
+                    blockTitle.appendChild(ViolationUI.createInlineViolation(violation));
+                });
+            }
+
             const code = clone.querySelector("code") as HTMLElement;
-            code.textContent = row.value;
+            const highlightedContent = highlightContent(row.value, viewModel.violationGroups);
+            code.innerHTML = highlightedContent;
 
             summaryContent.appendChild(clone);
         }
@@ -162,6 +189,11 @@ function buildSummaryTab(viewModel: HeaderModel): void {
     if (viewModel.originalHeaders) {
         DomUtils.setText("#original-headers", viewModel.originalHeaders);
         DomUtils.showElement("#orig-headers-ui");
+    }
+
+    const diagnosticsSection = ViolationUI.buildDiagnosticsSection(viewModel.violationGroups);
+    if (diagnosticsSection) {
+        summaryContent.appendChild(diagnosticsSection);
     }
 }
 
@@ -306,7 +338,7 @@ function buildAntispamTab(viewModel: HeaderModel): void {
 
         const ul = clone.querySelector("ul") as HTMLElement;
         viewModel.forefrontAntiSpamReport.rows.forEach((row: Row) => {
-            addSpamReportRow(row, ul);
+            addSpamReportRow(row, ul, viewModel);
         });
 
         antispamContent.appendChild(clone);
@@ -322,7 +354,7 @@ function buildAntispamTab(viewModel: HeaderModel): void {
 
         const ul = clone.querySelector("ul") as HTMLElement;
         viewModel.antiSpamReport.rows.forEach((row: Row) => {
-            addSpamReportRow(row, ul);
+            addSpamReportRow(row, ul, viewModel);
         });
 
         antispamContent.appendChild(clone);
@@ -338,6 +370,7 @@ function buildOtherTab(viewModel: HeaderModel): void {
             const clone = template.content.cloneNode(true) as DocumentFragment;
 
             const headerName = clone.querySelector(".block-title") as HTMLElement;
+            const rowViolations = getViolationsForRow(row, viewModel.violationGroups);
 
             if (row.url) {
                 const tempDiv = document.createElement("div");
@@ -355,7 +388,15 @@ function buildOtherTab(viewModel: HeaderModel): void {
             }
 
             const code = clone.querySelector("code") as HTMLElement;
-            code.innerHTML = row.value;
+            const highlightedContent = highlightContent(row.value, viewModel.violationGroups);
+            code.innerHTML = highlightedContent;
+
+            const violationsContainer = clone.querySelector(".violations-container") as HTMLElement;
+            if (rowViolations.length > 0) {
+                rowViolations.forEach((violation) => {
+                    violationsContainer.appendChild(ViolationUI.createViolationCard(violation));
+                });
+            }
 
             otherContent.appendChild(clone);
         }

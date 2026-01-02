@@ -163,7 +163,7 @@ fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label:not(
     content: "\2715"; /* Unicode ✕ multiplication X */
 }
 
-/* High contrast mode support - modern and legacy combined */
+/* High contrast mode support */
 @media (prefers-contrast: high), (forced-colors: active), screen and (-ms-high-contrast: active) {
     .fluent-icon {
         color: ButtonText;

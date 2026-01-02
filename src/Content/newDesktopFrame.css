@@ -1,5 +1,6 @@
 /* Import shared Fluent UI styles */
 @import url("fluentCommon.css");
+@import url("rulesCommon.css");
 
 .content-wrap {
     background: var(--white);
@@ -317,4 +318,111 @@
     word-break: break-word;
     font-size: 12px;
     font-family: var(--font-family);
+}
+
+/* Desktop-specific overrides for violation card header */
+.violation-card-header {
+    align-items: flex-start;
+}
+
+.violation-message {
+    padding: 4px;
+}
+
+/* Inline mode - compact display for Summary headers */
+.violation-inline {
+    display: flex;
+    font-size: 0.75rem;
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+/* Card mode - full display for popovers and accordions */
+.violation-card {
+    display: flex;
+    font-size: 0.75rem;
+    font-weight: 400;
+    gap: 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    flex-direction: column;
+    border: 1px solid var(--border-light-gray);
+}
+
+.violation-card:hover {
+    border-color: var(--border-gray);
+}
+
+.violation-card:last-child {
+    margin-bottom: 0;
+}
+
+/* Desktop-specific: show violation details in cards */
+.violation-card .violation-details {
+    display: block;
+    padding: 0px;
+}
+
+.diagnostic-content {
+    padding: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.diagnostics-accordion {
+    border-radius: 6px;
+    border: 1px solid var(--border-gray);
+}
+
+.popover-row .cell-content-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    position: relative;
+}
+
+.popover-row .cell-main-content {
+    flex: 1;
+    line-height: 1.4;
+}
+
+.show-diagnostics-popover-btn {
+    border-radius: 50% !important;
+}
+
+.show-diagnostics-popover-btn:not([data-severity]) {
+    display: none;
+}
+
+.show-diagnostics-popover-btn:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+.show-diagnostics-popover-btn:hover {
+    transform: scale(1.1);
+}
+
+.show-diagnostics-popover-btn .severity-icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.show-diagnostics-popover-btn .severity-icon::before {
+    content: var(--severity-icon);
+}
+
+/* Other tab header with inline popover button */
+.other-header-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+/* Severity Badges - Fluent UI overrides */
+fluent-badge.severity-badge {
+    display: flex;
+    flex-shrink: 0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
 }

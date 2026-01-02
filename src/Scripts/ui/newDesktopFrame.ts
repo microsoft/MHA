@@ -10,6 +10,9 @@ import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
 import { TabNavigation } from "../TabNavigation";
 import { DomUtils } from "./domUtils";
+import { ViolationUI } from "./ViolationUI";
+import { RuleViolation, ViolationGroup } from "../rules/types/AnalysisTypes";
+import { getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -181,7 +184,19 @@ function buildSummaryTab(viewModel: HeaderModel) {
             const clone = DomUtils.cloneTemplate("summary-row-template");
             DomUtils.setTemplateText(clone, ".section-header", row.label);
 
-            DomUtils.setTemplateHTML(clone, "code", row.value);
+            const highlightedContent = highlightContent(row.value, viewModel.violationGroups);
+            DomUtils.setTemplateHTML(clone, "code", highlightedContent);
+
+            // Add rule violation display in summary section
+            const sectionHeader = clone.querySelector(".section-header") as HTMLElement;
+            const rowViolations = getViolationsForRow(row, viewModel.violationGroups);
+
+            if (sectionHeader && rowViolations.length > 0) {
+                rowViolations.forEach((violation: RuleViolation) => {
+                    sectionHeader.appendChild(document.createTextNode(" "));
+                    sectionHeader.appendChild(ViolationUI.createInlineViolation(violation));
+                });
+            }
 
             summaryList.appendChild(clone);
         }
@@ -191,6 +206,12 @@ function buildSummaryTab(viewModel: HeaderModel) {
     DomUtils.setText("#original-headers textarea", viewModel.originalHeaders);
     if (viewModel.originalHeaders) {
         DomUtils.showElement(".orig-header-ui");
+    }
+
+    const diagnosticsSection = document.querySelector(".ui-diagnostics-report-section") as HTMLElement;
+    const diagnosticsContent = ViolationUI.buildDiagnosticsSection(viewModel.violationGroups);
+    if (diagnosticsContent) {
+        diagnosticsSection.appendChild(diagnosticsContent);
     }
 }
 
@@ -353,7 +374,7 @@ function buildAntispamTab(viewModel: HeaderModel) {
         antispamList.appendChild(antispamTable);
 
         viewModel.forefrontAntiSpamReport.rows.forEach((antispamrow: Row) => {
-            antispamTbody.appendChild(createRow("table-row-template", antispamrow));
+            antispamTbody.appendChild(createRow("table-row-template",antispamrow, viewModel.violationGroups));
         });
     }
 
@@ -369,7 +390,7 @@ function buildAntispamTab(viewModel: HeaderModel) {
         antispamList.appendChild(antispamTable);
 
         viewModel.antiSpamReport.rows.forEach((antispamrow: Row) => {
-            antispamTbody.appendChild(createRow("table-row-template", antispamrow));
+            antispamTbody.appendChild(createRow("table-row-template", antispamrow, viewModel.violationGroups));
         });
     }
 }
@@ -379,7 +400,7 @@ function buildOtherTab(viewModel: HeaderModel) {
 
     viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
         if (otherRow.value) {
-            otherList.appendChild(createRow("other-row-template", otherRow));
+            otherList.appendChild(createRow("other-row-template", otherRow, viewModel.violationGroups));
         }
     });
 }
@@ -449,11 +470,12 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 /**
- * Set up table row
+ * Set up table row with optional popover buttons
  */
 function createRow(
     template: string,
-    row: Row) {
+    row: Row,
+    violationGroups: ViolationGroup[]) {
     const clone = DomUtils.cloneTemplate(template);
     DomUtils.setTemplateHTML(clone, ".row-header", row.url || row.label || row.header);
     DomUtils.setTemplateAttribute(clone, ".row-header", "id", row.id);
@@ -462,7 +484,33 @@ function createRow(
     if (row.valueUrl) {
         DomUtils.setTemplateHTML(clone, ".cell-main-content", row.valueUrl);
     } else {
-        DomUtils.setTemplateText(clone, ".cell-main-content", row.value);
+        const highlightedContent = highlightContent(row.value, violationGroups);
+        if (highlightedContent !== row.value) {
+            DomUtils.setTemplateHTML(clone, ".cell-main-content", highlightedContent);
+        } else {
+            DomUtils.setTemplateHTML(clone, ".cell-main-content", row.value);
+        }
+    }
+
+    const effectiveViolations = getViolationsForRow(row, violationGroups);
+    if (effectiveViolations.length > 0) {
+        const diagnosticsList = clone.querySelector(".diagnostics-list") as HTMLElement;
+        effectiveViolations.forEach(v => diagnosticsList.appendChild(ViolationUI.createViolationCard(v)));
+
+        const popoverBtn = clone.querySelector(".show-diagnostics-popover-btn") as HTMLElement;
+        const popover = clone.querySelector(".details-overlay-popup") as HTMLElement;
+        if (popoverBtn && popover) {
+            popover.id = `popover-${row.id}`;
+
+            const severities = effectiveViolations.map(v => v.rule.severity);
+            const highestSeverity = severities.includes("error") ? "error" : severities.includes("warning") ? "warning" : "info";
+            popoverBtn.setAttribute("data-severity", highestSeverity);
+            popoverBtn.id = `popover-btn-${row.id}`;
+            popoverBtn.setAttribute("aria-describedby", popover.id);
+            popoverBtn.setAttribute("aria-label", `Show rule violations for ${row.label || row.header}`);
+
+            attachOverlayPopup(popoverBtn, popover as HTMLElement);
+        }
     }
 
     return clone;

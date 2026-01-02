@@ -1,4 +1,5 @@
 @import url("themeColors.css");
+@import url("rulesCommon.css");
 
 /* Framework7 specific overrides */
 
@@ -165,6 +166,16 @@ a.tab-link {
     overflow-wrap: break-word;
 }
 
+#antispam-view .accordion-item-content .violation-card .violation-parent-message {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+#antispam-view .accordion-item-content .violation-card .violation-details {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
 #antispam-view .accordion-item-content p {
     margin-top: 0 !important;
 }
@@ -202,6 +213,49 @@ a.tab-link {
 
 #summary-view .block {
     margin: 5px 0;
+}
+
+.diagnostics-section {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.diagnostics-section .list {
+    margin-bottom: 0;
+}
+
+.diagnostics-accordion {
+    margin-bottom: 0;
+}
+
+.diagnostics-accordion .accordion-item-content {
+    padding: 0;
+}
+
+.diagnostics-accordion .diagnostic-content {
+    margin: 10px;
+    padding-bottom: 0;
+}
+
+.diagnostics-accordion .violation-card {
+    padding: 10px;
+    margin: 5px 0;
+}
+
+.diagnostics-accordion .violation-details {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.diagnostics-accordion .violation-rule {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.diagnostics-accordion .item-title {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
 }
 
 #orig-headers-ui {
