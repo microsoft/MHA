@@ -96,6 +96,9 @@
     "stacktrace-js": "^2.0.2",
     "unfetch": "^5.0.0"
   },
+  "overrides": {
+    "tmp": "^0.2.5"
+  },
   "-vs-binding": {
     "BeforeBuild": [
       "build:dev"
