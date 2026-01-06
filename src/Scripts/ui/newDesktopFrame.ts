@@ -12,7 +12,7 @@ import { TabNavigation } from "../TabNavigation";
 import { DomUtils } from "./domUtils";
 import { ViolationUI } from "./ViolationUI";
 import { RuleViolation, ViolationGroup } from "../rules/types/AnalysisTypes";
-import { getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
+import { escapeAndHighlight, getViolationsForRow } from "../rules/ViolationUtils";
 
 // This is the "new" UI rendered in newDesktopFrame.html
 
@@ -184,7 +184,7 @@ function buildSummaryTab(viewModel: HeaderModel) {
             const clone = DomUtils.cloneTemplate("summary-row-template");
             DomUtils.setTemplateText(clone, ".section-header", row.label);
 
-            const highlightedContent = highlightContent(row.value, viewModel.violationGroups);
+            const highlightedContent = escapeAndHighlight(row.value, viewModel.violationGroups);
             DomUtils.setTemplateHTML(clone, "code", highlightedContent);
 
             // Add rule violation display in summary section
@@ -484,12 +484,8 @@ function createRow(
     if (row.valueUrl) {
         DomUtils.setTemplateHTML(clone, ".cell-main-content", row.valueUrl);
     } else {
-        const highlightedContent = highlightContent(row.value, violationGroups);
-        if (highlightedContent !== row.value) {
-            DomUtils.setTemplateHTML(clone, ".cell-main-content", highlightedContent);
-        } else {
-            DomUtils.setTemplateHTML(clone, ".cell-main-content", row.value);
-        }
+        const highlightedContent = escapeAndHighlight(row.value, violationGroups);
+        DomUtils.setTemplateHTML(clone, ".cell-main-content", highlightedContent);
     }
 
     const effectiveViolations = getViolationsForRow(row, violationGroups);

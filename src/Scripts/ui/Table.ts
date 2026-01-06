@@ -6,7 +6,7 @@ import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { RuleViolation } from "../rules/types/AnalysisTypes";
-import { getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
+import { escapeAndHighlight, getViolationsForRow } from "../rules/ViolationUtils";
 import { Column } from "../table/Column";
 import { DataTable } from "../table/DataTable";
 import { SummaryTable } from "../table/SummaryTable";
@@ -161,7 +161,7 @@ export class Table {
         if (headerVal) {
             if (row.value) {
                 const rowViolations = this.viewModel ? getViolationsForRow(row, this.viewModel.violationGroups) : [];
-                const highlightedContent = this.viewModel ? highlightContent(row.valueUrl || row.value, this.viewModel.violationGroups) : (row.valueUrl || row.value);
+                const highlightedContent = this.viewModel ? escapeAndHighlight(row.valueUrl || row.value, this.viewModel.violationGroups) : (row.valueUrl || row.value);
 
                 if (row.valueUrl) {
                     headerVal.innerHTML = highlightedContent;
@@ -330,7 +330,7 @@ export class Table {
             this.appendCell(row, otherRow.number.toString(), "", "", "number_header");
 
             const rowViolations = getViolationsForRow(otherRow, viewModel.violationGroups);
-            const highlightedHeader = highlightContent(otherRow.url || otherRow.header, viewModel.violationGroups);
+            const highlightedHeader = escapeAndHighlight(otherRow.url || otherRow.header, viewModel.violationGroups);
 
             const headerCell = row.insertCell(-1);
             headerCell.innerHTML = highlightedHeader;
@@ -343,7 +343,7 @@ export class Table {
                 });
             }
 
-            const highlightedValue = highlightContent(otherRow.value, viewModel.violationGroups);
+            const highlightedValue = escapeAndHighlight(otherRow.value, viewModel.violationGroups);
             this.appendCell(row, "", highlightedValue, "allowBreak", "value_header");
         });
 
