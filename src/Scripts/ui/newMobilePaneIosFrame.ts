@@ -21,7 +21,7 @@ import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
-import { getViolationsForRow, highlightContent } from "../rules/ViolationUtils";
+import { escapeAndHighlight, getViolationsForRow } from "../rules/ViolationUtils";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
@@ -136,7 +136,7 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderMo
         linkWrap.setAttribute("aria-labelledby", spamRow.id);
 
         const tempDiv = document.createElement("div");
-        const highlightedContent = highlightContent(spamRow.valueUrl, viewModel.violationGroups);
+        const highlightedContent = escapeAndHighlight(spamRow.valueUrl, viewModel.violationGroups);
         tempDiv.innerHTML = highlightedContent;
         while (tempDiv.firstChild) {
             const child = tempDiv.firstChild as HTMLElement;
@@ -179,7 +179,7 @@ function buildSummaryTab(viewModel: HeaderModel): void {
             }
 
             const code = clone.querySelector("code") as HTMLElement;
-            const highlightedContent = highlightContent(row.value, viewModel.violationGroups);
+            const highlightedContent = escapeAndHighlight(row.value, viewModel.violationGroups);
             code.innerHTML = highlightedContent;
 
             summaryContent.appendChild(clone);
@@ -388,7 +388,7 @@ function buildOtherTab(viewModel: HeaderModel): void {
             }
 
             const code = clone.querySelector("code") as HTMLElement;
-            const highlightedContent = highlightContent(row.value, viewModel.violationGroups);
+            const highlightedContent = escapeAndHighlight(row.value, viewModel.violationGroups);
             code.innerHTML = highlightedContent;
 
             const violationsContainer = clone.querySelector(".violations-container") as HTMLElement;

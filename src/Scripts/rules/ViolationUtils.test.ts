@@ -1,24 +1,24 @@
 import { RuleViolation, ViolationGroup } from "./types/AnalysisTypes";
 import { HeaderSection } from "./types/interfaces";
 import { SimpleValidationRule } from "./types/SimpleValidationRule";
-import { getViolationsForRow, highlightContent } from "./ViolationUtils";
+import { escapeAndHighlight, getViolationsForRow } from "./ViolationUtils";
 
-describe("highlightContent", () => {
+describe("escapeAndHighlight", () => {
     test("should return original content when no violation groups", () => {
         const content = "This is test content";
-        const result = highlightContent(content, []);
+        const result = escapeAndHighlight(content, []);
         expect(result).toBe(content);
     });
 
     test("should return original content when content is empty", () => {
-        const result = highlightContent("", []);
+        const result = escapeAndHighlight("", []);
         expect(result).toBe("");
     });
 
     test("should return original content when violationGroups is undefined", () => {
         const content = "Test content";
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result = highlightContent(content, undefined as any);
+        const result = escapeAndHighlight(content, undefined as any);
         expect(result).toBe(content);
     });
 
@@ -38,7 +38,7 @@ describe("highlightContent", () => {
         };
 
         const content = "This is spam email";
-        const result = highlightContent(content, [group]);
+        const result = escapeAndHighlight(content, [group]);
 
         expect(result).toContain("<span class=\"highlight-violation\">spam</span>");
         expect(result).toBe("This is <span class=\"highlight-violation\">spam</span> email");
@@ -60,7 +60,7 @@ describe("highlightContent", () => {
         };
 
         const content = "test test test";
-        const result = highlightContent(content, [group]);
+        const result = escapeAndHighlight(content, [group]);
 
         const matches = result.match(/<span class="highlight-violation">test<\/span>/g);
         expect(matches).toHaveLength(3);
@@ -82,11 +82,11 @@ describe("highlightContent", () => {
         };
 
         const content1 = "SFV:SPM;CIP:1.2.3.4";
-        const result1 = highlightContent(content1, [group]);
+        const result1 = escapeAndHighlight(content1, [group]);
         expect(result1).toContain("<span class=\"highlight-violation\">SFV:SPM</span>");
 
         const content2 = "SFV:BLK;CIP:1.2.3.4";
-        const result2 = highlightContent(content2, [group]);
+        const result2 = escapeAndHighlight(content2, [group]);
         expect(result2).toContain("<span class=\"highlight-violation\">SFV:BLK</span>");
     });
 
@@ -106,7 +106,7 @@ describe("highlightContent", () => {
         };
 
         const content = "This is SPAM email with Spam and spam";
-        const result = highlightContent(content, [group]);
+        const result = escapeAndHighlight(content, [group]);
 
         expect(result).toContain("<span class=\"highlight-violation\">SPAM</span>");
         expect(result).toContain("<span class=\"highlight-violation\">Spam</span>");
@@ -129,7 +129,7 @@ describe("highlightContent", () => {
         };
 
         const content = "Test content";
-        const result = highlightContent(content, [group]);
+        const result = escapeAndHighlight(content, [group]);
         expect(result).toBe(content);
     });
 
@@ -149,7 +149,7 @@ describe("highlightContent", () => {
         };
 
         const content = "This is test content";
-        const result = highlightContent(content, [group]);
+        const result = escapeAndHighlight(content, [group]);
         expect(result).toContain("<span class=\"highlight-violation\">test</span>");
     });
 
@@ -169,7 +169,7 @@ describe("highlightContent", () => {
         };
 
         const content = "Test content";
-        const result = highlightContent(content, [group]);
+        const result = escapeAndHighlight(content, [group]);
         // Should not throw error, just skip invalid pattern
         expect(result).toBe(content);
     });
@@ -205,7 +205,7 @@ describe("highlightContent", () => {
         };
 
         const content = "This has error and warning";
-        const result = highlightContent(content, [group1, group2]);
+        const result = escapeAndHighlight(content, [group1, group2]);
 
         expect(result).toContain("<span class=\"highlight-violation\">error</span>");
         expect(result).toContain("<span class=\"highlight-violation\">warning</span>");
@@ -227,7 +227,7 @@ describe("highlightContent", () => {
         };
 
         const content = "test. versus testing";
-        const result = highlightContent(content, [group]);
+        const result = escapeAndHighlight(content, [group]);
 
         // Should only match "test." literally, not "test" followed by any character
         expect(result).toContain("<span class=\"highlight-violation\">test.</span>");
@@ -260,7 +260,7 @@ describe("highlightContent", () => {
         };
 
         const content = "This is a test message";
-        const result = highlightContent(content, [group]);
+        const result = escapeAndHighlight(content, [group]);
 
         // Should NOT have nested spans or broken HTML
         const nestedSpanPattern = /<span[^>]*><span[^>]*>/;
