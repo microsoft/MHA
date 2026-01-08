@@ -21,7 +21,7 @@ import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
-import { escapeAndHighlight, getViolationsForRow } from "../rules/ViolationUtils";
+import { escapeAndHighlight, getViolationsForRow, highlightHtml } from "../rules/ViolationUtils";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
@@ -136,7 +136,7 @@ function addSpamReportRow(spamRow: Row, parent: HTMLElement, viewModel: HeaderMo
         linkWrap.setAttribute("aria-labelledby", spamRow.id);
 
         const tempDiv = document.createElement("div");
-        const highlightedContent = escapeAndHighlight(spamRow.valueUrl, viewModel.violationGroups);
+        const highlightedContent = highlightHtml(spamRow.valueUrl, viewModel.violationGroups);
         tempDiv.innerHTML = highlightedContent;
         while (tempDiv.firstChild) {
             const child = tempDiv.firstChild as HTMLElement;
