@@ -34,8 +34,10 @@ export function highlightHtml(htmlContent: string, violationGroups: ViolationGro
         if (node.nodeType === Node.TEXT_NODE) {
             const text = node.textContent || "";
             if (text.trim()) {
-                const highlighted = highlightContent(text, violationGroups);
-                if (highlighted !== text) {
+                // Escape the text content before highlighting to prevent XSS
+                const escapedText = Strings.htmlEncode(text);
+                const highlighted = highlightContent(escapedText, violationGroups);
+                if (highlighted !== escapedText) {
                     const span = document.createElement("span");
                     span.innerHTML = highlighted;
                     node.parentNode?.replaceChild(span, node);
