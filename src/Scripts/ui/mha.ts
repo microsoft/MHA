@@ -94,7 +94,7 @@ async function analyze() {
 
     viewModel = await HeaderModel.create(headerText);
 
-    // Clear UI first to ensure clean slate (same as Clear button)
+    // Clear UI before rebuilding to ensure clean state
     table.rebuildSections(null);
 
     table.resetArrows();
