@@ -1,7 +1,7 @@
 import { RuleViolation, ViolationGroup } from "./types/AnalysisTypes";
 import { HeaderSection } from "./types/interfaces";
 import { SimpleValidationRule } from "./types/SimpleValidationRule";
-import { escapeAndHighlight, getViolationsForRow } from "./ViolationUtils";
+import { escapeAndHighlight, getViolationsForRow, highlightHtml } from "./ViolationUtils";
 
 describe("escapeAndHighlight", () => {
     test("should return original content when no violation groups", () => {
@@ -560,5 +560,162 @@ describe("getViolationsForRow", () => {
         const result = getViolationsForRow(row, [group]);
 
         expect(result).toHaveLength(1);
+    });
+});
+
+describe("highlightHtml", () => {
+    test("should preserve HTML anchor tags without escaping", () => {
+        const rule = new SimpleValidationRule("Country", "US", "Country", "Country", "error");
+        const violation: RuleViolation = {
+            rule,
+            affectedSections: [],
+            highlightPattern: "US"
+        };
+        const group: ViolationGroup = {
+            groupId: "group-1",
+            displayName: "Country match",
+            severity: "error",
+            isAndRule: false,
+            violations: [violation]
+        };
+
+        const htmlContent = "<a href = 'https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers' target = '_blank'>US</a>";
+        const result = highlightHtml(htmlContent, [group]);
+
+        // Should preserve anchor tag structure
+        expect(result).toContain("<a href");
+        expect(result).toContain("target=\"_blank\"");
+        expect(result).toContain("</a>");
+        // Should highlight text inside anchor tag
+        expect(result).toContain("<span class=\"highlight-violation\">US</span>");
+        // Should NOT escape the HTML
+        expect(result).not.toContain("&lt;a");
+        expect(result).not.toContain("&gt;");
+    });
+
+    test("should preserve multiple anchor tags", () => {
+        const rule = new SimpleValidationRule("Lang", "en", "Language", "Language", "error");
+        const violation: RuleViolation = {
+            rule,
+            affectedSections: [],
+            highlightPattern: "en"
+        };
+        const group: ViolationGroup = {
+            groupId: "group-1",
+            displayName: "Language match",
+            severity: "error",
+            isAndRule: false,
+            violations: [violation]
+        };
+
+        const htmlContent = "<a href = 'https://example.com' target = '_blank'>en</a>";
+        const result = highlightHtml(htmlContent, [group]);
+
+        expect(result).toContain("<a href");
+        expect(result).toContain("</a>");
+        expect(result).toContain("<span class=\"highlight-violation\">en</span>");
+    });
+
+    test("should handle message IDs with special characters", () => {
+        const htmlContent = "<message@example.com>";
+        const result = highlightHtml(htmlContent, []);
+
+        // Message IDs with angle brackets should be preserved as-is (no escaping needed since no highlighting)
+        expect(result).toBe("<message@example.com>");
+    });
+
+    test("should escape special characters in plain text when using escapeAndHighlight", () => {
+        const content = "<message@example.com>";
+        const result = escapeAndHighlight(content, []);
+
+        // Plain text with special chars should be escaped
+        expect(result).toBe("&lt;message@example.com&gt;");
+    });
+
+    test("should return original content when no violation groups", () => {
+        const htmlContent = "<a href='test'>link</a>";
+        const result = highlightHtml(htmlContent, []);
+        expect(result).toBe(htmlContent);
+    });
+
+    test("should return original content when content is empty", () => {
+        const result = highlightHtml("", []);
+        expect(result).toBe("");
+    });
+
+    test("should handle HTML with no matches", () => {
+        const rule = new SimpleValidationRule("Test", "notfound", "Test", "Test", "error");
+        const violation: RuleViolation = {
+            rule,
+            affectedSections: [],
+            highlightPattern: "notfound"
+        };
+        const group: ViolationGroup = {
+            groupId: "group-1",
+            displayName: "Test",
+            severity: "error",
+            isAndRule: false,
+            violations: [violation]
+        };
+
+        const htmlContent = "<a href='test'>different text</a>";
+        const result = highlightHtml(htmlContent, [group]);
+
+        // Should preserve HTML without highlighting (DOM normalizes quotes to double quotes)
+        expect(result).toContain("<a href=\"");
+        expect(result).not.toContain("highlight-violation");
+    });
+
+    test("should highlight text outside tags", () => {
+        const rule = new SimpleValidationRule("Test", "spam", "Spam", "Test", "error");
+        const violation: RuleViolation = {
+            rule,
+            affectedSections: [],
+            highlightPattern: "spam"
+        };
+        const group: ViolationGroup = {
+            groupId: "group-1",
+            displayName: "Spam",
+            severity: "error",
+            isAndRule: false,
+            violations: [violation]
+        };
+
+        const htmlContent = "This is spam <a href='test'>link</a>";
+        const result = highlightHtml(htmlContent, [group]);
+
+        // Should highlight text outside tags
+        expect(result).toContain("<span class=\"highlight-violation\">spam</span>");
+        // Should preserve anchor tag (DOM normalizes quotes to double quotes)
+        expect(result).toContain("<a href=\"");
+        expect(result).toContain(">link</a>");
+    });
+
+    test("should handle complex HTML with nested elements", () => {
+        const rule = new SimpleValidationRule("Test", "test", "Test", "Test", "error");
+        const violation: RuleViolation = {
+            rule,
+            affectedSections: [],
+            highlightPattern: "test"
+        };
+        const group: ViolationGroup = {
+            groupId: "group-1",
+            displayName: "Test",
+            severity: "error",
+            isAndRule: false,
+            violations: [violation]
+        };
+
+        const htmlContent = "<div><span>test</span> text with test</div>";
+        const result = highlightHtml(htmlContent, [group]);
+
+        // Should preserve div and span structure
+        expect(result).toContain("<div>");
+        expect(result).toContain("</div>");
+        expect(result).toContain("<span>");
+        // Should highlight both occurrences
+        const matches = result.match(/highlight-violation/g);
+        expect(matches).toBeTruthy();
+        expect(matches!.length).toBeGreaterThan(0);
     });
 });
