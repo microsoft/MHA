@@ -123,6 +123,7 @@ export class Table {
 
             rows.forEach((summaryRow: Row) => {
                 const id = summaryRow.header + tag;
+                if (document.getElementById(id)) return; // Skip if already exists
                 const row = document.createElement("tr");
                 if (row !== null) {
                     row.id = id;
@@ -400,9 +401,10 @@ export class Table {
     }
 
     private addColumns(tableName: string, columns: Column[]): void {
-        const tableHeader = document.createElement("thead");
         const table = document.getElementById(tableName);
         if (table) {
+            if (table.querySelector("thead")) return; // Skip if already has headers
+            const tableHeader = document.createElement("thead");
             table.appendChild(tableHeader);
 
             const headerRow = document.createElement("tr");
@@ -496,6 +498,8 @@ export class Table {
     private setupReceivedHeadersUI(): void {
         const withColumn = document.querySelector("#receivedHeaders #with");
         if (withColumn !== null) {
+            if (document.getElementById("leftArrow")) return; // Skip if already exists
+
             const leftSpan = document.createElement("span");
             leftSpan.setAttribute("id", "leftArrow");
             leftSpan.classList.add("collapsibleArrow");
