@@ -93,6 +93,10 @@ async function analyze() {
     }
 
     viewModel = await HeaderModel.create(headerText);
+
+    // Clear UI before rebuilding to ensure clean state
+    table.rebuildSections(null);
+
     table.resetArrows();
 
     enableSpinner();
