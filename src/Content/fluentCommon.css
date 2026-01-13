@@ -269,7 +269,7 @@ fluent-radio:focus-visible {
 /* Common Status Overlay Styles for Copy Feedback */
 /* Used by both uitoggle and standalone MHA pages */
 .status-overlay {
-    display: none;
+    display: block;
     color: var(--success-green); /* Dark green text for contrast */
     font-size: 14px;
     font-weight: 500;
@@ -288,7 +288,6 @@ fluent-radio:focus-visible {
 }
 
 .status-overlay.show {
-    display: block;
     opacity: 1;
     transform: translateX(0);
 }
