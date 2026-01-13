@@ -13,7 +13,7 @@
         <h1 id="title">Message Header Analyzer</h1>
     </header>
     <main id="SectionContent">
-        <section aria-labelledby="inputSection">
+        <section role="region" aria-label="Input Headers">
             <h2 id="inputSection" class="sr-only">Input Headers</h2>
             <textarea id="inputHeaders" autofocus="autofocus" placeholder="Paste headers here." required="required"
                 rows="15"></textarea>
@@ -35,14 +35,14 @@
                 <div class="status-overlay status-overlay-inline" id="copyStatusMessage" role="status" aria-live="polite">
                 </div>
             </fluent-button>
-            <footer id="mhaFooter">
+            <div id="feedbackLink">
                 <a href="https://github.com/microsoft/MHA" target="_blank" rel="noopener">Submit feedback on github</a>
-            </footer>
+            </div>
         </section>
 
         <hr id="lineBreak" />
 
-        <section id="response" class="hiddenElement" aria-labelledby="resultsSection">
+        <section id="response" class="hiddenElement" role="region" aria-label="Analysis Results">
             <h2 id="resultsSection" class="sr-only">Analysis Results</h2>
             <div class="responsePane">
                 <div id="status"></div>

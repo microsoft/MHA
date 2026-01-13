@@ -288,7 +288,7 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     box-sizing: border-box;
 }
 
-#mhaFooter {
+#feedbackLink {
     float: right;
 }
 
