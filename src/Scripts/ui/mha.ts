@@ -58,6 +58,8 @@ function dismissAllStatusMessages() {
     // Find all status overlay elements and hide them
     document.querySelectorAll(".status-overlay-inline.show").forEach(element => {
         element.classList.remove("show");
+        // Clear text content so next announcement is detected as a change
+        element.textContent = "";
     });
 }
 
@@ -74,6 +76,7 @@ function showStatusMessage(elementId: string, message: string, duration = 2000) 
         // Hide after specified duration and track the timeout
         const timeoutId = setTimeout(() => {
             statusElement.classList.remove("show");
+            statusElement.textContent = "";
             statusMessageTimeouts.delete(elementId);
         }, duration);
 
@@ -114,9 +117,13 @@ function clear() {
     DomUtils.setValue("#inputHeaders", "");
 
     table.rebuildSections(null);
-    document.getElementById("inputHeaders")?.focus();
 
     showStatusMessage("clearStatusMessage", mhaStrings.mhaCleared);
+
+    // Delay focus to allow screen reader to fully announce status message
+    setTimeout(() => {
+        document.getElementById("inputHeaders")?.focus();
+    }, 1000);
 }
 
 function copy() {

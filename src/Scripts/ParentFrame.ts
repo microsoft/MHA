@@ -2,6 +2,7 @@
 import { DeferredError } from "./DeferredError";
 import { diagnostics } from "./Diag";
 import { Errors } from "./Errors";
+import { mhaStrings } from "./mhaStrings";
 import { Poster } from "./Poster";
 import { Strings } from "./Strings";
 import { TabNavigation } from "./TabNavigation";
@@ -340,11 +341,13 @@ export class ParentFrame {
             // Show status message for accessibility
             const statusMessage = document.getElementById("statusMessage");
             if (statusMessage) {
+                statusMessage.textContent = mhaStrings.mhaCopied;
                 statusMessage.classList.add("show");
 
                 // Hide after 2 seconds
                 setTimeout(() => {
                     statusMessage.classList.remove("show");
+                    statusMessage.textContent = "";
                 }, 2000);
             }
 
