@@ -84,6 +84,8 @@
     "webpack-dev-server": "^5.2.3"
   },
   "dependencies": {
+    "@azure/msal-browser": "^3.24.0",
+    "@azure/msal-browser-v2": "npm:@azure/msal-browser@^2.39.0",
     "@fluentui/web-components": "^2.6.1",
     "@microsoft/applicationinsights-web": "^3.3.11",
     "@microsoft/office-js": "^1.1.110",
