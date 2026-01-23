@@ -1,4 +1,6 @@
 @import url("themeColors.css");
+@import url("Office.css");
+@import url("rulesCommon.css");
 
 body {
     padding: 0;
@@ -255,7 +257,7 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     color: #E44D4D; /* A nice red */
 }
 
-/* High contrast support for error styling - modern and legacy combined */
+/* High contrast support for error styling */
 @media (prefers-contrast: high), (forced-colors: active), screen and (-ms-high-contrast: active) {
     .negativeCell {
         color: CanvasText !important;
@@ -286,7 +288,7 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     box-sizing: border-box;
 }
 
-#mhaFooter {
+#feedbackLink {
     float: right;
 }
 
@@ -337,4 +339,69 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
         color: #cccccc;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
+}
+
+/* Diagnostics section - matches classic table style */
+#diagnosticsContent {
+    border: 1px solid black;
+    background-color: #FFFFFF;
+    margin-bottom: 20px;
+}
+
+.diagnostic-group {
+    border-bottom: 1px solid #CDE6F7;
+    padding: 8px 12px;
+}
+
+.diagnostic-group:last-child {
+    border-bottom: none;
+}
+
+/* Classic-specific overrides for violation card header */
+.violation-card-header {
+    padding: 4px 0;
+    font-weight: bold;
+}
+
+.diagnostic-violations {
+    margin-top: 8px;
+    padding-left: 20px;
+}
+
+/* Classic-specific overrides for violation card */
+.violation-card {
+    padding: 6px 0;
+    margin-bottom: 6px;
+    padding-left: 8px;
+}
+
+/* Classic-specific overrides for violation details */
+.violation-details {
+    margin-top: 4px;
+    padding-left: 20px;
+    padding-bottom: 0px;
+}
+
+.violation-rule {
+    padding-bottom: 0px;
+}
+
+.violation-parent-message {
+    padding-top: 4px;
+}
+
+/* Classic-specific badge styling - smaller and more subtle */
+#summary .severity-badge,
+#forefrontAntiSpamReport .severity-badge,
+#antiSpamReport .severity-badge,
+#otherHeaders .severity-badge {
+    font-size: 9px;
+    padding: 1px 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+/* Ensure summary table values work well with inline violations */
+.summaryList td {
+    line-height: 1.4;
 }

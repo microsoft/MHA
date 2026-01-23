@@ -15,10 +15,10 @@ export class DomUtils {
     /**
      * Get multiple elements by CSS selector
      * @param selector CSS selector string
-     * @returns NodeList of HTMLElements
+     * @returns Array of HTMLElements
      */
-    static getElements(selector: string): NodeListOf<HTMLElement> {
-        return document.querySelectorAll(selector) as NodeListOf<HTMLElement>;
+    static getElements(selector: string): HTMLElement[] {
+        return Array.from(document.querySelectorAll(selector)) as HTMLElement[];
     }
 
     /**
@@ -140,6 +140,18 @@ export class DomUtils {
         const element = clone.querySelector(selector) as HTMLElement;
         if (element) {
             element.setAttribute(attribute, value);
+        }
+    }
+
+    /**
+     * Hide an element within a DocumentFragment
+     * @param clone DocumentFragment to search within
+     * @param selector CSS selector string
+     */
+    static hideTemplateElement(clone: DocumentFragment, selector: string): void {
+        const element = clone.querySelector(selector) as HTMLElement;
+        if (element) {
+            element.style.display = "none";
         }
     }
 

@@ -58,6 +58,8 @@ function dismissAllStatusMessages() {
     // Find all status overlay elements and hide them
     document.querySelectorAll(".status-overlay-inline.show").forEach(element => {
         element.classList.remove("show");
+        // Clear text content so next announcement is detected as a change
+        element.textContent = "";
     });
 }
 
@@ -74,6 +76,7 @@ function showStatusMessage(elementId: string, message: string, duration = 2000) 
         // Hide after specified duration and track the timeout
         const timeoutId = setTimeout(() => {
             statusElement.classList.remove("show");
+            statusElement.textContent = "";
             statusMessageTimeouts.delete(elementId);
         }, duration);
 
@@ -83,7 +86,7 @@ function showStatusMessage(elementId: string, message: string, duration = 2000) 
 
 // Do our best at recognizing RFC 2822 headers:
 // http://tools.ietf.org/html/rfc2822
-function analyze() {
+async function analyze() {
     diagnostics.trackEvent({ name: "analyzeHeaders" });
     const headerText = DomUtils.getValue("#inputHeaders");
 
@@ -92,13 +95,17 @@ function analyze() {
         return;
     }
 
-    viewModel = new HeaderModel(headerText);
+    viewModel = await HeaderModel.create(headerText);
+
+    // Clear UI before rebuilding to ensure clean state
+    table.rebuildSections(null);
+
     table.resetArrows();
 
     enableSpinner();
     updateStatus(mhaStrings.mhaLoading);
 
-    table.rebuildTables(viewModel);
+    table.initializeTableUI(viewModel);
     updateStatus("");
 
     disableSpinner();
@@ -109,12 +116,14 @@ function analyze() {
 function clear() {
     DomUtils.setValue("#inputHeaders", "");
 
-    viewModel = new HeaderModel();
-    table.resetArrows();
-    table.rebuildSections(viewModel);
-    document.getElementById("inputHeaders")?.focus();
+    table.rebuildSections(null);
 
     showStatusMessage("clearStatusMessage", mhaStrings.mhaCleared);
+
+    // Delay focus to allow screen reader to fully announce status message
+    setTimeout(() => {
+        document.getElementById("inputHeaders")?.focus();
+    }, 1000);
 }
 
 function copy() {
@@ -133,9 +142,8 @@ function copy() {
 
 document.addEventListener("DOMContentLoaded", function() {
     diagnostics.set("API used", "standalone");
-    viewModel = new HeaderModel();
     table = new Table();
-    table.initializeTableUI(viewModel);
+    table.initializeTableUI();
     table.makeResizablePane("inputHeaders", "sectionHeader", mhaStrings.mhaPrompt, () => true);
 
     (document.querySelector("#analyzeButton") as HTMLButtonElement).onclick = analyze;

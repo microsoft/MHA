@@ -30,6 +30,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 
+import CopyWebpackPlugin from "copy-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
@@ -195,6 +196,12 @@ export default async (env, options) => {
                     });
                 }
             },
+            new CopyWebpackPlugin({
+                patterns: [
+                    { from: "src/Resources/*", to: path.resolve(__dirname, "Resources/[name][ext]") },
+                    { from: "src/data/rules.json", to: path.resolve(__dirname, "Pages/data/[name][ext]") }
+                ]
+            }),
             ...generateHtmlWebpackPlugins(),
             // Bundle analyzer (when env.analyze is set)
             ...(env?.analyze ? [new BundleAnalyzerPlugin({
@@ -234,6 +241,13 @@ export default async (env, options) => {
                     type: "asset/resource",
                     generator: {
                         filename: "fonts/[name][ext]"
+                    }
+                },
+                {
+                    test: /\.json$/i,
+                    type: "asset/resource",
+                    generator: {
+                        filename: "data/[name][ext]"
                     }
                 }
             ],
@@ -328,7 +342,8 @@ export default async (env, options) => {
             watchFiles: {
                 paths: [
                     "src/**/*.{ts,js,css}",
-                    "src/Pages/*.html"
+                    "src/Pages/*.html",
+                    "src/data/rules.json"
                 ],
                 options: {
                     ignored: [

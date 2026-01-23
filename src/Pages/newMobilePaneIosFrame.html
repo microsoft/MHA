@@ -66,5 +66,136 @@
             </div>
         </div>
     </div>
+
+    <template id="violation-inline-template">
+        <span class="violation-inline">
+            <span class="severity-badge"></span>
+            <span class="violation-message"></span>
+        </span>
+    </template>
+
+    <template id="violation-card-template">
+        <div class="violation-card">
+            <div class="violation-card-header">
+                <span class="severity-badge"></span>
+                <span class="violation-message"></span>
+            </div>
+            <div class="violation-details">
+                <div class="violation-rule"></div>
+                <div class="violation-parent-message"></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="diagnostics-section-template">
+        <div class="diagnostics-section">
+            <div class="block-title">Diagnostics Report</div>
+            <div class="list accordion-list">
+                <ul class="diagnostics-accordion"></ul>
+            </div>
+        </div>
+    </template>
+
+    <template id="diagnostic-accordion-item-template">
+        <li class="accordion-item">
+            <a href="#" class="item-content item-link" role="button" aria-expanded="false">
+                <div class="item-inner">
+                    <div class="item-title">
+                        <span class="severity-badge"></span>
+                        <span class="violation-message"></span>
+                    </div>
+                </div>
+            </a>
+            <div class="accordion-item-content">
+                <div class="block diagnostic-content"></div>
+            </div>
+        </li>
+    </template>
+
+    <template id="summary-header-block-template">
+        <div class="block-title-container">
+            <div class="block-title"></div>
+        </div>
+        <div class="block">
+            <div class="code-box">
+                <pre><code></code></pre>
+            </div>
+        </div>
+    </template>
+
+    <template id="timeline-item-template">
+        <div class="timeline-item">
+            <div class="timeline-item-date"></div>
+            <div class="timeline-item-divider"></div>
+            <div class="timeline-item-content"></div>
+        </div>
+    </template>
+
+    <template id="timeline-inner-first-template">
+        <div class="timeline-item-inner link popover-open" tabindex="0" role="button">
+            <div class="timeline-item-time"></div>
+            <div class="timeline-item-subtitle"></div>
+            <div class="timeline-item-text"></div>
+        </div>
+    </template>
+
+    <template id="timeline-inner-subsequent-template">
+        <div class="timeline-item-inner link popover-open" tabindex="0" role="button">
+            <div class="timeline-item-time"></div>
+            <div class="timeline-item-subtitle"></div>
+            <div class="timeline-item-text">
+                <p class="delay-text"></p>
+                <p class="progress-wrap"></p>
+            </div>
+        </div>
+    </template>
+
+    <template id="popover-template">
+        <div class="popover">
+            <div class="popover-angle"></div>
+            <div class="popover-inner">
+                <div class="block popover-content"></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="popover-entry-template">
+        <p class="wrap-line"></p>
+    </template>
+
+    <template id="spam-report-accordion-item-template">
+        <li class="accordion-item">
+            <a class="item-content item-link" role="button" aria-expanded="false" href="#">
+                <div class="item-inner">
+                    <div class="item-title"></div>
+                </div>
+            </a>
+            <div class="accordion-item-content">
+                <div class="block">
+                    <div class="violations-container"></div>
+                    <p class="link-wrap"></p>
+                </div>
+            </div>
+        </li>
+    </template>
+
+    <template id="antispam-section-template">
+        <div class="block-title"></div>
+        <div class="list accordion-list">
+            <ul></ul>
+        </div>
+    </template>
+
+    <template id="other-header-block-template">
+        <div class="header-name-container">
+            <div class="block-title"></div>
+        </div>
+        <div class="block">
+            <div class="code-box">
+                <pre><code></code></pre>
+            </div>
+            <div class="violations-container"></div>
+        </div>
+    </template>
 </body>
 </html>

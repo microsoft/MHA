@@ -1,9 +1,12 @@
 import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { DomUtils } from "./domUtils";
+import { ViolationUI } from "./ViolationUI";
 import { OtherRow } from "../row/OtherRow";
 import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
+import { RuleViolation } from "../rules/types/AnalysisTypes";
+import { escapeAndHighlight, getViolationsForRow, highlightHtml } from "../rules/ViolationUtils";
 import { Column } from "../table/Column";
 import { DataTable } from "../table/DataTable";
 import { SummaryTable } from "../table/SummaryTable";
@@ -15,16 +18,16 @@ type Binding = {
 }
 
 export class Table {
-    private viewModel: HeaderModel = <HeaderModel>{};
+    private viewModel: HeaderModel | null = null;
     private showExtra = false;
 
     private visibilityBindings: Binding[] = [
-        { name: "#lineBreak", visible: function (table: Table) { return table.viewModel.hasData; } },
-        { name: "#response", visible: function (table: Table) { return table.viewModel.hasData; } },
-        { name: "#status", visible: function (table: Table) { return !!table.viewModel.status; } },
+        { name: "#lineBreak", visible: function (table: Table) { return !!table.viewModel?.hasData; } },
+        { name: "#response", visible: function (table: Table) { return !!table.viewModel?.hasData; } },
+        { name: "#status", visible: function (table: Table) { return !!table.viewModel?.status; } },
         { name: ".extraCol", visible: function (table: Table) { return table.showExtra; } },
-        { name: "#clearButton", visible: function (table: Table) { return table.viewModel.hasData; } },
-        { name: "#copyButton", visible: function (table: Table) { return table.viewModel.hasData; } }
+        { name: "#clearButton", visible: function (table: Table) { return !!table.viewModel?.hasData; } },
+        { name: "#copyButton", visible: function (table: Table) { return !!table.viewModel?.hasData; } }
     ];
 
     // Adjusts response under our lineBreak
@@ -120,6 +123,7 @@ export class Table {
 
             rows.forEach((summaryRow: Row) => {
                 const id = summaryRow.header + tag;
+                if (document.getElementById(id)) return; // Skip if already exists
                 const row = document.createElement("tr");
                 if (row !== null) {
                     row.id = id;
@@ -157,10 +161,20 @@ export class Table {
         const headerVal = document.getElementById(row.header + type + "Val");
         if (headerVal) {
             if (row.value) {
+                const rowViolations = this.viewModel ? getViolationsForRow(row, this.viewModel.violationGroups) : [];
+
+                // Use highlightHtml for valueUrl (already contains HTML), escapeAndHighlight for value (plain text)
                 if (row.valueUrl) {
-                    headerVal.innerHTML = row.valueUrl;
+                    headerVal.innerHTML = this.viewModel ? highlightHtml(row.valueUrl, this.viewModel.violationGroups) : row.valueUrl;
                 } else {
-                    headerVal.textContent = row.value;
+                    headerVal.innerHTML = this.viewModel ? escapeAndHighlight(row.value, this.viewModel.violationGroups) : row.value;
+                }
+
+                if (rowViolations.length > 0) {
+                    rowViolations.forEach((violation: RuleViolation) => {
+                        headerVal.appendChild(document.createTextNode(" "));
+                        headerVal.appendChild(ViolationUI.createInlineViolation(violation));
+                    });
                 }
 
                 this.makeVisible("#" + row.header + type, true);
@@ -227,17 +241,32 @@ export class Table {
 
     // Rebuilds content and recalculates what sections should be displayed
     // Repopulate the UI with the current viewModel
-    public rebuildSections(viewModel: HeaderModel): void {
+    public rebuildSections(viewModel: HeaderModel | null): void {
         this.viewModel = viewModel;
 
+        if (!viewModel) {
+            this.recalculateVisibility();
+            return;
+        }
+
         // Summary
-        this.viewModel.summary.rows.forEach((row: Row) => {
+        viewModel.summary.rows.forEach((row: Row) => {
             this.setRowValue(row, "SUM");
         });
 
+        // Diagnostics
+        const diagnosticsContainer = document.getElementById("diagnosticsContent");
+        if (diagnosticsContainer) {
+            diagnosticsContainer.innerHTML = "";
+            const diagnosticsSection = ViolationUI.buildDiagnosticsSection(viewModel.violationGroups);
+            if (diagnosticsSection) {
+                diagnosticsContainer.appendChild(diagnosticsSection);
+            }
+        }
+
         // Received
         this.emptyTableUI("receivedHeaders");
-        this.viewModel.receivedHeaders.rows.forEach((receivedRow: ReceivedRow) => {
+        viewModel.receivedHeaders.rows.forEach((receivedRow: ReceivedRow) => {
             const row: HTMLTableRowElement = document.createElement("tr");
             const receivedHeadersTable = document.getElementById("receivedHeaders");
             if (receivedHeadersTable) {
@@ -282,33 +311,51 @@ export class Table {
         this.hideEmptyColumns("receivedHeaders");
 
         // Forefront AntiSpam Report
-        this.viewModel.forefrontAntiSpamReport.rows.forEach((row: Row) => {
+        viewModel.forefrontAntiSpamReport.rows.forEach((row: Row) => {
             this.setRowValue(row, "FFAS");
         });
 
         // AntiSpam Report
-        this.viewModel.antiSpamReport.rows.forEach((row: Row) => {
+        viewModel.antiSpamReport.rows.forEach((row: Row) => {
             this.setRowValue(row, "AS");
         });
 
         // Other
         this.emptyTableUI("otherHeaders");
-        this.viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
+        viewModel.otherHeaders.rows.forEach((otherRow: OtherRow) => {
             const row: HTMLTableRowElement = document.createElement("tr");
             const otherHeadersTable = document.getElementById("otherHeaders");
             if (otherHeadersTable) {
-                otherHeadersTable.appendChild(row); // Must happen before we append cells to appease IE7
+                otherHeadersTable.appendChild(row);
             }
             this.appendCell(row, otherRow.number.toString(), "", "", "number_header");
-            this.appendCell(row, otherRow.header, otherRow.url, "", "header_header");
-            this.appendCell(row, otherRow.value, "", "allowBreak", "value_header");
+
+            const rowViolations = getViolationsForRow(otherRow, viewModel.violationGroups);
+            // Use highlightHtml for url (already contains HTML), escapeAndHighlight for plain text header
+            const highlightedHeader = otherRow.url
+                ? highlightHtml(otherRow.url, viewModel.violationGroups)
+                : escapeAndHighlight(otherRow.header, viewModel.violationGroups);
+
+            const headerCell = row.insertCell(-1);
+            headerCell.innerHTML = highlightedHeader;
+            headerCell.setAttribute("headers", "header_header");
+
+            if (rowViolations.length > 0) {
+                rowViolations.forEach((violation: RuleViolation) => {
+                    headerCell.appendChild(document.createTextNode(" "));
+                    headerCell.appendChild(ViolationUI.createInlineViolation(violation));
+                });
+            }
+
+            const highlightedValue = escapeAndHighlight(otherRow.value, viewModel.violationGroups);
+            this.appendCell(row, "", highlightedValue, "allowBreak", "value_header");
         });
 
         const otherRows = document.querySelectorAll("#otherHeaders tr:nth-child(odd)");
         otherRows.forEach(row => row.classList.add("oddRow"));
 
         // Original headers
-        DomUtils.setText("#originalHeaders", this.viewModel.originalHeaders);
+        DomUtils.setText("#originalHeaders", viewModel.originalHeaders);
 
         this.recalculateVisibility();
     }
@@ -331,7 +378,7 @@ export class Table {
                 }
 
                 headerButton.addEventListener("click", () => {
-                    if (this.viewModel[tableName] instanceof DataTable) {
+                    if (this.viewModel && this.viewModel[tableName] instanceof DataTable) {
                         const dataTable = this.viewModel[tableName] as DataTable;
                         dataTable.doSort(column.id);
                         this.setArrows(dataTable.tableName, dataTable.sortColumn,
@@ -354,9 +401,10 @@ export class Table {
     }
 
     private addColumns(tableName: string, columns: Column[]): void {
-        const tableHeader = document.createElement("thead");
         const table = document.getElementById(tableName);
         if (table) {
+            if (table.querySelector("thead")) return; // Skip if already has headers
+            const tableHeader = document.createElement("thead");
             table.appendChild(tableHeader);
 
             const headerRow = document.createElement("tr");
@@ -400,6 +448,7 @@ export class Table {
         // Create resizable pane using TableSection properties, but with proper closure
         this.makeResizablePane(section.tableName, section.paneClass, section.displayName, (table: Table) => {
             // Use table.viewModel[sectionProperty] to get the current section with data
+            if (!table.viewModel) return false;
             const currentSection = table.viewModel[sectionProperty] as TableSection;
             return currentSection.exists();
         });
@@ -449,6 +498,8 @@ export class Table {
     private setupReceivedHeadersUI(): void {
         const withColumn = document.querySelector("#receivedHeaders #with");
         if (withColumn !== null) {
+            if (document.getElementById("leftArrow")) return; // Skip if already exists
+
             const leftSpan = document.createElement("span");
             leftSpan.setAttribute("id", "leftArrow");
             leftSpan.classList.add("collapsibleArrow");
@@ -479,24 +530,34 @@ export class Table {
     }
 
     // Initialize UI with an empty viewModel using unified TableSection approach
-    public initializeTableUI(viewModel: HeaderModel): void {
+    public initializeTableUI(viewModel: HeaderModel | null = null): void {
         this.viewModel = viewModel;
 
         // Original headers (not a TableSection, handle separately)
         this.makeResizablePane("originalHeaders", "sectionHeader", mhaStrings.mhaOriginalHeaders, (table: Table) => {
-            return table.viewModel.originalHeaders.length > 0;
+            return !!table.viewModel && table.viewModel.originalHeaders.length > 0;
         });
-        this.toggleCollapse("originalHeaders"); // start this section hidden
+        this.toggleCollapse("originalHeaders");
+
+        // Diagnostics (collapsible, starts collapsed)
+        this.makeResizablePane("diagnosticsContent", "sectionHeader", "Diagnostics Report", (table: Table) => {
+            return !!table.viewModel && table.viewModel.violationGroups && table.viewModel.violationGroups.length > 0;
+        });
+
+        if (!viewModel) {
+            this.recalculateVisibility();
+            return;
+        }
 
         // Initialize all TableSection-based tables using unified approach
-        this.initializeTableSection(this.viewModel.summary, "summary");
-        this.initializeTableSection(this.viewModel.receivedHeaders, "receivedHeaders");
-        this.initializeTableSection(this.viewModel.forefrontAntiSpamReport, "forefrontAntiSpamReport");
-        this.initializeTableSection(this.viewModel.antiSpamReport, "antiSpamReport");
-        this.initializeTableSection(this.viewModel.otherHeaders, "otherHeaders");
+        this.initializeTableSection(viewModel.summary, "summary");
+        this.initializeTableSection(viewModel.receivedHeaders, "receivedHeaders");
+        this.initializeTableSection(viewModel.forefrontAntiSpamReport, "forefrontAntiSpamReport");
+        this.initializeTableSection(viewModel.antiSpamReport, "antiSpamReport");
+        this.initializeTableSection(viewModel.otherHeaders, "otherHeaders");
 
         this.resetArrows();
-        this.rebuildSections(this.viewModel);
+        this.rebuildSections(viewModel);
     }
 
     // Rebuilds the UI with a new viewModel

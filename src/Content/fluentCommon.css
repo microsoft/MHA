@@ -24,9 +24,6 @@
     --spacing-medium: 12px;
     --focus-outline: 2px solid var(--focus-blue);
     --button-height: 44px;
-    
-    /* Shadows */
-    --overlay-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Secondary Button Styling - Default black border, blue highlight */
@@ -162,7 +159,11 @@ fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label:not(
     content: "\2B07"; /* Unicode ⬇ down arrow */
 }
 
-/* High contrast mode support - modern and legacy combined */
+.fluent-icon--error::before {
+    content: "\2715"; /* Unicode ✕ multiplication X */
+}
+
+/* High contrast mode support */
 @media (prefers-contrast: high), (forced-colors: active), screen and (-ms-high-contrast: active) {
     .fluent-icon {
         color: ButtonText;
@@ -268,7 +269,7 @@ fluent-radio:focus-visible {
 /* Common Status Overlay Styles for Copy Feedback */
 /* Used by both uitoggle and standalone MHA pages */
 .status-overlay {
-    display: none;
+    display: block;
     color: var(--success-green); /* Dark green text for contrast */
     font-size: 14px;
     font-weight: 500;
@@ -287,7 +288,6 @@ fluent-radio:focus-visible {
 }
 
 .status-overlay.show {
-    display: block;
     opacity: 1;
     transform: translateX(0);
 }

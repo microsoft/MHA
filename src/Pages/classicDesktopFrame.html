@@ -13,15 +13,44 @@
             <div class="responsePane">
                 <div id="status"></div>
                 <table id="summary"></table>
+                <div id="diagnosticsContent" class="hiddenElement"></div>
                 <table id="receivedHeaders"></table>
                 <table id="forefrontAntiSpamReport"></table>
                 <table id="antiSpamReport"></table>
                 <table id="otherHeaders"></table>
-                <!-- This will crash IE11. As a workaround, we use inline style. -->
-                <!--<textarea class="hiddenElement" id="originalHeaders" readonly rows="10"></textarea>-->
                 <textarea id="originalHeaders" readonly rows="10"></textarea>
             </div>
         </div>
     </div>
+
+    <template id="violation-inline-template">
+        <span class="violation-inline">
+            <span class="severity-badge"></span>
+            <span class="violation-message"></span>
+        </span>
+    </template>
+
+    <template id="violation-card-template">
+        <div class="violation-card">
+            <div class="violation-card-header">
+                <span class="severity-badge"></span>
+                <span class="violation-message"></span>
+            </div>
+            <div class="violation-details">
+                <div class="violation-rule"></div>
+                <div class="violation-parent-message"></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="diagnostic-accordion-item-template">
+        <div class="diagnostic-group">
+            <div class="violation-card-header">
+                <span class="severity-badge"></span>
+                <span class="violation-message"></span>
+            </div>
+            <div class="diagnostic-content diagnostic-violations"></div>
+        </div>
+    </template>
 </body>
 </html>

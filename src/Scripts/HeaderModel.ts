@@ -3,6 +3,8 @@ import { Poster } from "./Poster";
 import { AntiSpamReport } from "./row/Antispam";
 import { ForefrontAntiSpamReport } from "./row/ForefrontAntispam";
 import { Header } from "./row/Header";
+import { rulesService } from "./rules";
+import { ViolationGroup } from "./rules/types/AnalysisTypes";
 import { Summary } from "./Summary";
 import { Other } from "./table/Other";
 import { Received } from "./table/Received";
@@ -14,6 +16,7 @@ export class HeaderModel {
     public forefrontAntiSpamReport: ForefrontAntiSpamReport;
     public antiSpamReport: AntiSpamReport;
     public otherHeaders: Other;
+    public violationGroups: ViolationGroup[];
     private hasDataInternal: boolean;
     private statusInternal: string;
     public get hasData(): boolean { return this.hasDataInternal || !!this.statusInternal; }
@@ -21,7 +24,7 @@ export class HeaderModel {
     public set status(value) { this.statusInternal = value; }
     [index: string]: unknown;
 
-    constructor(headers?: string) {
+    private constructor() {
         this.summary = new Summary();
         this.receivedHeaders = new Received();
         this.forefrontAntiSpamReport = new ForefrontAntiSpamReport();
@@ -30,13 +33,27 @@ export class HeaderModel {
         this.originalHeaders = "";
         this.statusInternal = "";
         this.hasDataInternal = false;
-        if (headers) {
-            this.parseHeaders(headers);
-            Poster.postMessageToParent("modelToString", this.toString());
-        }
+        this.violationGroups = [];
     }
 
-    public getHeaderList(headers: string): Header[] {
+    public static async create(headers?: string): Promise<HeaderModel> {
+        const model = new HeaderModel();
+
+        if (headers) {
+            model.parseHeaders(headers);
+            await model.analyzeRules();
+            Poster.postMessageToParent("modelToString", model.toString());
+        }
+
+        return model;
+    }
+
+    private async analyzeRules(): Promise<void> {
+        const validationResult = await rulesService.analyzeHeaders(this);
+        this.violationGroups = validationResult.violationGroups;
+    }
+
+    public static getHeaderList(headers: string): Header[] {
         // First, break up out input by lines.
         // Keep empty lines for recognizing the boundary between the header section & the body.
         const lines: string[] = headers.split(/\r\n|\r|\n/);
@@ -112,7 +129,7 @@ export class HeaderModel {
         // Initialize originalHeaders in case we have parsing problems
         // Flatten CRLF to LF to avoid extra blank lines
         this.originalHeaders = headers.replace(/(?:\r\n|\r|\n)/g, "\n");
-        const headerList: Header[] = this.getHeaderList(headers);
+        const headerList: Header[] = HeaderModel.getHeaderList(headers);
 
         if (headerList.length > 0) {
             this.hasDataInternal = true;

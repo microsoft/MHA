@@ -24,6 +24,15 @@ export default [{
 }, {
     files: ["**/*.ts","**/*.js"],
 }, ...compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended"), {
+    // Jest test files configuration
+    files: ["**/*.test.{js,ts}", "**/*.spec.{js,ts}", "**/test/**", "**/tests/**"],
+    languageOptions: {
+        globals: {
+            ...globals.browser,
+            ...globals.jest,
+        },
+    },
+}, {
     plugins: {
         "@typescript-eslint": typescriptEslint,
         "@stylistic": stylistic,
@@ -34,7 +43,21 @@ export default [{
     languageOptions: {
         globals: {
             ...globals.browser,
-            ...globals.node,
+            // Office.js globals
+            Office: "readonly",
+            // Webpack defined globals (replaced at build time)
+            __AIKEY__: "readonly",
+            __BUILDTIME__: "readonly",
+            __VERSION__: "readonly",
+            // Node.js/TypeScript globals used in specific contexts
+            process: "readonly",
+            global: "readonly",
+            NodeJS: "readonly",
+            // DOM/Web API globals that ESLint doesn't recognize by default
+            EventListenerOrEventListenerObject: "readonly",
+            AddEventListenerOptions: "readonly",
+            PermissionDescriptor: "readonly",
+            PermissionName: "readonly",
         },
 
         parser: tsParser,
@@ -63,6 +86,8 @@ export default [{
         "no-inner-declarations": "error",
         "no-unmodified-loop-condition": "error",
         "block-scoped-var": "error",
+        "no-undef": "error",  // Catch undefined variables/functions
+        "no-global-assign": "error",  // Prevent accidental global overwrites
 
         camelcase: ["error", {
             properties: "always",
@@ -112,13 +137,13 @@ export default [{
             selector: "property",
             format: ["camelCase"],
             filter: {
-                regex: "^(@|import/|linebreak-style|max-classes-per-file|no-duplicate-imports|no-inner-declarations|no-unmodified-loop-condition|block-scoped-var|sort-imports|newlines-between|SwitchCase|__[A-Z_]+__|\\^.+\\$)",
+                regex: "^(@|import/|linebreak-style|max-classes-per-file|no-duplicate-imports|no-inner-declarations|no-unmodified-loop-condition|block-scoped-var|sort-imports|newlines-between|SwitchCase|no-undef|no-global-assign|Office|NodeJS|EventListenerOrEventListenerObject|AddEventListenerOptions|PermissionDescriptor|PermissionName|__[A-Z_]+__|\\^.+\\$)",
                 match: false
             }
         }, {
             selector: "property",
             filter: {
-                regex: "^(@|import/|linebreak-style|max-classes-per-file|no-duplicate-imports|no-inner-declarations|no-unmodified-loop-condition|block-scoped-var|sort-imports|newlines-between|SwitchCase|__[A-Z_]+__|\\^.+\\$)",
+                regex: "^(@|import/|linebreak-style|max-classes-per-file|no-duplicate-imports|no-inner-declarations|no-unmodified-loop-condition|block-scoped-var|sort-imports|newlines-between|SwitchCase|no-undef|no-global-assign|Office|NodeJS|EventListenerOrEventListenerObject|AddEventListenerOptions|PermissionDescriptor|PermissionName|__[A-Z_]+__|\\^.+\\$)",
                 match: true
             },
             format: null
