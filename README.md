@@ -7,12 +7,45 @@
 [![Jest](https://github.com/microsoft/MHA/actions/workflows/jest.yml/badge.svg)](https://github.com/microsoft/MHA/actions/workflows/jest.yml)  
 [![OpenSSF
 Scorecard](https://api.securityscorecards.dev/projects/github.com/microsoft/MHA/badge)](https://scorecard.dev/viewer/?uri=github.com%2Fmicrosoft%2FMHA)  
-[![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7511/badge)](https://bestpractices.coreinfrastructure.org/projects/7511)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/7511/badge)](https://www.bestpractices.dev/projects/7511)
 
 Message Header Analyzer mail app.
 
 This is the source for the Message Header Analyzer. Install the app from the store here:
 <https://appsource.microsoft.com/en-us/product/office/WA104005406>
+
+## Obtain, Provide Feedback, and Contribute
+
+- Obtain: Install Message Header Analyzer from AppSource: <https://appsource.microsoft.com/en-us/product/office/WA104005406>
+- Provide feedback (bugs/enhancements): Open a GitHub issue: <https://github.com/microsoft/MHA/issues>
+- Contribute code/docs: Submit a pull request to this repository and follow the contribution process in `CONTRIBUTING.md`: <https://github.com/microsoft/MHA/blob/main/CONTRIBUTING.md>
+
+## External Interface Reference
+
+This section documents the external interface of the software, including where it is accessed and the expected inputs and outputs.
+
+### End-user interface
+
+- AppSource install endpoint: <https://appsource.microsoft.com/en-us/product/office/WA104005406>
+- Standalone web interface URL: <https://mha.azurewebsites.net/pages/mha.html>
+- Outlook add-in interface: opened from an Outlook message in supported Outlook clients.
+
+### Functional input/output
+
+- Primary input: the currently selected email message in Outlook.
+- Data input read by the app: transport message headers retrieved through the Outlook/EWS mailbox APIs.
+- Primary output: parsed and human-readable header analysis shown in the MHA UI.
+
+### Local development/test interface
+
+- Local standalone page: <https://localhost:44336/Pages/mha.html>
+- Local unit test runner page: <https://localhost:44336/Pages/test/>
+- Local coverage report page: <https://localhost:44336/Pages/coverage/lcov-report/>
+
+### Interface behavior notes
+
+- Required Outlook permission level for header retrieval: ReadWriteMailbox.
+- The app consumes Outlook mailbox APIs and does not expose a separate public REST API.
 
 ## Installation Procedure
 
@@ -44,8 +77,7 @@ Here is a standalone Message Header Analyzer running the same backend code as th
 
 ## Unit Tests
 
-- [Unit tests](https://mha.azurewebsites.net/Pages/test)
-- [Code coverage](https://mha.azurewebsites.net/Pages/coverage/lcov-report)
+- Testing policy, local test workflow, coverage requirements, and CI details are documented in [TESTING.md](./TESTING.md).
 
 ## Mobile
 
@@ -64,14 +96,6 @@ For both IOS and Android click open an email, then press the three dots under th
 - The commands below for unit/site/add-in testing will also build before starting the server, but you can also build on demand.
 - Manual build: `npm run build`
 - For continuous build on changes, you can use watch: `npm run watch`
-
-### Unit Testing
-
-- Start the dev server: `npm run dev-server`
-- Run unit tests from command line: `npm run test`
-- View test results here: <https://localhost:44336/Pages/test/>
-- View code coverage here: <https://localhost:44336/Pages/coverage/lcov-report/>
-- After changing source you will need to `npm run test` again.
 
 ### Live site testing
 
