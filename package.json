@@ -97,7 +97,8 @@
     "unfetch": "^5.0.0"
   },
   "overrides": {
-    "tmp": "^0.2.5"
+    "tmp": "^0.2.5",
+    "@azure/msal-browser": "^5.2.0"
   },
   "-vs-binding": {
     "BeforeBuild": [
