@@ -51,7 +51,7 @@
     "@jest/globals": "^30.3.0",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/jest": "^30.0.0",
-    "@types/office-js": "^1.0.583",
+    "@types/office-js": "^1.0.584",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "@typescript-eslint/parser": "^8.32.1",
     "copy-webpack-plugin": "^14.0.0",
