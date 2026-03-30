@@ -68,7 +68,7 @@
     "jest-environment-jsdom": "^30.3.0",
     "jest-html-reporters": "^3.1.7",
     "mini-css-extract-plugin": "^2.10.1",
-    "office-addin-debugging": "^6.0.6",
+    "office-addin-debugging": "^6.0.4",
     "office-addin-dev-certs": "^2.0.3",
     "office-addin-dev-settings": "^3.0.3",
     "office-addin-manifest": "^2.0.3",
@@ -97,8 +97,7 @@
     "unfetch": "^5.0.0"
   },
   "overrides": {
-    "tmp": "^0.2.5",
-    "@azure/msal-browser": "^5.2.0"
+    "tmp": "^0.2.5"
   },
   "-vs-binding": {
     "BeforeBuild": [
