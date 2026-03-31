@@ -11,14 +11,20 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 10
 
-    # Ignore eslint 10 until ecosystem supports it
-    # https://github.com/typescript-eslint/typescript-eslint/issues/11952
-    # https://github.com/import-js/eslint-plugin-import/issues/3227
     ignore:
+      # Ignore eslint 10 until ecosystem supports it
+      # https://github.com/typescript-eslint/typescript-eslint/issues/11952
+      # https://github.com/import-js/eslint-plugin-import/issues/3227
       - dependency-name: "eslint"
         versions: [">=10.0.0"]
       - dependency-name: "@eslint/js"
         versions: [">=10.0.0"]
+      # Ignore typescript 6 until ecosystem supports it
+      # typescript-eslint
+      # https://github.com/typescript-eslint/typescript-eslint/issues/12123
+      # https://github.com/kulshekhar/ts-jest/issues/5232
+      - dependency-name: "typescript"
+        versions: [">=6.0.0"]
 
     groups:
       production-dependencies:
