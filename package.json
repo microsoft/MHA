@@ -74,11 +74,11 @@
     "office-addin-manifest": "^2.0.3",
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
-    "ts-jest": "^29.4.10",
+    "ts-jest": "^29.4.11",
     "ts-loader": "^9.5.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "webpack": "^5.106.2",
+    "webpack": "^5.107.1",
     "webpack-bundle-analyzer": "^5.3.0",
     "webpack-cli": "^7.0.2",
     "webpack-dev-server": "^5.2.4"
