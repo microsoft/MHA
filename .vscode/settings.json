@@ -2,7 +2,7 @@
   "editor.formatOnSave": false,
   "eslint.validate": ["javascript", "javascriptreact", "typescript"],
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
+    "source.fixAll.eslint": "explicit"
   },
   "jest.jestCommandLine": "npm test --",
   "jest.autoRun": {
