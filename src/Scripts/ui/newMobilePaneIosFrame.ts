@@ -22,6 +22,7 @@ import { ReceivedRow } from "../row/ReceivedRow";
 import { Row } from "../row/Row";
 import { SummaryRow } from "../row/SummaryRow";
 import { escapeAndHighlight, getViolationsForRow, highlightHtml } from "../rules/ViolationUtils";
+import { Strings } from "../Strings";
 
 // This is the "new-mobile" UI rendered in newMobilePaneIosFrame.html
 
@@ -103,7 +104,7 @@ function addCalloutEntry(name: string, value: string | number | null, parent: HT
         const template = document.getElementById("popover-entry-template") as HTMLTemplateElement;
         const clone = template.content.cloneNode(true) as DocumentFragment;
         const p = clone.querySelector("p") as HTMLElement;
-        p.innerHTML = "<strong>" + name + ": </strong>" + value;
+        p.innerHTML = "<strong>" + name + ": </strong>" + Strings.htmlEncode(value.toString());
         parent.appendChild(clone);
     }
 }
@@ -234,10 +235,10 @@ function buildReceivedTab(viewModel: HeaderModel): void {
                 timelineTime.textContent = currentTime.format("h:mm:ss");
 
                 const timelineSubtitle = innerClone.querySelector(".timeline-item-subtitle") as HTMLElement;
-                timelineSubtitle.innerHTML = "<strong>From: </strong>" + row.from;
+                timelineSubtitle.innerHTML = "<strong>From: </strong>" + Strings.htmlEncode(row.from.toString());
 
                 const timelineText = innerClone.querySelector(".timeline-item-text") as HTMLElement;
-                timelineText.innerHTML = "<strong>To: </strong>" + row.by;
+                timelineText.innerHTML = "<strong>To: </strong>" + Strings.htmlEncode(row.by.toString());
 
                 currentTimeEntry.appendChild(innerClone);
             } else {
@@ -272,7 +273,7 @@ function buildReceivedTab(viewModel: HeaderModel): void {
                 timelineTime.textContent = entryTime.format("h:mm:ss");
 
                 const timelineSubtitle = innerClone.querySelector(".timeline-item-subtitle") as HTMLElement;
-                timelineSubtitle.innerHTML = "<strong>To: </strong>" + row.by;
+                timelineSubtitle.innerHTML = "<strong>To: </strong>" + Strings.htmlEncode(row.by.toString());
 
                 const delayText = innerClone.querySelector(".delay-text") as HTMLElement;
                 delayText.textContent = row.delay.value !== null ? String(row.delay.value) : "";
