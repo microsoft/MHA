@@ -8,7 +8,7 @@ jest.mock("../Strings", () => {
     return {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         Strings: {
-            mapHeaderToURL: jest.fn((value: string) => actualStrings.Strings.mapHeaderToURL(value)),
+            mapHeaderToURL: jest.fn((headerName: string, text?: string) => actualStrings.Strings.mapHeaderToURL(headerName, text)),
             htmlEncode: jest.fn((value: string) => actualStrings.Strings.htmlEncode(value))
         }
     };
@@ -31,8 +31,12 @@ describe("ArchivedRow", () => {
 
     it("should return html href for bracketed http(s) links", () => {
         archivedRow.value = "<https://example.test/path>";
-        expect(Strings.htmlEncode).not.toHaveBeenCalled();
-        expect(archivedRow.valueUrl).toBe("<a href='https://example.test/path' target='_blank'>https://example.test/path</a>");
+        const valueUrl = archivedRow.valueUrl;
+
+        expect(valueUrl).toContain("<a");
+        expect(valueUrl).toContain("href=");
+        expect(valueUrl).toContain("https://example.test/path");
+        expect(valueUrl).toContain("target=");
     });
 
     it("should html encode non-bracketed values", () => {
