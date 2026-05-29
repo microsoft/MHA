@@ -5,7 +5,6 @@ import { SummaryRow } from "./SummaryRow";
 export class ArchivedRow extends SummaryRow {
     constructor(header: string, label: string) {
         super(header, label);
-        this.url = Strings.mapHeaderToURL(header, label);
     }
     // Return the URL for the archived message, or the encoded value if it's not a valid URL.
     override get valueUrl(): string {
