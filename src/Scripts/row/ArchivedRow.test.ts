@@ -26,7 +26,7 @@ describe("ArchivedRow", () => {
 
     it("should set url using Strings.mapHeaderToURL", () => {
         expect(Strings.mapHeaderToURL).toHaveBeenCalledWith(header, label);
-        expect(archivedRow.url).toBe("<a href = 'https://tools.ietf.org/html/rfc5064' target = '_blank'>Archived-At</a>");
+        expect(archivedRow.url).toBe("<a href = 'https://tools.ietf.org/html/rfc5064' target = '_blank'>testLabel</a>");
     });
 
     it("should return html href for bracketed http(s) links", () => {
@@ -69,9 +69,10 @@ describe("ArchivedRow", () => {
     it("should render anchor only for strict angle-bracketed http(s) URL", () => {
         const url = "https://example.com/test/list/foo-users@lists.example.com/message/mysubject/";
         archivedRow.value = `<${url}>`;
+        const valueUrl = archivedRow.valueUrl;
 
-        expect(archivedRow.valueUrl).toContain("<a href='");
-        expect(archivedRow.valueUrl).toContain(url);
-        expect(archivedRow.valueUrl).toContain("target='_blank'");
+        expect(valueUrl).toMatch("<a href=\"");
+        expect(valueUrl).toContain(url);
+        expect(valueUrl).toContain("target=\"_blank\"");
     });
 });
