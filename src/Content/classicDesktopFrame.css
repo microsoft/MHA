@@ -99,22 +99,56 @@ td {
     background-color: #CDE6F7; /* 2013 light background color */
 }
 
-.tableHeaderButton {
+.sortableHeaderCell {
     background-color: #0072C6; /*2013 hero color*/
     color: #FFFFFF;
     border: 0;
     font-weight: bold;
-    width: 100%;
+    width: auto;
     cursor: pointer;
+    padding: 1em 1.2em 1em 1.2em;
+    white-space: nowrap;
+    line-height: 1.2;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#response th.sortableHeaderCell {
     padding: 1em 1.2em 1em 1.2em;
 }
 
-th[aria-sort="descending"] .tableHeaderButton .sortArrow::after {
+.sortableHeaderCell .headerLabel {
+    display: inline;
+    vertical-align: middle;
+}
+
+.sortableHeaderCell .sortArrow {
+    display: inline;
+    min-width: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+}
+
+.sortableHeaderCell:focus-visible {
+    outline: black solid 2px;
+    outline-offset: -2px;
+}
+
+.sortableHeaderCell:focus {
+    outline: black solid 2px;
+    outline-offset: -2px;
+}
+
+th[aria-sort="descending"] .sortArrow::after {
     content: "\2193"; /* Down arrow */
 }
 
-th[aria-sort="ascending"] .tableHeaderButton .sortArrow::after {
+th[aria-sort="ascending"] .sortArrow::after {
     content: "\2191"; /* Up arrow */
+}
+
+th[aria-sort="none"] .sortArrow::after {
+    content: "";
 }
 
 .tableHeader td + td,
@@ -268,11 +302,11 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     }
 }
 
-#hop {
+#hop_header {
     min-width: 3em;
 }
 
-#number {
+#number_header {
     min-width: 2em;
 }
 
@@ -299,7 +333,7 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
 }
 
 @media screen and (-ms-high-contrast:active) {
-    .tableHeaderButton .sortArrow::after { color: buttontext; }
+    .sortableHeaderCell .sortArrow::after { color: buttontext; }
     button .collapsibleSwitch::after { color: buttontext; }
 }
 

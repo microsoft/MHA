@@ -158,10 +158,27 @@ export function getViolationsForRow(
             // Check if violation applies to this row via any of its affected sections
             const matchesSection = violation.affectedSections.some(section => {
                 const headerSection = section as HeaderSection;
-                // Match by section header/name or headerName property
-                return headerSection.header === row.label ||
-                       headerSection.header === row.header ||
-                       headerSection.header === row.headerName;
+
+                // Prefer exact header/headerName matching to avoid collisions where
+                // different tables share generic row headers like "source".
+                if (row.header && headerSection.header === row.header) {
+                    if (row.headerName && headerSection.headerName) {
+                        return headerSection.headerName === row.headerName;
+                    }
+
+                    if (row.headerName && !headerSection.headerName) {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                // Fallback for rows without explicit header metadata.
+                if (row.label && headerSection.header === row.label) {
+                    return true;
+                }
+
+                return false;
             });
 
             if (matchesSection) {

@@ -151,9 +151,19 @@ export class Table {
         const headers = document.querySelectorAll(`#${table} th[role="columnheader"]`);
         headers.forEach(header => header.setAttribute("aria-sort", "none"));
 
-        const targetButton = document.querySelector(`#${table} th #${colName}`);
-        if (targetButton && targetButton.parentElement) {
-            targetButton.parentElement.setAttribute("aria-sort", sortOrder === 1 ? "descending" : "ascending");
+        const targetHeader = document.querySelector(`#${table} th#${colName}_header`);
+        if (targetHeader) {
+            targetHeader.setAttribute("aria-sort", sortOrder === 1 ? "descending" : "ascending");
+        }
+    }
+
+    private sortByColumn(tableName: string, columnId: string): void {
+        if (this.viewModel && this.viewModel[tableName] instanceof DataTable) {
+            const dataTable = this.viewModel[tableName] as DataTable;
+            dataTable.doSort(columnId);
+            this.setArrows(dataTable.tableName, dataTable.sortColumn,
+                dataTable.sortOrder);
+            this.rebuildSections(this.viewModel);
         }
     }
 
@@ -367,34 +377,35 @@ export class Table {
             header.setAttribute("aria-sort", "none");
             header.setAttribute("id", column.id + "_header"); // Add unique ID for headers attribute
 
-            const headerButton = document.createElement("button");
-            if (headerButton !== null) {
-                headerButton.setAttribute("class", "tableHeaderButton");
-                headerButton.setAttribute("id", column.id);
-                headerButton.setAttribute("type", "button");
-                headerButton.innerHTML = column.label;
-                if (column.class !== null) {
-                    headerButton.setAttribute("class", "tableHeaderButton " + column.class);
-                }
-
-                headerButton.addEventListener("click", () => {
-                    if (this.viewModel && this.viewModel[tableName] instanceof DataTable) {
-                        const dataTable = this.viewModel[tableName] as DataTable;
-                        dataTable.doSort(column.id);
-                        this.setArrows(dataTable.tableName, dataTable.sortColumn,
-                            dataTable.sortOrder);
-                        this.rebuildSections(this.viewModel);
-                    }
-                });
-
-                const arrowSpan = document.createElement("span");
-                arrowSpan.setAttribute("aria-hidden", "true");
-                arrowSpan.classList.add("sortArrow");
-
-                // Now that everything is built, put it together
-                headerButton.appendChild(arrowSpan);
-                header.appendChild(headerButton);
+            header.classList.add("sortableHeaderCell");
+            if (column.class) {
+                header.classList.add(column.class);
             }
+
+            const labelSpan = document.createElement("span");
+            labelSpan.classList.add("headerLabel");
+            labelSpan.textContent = column.label;
+
+            const arrowSpan = document.createElement("span");
+            arrowSpan.setAttribute("aria-hidden", "true");
+            arrowSpan.classList.add("sortArrow");
+
+            header.appendChild(labelSpan);
+            header.appendChild(arrowSpan);
+
+            header.setAttribute("tabindex", "0");
+            header.setAttribute("aria-label", `Sort by ${column.label}`);
+
+            header.addEventListener("click", () => {
+                this.sortByColumn(tableName, column.id);
+            });
+
+            header.addEventListener("keydown", (event: KeyboardEvent) => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    this.sortByColumn(tableName, column.id);
+                }
+            });
         }
 
         return header;
@@ -496,7 +507,7 @@ export class Table {
     }
 
     private setupReceivedHeadersUI(): void {
-        const withColumn = document.querySelector("#receivedHeaders #with");
+        const withColumn = document.querySelector("#receivedHeaders #with_header");
         if (withColumn !== null) {
             if (document.getElementById("leftArrow")) return; // Skip if already exists
 

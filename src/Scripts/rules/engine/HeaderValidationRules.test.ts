@@ -601,4 +601,29 @@ describe("findSectionSubSection", () => {
         expect(results).toHaveLength(1);
         expect(results[0]!.value).toBe("Test");
     });
+
+    test("should not match non-source rows by headerName", () => {
+        const sections: HeaderSection[][] = [
+            [
+                { header: "SFV", value: "SPM", headerName: "X-Forefront-Antispam-Report" },
+                { header: "CTRY", value: "US", headerName: "X-Forefront-Antispam-Report" }
+            ]
+        ];
+
+        const results = findSectionSubSection(sections, "X-Forefront-Antispam-Report");
+        expect(results).toHaveLength(0);
+    });
+
+    test("should match source row by headerName", () => {
+        const sections: HeaderSection[][] = [
+            [
+                { header: "source", value: "SFV:SPM;CTRY:US;", headerName: "X-Forefront-Antispam-Report" },
+                { header: "SFV", value: "SPM", headerName: "X-Forefront-Antispam-Report" }
+            ]
+        ];
+
+        const results = findSectionSubSection(sections, "X-Forefront-Antispam-Report");
+        expect(results).toHaveLength(1);
+        expect(results[0]!.header).toBe("source");
+    });
 });
