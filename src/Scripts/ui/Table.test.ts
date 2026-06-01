@@ -156,24 +156,41 @@ describe("Table", () => {
     });
 
     it("should reset arrows", () => {
-        const by = document.querySelector("#receivedHeaders th #by") as HTMLElement;
-        const hop = document.querySelector("#receivedHeaders th #hop") as HTMLElement;
-        const number = document.querySelector("#otherHeaders th #number") as HTMLElement;
-
-        // Check aria-sort on the parent th elements instead of buttons
-        const byTh = by?.parentElement as HTMLElement;
-        const hopTh = hop?.parentElement as HTMLElement;
-        const numberTh = number?.parentElement as HTMLElement;
+        const byTh = document.querySelector("#receivedHeaders th#by_header") as HTMLElement;
+        const hopTh = document.querySelector("#receivedHeaders th#hop_header") as HTMLElement;
+        const numberTh = document.querySelector("#otherHeaders th#number_header") as HTMLElement;
 
         expect(hopTh.getAttribute("aria-sort")).toBe("descending");
         expect(byTh.getAttribute("aria-sort")).toBe("none");
         expect(numberTh.getAttribute("aria-sort")).toBe("descending");
-        by.click();
+        byTh.click();
         expect(hopTh.getAttribute("aria-sort")).toBe("none");
         expect(byTh.getAttribute("aria-sort")).toBe("descending");
         table.resetArrows();
         expect(hopTh.getAttribute("aria-sort")).toBe("descending");
         expect(byTh.getAttribute("aria-sort")).toBe("none");
+    });
+
+    it("should support keyboard sorting on header cells", () => {
+        const byTh = document.querySelector("#receivedHeaders th#by_header") as HTMLElement;
+        const hopTh = document.querySelector("#receivedHeaders th#hop_header") as HTMLElement;
+
+        expect(byTh.getAttribute("tabindex")).toBe("0");
+        expect(byTh.getAttribute("aria-label")).toContain("Sort by");
+
+        const enterKeyDown = new KeyboardEvent("keydown", { key: "Enter", bubbles: true });
+        byTh.dispatchEvent(enterKeyDown);
+
+        const firstSortDirection = byTh.getAttribute("aria-sort");
+        expect(firstSortDirection === "descending" || firstSortDirection === "ascending").toBe(true);
+        expect(hopTh.getAttribute("aria-sort")).toBe("none");
+
+        const spaceKeyDown = new KeyboardEvent("keydown", { key: " ", bubbles: true });
+        byTh.dispatchEvent(spaceKeyDown);
+
+        const secondSortDirection = byTh.getAttribute("aria-sort");
+        expect(secondSortDirection === "descending" || secondSortDirection === "ascending").toBe(true);
+        expect(secondSortDirection).not.toBe(firstSortDirection);
     });
 
     describe("TableSection Integration", () => {
