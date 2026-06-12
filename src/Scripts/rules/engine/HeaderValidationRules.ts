@@ -278,7 +278,13 @@ export function findSectionSubSection(setOfSections: HeaderSection[][], subSecti
 
     setOfSections.forEach((section) => {
         section.forEach((subSection) => {
-            if (subSection.header === subSectionLookingFor || subSection.headerName === subSectionLookingFor) {
+            // Match explicit sections by header. Only allow headerName matches for
+            // the source row so rules can still target full raw header content
+            // without fanning out to every parsed child row.
+            const headerMatch = subSection.header === subSectionLookingFor;
+            const sourceHeaderMatch = subSection.headerName === subSectionLookingFor && subSection.header === "source";
+
+            if (headerMatch || sourceHeaderMatch) {
                 results.push(subSection);
             }
         });

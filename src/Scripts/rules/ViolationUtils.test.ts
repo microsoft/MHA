@@ -561,6 +561,77 @@ describe("getViolationsForRow", () => {
 
         expect(result).toHaveLength(1);
     });
+
+    test("should not cross-match source rows from different header families", () => {
+        const ffasSection: HeaderSection = {
+            header: "source",
+            headerName: "X-Forefront-Antispam-Report",
+            value: "SFV:SPM;"
+        };
+        const asSection: HeaderSection = {
+            header: "source",
+            headerName: "X-Microsoft-Antispam",
+            value: "BCL:8;"
+        };
+
+        const ffasRule = new SimpleValidationRule(
+            "X-Forefront-Antispam-Report",
+            "SFV:SPM",
+            "Message was marked as spam",
+            ["source"],
+            "error"
+        );
+        const asRule = new SimpleValidationRule(
+            "X-Microsoft-Antispam",
+            "BCL:[6789]",
+            "Bulk Sender Reputation is bad",
+            ["source"],
+            "error"
+        );
+
+        const ffasViolation: RuleViolation = {
+            rule: ffasRule,
+            affectedSections: [ffasSection],
+            highlightPattern: "SFV:SPM"
+        };
+        const asViolation: RuleViolation = {
+            rule: asRule,
+            affectedSections: [asSection],
+            highlightPattern: "BCL:[6789]"
+        };
+
+        const group: ViolationGroup = {
+            groupId: "group-1",
+            displayName: "Source violations",
+            severity: "error",
+            isAndRule: false,
+            violations: [ffasViolation, asViolation]
+        };
+
+        const ffasRow = {
+            header: "source",
+            headerName: "X-Forefront-Antispam-Report",
+            label: "Source header",
+            value: "SFV:SPM;"
+        };
+        const asRow = {
+            header: "source",
+            headerName: "X-Microsoft-Antispam",
+            label: "Source header",
+            value: "BCL:8;"
+        };
+
+        const ffasResults = getViolationsForRow(ffasRow, [group]);
+        const asResults = getViolationsForRow(asRow, [group]);
+
+        expect(ffasResults).toHaveLength(1);
+        expect(ffasResults).toContain(ffasViolation);
+        expect(ffasResults).not.toContain(asViolation);
+
+        expect(asResults).toHaveLength(1);
+        expect(asResults).toContain(asViolation);
+        expect(asResults).not.toContain(ffasViolation);
+    });
 });
 
 describe("highlightHtml", () => {

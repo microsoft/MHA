@@ -1,33 +1,78 @@
 import { ArchivedRow } from "./ArchivedRow";
+import { Decoder } from "../2047";
 import { Strings } from "../Strings";
 
-jest.mock("../Strings", () => ({
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    Strings: {
-        mapHeaderToURL: jest.fn(),
-        mapValueToURL: jest.fn()
-    }
-}));
+jest.mock("../Strings", () => {
+    const actualStrings = jest.requireActual("../Strings") as typeof import("../Strings");
+
+    return {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        Strings: {
+            mapHeaderToURL: jest.fn((headerName: string, text?: string) => actualStrings.Strings.mapHeaderToURL(headerName, text)),
+            htmlEncode: jest.fn((value: string) => actualStrings.Strings.htmlEncode(value))
+        }
+    };
+});
 
 describe("ArchivedRow", () => {
-    const header = "testHeader";
+    const header = "Archived-At";
     const label = "testLabel";
     let archivedRow: ArchivedRow;
 
     beforeEach(() => {
-        (Strings.mapHeaderToURL as jest.Mock).mockReturnValue("mockedHeaderURL");
-        (Strings.mapValueToURL as jest.Mock).mockReturnValue("mockedValueURL");
+        jest.clearAllMocks();
         archivedRow = new ArchivedRow(header, label);
     });
 
     it("should set url using Strings.mapHeaderToURL", () => {
         expect(Strings.mapHeaderToURL).toHaveBeenCalledWith(header, label);
-        expect(archivedRow.url).toBe("mockedHeaderURL");
+        expect(archivedRow.url).toBe("<a href = 'https://tools.ietf.org/html/rfc5064' target = '_blank'>testLabel</a>");
     });
 
-    it("should return valueUrl using Strings.mapValueToURL", () => {
-        archivedRow["valueInternal"] = "internalValue";
-        expect(archivedRow.valueUrl).toBe("mockedValueURL");
-        expect(Strings.mapValueToURL).toHaveBeenCalledWith("internalValue");
+    it("should return html href for bracketed http(s) links", () => {
+        archivedRow.value = "<https://example.test/path>";
+        const valueUrl = archivedRow.valueUrl;
+
+        expect(valueUrl).toContain("<a");
+        expect(valueUrl).toContain("href=");
+        expect(valueUrl).toContain("https://example.test/path");
+        expect(valueUrl).toContain("target=");
+    });
+
+    it("should html encode non-bracketed values", () => {
+        archivedRow.value = "https://example.test/path";
+        const valueUrl = archivedRow.valueUrl;
+        expect(Strings.htmlEncode).toHaveBeenCalledWith(archivedRow.value);
+        expect(valueUrl).toBe("https://example.test/path");
+    });
+
+    it("should html encode raw img payload instead of rendering executable HTML", () => {
+        archivedRow.value = "<img src=x onerror=alert('XSS')>";
+        const valueUrl = archivedRow.valueUrl;
+        expect(Strings.htmlEncode).toHaveBeenCalledWith(archivedRow.value);
+        expect(valueUrl).toContain("&lt;img");
+        expect(valueUrl).toContain("&gt;");
+        expect(valueUrl).not.toContain("<img");
+        expect(valueUrl).not.toContain("<a href=");
+    });
+
+    it("should encode RFC2047-decoded img payload instead of rendering executable HTML", () => {
+        const encodedPayload = "=?UTF-8?B?PGltZyBzcmM9eCBvbmVycm9yPWFsZXJ0KCdYU1MnKT4=?=";
+        archivedRow.value = Decoder.clean2047Encoding(encodedPayload);
+
+        expect(archivedRow.valueUrl).toContain("&lt;img");
+        expect(archivedRow.valueUrl).toContain("&gt;");
+        expect(archivedRow.valueUrl).not.toContain("<img");
+        expect(archivedRow.valueUrl).not.toContain("<a href=");
+    });
+
+    it("should render anchor only for strict angle-bracketed http(s) URL", () => {
+        const url = "https://example.com/test/list/foo-users@lists.example.com/message/mysubject/";
+        archivedRow.value = `<${url}>`;
+        const valueUrl = archivedRow.valueUrl;
+
+        expect(valueUrl).toMatch("<a href=\"");
+        expect(valueUrl).toContain(url);
+        expect(valueUrl).toContain("target=\"_blank\"");
     });
 });

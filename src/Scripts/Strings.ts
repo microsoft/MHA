@@ -115,14 +115,6 @@ export class Strings {
         return "";
     }
 
-    public static mapValueToURL(text: string): string {
-        try {
-            return ["<a href='", text, "' target='_blank'>", this.htmlEncode(text), "</a>"].join("");
-        } catch {
-            return text;
-        }
-    }
-
     // Join an array with char, dropping empty/missing entries
     public static joinArray(array: (string | number | null)[] | null, char: string): string {
         if (!array) return "";
