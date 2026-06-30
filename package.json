@@ -84,12 +84,12 @@
     "webpack-dev-server": "^5.2.5"
   },
   "dependencies": {
-    "@fluentui/web-components": "^2.6.1",
+    "@fluentui/web-components": "^3.0.0",
     "@microsoft/applicationinsights-web": "^3.4.2",
     "@microsoft/office-js": "^1.1.110",
     "codepage": "^1.15.0",
     "dayjs": "^1.11.21",
-    "framework7": "^9.0.5",
+    "framework7": "^9.1.0",
     "framework7-icons": "^5.0.5",
     "jwt-decode": "^4.0.0",
     "promise-polyfill": "8.3.0",
