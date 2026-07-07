@@ -31,6 +31,9 @@ updates:
         dependency-type: "production"
       development-dependencies:
         dependency-type: "development"
+      other-dependencies:
+        patterns:
+          - "*"
 
   - package-ecosystem: github-actions
     directory: /
