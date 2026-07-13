@@ -10,6 +10,8 @@ updates:
     schedule:
       interval: "daily"
     open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
 
     ignore:
       # Ignore eslint 10 until ecosystem supports it
@@ -39,6 +41,8 @@ updates:
     directory: /
     schedule:
       interval: daily
+    cooldown:
+      default-days: 7
     groups:
       production-dependencies:
         dependency-type: "production"
