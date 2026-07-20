@@ -84,7 +84,7 @@
     "webpack-dev-server": "^6.0.0"
   },
   "dependencies": {
-    "@fluentui/web-components": "^3.0.1",
+    "@fluentui/web-components": "^3.0.2",
     "@microsoft/applicationinsights-web": "^3.4.3",
     "@microsoft/office-js": "^1.1.110",
     "codepage": "^1.15.0",
