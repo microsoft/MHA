@@ -97,7 +97,8 @@
     "unfetch": "^5.0.0"
   },
   "overrides": {
-    "tmp": "^0.2.5"
+    "tmp": "^0.2.5",
+    "brace-expansion": "^2.1.2"
   },
   "-vs-binding": {
     "BeforeBuild": [
