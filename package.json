@@ -97,6 +97,7 @@
     "unfetch": "^5.0.0"
   },
   "overrides": {
+    "adm-zip": "0.6.0",
     "tmp": "^0.2.5"
   },
   "-vs-binding": {
