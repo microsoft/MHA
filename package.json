@@ -102,7 +102,8 @@
     "uuid": "^14.0.1",
     "@babel/core": "^7.29.6",
     "js-yaml": "^4.3.0",
-    "@hono/node-server": "^2.0.11"
+    "@hono/node-server": "^2.0.11",
+    "brace-expansion": "^2.1.2"
   },
   "-vs-binding": {
     "BeforeBuild": [
