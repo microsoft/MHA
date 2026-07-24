@@ -97,7 +97,8 @@
     "unfetch": "^5.0.0"
   },
   "overrides": {
-    "tmp": "^0.2.5"
+    "tmp": "^0.2.5",
+    "@babel/core": "^7.29.6"
   },
   "-vs-binding": {
     "BeforeBuild": [
