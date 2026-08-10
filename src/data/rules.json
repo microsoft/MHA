@@ -13,14 +13,6 @@
     {
       "RuleType": "SimpleRule",
       "SectionToCheck": "Authentication-Results",
-      "PatternToCheckFor": "dkim=fail.*",
-      "MessageWhenPatternFails": "Sender failed DKIM validation",
-      "SectionsInHeaderToShowError": ["From", "Authentication-Results"],
-      "Severity": "error"
-    },
-    {
-      "RuleType": "SimpleRule",
-      "SectionToCheck": "Authentication-Results",
       "PatternToCheckFor": "dmarc=fail",
       "MessageWhenPatternFails": "Sender failed DMARC validation",
       "SectionsInHeaderToShowError": ["From", "Authentication-Results"],
@@ -122,6 +114,53 @@
     }
   ],
   "AndRules": [
+    {
+      "Message": "Sender failed DKIM validation",
+      "SectionsInHeaderToShowError": ["From", "Authentication-Results"],
+      "RulesToAnd": [
+        {
+          "RuleType": "SimpleRule",
+          "SectionToCheck": "Authentication-Results",
+          "PatternToCheckFor": "dkim=fail",
+          "MessageWhenPatternFails": "Sender failed DKIM validation",
+          "SectionsInHeaderToShowError": ["From", "Authentication-Results"],
+          "Severity": "error"
+        },
+        {
+          "RuleType": "SimpleRule",
+          "SectionToCheck": "Authentication-Results",
+          "PatternToCheckFor": "dkim=pass",
+          "Negate": true,
+          "MessageWhenPatternFails": "",
+          "SectionsInHeaderToShowError": [],
+          "Severity": "info"
+        }
+      ],
+      "Severity": "error"
+    },
+    {
+      "Message": "One or more DKIM signatures failed; at least one passed",
+      "SectionsInHeaderToShowError": ["Authentication-Results"],
+      "RulesToAnd": [
+        {
+          "RuleType": "SimpleRule",
+          "SectionToCheck": "Authentication-Results",
+          "PatternToCheckFor": "dkim=fail",
+          "MessageWhenPatternFails": "One or more DKIM signatures failed; at least one passed",
+          "SectionsInHeaderToShowError": ["Authentication-Results"],
+          "Severity": "warning"
+        },
+        {
+          "RuleType": "SimpleRule",
+          "SectionToCheck": "Authentication-Results",
+          "PatternToCheckFor": "dkim=pass",
+          "MessageWhenPatternFails": "",
+          "SectionsInHeaderToShowError": [],
+          "Severity": "info"
+        }
+      ],
+      "Severity": "warning"
+    },
     {
       "Message": "Email filtered as spam but sent to inbox",
       "SectionsInHeaderToShowError": ["SFV"],

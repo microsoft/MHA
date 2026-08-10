@@ -17,13 +17,15 @@ export class SimpleValidationRule implements ISimpleValidationRule {
     public ruleNumber: number;
     public primaryRule: boolean;
     public severity: "error" | "warning" | "info";
+    public negate: boolean;
 
     constructor(
         checkSection: string,
         errorPattern: string,
         errorMessage: string,
         reportSection: string | string[],
-        severity: "error" | "warning" | "info"
+        severity: "error" | "warning" | "info",
+        negate = false
     ) {
         this.checkSection = checkSection;
         this.errorPattern = errorPattern;
@@ -43,6 +45,7 @@ export class SimpleValidationRule implements ISimpleValidationRule {
         this.ruleNumber = ++uniqueRuleNumber;
         this.primaryRule = true;
         this.severity = severity;
+        this.negate = negate;
     }
 
     /**
