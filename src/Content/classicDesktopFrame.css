@@ -352,6 +352,10 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
 }
 
 /* Status message overlay for button feedback */
+#analyzeButton {
+    z-index: 1;
+}
+
 .status-overlay-inline {
     position: absolute;
     top: calc(100% + 8px); /* Position below the button */

@@ -157,7 +157,15 @@ fluent-dialog > div {
 }
 
 fluent-dialog fluent-radio-group {
+    gap: 0px;
     margin: 4px 0 2px 0;
+}
+
+.fluent-control-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
 }
 
 fluent-dialog fluent-radio {

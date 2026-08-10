@@ -1,4 +1,5 @@
 import "@fluentui/web-components/button.js";
+import "../fluentTheme";
 import "../../Content/fluentCommon.css";
 import "../../Content/Office.css";
 import "../../Content/classicDesktopFrame.css";

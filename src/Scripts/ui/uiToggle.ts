@@ -3,6 +3,7 @@ import "@fluentui/web-components/checkbox.js";
 import "@fluentui/web-components/dialog.js";
 import "@fluentui/web-components/radio.js";
 import "@fluentui/web-components/radio-group.js";
+import "../fluentTheme";
 import "../../Content/fluentCommon.css";
 import "../../Content/uiToggle.css";
 

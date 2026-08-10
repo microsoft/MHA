@@ -11,7 +11,9 @@ import { ParentFrameUtils } from "./utils/ParentFrameUtils";
 
 // Fluent UI Web Components interfaces
 interface FluentDialog extends HTMLElement {
-    hidden: boolean;
+    dialog: HTMLDialogElement;
+    show(): void;
+    hide(): void;
     addEventListener(type: "dismiss", listener: (event: Event) => void): void;
     addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
 }
@@ -185,15 +187,17 @@ export class ParentFrame {
         radioGroup.innerHTML = "";
 
         ParentFrame.choices.forEach((choice: Choice, iChoice: number) => {
+            const label = document.createElement("label");
+            label.className = "fluent-control-label";
             const radio = document.createElement("fluent-radio") as FluentRadio;
             radio.value = iChoice.toString();
-            radio.textContent = choice.label;
 
             if (choice.checked) {
                 radio.checked = true;
             }
 
-            radioGroup.appendChild(radio);
+            label.append(radio, choice.label);
+            radioGroup.appendChild(label);
         });
     }
 
@@ -207,36 +211,35 @@ export class ParentFrame {
 
         if (!dialogSettings || !dialogDiagnostics) return;
 
-        // Ensure dialogs are initially hidden
-        dialogSettings.hidden = true;
-        dialogDiagnostics.hidden = true;
+        dialogSettings.hidden = false;
+        dialogDiagnostics.hidden = false;
 
         // Add click-outside-to-dismiss functionality
         dialogSettings.addEventListener("click", (e) => {
             if (e.target === dialogSettings) {
-                dialogSettings.hidden = true;
+                dialogSettings.hide();
             }
         });
 
         dialogDiagnostics.addEventListener("click", (e) => {
             if (e.target === dialogDiagnostics) {
-                dialogDiagnostics.hidden = true;
+                dialogDiagnostics.hide();
             }
         });
 
         // Add escape key to dismiss dialogs and enter key to apply settings
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
-                if (!dialogSettings.hidden) {
-                    dialogSettings.hidden = true;
+                if (dialogSettings.dialog.open) {
+                    dialogSettings.hide();
                 }
 
-                if (!dialogDiagnostics.hidden) {
-                    dialogDiagnostics.hidden = true;
+                if (dialogDiagnostics.dialog.open) {
+                    dialogDiagnostics.hide();
                 }
             }
 
-            if (e.key === "Enter" && !dialogSettings.hidden) {
+            if (e.key === "Enter" && dialogSettings.dialog.open) {
                 // Only trigger OK action when focused on radio buttons or checkboxes
                 const activeElement = document.activeElement;
                 const isRadioOrCheckbox = activeElement &&
@@ -259,16 +262,16 @@ export class ParentFrame {
                         diagnostics.setSendTelemetry(ParentFrame.telemetryCheckbox.checked);
                     }
 
-                    dialogSettings.hidden = true;
+                    dialogSettings.hide();
                     e.preventDefault(); // Prevent default form submission behavior
                 }
             }
 
-            if (e.key === "Enter" && !dialogDiagnostics.hidden) {
+            if (e.key === "Enter" && dialogDiagnostics.dialog.open) {
                 // Close diagnostics dialog when Enter is pressed on the code box
                 const activeElement = document.activeElement;
                 if (activeElement && activeElement.id === "diagpre") {
-                    dialogDiagnostics.hidden = true;
+                    dialogDiagnostics.hide();
                     e.preventDefault();
                 }
             }
@@ -298,7 +301,7 @@ export class ParentFrame {
                 diagnostics.setSendTelemetry(ParentFrame.telemetryCheckbox.checked);
             }
 
-            dialogSettings.hidden = true;
+            dialogSettings.hide();
         });
 
         const diagButton = document.getElementById("actionsSettings-diag");
@@ -310,14 +313,14 @@ export class ParentFrame {
             }
 
             // Hide settings dialog and show diagnostics dialog
-            dialogSettings.hidden = true;
-            dialogDiagnostics.hidden = false;
+            dialogSettings.hide();
+            dialogDiagnostics.show();
             document.getElementById("diagpre")?.focus();
         });
 
         const diagOkButton = document.getElementById("actionsDiag-OK");
         diagOkButton?.addEventListener("click", () => {
-            dialogDiagnostics.hidden = true;
+            dialogDiagnostics.hide();
         });
 
         const settingsButton = document.getElementById("settingsButton");
@@ -331,7 +334,7 @@ export class ParentFrame {
                 }
             }
 
-            dialogSettings.hidden = false;
+            dialogSettings.show();
         });
 
         const copyButton = document.getElementById("copyButton");
