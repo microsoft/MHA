@@ -99,7 +99,7 @@ export class HeaderValidationRulesEngine {
                     if (this.isAndRule(rule)) {
                         // Show sub-rules with message and parent context
                         rule.rulesToAndArray.forEach((reportRule) => {
-                            if (reportRule && reportRule.errorMessage !== "") {
+                            if (reportRule && !reportRule.negate && reportRule.errorMessage !== "") {
                                 // Attach parent AND rule information to child rule
                                 reportRule.parentAndRule = {
                                     message: rule.errorMessage,
@@ -170,7 +170,8 @@ export class HeaderValidationRulesEngine {
                                 newAndRule.PatternToCheckFor || "",
                                 newAndRule.MessageWhenPatternFails,
                                 newAndRule.SectionsInHeaderToShowError,
-                                newAndRule.Severity
+                                newAndRule.Severity,
+                                newAndRule.Negate
                             ));
                         }
                     }

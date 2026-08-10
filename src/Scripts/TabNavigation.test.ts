@@ -291,3 +291,37 @@ describe("TabNavigation comprehensive selector test", () => {
         expect(details && result.includes(details)).toBeTruthy();
     });
 });
+
+describe("TabNavigation settings dialog", () => {
+    test("tabs between the checked radio and the dialog boundaries", () => {
+        document.body.innerHTML = `
+            <fluent-dialog id="dialog-Settings">
+                <fluent-radio-group id="uiChoice">
+                    <label><fluent-radio id="selected-radio" tabindex="0"></fluent-radio></label>
+                </fluent-radio-group>
+                <fluent-checkbox id="telemetryInput" tabindex="0"></fluent-checkbox>
+                <a id="privacy-link" href="#">privacy</a>
+                <fluent-button id="actionsSettings-diag" tabindex="0"></fluent-button>
+                <fluent-button id="actionsSettings-OK" tabindex="0"></fluent-button>
+            </fluent-dialog>
+            <fluent-dialog id="dialog-Diagnostics">
+                <pre id="diagpre" tabindex="0"></pre>
+                <fluent-button id="actionsDiag-OK" tabindex="0"></fluent-button>
+            </fluent-dialog>
+        `;
+
+        const selectedRadio = document.getElementById("selected-radio") as HTMLElement & { checked: boolean };
+        const telemetryCheckbox = document.getElementById("telemetryInput") as HTMLElement;
+        const settingsOkButton = document.getElementById("actionsSettings-OK") as HTMLElement;
+        selectedRadio.checked = true;
+        TabNavigation.initializeParentFrameTabHandling();
+
+        telemetryCheckbox.focus();
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: true, bubbles: true }));
+        expect(document.activeElement).toBe(selectedRadio);
+
+        settingsOkButton.focus();
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", bubbles: true }));
+        expect(document.activeElement).toBe(selectedRadio);
+    });
+});

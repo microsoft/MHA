@@ -459,6 +459,44 @@ describe("HeaderValidationRulesEngine", () => {
             expect(flaggedRule!.parentAndRule!.message).toBe("Combined condition");
         });
 
+        test("should preserve negated conditions when setting AND rules", () => {
+            const andRuleData = [
+                {
+                    Message: "DKIM failed",
+                    SectionsInHeaderToShowError: ["Authentication-Results"],
+                    Severity: "error" as const,
+                    RulesToAnd: [
+                        {
+                            RuleType: "SimpleRule" as const,
+                            SectionToCheck: "Authentication-Results",
+                            PatternToCheckFor: "dkim=fail",
+                            MessageWhenPatternFails: "DKIM failed",
+                            SectionsInHeaderToShowError: ["Authentication-Results"],
+                            Severity: "error" as const
+                        },
+                        {
+                            RuleType: "SimpleRule" as const,
+                            SectionToCheck: "Authentication-Results",
+                            PatternToCheckFor: "dkim=pass",
+                            Negate: true,
+                            MessageWhenPatternFails: "DKIM did not pass",
+                            SectionsInHeaderToShowError: ["Authentication-Results"],
+                            Severity: "info" as const
+                        }
+                    ]
+                }
+            ];
+            const sections: HeaderSection[][] = [[
+                { header: "Authentication-Results", value: "dkim=fail reason=body_hash_mismatch" }
+            ]];
+
+            engine.setRules([], andRuleData);
+            engine.findComplexViolations(sections);
+
+            expect(sections[0]![0]!.rulesFlagged).toHaveLength(1);
+            expect(sections[0]![0]!.rulesFlagged![0]!.errorMessage).toBe("DKIM failed");
+        });
+
         test("should clear existing rules before setting new ones", () => {
             const rule1 = new SimpleValidationRule("A", "p", "m", "A", "error");
             engine.addRule(rule1);

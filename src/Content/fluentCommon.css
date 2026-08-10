@@ -6,7 +6,7 @@
 /*
  * MHA Button System Documentation:
  * 
- * PRIMARY BUTTONS: Use appearance="accent" - Blue background, white text
+ * PRIMARY BUTTONS: Use appearance="primary" - Blue background, white text
  * SECONDARY BUTTONS: Use default (no appearance) - White background, black border, blue hover
  * TOOLBAR BUTTONS: Use appearance="subtle" - Transparent, square, content-aware labels
  * SPECIAL BUTTONS: Maintain unique styling as needed (e.g., Original Headers)
@@ -181,7 +181,7 @@ fluent-button[appearance="subtle"]:is(:hover, .is-active):has(.button-label:not(
         outline-offset: 2px;
     }
     
-    fluent-button[appearance="accent"] {
+    fluent-button[appearance="primary"] {
         background-color: ButtonFace !important;
         color: ButtonText !important;
         border: 2px solid ButtonText !important;
