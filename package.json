@@ -99,7 +99,9 @@
   "overrides": {
     "adm-zip": "0.6.0",
     "uuid": "^14.0.1",
-    "brace-expansion": "2.1.3"
+    "brace-expansion@<3": "2.1.4",
+    "brace-expansion@>=3 <4": "3.0.6",
+    "brace-expansion@>=4": "5.0.9"
   },
   "-vs-binding": {
     "BeforeBuild": [
