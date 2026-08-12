@@ -67,10 +67,16 @@ if (buildNumber !== "local" && !pipelineCommit) {
     throw new Error("SCM_COMMIT_ID is required when MHA_BUILD_NUMBER is set");
 }
 
-const commit = pipelineCommit || execFileSync("git", ["rev-parse", "HEAD"], {
-    cwd: __dirname,
-    encoding: "utf8"
-}).trim();
+const commit = (() => {
+    try {
+        return (pipelineCommit || execFileSync("git", ["rev-parse", "HEAD"], {
+            cwd: __dirname,
+            encoding: "utf8"
+        })).trim();
+    } catch (error) {
+        throw new Error(`Unable to determine Git commit SHA. Set SCM_COMMIT_ID (and MHA_BUILD_NUMBER in CI) or ensure 'git' is available and this is a Git checkout. (${String(error)})`);
+    }
+})();
 
 if (!/^[0-9a-f]{40}$/iu.test(commit)) {
     throw new Error("SCM_COMMIT_ID must be a full Git commit SHA");
