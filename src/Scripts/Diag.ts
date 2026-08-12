@@ -177,10 +177,10 @@ class Diag {
                 this.appDiagnostics["ui"] = "standalone";
             }
 
-const buildInfo = getBuildInfo();
-this.appDiagnostics["Build"] = isLocalBuild() ? "Local" : buildInfo.buildNumber;
-this.appDiagnostics[isLocalBuild() ? "Base commit" : "Commit"] = buildInfo.commit;
-this.appDiagnostics["Built"] = buildInfo.builtAt;
+            const buildInfo = getBuildInfo();
+            this.appDiagnostics["Build"] = isLocalBuild() ? "Local" : buildInfo.buildNumber;
+            this.appDiagnostics[isLocalBuild() ? "Base commit" : "Commit"] = buildInfo.commit;
+            this.appDiagnostics["Built"] = buildInfo.builtAt;
 
             if (window.Office) {
                 delete this.appDiagnostics["Office"];
