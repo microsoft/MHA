@@ -35,8 +35,8 @@
                 <div class="status-overlay status-overlay-inline" id="copyStatusMessage" role="status" aria-live="polite">
                 </div>
             </fluent-button>
-            <div id="feedbackLink">
-                <a href="https://github.com/microsoft/MHA" target="_blank" rel="noopener">Submit feedback on github</a>
+            <div id="aboutLink">
+                <button type="button" id="aboutButton">About</button>
             </div>
         </section>
 
@@ -55,6 +55,27 @@
             </div>
         </section>
     </main>
+
+    <fluent-dialog id="aboutDialog" aria-label="About Message Header Analyzer" hidden>
+        <header class="dialog-header">
+            <h2>About</h2>
+        </header>
+        <section class="dialog-content">
+            <dl>
+                <dt>Build</dt>
+                <dd id="aboutBuild"></dd>
+                <dt id="aboutCommitLabel">Commit</dt>
+                <dd><a id="aboutCommit" target="_blank" rel="noopener noreferrer"></a></dd>
+                <dt>Built</dt>
+                <dd><time id="aboutBuiltAt"></time></dd>
+            </dl>
+            <p><a href="https://github.com/microsoft/MHA" target="_blank" rel="noopener noreferrer">Project on GitHub</a></p>
+            <p><a href="https://github.com/microsoft/MHA/issues" target="_blank" rel="noopener noreferrer">Submit feedback on GitHub</a></p>
+        </section>
+        <footer class="dialog-actions">
+            <fluent-button appearance="primary" id="aboutCloseButton">Close</fluent-button>
+        </footer>
+    </fluent-dialog>
 
     <template id="violation-inline-template">
         <span class="violation-inline">

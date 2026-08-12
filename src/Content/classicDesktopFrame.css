@@ -322,8 +322,75 @@ button[aria-expanded="false"] .collapsibleSwitch::after {
     box-sizing: border-box;
 }
 
-#feedbackLink {
+#aboutLink {
     float: right;
+}
+
+#aboutButton {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--primary-blue);
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#aboutDialog {
+    --dialog-width: min(360px, calc(100vw - 32px));
+    overflow-x: hidden;
+}
+
+#aboutDialog::part(control),
+#aboutDialog::part(positioning-region),
+#aboutDialog::part(overlay),
+#aboutDialog::part(dialog) {
+    overflow-x: hidden;
+}
+
+#aboutDialog[hidden] {
+    display: none;
+}
+
+#aboutDialog .dialog-header,
+#aboutDialog .dialog-content,
+#aboutDialog .dialog-actions {
+    overflow-x: hidden;
+}
+
+#aboutDialog .dialog-content {
+    padding: 16px 20px;
+}
+
+#aboutDialog dl {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 8px 16px;
+    margin: 0 0 16px;
+    min-width: 0;
+}
+
+#aboutDialog dt {
+    font-weight: 600;
+}
+
+#aboutDialog dd {
+    min-width: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+#aboutDialog p {
+    margin: 8px 0 0;
+    overflow-wrap: anywhere;
+}
+
+#aboutDialog .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px 20px 16px;
+    border-top: 1px solid var(--border-gray);
 }
 
 .commandBar {

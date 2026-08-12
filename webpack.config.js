@@ -13,12 +13,12 @@
  *
  * Functions:
  * - getHttpsOptions: Asynchronously retrieves HTTPS options for the development server.
- * - getHash: Generates a short hash from a given string.
  * - generateEntry: Generates an entry object for webpack configuration.
  * - generateHtmlWebpackPlugins: Generates an array of HtmlWebpackPlugin instances for each page.
  *
  * Environment Variables:
- * - SCM_COMMIT_ID: The commit ID used to generate a version hash.
+ * - MHA_BUILD_NUMBER: The ADO build number.
+ * - SCM_COMMIT_ID: The commit ID used to build the application.
  * - APPINSIGHTS_INSTRUMENTATIONKEY: Application Insights instrumentation key.
  * - npm_package_config_dev_server_port: Port for the development server.
  *
@@ -27,6 +27,7 @@
  * @returns {Promise<Object>} The webpack configuration object.
  */
 
+import { execFileSync } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -60,33 +61,30 @@ async function getHttpsOptions() {
     }
 }
 
-/**
- * Generates a hash for a given string.
- * Used to reduce commit ID to something short.
- *
- * @param {string} str - The input string to hash.
- * @returns {string} The hexadecimal representation of the hash.
- */
-const getHash = (str) => {
-    let hash = 42;
-    if (str.length) {
-        for (let i = 0; i < str.length; i++) {
-            hash = Math.abs((hash << 5) - hash + str.charCodeAt(i));
-        }
-    }
-    return hash.toString(16);
-};
+const buildNumber = process.env.MHA_BUILD_NUMBER || "local";
+const pipelineCommit = process.env.SCM_COMMIT_ID?.trim();
+if (buildNumber !== "local" && !pipelineCommit) {
+    throw new Error("SCM_COMMIT_ID is required when MHA_BUILD_NUMBER is set");
+}
 
-const commitID = process.env.SCM_COMMIT_ID || "test";
-const version = getHash(commitID);
-console.log("commitID:", commitID);
-console.log("version:", version);
+const commit = pipelineCommit || execFileSync("git", ["rev-parse", "HEAD"], {
+    cwd: __dirname,
+    encoding: "utf8"
+}).trim();
+
+if (!/^[0-9a-f]{40}$/iu.test(commit)) {
+    throw new Error("SCM_COMMIT_ID must be a full Git commit SHA");
+}
+
+const buildInfo = Object.freeze({
+    buildNumber,
+    commit,
+    builtAt: new Date().toISOString()
+});
+console.log("buildInfo:", buildInfo);
 
 const aikey = process.env.APPINSIGHTS_INSTRUMENTATIONKEY || "unknown";
 console.log("aikey:", aikey);
-
-const buildTime = new Date().toUTCString();
-console.log("buildTime:", buildTime);
 
 const pages = [
     { name: "mha", script: "mha" },
@@ -164,12 +162,18 @@ export default async (env, options) => {
     const config = {
         entry: generateEntry(),
         plugins: [
-            new MiniCssExtractPlugin({ filename: `${version}/[name].css` }),
+            new MiniCssExtractPlugin({ filename: "[name].css" }),
             new webpack.DefinePlugin({
-                __VERSION__: JSON.stringify(version),
                 __AIKEY__: JSON.stringify(aikey),
-                __BUILDTIME__: JSON.stringify(buildTime),
+                mhaBuildInfo: JSON.stringify(buildInfo),
             }),
+            {
+                apply(compiler) {
+                    compiler.hooks.thisCompilation.tap("BuildInfoPlugin", (compilation) => {
+                        compilation.emitAsset("build-info.json", new compiler.webpack.sources.RawSource(`${JSON.stringify(buildInfo, null, 2)}\n`));
+                    });
+                }
+            },
             new ForkTsCheckerWebpackPlugin(),
             // Custom plugin to log compilation start/end times with timestamps
             {
@@ -311,7 +315,7 @@ export default async (env, options) => {
             },
         },
         output: {
-            filename: `${version}/[name].js`,
+            filename: "[name].js",
             path: path.resolve(__dirname, "Pages"),
             publicPath: "/Pages/",
             clean: true,

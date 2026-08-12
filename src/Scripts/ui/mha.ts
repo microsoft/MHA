@@ -1,4 +1,5 @@
 import "@fluentui/web-components/button.js";
+import "@fluentui/web-components/dialog.js";
 import "../fluentTheme";
 import "../../Content/fluentCommon.css";
 import "../../Content/Office.css";
@@ -9,6 +10,7 @@ import { HeaderModel } from "../HeaderModel";
 import { mhaStrings } from "../mhaStrings";
 import { Strings } from "../Strings";
 import { DomUtils } from "./domUtils";
+import { initializeStandaloneAbout } from "./StandaloneAbout";
 import { Table } from "./Table";
 
 let viewModel: HeaderModel;
@@ -135,6 +137,7 @@ function copy() {
 
 document.addEventListener("DOMContentLoaded", function() {
     diagnostics.set("API used", "standalone");
+    initializeStandaloneAbout();
     table = new Table();
     table.initializeTableUI();
     table.makeResizablePane("inputHeaders", "sectionHeader", mhaStrings.mhaPrompt, () => true);

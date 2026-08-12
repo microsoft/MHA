@@ -47,8 +47,7 @@ export default [{
             Office: "readonly",
             // Webpack defined globals (replaced at build time)
             __AIKEY__: "readonly",
-            __BUILDTIME__: "readonly",
-            __VERSION__: "readonly",
+            mhaBuildInfo: "readonly",
             // Node.js/TypeScript globals used in specific contexts
             process: "readonly",
             global: "readonly",
