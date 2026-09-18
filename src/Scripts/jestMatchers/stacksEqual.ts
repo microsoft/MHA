@@ -1,16 +1,35 @@
 import { expect } from "@jest/globals";
 import type { MatcherFunction } from "expect";
 
+// Normalize Windows source paths in stack frames.
+// This includes CI frames that combine a relative src path with an absolute path.
+function normalizeWindowsSourcePath(item: string): string {
+    // Search within the frame because CI overlap puts the drive path after a relative src\...\ prefix.
+    const drivePathMatch = /[A-Z]:\\/.exec(item);
+    // Preserve the previous non-drive Windows normalization for stacktrace-js output.
+    if (!drivePathMatch) return item.replace(/MHA\\src/, "src");
+
+    const beforeDrivePath = item.slice(0, drivePathMatch.index);
+    const drivePath = item.slice(drivePathMatch.index);
+    // Use the final \src\ segment from the absolute path as the canonical project-relative path.
+    const sourcePathIndex = drivePath.lastIndexOf("\\src\\");
+    if (sourcePathIndex === -1) return item;
+
+    // Windows CI runners can prepend the working directory-relative src path before the absolute test path.
+    // Example input: testParse (src\Foo\D:\a\MHA\MHA\src\Foo\File.ts)
+    // Example output: testParse (src\Foo\File.ts)
+    // Strip only that trailing relative src\...\ prefix while keeping the function text before it.
+    const beforeSourcePath = beforeDrivePath.replace(/src\\(?:[^\\]+\\)*$/, "");
+    return beforeSourcePath + drivePath.slice(sourcePathIndex + 1);
+}
+
 // Strip stack of rows with jest.
 // Used to normalize cross environment differences strictly for testing purposes
 // Real stacks sent up will contain cross browser quirks
-function cleanStack(stack: string[]) {
+function cleanStack(stack: string[]): string[] | null {
     if (!stack) return null;
     return stack.map(function (item: string): string {
-        return item
-            .replace(/[A-Z]:\\.*?\\MHA\\/, "") // Remove path prefix that start <drive letter>:\src\MHA
-            .replace(/MHA\\src/, "src") // Remove path prefix that start MHA\\src
-            .replace(/[A-Z]:\\.*?\\.*\\src\\/, "src\\") // Remove path prefix that start <drive letter>:\src\MHA
+        return normalizeWindowsSourcePath(item)
             .replace(/Function\.get \[as parse\]/, "Function.parse") // normalize function name
             .replace(/.*jest.*/, "") // Don't care about jest internals
             .replace(/:\d+:\d*\)/, ")") // remove column and line # since they may vary
