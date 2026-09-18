@@ -1,17 +1,22 @@
 import { expect } from "@jest/globals";
 import type { MatcherFunction } from "expect";
 
+function normalizeWindowsSourcePath(item: string): string {
+    return item
+        // stacktrace-js can report functionName (D:\a\MHA\MHA\src\Scripts\File.ts).
+        .replace(/(\()[A-Z]:\\.*?\\MHA\\/, "$1")
+        .replace(/MHA\\src/, "src")
+        // Windows CI can report src\...\D:\a\MHA\MHA\src\...\File.ts.
+        .replace(/(?:src\\(?:[^\\]+\\)*)?[A-Z]:\\.*?\\.*\\src\\/, "src\\");
+}
+
 // Strip stack of rows with jest.
 // Used to normalize cross environment differences strictly for testing purposes
 // Real stacks sent up will contain cross browser quirks
-function cleanStack(stack: string[]) {
+function cleanStack(stack: string[]): string[] | null {
     if (!stack) return null;
     return stack.map(function (item: string): string {
-        return item
-            .replace(/(\()[A-Z]:\\.*?\\MHA\\/, "$1") // Remove drive prefix after the stack frame's opening parenthesis
-            .replace(/MHA\\src/, "src") // Remove path prefix that start MHA\\src
-            // Windows CI can report src\...\D:\a\MHA\MHA\src\...\File.ts.
-            .replace(/(?:src\\(?:[^\\]+\\)*)?[A-Z]:\\.*?\\.*\\src\\/, "src\\") // Normalize Windows absolute src prefixes
+        return normalizeWindowsSourcePath(item)
             .replace(/Function\.get \[as parse\]/, "Function.parse") // normalize function name
             .replace(/.*jest.*/, "") // Don't care about jest internals
             .replace(/:\d+:\d*\)/, ")") // remove column and line # since they may vary
