@@ -3,6 +3,22 @@ import { expect } from "@jest/globals";
 import "./stacksEqual";
 
 describe("stacksEqual", () => {
+    test("normalizes Windows absolute source paths", () => {
+        expect([
+            "testParse (D:\\a\\MHA\\MHA\\src\\Scripts\\Errors.test.ts:11:27)"
+        ]).stacksEqual([
+            "testParse (src\\Scripts\\Errors.test.ts)"
+        ]);
+    });
+
+    test("normalizes repository root source paths", () => {
+        expect([
+            "testParse (MHA\\src\\Scripts\\Errors.test.ts:11:27)"
+        ]).stacksEqual([
+            "testParse (src\\Scripts\\Errors.test.ts)"
+        ]);
+    });
+
     test("normalizes Windows CI relative and absolute source path overlap", () => {
         expect([
             "testParse (src\\Foo\\Bar\\D:\\a\\MHA\\MHA\\src\\Foo\\Bar\\Errors.test.ts:11:27)",

@@ -15,6 +15,8 @@ function normalizeWindowsSourcePath(item: string): string {
     if (sourcePathIndex === -1) return item;
 
     // Windows CI runners can prepend the working directory-relative src path before the absolute test path.
+    // Example input: testParse (src\Foo\D:\a\MHA\MHA\src\Foo\File.ts)
+    // Example output: testParse (src\Foo\File.ts)
     const beforeSourcePath = beforeDrivePath.replace(/src\\(?:[^\\]+\\)*$/, "");
     return beforeSourcePath + drivePath.slice(sourcePathIndex + 1);
 }
