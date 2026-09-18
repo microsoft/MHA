@@ -11,7 +11,7 @@ function cleanStack(stack: string[]) {
             .replace(/[A-Z]:\\.*?\\MHA\\/, "") // Remove path prefix that start <drive letter>:\src\MHA
             .replace(/MHA\\src/, "src") // Remove path prefix that start MHA\\src
             .replace(/[A-Z]:\\.*?\\.*\\src\\/, "src\\") // Remove path prefix that start <drive letter>:\src\MHA
-            .replace(/src\\Scripts\\src\\Scripts\\/g, "src\\Scripts\\")
+            .replace(/(?:src\\Scripts\\)+/g, "src\\Scripts\\")
             .replace(/Function\.get \[as parse\]/, "Function.parse") // normalize function name
             .replace(/.*jest.*/, "") // Don't care about jest internals
             .replace(/:\d+:\d*\)/, ")") // remove column and line # since they may vary

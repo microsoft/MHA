@@ -5,7 +5,7 @@ import "./stacksEqual";
 describe("stacksEqual", () => {
     test("normalizes duplicated source paths", () => {
         expect([
-            "testParse (src\\Scripts\\src\\Scripts\\Errors.test.ts:11:27)",
+            "testParse (src\\Scripts\\src\\Scripts\\src\\Scripts\\Errors.test.ts:11:27)",
             "Object.<anonymous> (src\\Scripts\\src\\Scripts\\Errors.test.ts:11:27)",
             "processTicksAndRejections (node:internal/process/task_queues)"
         ]).stacksEqual([
