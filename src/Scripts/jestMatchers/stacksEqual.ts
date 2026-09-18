@@ -4,13 +4,18 @@ import type { MatcherFunction } from "expect";
 // Normalize Windows source paths in stack frames.
 // This includes CI frames that combine a relative src path with an absolute path.
 function normalizeWindowsSourcePath(item: string): string {
-    // stacktrace-js can report functionName (D:\a\MHA\MHA\src\Scripts\File.ts).
-    const withoutStackFrameDrivePrefix = item.replace(/(\()[A-Z]:\\.*?\\MHA\\/, "$1");
+    const drivePathMatch = /[A-Z]:\\/.exec(item);
+    if (!drivePathMatch) return item.replace(/MHA\\src/, "src");
 
-    const withoutRepositoryRootPrefix = withoutStackFrameDrivePrefix.replace(/MHA\\src/, "src");
+    const beforeDrivePath = item.slice(0, drivePathMatch.index);
+    const drivePath = item.slice(drivePathMatch.index);
+    // Use the final \src\ segment from the absolute path as the canonical project-relative path.
+    const sourcePathIndex = drivePath.lastIndexOf("\\src\\");
+    if (sourcePathIndex === -1) return item;
 
-    // Windows CI can report src\...\D:\a\MHA\MHA\src\...\File.ts.
-    return withoutRepositoryRootPrefix.replace(/(?:src\\(?:[^\\]+\\)*)?[A-Z]:\\.*?\\.*\\src\\/, "src\\");
+    // Drop a relative src\...\ prefix if Windows CI prepended one before the absolute path.
+    const beforeSourcePath = beforeDrivePath.replace(/src\\(?:[^\\]+\\)*$/, "");
+    return beforeSourcePath + drivePath.slice(sourcePathIndex + 1);
 }
 
 // Strip stack of rows with jest.
