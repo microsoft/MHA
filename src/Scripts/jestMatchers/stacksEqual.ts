@@ -10,8 +10,8 @@ function cleanStack(stack: string[]) {
         return item
             .replace(/(\()[A-Z]:\\.*?\\MHA\\/, "$1") // Remove drive prefix after the stack frame's opening parenthesis
             .replace(/MHA\\src/, "src") // Remove path prefix that start MHA\\src
-            // Windows CI can report src\Scripts\D:\a\MHA\MHA\src\Scripts\File.ts.
-            .replace(/(?:src\\Scripts\\)?[A-Z]:\\.*?\\.*\\src\\/, "src\\") // Normalize Windows absolute src prefixes
+            // Windows CI can report src\...\D:\a\MHA\MHA\src\...\File.ts.
+            .replace(/(?:src\\(?:[^\\]+\\)*)?[A-Z]:\\.*?\\.*\\src\\/, "src\\") // Normalize Windows absolute src prefixes
             .replace(/Function\.get \[as parse\]/, "Function.parse") // normalize function name
             .replace(/.*jest.*/, "") // Don't care about jest internals
             .replace(/:\d+:\d*\)/, ")") // remove column and line # since they may vary
