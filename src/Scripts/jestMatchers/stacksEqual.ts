@@ -1,6 +1,8 @@
 import { expect } from "@jest/globals";
 import type { MatcherFunction } from "expect";
 
+// Normalize Windows source paths in stack frames.
+// This includes CI frames that combine a relative src path with an absolute path.
 function normalizeWindowsSourcePath(item: string): string {
     return item
         // stacktrace-js can report functionName (D:\a\MHA\MHA\src\Scripts\File.ts).
