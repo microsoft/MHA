@@ -5,6 +5,7 @@ import type { MatcherFunction } from "expect";
 // This includes CI frames that combine a relative src path with an absolute path.
 function normalizeWindowsSourcePath(item: string): string {
     const drivePathMatch = /[A-Z]:\\/.exec(item);
+    // Preserve the previous non-drive Windows normalization for stacktrace-js output.
     if (!drivePathMatch) return item.replace(/MHA\\src/, "src");
 
     const beforeDrivePath = item.slice(0, drivePathMatch.index);
@@ -13,7 +14,7 @@ function normalizeWindowsSourcePath(item: string): string {
     const sourcePathIndex = drivePath.lastIndexOf("\\src\\");
     if (sourcePathIndex === -1) return item;
 
-    // Drop a relative src\...\ prefix if Windows CI prepended one before the absolute path.
+    // Windows CI runners can prepend the working directory-relative src path before the absolute test path.
     const beforeSourcePath = beforeDrivePath.replace(/src\\(?:[^\\]+\\)*$/, "");
     return beforeSourcePath + drivePath.slice(sourcePathIndex + 1);
 }
