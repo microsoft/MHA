@@ -98,11 +98,15 @@
     "unfetch": "^5.0.0"
   },
   "overrides": {
-    "adm-zip": "0.6.0",
+    "@azure/msal-node": "7.1.0",
+    "adm-zip": "0.6.1",
+    "launch-editor": "2.14.2",
+    "qs": "6.16.1",
+    "serialize-javascript": "<=7.1.2",
     "uuid": "^14.0.1",
-    "brace-expansion@<3": "2.1.4",
+    "brace-expansion@<3": "2.1.7",
     "brace-expansion@>=3 <4": "3.0.6",
-    "brace-expansion@>=4": "5.0.9"
+    "brace-expansion@>=4": "5.0.12"
   },
   "-vs-binding": {
     "BeforeBuild": [
