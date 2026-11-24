@@ -232,6 +232,55 @@ describe("AndValidationRule", () => {
             expect(rule.violatesComplexRule(sections)).toBe(false);
         });
 
+        test("should satisfy a negated sub-rule when no matching value exists", () => {
+            const failed = new SimpleValidationRule(
+                "Authentication-Results",
+                "dkim=fail",
+                "DKIM failed",
+                "Authentication-Results",
+                "error"
+            );
+            const passed = new SimpleValidationRule(
+                "Authentication-Results",
+                "dkim=pass",
+                "",
+                [],
+                "info",
+                true
+            );
+            const rule = new AndValidationRule("DKIM failed", "Authentication-Results", "error", [failed, passed]);
+            const sections: HeaderSection[][] = [[
+                { header: "Authentication-Results", value: "dkim=fail reason=body_hash_mismatch" }
+            ]];
+
+            expect(rule.violatesComplexRule(sections)).toBe(true);
+        });
+
+        test("should reject a negated sub-rule when any matching value exists", () => {
+            const failed = new SimpleValidationRule(
+                "Authentication-Results",
+                "dkim=fail",
+                "DKIM failed",
+                "Authentication-Results",
+                "error"
+            );
+            const passed = new SimpleValidationRule(
+                "Authentication-Results",
+                "dkim=pass",
+                "",
+                [],
+                "info",
+                true
+            );
+            const rule = new AndValidationRule("DKIM failed", "Authentication-Results", "error", [failed, passed]);
+            const sections: HeaderSection[][] = [[
+                { header: "Authentication-Results", value: "dkim=fail reason=body_hash_mismatch" },
+                { header: "Authentication-Results", value: "dkim=pass header.d=example.com" }
+            ]];
+
+            expect(rule.violatesComplexRule(sections)).toBe(false);
+        });
+
         test("should handle three sub-rules (all must match)", () => {
             const subRule1 = new SimpleValidationRule("A", "pattern1", "m1", "A", "info");
             const subRule2 = new SimpleValidationRule("B", "pattern2", "m2", "B", "info");

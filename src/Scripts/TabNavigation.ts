@@ -3,6 +3,10 @@ interface FluentRadioGroup extends HTMLElement {
     value: string;
 }
 
+interface FluentRadio extends HTMLElement {
+    checked: boolean;
+}
+
 // Result type for tab target determination
 interface TabTargetResult {
     element: HTMLElement | null;
@@ -262,29 +266,13 @@ export class TabNavigation {
                 let targetResult: TabTargetResult | null = null;
 
                 // Check if we're in a dialog - if so, implement circular tab navigation
-                const openDialog = document.querySelector("fluent-dialog:not([hidden])") as HTMLElement;
-                if (openDialog && openDialog.contains(focused)) {
+                const openDialog = focused.closest("fluent-dialog") as HTMLElement | null;
+                if (openDialog) {
 
                     // Define the dialog tab order
                     const radioGroup = document.getElementById(TabNavigation.elementIds.uiChoice) as FluentRadioGroup;
-                    let checkedRadio = radioGroup?.querySelector("fluent-radio[checked]") as HTMLElement;
-
-                    // Find the correct current radio button using Fluent UI Web Components attributes
-                    if (!checkedRadio && radioGroup) {
-                        const allRadios = radioGroup.querySelectorAll("fluent-radio");
-
-                        // Try to find the actually selected radio button
-                        checkedRadio = Array.from(allRadios).find(r =>
-                            r.getAttribute("current-checked") === "true" ||
-                            r.getAttribute("aria-checked") === "true" ||
-                            r.hasAttribute("checked")
-                        ) as HTMLElement;
-
-                        // If still not found, use the radio group value to find it
-                        if (!checkedRadio && radioGroup.value) {
-                            checkedRadio = radioGroup.querySelector(`fluent-radio[current-value="${radioGroup.value}"]`) as HTMLElement;
-                        }
-                    }
+                    const checkedRadio = Array.from(radioGroup?.querySelectorAll<FluentRadio>("fluent-radio") ?? [])
+                        .find(radio => radio.checked);
 
                     const telemetryCheckbox = document.getElementById(TabNavigation.elementIds.telemetryInput);
                     const privacyLink = document.getElementById(TabNavigation.elementIds.privacyLink) as HTMLElement;
@@ -302,7 +290,7 @@ export class TabNavigation {
                         settingsOkButton,
                         diagPre,
                         diagOkButton
-                    ].filter(el => el) as HTMLElement[];
+                    ].filter((element): element is HTMLElement => element instanceof HTMLElement && openDialog.contains(element));
 
                     const currentIndex = dialogTabOrder.indexOf(focused);
 

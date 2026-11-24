@@ -2,8 +2,7 @@ import { ApplicationInsights, ICustomProperties, IEventTelemetry, ITelemetryItem
 import stackTrace from "stacktrace-js";
 
 import { aikey } from "./aikey";
-import { buildTime } from "./buildTime";
-import { mhaVersion } from "./mhaVersion";
+import { getBuildInfo, isLocalBuild } from "./BuildInfo";
 import { ParentFrame } from "./ParentFrame";
 import { GetHeaders } from "./ui/getHeaders/GetHeaders";
 import { GetHeadersAPI } from "./ui/getHeaders/GetHeadersAPI";
@@ -178,8 +177,10 @@ class Diag {
                 this.appDiagnostics["ui"] = "standalone";
             }
 
-            this.appDiagnostics["Last Update"] = buildTime();
-            this.appDiagnostics["mhaVersion"] = mhaVersion();
+            const buildInfo = getBuildInfo();
+            this.appDiagnostics["Build"] = isLocalBuild() ? "Local" : buildInfo.buildNumber;
+            this.appDiagnostics[isLocalBuild() ? "Base commit" : "Commit"] = buildInfo.commit;
+            this.appDiagnostics["Built"] = buildInfo.builtAt;
 
             if (window.Office) {
                 delete this.appDiagnostics["Office"];

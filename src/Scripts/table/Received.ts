@@ -132,7 +132,12 @@ export class Received extends DataTable {
             if (!acol) return 1;
             const bcol = b[col]?.toString();
             if (!bcol) return -1;
-            return this.sortOrder * (acol < bcol ? -1 : 1);
+            const anum = Number(acol);
+            const bnum = Number(bcol);
+            if (!isNaN(anum) && !isNaN(bnum)) {
+                return this.sortOrder * (anum - bnum);
+            }
+            return this.sortOrder * acol.localeCompare(bcol, undefined, { sensitivity: "accent" });
         });
     }
 

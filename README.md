@@ -46,6 +46,9 @@ This section documents the external interface of the software, including where i
 
 - Required Outlook permission level for header retrieval: ReadWriteMailbox.
 - The app consumes Outlook mailbox APIs and does not expose a separate public REST API.
+- The standalone About dialog and Outlook add-in diagnostics identify the build and source commit.
+- Build metadata is available as JSON at `/Pages/build-info.json`.
+- Local builds display `Local` and identify the Git commit on which the working tree is based.
 
 ## Installation Procedure
 
@@ -112,7 +115,7 @@ For both IOS and Android click open an email, then press the three dots under th
 
 ### Add-in testing (VSCode)
 
-- Follow the steps given [here](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/debug-desktop-using-edge-chromium#use-the-visual-studio-code-debugger).
+- Follow the steps for [using the Visual Studio Code debugger](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/debug-desktop-using-edge-chromium#use-the-visual-studio-code-debugger).
 
 ### Add-in testing (Outlook Web App)
 

@@ -29,6 +29,7 @@ export interface IValidationRule {
 }
 
 export interface ISimpleValidationRule extends IValidationRule {
+    negate: boolean;
     violatesRule(section: HeaderSection): string | null;
 }
 
@@ -46,6 +47,7 @@ export interface IRuleData {
     RuleType: "SimpleRule" | "HeaderMissingRule";
     SectionToCheck: string;
     PatternToCheckFor?: string;
+    Negate?: boolean;
     MessageWhenPatternFails: string;
     SectionsInHeaderToShowError: string[];
     Severity: "error" | "warning" | "info";

@@ -7,7 +7,13 @@ const config: Config = {
         "^.+.tsx?$": ["ts-jest",{ diagnostics: { ignoreCodes: ["TS151001"] } }],
     },
     globals: {
-        "__AIKEY__": ""
+        // Stand-ins for webpack DefinePlugin constants so code runs under Jest.
+        "__AIKEY__": "",
+        "mhaBuildInfo": {
+            buildNumber: "local",
+            commit: "0".repeat(40),
+            builtAt: "1970-01-01T00:00:00.000Z"
+        }
     },
     collectCoverage: true,
     collectCoverageFrom: ["./src/**"],

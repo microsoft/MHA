@@ -67,28 +67,22 @@ export class AndValidationRule implements IAndValidationRule {
         this.rulesToAndArray.forEach((rule) => {
             if (allTrue) {
                 const sectionsToExamine = findSectionSubSection(setOfSections, rule.checkSection);
+                let foundMatch = false;
 
-                // IF there are sections to examine to see if this part of the AND statement is true
-                if (sectionsToExamine && sectionsToExamine.length > 0) {
-                    // Check if ANY of the sections match this rule
-                    let foundMatch = false;
-                    sectionsToExamine.forEach((section) => {
-                        if (!foundMatch) {
-                            // IF passes rule, then this sub-rule is satisfied
-                            const result = rule.violatesRule(section);
-                            if (result !== null) {
-                                foundMatch = true;
-                                // Store the specific section that matched so it can be flagged later
-                                rule.matchedSection = section;
-                            }
-                        }
-                    });
-
+                // Check if ANY of the sections match this rule
+                sectionsToExamine.forEach((section) => {
                     if (!foundMatch) {
-                        allTrue = false;
+                        const result = rule.violatesRule(section);
+                        if (result !== null) {
+                            foundMatch = true;
+                            // Store the specific section that matched so it can be flagged later
+                            rule.matchedSection = section;
+                        }
                     }
-                } else {
-                    // IF nothing to prove this rule true, then it must be false.
+                });
+
+                const conditionSatisfied = rule.negate ? !foundMatch : foundMatch;
+                if (!conditionSatisfied) {
                     allTrue = false;
                 }
             }
