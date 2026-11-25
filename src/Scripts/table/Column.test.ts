@@ -12,18 +12,12 @@ describe("column", () => {
         expect(col.class).toBe(columnClass);
     });
 
-    it("should have id as a string", () => {
+    it.each([
+        ["id"],
+        ["label"],
+        ["class"],
+    ])("should have %s as a string", (property) => {
         const col = new Column("col2", "Column 2", "class2");
-        expect(typeof col.id).toBe("string");
-    });
-
-    it("should have label as a string", () => {
-        const col = new Column("col3", "Column 3", "class3");
-        expect(typeof col.label).toBe("string");
-    });
-
-    it("should have class as a string", () => {
-        const col = new Column("col4", "Column 4", "class4");
-        expect(typeof col.class).toBe("string");
+        expect(typeof col[property as keyof Column]).toBe("string");
     });
 });
