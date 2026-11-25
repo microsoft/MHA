@@ -1,3 +1,4 @@
+import "@fluentui/web-components/web-components.min.js";
 import "../../Content/fluentCommon.css";
 import "../../Content/newDesktopFrame.css";
 

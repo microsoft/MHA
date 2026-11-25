@@ -96,6 +96,9 @@ For both IOS and Android click open an email, then press the three dots under th
 
 ### Manual build
 
+- The IIS configuration in [Web.config](./Web.config) disables ASP.NET debugging
+  and sets a one-year HSTS policy. Fluent UI components are bundled from npm
+  dependencies rather than loaded from an unversioned runtime URL.
 - The commands below for unit/site/add-in testing will also build before starting the server, but you can also build on demand.
 - Manual build: `npm run build`
 - For continuous build on changes, you can use watch: `npm run watch`
